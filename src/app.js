@@ -1,5 +1,16 @@
 import { initialState, lifecycle, pageMeta, roleNavigation, roles } from "./data.js";
-import { createApplication, runScenarioStep, scenarioDefinitions, transitionApplication } from "./workflow.js";
+import {
+  canRecordAssessmentDecision,
+  canViewApplication,
+  createApplication,
+  filterApplicationsForRole,
+  getAllowedApplicationTransitions,
+  recordAssessmentDecision,
+  runScenarioStep,
+  scenarioDefinitions,
+  transitionApplication,
+  visibleProgramsForRole
+} from "./workflow.js";
 import { getSupabasePublicConfig, loadPilotSnapshot } from "./supabase.js";
 
 const STORAGE_KEY = "kdpu-myys-pilot-v3";
@@ -11,6 +22,12 @@ const modalBackdrop = document.querySelector("#modal-backdrop");
 const modal = document.querySelector("#modal");
 const toastRegion = document.querySelector("#toast-region");
 const routeAnnouncer = document.querySelector("#route-announcer");
+const notificationButton = document.querySelector("[data-nav='notifications']");
+
+const ASSESSMENT_START_ROLES = new Set(["learner", "instructor", "externalInstructor"]);
+const INTEGRATION_BULK_ROLES = new Set(["it", "admin"]);
+const FINANCE_OPERATOR_ROLES = new Set(["finance", "admin"]);
+const PROPOSAL_ROLES = new Set(["instructor", "externalInstructor"]);
 
 let state = loadState();
 let lastFocused = null;
@@ -19,11 +36,38 @@ let currentCommissionTab = "summary";
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (saved?.version === initialState.version) return saved;
+    if (isValidSavedState(saved)) return saved;
   } catch {
     // Corrupt local state safely falls back to the sealed synthetic seed.
   }
   return structuredClone(initialState);
+}
+
+function isValidSavedState(saved) {
+  const roleIds = new Set(roles.map((role) => role.id));
+  const applicationStatuses = new Set(["draft", "review", "commission", "revision", "approved", "rejected", "credentialed"]);
+  const ownerRoles = new Set(["learner", "instructor", "externalInstructor"]);
+  const arrayKeys = [
+    "applications", "programs", "credentials", "integrations", "notifications", "audit",
+    "enrollments", "assessmentSessions", "recognizedCredits", "integrationJobs"
+  ];
+  return Boolean(
+    saved &&
+    typeof saved === "object" &&
+    saved.version === initialState.version &&
+    roleIds.has(saved.roleId) &&
+    arrayKeys.every((key) => Array.isArray(saved[key])) &&
+    saved.scenarios && typeof saved.scenarios === "object" &&
+    saved.scenarios.internal && saved.scenarios.recognition &&
+    saved.applications.every((item) => item && typeof item.id === "string" && ownerRoles.has(item.ownerRole) && applicationStatuses.has(item.status)) &&
+    saved.integrations.every((item) => item && typeof item.id === "string" && item.realDataEnabled !== true && !item.secret) &&
+    saved.integrationJobs.every((item) => item && item.realDataSent !== true) &&
+    saved.notifications.every((item) => item && Array.isArray(item.recipientRoles) && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy)) &&
+    saved.finance && typeof saved.finance === "object" &&
+    Array.isArray(saved.finance.transactions) &&
+    Array.isArray(saved.finance.entitlements) &&
+    saved.finance.parameters && typeof saved.finance.parameters === "object"
+  );
 }
 
 function saveState() {
@@ -50,7 +94,9 @@ function initials(name) {
 }
 
 function navigate(page, detail = "") {
-  window.location.hash = `#/${page}${detail ? `/${encodeURIComponent(detail)}` : ""}`;
+  const nextHash = `#/${page}${detail ? `/${encodeURIComponent(detail)}` : ""}`;
+  if (window.location.hash === nextHash) render();
+  else window.location.hash = nextHash;
 }
 
 function route() {
@@ -60,6 +106,61 @@ function route() {
 
 function isAllowed(page) {
   return ["home", "verify"].includes(page) || (roleNavigation[state.roleId] || []).includes(page);
+}
+
+function visibleApplications() {
+  return filterApplicationsForRole(state.applications, state.roleId, currentRole().name);
+}
+
+function visiblePrograms() {
+  return visibleProgramsForRole(state.programs, state.roleId, currentRole().name);
+}
+
+function visibleNotifications() {
+  return state.notifications.filter((item) => item.recipientRoles.includes(state.roleId));
+}
+
+function isNotificationRead(item) {
+  return item.readBy.includes(state.roleId);
+}
+
+function visibleAuditEvents(applications = visibleApplications()) {
+  const visibleIds = new Set(applications.map((application) => application.id));
+  const isOwnActor = (event) => event.actorRole === state.roleId && event.actor === currentRole().name;
+
+  if (state.roleId === "admin") return state.audit;
+  if (["learner", "instructor", "externalInstructor"].includes(state.roleId)) {
+    return state.audit.filter((event) => visibleIds.has(event.entityId) || isOwnActor(event));
+  }
+  if (state.roleId === "coordinator") {
+    return state.audit.filter((event) => visibleIds.has(event.entityId) || event.actorRole === "coordinator");
+  }
+  if (state.roleId === "commission") {
+    return state.audit.filter((event) => visibleIds.has(event.entityId) || event.actorRole === "commission" || /^(ASM-|credential-)/.test(event.entityId));
+  }
+  if (state.roleId === "studentAffairs") {
+    return state.audit.filter((event) => visibleIds.has(event.entityId) || event.actorRole === "studentAffairs" || /^(CR-|ENR-|credential-|INT-obis)/.test(event.entityId));
+  }
+  if (state.roleId === "it") {
+    return state.audit.filter((event) => event.actorRole === "it" || /^(INT-|JOB-)/.test(event.entityId));
+  }
+  if (state.roleId === "finance") {
+    return state.audit.filter((event) => event.actorRole === "finance" || /^(FIN-|TX-|INV-|ENT-)/.test(event.entityId));
+  }
+  return [];
+}
+
+function visibleOverviewAudit(applications) {
+  return visibleAuditEvents(applications);
+}
+
+function deny(message = "Seçili demo rolü bu işlemi gerçekleştiremez.") {
+  toast(message, "error");
+  return false;
+}
+
+function canOperateIntegration(id) {
+  return INTEGRATION_BULK_ROLES.has(state.roleId) || (state.roleId === "studentAffairs" && id === "obis");
 }
 
 function formatDate(value, includeTime = false) {
@@ -135,7 +236,11 @@ function renderShell() {
   personaCard.innerHTML = `<div class="persona-top"><span class="avatar" aria-hidden="true">${initials(role.name)}</span><div><strong>${escapeHtml(role.name)}</strong><small>${escapeHtml(role.title)}</small></div></div><span class="persona-badge">${escapeHtml(role.label)}</span>`;
   const active = route().page;
   sideNav.innerHTML = `<button class="nav-link ${active === "home" ? "active" : ""}" type="button" data-nav="home" ${active === "home" ? `aria-current="page"` : ""}>${icon("home")}<span>Pilot Ana Sayfa</span></button>${(roleNavigation[state.roleId] || []).map((page) => `<button class="nav-link ${active === page ? "active" : ""}" type="button" data-nav="${page}" ${active === page ? `aria-current="page"` : ""}>${icon(pageMeta[page].icon)}<span>${escapeHtml(pageMeta[page].label)}</span></button>`).join("")}`;
-  document.querySelector("#notification-count").textContent = String(state.notifications.filter((item) => !item.read).length);
+  const notificationAllowed = isAllowed("notifications");
+  notificationButton.hidden = !notificationAllowed;
+  notificationButton.disabled = !notificationAllowed;
+  notificationButton.setAttribute("aria-hidden", String(!notificationAllowed));
+  document.querySelector("#notification-count").textContent = String(visibleNotifications().filter((item) => !isNotificationRead(item)).length);
   document.querySelector("#data-mode-label").textContent = state.dataMode;
 }
 
@@ -165,6 +270,7 @@ function unauthorizedPage(page) {
 }
 
 function homePage() {
+  const catalogAction = state.roleId === "learner" ? `<button class="button button--secondary" data-nav="catalog">${icon("book")} Mikro yeterlilikleri incele</button>` : "";
   return `<div class="page-container">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-art"><img src="assets/illustrations/myys-hero.webp" alt="Üniversite, öğrenenler, eğitici, akademik komisyon ve dijital yeterlilik arasında kurulan kontrollü ekosistem illüstrasyonu" width="1400" height="896" fetchpriority="high" /></div>
@@ -173,7 +279,7 @@ function homePage() {
         <div class="eyebrow">Mikro Yeterlilik Yönetim Sistemi • Kontrollü Pilot</div>
         <h1 id="hero-title">Kısa öğrenmeleri <span>izlenebilir akademik kazanımlara</span> dönüştüren pilot</h1>
         <p>Başvuru, kanıt, komisyon değerlendirmesi, dijital yeterlilik, entegrasyon ve mali süreçleri ortak bir denetim izi içinde örnekler.</p>
-        <div class="hero-actions"><button class="button" data-action="demo-login">${icon("arrow")} Demo rolle giriş yap</button><button class="button button--secondary" data-nav="catalog">${icon("book")} Mikro yeterlilikleri incele</button><button class="button button--ghost" data-action="pilot-info">Pilot kapsamını görüntüle</button></div>
+        <div class="hero-actions"><button class="button" data-action="demo-login">${icon("arrow")} ${escapeHtml(currentRole().label)} panelini aç</button>${catalogAction}<button class="button button--ghost" data-action="pilot-info">Pilot kapsamını görüntüle</button></div>
         <div class="source-strip"><span>${icon("shield")} Gerçek veri yok</span><span>${icon("check")} İnsan kararı merkezde</span><span>${icon("network")} Entegrasyonlar bağlı değil</span></div>
       </div>
     </section>
@@ -188,19 +294,25 @@ function homePage() {
 
 function overviewPage() {
   const role = currentRole();
-  const pending = state.applications.filter((item) => ["review", "commission", "revision"].includes(item.status)).length;
-  const dueSoon = state.applications.filter((item) => item.elapsedDays >= 15 && !["approved", "rejected"].includes(item.status)).length;
-  const unread = state.notifications.filter((item) => !item.read).length;
+  const applications = visibleApplications();
+  const auditEvents = visibleOverviewAudit(applications);
+  const pending = applications.filter((item) => ["review", "commission", "revision"].includes(item.status)).length;
+  const dueSoon = applications.filter((item) => item.elapsedDays >= 15 && !["approved", "rejected"].includes(item.status)).length;
+  const unread = visibleNotifications().filter((item) => !isNotificationRead(item)).length;
+  const notificationValue = isAllowed("notifications") ? unread : "Kapalı";
+  const notificationNote = isAllowed("notifications") ? "Yalnız uygulama içi; SMS/e-posta gönderilmez" : "Bu rolün bildirim çalışma alanı yoktur";
+  const auditAction = isAllowed("audit") ? `<button class="button button--ghost button--sm" data-nav="audit">Tümünü gör</button>` : "";
+  const auditContent = auditEvents.length ? `<div class="timeline">${auditEvents.slice(0,4).map(auditTimeline).join("")}</div>` : `<div class="empty-inline"><strong>Bu role ait denetim olayı yok</strong><span>Yeni bir pilot işlem yaptığınızda burada görünür.</span></div>`;
   return `<div class="page-container">${pageHeader("Rol bazlı operasyon", `${role.label} genel bakışı`, `${role.name} için yalnızca kurgusal pilot veriler ve role uygun eylemler gösteriliyor.`, `<button class="button button--secondary" data-action="reset-demo">${icon("refresh")} Demo verisini sıfırla</button>`)}
     <div class="grid grid-4">
       ${kpi("Aktif başvurular", pending, "İnceleme, komisyon veya revizyon aşamasında", "file")}
       ${kpi("Yaklaşan pilot süre", dueSoon, "30 günlük gösterge kurumsal doğrulamaya açıktır", "clock")}
       ${kpi("Pilot yeterlilik", state.credentials.length, "Yalnız bu Preview ortamında doğrulanabilir", "wallet")}
-      ${kpi("Okunmamış bildirim", unread, "Yalnız uygulama içi; SMS/e-posta gönderilmez", "bell")}
+      ${kpi("Okunmamış bildirim", notificationValue, notificationNote, "bell")}
     </div>
     <div class="grid grid-2 section">
       <section class="card"><div class="card-header"><div><h2>Rolünüze uygun sonraki adımlar</h2><p>Görevler çalışma alanına göre önceliklendirildi.</p></div>${statusBadge("simulated")}</div><div class="card-body">${roleTasks(state.roleId)}</div></section>
-      <section class="card"><div class="card-header"><div><h2>Son denetim olayları</h2><p>Her durum değişikliği gerekçe ve aktörle birlikte tutulur.</p></div><button class="button button--ghost button--sm" data-nav="audit">Tümünü gör</button></div><div class="card-body"><div class="timeline">${state.audit.slice(0,4).map(auditTimeline).join("")}</div></div></section>
+      <section class="card"><div class="card-header"><div><h2>Son denetim olayları</h2><p>Her durum değişikliği gerekçe ve aktörle birlikte tutulur.</p></div>${auditAction}</div><div class="card-body">${auditContent}</div></section>
     </div>
     <div class="section">${notice("warning", "Pilot kural uyarısı", "30 gün, %10 AKTS, %50 uzaktan kredi ve benzerlik bantları kaynak dosyalardaki öneri/ön kontrol değerleridir; kurumsal ve Senato doğrulaması olmadan nihai karar üretmez.")}</div>
   </div>`;
@@ -263,9 +375,13 @@ function roleTasks(roleId) {
 
 function catalogPage() {
   const proposalAction = ["instructor","externalInstructor"].includes(state.roleId) ? `<button class="button" data-nav="proposal">${icon("plus")} Program öner</button>` : "";
+  const programs = visiblePrograms();
+  const catalogContent = programs.length
+    ? `<div class="grid grid-3" id="catalog-grid">${programs.map(programCard).join("")}</div><div class="card empty-state" id="catalog-filter-empty" hidden><div class="empty-icon">${icon("search")}</div><h3>Filtreyle eşleşen program yok</h3><p>Arama metnini veya TYÇ düzeyi filtresini değiştirin.</p><button class="button button--secondary" data-action="clear-catalog">Filtreleri temizle</button></div>`
+    : `<div class="card empty-state" id="catalog-grid"><div class="empty-icon">${icon("book")}</div><h3>Yayımlanmış pilot program yok</h3><p>Bu katalog yalnız aktif durumdaki ve öğrenene açık sentetik programları gösterir.</p></div>`;
   return `<div class="page-container">${pageHeader("Öğrenme kataloğu", "Mikro yeterlilik programları", "Katalogdaki tüm programlar kurgusal pilot kayıtlardır; aktif görünen programlar gerçek kayıt veya ödeme kabul etmez.", proposalAction)}
     <div class="toolbar"><div class="search">${icon("search")}<label class="sr-only" for="catalog-search">Program, birim veya eğitici ara</label><input id="catalog-search" type="search" placeholder="Program, birim veya eğitici ara" /></div><div class="toolbar-group"><select class="select" id="catalog-level" aria-label="TYÇ düzeyi filtresi"><option value="">Tüm TYÇ düzeyleri</option><option value="6">TYÇ 6</option><option value="7">TYÇ 7</option></select><button class="button button--secondary button--sm" data-action="clear-catalog">Filtreleri temizle</button></div></div>
-    <div class="grid grid-3" id="catalog-grid">${state.programs.map(programCard).join("")}</div>
+    ${catalogContent}
   </div>`;
 }
 
@@ -287,10 +403,11 @@ function proposalPage() {
 }
 
 function applicationsPage() {
+  const applications = visibleApplications();
   const actions = `${state.roleId === "learner" ? `<button class="button button--secondary" data-nav="recognition">${icon("upload")} Dış kazanım başvurusu</button>` : ""}${["instructor","externalInstructor"].includes(state.roleId) ? `<button class="button" data-nav="proposal">${icon("plus")} Program önerisi</button>` : ""}`;
   return `<div class="page-container">${pageHeader("Başvuru yönetimi", "Başvurular ve süre takibi", "Program önerileri ile dış kazanım tanınma talepleri aynı denetim izi içinde, farklı kontrol yollarıyla izlenir.", actions)}
     <div class="toolbar"><div class="search">${icon("search")}<label class="sr-only" for="application-search">Kod, başlık veya başvuran ara</label><input id="application-search" type="search" placeholder="Kod, başlık veya başvuran ara" /></div><div class="toolbar-group"><select id="application-status" class="select" aria-label="Durum filtresi"><option value="">Tüm durumlar</option><option value="review">Ön incelemede</option><option value="commission">Komisyon gündeminde</option><option value="revision">Revizyon bekliyor</option><option value="approved">Pilot onaylandı</option></select></div></div>
-    <div class="table-wrap"><table><thead><tr><th>Başvuru</th><th>Tür / Başvuran</th><th>Durum</th><th>30 günlük gösterge</th><th>Pilot analiz</th><th></th></tr></thead><tbody id="application-rows">${state.applications.map(applicationRow).join("")}</tbody></table></div>
+    <div class="table-wrap"><table><caption class="sr-only">${escapeHtml(currentRole().label)} rolünün görebildiği başvurular</caption><thead><tr><th>Başvuru</th><th>Tür / Başvuran</th><th>Durum</th><th>30 günlük gösterge</th><th>Pilot analiz</th><th></th></tr></thead><tbody id="application-rows">${applications.length ? applications.map(applicationRow).join("") : `<tr class="empty-table-row"><td colspan="6"><strong>Bu role ait başvuru bulunamadı</strong><span>Yeni bir taslak oluşturduğunuzda yalnız kendi kaydınız burada görünür.</span></td></tr>`}</tbody></table></div><div class="card empty-state" id="application-filter-empty" hidden><div class="empty-icon">${icon("search")}</div><h3>Filtreyle eşleşen başvuru yok</h3><p>Arama metnini veya durum filtresini değiştirin.</p></div>
     <div class="section">${notice("warning", "Süre göstergesi hakkında", "30 günlük sayaç yalnızca kaynak dosyadaki pilot kuralı görselleştirir. Sürenin başlangıcı, durması ve kurumsal eskalasyon yöntemi ayrıca doğrulanmalıdır.")}</div>
   </div>`;
 }
@@ -309,8 +426,12 @@ function recognitionPage() {
 }
 
 function commissionPage() {
-  const selected = state.applications.find((item) => item.id === state.selectedApplicationId);
-  const application = (selected?.status === "commission" ? selected : null) || state.applications.find((item) => item.status === "commission") || selected || state.applications[0];
+  const scopedApplications = visibleApplications().filter((item) => item.status !== "draft");
+  const selected = scopedApplications.find((item) => item.id === state.selectedApplicationId);
+  const application = (selected?.status === "commission" ? selected : null) || scopedApplications.find((item) => item.status === "commission") || selected || scopedApplications[0];
+  if (!application) {
+    return `<div class="page-container">${pageHeader("Evre 2 • Akademik karar desteği", "Komisyon karar masası", "Seçili demo rolünün görev kapsamında incelenebilir bir başvuru bulunmuyor.")}${notice("warning", "Karar değil, pilot analiz", "Yapay zekâ hiçbir durumda akademik karar vermez; karar yetkili Komisyon ve kuruldadır.")}<div class="card empty-state section"><div class="empty-icon">${icon("file")}</div><h3>İncelenecek başvuru yok</h3><p>Gönderilmiş bir program veya dış kazanım başvurusu oluştuğunda yalnız role açık kayıtlar burada görünür.</p><button class="button button--secondary" data-nav="applications">Başvurulara dön</button></div></div>`;
+  }
   const tabs = [["summary","Özet"],["evidence","Kanıtlar"],["curriculum","Müfredat eşleme"],["history","Karar geçmişi"]];
   const decisionActions = application.status !== "commission"
     ? notice("success", "Karar kaydı kapalı", "Bu başvuru artık Komisyon gündeminde değildir. Geçmiş ve kanıtlar salt-okunur görüntülenebilir.")
@@ -337,26 +458,41 @@ function commissionTab(application, tab) {
 
 function programsPage() {
   const action = ["instructor","externalInstructor"].includes(state.roleId) ? `<button class="button" data-nav="proposal">${icon("plus")} Yeni program öner</button>` : "";
-  return `<div class="page-container">${pageHeader("Program yaşam döngüsü", "Mikro yeterlilik programları", "Taslak, inceleme ve pilot yayımlama durumlarını fakülte, AKTS, yöntem ve öğrenen sayısıyla birlikte izleyin.", action)}<div class="grid grid-3">${state.programs.map(programCard).join("")}</div></div>`;
+  const programs = visiblePrograms();
+  const content = programs.length ? `<div class="grid grid-3">${programs.map(programCard).join("")}</div>` : `<div class="card empty-state"><div class="empty-icon">${icon("layers")}</div><h3>Bu role ait program yok</h3><p>Yeni bir program önerisi gönderildiğinde yaşam döngüsü kaydı burada görünür.</p>${action}</div>`;
+  return `<div class="page-container">${pageHeader("Program yaşam döngüsü", "Mikro yeterlilik programları", "Taslak, inceleme ve pilot yayımlama durumlarını fakülte, AKTS, yöntem ve öğrenen sayısıyla birlikte izleyin.", action)}${content}</div>`;
 }
 
 function assessmentPage() {
   const events = [["09.02","Kimlik adımı","Örnek kimlik kontrolü tamamlandı"],["09.18","Sekme değişimi","Pilot olay kaydı • orta önem"],["09.27","Ortam sesi","Simüle ses eşiği işareti"],["09.41","Gönderim","Değerlendirme kuyruğuna alındı"]];
   const session = state.assessmentSessions.find((item)=>item.id==="ASM-DEMO-LIVE") || state.assessmentSessions[0];
   const score = session?.score ?? 84;
-  return `<div class="page-container">${pageHeader("Evre 3 • Kanıt ve değerlendirme", "Eğitim ve değerlendirme pilotu", "Gerçek kamera, mikrofon, yüz tanıma veya biyometrik veri işlenmez. Olaylar yalnız senaryolaştırılmış metinsel pilot kayıtlarıdır.", `<button class="button" data-action="assessment-run">${icon("check")} Örnek sınavı başlat</button>`)}
+  const startAction = ASSESSMENT_START_ROLES.has(state.roleId) ? `<button class="button" data-action="assessment-run">${icon("check")} Örnek sınavı başlat</button>` : "";
+  const decisionReady = session && ["active", "under_review"].includes(session.status);
+  const decisionAction = canRecordAssessmentDecision(state.roleId) && decisionReady
+    ? `<button class="button button--secondary" data-action="assessment-decision">İnsan değerlendirmesi kaydet</button>`
+    : canRecordAssessmentDecision(state.roleId)
+      ? `<div class="permission-note"><strong>Karar kaydı kapalı</strong><span>Yeni veya insan incelemesindeki bir oturum olduğunda değerlendirici kararı kaydedilebilir.</span></div>`
+      : `<div class="permission-note"><strong>Salt-okunur olay görünümü</strong><span>Nihai insan değerlendirici kararı yalnız eğitici veya Komisyon demo rolü tarafından kaydedilebilir.</span></div>`;
+  return `<div class="page-container">${pageHeader("Evre 3 • Kanıt ve değerlendirme", "Eğitim ve değerlendirme pilotu", "Gerçek kamera, mikrofon, yüz tanıma veya biyometrik veri işlenmez. Olaylar yalnız senaryolaştırılmış metinsel pilot kayıtlarıdır.", startAction)}
     ${notice("risk", "Gözetim simülasyonu", "Bu ekran akademik geçerlilik veya mevzuata tam uyum iddiası taşımaz. Her işaret insan değerlendirici tarafından incelenir; teknoloji tek başına karar vermez.")}
     <div class="grid grid-3 section"><section class="card"><div class="card-header"><div><h2>Örnek değerlendirme oturumu</h2><p>Proje Temelli Öğrenme Tasarımı • Sentetik katılımcı</p></div>${statusBadge(session?.status || "scheduled")}</div><div class="card-body"><div class="grid grid-3">${kpi("Proje puanı",`${score}/100`,"Rubrik tabanlı pilot puan","check")}${kpi("Güvenilirlik","76/100","İnsan incelemesi gerekli","shield")}${kpi("İşaretli olay",session?.events ?? 2,"Karar değildir","alert")}</div><h3 class="section">Rubrik özeti</h3>${[["Problem tanımı",90],["Kanıt kullanımı",82],["Çözüm tasarımı",80]].map(([label,value]) => `<div style="margin-bottom:13px"><div class="progress-labels"><strong>${label}</strong><span>${value}/100</span></div><div class="progress" role="progressbar" aria-label="${label}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${value}"><span style="width:${value}%"></span></div></div>`).join("")}</div></section>
       <section class="card"><div class="card-header"><div><h2>İzin ve kimlik kontrol listesi</h2><p>Tamamı senaryo verisidir.</p></div>${statusBadge("simulated")}</div><div class="card-body"><div class="timeline">${[["Örnek kimlik adımı","Sentetik kullanıcı eşleştirildi"],["Kamera izni","Kapalı — istek yapılmadı"],["Mikrofon izni","Kapalı — istek yapılmadı"],["Veri minimizasyonu","Yalnız metinsel olay etiketi"]].map(([title,body])=>`<div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>${title}</strong><span>${body}</span></div></div>`).join("")}</div></div></section>
-      <section class="card"><div class="card-header"><div><h2>Simüle olay günlüğü</h2><p>Görüntü, ses veya biyometrik şablon saklanmaz.</p></div></div><div class="card-body"><div class="timeline">${events.map(([time,title,body]) => `<div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>${title}</strong><span>${time} • ${body}</span></div></div>`).join("")}</div><button class="button button--secondary" data-action="assessment-decision">İnsan değerlendirmesi kaydet</button></div></section>
+      <section class="card"><div class="card-header"><div><h2>Simüle olay günlüğü</h2><p>Görüntü, ses veya biyometrik şablon saklanmaz.</p></div></div><div class="card-body"><div class="timeline">${events.map(([time,title,body]) => `<div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>${title}</strong><span>${time} • ${body}</span></div></div>`).join("")}</div>${decisionAction}</div></section>
     </div>
   </div>`;
 }
 
 function walletPage() {
+  const credentialContent = state.credentials.length
+    ? state.credentials.map(credentialCard).join("")
+    : `<section class="card empty-state"><div class="empty-icon">${icon("wallet")}</div><h3>Henüz pilot yeterlilik yok</h3><p>Uçtan uca program senaryosu tamamlandığında yapılandırılmış belge burada görünür.</p></section>`;
+  const verifyAction = state.credentials[0]
+    ? `<button class="button button--secondary button--sm" data-action="open-credential" data-code="${state.credentials[0].code}">Doğrulama sayfasını aç</button>`
+    : `<span class="table-subtitle">Doğrulama için önce pilot yeterlilik oluşturulmalıdır.</span>`;
   return `<div class="page-container">${pageHeader("Evre 4 • Yapılandırılmış belge", "Dijital yeterlilik cüzdanı", "Pilot belgeler yalnız bu Preview ortamında doğrulanır; gerçek W3C/Open Badges uygunluk testi, kurumsal imza veya dış cüzdan yayını yapılmaz.", `<button class="button button--secondary" data-action="verify-code">${icon("search")} Kodla doğrula</button>`)}
     <figure class="editorial-figure editorial-figure--wide"><img src="assets/illustrations/digital-wallet.webp" alt="Üniversite kaydı, öğrenen dijital cüzdanı ve doğrulayıcı kurum arasındaki güven zinciri illüstrasyonu" width="960" height="668" loading="lazy" /><figcaption>Taşınabilirlik hedefi, iptal farkındalığı ve Preview içi doğrulama birlikte görünür.</figcaption></figure>
-    <div class="grid grid-2">${state.credentials.map(credentialCard).join("")}<section class="card"><div class="card-header"><div><h2>Kontrollü paylaşım</h2><p>QR yalnız pilot doğrulama rotasına gider.</p></div></div><div class="card-body donut-row">${qrMarkup()}<div><h3>Doğrulanabilir görünüm</h3><p class="page-subtitle">Belge kodu, sağlayan kurum, öğrenme çıktıları, AKTS, TYÇ önerisi, düzenlenme tarihi ve pilot durumu gösterilir.</p><button class="button button--secondary button--sm" data-action="open-credential" data-code="${state.credentials[0]?.code || ""}">Doğrulama sayfasını aç</button></div></div></section></div>
+    <div class="grid grid-2">${credentialContent}<section class="card"><div class="card-header"><div><h2>Kontrollü paylaşım</h2><p>QR yalnız pilot doğrulama rotasına gider.</p></div></div><div class="card-body donut-row">${qrMarkup()}<div><h3>Doğrulanabilir görünüm</h3><p class="page-subtitle">Belge kodu, sağlayan kurum, öğrenme çıktıları, AKTS, TYÇ önerisi, düzenlenme tarihi ve pilot durumu gösterilir.</p>${verifyAction}</div></div></section></div>
     <div class="section">${notice("warning", "EK-1 alanları kurumsal teyide açık", "Kaynaklar asgari alan yapısından söz eder ancak tüm alanları tek tek doğrulamamaktadır. Bu pilot şema resmî alan seti olarak sunulmaz.")}</div>
   </div>`;
 }
@@ -371,7 +507,8 @@ function qrMarkup() {
 }
 
 function integrationsPage() {
-  return `<div class="page-container">${pageHeader("Evre 5 • Kontrollü servis katmanı", "Entegrasyon merkezi", "Bütün bağlantılar simülasyon veya bağlı değil durumundadır. Dry-run, onay kapısı, hata, yeniden deneme ve mutabakat kayıtları gerçek API çağrısı olmadan örneklenir.", `<button class="button button--secondary" data-action="integration-dryrun">${icon("refresh")} Toplu dry-run</button>`)}
+  const bulkAction = INTEGRATION_BULK_ROLES.has(state.roleId) ? `<button class="button button--secondary" data-action="integration-dryrun">${icon("refresh")} Toplu dry-run</button>` : "";
+  return `<div class="page-container">${pageHeader("Evre 5 • Kontrollü servis katmanı", "Entegrasyon merkezi", "Bütün bağlantılar simülasyon veya bağlı değil durumundadır. Dry-run, onay kapısı, hata, yeniden deneme ve mutabakat kayıtları gerçek API çağrısı olmadan örneklenir.", bulkAction)}
     ${notice("success", "Canlı servis çağrısı kapalı", "Tarayıcı izin politikası kamera, mikrofon, konum ve ödeme özelliklerini devre dışı bırakır; bu pilot gerçek kurumsal uç noktalara istek göndermez.")}
     <figure class="editorial-figure editorial-figure--wide"><img src="assets/illustrations/integration-gates.webp" alt="Akademik kaydı doğrudan veri tabanı erişiminden koruyan rol, onay ve servis kapıları illüstrasyonu" width="1400" height="788" loading="lazy" /><figcaption>Servisler aşamalı ve bağlı değil; her geçiş rol, onay, audit ve geri alma kontrolüne tabidir.</figcaption></figure>
     <div class="grid grid-3 section">${state.integrations.map(integrationCard).join("")}</div>
@@ -384,12 +521,16 @@ function integrationCard(item) {
 }
 
 function financePage() {
-  const gross = state.finance.entitlements[0].gross;
+  const entitlement = state.finance.entitlements[0] || null;
+  const gross = entitlement?.gross || 0;
   const withholding = gross * state.finance.parameters.withholding / 100;
+  const entitlementPanel = entitlement
+    ? `<section class="card"><div class="card-header"><div><h2>Hak ediş taslağı</h2><p>${escapeHtml(entitlement.instructor)}</p></div>${statusBadge("draft")}</div><div class="card-body"><dl class="integration-card" style="min-height:0"><div class="integration-head"><dt>Ders kanıtı</dt><dd>${entitlement.evidence}</dd></div><div class="integration-head"><dt>Brüt taslak</dt><dd>${formatCurrency(gross)}</dd></div><div class="integration-head"><dt>Örnek kesinti</dt><dd>−${formatCurrency(withholding)}</dd></div><div class="integration-head"><dt>Net ön izleme</dt><dd><strong>${formatCurrency(gross-withholding)}</strong></dd></div></dl><button class="button button--secondary" data-action="finance-draft">Fatura / bordro taslağı oluştur</button><p class="table-subtitle">${state.finance.invoiceDrafts?.length || 0} sentetik taslak kayıtlı</p></div></section>`
+    : `<section class="card empty-state"><div class="empty-icon">${icon("file")}</div><h3>Hak ediş taslağı yok</h3><p>Ders ve katılım kanıtı olan sentetik bir kayıt oluştuğunda mali ön izleme burada görünür.</p></section>`;
   return `<div class="page-container">${pageHeader("Evre 6 • Mali izlenebilirlik", "Finansal yönetim ve döner sermaye pilotu", "Tahsilat, fatura ve eğitici hak edişleri yalnız sentetik kayıtlarla örneklenir. Oranlar yapılandırılabilir pilot parametreleridir.", `<button class="button" data-action="finance-simulate">${icon("coins")} Tahsilatı simüle et</button>`)}
     ${notice("warning", "Pilot parametre — mali birim doğrulaması gerekir", "Vergi, kesinti ve ödeme kuralları kesin mevzuat veya canlı hesaplama olarak kodlanmamıştır; aşağıdaki değerler yalnız ekran davranışını örnekler.")}
     <div class="grid grid-4 section">${kpi("Simüle brüt tahsilat", formatCurrency(state.finance.transactions.reduce((sum,item)=>sum+item.gross,0)), "Gerçek ödeme alınmadı", "coins")}${kpi("Eşleşen kayıt", state.finance.transactions.filter((item)=>item.status==="matched").length, "Pilot mutabakat", "check")}${kpi("Hak ediş taslağı", formatCurrency(gross), "Mali onay gerekli", "file")}${kpi("Örnek kesinti", formatCurrency(withholding), `%${state.finance.parameters.withholding} pilot parametre`, "chart")}</div>
-    <div class="grid grid-2 section"><section><div class="section-heading"><div><h2>Tahsilat simülasyonları</h2></div></div><div class="table-wrap"><table><caption class="sr-only">Sentetik tahsilat kayıtları</caption><thead><tr><th scope="col">Kayıt</th><th scope="col">Program</th><th scope="col">Tutar</th><th scope="col">Kanal</th><th scope="col">Durum</th></tr></thead><tbody>${state.finance.transactions.map((item)=>`<tr><td><span class="table-title">${item.id}</span><span class="table-subtitle">${escapeHtml(item.learner)}</span></td><td>${escapeHtml(item.program)}</td><td>${formatCurrency(item.gross)}</td><td>${escapeHtml(item.channel)}</td><td>${statusBadge(item.status)}</td></tr>`).join("")}</tbody></table></div></section><section class="card"><div class="card-header"><div><h2>Hak ediş taslağı</h2><p>${escapeHtml(state.finance.entitlements[0].instructor)}</p></div>${statusBadge("draft")}</div><div class="card-body"><dl class="integration-card" style="min-height:0"><div class="integration-head"><dt>Ders kanıtı</dt><dd>${state.finance.entitlements[0].evidence}</dd></div><div class="integration-head"><dt>Brüt taslak</dt><dd>${formatCurrency(gross)}</dd></div><div class="integration-head"><dt>Örnek kesinti</dt><dd>−${formatCurrency(withholding)}</dd></div><div class="integration-head"><dt>Net ön izleme</dt><dd><strong>${formatCurrency(gross-withholding)}</strong></dd></div></dl><button class="button button--secondary" data-action="finance-draft">Fatura / bordro taslağı oluştur</button><p class="table-subtitle">${state.finance.invoiceDrafts?.length || 0} sentetik taslak kayıtlı</p></div></section></div>
+    <div class="grid grid-2 section"><section><div class="section-heading"><div><h2>Tahsilat simülasyonları</h2></div></div><div class="table-wrap"><table><caption class="sr-only">Sentetik tahsilat kayıtları</caption><thead><tr><th scope="col">Kayıt</th><th scope="col">Program</th><th scope="col">Tutar</th><th scope="col">Kanal</th><th scope="col">Durum</th></tr></thead><tbody>${state.finance.transactions.length ? state.finance.transactions.map((item)=>`<tr><td><span class="table-title">${item.id}</span><span class="table-subtitle">${escapeHtml(item.learner)}</span></td><td>${escapeHtml(item.program)}</td><td>${formatCurrency(item.gross)}</td><td>${escapeHtml(item.channel)}</td><td>${statusBadge(item.status)}</td></tr>`).join("") : `<tr><td colspan="5"><div class="table-empty"><strong>Tahsilat simülasyonu yok</strong><span>Gerçek ödeme alınmadan örnek kayıt oluşturabilirsiniz.</span></div></td></tr>`}</tbody></table></div></section>${entitlementPanel}</div>
     <section class="card section"><div class="card-header"><div><h2>Yapılandırılabilir mali pilot parametreleri</h2><p>Değişiklikler yalnız yerel demo durumunu etkiler; mali onay değildir.</p></div></div><form class="card-body form-grid" id="finance-parameters"><div class="field"><label for="finance-withholding">Örnek kesinti (%)</label><input id="finance-withholding" name="withholding" type="number" min="0" max="100" step="0.01" value="${state.finance.parameters.withholding}" /></div><div class="field"><label for="finance-vat">Örnek KDV alanı (%)</label><input id="finance-vat" name="vat" type="number" min="0" max="100" step="0.01" value="${state.finance.parameters.vat}" /></div><div class="field"><label for="finance-stamp">Örnek damga alanı (%)</label><input id="finance-stamp" name="stamp" type="number" min="0" max="100" step="0.001" value="${state.finance.parameters.stamp}" /></div><div class="field"><span class="table-subtitle">Pilot parametre — mali birim doğrulaması gerekir</span><button class="button" type="submit">Parametre taslağını kaydet</button></div></form></section>
   </div>`;
 }
@@ -403,21 +544,46 @@ function reportsPage() {
     <div class="grid grid-4">${kpi("Toplam başvuru",state.applications.length,"Sentetik pilot kayıt","file")}${kpi("Ort. geçen süre","12 gün","30 günlük pilot gösterge","clock")}${kpi("Aktif program",state.programs.filter((item)=>item.status==="active").length,"Katalog simülasyonu","book")}${kpi("Bağlı canlı servis","0","Tüm entegrasyonlar kapalı","network")}</div>
     <div class="grid grid-2 section"><section class="card chart-wrap"><div class="card-header"><div><h2>Başvuru durumu</h2><p>Durum dağılımının erişilebilir metin özeti</p></div></div><div class="card-body donut-row"><div class="donut" role="img" aria-label="Başvuruların yüzde ${activePercent} kadarı aktif incelemede" style="--value:${activePercent}"><strong>%${activePercent}</strong></div><div class="chart-legend">${[["Aktif inceleme",counts[0]+counts[1],"#352b82"],["Revizyon",counts[2],"#b58a43"],["Pilot onay",counts[3],"#167a5b"]].map(([label,value,color])=>`<div class="legend-item"><span><i style="background:${color}"></i>${label}</span><strong>${value}</strong></div>`).join("")}</div></div></section><section class="card chart-wrap"><div class="card-header"><div><h2>Birim bazlı örnek programlar</h2><p>Toplam ${state.programs.length} sentetik program</p></div></div><div class="card-body"><div class="bar-chart" role="img" aria-label="Birim bazlı program sayıları">${units.map(([label,value])=>`<div class="bar" style="--h:${Math.max(22,Math.round(value/maxUnit*88))}%"><strong>${value}</strong><span>${escapeHtml(label)}</span></div>`).join("")}</div></div></section></div>
     <div class="grid grid-2 section"><section class="card"><div class="card-header"><div><h2>Kritik başarı ölçütleri</h2><p>Teknolojiden önce kurumsal karar netliği</p></div></div><div class="card-body"><div class="timeline">${[["Akademik yetki eşlemesi","Rol ve onay sahibi görünür"],["Mahremiyet sınırı","Gerçek kişisel veri yok"],["Entegrasyon hatası","Kontrollü dry-run ve mutabakat"],["Sürdürülebilirlik","Pilot sonrası kaynak kararı"]].map(([a,b])=>`<div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>${a}</strong><span>${b}</span></div></div>`).join("")}</div></div></section><section class="card"><div class="card-header"><div><h2>Pilot kapsamı</h2><p>Önerilen sınırlı doğrulama çerçevesi</p></div></div><div class="card-body"><ul class="page-subtitle"><li>1–2 örnek program ve sınırlı sentetik öğrenen</li><li>Başvuru, karar, belge ve aktarım simülasyonu</li><li>Gerçek ödeme, kimlik, biyometri veya dış servis yok</li><li>Komisyon kararı ve kullanıcı geri bildirimiyle değerlendirme</li></ul></div></section></div>
+    <section class="card section" aria-labelledby="role-matrix-title"><div class="card-header"><div><h2 id="role-matrix-title">9 rol • yetki ve sınır matrisi</h2><p>Her demo rolünün çalışma alanı, kritik eylemi ve açıkça engellenen sınırı</p></div>${statusBadge("simulated", "9/9 rol tanımlı")}</div><div class="table-wrap"><table><caption class="sr-only">Dokuz kontrollü pilot rolünün yetki matrisi</caption><thead><tr><th scope="col">Rol</th><th scope="col">Temel çalışma alanı</th><th scope="col">İzinli kritik eylem</th><th scope="col">Yasak / sınır</th></tr></thead><tbody>${roleCapabilityRows().map(([roleId,area,allowed,boundary])=>`<tr><td><span class="table-title">${escapeHtml(roleLabel(roleId))}</span><span class="table-subtitle">${escapeHtml(roleId)}</span></td><td>${escapeHtml(area)}</td><td>${escapeHtml(allowed)}</td><td>${escapeHtml(boundary)}</td></tr>`).join("")}</tbody></table></div></section>
   </div>`;
 }
 
+function roleCapabilityRows() {
+  return [
+    ["learner", "Katalog, öğrenme, kendi başvurusu ve cüzdan", "Kendi dış kazanım başvurusunu oluşturur; sınav simülasyonunu başlatır", "Başkasının kaydını veya insan değerlendirici kararını değiştiremez"],
+    ["instructor", "Kendi program önerileri ve değerlendirme simülasyonu", "Program taslağı gönderir; insan değerlendirmesi kaydeder", "Başka eğiticinin kaydını ve Komisyon kararını göremez/değiştiremez"],
+    ["externalInstructor", "Kendi dış eğitici program önerileri", "Kendi kimliğiyle öneri ve insan değerlendirmesi oluşturur", "İç eğitici gibi işaretlenmez; Komisyon kararı veremez"],
+    ["coordinator", "Başvuru ön inceleme, program ve süre takibi", "Eksik kanıt için revizyon ister", "Akademik onay veya ret kaydedemez"],
+    ["commission", "Karar masası, değerlendirme ve denetim izi", "Gerekçeli onay/ret/revizyon ve nihai insan değerlendirmesi kaydeder", "Yapay zekâ çıktısını tek başına karar olarak kullanamaz"],
+    ["studentAffairs", "Taslak olmayan dış kazanım, AKTS ve belge alanları", "ÖBİS aktarımını yalnız dry-run olarak inceler", "Özel taslakları veya akademik kararı değiştiremez"],
+    ["it", "Entegrasyon, audit ve sistem sağlığı", "Hata/yeniden deneme simülasyonu üretir", "Gerçek servis çağrısı ve akademik karar yapamaz"],
+    ["finance", "Tahsilat, hak ediş ve mali rapor simülasyonu", "Mali pilot parametre taslağı kaydeder", "Gerçek ödeme/fatura üretemez; oranlar kesin kural değildir"],
+    ["admin", "Teknik gözetim, yapılandırma ve tüm pilot modüller", "Entegrasyon/finans simülasyonlarını ve kayıtları denetler", "Akademik onay, ret veya insan değerlendirici kararı kaydedemez"]
+  ];
+}
+
 function auditPage() {
-  return `<div class="page-container">${pageHeader("İzlenebilirlik", "Pilot denetim izi", "Her kayıt için aktör, rol, önceki/sonraki durum, gerekçe ve zaman damgası tutulur. Bu görünüm 5651 nitelikli değiştirilemez log iddiası taşımaz.", `<button class="button button--secondary" data-action="export-audit">${icon("file")} Sentetik kayıt özeti</button>`)}<div class="table-wrap"><table><thead><tr><th>Zaman</th><th>Varlık</th><th>Aktör / Rol</th><th>Olay</th><th>Durum geçişi</th><th>Gerekçe</th></tr></thead><tbody>${state.audit.map((event)=>`<tr><td>${formatDate(event.at,true)}</td><td><span class="table-title">${escapeHtml(event.entityId)}</span><span class="table-subtitle">${escapeHtml(event.id)}</span></td><td>${escapeHtml(event.actor)}<span class="table-subtitle">${escapeHtml(event.actorRole)}</span></td><td>${escapeHtml(event.action)}</td><td>${escapeHtml(event.from)} → ${escapeHtml(event.to)}</td><td>${escapeHtml(event.reason)}</td></tr>`).join("")}</tbody></table></div></div>`;
+  const events = visibleAuditEvents();
+  const rows = events.length
+    ? events.map((event)=>`<tr><td>${formatDate(event.at,true)}</td><td><span class="table-title">${escapeHtml(event.entityId)}</span><span class="table-subtitle">${escapeHtml(event.id)}</span></td><td>${escapeHtml(event.actor)}<span class="table-subtitle">${escapeHtml(event.actorRole)}</span></td><td>${escapeHtml(event.action)}</td><td>${escapeHtml(event.from)} → ${escapeHtml(event.to)}</td><td>${escapeHtml(event.reason)}</td></tr>`).join("")
+    : `<tr><td colspan="6"><div class="table-empty"><strong>Bu rolün kapsamında denetim kaydı yok</strong><span>İzinli bir pilot işlem yapıldığında yalnız ilgili kayıtlar burada görünür.</span></div></td></tr>`;
+  return `<div class="page-container">${pageHeader("İzlenebilirlik", "Pilot denetim izi", "Her rol yalnız görev kapsamındaki aktör, durum, gerekçe ve zaman damgası kayıtlarını görür. Bu görünüm 5651 nitelikli değiştirilemez log iddiası taşımaz.", `<button class="button button--secondary" data-action="export-audit">${icon("file")} Sentetik kayıt özeti</button>`)}<div class="table-wrap"><table><caption class="sr-only">Seçili demo rolünün görev kapsamındaki pilot denetim kayıtları</caption><thead><tr><th scope="col">Zaman</th><th scope="col">Varlık</th><th scope="col">Aktör / Rol</th><th scope="col">Olay</th><th scope="col">Durum geçişi</th><th scope="col">Gerekçe</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
 }
 
 function notificationsPage() {
-  return `<div class="page-container">${pageHeader("Uygulama içi iletişim", "Bildirimler", "Gerçek SMS veya e-posta gönderilmez. Bütün bildirimler tarayıcıdaki sentetik pilot veri katmanında tutulur.", `<button class="button button--secondary" data-action="mark-notifications">Tümünü okundu işaretle</button>`)}<div class="grid">${state.notifications.map((item)=>`<article class="card"><div class="card-body"><div class="integration-head"><div><h3>${escapeHtml(item.title)}</h3><p class="page-subtitle">${escapeHtml(item.body)}</p><span class="table-subtitle">${escapeHtml(item.time)}</span></div>${item.read ? statusBadge("neutral","Okundu") : statusBadge("review","Yeni")}</div></div></article>`).join("")}</div></div>`;
+  const notifications = visibleNotifications();
+  const content = notifications.length
+    ? notifications.map((item)=>`<article class="card"><div class="card-body"><div class="integration-head"><div><h3>${escapeHtml(item.title)}</h3><p class="page-subtitle">${escapeHtml(item.body)}</p><span class="table-subtitle">${escapeHtml(item.time)}</span></div>${isNotificationRead(item) ? statusBadge("neutral","Okundu") : statusBadge("review","Yeni")}</div></div></article>`).join("")
+    : `<article class="card empty-state"><div class="empty-icon">${icon("bell")}</div><h3>Bu role ait bildirim yok</h3><p>Yeni bir pilot işlem oluştuğunda yalnız ilgili demo rolünün bildirim alanında gösterilir.</p></article>`;
+  return `<div class="page-container">${pageHeader("Uygulama içi iletişim", "Bildirimler", "Gerçek SMS veya e-posta gönderilmez. Yalnız seçili demo rolünün sentetik uygulama içi kayıtları gösterilir.", `<button class="button button--secondary" data-action="mark-notifications">Bu rolün tümünü okundu işaretle</button>`)}<div class="grid">${content}</div></div>`;
 }
 
 function verifyPage(code) {
   const credential = state.credentials.find((item)=>item.code===code);
-  if (!credential) return `<div class="page-container">${pageHeader("Pilot doğrulama", "Doğrulama kaydı bulunamadı", "Bu kodla eşleşen sentetik pilot yeterlilik yoktur.")}<div class="card empty-state"><div class="empty-icon">${icon("search")}</div><h3>Kod eşleşmedi</h3><p>Kodu yeniden girin veya dijital yeterlilik cüzdanına dönün.</p><button class="button" data-action="verify-code">Kodu yeniden gir</button></div></div>`;
-  return `<div class="page-container">${pageHeader("Pilot doğrulama", "Dijital yeterlilik doğrulandı", "Bu sonuç yalnızca kontrollü Preview ortamındaki sentetik kayda dayanır; üretim imzası veya dış cüzdan uygunluğu değildir.", `<button class="button button--secondary" data-nav="wallet">Cüzdana dön</button>`)}${notice("success","Pilot kayıt eşleşti",`${credential.code} kodlu sentetik yeterlilik bu pilot veri katmanında geçerli görünüyor.`)}<div class="grid grid-2 section">${credentialCard(credential)}<section class="card"><div class="card-header"><div><h2>Yapılandırılmış alanlar</h2><p>Kurumsal doğrulamaya açık pilot görünüm</p></div>${statusBadge("valid")}</div><div class="card-body"><dl class="integration-card" style="min-height:0"><div class="integration-head"><dt>Sağlayan kurum</dt><dd>${escapeHtml(credential.issuer)}</dd></div><div class="integration-head"><dt>Öğrenen</dt><dd>${escapeHtml(credential.owner)}</dd></div><div class="integration-head"><dt>Pilot AKTS</dt><dd>${credential.ects}</dd></div><div class="integration-head"><dt>TYÇ düzeyi</dt><dd>${credential.level} • Öneri</dd></div><div class="integration-head"><dt>İmzalama modu</dt><dd>Simülasyon</dd></div><div class="integration-head"><dt>Dış paylaşım</dt><dd>Kapalı</dd></div></dl><h3>Öğrenme çıktıları</h3><ul class="page-subtitle">${credential.outcomes.map((outcome)=>`<li>${escapeHtml(outcome)}</li>`).join("")}</ul></div></section></div></div>`;
+  if (!credential) return `<div class="page-container">${pageHeader("Pilot doğrulama", "Doğrulama kaydı bulunamadı", "Bu kodla eşleşen sentetik pilot yeterlilik yoktur.")}<div class="card empty-state"><div class="empty-icon">${icon("search")}</div><h3>Kod eşleşmedi</h3><p>Pilot belge kodunu kontrol edip yeniden deneyin.</p><button class="button" data-action="verify-code">Kodu yeniden gir</button></div></div>`;
+  const returnPage = isAllowed("wallet") ? "wallet" : "overview";
+  const returnLabel = returnPage === "wallet" ? "Cüzdana dön" : "Genel bakışa dön";
+  return `<div class="page-container">${pageHeader("Pilot doğrulama", "Dijital yeterlilik doğrulandı", "Bu sonuç yalnızca kontrollü Preview ortamındaki sentetik kayda dayanır; üretim imzası veya dış cüzdan uygunluğu değildir.", `<button class="button button--secondary" data-nav="${returnPage}">${returnLabel}</button>`)}${notice("success","Pilot kayıt eşleşti",`${credential.code} kodlu sentetik yeterlilik bu pilot veri katmanında geçerli görünüyor.`)}<div class="grid grid-2 section">${credentialCard(credential)}<section class="card"><div class="card-header"><div><h2>Yapılandırılmış alanlar</h2><p>Kurumsal doğrulamaya açık pilot görünüm</p></div>${statusBadge("valid")}</div><div class="card-body"><dl class="integration-card" style="min-height:0"><div class="integration-head"><dt>Sağlayan kurum</dt><dd>${escapeHtml(credential.issuer)}</dd></div><div class="integration-head"><dt>Öğrenen</dt><dd>${escapeHtml(credential.owner)}</dd></div><div class="integration-head"><dt>Pilot AKTS</dt><dd>${credential.ects}</dd></div><div class="integration-head"><dt>TYÇ düzeyi</dt><dd>${credential.level} • Öneri</dd></div><div class="integration-head"><dt>İmzalama modu</dt><dd>Simülasyon</dd></div><div class="integration-head"><dt>Dış paylaşım</dt><dd>Kapalı</dd></div></dl><h3>Öğrenme çıktıları</h3><ul class="page-subtitle">${credential.outcomes.map((outcome)=>`<li>${escapeHtml(outcome)}</li>`).join("")}</ul></div></section></div></div>`;
 }
 
 function auditTimeline(event) {
@@ -456,8 +622,10 @@ function showDataMode() {
 }
 
 function openProgram(id) {
+  if (!isAllowed("catalog") && !isAllowed("programs")) { deny("Bu rol program ayrıntılarını açamaz."); return; }
   const program = state.programs.find((item)=>item.id===id);
   if (!program) return;
+  if (!visiblePrograms().some((item)=>item.id===program.id)) { deny("Bu program seçili demo rolünün görünür kayıtları arasında değildir."); return; }
   const applyAction = state.roleId === "learner" ? `<button class="button" data-action="apply-program" data-id="${program.id}">Programa pilot kayıt oluştur</button>` : "";
   openModal(modalTemplate(program.title, `<div class="program-meta"><span class="meta-pill">${program.code}</span><span class="meta-pill">${program.ects} AKTS</span><span class="meta-pill">${program.workload} saat</span><span class="meta-pill">TYÇ ${program.level} önerisi</span></div><p class="page-subtitle">${escapeHtml(program.summary)}</p><div class="section"><h3>Öğrenme çıktıları</h3><ul class="page-subtitle">${program.outcomes.map((item)=>`<li>${escapeHtml(item)}</li>`).join("")}</ul></div>${notice("warning","Pilot program", "Bu program gerçek kayıt veya ödeme kabul etmez; durum yalnızca demo akışını örnekler.")}`, `<button class="button button--secondary" data-action="close-modal">Kapat</button>${applyAction}`));
 }
@@ -465,6 +633,7 @@ function openProgram(id) {
 function openApplication(id) {
   const item = state.applications.find((application)=>application.id===id);
   if (!item) return;
+  if (!canViewApplication(item, state.roleId, currentRole().name)) { deny("Bu başvuru başka bir pilot kayıt sahibine aittir veya rol kapsamınız dışındadır."); return; }
   state.selectedApplicationId = item.id;
   saveState();
   openModal(modalTemplate(`${item.code} • Başvuru ayrıntısı`, `<div class="grid grid-2"><article class="card"><div class="card-body"><span class="table-subtitle">Başvuru</span><h3>${escapeHtml(item.title)}</h3><p class="page-subtitle">${escapeHtml(item.applicant)} • ${item.kind === "external" ? "Dış kazanım" : "Program önerisi"}</p>${statusBadge(item.status)}</div></article><article class="card"><div class="card-body"><span class="table-subtitle">30 günlük pilot gösterge</span><h3>${item.elapsedDays}/30 gün</h3><div class="progress"><span style="width:${Math.round(item.elapsedDays/30*100)}%"></span></div><span class="table-subtitle">Hedef: ${formatDate(item.targetAt)}</span></div></article></div><div class="analysis-band"><div class="band"><span>Müfredat benzerliği</span><strong>%${item.similarity}</strong><span>Karar değildir</span></div><div class="band"><span>TYÇ önerisi</span><strong>%${item.tycMatch}</strong><span>Gerekçeli pilot skor</span></div><div class="band"><span>Kanıt</span><strong>${item.evidence}</strong><span>${item.missing} eksik</span></div></div>${notice("warning","İnsan incelemesi gerekir",item.notes)}`, `<button class="button button--secondary" data-action="close-modal">Kapat</button>${["coordinator","commission","admin"].includes(state.roleId) ? `<button class="button" data-action="go-commission">Karar masasında aç</button>` : ""}`));
@@ -472,14 +641,24 @@ function openApplication(id) {
 
 function decisionModal(id, nextStatus) {
   const item = state.applications.find((application)=>application.id===id);
+  if (!item) { deny("Başvuru bulunamadı."); return; }
+  if (!getAllowedApplicationTransitions(item, state.roleId, currentRole().name).includes(nextStatus)) {
+    deny("Seçili demo rolü bu başvuru için istenen durum geçişini oluşturamaz.");
+    return;
+  }
   const labels = { approved: "Pilot onayı", revision: "Revizyon isteği", rejected: "Pilot ret", commission: "Çekimser görüş" };
   openModal(modalTemplate(`${labels[nextStatus]} kaydı`, `<form id="decision-form"><input type="hidden" name="id" value="${item.id}" /><input type="hidden" name="status" value="${nextStatus}" /><div class="field"><label class="required" for="decision-reason">Gerekçe</label><textarea id="decision-reason" name="reason" required minlength="12" placeholder="Kanıtları, akademik değerlendirmeyi ve karar gerekçesini yazın"></textarea><small>Gerekçe audit izine eklenir ve sonradan görünür kalır.</small></div><div class="field" style="margin-top:14px"><label><input type="checkbox" name="confirm" required /> Bu kaydın yalnız kontrollü pilot kararı olduğunu onaylıyorum.</label></div></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "rejected" ? "button--danger" : nextStatus === "approved" ? "button--success" : ""}" data-action="submit-decision">Gerekçeli kaydı oluştur</button>`));
 }
 
 function openIntegration(id) {
+  if (!isAllowed("integrations")) { deny("Bu rol entegrasyon ayrıntılarını açamaz."); return; }
   const item = state.integrations.find((integration)=>integration.id===id);
+  if (!item) { deny("Entegrasyon kaydı bulunamadı."); return; }
   const lastResult = item.status === "failed" ? `,\n  "error": "SIMULATED_TIMEOUT",\n  "retryAvailable": true` : "";
-  openModal(modalTemplate(`${item.name} • Entegrasyon taslağı`, `${notice("warning","Bağlı değil — gerçek veri gönderilmez","Aşağıdaki istek ve yanıt yalnız redakte edilmiş sentetik veri paketi simülasyonudur.")}<div class="grid grid-2 section"><article class="card"><div class="card-body"><h3>Onay kapısı</h3><ul class="page-subtitle"><li>Yetkili rol kontrolü</li><li>Kurumsal servis erişimi</li><li>Redakte veri paketi doğrulaması</li><li>Denetim izi ve geri alma/mutabakat planı</li></ul></div></article><article class="card"><div class="card-body"><h3>Örnek deneme sonucu</h3><pre style="white-space:pre-wrap;font-size:10px;color:#3a4658">{\n  "mode": "simulation",\n  "target": "${item.id}",\n  "attempt": ${item.attempts || 0},\n  "realDataSent": false${lastResult}\n}</pre></div></article></div>`, `<button class="button button--secondary" data-action="close-modal">Kapat</button><button class="button" data-action="simulate-integration" data-id="${item.id}">${item.status === "failed" ? "Yeniden dene" : "Deneme çalıştırması"}</button>`));
+  const operationAction = canOperateIntegration(item.id)
+    ? `<button class="button" data-action="simulate-integration" data-id="${item.id}">${item.status === "failed" ? "Yeniden dene" : "Deneme çalıştırması"}</button>`
+    : "";
+  openModal(modalTemplate(`${item.name} • Entegrasyon taslağı`, `${notice("warning","Bağlı değil — gerçek veri gönderilmez","Aşağıdaki istek ve yanıt yalnız redakte edilmiş sentetik veri paketi simülasyonudur.")}<div class="grid grid-2 section"><article class="card"><div class="card-body"><h3>Onay kapısı</h3><ul class="page-subtitle"><li>Yetkili rol kontrolü</li><li>Kurumsal servis erişimi</li><li>Redakte veri paketi doğrulaması</li><li>Denetim izi ve geri alma/mutabakat planı</li></ul></div></article><article class="card"><div class="card-body"><h3>Örnek deneme sonucu</h3><pre style="white-space:pre-wrap;font-size:10px;color:#3a4658">{\n  "mode": "simulation",\n  "target": "${item.id}",\n  "attempt": ${item.attempts || 0},\n  "realDataSent": false${lastResult}\n}</pre></div></article></div>`, `<button class="button button--secondary" data-action="close-modal">Kapat</button>${operationAction}`));
 }
 
 function verifyCodeModal() {
@@ -488,7 +667,11 @@ function verifyCodeModal() {
 
 document.addEventListener("click", (event) => {
   const nav = event.target.closest("[data-nav]");
-  if (nav) { navigate(nav.dataset.nav); return; }
+  if (nav) {
+    if (!isAllowed(nav.dataset.nav)) deny(`${currentRole().label} rolü bu sayfaya erişemez.`);
+    else navigate(nav.dataset.nav);
+    return;
+  }
   const trigger = event.target.closest("[data-action]");
   if (!trigger) return;
   const { action } = trigger.dataset;
@@ -497,8 +680,8 @@ document.addEventListener("click", (event) => {
   if (action === "close-modal") closeModal();
   if (action === "pilot-info") showPilotInfo();
   if (action === "data-mode") showDataMode();
-  if (action === "demo-login") { state.roleId = "learner"; saveState(); navigate("overview"); toast("Öğrenen demo rolüyle giriş yapıldı."); }
-  if (action === "reset-demo") { state = structuredClone(initialState); saveState(); render(); toast("Sentetik pilot verisi başlangıç durumuna döndürüldü."); }
+  if (action === "demo-login") { saveState(); navigate("overview"); toast(`${currentRole().label} demo paneli açıldı.`); }
+  if (action === "reset-demo") { const selectedRole = state.roleId; state = structuredClone(initialState); state.roleId = selectedRole; saveState(); render(); toast("Sentetik pilot verisi başlangıç durumuna döndürüldü; seçili rol korundu."); }
   if (action === "run-scenario") runNextScenario(trigger.dataset.kind);
   if (action === "open-scenario-result") {
     state.roleId = trigger.dataset.kind === "internal" ? "learner" : "it";
@@ -507,7 +690,10 @@ document.addEventListener("click", (event) => {
   }
   if (action === "open-program") openProgram(trigger.dataset.id);
   if (action === "open-application") openApplication(trigger.dataset.id);
-  if (action === "go-commission") { closeModal(); navigate("commission"); }
+  if (action === "go-commission") {
+    if (!isAllowed("commission")) { deny(`${currentRole().label} rolünün karar masasına erişimi yoktur.`); return; }
+    closeModal(); navigate("commission");
+  }
   if (action === "decision") decisionModal(trigger.dataset.id, trigger.dataset.status);
   if (action === "commission-tab") { currentCommissionTab = trigger.dataset.tab; render(); setTimeout(()=>document.querySelector(`#commission-tab-${currentCommissionTab}`)?.focus(),0); }
   if (action === "submit-decision") document.querySelector("#decision-form")?.requestSubmit();
@@ -528,8 +714,18 @@ document.addEventListener("click", (event) => {
   if (action === "verify-code") verifyCodeModal();
   if (action === "open-credential") navigate("verify", trigger.dataset.code);
   if (action === "submit-verify") submitVerify();
-  if (action === "mark-notifications") { state.notifications.forEach((item)=>item.read=true); saveState(); render(); toast("Tüm uygulama içi bildirimler okundu."); }
-  if (["export-report","export-audit"].includes(action)) toast("Sentetik pilot rapor özeti hazırlandı; bu demo gerçek veri dışa aktarmaz.");
+  if (action === "mark-notifications") {
+    if (!isAllowed("notifications")) { deny("Bu rolün bildirim çalışma alanı yoktur."); return; }
+    visibleNotifications().forEach((item)=>{ if (!item.readBy.includes(state.roleId)) item.readBy.push(state.roleId); }); saveState(); render(); toast("Bu role ait uygulama içi bildirimler okundu.");
+  }
+  if (action === "export-report") {
+    if (!isAllowed("reports")) { deny("Bu rol rapor özeti oluşturamaz."); return; }
+    toast("Sentetik pilot rapor özeti hazırlandı; bu demo gerçek veri dışa aktarmaz.");
+  }
+  if (action === "export-audit") {
+    if (!isAllowed("audit")) { deny("Bu rol denetim izi özeti oluşturamaz."); return; }
+    toast("Sentetik pilot rapor özeti hazırlandı; bu demo gerçek veri dışa aktarmaz.");
+  }
   if (action === "apply-program") enrollProgram(trigger.dataset.id);
   if (action === "refresh-data") refreshRemote(true);
   if (action === "clear-catalog") { document.querySelector("#catalog-search").value=""; document.querySelector("#catalog-level").value=""; filterCatalog(); }
@@ -551,7 +747,15 @@ document.addEventListener("input", (event) => {
 });
 
 roleSelect.addEventListener("change", () => {
+  if (!roles.some((role) => role.id === roleSelect.value)) {
+    state.roleId = initialState.roleId;
+    saveState();
+    render();
+    deny("Geçersiz demo rolü algılandı; güvenli başlangıç rolüne dönüldü.");
+    return;
+  }
   state.roleId = roleSelect.value;
+  state.selectedApplicationId = null;
   saveState();
   navigate("overview");
   toast(`${currentRole().label} demo görünümüne geçildi.`);
@@ -590,9 +794,10 @@ function previewProposal(form) {
 
 function saveProposalDraft(form) {
   if (!form) return;
+  if (!PROPOSAL_ROLES.has(state.roleId)) { deny("Program önerisi yalnız iç veya kurum dışı eğitici rolüyle oluşturulabilir."); return; }
   const data = new FormData(form);
   const title = String(data.get("title") || "Başlıksız program taslağı");
-  const application = createApplication(state, { kind: "internal", status: "draft", title, applicant: currentRole().name, ects: data.get("ects") || 1, remoteRate: data.get("remoteRate") || 0, evidence: data.get("evidence") || 0, comparedCourse: "Kurumsal Bologna kataloğu" });
+  const application = createApplication(state, { kind: "internal", status: "draft", title, applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects") || 1, remoteRate: data.get("remoteRate") || 0, evidence: data.get("evidence") || 0, comparedCourse: "Kurumsal Bologna kataloğu" });
   application.formData = Object.fromEntries(data.entries());
   saveState();
   toast(`${application.code} taslağı tarayıcıdaki izole pilot çalışma alanına kaydedildi.`);
@@ -600,13 +805,15 @@ function saveProposalDraft(form) {
 
 function saveRecognitionDraft(form) {
   if (!form) return;
+  if (state.roleId !== "learner") { deny("Dış kazanım taslağı yalnız öğrenen rolüyle oluşturulabilir."); return; }
   const data = new FormData(form);
-  const application = createApplication(state, { kind: "external", status: "draft", title: data.get("title") || "Başlıksız dış kazanım taslağı", applicant: currentRole().name, provider: data.get("provider"), ects: data.get("ects") || 1, remoteRate: data.get("remoteRate") || 0, evidence: 1, comparedCourse: data.get("comparedCourse") });
+  const application = createApplication(state, { kind: "external", status: "draft", title: data.get("title") || "Başlıksız dış kazanım taslağı", applicant: currentRole().name, actorRole: state.roleId, provider: data.get("provider"), ects: data.get("ects") || 1, remoteRate: data.get("remoteRate") || 0, evidence: 1, comparedCourse: data.get("comparedCourse") });
   saveState();
   toast(`${application.code} dış kazanım taslağı kaydedildi.`);
 }
 
 function enrollProgram(id) {
+  if (state.roleId !== "learner") { deny("Programa pilot kayıt yalnız öğrenen rolüyle oluşturulabilir."); return; }
   const program = state.programs.find((item)=>item.id===id);
   if (!program) return;
   const enrollmentId = `ENR-${program.code}`;
@@ -618,26 +825,33 @@ function enrollProgram(id) {
 }
 
 function runAssessment() {
+  if (!ASSESSMENT_START_ROLES.has(state.roleId)) { deny("Bu rol örnek değerlendirme oturumu başlatamaz."); return; }
   const existing = state.assessmentSessions.find((item)=>item.id==="ASM-DEMO-LIVE");
   if (existing && existing.status === "active") { toast("Örnek değerlendirme zaten devam ediyor.", "error"); return; }
+  const previousStatus = existing?.status || "scheduled";
   const session = existing || { id:"ASM-DEMO-LIVE", enrollmentId:state.enrollments[0]?.id || "ENR-DEMO", title:"Kimlik ve değerlendirme oturumu", status:"active", score:null, evaluatorDecision:null, events:2 };
   if (!existing) state.assessmentSessions.unshift(session); else Object.assign(existing, session, { status:"active", score:null, evaluatorDecision:null });
-  state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:session.id, at:new Date().toISOString(), actor:currentRole().name, actorRole:state.roleId, action:"Örnek değerlendirme başlatıldı", from:"scheduled", to:"active", reason:"Kamera ve mikrofon izinleri kapalı; olaylar yalnız metinsel simülasyon" });
+  state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:session.id, at:new Date().toISOString(), actor:currentRole().name, actorRole:state.roleId, action:"Örnek değerlendirme başlatıldı", from:previousStatus, to:"active", reason:"Kamera ve mikrofon izinleri kapalı; olaylar yalnız metinsel simülasyon" });
   saveState(); render(); toast("Örnek değerlendirme başlatıldı; kamera ve mikrofon erişimi kapalıdır.");
 }
 
 function decideAssessment() {
   const session = state.assessmentSessions.find((item)=>item.id==="ASM-DEMO-LIVE") || state.assessmentSessions[0];
   if (!session) { toast("İncelenecek pilot değerlendirme bulunamadı.", "error"); return; }
-  session.status = "completed"; session.score = session.score || 82; session.evaluatorDecision = "Başarılı • İnsan değerlendirici";
-  state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:session.id, at:new Date().toISOString(), actor:currentRole().name, actorRole:state.roleId, action:"İnsan değerlendirici kararı kaydedildi", from:"under_review", to:"completed", reason:"Simüle olaylar tek başına karar olarak kullanılmadı" });
-  saveState(); render(); toast("İnsan değerlendirici kararı pilot denetim izine kaydedildi.");
+  if (!canRecordAssessmentDecision(state.roleId)) { deny("Bu rol insan değerlendirici kararı kaydedemez."); return; }
+  try {
+    recordAssessmentDecision(state, session.id, state.roleId, { score: session.score || 82, decision: "Başarılı • İnsan değerlendirici", reason: "Simüle olaylar tek başına karar olarak kullanılmadı" }, currentRole().name);
+    saveState(); render(); toast("İnsan değerlendirici kararı pilot denetim izine kaydedildi.");
+  } catch (error) {
+    toast(error.message, "error");
+  }
 }
 
 function submitProposal(form) {
   if (!form.reportValidity()) return;
+  if (!PROPOSAL_ROLES.has(state.roleId)) { deny("Program önerisi yalnız iç veya kurum dışı eğitici rolüyle gönderilebilir."); return; }
   const data = new FormData(form);
-  const application = createApplication(state, { kind: "internal", title: data.get("title"), applicant: currentRole().name, ects: data.get("ects"), remoteRate: data.get("remoteRate"), evidence: data.get("evidence"), comparedCourse: "Kurumsal Bologna kataloğu" });
+  const application = createApplication(state, { kind: "internal", title: data.get("title"), applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects"), remoteRate: data.get("remoteRate"), evidence: data.get("evidence"), comparedCourse: "Kurumsal Bologna kataloğu" });
   application.formData = { audience:data.get("audience"), assessment:data.get("assessment"), qualifications:data.get("qualifications"), quality:data.get("quality"), feeMode:data.get("feeMode"), fee:Number(data.get("fee") || 0) };
   state.programs.unshift({ id:`program-${Date.now()}`, code:application.code, title:data.get("title"), unit:data.get("unit"), instructor:currentRole().name, ects:Number(data.get("ects")), workload:Number(data.get("workload")), level:Number(data.get("level")), mode:Number(data.get("remoteRate")) ? "Karma" : "Yüz yüze", remoteRate:Number(data.get("remoteRate")), status:"review", learners:0, price:Number(data.get("fee") || 0), summary:data.get("summary"), outcomes:String(data.get("outcomes")).split("\n").filter(Boolean) });
   saveState();
@@ -647,8 +861,9 @@ function submitProposal(form) {
 
 function submitRecognition(form) {
   if (!form.reportValidity()) return;
+  if (state.roleId !== "learner") { deny("Dış kazanım başvurusu yalnız öğrenen rolüyle gönderilebilir."); return; }
   const data = new FormData(form);
-  const application = createApplication(state, { kind: "external", title:data.get("title"), applicant:currentRole().name, provider:data.get("provider"), ects:data.get("ects"), remoteRate:data.get("remoteRate"), evidence:2, comparedCourse:data.get("comparedCourse") });
+  const application = createApplication(state, { kind: "external", title:data.get("title"), applicant:currentRole().name, actorRole:state.roleId, provider:data.get("provider"), ects:data.get("ects"), remoteRate:data.get("remoteRate"), evidence:2, comparedCourse:data.get("comparedCourse") });
   saveState();
   toast(`${application.code} dış kazanım başvurusu ön incelemeye gönderildi.`);
   navigate("applications");
@@ -659,9 +874,9 @@ function submitDecision(form) {
   const data = new FormData(form);
   try {
     const nextStatus = data.get("status");
-    const roleCanDecide = state.roleId === "commission" || (state.roleId === "coordinator" && nextStatus === "revision");
-    if (!roleCanDecide) throw new Error("Seçili demo rolü bu akademik kararı kaydedemez");
-    const updated = transitionApplication(state, data.get("id"), nextStatus, state.roleId, data.get("reason"));
+    const application = state.applications.find((item)=>item.id===data.get("id"));
+    if (!getAllowedApplicationTransitions(application, state.roleId, currentRole().name).includes(nextStatus)) throw new Error("Seçili demo rolü bu akademik kararı kaydedemez");
+    const updated = transitionApplication(state, data.get("id"), nextStatus, state.roleId, data.get("reason"), currentRole().name);
     if (nextStatus === "approved") {
       const program = state.programs.find((item)=>item.code===updated.code);
       if (program) program.status = "active";
@@ -679,17 +894,29 @@ function submitVerify() {
 function filterCatalog() {
   const query = document.querySelector("#catalog-search")?.value.toLocaleLowerCase("tr-TR") || "";
   const level = document.querySelector("#catalog-level")?.value || "";
-  document.querySelectorAll("#catalog-grid .program-card").forEach((card)=>{ card.hidden = Boolean((query && !card.dataset.searchable.includes(query)) || (level && card.dataset.programLevel !== level)); });
+  const cards = [...document.querySelectorAll("#catalog-grid .program-card")];
+  cards.forEach((card)=>{ card.hidden = Boolean((query && !card.dataset.searchable.includes(query)) || (level && card.dataset.programLevel !== level)); });
+  const empty = document.querySelector("#catalog-filter-empty");
+  if (empty) empty.hidden = !cards.length || cards.some((card) => !card.hidden);
 }
 
 function filterApplications() {
   const query = document.querySelector("#application-search")?.value.toLocaleLowerCase("tr-TR") || "";
   const status = document.querySelector("#application-status")?.value || "";
-  document.querySelectorAll("#application-rows tr").forEach((row)=>{ row.hidden = Boolean((query && !row.dataset.searchable.includes(query)) || (status && row.dataset.applicationStatus !== status)); });
+  const rows = [...document.querySelectorAll("#application-rows tr")];
+  rows.forEach((row)=>{
+    if (!row.dataset.searchable) { row.hidden = false; return; }
+    row.hidden = Boolean((query && !row.dataset.searchable.includes(query)) || (status && row.dataset.applicationStatus !== status));
+  });
+  const filterableRows = rows.filter((row) => row.dataset.searchable);
+  const empty = document.querySelector("#application-filter-empty");
+  if (empty) empty.hidden = !filterableRows.length || filterableRows.some((row) => !row.hidden);
 }
 
 function simulateIntegration(id) {
+  if (!canOperateIntegration(id)) { deny("Bu rol bu entegrasyon için dry-run kaydı oluşturamaz."); return; }
   const item = state.integrations.find((integration)=>integration.id===id);
+  if (!item) { deny("Entegrasyon kaydı bulunamadı."); return; }
   item.attempts = (item.attempts || 0) + 1;
   const previous = item.status;
   const shouldFail = item.attempts === 1;
@@ -701,11 +928,13 @@ function simulateIntegration(id) {
 }
 
 function simulateAllIntegrations() {
+  if (!INTEGRATION_BULK_ROLES.has(state.roleId)) { deny("Bu rol toplu entegrasyon dry-run çalıştıramaz."); return; }
   state.integrations.forEach((item)=>{ item.status="simulated"; item.attempts=(item.attempts || 0)+1; item.lastTest="Toplu deneme çalıştırması başarılı"; state.integrationJobs.unshift({ id:`JOB-${item.id}-${Date.now()}`, target:item.name, status:"simulation_succeeded", realDataSent:false, at:new Date().toISOString() }); });
   saveState(); render(); toast("7 entegrasyon için yalnız simülasyon logu üretildi.");
 }
 
 function simulateFinance() {
+  if (!FINANCE_OPERATOR_ROLES.has(state.roleId)) { deny("Bu rol tahsilat simülasyonu oluşturamaz."); return; }
   const id = `TX-${String(Date.now()).slice(-4)}`;
   state.finance.transactions.unshift({ id, program:"Dijital Üretimde Veri Okuryazarlığı", learner:"Pilot Katılımcı 030", gross:1500, channel:"Sanal POS simülasyonu", status:"matched" });
   state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:id, at:new Date().toISOString(), actor:currentRole().name, actorRole:state.roleId, action:"Tahsilat simülasyonu eşleştirildi", from:"pending", to:"matched", reason:"Gerçek ödeme veya kart verisi işlenmedi" });
@@ -713,6 +942,7 @@ function simulateFinance() {
 }
 
 function createFinanceDraft() {
+  if (!FINANCE_OPERATOR_ROLES.has(state.roleId)) { deny("Bu rol fatura veya hak ediş taslağı oluşturamaz."); return; }
   state.finance.invoiceDrafts ||= [];
   const draft = { id:`INV-DRAFT-${String(Date.now()).slice(-5)}`, entitlementId:state.finance.entitlements[0].id, status:"draft", realDocument:false, createdAt:new Date().toISOString() };
   state.finance.invoiceDrafts.unshift(draft);
@@ -722,6 +952,7 @@ function createFinanceDraft() {
 
 function saveFinanceParameters(form) {
   if (!form.reportValidity()) return;
+  if (!FINANCE_OPERATOR_ROLES.has(state.roleId)) { deny("Bu rol mali pilot parametrelerini değiştiremez."); return; }
   const data = new FormData(form);
   state.finance.parameters = { withholding:Number(data.get("withholding")), vat:Number(data.get("vat")), stamp:Number(data.get("stamp")) };
   state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:"FIN-PARAM", at:new Date().toISOString(), actor:currentRole().name, actorRole:state.roleId, action:"Mali pilot parametre taslağı güncellendi", from:"draft", to:"draft", reason:"Mali birim doğrulaması gerekir" });

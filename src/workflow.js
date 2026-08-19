@@ -1,4 +1,4 @@
-const allowedTransitions = {
+export const allowedTransitions = {
   draft: ["review"],
   review: ["commission", "revision", "rejected"],
   commission: ["approved", "revision", "rejected", "commission"],
@@ -8,7 +8,7 @@ const allowedTransitions = {
   rejected: []
 };
 
-const transitionPermissions = {
+export const transitionPermissions = {
   review: ["instructor", "externalInstructor", "learner"],
   commission: ["coordinator", "commission"],
   revision: ["coordinator", "commission"],
@@ -16,6 +16,98 @@ const transitionPermissions = {
   rejected: ["commission"],
   credentialed: ["system"]
 };
+
+const applicationOwnerRoles = new Set(["learner", "instructor", "externalInstructor"]);
+const assessmentDecisionRoles = new Set(["instructor", "externalInstructor", "commission"]);
+
+const actorNames = {
+  learner: "Derya Örnek",
+  instructor: "Dr. Öğr. Üyesi Ekin Demir",
+  externalInstructor: "Uzman Eğitici Selin Ada",
+  coordinator: "Murat Akın",
+  commission: "Prof. Dr. Deniz Aydın",
+  studentAffairs: "Öğrenci İşleri Pilot Kullanıcısı",
+  it: "Bilgi İşlem Pilot Kullanıcısı",
+  finance: "Mali İşler Pilot Kullanıcısı",
+  admin: "MYYS Pilot Yöneticisi",
+  system: "MYYS Pilot Analiz / Belge Hizmeti"
+};
+
+/** Returns the synthetic pilot identity for a role. */
+export function actorNameForRole(role) {
+  return actorNames[role] || "Pilot kullanıcı";
+}
+
+/**
+ * Ownership is stricter than a role-only comparison. This prevents two people
+ * with the same instructor role from seeing or mutating each other's records.
+ */
+export function ownsApplication(application, actorRole, actorName) {
+  if (!application || !applicationOwnerRoles.has(actorRole) || application.ownerRole !== actorRole) return false;
+  const effectiveActorName = actorName || actorNameForRole(actorRole);
+  return Boolean(application.applicant && application.applicant === effectiveActorName);
+}
+
+/**
+ * Role-scoped application read policy.
+ * Applicants see only their own records. Coordinator and commission can see
+ * submitted records, but never private drafts. Admin has technical oversight
+ * visibility without receiving academic decision authority.
+ */
+export function canViewApplication(application, actorRole, actorName) {
+  if (!application) return false;
+  if (applicationOwnerRoles.has(actorRole)) return ownsApplication(application, actorRole, actorName);
+  if (["coordinator", "commission"].includes(actorRole)) return application.status !== "draft";
+  if (actorRole === "studentAffairs") return application.kind === "external" && application.status !== "draft";
+  if (actorRole === "admin") return true;
+  return false;
+}
+
+export function filterApplicationsForRole(applications, actorRole, actorName) {
+  return (applications || []).filter((application) => canViewApplication(application, actorRole, actorName));
+}
+
+// Semantically named alias for callers that render a role-scoped collection.
+export function visibleApplicationsForRole(stateOrApplications, actorRole, actorName) {
+  const applications = Array.isArray(stateOrApplications)
+    ? stateOrApplications
+    : stateOrApplications?.applications || [];
+  return filterApplicationsForRole(applications, actorRole, actorName);
+}
+
+/**
+ * Returns the program collection visible to the active pilot persona.
+ * Accepts either the whole state object or a program array for testability.
+ */
+export function visibleProgramsForRole(stateOrPrograms, actorRole, actorName) {
+  const programs = Array.isArray(stateOrPrograms) ? stateOrPrograms : stateOrPrograms?.programs || [];
+  const effectiveActorName = actorName || actorNameForRole(actorRole);
+  if (["instructor", "externalInstructor"].includes(actorRole)) {
+    return programs.filter((program) => program.instructor === effectiveActorName);
+  }
+  if (["coordinator", "commission", "admin"].includes(actorRole)) return [...programs];
+  if (["learner", "studentAffairs"].includes(actorRole)) return programs.filter((program) => program.status === "active");
+  if (actorRole === "finance") return programs.filter((program) => program.status === "active" && Number(program.price) > 0);
+  return [];
+}
+
+/** Pure transition-policy helper for UI affordances and mutation guards. */
+export function getAllowedApplicationTransitions(application, actorRole, actorName) {
+  if (!application) return [];
+  return (allowedTransitions[application.status] || []).filter((nextStatus) => {
+    if (!(transitionPermissions[nextStatus] || []).includes(actorRole)) return false;
+    if (nextStatus === "review") return ownsApplication(application, actorRole, actorName);
+    // A same-state commission transition represents an abstention/opinion and
+    // belongs to a commission member, not to the coordinator.
+    if (application.status === "commission" && nextStatus === "commission") return actorRole === "commission";
+    if (actorRole === "system") return nextStatus === "credentialed";
+    return canViewApplication(application, actorRole, actorName);
+  });
+}
+
+export function canRecordAssessmentDecision(actorRole) {
+  return assessmentDecisionRoles.has(actorRole);
+}
 
 export const scenarioDefinitions = {
   internal: [
@@ -48,7 +140,7 @@ export function cloneState(value) {
   return structuredClone(value);
 }
 
-export function transitionApplication(state, applicationId, nextStatus, actorRole, reason) {
+export function transitionApplication(state, applicationId, nextStatus, actorRole, reason, actorName) {
   const application = state.applications.find((item) => item.id === applicationId);
   if (!application) throw new Error("Başvuru bulunamadı");
   const current = application.status;
@@ -58,22 +150,25 @@ export function transitionApplication(state, applicationId, nextStatus, actorRol
   if (!(transitionPermissions[nextStatus] || []).includes(actorRole)) {
     throw new Error(`${actorRole} rolü ${nextStatus} durumuna geçiş yapamaz`);
   }
+  if (!getAllowedApplicationTransitions(application, actorRole, actorName).includes(nextStatus)) {
+    if (nextStatus === "review") throw new Error("Başvuruyu yalnızca kayıt sahibi ön incelemeye gönderebilir");
+    throw new Error(`${actorRole} rolü bu başvuru üzerinde ${nextStatus} geçişi yapamaz`);
+  }
+  if (!String(reason || "").trim()) {
+    throw new Error("Akademik durum geçişi için gerekçe zorunludur");
+  }
   application.status = nextStatus;
   application.notes = reason || application.notes;
-  const actor = {
-    commission: "Prof. Dr. Deniz Aydın",
-    coordinator: "Murat Akın",
-    learner: "Derya Örnek",
-    instructor: "Dr. Öğr. Üyesi Ekin Demir",
-    admin: "MYYS Pilot Yöneticisi"
-  }[actorRole] || "Pilot kullanıcı";
+  const actor = actorName || actorNameForRole(actorRole);
   state.audit.unshift({
     id: `AUD-${Date.now()}`,
     entityId: application.id,
     at: new Date().toISOString(),
     actor,
     actorRole,
-    action: statusAction(nextStatus),
+    action: current === "commission" && nextStatus === "commission"
+      ? "Çekimser komisyon görüşü eklendi"
+      : statusAction(nextStatus),
     from: current,
     to: nextStatus,
     reason: reason || "Pilot durum geçişi"
@@ -81,7 +176,12 @@ export function transitionApplication(state, applicationId, nextStatus, actorRol
   return application;
 }
 
-export function issueCredential(state, payload) {
+export function issueCredential(state, payload, actorRole = "system") {
+  if (actorRole !== "system") throw new Error("Pilot dijital yeterliliği yalnız sistem belge hizmeti oluşturabilir");
+  const sourceApplication = state.applications.find((item) => item.id === payload.sourceApplicationId);
+  if (!sourceApplication || sourceApplication.status !== "approved") {
+    throw new Error("Pilot yeterlilik için gerekçeli onaylı kaynak başvuru gerekir");
+  }
   if (state.credentials.some((item) => item.code === payload.code)) throw new Error("Bu kodla pilot yeterlilik zaten var");
   const credential = {
     id: `credential-${Date.now()}`,
@@ -93,6 +193,7 @@ export function issueCredential(state, payload) {
     level: Number(payload.level),
     issuedAt: new Date().toISOString().slice(0, 10),
     status: "valid",
+    sourceApplicationId: sourceApplication.id,
     verifyPath: `#/verify/${payload.code}`,
     outcomes: payload.outcomes || ["Pilot öğrenme çıktıları kurumsal doğrulamaya açıktır"]
   };
@@ -112,6 +213,11 @@ export function issueCredential(state, payload) {
 }
 
 export function createApplication(state, payload) {
+  const requestedStatus = payload.status || "review";
+  if (!["draft", "review"].includes(requestedStatus)) {
+    throw new Error("Yeni başvuru yalnız taslak veya ön inceleme durumunda oluşturulabilir");
+  }
+  const ownerRole = resolveApplicationOwnerRole(payload);
   const id = `APP-${String(state.applications.length + 50).padStart(3, "0")}`;
   const codePrefix = payload.kind === "external" ? "MY-BSV" : "MY-PRG";
   const application = {
@@ -120,9 +226,9 @@ export function createApplication(state, payload) {
     kind: payload.kind,
     title: payload.title,
     applicant: payload.applicant,
-    ownerRole: payload.kind === "external" ? "learner" : "instructor",
+    ownerRole,
     provider: payload.provider || undefined,
-    status: payload.status || "review",
+    status: requestedStatus,
     submittedAt: new Date().toISOString(),
     targetAt: new Date(Date.now() + 30 * 86400000).toISOString(),
     elapsedDays: 0,
@@ -149,6 +255,50 @@ export function createApplication(state, payload) {
     reason: application.status === "draft" ? "Tarayıcıdaki izole pilot çalışma alanına kaydedildi" : "Form doğrulaması tamamlandı"
   });
   return application;
+}
+
+/**
+ * Finalizes a simulated assessment through an explicit authorization boundary.
+ * The nine-role pilot has no separate evaluator persona. Academic educators
+ * may record a human evaluation, while the commission can record the result
+ * when it is acting as the designated review body. Learners and operational
+ * roles are always denied.
+ */
+export function recordAssessmentDecision(state, sessionId, actorRole, decision = {}, actorName) {
+  if (!canRecordAssessmentDecision(actorRole)) {
+    throw new Error(`${actorRole} rolü insan değerlendirici kararı kaydedemez`);
+  }
+  const session = state.assessmentSessions.find((item) => item.id === sessionId);
+  if (!session) throw new Error("Değerlendirme oturumu bulunamadı");
+  if (!["active", "under_review"].includes(session.status)) {
+    throw new Error("Yalnız etkin veya insan incelemesindeki oturum sonuçlandırılabilir");
+  }
+
+  const details = typeof decision === "string" ? { evaluatorDecision: decision } : decision || {};
+  const score = details.score === undefined || details.score === null || details.score === ""
+    ? session.score
+    : Number(details.score);
+  if (score !== null && score !== undefined && (!Number.isFinite(score) || score < 0 || score > 100)) {
+    throw new Error("Değerlendirme puanı 0 ile 100 arasında olmalıdır");
+  }
+
+  const previousStatus = session.status;
+  session.status = "completed";
+  session.score = score ?? null;
+  session.evaluatorDecision = details.evaluatorDecision || details.decision || "İnsan değerlendirici incelemesi tamamlandı";
+  const now = new Date().toISOString();
+  state.audit.unshift({
+    id: `AUD-${Date.now()}`,
+    entityId: session.id,
+    at: now,
+    actor: actorName || actorNameForRole(actorRole),
+    actorRole,
+    action: "İnsan değerlendirici kararı kaydedildi",
+    from: previousStatus,
+    to: "completed",
+    reason: details.reason || "Simüle olaylar tek başına karar olarak kullanılmadı"
+  });
+  return session;
 }
 
 export function runScenarioStep(state, kind) {
@@ -194,7 +344,7 @@ export function runScenarioStep(state, kind) {
     }
     if (index === 10) {
       const code = `MY-BEL-SCN-${String(Date.now()).slice(-6)}`;
-      const credential = issueCredential(state, { code, title: application.title, owner: "Derya Örnek", ects: application.ects, level: 6, outcomes: ["Dijital kanıtı yapılandırır", "Rubrik ölçütlerini eşler", "Denetim izini yorumlar"] });
+      const credential = issueCredential(state, { sourceApplicationId: application.id, code, title: application.title, owner: "Derya Örnek", ects: application.ects, level: 6, outcomes: ["Dijital kanıtı yapılandırır", "Rubrik ölçütlerini eşler", "Denetim izini yorumlar"] }, "system");
       application.status = "credentialed";
       scenario.credentialCode = credential.code;
     }
@@ -228,15 +378,26 @@ export function runScenarioStep(state, kind) {
 }
 
 function scenarioActor(role) {
-  return {
-    instructor: "Dr. Öğr. Üyesi Ekin Demir",
-    learner: "Derya Örnek",
-    coordinator: "Murat Akın",
-    commission: "Prof. Dr. Deniz Aydın",
-    studentAffairs: "Öğrenci İşleri Pilot Kullanıcısı",
-    it: "Bilgi İşlem Pilot Kullanıcısı",
-    system: "MYYS Pilot Analiz / Belge Hizmeti"
-  }[role] || "Pilot kullanıcı";
+  return actorNameForRole(role);
+}
+
+function resolveApplicationOwnerRole(payload) {
+  const explicitRole = payload.ownerRole || payload.actorRole;
+  const inferredRole = payload.applicant === actorNameForRole("externalInstructor")
+    ? "externalInstructor"
+    : payload.kind === "external"
+      ? "learner"
+      : "instructor";
+  const ownerRole = explicitRole || inferredRole;
+
+  if (!applicationOwnerRoles.has(ownerRole)) throw new Error(`${ownerRole} rolü başvuru sahibi olamaz`);
+  if (payload.kind === "external" && ownerRole !== "learner") {
+    throw new Error("Dış kazanım tanıma başvurusu yalnız öğrenen adına oluşturulabilir");
+  }
+  if (payload.kind !== "external" && !["instructor", "externalInstructor"].includes(ownerRole)) {
+    throw new Error("Program önerisi yalnız iç veya kurum dışı eğitici adına oluşturulabilir");
+  }
+  return ownerRole;
 }
 
 function statusAction(status) {

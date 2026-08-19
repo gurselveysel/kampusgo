@@ -10,7 +10,8 @@
     "start": "next start",
     "build": "node scripts/build-public.mjs && next build",
     "build:static": "node scripts/build-static.mjs",
-    "test": "node scripts/test.mjs && node scripts/validate.mjs"
+    "test": "node scripts/test.mjs && node scripts/validate.mjs",
+    "test:browser": "node scripts/browser-qa.cjs"
   },
   "engines": {
     "node": ">=22"

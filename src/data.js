@@ -52,7 +52,7 @@ export const lifecycle = [
 ];
 
 export const initialState = {
-  version: 4,
+  version: 6,
   roleId: "learner",
   activePage: "home",
   mobileNavOpen: false,
@@ -223,9 +223,10 @@ export const initialState = {
     ]
   },
   notifications: [
-    { id: "N-1", title: "Komisyon gündemi güncellendi", body: "MY-PRG-2026-014 başvurusu 21 Ağustos pilot toplantısına eklendi.", time: "Bugün • 09.20", read: false },
-    { id: "N-2", title: "Ek belge gerekiyor", body: "MY-BSV-2026-0042 için sağlayıcı doğrulama kanıtı bekleniyor.", time: "Dün • 16.45", read: false },
-    { id: "N-3", title: "Aktarım simülasyonu planlandı", body: "ÖBİS dry-run senaryosu için onay kapısı kontrol listesi hazırlandı.", time: "17.08.2026", read: true }
+    { id: "N-1", title: "Komisyon gündemi güncellendi", body: "MY-PRG-2026-014 başvurusu 21 Ağustos pilot toplantısına eklendi.", time: "Bugün • 09.20", recipientRoles: ["coordinator", "commission"], readBy: [] },
+    { id: "N-2", title: "Ek belge gerekiyor", body: "MY-BSV-2026-0042 için sağlayıcı doğrulama kanıtı bekleniyor.", time: "Dün • 16.45", recipientRoles: ["learner", "coordinator", "commission"], readBy: [] },
+    { id: "N-3", title: "Aktarım simülasyonu planlandı", body: "ÖBİS dry-run senaryosu için onay kapısı kontrol listesi hazırlandı.", time: "17.08.2026", recipientRoles: ["coordinator", "commission"], readBy: ["coordinator", "commission"] },
+    { id: "N-4", title: "Program kanıt kontrol listesi hazır", body: "Yeni program önerilerinde eğitici yeterliliği ve kalite güvence kanıtı alanlarını tamamlayın.", time: "16.08.2026", recipientRoles: ["instructor", "externalInstructor"], readBy: [] }
   ],
   audit: [
     { id: "AUD-1007", entityId: "APP-014", at: "2026-08-19T08:42:00Z", actor: "Murat Akın", actorRole: "coordinator", action: "Ön kontrol tamamlandı", from: "review", to: "commission", reason: "Zorunlu pilot kanıtların tamamı mevcut" },

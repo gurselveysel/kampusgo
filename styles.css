@@ -37,6 +37,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; background: var(--paper); }
 body { margin: 0; min-width: 320px; background: var(--paper); color: var(--text); line-height: 1.55; }
 button, input, select, textarea { font: inherit; }
@@ -350,6 +351,15 @@ tbody tr:hover td { background: #fbfaf8; }
 .empty-icon svg { width: 28px; height: 28px; }
 .empty-state h3 { margin-bottom: 7px; }
 .empty-state p { max-width: 420px; font-size: 12px; }
+.empty-inline { display: grid; gap: 5px; min-height: 150px; place-content: center; color: var(--muted); text-align: center; }
+.empty-inline strong { color: var(--navy); }
+.empty-inline span { font-size: 12px; }
+.empty-table-row td { padding: 42px 20px; color: var(--muted); text-align: center; }
+.empty-table-row strong, .empty-table-row span { display: block; }
+.empty-table-row strong { margin-bottom: 6px; color: var(--navy); }
+.empty-table-row span { font-size: 12px; }
+.permission-note { display: grid; gap: 4px; margin-top: 16px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--paper); color: var(--muted); font-size: 11px; line-height: 1.45; }
+.permission-note strong { color: var(--navy); font-size: 12px; }
 
 .modal-backdrop { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 20px; background: rgba(10, 23, 41, .58); backdrop-filter: blur(4px); }
 .modal-backdrop[hidden] { display: none; }

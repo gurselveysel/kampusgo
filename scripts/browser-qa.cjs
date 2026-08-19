@@ -1,8 +1,11 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { spawn } = require("node:child_process");
 const { chromium } = require(path.join(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES, "playwright"));
 
-const baseURL = process.env.QA_BASE_URL || "http://127.0.0.1:4173";
+const qaPort = Number(process.env.QA_PORT || 4173);
+const suppliedBaseURL = process.env.QA_BASE_URL;
+const baseURL = suppliedBaseURL || `http://127.0.0.1:${qaPort}`;
 const viewports = [
   { name: "desktop-1440", width: 1440, height: 1000 },
   { name: "desktop-1024", width: 1024, height: 900 },
@@ -10,53 +13,396 @@ const viewports = [
   { name: "mobile-390", width: 390, height: 844 }
 ];
 
+const roleRoutes = {
+  learner: ["catalog", "Mikro yeterlilik programları"],
+  instructor: ["proposal", "Yeni mikro yeterlilik programı önerisi"],
+  externalInstructor: ["proposal", "Yeni mikro yeterlilik programı önerisi"],
+  coordinator: ["commission", "Komisyon karar masası"],
+  commission: ["audit", "Pilot denetim izi"],
+  studentAffairs: ["wallet", "Dijital yeterlilik cüzdanı"],
+  it: ["integrations", "Entegrasyon merkezi"],
+  finance: ["finance", "Finansal yönetim ve döner sermaye pilotu"],
+  admin: ["reports", "Pilot performans ve risk göstergeleri"]
+};
+
+const applicationExpectations = {
+  learner: ["MY-BSV-2026-0042"],
+  instructor: ["MY-PRG-2026-014"],
+  externalInstructor: [],
+  coordinator: ["MY-PRG-2026-014", "MY-BSV-2026-0042", "MY-PRG-2026-009"],
+  commission: ["MY-PRG-2026-014", "MY-BSV-2026-0042", "MY-PRG-2026-009"],
+  studentAffairs: ["MY-BSV-2026-0042"],
+  admin: ["MY-PRG-2026-014", "MY-BSV-2026-0042", "MY-PRG-2026-009"]
+};
+
+function sleep(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function endpointReady(url) {
+  try {
+    const response = await fetch(url, { redirect: "manual" });
+    return response.status >= 200 && response.status < 500;
+  } catch {
+    return false;
+  }
+}
+
+async function ensureServer() {
+  if (suppliedBaseURL || await endpointReady(baseURL)) return null;
+  const child = spawn(process.execPath, ["server.mjs"], {
+    cwd: process.cwd(),
+    env: { ...process.env, PORT: String(qaPort) },
+    stdio: ["ignore", "pipe", "pipe"]
+  });
+  let output = "";
+  child.stdout.on("data", (chunk) => { output += String(chunk); });
+  child.stderr.on("data", (chunk) => { output += String(chunk); });
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    if (await endpointReady(baseURL)) return child;
+    if (child.exitCode !== null) throw new Error(`QA sunucusu başlatılamadı: ${output.trim()}`);
+    await sleep(100);
+  }
+  child.kill("SIGTERM");
+  throw new Error(`QA sunucusu 5 saniye içinde hazır olmadı: ${output.trim()}`);
+}
+
+async function setHash(page, route) {
+  await page.evaluate((value) => { window.location.hash = `#/${value}`; }, route);
+  await page.waitForFunction((value) => window.location.hash === `#/${value}`, route, { timeout: 3000 });
+}
+
+async function waitForRole(page, role) {
+  await page.waitForFunction(({ id, label, name }) => {
+    const select = document.querySelector("#role-select");
+    const persona = document.querySelector("#persona-card")?.innerText || "";
+    const heading = document.querySelector("#main-content h1")?.textContent || "";
+    return select?.value === id && persona.includes(label) && persona.includes(name) && heading.includes(`${label} genel bakışı`);
+  }, role, { timeout: 3000 });
+}
+
+async function visibleNavTargets(page) {
+  return page.locator("[data-nav]").evaluateAll((nodes) => nodes
+    .filter((node) => {
+      const style = getComputedStyle(node);
+      return !node.hidden && !node.disabled && style.display !== "none" && style.visibility !== "hidden";
+    })
+    .map((node) => node.dataset.nav));
+}
+
+async function assertNoOverflow(page, label, errors) {
+  const overflow = await page.evaluate(() => ({
+    document: document.documentElement.scrollWidth - window.innerWidth,
+    body: document.body.scrollWidth - window.innerWidth
+  }));
+  if (overflow.document > 1 || overflow.body > 1) {
+    errors.push(`${label}: yatay taşma document=${overflow.document}px body=${overflow.body}px`);
+  }
+  return overflow;
+}
+
+async function assertImagesLoaded(page, label, errors) {
+  const failures = await page.locator("#main-content img").evaluateAll(async (images) => {
+    await Promise.all(images.map((image) => image.decode().catch(() => undefined)));
+    return images.filter((image) => !image.complete || image.naturalWidth === 0).map((image) => image.src);
+  });
+  if (failures.length) errors.push(`${label}: kırık görsel: ${failures.join(",")}`);
+}
+
+function check(condition, message, errors) {
+  if (!condition) errors.push(message);
+}
+
+async function verifyRoleMatrix(page, roles, roleNavigation, viewport, errors) {
+  for (const role of roles) {
+    // The hash deliberately remains #/overview between selections. This catches the
+    // regression where a same-hash role switch updated the select but not the UI.
+    await setHash(page, "overview");
+    await page.selectOption("#role-select", role.id);
+    try {
+      await waitForRole(page, role);
+    } catch {
+      errors.push(`${viewport.name}/${role.id}: aynı rotada rol değişimi persona/H1 görünümünü anlık yenilemedi`);
+      continue;
+    }
+
+    const actualNav = await page.locator("#side-nav [data-nav]").evaluateAll((nodes) => nodes.map((node) => node.dataset.nav));
+    const expectedNav = ["home", ...roleNavigation[role.id]];
+    check(JSON.stringify(actualNav) === JSON.stringify(expectedNav), `${viewport.name}/${role.id}: menü beklenen role ait değil (${actualNav.join(",")})`, errors);
+
+    const notificationButton = page.locator('.site-header [data-nav="notifications"]');
+    const notificationAllowed = roleNavigation[role.id].includes("notifications");
+    const notificationVisible = await notificationButton.isVisible();
+    const notificationDisabled = await notificationButton.isDisabled();
+    check(notificationAllowed ? notificationVisible && !notificationDisabled : !notificationVisible && notificationDisabled,
+      `${viewport.name}/${role.id}: bildirim CTA yetkisi menü matrisiyle uyuşmuyor`, errors);
+
+    const allowedTargets = new Set(["home", "verify", ...roleNavigation[role.id]]);
+    const targets = await visibleNavTargets(page);
+    const unauthorizedTargets = targets.filter((target) => !allowedTargets.has(target));
+    check(unauthorizedTargets.length === 0, `${viewport.name}/${role.id}: yetkisiz görünür CTA: ${unauthorizedTargets.join(",")}`, errors);
+    await assertNoOverflow(page, `${viewport.name}/${role.id}/overview`, errors);
+
+    await setHash(page, "home");
+    await page.waitForSelector("#hero-title");
+    const catalogCTAVisible = await page.locator('.hero-actions [data-nav="catalog"]').isVisible().catch(() => false);
+    check(catalogCTAVisible === (role.id === "learner"), `${viewport.name}/${role.id}: ana sayfa katalog CTA görünürlüğü hatalı`, errors);
+    const homeUnauthorizedTargets = (await visibleNavTargets(page)).filter((target) => !allowedTargets.has(target));
+    check(homeUnauthorizedTargets.length === 0, `${viewport.name}/${role.id}: ana sayfada yetkisiz CTA: ${homeUnauthorizedTargets.join(",")}`, errors);
+
+    const [route, heading] = roleRoutes[role.id];
+    await setHash(page, route);
+    try {
+      await page.waitForFunction((expected) => document.querySelector("#main-content h1")?.textContent?.includes(expected), heading, { timeout: 3000 });
+    } catch {
+      errors.push(`${viewport.name}/${role.id}: ayırt edici ${route} rotası doğru içeriği açmadı`);
+    }
+    const routeText = await page.locator("#main-content").innerText();
+    check(!routeText.includes("Bu bölüm seçili demo rolüne açık değil"), `${viewport.name}/${role.id}: izinli ${route} rotası yetkisiz göründü`, errors);
+    await assertNoOverflow(page, `${viewport.name}/${role.id}/${route}`, errors);
+    await assertImagesLoaded(page, `${viewport.name}/${role.id}/${route}`, errors);
+
+    if (Object.hasOwn(applicationExpectations, role.id)) {
+      await setHash(page, "applications");
+      await page.waitForSelector("#main-content h1");
+      const applicationText = await page.locator("#main-content").innerText();
+      const expectedCodes = applicationExpectations[role.id];
+      const allCodes = ["MY-PRG-2026-014", "MY-BSV-2026-0042", "MY-PRG-2026-009"];
+      for (const code of allCodes) {
+        check(applicationText.includes(code) === expectedCodes.includes(code), `${viewport.name}/${role.id}: ${code} kayıt görünürlüğü hatalı`, errors);
+      }
+      await assertNoOverflow(page, `${viewport.name}/${role.id}/applications`, errors);
+    }
+
+    if (roleNavigation[role.id].includes("assessment")) {
+      await setHash(page, "assessment");
+      await page.waitForSelector("#main-content h1");
+      const decisionButton = page.locator('[data-action="assessment-decision"]');
+      check((await decisionButton.count()) === 0, `${viewport.name}/${role.id}: tamamlanmış oturumda başarısız karar CTA'sı görünür`, errors);
+      await assertNoOverflow(page, `${viewport.name}/${role.id}/assessment`, errors);
+    }
+  }
+}
+
+async function verifyAssessmentActions(page, errors) {
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "learner");
+  await setHash(page, "assessment");
+  check(await page.locator('[data-action="assessment-decision"]').count() === 0, "learner: tamamlanmış oturumda değerlendirme kararı görünür", errors);
+  await page.locator('[data-action="assessment-run"]').click();
+  check(await page.locator('[data-action="assessment-decision"]').count() === 0, "learner: etkin oturumda değerlendirici kararı görünür", errors);
+
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "instructor");
+  await setHash(page, "assessment");
+  check(await page.locator('[data-action="assessment-decision"]').count() === 1, "instructor: etkin oturumda değerlendirici kararı yok", errors);
+  await page.locator('[data-action="assessment-decision"]').click();
+  check(await page.locator('[data-action="assessment-decision"]').count() === 0, "instructor: tamamlanan karardan sonra CTA kapanmadı", errors);
+  const instructorAudit = await page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    return saved.audit.find((event) => event.entityId === "ASM-DEMO-LIVE" && event.action === "İnsan değerlendirici kararı kaydedildi");
+  });
+  check(instructorAudit?.actorRole === "instructor", "instructor: değerlendirici kararı doğru rolle audit izine yazılmadı", errors);
+
+  await page.locator('[data-action="assessment-run"]').click();
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "externalInstructor");
+  await setHash(page, "assessment");
+  check(await page.locator('[data-action="assessment-decision"]').count() === 1, "externalInstructor: etkin oturumda değerlendirici kararı yok", errors);
+
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "commission");
+  await setHash(page, "assessment");
+  check(await page.locator('[data-action="assessment-decision"]').count() === 1, "commission: etkin oturumda değerlendirici kararı yok", errors);
+}
+
+async function verifyExternalInstructorProposal(page, errors) {
+  const title = "Kurum Dışı Eğitici Tarayıcı Test Programı";
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "externalInstructor");
+  await setHash(page, "proposal");
+  await page.fill("#proposal-title", title);
+  await page.fill("#proposal-summary", "Kurum dışı eğitici sahipliği ve pilot audit zinciri için sentetik program özeti.");
+  await page.fill("#proposal-outcomes", "Kanıt zincirini yapılandırır\nPilot rubrik sonuçlarını yorumlar");
+  await page.fill("#proposal-qualifications", "Sentetik alan uzmanlığı ve öğretim deneyimi kanıtları");
+  await page.fill("#proposal-quality", "Rubrik kalibrasyonu ve insan geri bildirimi pilot planı");
+  await page.locator('#proposal-form button[type="submit"]').click();
+  await page.waitForFunction((expected) => document.querySelector("#main-content")?.innerText.includes(expected), title, { timeout: 3000 });
+  const ownership = await page.evaluate((expected) => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const application = saved.applications.find((item) => item.title === expected);
+    const audit = saved.audit.find((event) => event.entityId === application?.id);
+    return { ownerRole: application?.ownerRole, applicant: application?.applicant, auditRole: audit?.actorRole };
+  }, title);
+  check(ownership.ownerRole === "externalInstructor", "externalInstructor: UI gönderimi ownerRole kimliğini kaybetti", errors);
+  check(ownership.applicant === "Uzman Eğitici Selin Ada", "externalInstructor: UI gönderimi demo persona adını kaybetti", errors);
+  check(ownership.auditRole === "externalInstructor", "externalInstructor: UI gönderimi audit rolünü kaybetti", errors);
+
+  await setHash(page, "overview");
+  await page.locator('[data-action="reset-demo"]').click();
+}
+
+async function verifyScenarioActions(page, scenarioDefinitions, errors) {
+  await setHash(page, "scenarios");
+  await page.locator('[data-action="reset-demo"]').click();
+  for (const [kind, steps] of Object.entries(scenarioDefinitions)) {
+    for (let index = 0; index < steps.length; index += 1) {
+      await page.locator(`[data-action="run-scenario"][data-kind="${kind}"]`).click();
+      await page.waitForFunction(({ scenarioKind, expectedStep }) => {
+        const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+        return saved.scenarios?.[scenarioKind]?.step === expectedStep;
+      }, { scenarioKind: kind, expectedStep: index + 1 }, { timeout: 3000 });
+    }
+    check(await page.locator(`[data-action="run-scenario"][data-kind="${kind}"]`).count() === 0, `${kind}: tamamlanan senaryoda sonraki-adım CTA kaldı`, errors);
+  }
+  const scenarioState = await page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    return {
+      internal: saved.scenarios.internal.completed,
+      recognition: saved.scenarios.recognition.completed,
+      credentials: saved.credentials.filter((item) => item.code.startsWith("MY-BEL-SCN-")).length,
+      safeTransfers: saved.integrationJobs.filter((item) => ["ÖBİS", "YÖKSİS"].includes(item.target) && item.realDataSent === false).length
+    };
+  });
+  check(scenarioState.internal && scenarioState.recognition, "iki uçtan uca senaryo tarayıcı veri katmanında tamamlanmadı", errors);
+  check(scenarioState.credentials >= 1, "senaryo 1 tarayıcıda pilot yeterlilik üretmedi", errors);
+  check(scenarioState.safeTransfers >= 2, "senaryo 2 güvenli aktarım loglarını üretmedi", errors);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="admin"]');
+  check(await page.locator('[data-action="run-scenario"]').count() === 0, "yenileme sonrası senaryo tamamlanma durumu korunmadı", errors);
+}
+
+async function verifyDecisionActions(page, errors) {
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "coordinator");
+  await setHash(page, "commission");
+  check(await page.locator('[data-action="decision"][data-status="revision"]').count() === 1, "coordinator: revizyon eylemi yok", errors);
+  check(await page.locator('[data-action="decision"][data-status="approved"], [data-action="decision"][data-status="rejected"]').count() === 0, "coordinator: onay/ret eylemi görünür", errors);
+
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "commission");
+  await setHash(page, "commission");
+  check(await page.locator('[data-action="decision"]').count() === 4, "commission: dört gerekçeli karar eylemi görünmüyor", errors);
+  await page.locator('[data-action="decision"][data-status="approved"]').click();
+  check(await page.locator("#decision-form").count() === 1, "commission: karar modalı açılmadı", errors);
+  await page.locator('[data-action="close-modal"]').first().click();
+
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "admin");
+  await setHash(page, "commission");
+  check(await page.locator('[data-action="decision"]').count() === 0, "admin: akademik karar eylemi görünür", errors);
+  check((await page.locator("#main-content").innerText()).includes("Salt-okunur"), "admin: salt-okunur karar açıklaması yok", errors);
+}
+
+async function verifyPersistenceAndStateGuard(page, roles, errors) {
+  const external = roles.find((role) => role.id === "externalInstructor");
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", external.id);
+  await waitForRole(page, external);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="admin"]');
+  try {
+    await waitForRole(page, external);
+  } catch {
+    errors.push("reload: seçilen externalInstructor rolü/paneli localStorage üzerinden korunmadı");
+  }
+
+  await page.evaluate(() => {
+    const key = "kdpu-myys-pilot-v3";
+    const saved = JSON.parse(localStorage.getItem(key));
+    saved.roleId = "intruder-role";
+    localStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="admin"]');
+  check(await page.locator("#role-select").inputValue() === "learner", "bozuk/kayıtsız rol kimliği güvenli varsayılana dönmedi", errors);
+}
+
+async function verifyUnauthorizedRoute(page, errors) {
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "learner");
+  await setHash(page, "finance");
+  const text = await page.locator("#main-content").innerText();
+  check(text.includes("Bu bölüm seçili demo rolüne açık değil"), "learner: finance doğrudan rotası engellenmedi", errors);
+  check(!text.includes("Tahsilatı simüle et"), "learner: yetkisiz finans eylemi sızdı", errors);
+}
+
 (async () => {
   fs.mkdirSync("test-results", { recursive: true });
-  const browser = await chromium.launch({ headless: true });
+  const { roles, roleNavigation } = await import(path.join(process.cwd(), "src/data.js"));
+  const { scenarioDefinitions } = await import(path.join(process.cwd(), "src/workflow.js"));
+  let server = null;
+  let browser = null;
   const results = [];
   try {
+    server = await ensureServer();
+    browser = await chromium.launch({ headless: true });
     for (const viewport of viewports) {
-      const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, reducedMotion: "reduce" });
+      const context = await browser.newContext({
+        viewport: { width: viewport.width, height: viewport.height },
+        reducedMotion: "reduce"
+      });
       const page = await context.newPage();
       const errors = [];
       page.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
       page.on("console", (message) => { if (message.type() === "error") errors.push(`console: ${message.text()}`); });
-      await page.goto(baseURL, { waitUntil: "domcontentloaded" });
-      await page.waitForSelector("#hero-title", { timeout: 8000 });
-      await page.waitForTimeout(500);
-      const homeContent = await page.locator("body").innerText();
-      if (!homeContent.includes("Kısa öğrenmeleri")) throw new Error(`${viewport.name}: hero metni yok`);
-      const imageFailures = await page.evaluate(() => [...document.images].filter((image) => !image.complete || image.naturalWidth === 0).map((image) => image.src));
-      if (imageFailures.length) errors.push(`broken-images: ${imageFailures.join(",")}`);
-      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-      if (overflow > 1) errors.push(`horizontal-overflow:${overflow}px`);
-      await page.screenshot({ path: `test-results/${viewport.name}-home.png`, fullPage: true });
+      try {
+        const response = await page.goto(baseURL, { waitUntil: "load" });
+        check(Boolean(response?.ok()), `${viewport.name}: HTTP yükleme başarısız (${response?.status() ?? "yanıt yok"})`, errors);
+        await page.waitForSelector('#role-select option[value="admin"]', { timeout: 10000 });
+        const homeContent = await page.locator("body").innerText();
+        check(homeContent.includes("Kısa öğrenmeleri"), `${viewport.name}: hero metni yok`, errors);
+        check(homeContent.includes("KONTROLLÜ PİLOT"), `${viewport.name}: pilot uyarısı yok`, errors);
+        if (suppliedBaseURL) {
+          const finalURL = new URL(page.url());
+          check(finalURL.pathname === "/pilot.html", `${viewport.name}: Preview kökü /pilot.html uygulamasına ulaşmadı (${finalURL.pathname})`, errors);
+          check(!/vercel\.com\/login|vercel\.com\/sso-api/.test(page.url()), `${viewport.name}: Preview Vercel giriş duvarına yönlendi`, errors);
+          check(!homeContent.includes("Vercel'e giriş yapın"), `${viewport.name}: paylaşılabilir Preview yerine Vercel giriş ekranı açıldı`, errors);
+        }
+        const imageFailures = await page.evaluate(() => [...document.images]
+          .filter((image) => !image.complete || image.naturalWidth === 0)
+          .map((image) => image.src));
+        if (imageFailures.length) errors.push(`${viewport.name}: kırık görsel: ${imageFailures.join(",")}`);
 
-      await page.selectOption("#role-select", "commission");
-      await page.waitForURL(/#\/overview/);
-      await page.locator('[data-nav="commission"]').click();
-      await page.waitForURL(/#\/commission/);
-      await page.waitForSelector("text=Karar değil, pilot analiz");
-      await page.screenshot({ path: `test-results/${viewport.name}-commission.png`, fullPage: true });
-      const panelOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-      if (panelOverflow > 1) errors.push(`commission-overflow:${panelOverflow}px`);
-
-      if (viewport.width >= 768) {
-        await page.locator('[data-action="decision"][data-status="revision"]').click();
-        await page.fill("#decision-reason", "Öğrenme çıktısı ve rubrik eşlemesinin pilot revizyonu gereklidir.");
-        await page.check('#decision-form input[name="confirm"]');
-        await page.locator('[data-action="submit-decision"]').click();
-        await page.waitForSelector("text=Gerekçeli komisyon pilot kaydı", { timeout: 4000 }).catch(() => {});
+        await verifyRoleMatrix(page, roles, roleNavigation, viewport, errors);
+        if (viewport.width === 1440) {
+          await verifyExternalInstructorProposal(page, errors);
+          await verifyAssessmentActions(page, errors);
+          await verifyDecisionActions(page, errors);
+          await verifyPersistenceAndStateGuard(page, roles, errors);
+          await verifyUnauthorizedRoute(page, errors);
+          await verifyScenarioActions(page, scenarioDefinitions, errors);
+        }
+        if (viewport.width === 390) {
+          await setHash(page, "overview");
+          await page.locator('[data-action="toggle-nav"]').click();
+          check(await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü açılmadı", errors);
+          await page.locator('[data-action="close-nav"]').click();
+          check(!await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü kapanmadı", errors);
+        }
+        await page.screenshot({ path: `test-results/${viewport.name}-nine-role-qa.png`, fullPage: true });
+      } catch (error) {
+        errors.push(`${viewport.name}: kritik QA hatası: ${error.stack || error.message}`);
       }
-
-      results.push({ viewport: viewport.name, overflow, errors });
+      results.push({ viewport: viewport.name, rolesChecked: roles.length, errors });
       await context.close();
     }
   } finally {
-    await browser.close();
+    if (browser) await browser.close();
+    if (server) server.kill("SIGTERM");
   }
 
   const failed = results.filter((result) => result.errors.length);
-  console.log(JSON.stringify(results, null, 2));
-  if (failed.length) process.exitCode = 1;
-})();
+  const report = { checkedAt: new Date().toISOString(), baseURL, results };
+  fs.writeFileSync("test-results/nine-role-qa.json", `${JSON.stringify(report, null, 2)}\n`);
+  console.log(JSON.stringify(report, null, 2));
+  if (failed.length) {
+    console.error(`Dokuz rol tarayıcı QA başarısız: ${failed.reduce((sum, result) => sum + result.errors.length, 0)} bulgu.`);
+    process.exitCode = 1;
+  } else {
+    console.log("Dokuz rol tarayıcı QA başarılı: 9/9 rol, dört viewport, erişim, sahiplik, kalıcılık ve CTA kontrolleri geçti.");
+  }
+})().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

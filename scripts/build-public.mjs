@@ -9,6 +9,7 @@ mkdirSync(output, { recursive: true });
 
 const files = [
   ["index.html", "pilot.html"],
+  ["qa-responsive.html", "qa-responsive.html"],
   ["styles.css", "styles.css"],
   ["src/app.js", "src/app.js"],
   ["src/data.js", "src/data.js"],
