@@ -45,33 +45,97 @@ function loadState() {
 
 function isValidSavedState(saved) {
   const roleIds = new Set(roles.map((role) => role.id));
+  const auditRoleIds = new Set([...roleIds, "system"]);
   const applicationStatuses = new Set(["draft", "review", "commission", "revision", "approved", "rejected", "credentialed"]);
+  const programStatuses = new Set([...applicationStatuses, "active"]);
+  const assessmentStatuses = new Set(["scheduled", "active", "under_review", "completed"]);
   const ownerRoles = new Set(["learner", "instructor", "externalInstructor"]);
   const arrayKeys = [
     "applications", "programs", "credentials", "integrations", "notifications", "audit",
     "enrollments", "assessmentSessions", "recognizedCredits", "integrationJobs"
   ];
+  const isObject = (value) => Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  const isText = (value) => typeof value === "string" && value.trim().length > 0;
+  const isNumber = (value, min = 0, max = Number.POSITIVE_INFINITY) => Number.isFinite(value) && value >= min && value <= max;
+  const isDate = (value) => isText(value) && Number.isFinite(Date.parse(value));
+  const isScenario = (item, kind) => isObject(item) &&
+    Number.isInteger(item.step) && item.step >= 0 && item.step <= scenarioDefinitions[kind].length &&
+    typeof item.completed === "boolean" &&
+    (item.applicationId === null || item.applicationId === undefined || isText(item.applicationId)) &&
+    Array.isArray(item.log) && item.log.every((entry) => isObject(entry) && Number.isInteger(entry.index) && auditRoleIds.has(entry.role) && isText(entry.label) && isDate(entry.at));
+  const isApplication = (item) => isObject(item) &&
+    ["id", "code", "title", "applicant", "submittedAt", "targetAt", "comparedCourse", "notes"].every((key) => isText(item[key])) &&
+    isDate(item.submittedAt) && isDate(item.targetAt) &&
+    ["internal", "external"].includes(item.kind) && ownerRoles.has(item.ownerRole) &&
+    (item.kind === "external" ? item.ownerRole === "learner" : ["instructor", "externalInstructor"].includes(item.ownerRole)) &&
+    applicationStatuses.has(item.status) &&
+    isNumber(item.elapsedDays) && isNumber(item.similarity, 0, 100) && isNumber(item.tycMatch, 0, 100) &&
+    isNumber(item.ects, 0.01) && isNumber(item.remoteRate, 0, 100) && isNumber(item.evidence) && isNumber(item.missing) &&
+    (item.portfolioRemoteShare === undefined || isNumber(item.portfolioRemoteShare, 0, 100));
+  const isProgram = (item) => isObject(item) &&
+    ["id", "code", "title", "unit", "instructor", "mode", "summary"].every((key) => isText(item[key])) &&
+    programStatuses.has(item.status) && isNumber(item.ects, 0.01) && isNumber(item.workload) &&
+    isNumber(item.level, 1, 8) && isNumber(item.remoteRate, 0, 100) && isNumber(item.learners) && isNumber(item.price) &&
+    Array.isArray(item.outcomes) && item.outcomes.every(isText);
+  const isCredential = (item) => isObject(item) &&
+    ["id", "code", "title", "owner", "issuer", "issuedAt", "status", "verifyPath"].every((key) => isText(item[key])) &&
+    isDate(item.issuedAt) && isNumber(item.ects, 0.01) && isNumber(item.level, 1, 8) &&
+    Array.isArray(item.outcomes) && item.outcomes.every(isText);
+  const isEnrollment = (item) => isObject(item) &&
+    ["id", "programCode", "title", "learner", "status"].every((key) => isText(item[key])) &&
+    isNumber(item.progress, 0, 100) && isNumber(item.ects, 0.01) && isNumber(item.remoteEcts);
+  const isAssessment = (item) => isObject(item) &&
+    ["id", "enrollmentId", "title"].every((key) => isText(item[key])) && assessmentStatuses.has(item.status) &&
+    (item.score === null || item.score === undefined || isNumber(item.score, 0, 100)) &&
+    (item.evaluatorDecision === null || item.evaluatorDecision === undefined || isText(item.evaluatorDecision)) && isNumber(item.events);
+  const isRecognizedCredit = (item) => isObject(item) &&
+    ["id", "applicationId", "title", "status"].every((key) => isText(item[key])) &&
+    isNumber(item.ects, 0.01) && isNumber(item.remoteEcts);
+  const isFinanceRecord = (item, kind) => {
+    if (!isObject(item) || !isText(item.id)) return false;
+    if (kind === "transaction") return ["program", "learner", "channel", "status"].every((key) => isText(item[key])) && isNumber(item.gross);
+    if (kind === "entitlement") return ["instructor", "evidence", "status"].every((key) => isText(item[key])) && isNumber(item.hours) && isNumber(item.gross);
+    return isText(item.entitlementId) && isText(item.status) && isDate(item.createdAt) && item.realDocument === false;
+  };
+  const selectedApplicationIsValid = (applications) => saved.selectedApplicationId === null ||
+    saved.selectedApplicationId === undefined ||
+    (isText(saved.selectedApplicationId) && applications.some((item) => item.id === saved.selectedApplicationId));
   return Boolean(
-    saved &&
-    typeof saved === "object" &&
+    isObject(saved) &&
     saved.version === initialState.version &&
     roleIds.has(saved.roleId) &&
+    isText(saved.activePage) && typeof saved.mobileNavOpen === "boolean" && isText(saved.dataMode) &&
     arrayKeys.every((key) => Array.isArray(saved[key])) &&
-    saved.scenarios && typeof saved.scenarios === "object" &&
-    saved.scenarios.internal && saved.scenarios.recognition &&
-    saved.applications.every((item) => item && typeof item.id === "string" && ownerRoles.has(item.ownerRole) && applicationStatuses.has(item.status)) &&
-    saved.integrations.every((item) => item && typeof item.id === "string" && item.realDataEnabled !== true && !item.secret) &&
-    saved.integrationJobs.every((item) => item && item.realDataSent !== true) &&
-    saved.notifications.every((item) => item && Array.isArray(item.recipientRoles) && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy)) &&
-    saved.finance && typeof saved.finance === "object" &&
+    isObject(saved.scenarios) && isScenario(saved.scenarios.internal, "internal") && isScenario(saved.scenarios.recognition, "recognition") &&
+    saved.applications.every(isApplication) && selectedApplicationIsValid(saved.applications) &&
+    saved.programs.every(isProgram) && saved.credentials.every(isCredential) && saved.enrollments.every(isEnrollment) &&
+    saved.assessmentSessions.every(isAssessment) && saved.recognizedCredits.every(isRecognizedCredit) &&
+    saved.integrations.every((item) => isObject(item) && ["id", "name", "owner", "status", "lastTest"].every((key) => isText(item[key])) && isNumber(item.stage, 0, 5) && (item.attempts === undefined || isNumber(item.attempts)) && item.realDataEnabled !== true && !item.secret) &&
+    saved.integrationJobs.every((item) => isObject(item) && ["id", "target", "status", "at"].every((key) => isText(item[key])) && isDate(item.at) && item.realDataSent === false) &&
+    saved.notifications.every((item) => isObject(item) && ["id", "title", "body", "time"].every((key) => isText(item[key])) && Array.isArray(item.recipientRoles) && item.recipientRoles.length > 0 && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy) && item.readBy.every((role) => roleIds.has(role) && item.recipientRoles.includes(role))) &&
+    saved.audit.every((item) => isObject(item) && ["id", "entityId", "at", "actor", "action", "from", "to", "reason"].every((key) => isText(item[key])) && isDate(item.at) && auditRoleIds.has(item.actorRole)) &&
+    isObject(saved.finance) &&
     Array.isArray(saved.finance.transactions) &&
     Array.isArray(saved.finance.entitlements) &&
-    saved.finance.parameters && typeof saved.finance.parameters === "object"
+    saved.finance.transactions.every((item) => isFinanceRecord(item, "transaction")) &&
+    saved.finance.entitlements.every((item) => isFinanceRecord(item, "entitlement")) &&
+    (saved.finance.invoiceDrafts === undefined || (Array.isArray(saved.finance.invoiceDrafts) && saved.finance.invoiceDrafts.every((item) => isFinanceRecord(item, "invoice")))) &&
+    isObject(saved.finance.parameters) && ["withholding", "vat", "stamp"].every((key) => isNumber(saved.finance.parameters[key], 0, 100)) &&
+    (saved.remoteSnapshot === null || saved.remoteSnapshot === undefined || (isObject(saved.remoteSnapshot) && ["programs", "applications", "credentials", "integrations"].every((key) => isNumber(saved.remoteSnapshot[key])) && isDate(saved.remoteSnapshot.checkedAt)))
   );
 }
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function canCommitAsyncRefresh() {
+  try {
+    const persisted = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return isValidSavedState(persisted) && persisted.roleId === state.roleId;
+  } catch {
+    return false;
+  }
 }
 
 function escapeHtml(value = "") {
@@ -390,13 +454,16 @@ function programCard(program) {
 }
 
 function proposalPage() {
+  const role = currentRole();
+  const submitLabel = state.roleId === "externalInstructor" ? "Kurum dışı eğitici olarak koordinatörlüğe ilet" : "Koordinatörlüğe ilet";
   return `<div class="page-container">${pageHeader("Başvuru • Evre 1", "Yeni mikro yeterlilik programı önerisi", "Zorunlu alanları tamamlayın; bu form yalnızca tarayıcınızdaki pilot veri katmanına sentetik kayıt oluşturur.")}
+    ${notice("success", "Başvuru sahibi demo kimliği", `${role.name} • ${role.label}. Gönderim bu rol ve kişi adına sahiplik ile denetim kaydı oluşturur.`)}
     <div class="form-shell"><aside class="card steps" aria-label="Form adımları"><div class="step active"><span>1</span><div><strong>Program bilgileri</strong><small>Ad, birim, hedef kitle</small></div></div><div class="step"><span>2</span><div><strong>Akademik yapı</strong><small>Çıktı, AKTS, TYÇ</small></div></div><div class="step"><span>3</span><div><strong>Değerlendirme</strong><small>Kanıt ve rubrik</small></div></div><div class="step"><span>4</span><div><strong>Önizleme</strong><small>Pilot kontrol ve gönderim</small></div></div></aside>
       <form class="card form-card" id="proposal-form">
         <section class="form-section"><h3>Program kimliği</h3><p>Başvuru, seçili demo rolü adına oluşturulur.</p><div class="form-grid"><div class="field full"><label class="required" for="proposal-title">Program adı</label><input id="proposal-title" name="title" required minlength="8" placeholder="Örn. Dijital Üretimde Veri Okuryazarlığı" /></div><div class="field"><label for="proposal-unit">Akademik birim</label><select id="proposal-unit" name="unit"><option>Mühendislik Fakültesi</option><option>Eğitim Fakültesi</option><option>Lisansüstü Eğitim Enstitüsü</option><option>Sürekli Eğitim Merkezi</option></select></div><div class="field"><label for="proposal-audience">Hedef kitle</label><input id="proposal-audience" name="audience" value="Lisans öğrencileri ve yeni mezunlar" /></div><div class="field full"><label class="required" for="proposal-summary">Program özeti</label><textarea id="proposal-summary" name="summary" required minlength="20" placeholder="Programın amacı ve kapsamı"></textarea></div></div></section>
         <section class="form-section"><h3>Akademik yapı ve pilot parametreler</h3><p>1 AKTS = 25 saat, TYÇ düzeyi ve oranlar yalnız pilot ön kontrolüdür; kurumsal doğrulama gerekir.</p><div class="form-grid"><div class="field"><label class="required" for="proposal-ects">Önerilen AKTS</label><input id="proposal-ects" name="ects" type="number" min="1" max="12" value="3" required /></div><div class="field"><label for="proposal-workload">Kavramsal iş yükü</label><input id="proposal-workload" name="workload" type="number" value="75" readonly /><small>AKTS × 25 saat pilot hesabı</small></div><div class="field"><label for="proposal-level">Önerilen TYÇ düzeyi</label><select id="proposal-level" name="level"><option value="5">5 • Önlisans</option><option value="6" selected>6 • Lisans</option><option value="7">7 • Yüksek lisans</option><option value="8">8 • Doktora</option></select></div><div class="field"><label for="proposal-remote">Uzaktan sunum oranı (%)</label><input id="proposal-remote" name="remoteRate" type="number" min="0" max="100" value="40" /></div><div class="field full"><label class="required" for="proposal-outcomes">Öğrenme çıktıları</label><textarea id="proposal-outcomes" name="outcomes" required minlength="20" placeholder="Her satıra bir ölçülebilir öğrenme çıktısı yazın"></textarea></div></div></section>
         <section class="form-section"><h3>Ölçme, kanıt ve kalite güvencesi</h3><p>Gerçek kimlik veya biyometrik veri yüklemeyin. Dosya alanı yalnız üst veri simülasyonudur.</p><div class="form-grid"><div class="field"><label for="proposal-assessment">Birincil değerlendirme</label><select id="proposal-assessment" name="assessment"><option>Proje + rubrik</option><option>Portfolyo + sözlü sunum</option><option>Uygulama + kısa sınav</option></select></div><div class="field"><label for="proposal-evidence">Pilot kanıt sayısı</label><input id="proposal-evidence" name="evidence" type="number" min="1" value="3" /></div><div class="field full"><label class="required" for="proposal-qualifications">Eğitici yeterlilikleri</label><textarea id="proposal-qualifications" name="qualifications" required minlength="15" placeholder="Alan uzmanlığı, öğretim deneyimi ve doğrulanacak kanıtlar"></textarea></div><div class="field full"><label class="required" for="proposal-quality">Kalite güvence planı</label><textarea id="proposal-quality" name="quality" required minlength="15" placeholder="Rubrik kalibrasyonu, geri bildirim ve kanıt saklama yaklaşımı"></textarea></div><div class="field"><label for="proposal-fee-mode">Program türü</label><select id="proposal-fee-mode" name="feeMode"><option>Ücretsiz</option><option>Ücretli • Pilot taslak</option></select></div><div class="field"><label for="proposal-fee">Örnek ücret (TL)</label><input id="proposal-fee" name="fee" type="number" min="0" value="0" /><small>Pilot parametre — mali birim doğrulaması gerekir</small></div><button class="dropzone full" type="button" data-action="mock-upload">${icon("upload")}<strong>Sentetik kanıt üst verisi ekle</strong><span>PDF, PNG veya JPG • Dosya içeriği aktarılmaz</span></button></div></section>
-        <div class="form-actions"><button class="button button--secondary" type="button" data-action="save-draft">Taslağı kaydet</button><button class="button button--secondary" type="button" data-action="preview-proposal">Ön izle</button><button class="button" type="submit">Koordinatörlüğe ilet ${icon("arrow")}</button></div>
+        <div class="form-actions"><button class="button button--secondary" type="button" data-action="save-draft">Taslağı kaydet</button><button class="button button--secondary" type="button" data-action="preview-proposal">Ön izle</button><button class="button" type="submit">${submitLabel} ${icon("arrow")}</button></div>
       </form>
     </div>
   </div>`;
@@ -943,8 +1010,10 @@ function simulateFinance() {
 
 function createFinanceDraft() {
   if (!FINANCE_OPERATOR_ROLES.has(state.roleId)) { deny("Bu rol fatura veya hak ediş taslağı oluşturamaz."); return; }
+  const entitlement = state.finance.entitlements[0];
+  if (!entitlement) { deny("Fatura veya hak ediş taslağı için önce kanıtlı bir sentetik hak ediş kaydı gerekir."); return; }
   state.finance.invoiceDrafts ||= [];
-  const draft = { id:`INV-DRAFT-${String(Date.now()).slice(-5)}`, entitlementId:state.finance.entitlements[0].id, status:"draft", realDocument:false, createdAt:new Date().toISOString() };
+  const draft = { id:`INV-DRAFT-${String(Date.now()).slice(-5)}`, entitlementId:entitlement.id, status:"draft", realDocument:false, createdAt:new Date().toISOString() };
   state.finance.invoiceDrafts.unshift(draft);
   state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:draft.id, at:draft.createdAt, actor:currentRole().name, actorRole:state.roleId, action:"Fatura / hak ediş taslağı oluşturuldu", from:"none", to:"draft", reason:"Gerçek mali belge üretilmedi; mali birim doğrulaması gerekir" });
   saveState(); render(); toast("Fatura / hak ediş taslağı kaydedildi. Gerçek mali belge üretilmedi.");
@@ -954,13 +1023,21 @@ function saveFinanceParameters(form) {
   if (!form.reportValidity()) return;
   if (!FINANCE_OPERATOR_ROLES.has(state.roleId)) { deny("Bu rol mali pilot parametrelerini değiştiremez."); return; }
   const data = new FormData(form);
-  state.finance.parameters = { withholding:Number(data.get("withholding")), vat:Number(data.get("vat")), stamp:Number(data.get("stamp")) };
+  const parameters = { withholding:Number(data.get("withholding")), vat:Number(data.get("vat")), stamp:Number(data.get("stamp")) };
+  if (Object.values(parameters).some((value) => !Number.isFinite(value) || value < 0 || value > 100)) { deny("Mali pilot parametreleri 0 ile 100 arasında sayısal değerler olmalıdır."); return; }
+  state.finance.parameters = parameters;
   state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:"FIN-PARAM", at:new Date().toISOString(), actor:currentRole().name, actorRole:state.roleId, action:"Mali pilot parametre taslağı güncellendi", from:"draft", to:"draft", reason:"Mali birim doğrulaması gerekir" });
   saveState(); render(); toast("Yapılandırılabilir mali pilot parametreleri kaydedildi.");
 }
 
 async function refreshRemote(fromModal = false) {
   const snapshot = await loadPilotSnapshot();
+  // Do not let a late network response overwrite a role/schema mutation made
+  // after the request started (for example another tab or a reload guard test).
+  if (!canCommitAsyncRefresh()) {
+    if (fromModal) closeModal();
+    return;
+  }
   state.remoteSnapshot = snapshot.ok ? { programs:snapshot.programs.length, applications:snapshot.applications.length, credentials:snapshot.credentials.length, integrations:snapshot.integrations.length, checkedAt:new Date().toISOString() } : null;
   state.dataMode = snapshot.ok ? `Yerel çalışma alanı • Supabase seed doğrulandı (${snapshot.programs.length} program)` : snapshot.mode;
   saveState();
