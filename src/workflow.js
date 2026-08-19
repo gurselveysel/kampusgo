@@ -217,6 +217,16 @@ export function createApplication(state, payload) {
   if (!["draft", "review"].includes(requestedStatus)) {
     throw new Error("Yeni başvuru yalnız taslak veya ön inceleme durumunda oluşturulabilir");
   }
+  if (!["internal", "external"].includes(payload.kind)) throw new Error("Başvuru türü internal veya external olmalıdır");
+  if (!String(payload.title || "").trim() || !String(payload.applicant || "").trim()) {
+    throw new Error("Başvuru başlığı ve sentetik başvuran kimliği zorunludur");
+  }
+  const ects = Number(payload.ects);
+  const remoteRate = Number(payload.remoteRate);
+  const evidence = Number(payload.evidence ?? 1);
+  if (!Number.isFinite(ects) || ects <= 0 || ects > 30) throw new Error("Pilot AKTS değeri 0'dan büyük ve en fazla 30 olmalıdır");
+  if (!Number.isFinite(remoteRate) || remoteRate < 0 || remoteRate > 100) throw new Error("Uzaktan sunum oranı 0 ile 100 arasında olmalıdır");
+  if (!Number.isFinite(evidence) || evidence < 0) throw new Error("Pilot kanıt sayısı negatif olamaz");
   const ownerRole = resolveApplicationOwnerRole(payload);
   const id = `APP-${String(state.applications.length + 50).padStart(3, "0")}`;
   const codePrefix = payload.kind === "external" ? "MY-BSV" : "MY-PRG";
@@ -234,10 +244,10 @@ export function createApplication(state, payload) {
     elapsedDays: 0,
     similarity: payload.kind === "external" ? 58 : 34,
     tycMatch: 76,
-    ects: Number(payload.ects),
-    remoteRate: Number(payload.remoteRate),
+    ects,
+    remoteRate,
     portfolioRemoteShare: payload.kind === "external" ? 45 : undefined,
-    evidence: Number(payload.evidence || 1),
+    evidence,
     missing: 0,
     comparedCourse: payload.comparedCourse || "Kurumsal ders kataloğu",
     notes: "Pilot veri katmanına kaydedildi; koordinatörlük ön incelemesi bekleniyor."
