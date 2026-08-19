@@ -42,7 +42,7 @@ npm run dev
 ```
 
 Ardından `http://localhost:3000` adresini açın. Next.js App Router kök rotası,
-pilot ES module uygulamasını `/pilot` altında sunar. Bağımlılıksız statik geliştirme
+pilot ES module uygulamasına ait açık `/pilot.html` rotasına yönlendirir. Bağımlılıksız statik geliştirme
 sunucusu gerektiğinde `npm run dev:static` ile `http://localhost:4173` üzerinde açılabilir.
 
 Doğrulama ve iş akışı testleri:
@@ -55,7 +55,7 @@ npm test
 
 ## Veri mimarisi
 
-Uygulama, korumalı Vercel Preview ortamında güvenli ve tekrar oynatılabilir olması için iki katman kullanır:
+Uygulama, Vercel Preview ortamında güvenli ve tekrar oynatılabilir olması için iki katman kullanır:
 
 1. Supabase `pilot_*` tabloları yalnız sentetik başlangıç görünümünü sunar. `anon` ve `authenticated` rolleri sadece `SELECT` yetkisine sahiptir; RLS açıktır ve zorlanır.
 2. Kullanıcı etkileşimleri tarayıcıdaki sürümlü `localStorage` çalışma alanında kalıcılaşır. Başvuru/karar/denetim değişiklikleri bu izole pilot durumda gerçekten güncellenir; herhangi bir dış servise gönderilmez.
@@ -81,10 +81,14 @@ Arayüz metinleri, formlar, tablolar, grafikler ve kontroller bu görsellere gö
 
 `vercel.json`, Next.js App Router üzerinden çalışan Preview dağıtımı ve kamera,
 mikrofon, konum ile ödeme izinlerinin kapatılması için güvenlik başlıklarını içerir.
-`kampusgo.uzemgo.com` yalnız kontrollü Preview alias hedefi olarak tanımlanır; çalışma
-production'a terfi ettirilmemeli ve production branch'e doğrudan yayımlanmamalıdır.
+Etkileşimli uygulamanın kanonik rotası `/pilot.html`'dir; kök rota bu adrese yönlenir.
+Çalışma production'a terfi ettirilmemeli ve production branch'e doğrudan yayımlanmamalıdır.
 
-Korumalı Preview: <https://kdpu-myys-mockup-r3rr3iuv8-info-64116029s-projects.vercel.app>
+- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-o9qjtt3wr-info-64116029s-projects.vercel.app/pilot.html>
+- Public alias: <https://kampusgo.uzemgo.com/pilot.html> — **Alias doğrulaması: PENDING**
+
+Dokuz rolün domain sözleşmeleri `18/18` başarılıdır. Dokuz rol × dört hedef genişlikten
+oluşan 9×4 tarayıcı QA matrisi **36/36 başarılıdır** ([GitHub Actions run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557)).
 
 ## Belgeler
 
@@ -92,6 +96,6 @@ Korumalı Preview: <https://kdpu-myys-mockup-r3rr3iuv8-info-64116029s-projects.v
 - [Test ve teslim raporu](docs/test-report.md)
 - [Tek teslim raporu](docs/delivery-report.md)
 
-## Production NO-GO
+## Production NO-GO — kesin karar
 
-Bu pilotta gerçek öğrenci/personel verisi, gerçek ödeme, e-fatura, kurumsal kimlik, kamera/mikrofon kaydı, biyometri, SMS/e-posta veya canlı ÖBİS/YÖKSİS/e-Devlet/GİB/MYS çağrısı yoktur. Production deployment yapılmamıştır.
+Bu pilotta gerçek öğrenci/personel verisi, gerçek ödeme, e-fatura, kurumsal kimlik, kamera/mikrofon kaydı, biyometri, SMS/e-posta veya canlı ÖBİS/YÖKSİS/e-Devlet/GİB/MYS çağrısı yoktur. **Production deployment yapılmamıştır ve yapılmayacaktır; bu teslim yalnız Vercel Preview kapsamındadır.**
