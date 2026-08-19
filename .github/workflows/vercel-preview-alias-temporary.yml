@@ -161,7 +161,7 @@ jobs:
                 "",
                 `**https://${domain}** yeni 9 rol Preview dağıtımını gösteriyor.`,
                 "",
-                `Deployment: **${deploymentId}** — **READY Preview** (`target: null`).`,
+                `Deployment: **${deploymentId}** — **READY Preview** (target: null).`,
                 "",
                 "Production deploy/promote yapılmadı."
               ].join("\n"), "closed");
