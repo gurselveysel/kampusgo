@@ -26,7 +26,7 @@ jobs:
           node <<'NODE'
           (async () => {
             const clientId = "cl_HYyOPBNtFMfHhaUn9L4QPfTZz6TP47bp";
-            const deploymentId = "dpl_CgCitLE8aZmEimpFKgzcdmEsMEE1";
+            const deploymentId = "dpl_7bRivLenkyMotUP4ytRFjZ5FVdv7";
             const teamId = "team_QH2k9edmHSXuybZK3Ay9RVAo";
             const domain = "kampusgo.uzemgo.com";
             const repo = process.env.GITHUB_REPOSITORY;
