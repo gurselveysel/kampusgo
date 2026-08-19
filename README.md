@@ -98,4 +98,4 @@ oluşan 9×4 tarayıcı QA matrisi **36/36 başarılıdır** ([GitHub Actions ru
 
 ## Production NO-GO — kesin karar
 
-Bu pilotta gerçek öğrenci/personel verisi, gerçek ödeme, e-fatura, kurumsal kimlik, kamera/mikrofon kaydı, biyometri, SMS/e-posta veya canlı ÖBİS/YÖKSİS/e-Devlet/GİB/MYS çağrısı yoktur. **Production deployment yapılmamıştır ve yapılmayacaktır; bu teslim yalnız Vercel Preview kapsamındadır.**
+Bu pilotta gerçek öğrenci/personel verisi, gerçek ödeme, e-fatura, kurumsal kimlik, kamera/mikrofon kaydı, biyometri, SMS/e-posta veya canlı ÖBİS/YÖKSİS/e-Devlet/GİB/MYS çağrısı yoktur. **Bu teslimin kabul edilen dağıtımı READY `target: null` Preview'dır; production'a terfi ettirilmemiştir.** Vercel proje ilk kurulumunda oluşmuş eski `dpl_4kwgoosKHY1aw5H8QbjNthZ5j1JC` production hedefi bu teslimde değiştirilmemiş ve `kampusgo.uzemgo.com` için kullanılmamıştır.
