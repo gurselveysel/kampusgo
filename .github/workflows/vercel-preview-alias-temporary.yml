@@ -172,7 +172,7 @@ jobs:
                 await updateIssue(issueNumber, [
                   "İşlem tamamlanamadı.",
                   "",
-                  ```text\n${String(error.message || error).slice(0, 800)}\n````,
+                  "```text\\n" + String(error.message || error).slice(0, 800) + "\\n```",
                   "",
                   "Production deploy/promote komutu çalıştırılmadı."
                 ].join("\n"), "open");
