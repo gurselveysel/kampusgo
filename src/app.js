@@ -262,6 +262,7 @@ function notice(tone, title, text) {
 function toast(message, tone = "success") {
   const node = document.createElement("div");
   node.className = `toast toast--${tone}`;
+  node.setAttribute("role", tone === "error" ? "alert" : "status");
   node.innerHTML = `${icon(tone === "success" ? "check" : "alert")}<div>${escapeHtml(message)}</div>`;
   toastRegion.append(node);
   setTimeout(() => node.remove(), 4300);
@@ -288,6 +289,21 @@ function closeModal() {
   }
   document.body.style.overflow = "";
   lastFocused?.focus?.();
+}
+
+function closeMobileNav(restoreFocus = false) {
+  document.body.classList.remove("nav-open");
+  const toggle = document.querySelector("[data-action='toggle-nav']");
+  toggle?.setAttribute("aria-expanded", "false");
+  toggle?.setAttribute("aria-label", "Menüyü aç");
+  if (restoreFocus) setTimeout(() => toggle?.focus(), 0);
+}
+
+function activateCommissionTab(tabId) {
+  if (!["summary", "evidence", "curriculum", "history"].includes(tabId)) return;
+  currentCommissionTab = tabId;
+  render();
+  setTimeout(() => document.querySelector(`#commission-tab-${currentCommissionTab}`)?.focus(), 0);
 }
 
 function modalTemplate(title, body, footer = "") {
@@ -319,9 +335,7 @@ function render() {
     const renderer = pages[page] || pages.overview;
     root.innerHTML = renderer(detail);
   }
-  document.body.classList.remove("nav-open");
-  document.querySelector("[data-action='toggle-nav']")?.setAttribute("aria-expanded", "false");
-  document.querySelector("[data-action='toggle-nav']")?.setAttribute("aria-label", "Menüyü aç");
+  closeMobileNav();
   const announcedTitle = page === "verify" ? "Pilot belge doğrulama" : (pageMeta[page]?.label || "Sayfa");
   routeAnnouncer.textContent = `${announcedTitle} sayfası açıldı`;
   document.title = `${announcedTitle} • KDPÜ MYYS`;
@@ -474,19 +488,20 @@ function applicationsPage() {
   const actions = `${state.roleId === "learner" ? `<button class="button button--secondary" data-nav="recognition">${icon("upload")} Dış kazanım başvurusu</button>` : ""}${["instructor","externalInstructor"].includes(state.roleId) ? `<button class="button" data-nav="proposal">${icon("plus")} Program önerisi</button>` : ""}`;
   return `<div class="page-container">${pageHeader("Başvuru yönetimi", "Başvurular ve süre takibi", "Program önerileri ile dış kazanım tanınma talepleri aynı denetim izi içinde, farklı kontrol yollarıyla izlenir.", actions)}
     <div class="toolbar"><div class="search">${icon("search")}<label class="sr-only" for="application-search">Kod, başlık veya başvuran ara</label><input id="application-search" type="search" placeholder="Kod, başlık veya başvuran ara" /></div><div class="toolbar-group"><select id="application-status" class="select" aria-label="Durum filtresi"><option value="">Tüm durumlar</option><option value="review">Ön incelemede</option><option value="commission">Komisyon gündeminde</option><option value="revision">Revizyon bekliyor</option><option value="approved">Pilot onaylandı</option></select></div></div>
-    <div class="table-wrap"><table><caption class="sr-only">${escapeHtml(currentRole().label)} rolünün görebildiği başvurular</caption><thead><tr><th>Başvuru</th><th>Tür / Başvuran</th><th>Durum</th><th>30 günlük gösterge</th><th>Pilot analiz</th><th></th></tr></thead><tbody id="application-rows">${applications.length ? applications.map(applicationRow).join("") : `<tr class="empty-table-row"><td colspan="6"><strong>Bu role ait başvuru bulunamadı</strong><span>Yeni bir taslak oluşturduğunuzda yalnız kendi kaydınız burada görünür.</span></td></tr>`}</tbody></table></div><div class="card empty-state" id="application-filter-empty" hidden><div class="empty-icon">${icon("search")}</div><h3>Filtreyle eşleşen başvuru yok</h3><p>Arama metnini veya durum filtresini değiştirin.</p></div>
+    <div class="table-wrap"><table><caption class="sr-only">${escapeHtml(currentRole().label)} rolünün görebildiği başvurular</caption><thead><tr><th scope="col">Başvuru</th><th scope="col">Tür / Başvuran</th><th scope="col">Durum</th><th scope="col">30 günlük gösterge</th><th scope="col">Pilot analiz</th><th scope="col"><span class="sr-only">İşlem</span></th></tr></thead><tbody id="application-rows">${applications.length ? applications.map(applicationRow).join("") : `<tr class="empty-table-row"><td colspan="6"><strong>Bu role ait başvuru bulunamadı</strong><span>Yeni bir taslak oluşturduğunuzda yalnız kendi kaydınız burada görünür.</span></td></tr>`}</tbody></table></div><div class="card empty-state" id="application-filter-empty" hidden><div class="empty-icon">${icon("search")}</div><h3>Filtreyle eşleşen başvuru yok</h3><p>Arama metnini veya durum filtresini değiştirin.</p></div>
     <div class="section">${notice("warning", "Süre göstergesi hakkında", "30 günlük sayaç yalnızca kaynak dosyadaki pilot kuralı görselleştirir. Sürenin başlangıcı, durması ve kurumsal eskalasyon yöntemi ayrıca doğrulanmalıdır.")}</div>
   </div>`;
 }
 
 function applicationRow(item) {
   const progress = Math.min(100, Math.round(item.elapsedDays / 30 * 100));
-  return `<tr data-application-status="${item.status}" data-searchable="${escapeHtml(`${item.code} ${item.title} ${item.applicant}`.toLocaleLowerCase("tr-TR"))}"><td><span class="table-title">${escapeHtml(item.title)}</span><span class="table-subtitle">${escapeHtml(item.code)} • ${formatDate(item.submittedAt)}</span></td><td>${item.kind === "external" ? "Dış kazanım" : "Program önerisi"}<span class="table-subtitle">${escapeHtml(item.applicant)}</span></td><td>${statusBadge(item.status)}</td><td><div class="progress ${progress > 65 ? "progress--warning" : ""}"><span style="width:${progress}%"></span></div><div class="progress-labels"><span>${item.elapsedDays}/30 gün</span><span>${30 - item.elapsedDays} gün</span></div></td><td><strong>%${item.similarity}</strong> benzerlik<span class="table-subtitle">TYÇ önerisi %${item.tycMatch}</span></td><td><button class="button button--secondary button--sm" data-action="open-application" data-id="${item.id}">İncele</button></td></tr>`;
+  const remaining = Math.max(0, 30 - item.elapsedDays);
+  return `<tr data-application-status="${item.status}" data-searchable="${escapeHtml(`${item.code} ${item.title} ${item.applicant}`.toLocaleLowerCase("tr-TR"))}"><td><span class="table-title">${escapeHtml(item.title)}</span><span class="table-subtitle">${escapeHtml(item.code)} • ${formatDate(item.submittedAt)}</span></td><td>${item.kind === "external" ? "Dış kazanım" : "Program önerisi"}<span class="table-subtitle">${escapeHtml(item.applicant)}</span></td><td>${statusBadge(item.status)}</td><td><div class="progress ${progress > 65 ? "progress--warning" : ""}" role="progressbar" aria-label="${escapeHtml(item.code)} değerlendirme süresi" aria-valuemin="0" aria-valuemax="30" aria-valuenow="${Math.min(30, item.elapsedDays)}" aria-valuetext="${item.elapsedDays} gün geçti, ${remaining} gün kaldı"><span style="width:${progress}%"></span></div><div class="progress-labels"><span>${item.elapsedDays}/30 gün</span><span>${remaining} gün</span></div></td><td><strong>%${item.similarity}</strong> benzerlik<span class="table-subtitle">TYÇ önerisi %${item.tycMatch}</span></td><td><button class="button button--secondary button--sm" data-action="open-application" data-id="${item.id}">İncele</button></td></tr>`;
 }
 
 function recognitionPage() {
   return `<div class="page-container">${pageHeader("Başvuru • Evre 1", "Kurum dışı kazanım tanınma talebi", "Dış öğrenme kanıtını ve program bilgisini sentetik verilerle girin. Doğrulama bağlantısı sunucu tarafından açılmaz; gerçek belge yüklenmez.")}
-    <div class="grid grid-2"><form class="card form-card" id="recognition-form"><section class="form-section"><h3>Kazanım ve sağlayıcı</h3><div class="form-grid"><div class="field full"><label class="required" for="recognition-title">Eğitim adı</label><input id="recognition-title" name="title" required value="Veri Görselleştirme Temelleri" /></div><div class="field"><label class="required" for="recognition-provider">Sağlayıcı</label><input id="recognition-provider" name="provider" required value="Örnek Açık Öğrenme Merkezi" /></div><div class="field"><label for="recognition-url">Doğrulama bağlantısı</label><input id="recognition-url" name="url" type="url" value="https://example.invalid/pilot-belge" /></div></div></section><section class="form-section"><h3>Kredi ve karşılaştırma</h3><div class="form-grid"><div class="field"><label for="recognition-ects">Talep edilen AKTS</label><input id="recognition-ects" name="ects" type="number" min="1" max="12" value="2" /></div><div class="field"><label for="recognition-remote">Uzaktan eğitim oranı (%)</label><input id="recognition-remote" name="remoteRate" type="number" min="0" max="100" value="100" /></div><div class="field full"><label for="recognition-course">Karşılaştırılacak kurumsal ders</label><input id="recognition-course" name="comparedCourse" value="İstatistiksel Veri Analizi" /></div></div></section><section class="form-section"><h3>Kanıt üst veri simülasyonu</h3><button class="dropzone" type="button" data-action="mock-upload">${icon("upload")}<strong>Örnek sertifika ve içerik planı</strong><span>Dosya seçimi yalnız görünüm simülasyonudur; dosya içeriği aktarılmaz.</span></button></section><div class="form-actions"><button class="button button--secondary" type="button" data-action="save-draft">Taslağı kaydet</button><button class="button" type="submit">Ön incelemeye gönder ${icon("arrow")}</button></div></form>
+    <div class="grid grid-2"><form class="card form-card" id="recognition-form"><section class="form-section"><h3>Kazanım ve sağlayıcı</h3><div class="form-grid"><div class="field full"><label class="required" for="recognition-title">Eğitim adı</label><input id="recognition-title" name="title" required value="Veri Görselleştirme Temelleri" /></div><div class="field"><label class="required" for="recognition-provider">Sağlayıcı</label><input id="recognition-provider" name="provider" required value="Örnek Açık Öğrenme Merkezi" /></div><div class="field"><label for="recognition-url">Doğrulama bağlantısı</label><input id="recognition-url" name="url" type="url" value="https://example.invalid/pilot-belge" /></div></div></section><section class="form-section"><h3>Kredi ve karşılaştırma</h3><div class="form-grid"><div class="field"><label class="required" for="recognition-ects">Talep edilen AKTS</label><input id="recognition-ects" name="ects" type="number" min="1" max="12" value="2" required /></div><div class="field"><label class="required" for="recognition-remote">Uzaktan eğitim oranı (%)</label><input id="recognition-remote" name="remoteRate" type="number" min="0" max="100" value="100" required /></div><div class="field full"><label for="recognition-course">Karşılaştırılacak kurumsal ders</label><input id="recognition-course" name="comparedCourse" value="İstatistiksel Veri Analizi" /></div></div></section><section class="form-section"><h3>Kanıt üst veri simülasyonu</h3><button class="dropzone" type="button" data-action="mock-upload">${icon("upload")}<strong>Örnek sertifika ve içerik planı</strong><span>Dosya seçimi yalnız görünüm simülasyonudur; dosya içeriği aktarılmaz.</span></button></section><div class="form-actions"><button class="button button--secondary" type="button" data-action="save-draft">Taslağı kaydet</button><button class="button" type="submit">Ön incelemeye gönder ${icon("arrow")}</button></div></form>
       <aside class="grid"><div class="card"><div class="card-header"><div><h2>Pilot ön kontrol özeti</h2><p>Başvurudan sonra deterministik örnek bulgular üretilir.</p></div>${statusBadge("simulated")}</div><div class="card-body"><div class="timeline"><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>Belge bütünlüğü</strong><span>Sağlayıcı teyidi insan incelemesine açıktır.</span></div></div><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>İçerik karşılaştırması</strong><span>Benzerlik işareti karar değildir.</span></div></div><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>AKTS portföy hesabı</strong><span>Toplam kredi ve uzaktan kaynak payı ayrı izlenir.</span></div></div></div></div></div>${notice("warning", "%50 ifadesi basitleştirilmez", "Kaynak, transfer edilen mikro yeterlilik kredilerinin uzaktan kaynaklı bölümüne ilişkindir. Tek eğitimin sunum oranı ile toplam portföy payı ayrı gösterilir.")}</aside>
     </div>
   </div>`;
@@ -743,7 +758,7 @@ document.addEventListener("click", (event) => {
   if (!trigger) return;
   const { action } = trigger.dataset;
   if (action === "toggle-nav") { const open = document.body.classList.toggle("nav-open"); trigger.setAttribute("aria-expanded", String(open)); trigger.setAttribute("aria-label", open ? "Menüyü kapat" : "Menüyü aç"); }
-  if (action === "close-nav") { document.body.classList.remove("nav-open"); document.querySelector("[data-action='toggle-nav']")?.setAttribute("aria-expanded", "false"); }
+  if (action === "close-nav") closeMobileNav(true);
   if (action === "close-modal") closeModal();
   if (action === "pilot-info") showPilotInfo();
   if (action === "data-mode") showDataMode();
@@ -762,7 +777,7 @@ document.addEventListener("click", (event) => {
     closeModal(); navigate("commission");
   }
   if (action === "decision") decisionModal(trigger.dataset.id, trigger.dataset.status);
-  if (action === "commission-tab") { currentCommissionTab = trigger.dataset.tab; render(); setTimeout(()=>document.querySelector(`#commission-tab-${currentCommissionTab}`)?.focus(),0); }
+  if (action === "commission-tab") activateCommissionTab(trigger.dataset.tab);
   if (action === "submit-decision") document.querySelector("#decision-form")?.requestSubmit();
   if (action === "save-draft") {
     const form = trigger.closest("form");
@@ -780,7 +795,7 @@ document.addEventListener("click", (event) => {
   if (action === "assessment-decision") decideAssessment();
   if (action === "verify-code") verifyCodeModal();
   if (action === "open-credential") navigate("verify", trigger.dataset.code);
-  if (action === "submit-verify") submitVerify();
+  if (action === "submit-verify") document.querySelector("#verify-form")?.requestSubmit();
   if (action === "mark-notifications") {
     if (!isAllowed("notifications")) { deny("Bu rolün bildirim çalışma alanı yoktur."); return; }
     visibleNotifications().forEach((item)=>{ if (!item.readBy.includes(state.roleId)) item.readBy.push(state.roleId); }); saveState(); render(); toast("Bu role ait uygulama içi bildirimler okundu.");
@@ -831,6 +846,20 @@ roleSelect.addEventListener("change", () => {
 modalBackdrop.addEventListener("click", (event) => { if (event.target === modalBackdrop) closeModal(); });
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !modalBackdrop.hidden) { closeModal(); return; }
+  if (event.key === "Escape" && document.body.classList.contains("nav-open")) { closeMobileNav(true); return; }
+  const activeTab = event.target.closest?.("[role='tab'][data-action='commission-tab']");
+  if (activeTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+    const tabs = [...document.querySelectorAll("[role='tab'][data-action='commission-tab']")];
+    const currentIndex = tabs.indexOf(activeTab);
+    const nextIndex = event.key === "Home"
+      ? 0
+      : event.key === "End"
+        ? tabs.length - 1
+        : (currentIndex + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    event.preventDefault();
+    activateCommissionTab(tabs[nextIndex]?.dataset.tab);
+    return;
+  }
   if (event.key === "Tab" && !modalBackdrop.hidden) {
     const focusable = [...modal.querySelectorAll("button, input, select, textarea, a[href], [tabindex]:not([tabindex='-1'])")].filter((element)=>!element.disabled);
     if (!focusable.length) return;
@@ -883,6 +912,10 @@ function enrollProgram(id) {
   if (state.roleId !== "learner") { deny("Programa pilot kayıt yalnız öğrenen rolüyle oluşturulabilir."); return; }
   const program = state.programs.find((item)=>item.id===id);
   if (!program) return;
+  if (program.status !== "active" || !visiblePrograms().some((item) => item.id === program.id)) {
+    deny("Yalnız öğrenene açık, aktif pilot programlara kayıt oluşturulabilir.");
+    return;
+  }
   const enrollmentId = `ENR-${program.code}`;
   if (!state.enrollments.some((item)=>item.id===enrollmentId)) {
     state.enrollments.unshift({ id:enrollmentId, programCode:program.code, title:program.title, learner:"Derya Örnek", status:"active", progress:10, ects:program.ects, remoteEcts:Number((program.ects * program.remoteRate / 100).toFixed(1)) });
