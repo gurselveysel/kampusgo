@@ -14,7 +14,7 @@ Karar: **Production NO-GO**
 | Yerel Git sürüm kaydı | Hazır | Kaynak teslimi yerel commit ve arşivle sabitlendi |
 | GitHub uzak deposu | Hazır | `gurselveysel/kampusgo`; yalnız kaynak aynası, production otomatik yayını yok |
 
-- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-o9qjtt3wr-info-64116029s-projects.vercel.app/pilot.html>
+- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-ltc17soi8-info-64116029s-projects.vercel.app/pilot.html>
 - Public alias: <https://kampusgo.uzemgo.com/pilot.html>
 - Alias doğrulaması: **PENDING**
 - Kök rota: `/` → `/pilot.html`
@@ -60,7 +60,7 @@ Tüm logolar özgün yüklenen dosyalardan ayrı `<img>` bileşenleriyle kullan�
 - Kaynak söz dizimi, yapı/secret taraması ve build doğrulamaları başarılıdır.
 - Dokuz rolün sahiplik, görünürlük, kritik eylem, değerlendirme kararı, audit ve iki uçtan uca senaryo domain sözleşmeleri **18/18 başarılıdır**.
 - Domain testinde Senaryo 1'in 12 ve Senaryo 2'nin 8 adımı tamamlanmış; kalıcı durum ve `realDataSent=false` değişmezleri doğrulanmıştır.
-- Dokuz rol × 1440, 1024, 768 ve 390 px hedeflerinden oluşan 9×4 tarayıcı QA matrisi **36/36 başarılıdır** ([run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557); [kanıt paketi](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557/artifacts/9371422369)).
+- Dokuz rol × 1440, 1024, 768 ve 390 px hedeflerinden oluşan 9×4 tarayıcı QA matrisi **36/36 başarılıdır** ([run #17](https://github.com/gurselveysel/kampusgo/actions/runs/32275262333); [kanıt paketi](https://github.com/gurselveysel/kampusgo/actions/runs/32275262333/artifacts/9373767031)).
 - Public alias üzerinde rota, içerik ve asset smoke doğrulaması **PENDING** durumundadır.
 - Supabase katmanında RLS + FORCE RLS, salt-okunur grant'ler, sentetik veri ve `real_data_sent=false` değişmezleri doğrulanmıştır.
 
@@ -90,7 +90,7 @@ Yerel adres: `http://localhost:3000` (kök rota `/pilot.html`'e yönlenir; `npm 
 
 ## Production teyidi
 
-Bu teslimde kabul edilen `dpl_7bRivLenkyMotUP4ytRFjZ5FVdv7` dağıtımı READY **Preview**'dır
+Bu teslimde kabul edilen `dpl_7s2ZL879z7dYSUpgnkrHn8Jjdkzd` dağıtımı READY **Preview**'dır
 (`target: null`) ve production'a terfi ettirilmedi; karar kesin **NO-GO**'dur. Vercel proje
 ilk kurulumundan kalan eski `dpl_4kwgoosKHY1aw5H8QbjNthZ5j1JC` production hedefi
 değiştirilmedi, özel alan adına bağlanmadı ve bu kabulde kullanılmadı.
