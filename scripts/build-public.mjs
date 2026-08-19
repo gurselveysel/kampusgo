@@ -13,6 +13,7 @@ const files = [
   ["styles.css", "styles.css"],
   ["src/app.js", "src/app.js"],
   ["src/data.js", "src/data.js"],
+  ["src/reference-data.js", "src/reference-data.js"],
   ["src/supabase.js", "src/supabase.js"],
   ["src/workflow.js", "src/workflow.js"],
   ["assets/brand/go-icon-web.png", "assets/brand/go-icon-web.png"],

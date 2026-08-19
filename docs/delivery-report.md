@@ -1,40 +1,90 @@
 # MYYS kontrollü pilot — tek teslim raporu
 
-Tarih: 19 Ağustos 2026  
+Tarih: 19–20 Ağustos 2026 (UTC)
+
 Karar: **Production NO-GO**
 
 ## Teslim durumu
 
 | Çıktı | Durum | Not |
 | --- | --- | --- |
-| Çalışan uygulama | Hazır | Gerçek HTML/CSS/ES module bileşenleri; ekran görüntüsü tabanlı arayüz değildir |
-| Vercel Preview | Hazır | Preview-only dağıtım; uygulama `/pilot.html` rotasında, production terfisi yapılmadı |
-| Public alias | Doğrulama bekliyor | `kampusgo.uzemgo.com/pilot.html`; alias doğrulaması PENDING |
-| Supabase pilot şeması | Hazır | `xpjkrwzgimdxsasqszfi`; RLS + FORCE RLS, yalnız sentetik ve salt-okunur başlangıç görünümü |
-| Yerel Git sürüm kaydı | Hazır | Kaynak teslimi yerel commit ve arşivle sabitlendi |
-| GitHub uzak deposu | Hazır | `gurselveysel/kampusgo`; yalnız kaynak aynası, production otomatik yayını yok |
+| Çalışan uygulama kodu | Hazır | Gerçek HTML/CSS/ES module bileşenleri; ekran görüntüsü tabanlı arayüz değildir |
+| Dokuz rol kabulü | Yerelde hazır | Dokuz rolün farklı özet, navigasyon, görünürlük ve işlem sınırları; 22/22 domain sözleşmesi geçti |
+| Ödeme ve finans akışı | Yerelde hazır | Gerçek ödeme almayan öğrenen → Finans / Döner Sermaye akışı, revizyon/onay/mutabakat ve audit |
+| TYÇ / AYÇ matrisleri | Yerelde hazır | TYÇ 8 + AYÇ/EQF 8 seviye, 16 şablon, eğitici girişi ve salt-okunur inceleme |
+| Supabase migration | **PASS** | Canlı sürümler `20260819234334` + `20260819234424`; 14 tablo, 10 katalog görünümü, 14 FORCE RLS ve security advisor 0 bulgu |
+| Vercel Preview | Public adres tanımlı | <https://kampusgo.uzemgo.com/pilot.html>; bu revizyonun son deploy/smoke sonucu **uygulama sonrası doğrulanacak** |
+| GitHub uzak deposu | Mevcut | [`gurselveysel/kampusgo`](https://github.com/gurselveysel/kampusgo); bu revizyonun push SHA'sı **uygulama sonrası doğrulanacak** |
+| Production | Yapılmayacak | Kesin NO-GO; terfi, production branch yayını veya production hedefi yok |
 
-- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-ltc17soi8-info-64116029s-projects.vercel.app/pilot.html>
-- Public alias: <https://kampusgo.uzemgo.com/pilot.html>
-- Alias doğrulaması: **PENDING**
-- Kök rota: `/` → `/pilot.html`
+## Birsen Hoca geri bildirimlerinin karşılığı
 
-## Tamamlanan ekranlar
+| Geri bildirim | Uygulanan karşılık |
+| --- | --- |
+| “Ödeme bölümü yok” | Öğrenen panelinde ücretli programa başvuru, kanal seçimi, mali birime yönlendirme ve durum geçmişi |
+| “Ödeme sayfasına ve mali işlere yönlendirme olsun” | `draft → pending_finance → approved/revision → reconciled` akışı; Finans rolüne tek tıkla geçiş, bildirim ve audit |
+| “GİB, MYS/MAYS açıklamaları eksik” | Ana sayfa ve mali akışta GİB/e-Arşiv ile MYS/MAYS'ın amacı, onay kapısı ve canlı bağlantı sınırı |
+| “Rol değişince genel bakış değişmiyor” | Dokuz rol için ayrı çalışma alanı başlığı, görev listesi, veri görünürlüğü, navigasyon ve işlem kapıları |
+| “TYÇ ve Avrupa yeterlilikleri için hazır şablon” | TYÇ ve AYÇ/EQF ayrı sekmeler; her biri 1–8 seviye; doldurulabilir öğrenme hedefi–içerik–ölçme matrisi ve örnekler |
+| “Verileri Supabase şemasına uyumla” | Resmî referans, çeviri, matris, ödeme, rol ve veri kaynağı kütüklerini kapsayan RLS'li migration |
 
-- Kurumsal açılış, pilot kapsamı, altı evre, demo giriş/rol değiştirici
-- Dokuz rol için rol bazlı özet ve navigasyon
-- Katalog, programlar, öğrenen eğitim/AKTS görünümü
-- Program önerisi ile dış kazanım tanıma formları; doğrulama, taslak, önizleme ve sentetik dosya üst verisi
+## Tamamlanan ekran ve işlevler
+
+- Kurumsal açılış, kontrollü pilot sınırı, altı evre, demo giriş ve rol değiştirici
+- Dokuz rol için role özgü genel bakış, görevler, veri görünürlüğü ve doğrudan rota engeli
+- Katalog, program detayları, öğrenen eğitim/AKTS görünümü
+- Ücretli program başvurusu, Sanal POS/Havale-EFT etiketli ödeme simülasyonu ve mali yönlendirme
+- Finans/Döner Sermaye kuyruğu, mali ön onay, revizyon, mutabakat ve eğitime pilot kayıt
+- GİB/e-Arşiv ve MYS/MAYS açıklama kartları; hata/yeniden deneme ve onay kapısı
+- Program önerisi ve dış kazanım tanıma formları; doğrulama, taslak ve sentetik dosya üst verisi
+- TYÇ 1–8 ile AYÇ/EQF 1–8 seviye seçimi, resmî tanımlayıcı kartları ve 16 matris şablonu
+- İç/dış eğitici için matris kaydı; koordinatörlük, Komisyon ve admin için salt-okunur inceleme
 - Başvuru arama/filtreleme, SLA, durum takibi ve denetim izi
-- Koordinatörlük/Komisyon karar masası; karşılaştırma, kanıt, görüş ve gerekçeli kararlar
-- Ölçme-değerlendirme simülasyonu; olay günlüğü ve insan değerlendirici kararı
+- Komisyon karşılaştırma, kanıt, görüş, gerekçeli onay/ret/revizyon/çekimser kayıtları
+- Ölçme-değerlendirme simülasyonu, olay günlüğü ve insan değerlendirici kararı
 - Dijital yeterlilik cüzdanı ve pilot doğrulama rotası
-- Yedi bağlı-olmayan entegrasyon kartı; hata, yeniden deneme, onay ve aktarım logları
-- Finans/Döner Sermaye; tahsilat, fatura-hak ediş taslağı, mali parametre ve mutabakat
+- Yedi bağlı-olmayan entegrasyon kartı; onay, hata ve aktarım logları
 - Raporlama, grafikler, bildirimler, boş/hata/yükleniyor durumları
 - İki uçtan uca senaryo çalıştırıcısı
 
-## Demo rolleri
+## Supabase şema teslimi
+
+Canlı uygulanan kaynak migration'lar:
+
+- [`20260820010000_framework_matrix_finance_role_seed.sql`](../supabase/migrations/20260820010000_framework_matrix_finance_role_seed.sql) — Supabase sürümü `20260819234334`
+- [`20260820011000_framework_matrix_performance_indexes.sql`](../supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql) — Supabase sürümü `20260819234424`
+
+### Tablolar
+
+`qualification_frameworks`, `qualification_level_descriptors`, `qualification_level_descriptor_translations`, `qualification_dataset_registry`, `official_qualification_references`, `pilot_matrix_templates`, `pilot_matrix_example_rows`, `pilot_matrix_drafts`, `pilot_matrix_draft_rows`, `pilot_finance_routes`, `pilot_payment_requests`, `pilot_payment_events`, `pilot_role_overviews`, `pilot_role_workflow_steps`.
+
+### Salt-okunur katalog görünümleri
+
+`qualification_level_catalog`, `qualification_level_bilingual_catalog`, `qualification_dataset_catalog`, `official_qualification_reference_catalog`, `pilot_matrix_template_catalog`, `pilot_matrix_draft_catalog`, `pilot_finance_handoff_catalog`, `pilot_payment_request_catalog`, `pilot_payment_event_catalog`, `pilot_role_workflow_catalog`.
+
+Migration'lar canlı projeye başarıyla uygulandı. Doğrulanan sözleşme: 14 FORCE RLS tablo; `anon`/`authenticated` için yalnız `SELECT`; 10 `security_invoker` görünümü; `real_payment=false`, `real_data_sent=false`, `automated_ingestion_enabled=false` değişmezleri. Security advisor sonucu **0 bulgu**. İlk performans taramasındaki indekslenmemiş çeviri yabancı anahtarı takip migration'ıyla kapatıldı; yalnız yeni/boş pilotta beklenen unused-index INFO kayıtları ve Auth connection strategy INFO kaydı kaldı.
+
+Canlı sayımlar: çerçeve `2`, tanımlayıcı `16`, şablon `16`, örnek satır `8`, mali rota `4`, rol özeti `9`, rol adımı `25`, veri kaynağı `2`, KDPÜ üst veri kaydı `6`, çeviri `8`, matris taslağı `2`, taslak satırı `6`, ödeme talebi `1`, ödeme olayı `2`.
+
+## Resmî referans ile pilot verinin ayrımı
+
+- Resmî kamu referansı: TYÇ 1–8, AYÇ/EQF 1–8 seviye tanımlayıcıları ve kaynak bağlantıları.
+- Sınırlı kamu üst verisi: altı doğrulanmış KDPÜ kamu üst veri kaydı; kod, başlık, kurum, kredi değeri (kaynakta bulunduğunda), geçici seviye ve yerleştirme durumu.
+- Sentetik pilot veri: matris şablonları/örnekleri, rol akışları, ödeme kayıtları, finans olayları ve kullanıcı işlemleri.
+
+Türkiye Yeterlilikler Veri Tabanı'nın tam kopyası oluşturulmamıştır. Portalın toplu yeniden kullanım lisansı ve kamuya açık bulk API/export sözleşmesi doğrulanmadığı için yalnız elle doğrulanmış sınırlı üst veri saklanır. Portalda listelenmek resmî TYÇ yerleştirmesi değildir; bu ayrım veri modelinde `placement_status`, `level_status` ve `institutional_validation_required` alanlarıyla korunur.
+
+## Test özeti
+
+- Güncel yerel domain/rol/ödeme/matris kabul paketi: **22/22 başarılı**.
+- Yapı ve production güvenlik taraması: **17/17 zorunlu dosya başarılı**.
+- Ödeme akışında yetkisiz rol, gerçek ödeme kanalı ve admin mali kararı reddedildi; `realPayment=false` korundu.
+- TYÇ ve AYÇ/EQF için ayrı ayrı sekiz seviye, sekiz şablon ve zorunlu matris alanları doğrulandı.
+- Önceki temel sürümün 9 rol × 1440/1024/768/390 px matrisi: **36/36 başarılı** ([run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557)).
+- Yeni ödeme/matris revizyonunun tam tarayıcı QA'sı, Preview asset/smoke kontrolü ve public alias kontrolü: **uygulama sonrası doğrulanacak**.
+- Genişletilmiş migration'ın canlı apply/RLS/grant/advisor doğrulaması: **PASS**.
+
+## Demo kullanıcıları ve roller
 
 1. Öğrenen / Öğrenci
 2. Üniversite içi eğitici
@@ -44,7 +94,9 @@ Karar: **Production NO-GO**
 6. Öğrenci İşleri yetkilisi
 7. Bilgi İşlem yetkilisi
 8. Finans / Döner Sermaye yetkilisi
-9. Sistem yöneticisi — akademik karar yetkisi yok
+9. Sistem yöneticisi — akademik veya mali karar yetkisi yok
+
+Gerçek hesap açılması veya gerçek kimlik doğrulama zorunlu değildir; tüm kullanıcı adları sentetiktir.
 
 ## ChatGPT Images varlıkları
 
@@ -53,31 +105,19 @@ Karar: **Production NO-GO**
 3. Dijital yeterlilik ve güven zinciri illüstrasyonu
 4. Kontrollü entegrasyon kapıları illüstrasyonu
 
-Tüm logolar özgün yüklenen dosyalardan ayrı `<img>` bileşenleriyle kullanıldı; oluşturulan görsellerin içine logo, düğme, form, tablo veya uzun metin gömülmedi.
-
-## Test özeti
-
-- Kaynak söz dizimi, yapı/secret taraması ve build doğrulamaları başarılıdır.
-- Dokuz rolün sahiplik, görünürlük, kritik eylem, değerlendirme kararı, audit ve iki uçtan uca senaryo domain sözleşmeleri **18/18 başarılıdır**.
-- Domain testinde Senaryo 1'in 12 ve Senaryo 2'nin 8 adımı tamamlanmış; kalıcı durum ve `realDataSent=false` değişmezleri doğrulanmıştır.
-- Dokuz rol × 1440, 1024, 768 ve 390 px hedeflerinden oluşan 9×4 tarayıcı QA matrisi **36/36 başarılıdır** ([run #17](https://github.com/gurselveysel/kampusgo/actions/runs/32275262333); [kanıt paketi](https://github.com/gurselveysel/kampusgo/actions/runs/32275262333/artifacts/9373767031)).
-- Public alias üzerinde rota, içerik ve asset smoke doğrulaması **PENDING** durumundadır.
-- Supabase katmanında RLS + FORCE RLS, salt-okunur grant'ler, sentetik veri ve `real_data_sent=false` değişmezleri doğrulanmıştır.
+Logolar yüklenen özgün dosyalardan ayrı `<img>` bileşenleriyle kullanılır; oluşturulan görsellere logo, düğme, form, tablo veya uzun metin gömülmez.
 
 ## Bilinen pilot sınırları
 
-- Etkileşimli arayüz bağımlılıksız HTML/CSS/ES module bileşenlerini korur; Vercel
-  dağıtımı Next.js 16 App Router kabuğu üzerinden yapılır. Tailwind dönüşümü bu pilot
-  kapsamına alınmamıştır.
-- Supabase uzak katmanı salt-okunur başlangıç görünümüdür; kullanıcı mutasyonları tarayıcıdaki izole, sürümlü `localStorage` çalışma alanındadır.
-- Gösterilen QR yalnız dekoratif pilot simülasyonudur; taranabilir üretim QR'ı, kurumsal imza ve W3C/Open Badges uygunluk iddiası yoktur.
-- Gerçek kimlik, kişisel veri, dosya içeriği, ödeme, e-fatura, kamera/mikrofon, biyometri, SMS/e-posta ve dış servis çağrısı yoktur.
-- Kural oranları, mevzuat yorumu ve EK-1 alanları yetkili kurumsal birim doğrulamasına açıktır.
-- Public alias için son HTTP/asset doğrulaması PENDING durumundadır; doğrulama bitmeden alias için PASS iddiası yapılmaz.
+- Supabase uzak referans katmanı salt-okunurdur; kullanıcı mutasyonları Preview tarayıcısındaki sürümlü `localStorage` alanında kalır.
+- Gerçek ödeme, banka/kart bilgisi, e-fatura, muhasebe fişi, kişisel veri veya canlı entegrasyon yoktur.
+- Matrisler otomatik seviye tayini veya akademik karar üretmez; yetkili kurul doğrulaması gerekir.
+- AYÇ/EQF Türkçe gösterim katmanı, kaynak ve çeviri temelini kayıt bazında belirtir; kurumsal doğrulamaya açıktır.
+- Türkiye Yeterlilikler Veri Tabanı tam scrape/mirror değildir; lisans ve bulk API/export sınırı nedeniyle `manual_snapshot_only` yaklaşımı kullanılır.
+- QR görünümü dekoratif simülasyondur; üretim imzası veya standart uygunluk iddiası yoktur.
+- Bu revizyonun GitHub SHA'sı, READY Preview kimliği ve custom-domain smoke testi henüz kesinleştirilmemiştir.
 
 ## Kurulum
-
-Node.js 22 veya üzeriyle:
 
 ```bash
 npm install
@@ -86,13 +126,8 @@ npm test
 npm run build
 ```
 
-Yerel adres: `http://localhost:3000` (kök rota `/pilot.html`'e yönlenir; `npm run dev:static` için `http://localhost:4173`)
+Yerel adres: `http://localhost:3000`; kök rota `/pilot.html`'e yönlenir. Statik sunucu: `npm run dev:static` → `http://localhost:4173`.
 
 ## Production teyidi
 
-Bu teslimde kabul edilen `dpl_7s2ZL879z7dYSUpgnkrHn8Jjdkzd` dağıtımı READY **Preview**'dır
-(`target: null`) ve production'a terfi ettirilmedi; karar kesin **NO-GO**'dur. Vercel proje
-ilk kurulumundan kalan eski `dpl_4kwgoosKHY1aw5H8QbjNthZ5j1JC` production hedefi
-değiştirilmedi, özel alan adına bağlanmadı ve bu kabulde kullanılmadı.
-`kampusgo.uzemgo.com/pilot.html` yalnız public Preview alias hedefidir; production branch,
-gerçek Supabase mutasyonu veya canlı kurumsal servis bağlantısı oluşturulmadı.
+Karar kesin **NO-GO**'dur. Bu çalışma production deployment, production branch yayını, canlı kurumsal sistem bağlantısı, gerçek Supabase kullanıcı mutasyonu veya production alan adı hedefi oluşturmaz. Kabul edilecek dağıtım yalnız `target: null` Vercel Preview olmalıdır; bu revizyonun deployment teyidi uygulama sonrası kayda geçirilecektir.

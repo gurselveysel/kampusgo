@@ -11,15 +11,15 @@ export const roles = [
 ];
 
 export const roleNavigation = {
-  learner: ["overview", "scenarios", "catalog", "learning", "applications", "recognition", "assessment", "wallet", "notifications"],
-  instructor: ["overview", "scenarios", "proposal", "applications", "programs", "assessment", "notifications"],
-  externalInstructor: ["overview", "scenarios", "proposal", "applications", "assessment", "notifications"],
-  coordinator: ["overview", "scenarios", "applications", "commission", "programs", "reports", "notifications"],
-  commission: ["overview", "scenarios", "commission", "applications", "assessment", "audit", "notifications"],
+  learner: ["overview", "scenarios", "catalog", "payments", "learning", "applications", "recognition", "assessment", "wallet", "notifications"],
+  instructor: ["overview", "scenarios", "proposal", "frameworks", "applications", "programs", "assessment", "notifications"],
+  externalInstructor: ["overview", "scenarios", "proposal", "frameworks", "applications", "assessment", "notifications"],
+  coordinator: ["overview", "scenarios", "applications", "frameworks", "commission", "programs", "reports", "notifications"],
+  commission: ["overview", "scenarios", "commission", "frameworks", "applications", "assessment", "audit", "notifications"],
   studentAffairs: ["overview", "scenarios", "applications", "integrations", "wallet", "audit"],
   it: ["overview", "scenarios", "integrations", "audit", "reports"],
-  finance: ["overview", "scenarios", "finance", "reports", "audit"],
-  admin: ["overview", "scenarios", "applications", "commission", "programs", "integrations", "finance", "reports", "audit"]
+  finance: ["overview", "scenarios", "finance", "reports", "audit", "notifications"],
+  admin: ["overview", "scenarios", "applications", "frameworks", "commission", "programs", "integrations", "finance", "reports", "audit"]
 };
 
 export const pageMeta = {
@@ -27,8 +27,10 @@ export const pageMeta = {
   overview: { label: "Genel Bakış", icon: "grid" },
   scenarios: { label: "Uçtan Uca Senaryolar", icon: "refresh" },
   catalog: { label: "Mikro Yeterlilik Kataloğu", icon: "book" },
+  payments: { label: "Başvuru ve Ödeme Demosu", icon: "coins" },
   learning: { label: "Eğitimlerim ve AKTS", icon: "book" },
   proposal: { label: "Yeni Program Önerisi", icon: "plus" },
+  frameworks: { label: "TYÇ / AYÇ Matrisleri", icon: "layers" },
   applications: { label: "Başvurular", icon: "file" },
   recognition: { label: "Dış Kazanım Başvurusu", icon: "upload" },
   commission: { label: "Akademik Karar Masası", icon: "users" },
@@ -71,6 +73,7 @@ export const initialState = {
   ],
   recognizedCredits: [],
   integrationJobs: [],
+  qualificationDrafts: [],
   programs: [
     {
       id: "program-data-literacy",
@@ -214,6 +217,22 @@ export const initialState = {
   ],
   finance: {
     parameters: { withholding: 15, vat: 20, stamp: 0.759 },
+    paymentRequests: [
+      {
+        id: "PAY-2401",
+        programId: "program-green-skills",
+        programCode: "MY-PRG-2026-011",
+        program: "Yeşil Dönüşüm İçin Temel Yetkinlikler",
+        learner: "Derya Örnek",
+        amount: 1750,
+        channel: "Havale/EFT simülasyonu",
+        status: "pending_finance",
+        createdAt: "2026-08-19T15:20:00Z",
+        updatedAt: "2026-08-19T15:20:00Z",
+        realPayment: false,
+        enrollmentCreated: false
+      }
+    ],
     transactions: [
       { id: "TX-0821", program: "Proje Temelli Öğrenme Tasarımı", learner: "Pilot Katılımcı 021", gross: 1200, channel: "Havale/EFT simülasyonu", status: "matched" },
       { id: "TX-0822", program: "Yeşil Dönüşüm İçin Temel Yetkinlikler", learner: "Pilot Katılımcı 014", gross: 1750, channel: "Sanal POS simülasyonu", status: "pending" }
@@ -226,9 +245,11 @@ export const initialState = {
     { id: "N-1", title: "Komisyon gündemi güncellendi", body: "MY-PRG-2026-014 başvurusu 21 Ağustos pilot toplantısına eklendi.", time: "Bugün • 09.20", recipientRoles: ["coordinator", "commission"], readBy: [] },
     { id: "N-2", title: "Ek belge gerekiyor", body: "MY-BSV-2026-0042 için sağlayıcı doğrulama kanıtı bekleniyor.", time: "Dün • 16.45", recipientRoles: ["learner", "coordinator", "commission"], readBy: [] },
     { id: "N-3", title: "Aktarım simülasyonu planlandı", body: "ÖBİS dry-run senaryosu için onay kapısı kontrol listesi hazırlandı.", time: "17.08.2026", recipientRoles: ["coordinator", "commission"], readBy: ["coordinator", "commission"] },
-    { id: "N-4", title: "Program kanıt kontrol listesi hazır", body: "Yeni program önerilerinde eğitici yeterliliği ve kalite güvence kanıtı alanlarını tamamlayın.", time: "16.08.2026", recipientRoles: ["instructor", "externalInstructor"], readBy: [] }
+    { id: "N-4", title: "Program kanıt kontrol listesi hazır", body: "Yeni program önerilerinde eğitici yeterliliği ve kalite güvence kanıtı alanlarını tamamlayın.", time: "16.08.2026", recipientRoles: ["instructor", "externalInstructor"], readBy: [] },
+    { id: "N-5", title: "Ödeme demo incelemesi bekliyor", body: "PAY-2401, Finans / Döner Sermaye ön kontrol kuyruğuna iletildi. Gerçek ödeme alınmadı.", time: "Bugün • 18.49", recipientRoles: ["finance"], readBy: [] }
   ],
   audit: [
+    { id: "AUD-1008", entityId: "PAY-2401", at: "2026-08-19T15:20:00Z", actor: "Derya Örnek", actorRole: "learner", action: "Ödeme demosu mali işlere yönlendirildi", from: "draft", to: "pending_finance", reason: "Havale/EFT simülasyonu; gerçek para veya ödeme aracı verisi işlenmedi" },
     { id: "AUD-1007", entityId: "APP-014", at: "2026-08-19T08:42:00Z", actor: "Murat Akın", actorRole: "coordinator", action: "Ön kontrol tamamlandı", from: "review", to: "commission", reason: "Zorunlu pilot kanıtların tamamı mevcut" },
     { id: "AUD-1006", entityId: "APP-042", at: "2026-08-18T14:15:00Z", actor: "MYYS Pilot Analiz Motoru", actorRole: "system", action: "Karşılaştırma analizi üretildi", from: "review", to: "review", reason: "%58 benzerlik işareti — karar değildir" },
     { id: "AUD-1005", entityId: "APP-031", at: "2026-08-18T09:05:00Z", actor: "Prof. Dr. Deniz Aydın", actorRole: "commission", action: "Revizyon istendi", from: "commission", to: "revision", reason: "Rubrik ve öğrenme çıktısı eşlemesi eksik" }

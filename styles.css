@@ -332,6 +332,35 @@ tbody tr:hover td { background: #fbfaf8; }
 .integration-card dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 10px; margin: 16px 0 0; font-size: 10.5px; }
 .integration-card dt { color: var(--muted); }
 .integration-card dd { margin: 0; color: var(--navy); text-align: right; }
+.integration-explainer { border-top: 3px solid var(--purple); }
+.integration-explainer:nth-child(2) { border-top-color: var(--gold); }
+.scope-list { display: grid; gap: 7px; padding-left: 18px; margin: 15px 0 0; color: var(--muted); font-size: 11px; }
+.scope-list strong { color: var(--risk); }
+
+.role-overview { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(220px, .8fr) auto; align-items: center; gap: 20px; margin-bottom: 18px; padding: 19px 21px; border: 1px solid #d9d0f1; border-left: 5px solid var(--purple); border-radius: var(--radius); background: linear-gradient(100deg, var(--purple-soft), #fff 70%); box-shadow: var(--shadow-sm); }
+.role-overview h2 { margin: 3px 0 5px; font-size: 19px; }
+.role-overview p { margin: 0; color: var(--muted); font-size: 11.5px; }
+.role-overview__eyebrow { color: var(--purple); font-size: 9.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.role-overview__boundary { display: grid; gap: 4px; padding: 10px 13px; border-left: 1px solid #d9d0f1; color: var(--muted); font-size: 10.5px; }
+.role-overview__boundary strong { color: var(--navy); }
+
+.payment-flow { padding-top: 24px; }
+.payment-flow ol { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 0; margin: 0; list-style: none; }
+.payment-flow li { position: relative; display: grid; grid-template-columns: 32px 1fr; align-items: center; gap: 9px; min-height: 72px; padding: 11px; border: 1px solid var(--border); border-radius: 11px; background: #fff; color: var(--muted); }
+.payment-flow li > span { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; font-size: 10px; font-weight: 800; }
+.payment-flow li > span svg { width: 15px; height: 15px; }
+.payment-flow li strong, .payment-flow li small { display: block; }
+.payment-flow li strong { color: var(--navy); font-size: 11px; }
+.payment-flow li small { margin-top: 3px; font-size: 9px; }
+.payment-flow li.current { border-color: #d9d0f1; background: var(--purple-soft); color: var(--purple); }
+.payment-flow li.current > span { border-color: var(--purple); background: var(--purple); color: #fff; }
+.payment-flow li.done { border-color: #b9dfd1; background: var(--success-soft); color: var(--success); }
+.payment-flow li.done > span { border-color: var(--success); color: var(--success); }
+.payment-form { overflow: hidden; }
+.payment-form .card-footer > span { display: grid; gap: 2px; }
+.consent-row { display: flex; align-items: flex-start; gap: 9px; color: var(--muted); font-size: 10.5px; line-height: 1.45; }
+.consent-row input { width: 18px; height: 18px; flex: 0 0 auto; margin-top: 1px; accent-color: var(--purple); }
+.table-actions { display: flex; flex-wrap: wrap; gap: 6px; min-width: 180px; }
 
 .chart-wrap { min-height: 260px; }
 .donut-row { display: flex; align-items: center; gap: 24px; }
@@ -376,6 +405,25 @@ tbody tr:hover td { background: #fbfaf8; }
 .toast--error svg { color: var(--risk); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(12px); } }
 
+.framework-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 22px 0 14px; }
+.framework-tabs .tab { min-height: 62px; display: flex; align-items: flex-start; justify-content: center; flex-direction: column; text-align: left; }
+.framework-tabs .tab small { display: block; margin-top: 3px; color: var(--muted); font-weight: 500; }
+.framework-source-card .card-body { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.matrix-intro { margin-top: 18px; }
+.instruction-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 28px; margin: 20px 0 0; padding-left: 22px; color: var(--muted); }
+.matrix-editor { display: grid; gap: 16px; margin-top: 16px; }
+.matrix-editor-row { min-width: 0; margin: 0; padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-sm); }
+.matrix-editor-row > legend { margin-left: 18px; padding: 0 8px; color: var(--navy); font-size: 15px; font-weight: 800; }
+.matrix-reference { padding: 18px 22px; border-bottom: 1px solid var(--border); background: var(--paper); }
+.matrix-reference > span { display: inline-flex; margin-bottom: 8px; color: var(--purple); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.matrix-reference p { margin: 0; color: var(--muted); font-size: 12.5px; white-space: pre-line; }
+.matrix-reference small { display: block; margin-top: 10px; color: var(--warning); font-size: 10.5px; }
+.matrix-reference details { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+.matrix-reference summary { color: var(--info); font-size: 11px; font-weight: 700; cursor: pointer; }
+.matrix-reference details p { margin-top: 8px; }
+.matrix-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 22px; }
+.matrix-fields textarea { min-height: 92px; }
+
 @media (max-width: 1180px) {
   :root { --sidebar-w: 224px; }
   .data-mode { display: none; }
@@ -409,6 +457,10 @@ tbody tr:hover td { background: #fbfaf8; }
   .steps, .sticky-card { position: static; }
   .steps { display: flex; overflow-x: auto; }
   .step { min-width: 170px; }
+  .role-overview { grid-template-columns: 1fr; }
+  .role-overview__boundary { border-left: 0; border-top: 1px solid #d9d0f1; padding-left: 0; }
+  .role-overview .button { width: fit-content; }
+  .payment-flow ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 640px) {
@@ -450,6 +502,11 @@ tbody tr:hover td { background: #fbfaf8; }
   .modal-backdrop { padding: 0; align-items: end; }
   .modal { width: 100%; max-height: 92vh; border-radius: 20px 20px 0 0; }
   .modal-footer { display: grid; }
+  .payment-flow ol { grid-template-columns: 1fr; }
+  .payment-form .card-footer { display: grid; align-items: stretch; }
+  .payment-form .card-footer .button, .role-overview .button { width: 100%; }
+  .framework-tabs, .instruction-list, .matrix-fields { grid-template-columns: 1fr; }
+  .framework-source-card .card-body { align-items: flex-start; flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {

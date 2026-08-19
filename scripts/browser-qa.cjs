@@ -78,32 +78,9 @@ async function setHash(page, route) {
 async function waitForRole(page, role) {
   await page.waitForFunction(({ id, label, name }) => {
     const select = document.querySelector("#role-select");
-    // At tablet/mobile widths the closed sidebar is intentionally hidden from
-    // the keyboard and accessibility trees. `innerText` is therefore empty
-    // even though role-specific drawer content has rendered. Use textContent
-    // for the state assertion and test the opened drawer separately below.
-    const persona = document.querySelector("#persona-card")?.textContent || "";
+    const persona = document.querySelector("#persona-card")?.innerText || "";
     const heading = document.querySelector("#main-content h1")?.textContent || "";
     return select?.value === id && persona.includes(label) && persona.includes(name) && heading.includes(`${label} genel bakışı`);
-  }, role, { timeout: 3000 });
-}
-
-async function waitForOpenDrawerPersona(page, role) {
-  if (!role?.id || !role?.label?.trim() || !role?.name?.trim()) {
-    throw new Error("Seçili demo rolü için doğrulanabilir persona bilgisi bulunamadı");
-  }
-  await page.waitForFunction(({ id, label, name }) => {
-    const sidebar = document.querySelector("#sidebar");
-    const toggle = document.querySelector('[data-action="toggle-nav"]');
-    if (!sidebar || !toggle) return false;
-    const persona = document.querySelector("#persona-card")?.innerText?.trim() || "";
-    return document.body.classList.contains("nav-open")
-      && toggle?.getAttribute("aria-expanded") === "true"
-      && document.querySelector("#role-select")?.value === id
-      && getComputedStyle(sidebar).visibility === "visible"
-      && persona.length > 0
-      && persona.includes(label)
-      && persona.includes(name);
   }, role, { timeout: 3000 });
 }
 
@@ -320,6 +297,107 @@ async function verifyDecisionActions(page, errors) {
   check((await page.locator("#main-content").innerText()).includes("Salt-okunur"), "admin: salt-okunur karar açıklaması yok", errors);
 }
 
+async function verifyPaymentDemoFlow(page, errors) {
+  await page.evaluate(() => {
+    const key = "kdpu-myys-pilot-v3";
+    const saved = JSON.parse(localStorage.getItem(key));
+    saved.finance.paymentRequests = [];
+    localStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="finance"]', { state: "attached" });
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "learner");
+  await setHash(page, "catalog");
+  await page.locator('[data-action="open-program"][data-id="program-green-skills"]').click();
+  await page.locator('[data-action="apply-program"][data-id="program-green-skills"]').click();
+  check((await page.locator("#payment-request-form").count()) === 1, "learner: ücretli program ödeme demo formuna yönlenmedi", errors);
+  await page.selectOption("#payment-channel", "Havale/EFT simülasyonu");
+  await page.check('#payment-request-form input[name="confirm"]');
+  await page.locator('#payment-request-form button[type="submit"]').click();
+  check((await page.locator('[data-action="handoff-finance"]').count()) === 1, "learner: mali işlere gönderim sonrası Finans rolü devir CTA'sı yok", errors);
+  await page.locator('[data-action="handoff-finance"]').click();
+  check(await page.locator("#role-select").inputValue() === "finance", "ödeme demo devir eylemi Finans rolünü açmadı", errors);
+
+  const requestRow = page.locator('tr:has-text("Yeşil Dönüşüm İçin Temel Yetkinlikler")').filter({ has: page.locator('[data-action="payment-review"][data-status="approved"]') }).first();
+  await requestRow.locator('[data-action="payment-review"][data-status="approved"]').click();
+  await page.check('#payment-review-form input[name="confirm"]');
+  await page.locator('[data-action="submit-payment-review"]').click();
+  const approvedRow = page.locator('tr:has-text("Yeşil Dönüşüm İçin Temel Yetkinlikler")').filter({ has: page.locator('[data-action="payment-review"][data-status="reconciled"]') }).first();
+  await approvedRow.locator('[data-action="payment-review"][data-status="reconciled"]').click();
+  await page.check('#payment-review-form input[name="confirm"]');
+  await page.locator('[data-action="submit-payment-review"]').click();
+
+  const paymentState = await page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const request = saved.finance.paymentRequests.find((item) => item.programId === "program-green-skills");
+    return {
+      status: request?.status,
+      realPayment: request?.realPayment,
+      enrollment: saved.enrollments.some((item) => item.programCode === "MY-PRG-2026-011"),
+      audit: saved.audit.some((item) => item.entityId === request?.id && item.to === "reconciled" && item.actorRole === "finance")
+    };
+  });
+  check(paymentState.status === "reconciled", "finance: ödeme demo mutabakat durumu kaydedilmedi", errors);
+  check(paymentState.realPayment === false, "ödeme demo kaydında realPayment=false korunmadı", errors);
+  check(paymentState.enrollment, "mutabakat sonrası pilot eğitim kaydı oluşturulmadı", errors);
+  check(paymentState.audit, "mali mutabakat denetim izine yazılmadı", errors);
+  await setHash(page, "overview");
+  await page.locator('[data-action="reset-demo"]').click();
+}
+
+async function verifyQualificationMatrixFlow(page, errors) {
+  const programTitle = "Tarayıcı QA TYÇ Matris Programı";
+  const outcome = "İleri kuramsal bilgiyi karmaşık bir öğrenme probleminde eleştirel olarak uygular.";
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "instructor");
+  await setHash(page, "frameworks");
+  await page.waitForFunction(() => document.querySelector("#main-content h1")?.textContent?.includes("TYÇ ve AYÇ yeterlilik eşleme matrisleri"));
+  check(await page.locator('.framework-tabs [data-action="framework-tab"]').count() === 2, "frameworks: TYÇ ve AYÇ sekmeleri birlikte görünmüyor", errors);
+  check(await page.locator("#framework-level option").count() === 8, "frameworks: TYÇ 1–8 seviye seçenekleri eksik", errors);
+
+  await page.locator('[data-action="framework-tab"][data-framework="eqf"]').click();
+  check(await page.locator("#framework-level option").count() === 8, "frameworks: AYÇ/EQF 1–8 seviye seçenekleri eksik", errors);
+  check((await page.locator(".framework-source-card").innerText()).includes("Avrupa Yeterlilikler Çerçevesi"), "frameworks: AYÇ/EQF resmî referansı yüklenmedi", errors);
+  await page.locator('[data-action="framework-tab"][data-framework="tyc"]').click();
+  await page.selectOption("#framework-level", "6");
+  await page.locator('[data-action="load-framework-level"]').click();
+
+  check((await page.locator('#qualification-matrix-form button[type="submit"]').count()) === 1, "instructor: matris kaydetme CTA'sı yok", errors);
+  check(await page.locator("#matrix-program-title").isEditable(), "instructor: program adı alanı düzenlenebilir değil", errors);
+  check(await page.locator("#matrix-knowledge-outcome").isEditable(), "instructor: matris çıktı alanı düzenlenebilir değil", errors);
+  await page.fill("#matrix-program-title", programTitle);
+  await page.fill("#matrix-knowledge-outcome", outcome);
+  await page.locator('#qualification-matrix-form button[type="submit"]').click();
+  await page.waitForFunction((title) => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    return saved.qualificationDrafts?.some((item) => item.frameworkId === "tyc" && item.level === 6 && item.programTitle === title && item.ownerRole === "instructor");
+  }, programTitle, { timeout: 3000 });
+
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="coordinator"]', { state: "attached" });
+  await setHash(page, "frameworks");
+  check(await page.locator("#matrix-program-title").inputValue() === programTitle, "instructor: matris taslağı reload sonrasında korunmadı", errors);
+  check(await page.locator("#matrix-knowledge-outcome").inputValue() === outcome, "instructor: matris satırı reload sonrasında korunmadı", errors);
+  check((await page.locator("#main-content").innerText()).includes("Kayıtlı pilot matris taslağı"), "instructor: reload sonrası kayıtlı taslak bildirimi yok", errors);
+
+  await page.selectOption("#role-select", "coordinator");
+  await setHash(page, "frameworks");
+  const editableFields = page.locator('#qualification-matrix-form input:not([type="hidden"]), #qualification-matrix-form textarea');
+  const readonlyFlags = await editableFields.evaluateAll((nodes) => nodes.map((node) => node.readOnly));
+  check(readonlyFlags.length > 0 && readonlyFlags.every(Boolean), "coordinator: matris alanlarının tamamı salt-okunur değil", errors);
+  check((await page.locator('#qualification-matrix-form button[type="submit"]').count()) === 0, "coordinator: matris kaydetme CTA'sı görünür", errors);
+  check((await page.locator("#main-content").innerText()).includes("Salt-okunur inceleme"), "coordinator: salt-okunur açıklaması yok", errors);
+  const before = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3")).qualificationDrafts.length);
+  await page.locator("#qualification-matrix-form").evaluate((form) => form.requestSubmit());
+  const after = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3")).qualificationDrafts.length);
+  check(after === before, "coordinator: doğrudan submit denemesi matris taslağını değiştirdi", errors);
+  const coordinatorMutation = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3")).audit.some((item) => item.actorRole === "coordinator" && item.action === "TYÇ / AYÇ pilot matris taslağı kaydedildi"));
+  check(!coordinatorMutation, "coordinator: yetkisiz matris kaydı audit izine yazıldı", errors);
+  await setHash(page, "overview");
+  await page.locator('[data-action="reset-demo"]').click();
+}
+
 async function verifyPersistenceAndStateGuard(page, roles, errors) {
   const external = roles.find((role) => role.id === "externalInstructor");
   await setHash(page, "overview");
@@ -398,36 +476,21 @@ async function verifyUnauthorizedRoute(page, errors) {
           await verifyExternalInstructorProposal(page, errors);
           await verifyAssessmentActions(page, errors);
           await verifyDecisionActions(page, errors);
+          await verifyPaymentDemoFlow(page, errors);
+          await verifyQualificationMatrixFlow(page, errors);
           await verifyPersistenceAndStateGuard(page, roles, errors);
           await verifyUnauthorizedRoute(page, errors);
           await verifyScenarioActions(page, scenarioDefinitions, errors);
         }
         if (viewport.width === 390) {
           await setHash(page, "overview");
-          const selectedRoleId = await page.locator("#role-select").inputValue();
-          const selectedRole = roles.find((role) => role.id === selectedRoleId);
-          if (!selectedRole?.label?.trim() || !selectedRole?.name?.trim()) {
-            errors.push(`mobile: seçili ${selectedRoleId || "boş"} rolü için persona kaydı bulunamadı`);
-          } else {
-            try {
-              // `setHash` yalnız URL değişimini doğrular; render/hashchange bir
-              // sonraki görevde tamamlanabilir. Drawer'ı açmadan önce seçili
-              // rolün görünümünü, açtıktan sonra da görünür persona metnini bekle.
-              await waitForRole(page, selectedRole);
-              await page.locator('[data-action="toggle-nav"]').click();
-              await waitForOpenDrawerPersona(page, selectedRole);
-            } catch {
-              errors.push("mobile: açılan menü seçili rolün görünür persona bilgisini göstermedi");
-            }
-          }
+          await page.locator('[data-action="toggle-nav"]').click();
+          check(await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü açılmadı", errors);
           // The backdrop spans the full viewport, including the area underneath
           // the higher-z-index sidebar. Click its exposed right edge, matching
           // an actual mobile user tap outside the drawer.
-          const drawerOpen = await page.locator("body").evaluate((body) => body.classList.contains("nav-open"));
-          if (drawerOpen) {
-            await page.locator('[data-action="close-nav"]').click({ position: { x: viewport.width - 8, y: 40 } });
-            await page.waitForFunction(() => !document.body.classList.contains("nav-open"), undefined, { timeout: 3000 });
-          }
+          await page.locator('[data-action="close-nav"]').click({ position: { x: viewport.width - 8, y: 40 } });
+          check(!await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü kapanmadı", errors);
         }
         await page.screenshot({ path: `test-results/${viewport.name}-nine-role-qa.png`, fullPage: true });
       } catch (error) {

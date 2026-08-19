@@ -19,6 +19,8 @@ export const transitionPermissions = {
 
 const applicationOwnerRoles = new Set(["learner", "instructor", "externalInstructor"]);
 const assessmentDecisionRoles = new Set(["instructor", "externalInstructor", "commission"]);
+const paymentChannels = new Set(["Sanal POS simülasyonu", "Havale/EFT simülasyonu"]);
+const paymentStatuses = new Set(["draft", "pending_finance", "approved", "revision", "reconciled"]);
 
 const actorNames = {
   learner: "Derya Örnek",
@@ -107,6 +109,164 @@ export function getAllowedApplicationTransitions(application, actorRole, actorNa
 
 export function canRecordAssessmentDecision(actorRole) {
   return assessmentDecisionRoles.has(actorRole);
+}
+
+/**
+ * Returns payment-demo records through a strict role and identity boundary.
+ * Learners see only their own synthetic requests; the finance role sees the
+ * operational queue. Admin has read-only technical oversight in the UI.
+ */
+export function visiblePaymentRequestsForRole(state, actorRole, actorName) {
+  const requests = state?.finance?.paymentRequests || [];
+  if (actorRole === "learner") {
+    const effectiveName = actorName || actorNameForRole("learner");
+    return requests.filter((request) => request.learner === effectiveName);
+  }
+  if (["finance", "admin"].includes(actorRole)) return [...requests];
+  return [];
+}
+
+/** Starts, but does not submit, a synthetic payment request for an active paid program. */
+export function startPaymentRequest(state, programId, actorRole, actorName) {
+  if (actorRole !== "learner") throw new Error("Ödeme demo adımını yalnız öğrenen başlatabilir");
+  const learner = actorName || actorNameForRole("learner");
+  const program = state.programs.find((item) => item.id === programId);
+  if (!program || program.status !== "active") throw new Error("Aktif pilot program bulunamadı");
+  if (!Number.isFinite(Number(program.price)) || Number(program.price) <= 0) {
+    throw new Error("Bu program için mali işler ödeme demosu gerekmez");
+  }
+  state.finance ||= {};
+  state.finance.paymentRequests ||= [];
+  const existing = state.finance.paymentRequests.find((request) =>
+    request.programId === program.id && request.learner === learner && request.status !== "reconciled"
+  );
+  if (existing) return existing;
+  const now = new Date().toISOString();
+  const request = {
+    id: `PAY-${String(Date.now()).slice(-6)}`,
+    programId: program.id,
+    programCode: program.code,
+    program: program.title,
+    learner,
+    amount: Number(program.price),
+    channel: "Seçilmedi • simülasyon",
+    status: "draft",
+    createdAt: now,
+    updatedAt: now,
+    realPayment: false,
+    enrollmentCreated: false
+  };
+  state.finance.paymentRequests.unshift(request);
+  state.audit.unshift({
+    id: `AUD-${Date.now()}-PAY-DRAFT`, entityId: request.id, at: now,
+    actor: learner, actorRole: "learner", action: "Ödeme demo taslağı oluşturuldu",
+    from: "none", to: "draft", reason: "Gerçek ödeme veya kart verisi alınmadı"
+  });
+  return request;
+}
+
+/** Sends the learner's request to the Finance / Döner Sermaye pilot queue. */
+export function submitPaymentRequest(state, requestId, channel, actorRole, actorName) {
+  if (actorRole !== "learner") throw new Error("Mali işler kuyruğuna yalnız öğrenen başvurusu gönderilebilir");
+  if (!paymentChannels.has(channel)) throw new Error("Geçerli bir pilot ödeme kanalı seçin");
+  const learner = actorName || actorNameForRole("learner");
+  const request = state.finance?.paymentRequests?.find((item) => item.id === requestId);
+  if (!request || request.learner !== learner) throw new Error("Ödeme demo kaydı bulunamadı veya bu öğrenene ait değil");
+  if (!["draft", "revision"].includes(request.status)) throw new Error("Bu ödeme demo kaydı mali işlere tekrar gönderilemez");
+  const previous = request.status;
+  const now = new Date().toISOString();
+  request.channel = channel;
+  request.status = "pending_finance";
+  request.updatedAt = now;
+  request.realPayment = false;
+  state.audit.unshift({
+    id: `AUD-${Date.now()}-PAY-SUBMIT`, entityId: request.id, at: now,
+    actor: learner, actorRole: "learner", action: "Ödeme demosu mali işlere yönlendirildi",
+    from: previous, to: request.status, reason: `${channel}; gerçek para veya ödeme aracı verisi işlenmedi`
+  });
+  pushPaymentNotification(state, ["finance"], "Yeni ödeme demo incelemesi", `${request.id} • ${request.program} için mali ön kontrol bekliyor.`);
+  pushPaymentNotification(state, ["learner"], "Mali işlere yönlendirildi", `${request.id} numaralı ödeme demonuz Finans / Döner Sermaye kuyruğuna iletildi.`);
+  return request;
+}
+
+/** Finance-only approval, revision and reconciliation state machine. */
+export function reviewPaymentRequest(state, requestId, nextStatus, actorRole, reason, actorName) {
+  if (actorRole !== "finance") throw new Error("Ödeme demo incelemesini yalnız Finans / Döner Sermaye rolü yapabilir");
+  if (!paymentStatuses.has(nextStatus)) throw new Error("Geçersiz ödeme demo durumu");
+  const request = state.finance?.paymentRequests?.find((item) => item.id === requestId);
+  if (!request) throw new Error("Ödeme demo kaydı bulunamadı");
+  const allowed = {
+    pending_finance: ["approved", "revision"],
+    approved: ["reconciled", "revision"]
+  }[request.status] || [];
+  if (!allowed.includes(nextStatus)) throw new Error(`${request.status} durumundan ${nextStatus} durumuna geçilemez`);
+  if (!String(reason || "").trim()) throw new Error("Mali demo durum değişikliği için gerekçe zorunludur");
+  const previous = request.status;
+  const now = new Date().toISOString();
+  request.status = nextStatus;
+  request.updatedAt = now;
+  request.reviewReason = String(reason).trim();
+  request.realPayment = false;
+
+  if (nextStatus === "reconciled") {
+    state.finance.transactions ||= [];
+    if (!state.finance.transactions.some((item) => item.paymentRequestId === request.id)) {
+      state.finance.transactions.unshift({
+        id: `TX-${request.id}`,
+        paymentRequestId: request.id,
+        program: request.program,
+        learner: request.learner,
+        gross: request.amount,
+        channel: request.channel,
+        status: "matched"
+      });
+    }
+    const enrollmentId = `ENR-${request.programCode}`;
+    if (!state.enrollments.some((item) => item.id === enrollmentId)) {
+      const program = state.programs.find((item) => item.id === request.programId);
+      state.enrollments.unshift({
+        id: enrollmentId,
+        programCode: request.programCode,
+        title: request.program,
+        learner: request.learner,
+        status: "active",
+        progress: 0,
+        ects: Number(program?.ects || 1),
+        remoteEcts: Number(((program?.ects || 1) * (program?.remoteRate || 0) / 100).toFixed(1))
+      });
+    }
+    request.enrollmentCreated = true;
+  }
+
+  const action = nextStatus === "approved"
+    ? "Mali ön onay verildi • simülasyon"
+    : nextStatus === "revision"
+      ? "Ödeme demosu için düzeltme istendi"
+      : "Ödeme demosu mutabakatı tamamlandı";
+  state.audit.unshift({
+    id: `AUD-${Date.now()}-PAY-REVIEW`, entityId: request.id, at: now,
+    actor: actorName || actorNameForRole("finance"), actorRole: "finance", action,
+    from: previous, to: nextStatus, reason: request.reviewReason
+  });
+  const notificationTitle = nextStatus === "approved"
+    ? "Mali ön onay verildi"
+    : nextStatus === "revision"
+      ? "Ödeme demosunda düzeltme gerekiyor"
+      : "Mutabakat tamamlandı • pilot kayıt açıldı";
+  pushPaymentNotification(state, ["learner"], notificationTitle, `${request.id} • ${request.reviewReason}`);
+  return request;
+}
+
+function pushPaymentNotification(state, recipientRoles, title, body) {
+  state.notifications ||= [];
+  state.notifications.unshift({
+    id: `N-PAY-${Date.now()}-${state.notifications.length}`,
+    title,
+    body,
+    time: "Şimdi • uygulama içi",
+    recipientRoles,
+    readBy: []
+  });
 }
 
 export const scenarioDefinitions = {

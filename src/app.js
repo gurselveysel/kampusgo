@@ -6,12 +6,25 @@ import {
   filterApplicationsForRole,
   getAllowedApplicationTransitions,
   recordAssessmentDecision,
+  reviewPaymentRequest,
   runScenarioStep,
   scenarioDefinitions,
+  startPaymentRequest,
+  submitPaymentRequest,
   transitionApplication,
+  visiblePaymentRequestsForRole,
   visibleProgramsForRole
 } from "./workflow.js";
 import { getSupabasePublicConfig, loadPilotSnapshot } from "./supabase.js";
+import {
+  findQualificationDescriptor,
+  findQualificationTemplate,
+  officialQualificationReferences,
+  qualificationDatasetRegistry,
+  qualificationFrameworks,
+  qualificationLevelDescriptors,
+  qualificationMatrixExamples
+} from "./reference-data.js";
 
 const STORAGE_KEY = "kdpu-myys-pilot-v3";
 const root = document.querySelector("#main-content");
@@ -29,9 +42,11 @@ const INTEGRATION_BULK_ROLES = new Set(["it", "admin"]);
 const FINANCE_OPERATOR_ROLES = new Set(["finance", "admin"]);
 const PROPOSAL_ROLES = new Set(["instructor", "externalInstructor"]);
 
-let state = loadState();
+let state = normalizePilotState(loadState());
 let lastFocused = null;
 let currentCommissionTab = "summary";
+let currentFrameworkTab = "tyc";
+let currentFrameworkLevel = 6;
 
 function loadState() {
   try {
@@ -41,6 +56,16 @@ function loadState() {
     // Corrupt local state safely falls back to the sealed synthetic seed.
   }
   return structuredClone(initialState);
+}
+
+function normalizePilotState(value) {
+  value.finance ||= structuredClone(initialState.finance);
+  value.finance.paymentRequests ||= structuredClone(initialState.finance.paymentRequests || []);
+  value.finance.transactions ||= [];
+  value.finance.entitlements ||= [];
+  value.finance.invoiceDrafts ||= [];
+  value.qualificationDrafts ||= [];
+  return value;
 }
 
 function isValidSavedState(saved) {
@@ -97,6 +122,18 @@ function isValidSavedState(saved) {
     if (kind === "entitlement") return ["instructor", "evidence", "status"].every((key) => isText(item[key])) && isNumber(item.hours) && isNumber(item.gross);
     return isText(item.entitlementId) && isText(item.status) && isDate(item.createdAt) && item.realDocument === false;
   };
+  const isPaymentRequest = (item) => isObject(item) &&
+    ["id", "programId", "programCode", "program", "learner", "channel", "status", "createdAt", "updatedAt"].every((key) => isText(item[key])) &&
+    ["draft", "pending_finance", "approved", "revision", "reconciled"].includes(item.status) &&
+    isDate(item.createdAt) && isDate(item.updatedAt) && isNumber(item.amount) &&
+    item.realPayment === false && typeof item.enrollmentCreated === "boolean";
+  const isQualificationDraft = (item) => isObject(item) &&
+    ["id", "frameworkId", "programTitle", "ownerRole", "ownerName", "status", "updatedAt"].every((key) => isText(item[key])) &&
+    ["tyc", "eqf"].includes(item.frameworkId) && ["instructor", "externalInstructor"].includes(item.ownerRole) &&
+    isNumber(item.level, 1, 8) && item.status === "pilot_draft" && isDate(item.updatedAt) &&
+    Array.isArray(item.rows) && item.rows.length === 3 && item.rows.every((row) => isObject(row) &&
+      ["dimension", "learningOutcome", "learningLevel", "courseContent", "assessmentMethod", "evidence", "alignmentRationale"].every((key) => isText(row[key]))
+    );
   const selectedApplicationIsValid = (applications) => saved.selectedApplicationId === null ||
     saved.selectedApplicationId === undefined ||
     (isText(saved.selectedApplicationId) && applications.some((item) => item.id === saved.selectedApplicationId));
@@ -119,9 +156,15 @@ function isValidSavedState(saved) {
     Array.isArray(saved.finance.entitlements) &&
     saved.finance.transactions.every((item) => isFinanceRecord(item, "transaction")) &&
     saved.finance.entitlements.every((item) => isFinanceRecord(item, "entitlement")) &&
+    (saved.finance.paymentRequests === undefined || (Array.isArray(saved.finance.paymentRequests) && saved.finance.paymentRequests.every(isPaymentRequest))) &&
+    (saved.qualificationDrafts === undefined || (Array.isArray(saved.qualificationDrafts) && saved.qualificationDrafts.every(isQualificationDraft))) &&
     (saved.finance.invoiceDrafts === undefined || (Array.isArray(saved.finance.invoiceDrafts) && saved.finance.invoiceDrafts.every((item) => isFinanceRecord(item, "invoice")))) &&
     isObject(saved.finance.parameters) && ["withholding", "vat", "stamp"].every((key) => isNumber(saved.finance.parameters[key], 0, 100)) &&
-    (saved.remoteSnapshot === null || saved.remoteSnapshot === undefined || (isObject(saved.remoteSnapshot) && ["programs", "applications", "credentials", "integrations"].every((key) => isNumber(saved.remoteSnapshot[key])) && isDate(saved.remoteSnapshot.checkedAt)))
+    (saved.remoteSnapshot === null || saved.remoteSnapshot === undefined || (isObject(saved.remoteSnapshot) &&
+      ["programs", "applications", "credentials", "integrations"].every((key) => isNumber(saved.remoteSnapshot[key])) &&
+      ["qualificationLevels", "officialQualifications", "matrixTemplates", "matrixDrafts", "paymentRequests", "roleWorkflowRows", "unavailableReferenceViews"].every((key) => saved.remoteSnapshot[key] === undefined || isNumber(saved.remoteSnapshot[key])) &&
+      (saved.remoteSnapshot.referenceSource === undefined || isText(saved.remoteSnapshot.referenceSource)) &&
+      isDate(saved.remoteSnapshot.checkedAt)))
   );
 }
 
@@ -209,7 +252,7 @@ function visibleAuditEvents(applications = visibleApplications()) {
     return state.audit.filter((event) => event.actorRole === "it" || /^(INT-|JOB-)/.test(event.entityId));
   }
   if (state.roleId === "finance") {
-    return state.audit.filter((event) => event.actorRole === "finance" || /^(FIN-|TX-|INV-|ENT-)/.test(event.entityId));
+    return state.audit.filter((event) => event.actorRole === "finance" || /^(FIN-|PAY-|TX-|INV-|ENT-)/.test(event.entityId));
   }
   return [];
 }
@@ -243,7 +286,9 @@ const statusMap = {
   active: ["Yayında • Pilot", "success"], credentialed: ["Yeterlilik üretildi • Pilot", "success"], valid: ["Geçerli • Pilot", "success"], disconnected: ["Bağlı değil", "neutral"],
   simulated: ["Simülasyon", "info"], matched: ["Eşleştirildi • Simülasyon", "success"], pending: ["Bekliyor • Simülasyon", "warning"],
   completed: ["Tamamlandı • Simülasyon", "success"], scheduled: ["Planlandı • Simülasyon", "info"],
-  failed: ["Hata senaryosu • Simülasyon", "risk"], recognized: ["Tanınan kredi • Pilot", "success"]
+  failed: ["Hata senaryosu • Simülasyon", "risk"], recognized: ["Tanınan kredi • Pilot", "success"],
+  pending_finance: ["Mali inceleme bekliyor", "warning"],
+  reconciled: ["Mutabakat tamamlandı • Simülasyon", "success"]
 };
 
 function statusBadge(status, override) {
@@ -362,6 +407,13 @@ function homePage() {
       </div>
     </section>
     <section class="section"><div class="section-heading"><div><div class="page-kicker">Uçtan uca izlenebilirlik</div><h2>Altı evre, tek kanıt zinciri</h2></div><p>Her evre; rol, karar sahibi, gerekçe, kanıt ve zaman damgasıyla görünür olur. Pilot analizler nihai akademik karar yerine geçmez.</p></div><div class="lifecycle-grid">${lifecycle.map((item) => `<article class="life-card"><span class="life-no">${item.no}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></article>`).join("")}</div></section>
+    <section class="section" aria-labelledby="financial-integration-title">
+      <div class="section-heading"><div><div class="page-kicker">Mali entegrasyon taslağı</div><h2 id="financial-integration-title">GİB/e-Arşiv ve MYS/MAYS neyi örnekliyor?</h2></div><p>Her iki kapı da varsayılan olarak bağlı değildir. Bu pilot, yalnız onay sırasını, hata senaryosunu ve denetim kaydını görünür kılar.</p></div>
+      <div class="grid grid-2">
+        <article class="card integration-explainer"><div class="card-body"><div class="integration-head"><span class="integration-mark">GİB</span>${statusBadge("disconnected")}</div><h3>GİB / e-Arşiv taslak kapısı</h3><p class="page-subtitle">Mali birimce doğrulanmış bir tahsilat sonrasında e-belge oluşturma sürecine aktarılması önerilen alanları ve onayları temsil eder. Gerçek mükellef bilgisi, e-Arşiv faturası, servis adresi veya belge numarası üretilmez.</p><ul class="scope-list"><li>Örnek belge üst verisi</li><li>Mali onay ve hata/yeniden deneme adımı</li><li><strong>Gerçek veri gönderilmez</strong></li></ul></div></article>
+        <article class="card integration-explainer"><div class="card-body"><div class="integration-head"><span class="integration-mark">MYS</span>${statusBadge("disconnected")}</div><h3>MYS / MAYS kontrollü aktarım taslağı</h3><p class="page-subtitle">Döner sermaye ve mali yönetim süreçlerinde gerekli olabilecek harcama, ödeme, hak ediş ve mutabakat kayıtlarının kontrollü servis katmanından geçirilmesini örnekler. Kurumsal kullanım ve alan eşlemesi ayrıca doğrulanmalıdır.</p><ul class="scope-list"><li>Onay kapısı ve görev ayrılığı</li><li>Hak ediş / mutabakat simülasyonu</li><li><strong>Canlı mali sisteme bağlı değil</strong></li></ul></div></article>
+      </div>
+    </section>
     <section class="section grid grid-3">
       <article class="card"><div class="card-body"><div class="kpi-icon">${icon("users")}</div><h3 style="margin-top:15px">Akademik yetki korunur</h3><p class="page-subtitle">Yapay zekâ yalnız karşılaştırılabilir pilot analiz üretir; nihai karar komisyon ve yetkili kuruldadır.</p></div></article>
       <article class="card"><div class="card-body"><div class="kpi-icon">${icon("shield")}</div><h3 style="margin-top:15px">Mahremiyet sınırlandırılır</h3><p class="page-subtitle">Kamera, mikrofon, biyometri, gerçek kimlik ve ödeme verisi toplanmaz; tüm kayıtlar açıkça sentetiktir.</p></div></article>
@@ -372,6 +424,7 @@ function homePage() {
 
 function overviewPage() {
   const role = currentRole();
+  const profile = roleOverviewProfile(state.roleId);
   const applications = visibleApplications();
   const auditEvents = visibleOverviewAudit(applications);
   const pending = applications.filter((item) => ["review", "commission", "revision"].includes(item.status)).length;
@@ -382,6 +435,11 @@ function overviewPage() {
   const auditAction = isAllowed("audit") ? `<button class="button button--ghost button--sm" data-nav="audit">Tümünü gör</button>` : "";
   const auditContent = auditEvents.length ? `<div class="timeline">${auditEvents.slice(0,4).map(auditTimeline).join("")}</div>` : `<div class="empty-inline"><strong>Bu role ait denetim olayı yok</strong><span>Yeni bir pilot işlem yaptığınızda burada görünür.</span></div>`;
   return `<div class="page-container">${pageHeader("Rol bazlı operasyon", `${role.label} genel bakışı`, `${role.name} için yalnızca kurgusal pilot veriler ve role uygun eylemler gösteriliyor.`, `<button class="button button--secondary" data-action="reset-demo">${icon("refresh")} Demo verisini sıfırla</button>`)}
+    <section class="role-overview" data-role-overview="${state.roleId}" aria-labelledby="role-workspace-title">
+      <div><span class="role-overview__eyebrow">Aktif demo çalışma alanı</span><h2 id="role-workspace-title">${escapeHtml(profile.title)}</h2><p>${escapeHtml(profile.scope)}</p></div>
+      <div class="role-overview__boundary"><strong>Bu rolün sınırı</strong><span>${escapeHtml(profile.boundary)}</span></div>
+      <button class="button button--secondary" data-nav="${profile.primaryPage}">${escapeHtml(profile.primaryAction)} ${icon("arrow")}</button>
+    </section>
     <div class="grid grid-4">
       ${kpi("Aktif başvurular", pending, "İnceleme, komisyon veya revizyon aşamasında", "file")}
       ${kpi("Yaklaşan pilot süre", dueSoon, "30 günlük gösterge kurumsal doğrulamaya açıktır", "clock")}
@@ -394,6 +452,20 @@ function overviewPage() {
     </div>
     <div class="section">${notice("warning", "Pilot kural uyarısı", "30 gün, %10 AKTS, %50 uzaktan kredi ve benzerlik bantları kaynak dosyalardaki öneri/ön kontrol değerleridir; kurumsal ve Senato doğrulaması olmadan nihai karar üretmez.")}</div>
   </div>`;
+}
+
+function roleOverviewProfile(roleId) {
+  return {
+    learner: { title: "Öğrenme, başvuru ve ödeme demo akışı", scope: "Kataloğu inceler; kendi başvurusunu, mali yönlendirmesini, eğitimini ve yeterlilik cüzdanını izler.", boundary: "Başka kişinin kaydını veya akademik/mali kararı değiştiremez.", primaryPage: "catalog", primaryAction: "Programa başvur" },
+    instructor: { title: "Üniversite içi program tasarım alanı", scope: "Program önerisini, öğrenme çıktısını, AKTS iş yükünü, rubriği ve kalite kanıtlarını hazırlar.", boundary: "Komisyon adına onay, ret veya mali işlem yapamaz.", primaryPage: "proposal", primaryAction: "Program önerisi oluştur" },
+    externalInstructor: { title: "Kurum dışı eğitici kanıt ve öneri alanı", scope: "Kendi demo kimliğiyle program önerisi ve eğitici yeterlilik kanıt üst verisi oluşturur.", boundary: "Üniversite içi eğitici gibi işaretlenmez; başka eğiticinin taslağını göremez.", primaryPage: "proposal", primaryAction: "Dış eğitici önerisini aç" },
+    coordinator: { title: "Koordinatörlük / SEM ön inceleme alanı", scope: "Başvuru bütünlüğünü, süre göstergesini, eksik kanıtı ve komisyon gündemine hazırlığı yönetir.", boundary: "Nihai akademik onay veya gerekçeli ret veremez.", primaryPage: "applications", primaryAction: "Gelen başvuruları incele" },
+    commission: { title: "Akademik insan kararı çalışma alanı", scope: "Karşılaştırılabilir kanıtları inceler; gerekçeli onay, ret, revizyon veya çekimser görüş kaydeder.", boundary: "Pilot analiz karar değildir; nihai yetki insan komisyonundadır.", primaryPage: "commission", primaryAction: "Karar masasını aç" },
+    studentAffairs: { title: "AKTS, kayıt ve belge kontrol alanı", scope: "Dış kazanım, AKTS portföyü, yapılandırılmış belge ve ÖBİS aktarım taslağını inceler.", boundary: "Gerçek öğrenci kaydı veya canlı ÖBİS aktarımı oluşturamaz.", primaryPage: "applications", primaryAction: "AKTS ön kontrolünü aç" },
+    it: { title: "Entegrasyon ve teknik kontrol alanı", scope: "Bağlı olmayan servis kapılarını, hata/yeniden deneme simülasyonlarını ve audit sağlığını izler.", boundary: "Canlı uç noktaya veri gönderemez; akademik karar veremez.", primaryPage: "integrations", primaryAction: "Entegrasyon merkezini aç" },
+    finance: { title: "Finans / Döner Sermaye inceleme kuyruğu", scope: "Öğrenenden gelen ödeme demolarını ön onay, revizyon ve mutabakat adımlarıyla işler; hak edişi izler.", boundary: "Gerçek para, kart verisi, fatura veya kesin vergi hesabı oluşturamaz.", primaryPage: "finance", primaryAction: "Mali inceleme kuyruğunu aç" },
+    admin: { title: "Teknik pilot yönetim ve gözetim alanı", scope: "Rol-yetki matrisini, modülleri, entegrasyon simülasyonlarını ve denetim izini teknik açıdan gözlemler.", boundary: "Akademik veya mali karar sahibi değildir; production yetkisi yoktur.", primaryPage: "reports", primaryAction: "Yönetim raporunu aç" }
+  }[roleId];
 }
 
 function scenariosPage() {
@@ -438,14 +510,14 @@ function kpi(label, value, note, iconName) {
 
 function roleTasks(roleId) {
   const tasks = {
-    learner: [["Dış kazanım için eksik kanıtı tamamla", "recognition", "1 belge bekliyor"], ["Aktif programları incele", "catalog", "3 pilot program"], ["Yeterliliğini doğrula", "wallet", "1 pilot belge"]],
+    learner: [["Eğitim başvurusu ve mali yönlendirmeyi izle", "payments", "Gerçek ödeme yok"], ["Aktif programları incele", "catalog", "3 pilot program"], ["Yeterliliğini doğrula", "wallet", "1 pilot belge"]],
     instructor: [["Program önerisini komisyon için gözden geçir", "proposal", "MY-PRG-2026-014"], ["Ölçme rubriğini aç", "assessment", "Taslak kanıt"], ["Program durumlarını izle", "applications", "3 kayıt"]],
     externalInstructor: [["Yetkinlik kanıtı yükleme alanını incele", "proposal", "Simülasyon"], ["Program önerisi oluştur", "proposal", "Yeni taslak"], ["Bildirimleri kontrol et", "notifications", "Uygulama içi"]],
     coordinator: [["Eksik belge kontrolünü tamamla", "applications", "1 başvuru"], ["Süre göstergelerini incele", "reports", "1 yaklaşan kayıt"], ["Komisyon gündemini aç", "commission", "2 kayıt"]],
     commission: [["Karşılaştırma analizini incele", "commission", "MY-PRG-2026-014"], ["Gerekçeli görüş ekle", "commission", "İnsan kararı"], ["Karar geçmişini denetle", "audit", "İzlenebilir kayıt"]],
     studentAffairs: [["AKTS ön kontrolünü incele", "applications", "%10 pilot sınırı"], ["ÖBİS dry-run kaydını aç", "integrations", "Bağlı değil"], ["Belge alanlarını karşılaştır", "wallet", "EK-1 taslağı"]],
     it: [["Entegrasyon onay kapılarını test et", "integrations", "7 bağlı olmayan servis"], ["Audit kayıtlarını incele", "audit", "Gerçek veri yok"], ["Sistem sağlığı özetini aç", "reports", "Pilot görünüm"]],
-    finance: [["Tahsilat eşleşmesini incele", "finance", "2 simülasyon"], ["Hak ediş taslağını doğrula", "finance", "Mali onay gerekli"], ["Program raporunu aç", "reports", "Parametreler dinamik"]],
+    finance: [["Öğrenen ödeme demo kuyruğunu incele", "finance", "Ön onay / revizyon / mutabakat"], ["Hak ediş taslağını doğrula", "finance", "Mali onay gerekli"], ["Bildirimleri kontrol et", "notifications", "Yalnız uygulama içi"]],
     admin: [["Rol ve kapsam görünümünü denetle", "overview", "9 demo rolü"], ["Entegrasyonları doğrula", "integrations", "Production kapalı"], ["Audit izini dışa aktarma simülasyonu", "audit", "Sentetik veri"]]
   }[roleId] || [];
   return `<div class="timeline">${tasks.map(([title, page, meta], index) => `<div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>${escapeHtml(title)}</strong><span>${escapeHtml(meta)}</span><button class="text-button" data-nav="${page}">Aç</button></div></div>`).join("")}</div>`;
@@ -463,6 +535,44 @@ function catalogPage() {
   </div>`;
 }
 
+function paymentsPage() {
+  const requests = visiblePaymentRequestsForRole(state, state.roleId, currentRole().name);
+  const current = requests.find((item) => ["draft", "revision", "pending_finance", "approved"].includes(item.status)) || requests[0];
+  const content = current
+    ? paymentRequestPanel(current)
+    : `<section class="card empty-state"><div class="empty-icon">${icon("coins")}</div><h3>Ödeme demo başvurusu yok</h3><p>Ücretli bir pilot programın ayrıntısından “Başvuru ve ödeme demosuna geç” düğmesini kullanın.</p><button class="button" data-nav="catalog">Pilot programları incele</button></section>`;
+  const history = requests.length
+    ? `<section class="card section"><div class="card-header"><div><h2>Başvuru ve mali yönlendirme geçmişim</h2><p>Yalnız ${escapeHtml(currentRole().name)} adına oluşturulan sentetik kayıtlar</p></div></div><div class="table-wrap"><table><caption class="sr-only">Öğrenenin ödeme demo başvuruları</caption><thead><tr><th scope="col">Kayıt</th><th scope="col">Program</th><th scope="col">Tutar</th><th scope="col">Kanal</th><th scope="col">Durum</th></tr></thead><tbody>${requests.map((item) => `<tr><td><span class="table-title">${escapeHtml(item.id)}</span><span class="table-subtitle">${formatDate(item.updatedAt, true)}</span></td><td>${escapeHtml(item.program)}</td><td>${formatCurrency(item.amount)}</td><td>${escapeHtml(item.channel)}</td><td>${paymentStatusBadge(item)}</td></tr>`).join("")}</tbody></table></div></section>`
+    : "";
+  return `<div class="page-container">${pageHeader("Eğitim başvurusu • Mali yönlendirme", "Eğitim başvurusu ve ödeme demosu", "Program seçimi, ödeme kanalı tercihi, Finans / Döner Sermaye incelemesi ve mutabakat adımları gerçek para veya ödeme aracı verisi olmadan örneklenir.", `<button class="button button--secondary" data-nav="catalog">${icon("book")} Kataloğa dön</button>`)}
+    ${notice("warning", "Gerçek ödeme alınmaz", "Kart numarası, banka hesabı, T.C. kimlik numarası veya kişisel mali veri istenmez. GİB/e-Arşiv ve MYS/MAYS bağlı değildir; yalnız mali işlere uygulama içi yönlendirme oluşturulur.")}
+    ${content}${history}
+  </div>`;
+}
+
+function paymentRequestPanel(request) {
+  const ranks = { draft: 1, revision: 1, pending_finance: 2, approved: 3, reconciled: 4 };
+  const rank = ranks[request.status] || 1;
+  const steps = [
+    [1, "Program seçildi", request.programCode],
+    [2, "Mali işlere yönlendirme", request.status === "draft" || request.status === "revision" ? "Kanal seçimi bekliyor" : request.channel],
+    [3, "Mali ön inceleme", request.status === "approved" || request.status === "reconciled" ? "Ön onay tamamlandı" : request.status === "revision" ? "Düzeltme istendi" : "Finans / Döner Sermaye"],
+    [4, "Mutabakat ve pilot kayıt", request.status === "reconciled" ? "Eğitim kaydı açıldı" : "Gerçek tahsilat yok"]
+  ];
+  const editable = ["draft", "revision"].includes(request.status);
+  const form = editable
+    ? `<form class="card payment-form" id="payment-request-form"><div class="card-header"><div><h2>Ödeme kanalı demosu</h2><p>Yalnız kanal adı seçilir; ödeme aracı bilgisi alınmaz.</p></div>${paymentStatusBadge(request)}</div><div class="card-body form-grid"><input type="hidden" name="id" value="${escapeHtml(request.id)}" /><div class="field full"><label class="required" for="payment-channel">Pilot kanal</label><select id="payment-channel" name="channel" required><option value="">Kanal seçin</option><option>Sanal POS simülasyonu</option><option>Havale/EFT simülasyonu</option></select><small>Her iki seçenek de yalnız iş akışı etiketidir; gerçek tahsilat başlatmaz.</small></div><label class="consent-row full"><input type="checkbox" name="confirm" required /><span>Bu işlemin gerçek ödeme veya kayıt oluşturmadığını ve yalnız mali inceleme demosu olduğunu anlıyorum.</span></label></div><div class="card-footer"><span><strong>${formatCurrency(request.amount)}</strong><span class="table-subtitle">Pilot program ücreti • mali birim doğrulaması gerekir</span></span><button class="button" type="submit">Finans / Döner Sermaye'ye gönder ${icon("arrow")}</button></div></form>`
+    : `<section class="card"><div class="card-header"><div><h2>${escapeHtml(request.program)}</h2><p>${escapeHtml(request.id)} • ${formatCurrency(request.amount)} • ${escapeHtml(request.channel)}</p></div>${paymentStatusBadge(request)}</div><div class="card-body">${request.reviewReason ? notice(request.status === "revision" ? "warning" : "success", "Mali birim notu", request.reviewReason) : notice("success", "Mali işlere iletildi", "Başvuru Finans / Döner Sermaye demo kuyruğunda görünür; gerçek tahsilat veya dış bildirim oluşmaz.")}${request.status === "reconciled" ? `<button class="button" data-nav="learning">Pilot eğitim kaydını aç</button>` : `<button class="button button--secondary" data-action="handoff-finance">Finans / Döner Sermaye demo rolüne geç</button>`}</div></section>`;
+  return `<section class="payment-flow section" aria-label="Ödeme demo ilerlemesi"><ol>${steps.map(([step, title, note]) => `<li class="${step < rank ? "done" : step === rank ? "current" : ""}"><span>${step < rank ? icon("check") : step}</span><div><strong>${escapeHtml(title)}</strong><small>${escapeHtml(note)}</small></div></li>`).join("")}</ol></section>${form}`;
+}
+
+function paymentStatusBadge(request) {
+  if (request.status === "approved") return statusBadge("approved", "Mali ön onay • Simülasyon");
+  if (request.status === "revision") return statusBadge("revision", "Mali düzeltme bekliyor");
+  if (request.status === "draft") return statusBadge("draft", "Kanal seçimi bekliyor");
+  return statusBadge(request.status);
+}
+
 function programCard(program) {
   return `<article class="card program-card" data-program-level="${program.level}" data-searchable="${escapeHtml(`${program.title} ${program.unit} ${program.instructor}`.toLocaleLowerCase("tr-TR"))}"><div class="program-accent"></div><div class="card-body"><div class="program-meta"><span class="meta-pill">${program.ects} AKTS • Pilot</span><span class="meta-pill">TYÇ ${program.level} önerisi</span><span class="meta-pill">${escapeHtml(program.mode)}</span></div><h3>${escapeHtml(program.title)}</h3><p>${escapeHtml(program.summary)}</p><small class="table-subtitle">${escapeHtml(program.unit)} • ${escapeHtml(program.instructor)}</small></div><div class="card-footer">${statusBadge(program.status)}<button class="button button--secondary button--sm" data-action="open-program" data-id="${program.id}">Ayrıntıları gör ${icon("arrow")}</button></div></article>`;
 }
@@ -470,7 +580,7 @@ function programCard(program) {
 function proposalPage() {
   const role = currentRole();
   const submitLabel = state.roleId === "externalInstructor" ? "Kurum dışı eğitici olarak koordinatörlüğe ilet" : "Koordinatörlüğe ilet";
-  return `<div class="page-container">${pageHeader("Başvuru • Evre 1", "Yeni mikro yeterlilik programı önerisi", "Zorunlu alanları tamamlayın; bu form yalnızca tarayıcınızdaki pilot veri katmanına sentetik kayıt oluşturur.")}
+  return `<div class="page-container">${pageHeader("Başvuru • Evre 1", "Yeni mikro yeterlilik programı önerisi", "Zorunlu alanları tamamlayın; bu form yalnızca tarayıcınızdaki pilot veri katmanına sentetik kayıt oluşturur.", `<button class="button button--secondary" data-nav="frameworks">${icon("layers")} TYÇ / AYÇ matrisini aç</button>`)}
     ${notice("success", "Başvuru sahibi demo kimliği", `${role.name} • ${role.label}. Gönderim bu rol ve kişi adına sahiplik ile denetim kaydı oluşturur.`)}
     <div class="form-shell"><aside class="card steps" aria-label="Form adımları"><div class="step active"><span>1</span><div><strong>Program bilgileri</strong><small>Ad, birim, hedef kitle</small></div></div><div class="step"><span>2</span><div><strong>Akademik yapı</strong><small>Çıktı, AKTS, TYÇ</small></div></div><div class="step"><span>3</span><div><strong>Değerlendirme</strong><small>Kanıt ve rubrik</small></div></div><div class="step"><span>4</span><div><strong>Önizleme</strong><small>Pilot kontrol ve gönderim</small></div></div></aside>
       <form class="card form-card" id="proposal-form">
@@ -588,6 +698,104 @@ function qrMarkup() {
   return `<div class="qr" role="img" aria-label="Pilot doğrulama kodunu temsil eden dekoratif QR simülasyonu">${[...pattern].slice(0,81).map((value) => `<i class="${value === "1" ? "on" : ""}"></i>`).join("")}</div>`;
 }
 
+function qualificationDraftFor(frameworkId, level) {
+  const matches = (state.qualificationDrafts || []).filter((draft) => draft.frameworkId === frameworkId && draft.level === Number(level));
+  if (PROPOSAL_ROLES.has(state.roleId)) {
+    return matches.find((draft) => draft.ownerRole === state.roleId && draft.ownerName === currentRole().name) || null;
+  }
+  return matches.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))[0] || null;
+}
+
+function matrixSeedRow(dimension, frameworkId, level) {
+  const example = qualificationMatrixExamples.find((item) => item.frameworkId === frameworkId && item.level === Number(level));
+  const seeds = {
+    knowledge: {
+      learningOutcome: "Dijital öğrenme tasarımının kuram ve ilkelerini eleştirel biçimde açıklar.",
+      learningLevel: "Analiz etme ve gerekçelendirme",
+      courseContent: "Öğrenme kuramları, tasarım modelleri ve kanıt değerlendirme ilkeleri",
+      assessmentMethod: "Eleştirel kısa rapor + analitik rubrik",
+      evidence: "Gerekçeli rapor ve rubrikte en az yeterli düzey",
+      alignmentRationale: "Kuramsal bilgiyi eleştirel açıklama ve uygulama bağlamına taşıma kanıtı üretir."
+    },
+    skills: {
+      learningOutcome: example?.learningOutcomeSample || "Karmaşık bir öğrenme ihtiyacına yenilikçi çözüm tasarlar.",
+      learningLevel: example?.learningLevelSample || "Yaratma ve değerlendirme",
+      courseContent: example?.courseContentSample || "İhtiyaç analizi, öğrenme senaryosu ve ölçme planı",
+      assessmentMethod: example?.assessmentMethodSample || "Proje + sunum + performans rubriği",
+      evidence: example?.evidenceSample || "Proje dosyası, sunum ve rubrik kaydı",
+      alignmentRationale: example?.alignmentRationaleSample || "Seviye beklentisiyle gözlenebilir beceri kanıtını ilişkilendirir."
+    },
+    competence: {
+      learningOutcome: "Öngörülemeyen proje koşullarında kanıta dayalı karar alır; ekip işini ve etik riskleri yönetir.",
+      learningLevel: "Bağımsız karar alma ve yönetme",
+      courseContent: "Proje yönetimi, etik, erişilebilirlik ve risk değerlendirmesi",
+      assessmentMethod: "Senaryo simülasyonu + karar gerekçesi + akran değerlendirmesi",
+      evidence: "Karar günlüğü, risk kaydı ve akran değerlendirmesi",
+      alignmentRationale: "Sorumluluk, özerklik, proje yönetimi ve etik yargı kanıtlarını birlikte görünür kılar."
+    }
+  };
+  return { dimension, ...seeds[dimension] };
+}
+
+function descriptorParagraphs(value) {
+  return String(value || "").split(/\n{2,}/).filter(Boolean).map((part) => `<p>${escapeHtml(part)}</p>`).join("");
+}
+
+function matrixDimensionCard(dimension, label, descriptorText, row, editable, canonicalText = "", translationNote = "") {
+  const readonly = editable ? "" : " readonly";
+  return `<fieldset class="matrix-editor-row"><legend>${escapeHtml(label)}</legend>
+    <div class="matrix-reference"><span>Resmî referans • salt okunur</span>${descriptorParagraphs(descriptorText)}${translationNote ? `<small>${escapeHtml(translationNote)}</small>` : ""}${canonicalText ? `<details><summary>Kanonik İngilizce metni göster</summary>${descriptorParagraphs(canonicalText)}</details>` : ""}</div>
+    <input type="hidden" name="${dimension}Dimension" value="${dimension}" />
+    <div class="matrix-fields">
+      <div class="field full"><label class="required" for="matrix-${dimension}-outcome">Öğrenme hedefi / çıktısı</label><textarea id="matrix-${dimension}-outcome" name="${dimension}Outcome" required minlength="20"${readonly}>${escapeHtml(row.learningOutcome)}</textarea></div>
+      <div class="field"><label class="required" for="matrix-${dimension}-level">Öğrenme düzeyi ve eylem fiili</label><input id="matrix-${dimension}-level" name="${dimension}Level" required minlength="5" value="${escapeHtml(row.learningLevel)}"${readonly} /></div>
+      <div class="field"><label class="required" for="matrix-${dimension}-content">Ders içeriği / etkinlik</label><textarea id="matrix-${dimension}-content" name="${dimension}Content" required minlength="12"${readonly}>${escapeHtml(row.courseContent)}</textarea></div>
+      <div class="field"><label class="required" for="matrix-${dimension}-assessment">Ölçme-değerlendirme</label><textarea id="matrix-${dimension}-assessment" name="${dimension}Assessment" required minlength="12"${readonly}>${escapeHtml(row.assessmentMethod)}</textarea></div>
+      <div class="field"><label class="required" for="matrix-${dimension}-evidence">Başarı ölçütü ve kanıt</label><textarea id="matrix-${dimension}-evidence" name="${dimension}Evidence" required minlength="12"${readonly}>${escapeHtml(row.evidence)}</textarea></div>
+      <div class="field full"><label class="required" for="matrix-${dimension}-rationale">Uyum gerekçesi</label><textarea id="matrix-${dimension}-rationale" name="${dimension}Rationale" required minlength="20"${readonly}>${escapeHtml(row.alignmentRationale)}</textarea></div>
+    </div>
+  </fieldset>`;
+}
+
+function frameworksPage() {
+  const framework = qualificationFrameworks.find((item) => item.id === currentFrameworkTab) || qualificationFrameworks[0];
+  const descriptor = findQualificationDescriptor(framework.id, currentFrameworkLevel) || qualificationLevelDescriptors.find((item) => item.frameworkId === framework.id);
+  const template = findQualificationTemplate(framework.id, descriptor.level);
+  const savedDraft = qualificationDraftFor(framework.id, descriptor.level);
+  const editable = PROPOSAL_ROLES.has(state.roleId);
+  const displayDescriptor = framework.id === "eqf" && descriptor.displayTranslationTr ? descriptor.displayTranslationTr : descriptor;
+  const eqfTranslationNote = framework.id === "eqf"
+    ? `Europass Türkçe görünüm; ${descriptor.level === 7 ? "beceri alanı kurumsal operasyonel çeviri olarak işaretlidir" : "resmî Türkçe sayfadan doğrulanmıştır"}.`
+    : "";
+  const dimensions = [
+    ["knowledge", framework.id === "tyc" ? "Bilgi" : "Bilgi (Knowledge)", displayDescriptor.knowledge, framework.id === "eqf" ? descriptor.knowledge : ""],
+    ["skills", framework.id === "tyc" ? "Beceri" : "Beceriler (Skills)", displayDescriptor.skills, framework.id === "eqf" ? descriptor.skills : ""],
+    ["competence", framework.id === "tyc" ? descriptor.competenceLabel : "Sorumluluk ve özerklik", displayDescriptor.competence, framework.id === "eqf" ? descriptor.competence : ""]
+  ];
+  const rows = dimensions.map(([dimension]) => savedDraft?.rows.find((row) => row.dimension === dimension) || matrixSeedRow(dimension, framework.id, descriptor.level));
+  const actions = editable
+    ? `<button class="button" type="submit">${icon("check")} Matris taslağını kaydet</button>`
+    : `<span class="status status--info">Salt-okunur inceleme</span>`;
+  const draftNotice = savedDraft
+    ? notice("success", "Kayıtlı pilot matris taslağı", `${savedDraft.ownerName} • ${formatDate(savedDraft.updatedAt, true)}. Bu kayıt resmî seviye ataması veya komisyon kararı değildir.`)
+    : notice("warning", "Hazır örnek alanlar", "Alanlar kullanım örneğiyle doldurulmuştur. Eğitici kendi ölçülebilir çıktısını, içeriğini, ölçme yöntemini, ölçütünü ve kanıtını yazmalıdır.");
+  return `<div class="page-container">${pageHeader("Akademik tasarım • Resmî referans + pilot şablon", "TYÇ ve AYÇ yeterlilik eşleme matrisleri", "Türkiye ve Avrupa çerçeveleri ayrı tutulur. Resmî seviye tanımlayıcıları kilitlidir; aday eğitici program hedefi, içerik, ölçme yöntemi, başarı ölçütü ve kanıt alanlarını doldurur.")}
+    ${notice("warning", "Seviye seçimi karar değildir", "Bu ekran yalnız program önerisi için gerekçeli seviye eşleme taslağı üretir. Nihai akademik karar yetkili kurulundur; portalda listelenme de tek başına TYÇ’ye yerleştirilme anlamına gelmez.")}
+    <div class="framework-tabs" role="tablist" aria-label="Yeterlilik çerçevesi seçimi">${qualificationFrameworks.map((item) => `<button class="tab ${item.id === framework.id ? "active" : ""}" role="tab" aria-selected="${item.id === framework.id}" data-action="framework-tab" data-framework="${item.id}">${escapeHtml(item.code)}<small>${escapeHtml(item.nameTr)}</small></button>`).join("")}</div>
+    <section class="card framework-source-card"><div class="card-body"><div><span class="table-subtitle">Kamuya açık resmî çerçeve referansı</span><h2>${escapeHtml(framework.nameTr)}</h2><p class="page-subtitle">${escapeHtml(framework.nameEn)} • ${escapeHtml(framework.jurisdiction)} • Doğrulama: ${formatDate(framework.verifiedAt)}</p></div><a class="button button--secondary button--sm" href="${escapeHtml(framework.officialSourceUrl)}" target="_blank" rel="noreferrer">Resmî kaynağı aç ${icon("arrow")}</a></div></section>
+    <div class="toolbar section"><div><strong>Hazır şablon</strong><span class="table-subtitle">1–8 arasında seviye seçin; üç resmî boyut birlikte yüklenir.</span></div><div class="toolbar-group"><label class="sr-only" for="framework-level">Seviye</label><select id="framework-level" class="select">${Array.from({ length: 8 }, (_, index) => index + 1).map((level) => `<option value="${level}" ${level === descriptor.level ? "selected" : ""}>${framework.code} ${level}. seviye</option>`).join("")}</select><button class="button button--secondary" data-action="load-framework-level">Şablonu yükle</button></div></div>
+    ${draftNotice}
+    <form id="qualification-matrix-form" class="section"><input type="hidden" name="frameworkId" value="${framework.id}" /><input type="hidden" name="level" value="${descriptor.level}" />
+      <section class="card matrix-intro"><div class="card-header"><div><h2>${escapeHtml(template.title)}</h2><p>${escapeHtml(template.candidateInstructions)}</p></div>${statusBadge("simulated", `${framework.code} ${descriptor.level} • Pilot öneri`)}</div><div class="card-body"><div class="field"><label class="required" for="matrix-program-title">Program adı</label><input id="matrix-program-title" name="programTitle" required minlength="8" value="${escapeHtml(savedDraft?.programTitle || "Dijital Öğrenme Tasarımı ve Değerlendirme")}"${editable ? "" : " readonly"} /></div><ol class="instruction-list"><li>Her resmî boyut için en az bir ölçülebilir çıktı yazın.</li><li>Çıktıyı içerik, öğretim etkinliği ve ölçme yöntemiyle eşleyin.</li><li>Başarı ölçütünü ve doğrulanabilir kanıtı açıkça belirtin.</li><li>AKTS/iş yükü ve uzaktan eğitim kontrollerini program formunda ayrıca tamamlayın.</li></ol></div></section>
+      <div class="matrix-editor">${dimensions.map(([dimension, label, text, canonical], index) => matrixDimensionCard(dimension, label, text, rows[index], editable, canonical, eqfTranslationNote)).join("")}</div>
+      <div class="form-actions"><span class="table-subtitle">Şablon ve örnekler sentetiktir; resmî metinler salt okunur kaynak alanlarıdır.</span>${actions}</div>
+    </form>
+    <section class="card section"><div class="card-header"><div><h2>Veri kapsamı ve provenans</h2><p>Supabase kataloğu resmî referans ile pilot çalışma verisini ayırır.</p></div>${statusBadge("approved", "16/16 seviye")}</div><div class="card-body"><div class="grid grid-3"><div><strong>8 TYÇ seviyesi</strong><p class="page-subtitle">MYK resmî Türkçe tanımlayıcıları</p></div><div><strong>8 AYÇ/EQF seviyesi</strong><p class="page-subtitle">Europass kanonik İngilizce + ayrı Türkçe görünüm</p></div><div><strong>Toplu portal aynası yok</strong><p class="page-subtitle">Yalnız kaynak, lisans ve yerleştirme durumu izlenen sınırlı kamu üst verisi alınır.</p></div></div></div></section>
+    <section class="card section"><div class="card-header"><div><h2>KDPÜ program referansları</h2><p>Türkiye Yeterlilikler Veri Tabanı'ndan doğrulanan sınırlı kamu üst verisi; tam katalog değildir.</p></div>${statusBadge("simulated", `${officialQualificationReferences.length} kaynak kayıt`)}</div><div class="table-wrap"><table><caption class="sr-only">KDPÜ resmî yeterlilik referansları</caption><thead><tr><th scope="col">Kod / program</th><th scope="col">Tür</th><th scope="col">Seviye</th><th scope="col">Yerleştirme durumu</th><th scope="col">Kaynak</th></tr></thead><tbody>${officialQualificationReferences.map((item) => `<tr><td><span class="table-title">${escapeHtml(item.qualificationCode)}</span><span class="table-subtitle">${escapeHtml(item.qualificationTitle)}</span></td><td>${escapeHtml(item.qualificationType)}</td><td>TYÇ ${item.tycLevel}${item.eqfLevel ? ` • AYÇ ${item.eqfLevel}` : ""}</td><td>${item.placementStatus === "not_placed" ? statusBadge("disconnected", "TYÇ'ye yerleştirilmedi") : statusBadge("simulated", "Yerleştirme doğrulanmadı")}</td><td><a class="text-button" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kaydı aç</a></td></tr>`).join("")}</tbody></table></div></section>
+    <section class="grid grid-2 section" aria-label="Yeterlilik veri kaynağı kütüğü">${qualificationDatasetRegistry.map((dataset) => `<article class="card"><div class="card-body"><span class="table-subtitle">${escapeHtml(dataset.publisherName)}</span><h3>${escapeHtml(dataset.datasetName)}</h3><p class="page-subtitle">${escapeHtml(dataset.coverageNote)}</p><div class="permission-note"><strong>Alım: manuel doğrulanmış anlık görüntü</strong><span>${escapeHtml(dataset.licenceNote)}</span></div><a class="button button--secondary button--sm" href="${escapeHtml(dataset.documentationUrl)}" target="_blank" rel="noreferrer">Kaynak açıklaması</a></div></article>`).join("")}</section>
+  </div>`;
+}
+
 function integrationsPage() {
   const bulkAction = INTEGRATION_BULK_ROLES.has(state.roleId) ? `<button class="button button--secondary" data-action="integration-dryrun">${icon("refresh")} Toplu dry-run</button>` : "";
   return `<div class="page-container">${pageHeader("Evre 5 • Kontrollü servis katmanı", "Entegrasyon merkezi", "Bütün bağlantılar simülasyon veya bağlı değil durumundadır. Dry-run, onay kapısı, hata, yeniden deneme ve mutabakat kayıtları gerçek API çağrısı olmadan örneklenir.", bulkAction)}
@@ -603,18 +811,37 @@ function integrationCard(item) {
 }
 
 function financePage() {
+  const paymentRequests = visiblePaymentRequestsForRole(state, state.roleId, currentRole().name);
+  const financeQueue = paymentRequests.filter((item) => ["pending_finance", "approved", "revision"].includes(item.status));
   const entitlement = state.finance.entitlements[0] || null;
   const gross = entitlement?.gross || 0;
   const withholding = gross * state.finance.parameters.withholding / 100;
   const entitlementPanel = entitlement
     ? `<section class="card"><div class="card-header"><div><h2>Hak ediş taslağı</h2><p>${escapeHtml(entitlement.instructor)}</p></div>${statusBadge("draft")}</div><div class="card-body"><dl class="integration-card" style="min-height:0"><div class="integration-head"><dt>Ders kanıtı</dt><dd>${entitlement.evidence}</dd></div><div class="integration-head"><dt>Brüt taslak</dt><dd>${formatCurrency(gross)}</dd></div><div class="integration-head"><dt>Örnek kesinti</dt><dd>−${formatCurrency(withholding)}</dd></div><div class="integration-head"><dt>Net ön izleme</dt><dd><strong>${formatCurrency(gross-withholding)}</strong></dd></div></dl><button class="button button--secondary" data-action="finance-draft">Fatura / bordro taslağı oluştur</button><p class="table-subtitle">${state.finance.invoiceDrafts?.length || 0} sentetik taslak kayıtlı</p></div></section>`
     : `<section class="card empty-state"><div class="empty-icon">${icon("file")}</div><h3>Hak ediş taslağı yok</h3><p>Ders ve katılım kanıtı olan sentetik bir kayıt oluştuğunda mali ön izleme burada görünür.</p></section>`;
-  return `<div class="page-container">${pageHeader("Evre 6 • Mali izlenebilirlik", "Finansal yönetim ve döner sermaye pilotu", "Tahsilat, fatura ve eğitici hak edişleri yalnız sentetik kayıtlarla örneklenir. Oranlar yapılandırılabilir pilot parametreleridir.", `<button class="button" data-action="finance-simulate">${icon("coins")} Tahsilatı simüle et</button>`)}
+  return `<div class="page-container">${pageHeader("Evre 6 • Mali izlenebilirlik", "Finansal yönetim ve döner sermaye pilotu", "Öğrenenden gelen ödeme demo kuyruğu, mali ön onay, revizyon, mutabakat, fatura taslağı ve eğitici hak edişleri yalnız sentetik kayıtlarla örneklenir.", `<button class="button" data-action="finance-simulate">${icon("coins")} Tahsilatı simüle et</button>`)}
     ${notice("warning", "Pilot parametre — mali birim doğrulaması gerekir", "Vergi, kesinti ve ödeme kuralları kesin mevzuat veya canlı hesaplama olarak kodlanmamıştır; aşağıdaki değerler yalnız ekran davranışını örnekler.")}
-    <div class="grid grid-4 section">${kpi("Simüle brüt tahsilat", formatCurrency(state.finance.transactions.reduce((sum,item)=>sum+item.gross,0)), "Gerçek ödeme alınmadı", "coins")}${kpi("Eşleşen kayıt", state.finance.transactions.filter((item)=>item.status==="matched").length, "Pilot mutabakat", "check")}${kpi("Hak ediş taslağı", formatCurrency(gross), "Mali onay gerekli", "file")}${kpi("Örnek kesinti", formatCurrency(withholding), `%${state.finance.parameters.withholding} pilot parametre`, "chart")}</div>
+    <div class="grid grid-4 section">${kpi("Mali inceleme kuyruğu", financeQueue.length, "Öğrenenden gelen demo kayıtları", "file")}${kpi("Simüle brüt tahsilat", formatCurrency(state.finance.transactions.reduce((sum,item)=>sum+item.gross,0)), "Gerçek ödeme alınmadı", "coins")}${kpi("Eşleşen kayıt", state.finance.transactions.filter((item)=>item.status==="matched").length, "Pilot mutabakat", "check")}${kpi("Hak ediş taslağı", formatCurrency(gross), "Mali onay gerekli", "chart")}</div>
+    ${financePaymentQueue(paymentRequests)}
     <div class="grid grid-2 section"><section><div class="section-heading"><div><h2>Tahsilat simülasyonları</h2></div></div><div class="table-wrap"><table><caption class="sr-only">Sentetik tahsilat kayıtları</caption><thead><tr><th scope="col">Kayıt</th><th scope="col">Program</th><th scope="col">Tutar</th><th scope="col">Kanal</th><th scope="col">Durum</th></tr></thead><tbody>${state.finance.transactions.length ? state.finance.transactions.map((item)=>`<tr><td><span class="table-title">${item.id}</span><span class="table-subtitle">${escapeHtml(item.learner)}</span></td><td>${escapeHtml(item.program)}</td><td>${formatCurrency(item.gross)}</td><td>${escapeHtml(item.channel)}</td><td>${statusBadge(item.status)}</td></tr>`).join("") : `<tr><td colspan="5"><div class="table-empty"><strong>Tahsilat simülasyonu yok</strong><span>Gerçek ödeme alınmadan örnek kayıt oluşturabilirsiniz.</span></div></td></tr>`}</tbody></table></div></section>${entitlementPanel}</div>
     <section class="card section"><div class="card-header"><div><h2>Yapılandırılabilir mali pilot parametreleri</h2><p>Değişiklikler yalnız yerel demo durumunu etkiler; mali onay değildir.</p></div></div><form class="card-body form-grid" id="finance-parameters"><div class="field"><label for="finance-withholding">Örnek kesinti (%)</label><input id="finance-withholding" name="withholding" type="number" min="0" max="100" step="0.01" value="${state.finance.parameters.withholding}" /></div><div class="field"><label for="finance-vat">Örnek KDV alanı (%)</label><input id="finance-vat" name="vat" type="number" min="0" max="100" step="0.01" value="${state.finance.parameters.vat}" /></div><div class="field"><label for="finance-stamp">Örnek damga alanı (%)</label><input id="finance-stamp" name="stamp" type="number" min="0" max="100" step="0.001" value="${state.finance.parameters.stamp}" /></div><div class="field"><span class="table-subtitle">Pilot parametre — mali birim doğrulaması gerekir</span><button class="button" type="submit">Parametre taslağını kaydet</button></div></form></section>
   </div>`;
+}
+
+function financePaymentQueue(requests) {
+  const rows = requests.length
+    ? requests.map((request) => {
+        const actionButtons = state.roleId === "finance"
+          ? request.status === "pending_finance"
+            ? `<button class="button button--success button--sm" data-action="payment-review" data-id="${request.id}" data-status="approved">Mali ön onay</button><button class="button button--secondary button--sm" data-action="payment-review" data-id="${request.id}" data-status="revision">Düzeltme iste</button>`
+            : request.status === "approved"
+              ? `<button class="button button--success button--sm" data-action="payment-review" data-id="${request.id}" data-status="reconciled">Mutabakatı tamamla</button><button class="button button--secondary button--sm" data-action="payment-review" data-id="${request.id}" data-status="revision">Düzeltme iste</button>`
+              : `<span class="table-subtitle">${request.status === "revision" ? "Öğrenen düzeltmesi bekleniyor" : request.status === "draft" ? "Öğrenen gönderimi bekleniyor" : "İşlem tamamlandı"}</span>`
+          : `<span class="table-subtitle">Teknik salt-okunur görünüm</span>`;
+        return `<tr><td><span class="table-title">${escapeHtml(request.id)}</span><span class="table-subtitle">${formatDate(request.createdAt, true)}</span></td><td>${escapeHtml(request.learner)}</td><td>${escapeHtml(request.program)}<span class="table-subtitle">${escapeHtml(request.programCode)}</span></td><td>${formatCurrency(request.amount)}<span class="table-subtitle">${escapeHtml(request.channel)}</span></td><td>${paymentStatusBadge(request)}</td><td><div class="table-actions">${actionButtons}</div></td></tr>`;
+      }).join("")
+    : `<tr><td colspan="6"><div class="table-empty"><strong>Mali inceleme kaydı yok</strong><span>Öğrenen ücretli program ödeme demosunu gönderdiğinde burada görünür.</span></div></td></tr>`;
+  return `<section class="card section"><div class="card-header"><div><h2>Öğrenen ödeme demo kuyruğu</h2><p>Ön onay → mutabakat → pilot eğitim kaydı; gerçek tahsilat, GİB/e-Arşiv veya MYS/MAYS aktarımı yapılmaz.</p></div>${statusBadge("disconnected", "Canlı mali servisler kapalı")}</div><div class="table-wrap"><table><caption class="sr-only">Finans ve Döner Sermaye ödeme demo inceleme kuyruğu</caption><thead><tr><th scope="col">Kayıt</th><th scope="col">Öğrenen</th><th scope="col">Program</th><th scope="col">Tutar / Kanal</th><th scope="col">Durum</th><th scope="col">Mali işlem</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 
 function reportsPage() {
@@ -632,14 +859,14 @@ function reportsPage() {
 
 function roleCapabilityRows() {
   return [
-    ["learner", "Katalog, öğrenme, kendi başvurusu ve cüzdan", "Kendi dış kazanım başvurusunu oluşturur; sınav simülasyonunu başlatır", "Başkasının kaydını veya insan değerlendirici kararını değiştiremez"],
+    ["learner", "Katalog, eğitim/ödeme demosu, kendi başvurusu ve cüzdan", "Ücretli programı ödeme aracı verisi olmadan mali işlere yönlendirir; kendi başvurusunu izler", "Başkasının kaydını, mali ön onayı veya insan değerlendirici kararını değiştiremez"],
     ["instructor", "Kendi program önerileri ve değerlendirme simülasyonu", "Program taslağı gönderir; insan değerlendirmesi kaydeder", "Başka eğiticinin kaydını ve Komisyon kararını göremez/değiştiremez"],
     ["externalInstructor", "Kendi dış eğitici program önerileri", "Kendi kimliğiyle öneri ve insan değerlendirmesi oluşturur", "İç eğitici gibi işaretlenmez; Komisyon kararı veremez"],
     ["coordinator", "Başvuru ön inceleme, program ve süre takibi", "Eksik kanıt için revizyon ister", "Akademik onay veya ret kaydedemez"],
     ["commission", "Karar masası, değerlendirme ve denetim izi", "Gerekçeli onay/ret/revizyon ve nihai insan değerlendirmesi kaydeder", "Yapay zekâ çıktısını tek başına karar olarak kullanamaz"],
     ["studentAffairs", "Taslak olmayan dış kazanım, AKTS ve belge alanları", "ÖBİS aktarımını yalnız dry-run olarak inceler", "Özel taslakları veya akademik kararı değiştiremez"],
     ["it", "Entegrasyon, audit ve sistem sağlığı", "Hata/yeniden deneme simülasyonu üretir", "Gerçek servis çağrısı ve akademik karar yapamaz"],
-    ["finance", "Tahsilat, hak ediş ve mali rapor simülasyonu", "Mali pilot parametre taslağı kaydeder", "Gerçek ödeme/fatura üretemez; oranlar kesin kural değildir"],
+    ["finance", "Ödeme demo kuyruğu, tahsilat, hak ediş ve mali rapor simülasyonu", "Ön onay, revizyon ve mutabakat kaydeder; mali pilot parametre taslağı oluşturur", "Gerçek ödeme/fatura veya GİB/MYS aktarımı üretemez; oranlar kesin kural değildir"],
     ["admin", "Teknik gözetim, yapılandırma ve tüm pilot modüller", "Entegrasyon/finans simülasyonlarını ve kayıtları denetler", "Akademik onay, ret veya insan değerlendirici kararı kaydedemez"]
   ];
 }
@@ -677,8 +904,10 @@ const pages = {
   overview: overviewPage,
   scenarios: scenariosPage,
   catalog: catalogPage,
+  payments: paymentsPage,
   learning: learningPage,
   proposal: proposalPage,
+  frameworks: frameworksPage,
   applications: applicationsPage,
   recognition: recognitionPage,
   commission: commissionPage,
@@ -700,7 +929,10 @@ function showPilotInfo() {
 function showDataMode() {
   const config = getSupabasePublicConfig();
   const snapshot = state.remoteSnapshot;
-  openModal(modalTemplate("Pilot veri katmanı", `<div class="grid grid-2"><article class="card"><div class="card-body"><h3>Etkin çalışma modu</h3><p class="page-subtitle">${escapeHtml(state.dataMode)}</p><span class="status status--success">Yerel mutasyonlar çalışıyor</span></div></article><article class="card"><div class="card-body"><h3>Supabase başlangıç görünümü</h3><p class="page-subtitle">Proje: ${config.projectRef}<br />${config.mode}${snapshot ? `<br />Doğrulanan: ${snapshot.programs} program, ${snapshot.applications} başvuru, ${snapshot.credentials} belge, ${snapshot.integrations} entegrasyon` : "<br />Son bağlantı doğrulanamadı"}</p><span class="status status--neutral">Gizli anahtar kullanılmıyor</span></div></article></div><div class="section">${notice("success","Katmanların sınırı açık","Supabase yalnız sentetik başlangıç satırlarını salt-okunur doğrular. Formlar ve iki demo iş akışındaki değişiklikler tarayıcıdaki sürümlü, izole çalışma alanında kalır.")}</div>`, `<button class="button button--secondary" data-action="refresh-data">Bağlantıyı yeniden dene</button><button class="button" data-action="close-modal">Kapat</button>`));
+  const referenceSummary = snapshot?.qualificationLevels === undefined
+    ? ""
+    : `<br />Referans kataloğu: ${snapshot.qualificationLevels} seviye, ${snapshot.officialQualifications} KDPÜ kaydı, ${snapshot.matrixTemplates} şablon, ${snapshot.matrixDrafts} örnek taslak, ${snapshot.paymentRequests} ödeme demo kaydı, ${snapshot.roleWorkflowRows} rol adımı${snapshot.unavailableReferenceViews ? `<br />Yerel güvenli fallback kullanan view: ${snapshot.unavailableReferenceViews}` : ""}`;
+  openModal(modalTemplate("Pilot veri katmanı", `<div class="grid grid-2"><article class="card"><div class="card-body"><h3>Etkin çalışma modu</h3><p class="page-subtitle">${escapeHtml(state.dataMode)}</p><span class="status status--success">Yerel mutasyonlar çalışıyor</span></div></article><article class="card"><div class="card-body"><h3>Supabase başlangıç görünümü</h3><p class="page-subtitle">Proje: ${config.projectRef}<br />${config.mode}${snapshot ? `<br />Doğrulanan: ${snapshot.programs} program, ${snapshot.applications} başvuru, ${snapshot.credentials} belge, ${snapshot.integrations} entegrasyon${referenceSummary}<br />Kaynak modu: ${escapeHtml(snapshot.referenceSource || "eski pilot seed")}` : "<br />Son bağlantı doğrulanamadı"}</p><span class="status status--neutral">Gizli anahtar kullanılmıyor</span></div></article></div><div class="section">${notice("success","Katmanların sınırı açık","Supabase, sentetik başlangıç satırları ile resmî kaynak izli TYÇ/AYÇ kataloglarını salt-okunur doğrular. Formlar ve iki demo iş akışındaki değişiklikler tarayıcıdaki sürümlü, izole çalışma alanında kalır; gerçek ödeme veya kurumsal aktarım yapılmaz.")}</div>`, `<button class="button button--secondary" data-action="refresh-data">Bağlantıyı yeniden dene</button><button class="button" data-action="close-modal">Kapat</button>`));
 }
 
 function openProgram(id) {
@@ -708,8 +940,9 @@ function openProgram(id) {
   const program = state.programs.find((item)=>item.id===id);
   if (!program) return;
   if (!visiblePrograms().some((item)=>item.id===program.id)) { deny("Bu program seçili demo rolünün görünür kayıtları arasında değildir."); return; }
-  const applyAction = state.roleId === "learner" ? `<button class="button" data-action="apply-program" data-id="${program.id}">Programa pilot kayıt oluştur</button>` : "";
-  openModal(modalTemplate(program.title, `<div class="program-meta"><span class="meta-pill">${program.code}</span><span class="meta-pill">${program.ects} AKTS</span><span class="meta-pill">${program.workload} saat</span><span class="meta-pill">TYÇ ${program.level} önerisi</span></div><p class="page-subtitle">${escapeHtml(program.summary)}</p><div class="section"><h3>Öğrenme çıktıları</h3><ul class="page-subtitle">${program.outcomes.map((item)=>`<li>${escapeHtml(item)}</li>`).join("")}</ul></div>${notice("warning","Pilot program", "Bu program gerçek kayıt veya ödeme kabul etmez; durum yalnızca demo akışını örnekler.")}`, `<button class="button button--secondary" data-action="close-modal">Kapat</button>${applyAction}`));
+  const applyLabel = Number(program.price) > 0 ? "Başvuru ve ödeme demosuna geç" : "Ücretsiz pilot kayıt oluştur";
+  const applyAction = state.roleId === "learner" ? `<button class="button" data-action="apply-program" data-id="${program.id}">${applyLabel}</button>` : "";
+  openModal(modalTemplate(program.title, `<div class="program-meta"><span class="meta-pill">${program.code}</span><span class="meta-pill">${program.ects} AKTS</span><span class="meta-pill">${program.workload} saat</span><span class="meta-pill">TYÇ ${program.level} önerisi</span><span class="meta-pill">${Number(program.price) > 0 ? `${formatCurrency(program.price)} • ödeme demosu` : "Ücretsiz • pilot"}</span></div><p class="page-subtitle">${escapeHtml(program.summary)}</p><div class="section"><h3>Öğrenme çıktıları</h3><ul class="page-subtitle">${program.outcomes.map((item)=>`<li>${escapeHtml(item)}</li>`).join("")}</ul></div>${notice("warning","Pilot program", Number(program.price) > 0 ? "Gerçek kayıt veya ödeme alınmaz. Devam ettiğinizde ödeme aracı bilgisi istemeyen demo sayfasına ve ardından Finans / Döner Sermaye inceleme kuyruğuna yönlendirilirsiniz." : "Bu ücretsiz program yalnızca sentetik pilot eğitim kaydı oluşturur; gerçek öğrenci kaydı değildir.")}`, `<button class="button button--secondary" data-action="close-modal">Kapat</button>${applyAction}`));
 }
 
 function openApplication(id) {
@@ -730,6 +963,19 @@ function decisionModal(id, nextStatus) {
   }
   const labels = { approved: "Pilot onayı", revision: "Revizyon isteği", rejected: "Pilot ret", commission: "Çekimser görüş" };
   openModal(modalTemplate(`${labels[nextStatus]} kaydı`, `<form id="decision-form"><input type="hidden" name="id" value="${item.id}" /><input type="hidden" name="status" value="${nextStatus}" /><div class="field"><label class="required" for="decision-reason">Gerekçe</label><textarea id="decision-reason" name="reason" required minlength="12" placeholder="Kanıtları, akademik değerlendirmeyi ve karar gerekçesini yazın"></textarea><small>Gerekçe audit izine eklenir ve sonradan görünür kalır.</small></div><div class="field" style="margin-top:14px"><label><input type="checkbox" name="confirm" required /> Bu kaydın yalnız kontrollü pilot kararı olduğunu onaylıyorum.</label></div></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "rejected" ? "button--danger" : nextStatus === "approved" ? "button--success" : ""}" data-action="submit-decision">Gerekçeli kaydı oluştur</button>`));
+}
+
+function paymentReviewModal(id, nextStatus) {
+  if (state.roleId !== "finance") { deny("Ödeme demo durumunu yalnız Finans / Döner Sermaye rolü değiştirebilir."); return; }
+  const request = state.finance.paymentRequests.find((item) => item.id === id);
+  if (!request) { deny("Ödeme demo kaydı bulunamadı."); return; }
+  const labels = { approved: "Mali ön onay", revision: "Mali düzeltme isteği", reconciled: "Mutabakat tamamlama" };
+  const defaultReason = nextStatus === "approved"
+    ? "Sentetik tutar, program ve kanal alanları pilot ön kontrolden geçti."
+    : nextStatus === "revision"
+      ? "Ödeme kanalı veya program başvuru bilgisi için öğrenen düzeltmesi gerekiyor."
+      : "Mali ön onay ile sentetik tahsilat kaydı eşleştirildi; gerçek para hareketi yoktur.";
+  openModal(modalTemplate(`${labels[nextStatus]} • ${request.id}`, `<form id="payment-review-form"><input type="hidden" name="id" value="${request.id}" /><input type="hidden" name="status" value="${nextStatus}" /><div class="grid grid-2"><div><span class="table-subtitle">Program</span><h3>${escapeHtml(request.program)}</h3><p class="page-subtitle">${escapeHtml(request.learner)} • ${formatCurrency(request.amount)} • ${escapeHtml(request.channel)}</p></div><div>${paymentStatusBadge(request)}</div></div><div class="field section"><label class="required" for="payment-review-reason">Mali demo gerekçesi</label><textarea id="payment-review-reason" name="reason" required minlength="12">${escapeHtml(defaultReason)}</textarea><small>Gerekçe, role açık bildirim ve denetim izinde görünür.</small></div><label class="consent-row"><input type="checkbox" name="confirm" required /><span>Gerçek ödeme, fatura, GİB/e-Arşiv veya MYS/MAYS aktarımı oluşturmadığımı onaylıyorum.</span></label></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "revision" ? "button--secondary" : "button--success"}" data-action="submit-payment-review">${labels[nextStatus]} kaydını oluştur</button>`));
 }
 
 function openIntegration(id) {
@@ -778,6 +1024,17 @@ document.addEventListener("click", (event) => {
   }
   if (action === "decision") decisionModal(trigger.dataset.id, trigger.dataset.status);
   if (action === "commission-tab") activateCommissionTab(trigger.dataset.tab);
+  if (action === "framework-tab") {
+    if (!["tyc", "eqf"].includes(trigger.dataset.framework)) { deny("Geçersiz yeterlilik çerçevesi seçildi."); return; }
+    currentFrameworkTab = trigger.dataset.framework;
+    render();
+  }
+  if (action === "load-framework-level") {
+    const value = Number(document.querySelector("#framework-level")?.value);
+    if (!Number.isInteger(value) || value < 1 || value > 8) { deny("Yeterlilik seviyesi 1 ile 8 arasında olmalıdır."); return; }
+    currentFrameworkLevel = value;
+    render();
+  }
   if (action === "submit-decision") document.querySelector("#decision-form")?.requestSubmit();
   if (action === "save-draft") {
     const form = trigger.closest("form");
@@ -791,6 +1048,15 @@ document.addEventListener("click", (event) => {
   if (action === "integration-dryrun") simulateAllIntegrations();
   if (action === "finance-simulate") simulateFinance();
   if (action === "finance-draft") createFinanceDraft();
+  if (action === "payment-review") paymentReviewModal(trigger.dataset.id, trigger.dataset.status);
+  if (action === "submit-payment-review") document.querySelector("#payment-review-form")?.requestSubmit();
+  if (action === "handoff-finance") {
+    state.roleId = "finance";
+    state.selectedApplicationId = null;
+    saveState();
+    navigate("finance");
+    toast("Finans / Döner Sermaye demo inceleme kuyruğuna geçildi.");
+  }
   if (action === "assessment-run") runAssessment();
   if (action === "assessment-decision") decideAssessment();
   if (action === "verify-code") verifyCodeModal();
@@ -820,6 +1086,9 @@ document.addEventListener("submit", (event) => {
   if (event.target.id === "decision-form") submitDecision(event.target);
   if (event.target.id === "verify-form") submitVerify();
   if (event.target.id === "finance-parameters") saveFinanceParameters(event.target);
+  if (event.target.id === "payment-request-form") submitPaymentDemo(event.target);
+  if (event.target.id === "payment-review-form") submitPaymentReview(event.target);
+  if (event.target.id === "qualification-matrix-form") saveQualificationMatrix(event.target);
 });
 
 document.addEventListener("input", (event) => {
@@ -908,6 +1177,61 @@ function saveRecognitionDraft(form) {
   toast(`${application.code} dış kazanım taslağı kaydedildi.`);
 }
 
+function saveQualificationMatrix(form) {
+  if (!PROPOSAL_ROLES.has(state.roleId)) { deny("TYÇ / AYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir."); return; }
+  if (!form.reportValidity()) return;
+  const data = new FormData(form);
+  const frameworkId = String(data.get("frameworkId") || "");
+  const level = Number(data.get("level"));
+  if (!["tyc", "eqf"].includes(frameworkId) || !Number.isInteger(level) || level < 1 || level > 8) {
+    deny("Yeterlilik çerçevesi veya seviyesi geçersiz.");
+    return;
+  }
+  const rows = ["knowledge", "skills", "competence"].map((dimension) => ({
+    dimension,
+    learningOutcome: String(data.get(`${dimension}Outcome`) || "").trim(),
+    learningLevel: String(data.get(`${dimension}Level`) || "").trim(),
+    courseContent: String(data.get(`${dimension}Content`) || "").trim(),
+    assessmentMethod: String(data.get(`${dimension}Assessment`) || "").trim(),
+    evidence: String(data.get(`${dimension}Evidence`) || "").trim(),
+    alignmentRationale: String(data.get(`${dimension}Rationale`) || "").trim()
+  }));
+  if (rows.some((row) => Object.values(row).some((value) => !String(value).trim()))) {
+    deny("Her resmî boyut için hedef, içerik, ölçme, ölçüt/kanıt ve uyum gerekçesi tamamlanmalıdır.");
+    return;
+  }
+  state.qualificationDrafts ||= [];
+  const id = `MATRIX-${frameworkId.toUpperCase()}-${level}-${state.roleId}`;
+  const draft = {
+    id,
+    frameworkId,
+    level,
+    programTitle: String(data.get("programTitle") || "").trim(),
+    ownerRole: state.roleId,
+    ownerName: currentRole().name,
+    status: "pilot_draft",
+    updatedAt: new Date().toISOString(),
+    rows
+  };
+  const existingIndex = state.qualificationDrafts.findIndex((item) => item.id === id && item.ownerName === draft.ownerName);
+  if (existingIndex >= 0) state.qualificationDrafts.splice(existingIndex, 1, draft);
+  else state.qualificationDrafts.unshift(draft);
+  state.audit.unshift({
+    id: `AUD-${Date.now()}`,
+    entityId: draft.id,
+    at: draft.updatedAt,
+    actor: draft.ownerName,
+    actorRole: draft.ownerRole,
+    action: "TYÇ / AYÇ pilot matris taslağı kaydedildi",
+    from: "draft",
+    to: "draft",
+    reason: `${frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF"} ${level}. seviye önerisi; resmî seviye veya akademik karar değildir`
+  });
+  saveState();
+  render();
+  toast("Yeterlilik eşleme matrisi izole pilot çalışma alanına kaydedildi.");
+}
+
 function enrollProgram(id) {
   if (state.roleId !== "learner") { deny("Programa pilot kayıt yalnız öğrenen rolüyle oluşturulabilir."); return; }
   const program = state.programs.find((item)=>item.id===id);
@@ -917,6 +1241,20 @@ function enrollProgram(id) {
     return;
   }
   const enrollmentId = `ENR-${program.code}`;
+  if (state.enrollments.some((item) => item.id === enrollmentId)) {
+    closeModal(); navigate("learning"); toast("Bu program için pilot eğitim kaydı zaten bulunuyor.");
+    return;
+  }
+  if (Number(program.price) > 0) {
+    try {
+      const request = startPaymentRequest(state, program.id, state.roleId, currentRole().name);
+      saveState(); closeModal(); navigate("payments");
+      toast(`${request.id} ödeme demo taslağı açıldı; gerçek ödeme bilgisi istenmeyecek.`);
+    } catch (error) {
+      deny(error.message);
+    }
+    return;
+  }
   if (!state.enrollments.some((item)=>item.id===enrollmentId)) {
     state.enrollments.unshift({ id:enrollmentId, programCode:program.code, title:program.title, learner:"Derya Örnek", status:"active", progress:10, ects:program.ects, remoteEcts:Number((program.ects * program.remoteRate / 100).toFixed(1)) });
     state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:enrollmentId, at:new Date().toISOString(), actor:"Derya Örnek", actorRole:"learner", action:"Programa pilot kayıt oluşturuldu", from:"applied", to:"active", reason:"Gerçek kayıt veya ödeme oluşturulmadı" });
@@ -1033,6 +1371,30 @@ function simulateAllIntegrations() {
   saveState(); render(); toast("7 entegrasyon için yalnız simülasyon logu üretildi.");
 }
 
+function submitPaymentDemo(form) {
+  if (!form.reportValidity()) return;
+  const data = new FormData(form);
+  try {
+    const request = submitPaymentRequest(state, data.get("id"), data.get("channel"), state.roleId, currentRole().name);
+    saveState(); render();
+    toast(`${request.id} Finans / Döner Sermaye demo kuyruğuna iletildi; gerçek ödeme alınmadı.`);
+  } catch (error) {
+    deny(error.message);
+  }
+}
+
+function submitPaymentReview(form) {
+  if (!form.reportValidity()) return;
+  const data = new FormData(form);
+  try {
+    const request = reviewPaymentRequest(state, data.get("id"), data.get("status"), state.roleId, data.get("reason"), currentRole().name);
+    saveState(); closeModal(); render();
+    toast(`${request.id} mali demo durumu güncellendi; gerçek para hareketi oluşturulmadı.`);
+  } catch (error) {
+    deny(error.message);
+  }
+}
+
 function simulateFinance() {
   if (!FINANCE_OPERATOR_ROLES.has(state.roleId)) { deny("Bu rol tahsilat simülasyonu oluşturamaz."); return; }
   const id = `TX-${String(Date.now()).slice(-4)}`;
@@ -1071,8 +1433,26 @@ async function refreshRemote(fromModal = false) {
     if (fromModal) closeModal();
     return;
   }
-  state.remoteSnapshot = snapshot.ok ? { programs:snapshot.programs.length, applications:snapshot.applications.length, credentials:snapshot.credentials.length, integrations:snapshot.integrations.length, checkedAt:new Date().toISOString() } : null;
-  state.dataMode = snapshot.ok ? `Yerel çalışma alanı • Supabase seed doğrulandı (${snapshot.programs.length} program)` : snapshot.mode;
+  const referenceData = snapshot.referenceData;
+  state.remoteSnapshot = snapshot.ok ? {
+    programs: snapshot.programs.length,
+    applications: snapshot.applications.length,
+    credentials: snapshot.credentials.length,
+    integrations: snapshot.integrations.length,
+    qualificationLevels: referenceData?.qualificationLevels?.length || 0,
+    officialQualifications: referenceData?.officialQualificationReferences?.length || 0,
+    matrixTemplates: referenceData?.matrixTemplates?.length || 0,
+    matrixDrafts: referenceData?.matrixDrafts?.length || 0,
+    paymentRequests: referenceData?.paymentRequests?.length || 0,
+    roleWorkflowRows: referenceData?.roleWorkflowRows?.length || 0,
+    unavailableReferenceViews: referenceData?.unavailableViews?.length || 0,
+    referenceSource: referenceData?.source || "local_reference_fallback",
+    checkedAt: new Date().toISOString()
+  } : null;
+  const referenceIsFullyRemote = referenceData?.source === "supabase_read_only_views";
+  state.dataMode = snapshot.ok
+    ? `Yerel çalışma alanı • Supabase ${referenceIsFullyRemote ? "salt-okunur katalog doğrulandı" : "çekirdek seed doğrulandı; referans fallback etkin"} (${snapshot.programs.length} program, ${referenceData?.qualificationLevels?.length || 0} seviye)`
+    : snapshot.mode;
   saveState();
   if (fromModal) closeModal();
   render();

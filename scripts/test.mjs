@@ -12,12 +12,25 @@ import {
   issueCredential,
   ownsApplication,
   recordAssessmentDecision,
+  reviewPaymentRequest,
   runScenarioStep,
   scenarioDefinitions,
+  startPaymentRequest,
+  submitPaymentRequest,
   transitionApplication,
   visibleApplicationsForRole,
+  visiblePaymentRequestsForRole,
   visibleProgramsForRole
 } from "../src/workflow.js";
+import {
+  findQualificationDescriptor,
+  findQualificationTemplate,
+  qualificationFrameworks,
+  qualificationLevelDescriptors,
+  qualificationMatrixColumns,
+  qualificationMatrixExamples,
+  qualificationMatrixTemplates
+} from "../src/reference-data.js";
 
 const results = [];
 
@@ -60,10 +73,87 @@ test("dokuz rol benzersiz ve bütün navigasyon hedefleri tanımlı", () => {
     assert.ok(roleNavigation[role.id]?.includes("overview"), `${role.id}: overview eksik`);
     for (const page of roleNavigation[role.id]) assert.ok(pageMeta[page], `${role.id}: ${page} metadata eksik`);
   }
+  assert.ok(roleNavigation.learner.includes("payments"), "öğrenen ödeme demo rotası eksik");
+  assert.ok(roleNavigation.finance.includes("notifications"), "mali işler bildirim rotası eksik");
 });
 
 test("rol kimliği ile sentetik aktör adı birebir eşleşiyor", () => {
   for (const role of roles) assert.equal(actorNameForRole(role.id), role.name, role.id);
+});
+
+test("TYÇ ve AYÇ ayrı ayrı sekiz resmî seviye tanımlayıcısı ve hazır şablon sağlıyor", () => {
+  assert.deepEqual(qualificationFrameworks.map((item) => item.id), ["tyc", "eqf"]);
+  assert.ok(qualificationFrameworks.every((item) => item.sourceStatus === "official" && /^https:\/\//.test(item.officialSourceUrl)));
+  for (const frameworkId of ["tyc", "eqf"]) {
+    const descriptors = qualificationLevelDescriptors.filter((item) => item.frameworkId === frameworkId);
+    const templates = qualificationMatrixTemplates.filter((item) => item.frameworkId === frameworkId);
+    assert.equal(descriptors.length, 8, `${frameworkId}: 8 seviye tanımlayıcısı yok`);
+    assert.deepEqual(descriptors.map((item) => item.level), [1, 2, 3, 4, 5, 6, 7, 8], `${frameworkId}: seviye dizisi hatalı`);
+    assert.equal(templates.length, 8, `${frameworkId}: 8 matris şablonu yok`);
+    for (let level = 1; level <= 8; level += 1) {
+      const descriptor = findQualificationDescriptor(frameworkId, level);
+      const template = findQualificationTemplate(frameworkId, level);
+      assert.ok(descriptor, `${frameworkId}-${level}: tanımlayıcı bulunamadı`);
+      assert.ok(template, `${frameworkId}-${level}: şablon bulunamadı`);
+      for (const field of ["knowledge", "skills", "competence"]) {
+        assert.ok(String(descriptor[field]).trim().length >= 10, `${frameworkId}-${level}: ${field} boş`);
+      }
+      assert.equal(template.level, level);
+      assert.equal(template.institutionalValidationRequired, true);
+      assert.equal(template.isSyntheticTemplate, true);
+      assert.equal(template.columns.length, qualificationMatrixColumns.length);
+    }
+  }
+  assert.equal(qualificationMatrixColumns.length, 7);
+  assert.ok(qualificationMatrixColumns.every((column) => column.required === true));
+  assert.equal(qualificationMatrixExamples.filter((item) => item.frameworkId === "tyc").length, 4);
+  assert.equal(qualificationMatrixExamples.filter((item) => item.frameworkId === "eqf").length, 4);
+});
+
+test("TYÇ / AYÇ matris rotası yalnız beş yetkili rol navigasyonunda", () => {
+  const expected = ["instructor", "externalInstructor", "coordinator", "commission", "admin"];
+  const actual = roles.filter((role) => roleNavigation[role.id].includes("frameworks")).map((role) => role.id);
+  assert.deepEqual(actual, expected);
+  assert.equal(pageMeta.frameworks.label, "TYÇ / AYÇ Matrisleri");
+  for (const roleId of ["learner", "studentAffairs", "it", "finance"]) {
+    assert.equal(roleNavigation[roleId].includes("frameworks"), false, `${roleId}: yetkisiz frameworks rotası`);
+  }
+});
+
+test("öğrenen ödeme demosu mali ön onay ve mutabakatla pilot eğitime dönüşüyor", () => {
+  const state = cloneState(initialState);
+  state.finance.paymentRequests = [];
+  const program = state.programs.find((item) => item.id === "program-green-skills");
+  const request = startPaymentRequest(state, program.id, "learner", actorNameForRole("learner"));
+  assert.equal(request.status, "draft");
+  assert.equal(request.realPayment, false);
+  assert.deepEqual(visiblePaymentRequestsForRole(state, "learner", actorNameForRole("learner")).map((item) => item.id), [request.id]);
+  assert.equal(visiblePaymentRequestsForRole(state, "instructor", actorNameForRole("instructor")).length, 0);
+
+  submitPaymentRequest(state, request.id, "Havale/EFT simülasyonu", "learner", actorNameForRole("learner"));
+  assert.equal(request.status, "pending_finance");
+  assert.ok(state.notifications.some((item) => item.recipientRoles.includes("finance") && item.body.includes(request.id)));
+
+  reviewPaymentRequest(state, request.id, "approved", "finance", "Sentetik mali ön kontrol tamamlandı", actorNameForRole("finance"));
+  assert.equal(request.status, "approved");
+  reviewPaymentRequest(state, request.id, "reconciled", "finance", "Mutabakat yalnız pilot kayıtla tamamlandı", actorNameForRole("finance"));
+  assert.equal(request.status, "reconciled");
+  assert.equal(request.enrollmentCreated, true);
+  assert.ok(state.finance.transactions.some((item) => item.paymentRequestId === request.id && item.status === "matched"));
+  assert.ok(state.enrollments.some((item) => item.programCode === program.code && item.learner === actorNameForRole("learner")));
+  assert.ok(state.audit.some((item) => item.entityId === request.id && item.actorRole === "finance" && item.to === "reconciled"));
+});
+
+test("ödeme demo RBAC ve canlı ödeme sınırı mutasyon katmanında korunuyor", () => {
+  const state = cloneState(initialState);
+  state.finance.paymentRequests = [];
+  const program = state.programs.find((item) => item.id === "program-green-skills");
+  assert.throws(() => startPaymentRequest(state, program.id, "finance", actorNameForRole("finance")), /yalnız öğrenen/);
+  const request = startPaymentRequest(state, program.id, "learner", actorNameForRole("learner"));
+  assert.throws(() => submitPaymentRequest(state, request.id, "Gerçek kredi kartı", "learner", actorNameForRole("learner")), /geçerli bir pilot/i);
+  submitPaymentRequest(state, request.id, "Sanal POS simülasyonu", "learner", actorNameForRole("learner"));
+  assert.throws(() => reviewPaymentRequest(state, request.id, "approved", "admin", "Yetkisiz mali karar", actorNameForRole("admin")), /yalnız Finans/);
+  assert.equal(request.realPayment, false);
 });
 
 test("arayüz domain yetki sınırlarını ve aynı-hash anlık render korumasını kullanıyor", () => {
@@ -79,6 +169,14 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /state\.roleId === "learner"[^\n]+data-nav="catalog"/, "katalog CTA öğrenen kapısı yok");
   assert.match(appSource, /actorRole:\s*state\.roleId/, "başvuru oluştururken etkin rol domain katmanına aktarılmıyor");
   assert.match(appSource, /program\.status !== "active" \|\| !visiblePrograms\(\)\.some/, "öğrenen kayıt mutasyonunda görünür ve aktif program kapısı yok");
+  assert.match(appSource, /GİB \/ e-Arşiv taslak kapısı/, "ana sayfada GİB\/e-Arşiv açıklaması yok");
+  assert.match(appSource, /MYS \/ MAYS kontrollü aktarım taslağı/, "ana sayfada MYS\/MAYS açıklaması yok");
+  assert.match(appSource, /Finans \/ Döner Sermaye'ye gönder/, "öğrenen ödeme demosunda mali işlere yönlendirme CTA'sı yok");
+  assert.match(appSource, /data-role-overview="\$\{state\.roleId\}"/, "rol değişiminde ayırt edici çalışma alanı işareti yok");
+  assert.match(appSource, /const editable = PROPOSAL_ROLES\.has\(state\.roleId\)/, "matris düzenleme yetkisi eğitici rolleriyle sınırlandırılmıyor");
+  assert.match(appSource, /if \(!PROPOSAL_ROLES\.has\(state\.roleId\)\) \{ deny\("TYÇ \/ AYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir\./, "matris kayıt mutasyonunda rol kapısı yok");
+  assert.match(appSource, /Salt-okunur inceleme/, "koordinatör\/komisyon salt-okunur matris görünümü yok");
+  assert.match(appSource, /state\.qualificationDrafts \|\|= \[\]/, "matris taslak veri katmanı yok");
   assert.match(appSource, /\["ArrowLeft", "ArrowRight", "Home", "End"\]/, "Komisyon sekmelerinin klavye yön tuşu desteği yok");
   assert.match(htmlSource, /id="notification-button"[^>]+data-nav="notifications"/, "bildirim düğmesi sabit seçicisi yok");
   assert.match(htmlSource, /data-action="toggle-nav"[^>]+aria-controls="sidebar"/, "mobil menü denetim ilişkisi tanımlı değil");
