@@ -69,6 +69,7 @@ test("rol kimliği ile sentetik aktör adı birebir eşleşiyor", () => {
 test("arayüz domain yetki sınırlarını ve aynı-hash anlık render korumasını kullanıyor", () => {
   const appSource = readFileSync(new URL("../src/app.js", import.meta.url), "utf8");
   const htmlSource = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const styleSource = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
   for (const symbol of [
     "filterApplicationsForRole", "visibleProgramsForRole", "getAllowedApplicationTransitions",
     "canRecordAssessmentDecision", "recordAssessmentDecision"
@@ -77,7 +78,16 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /notificationButton\.hidden = !notificationAllowed/, "bildirim CTA rol kapısı yok");
   assert.match(appSource, /state\.roleId === "learner"[^\n]+data-nav="catalog"/, "katalog CTA öğrenen kapısı yok");
   assert.match(appSource, /actorRole:\s*state\.roleId/, "başvuru oluştururken etkin rol domain katmanına aktarılmıyor");
+  assert.match(appSource, /program\.status !== "active" \|\| !visiblePrograms\(\)\.some/, "öğrenen kayıt mutasyonunda görünür ve aktif program kapısı yok");
+  assert.match(appSource, /\["ArrowLeft", "ArrowRight", "Home", "End"\]/, "Komisyon sekmelerinin klavye yön tuşu desteği yok");
   assert.match(htmlSource, /id="notification-button"[^>]+data-nav="notifications"/, "bildirim düğmesi sabit seçicisi yok");
+  assert.match(htmlSource, /data-action="toggle-nav"[^>]+aria-controls="sidebar"/, "mobil menü denetim ilişkisi tanımlı değil");
+  assert.match(styleSource, /:focus-visible\s*\{[^}]+outline:\s*3px solid #fff[^}]+box-shadow:\s*0 0 0 5px #255f95/s, "yüksek kontrastlı çift katmanlı odak göstergesi yok");
+  assert.match(styleSource, /\.sidebar\s*\{[^}]+visibility:\s*hidden[^}]+\}[\s\S]+body\.nav-open \.sidebar\s*\{[^}]+visibility:\s*visible/s, "kapalı mobil menü klavye sırasından çıkarılmıyor");
+
+  const actions = new Set([...appSource.matchAll(/data-action="([a-z0-9-]+)"/g), ...htmlSource.matchAll(/data-action="([a-z0-9-]+)"/g)].map((match) => match[1]));
+  const handlers = new Set([...appSource.matchAll(/action === "([a-z0-9-]+)"/g)].map((match) => match[1]));
+  assert.deepEqual([...actions].sort(), [...handlers].sort(), "data-action ile olay işleyicileri birebir eşleşmiyor");
 });
 
 test("responsive QA dört kabul genişliğini gerçek pilot rotasına yönlendiriyor", () => {
@@ -268,6 +278,18 @@ test("geçersiz durum geçişi reddediliyor", () => {
   const state = cloneState(initialState);
   const internal = state.applications.find((item) => item.kind === "internal");
   assert.throws(() => transitionApplication(state, internal.id, "draft", "commission", "Geçersiz geri dönüş"), /geçilemez/);
+
+  for (const payload of [
+    { kind: "unknown", title: "Geçersiz tür", applicant: actorNameForRole("instructor"), actorRole: "instructor", ects: 1, remoteRate: 0 },
+    { kind: "internal", title: "Geçersiz AKTS", applicant: actorNameForRole("instructor"), actorRole: "instructor", ects: 0, remoteRate: 0 },
+    { kind: "internal", title: "Geçersiz oran", applicant: actorNameForRole("instructor"), actorRole: "instructor", ects: 1, remoteRate: 101 },
+    { kind: "internal", title: "Geçersiz kanıt", applicant: actorNameForRole("instructor"), actorRole: "instructor", ects: 1, remoteRate: 0, evidence: -1 }
+  ]) {
+    const invalidState = cloneState(initialState);
+    const before = structuredClone(invalidState);
+    assert.throws(() => createApplication(invalidState, payload));
+    assert.deepEqual(invalidState, before, "geçersiz başvuru girdisi veri katmanını değiştirdi");
+  }
 });
 
 test("pilot dijital yeterlilik oluşturma ve mükerrer kod kontrolü çalışıyor", () => {
