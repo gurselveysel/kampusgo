@@ -84,11 +84,11 @@ mikrofon, konum ile ödeme izinlerinin kapatılması için güvenlik başlıklar
 Etkileşimli uygulamanın kanonik rotası `/pilot.html`'dir; kök rota bu adrese yönlenir.
 Çalışma production'a terfi ettirilmemeli ve production branch'e doğrudan yayımlanmamalıdır.
 
-- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-o9qjtt3wr-info-64116029s-projects.vercel.app/pilot.html>
+- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-ltc17soi8-info-64116029s-projects.vercel.app/pilot.html>
 - Public alias: <https://kampusgo.uzemgo.com/pilot.html> — **Alias doğrulaması: PENDING**
 
 Dokuz rolün domain sözleşmeleri `18/18` başarılıdır. Dokuz rol × dört hedef genişlikten
-oluşan 9×4 tarayıcı QA matrisi **36/36 başarılıdır** ([GitHub Actions run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557)).
+oluşan 9×4 tarayıcı QA matrisi **36/36 başarılıdır** ([GitHub Actions run #17](https://github.com/gurselveysel/kampusgo/actions/runs/32275262333)).
 
 ## Belgeler
 
