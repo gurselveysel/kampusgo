@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "alias": ["kampusgo.uzemgo.com"],
-  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
