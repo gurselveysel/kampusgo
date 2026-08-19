@@ -271,7 +271,7 @@ async function verifyScenarioActions(page, scenarioDefinitions, errors) {
   check(scenarioState.credentials >= 1, "senaryo 1 tarayıcıda pilot yeterlilik üretmedi", errors);
   check(scenarioState.safeTransfers >= 2, "senaryo 2 güvenli aktarım loglarını üretmedi", errors);
   await page.reload({ waitUntil: "domcontentloaded" });
-  await page.waitForSelector('#role-select option[value="admin"]');
+  await page.waitForSelector('#role-select option[value="admin"]', { state: "attached" });
   check(await page.locator('[data-action="run-scenario"]').count() === 0, "yenileme sonrası senaryo tamamlanma durumu korunmadı", errors);
 }
 
@@ -303,7 +303,7 @@ async function verifyPersistenceAndStateGuard(page, roles, errors) {
   await page.selectOption("#role-select", external.id);
   await waitForRole(page, external);
   await page.reload({ waitUntil: "domcontentloaded" });
-  await page.waitForSelector('#role-select option[value="admin"]');
+  await page.waitForSelector('#role-select option[value="admin"]', { state: "attached" });
   try {
     await waitForRole(page, external);
   } catch {
@@ -317,7 +317,7 @@ async function verifyPersistenceAndStateGuard(page, roles, errors) {
     localStorage.setItem(key, JSON.stringify(saved));
   });
   await page.reload({ waitUntil: "domcontentloaded" });
-  await page.waitForSelector('#role-select option[value="admin"]');
+  await page.waitForSelector('#role-select option[value="admin"]', { state: "attached" });
   check(await page.locator("#role-select").inputValue() === "learner", "bozuk/kayıtsız rol kimliği güvenli varsayılana dönmedi", errors);
 }
 
@@ -352,7 +352,10 @@ async function verifyUnauthorizedRoute(page, errors) {
       try {
         const response = await page.goto(baseURL, { waitUntil: "load" });
         check(Boolean(response?.ok()), `${viewport.name}: HTTP yükleme başarısız (${response?.status() ?? "yanıt yok"})`, errors);
-        await page.waitForSelector('#role-select option[value="admin"]', { timeout: 10000 });
+        // Native <option> elements are intentionally not rendered as visible
+        // boxes by Chromium. Waiting for `visible` therefore times out even
+        // though the role selector is fully initialized and operable.
+        await page.waitForSelector('#role-select option[value="admin"]', { state: "attached", timeout: 10000 });
         const homeContent = await page.locator("body").innerText();
         check(homeContent.includes("Kısa öğrenmeleri"), `${viewport.name}: hero metni yok`, errors);
         check(homeContent.includes("KONTROLLÜ PİLOT"), `${viewport.name}: pilot uyarısı yok`, errors);
