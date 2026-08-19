@@ -1,0 +1,38 @@
+name: Nine-role Preview QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/nine-role-preview-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      QA_BASE_URL: https://kdpu-myys-mockup-emsepqqc5-info-64116029s-projects.vercel.app/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install isolated browser QA runtime
+        run: |
+          npm install --no-save playwright@1.58.0
+          npx playwright install --with-deps chromium
+      - name: Run 9 roles x 4 viewport acceptance
+        run: npm run test:browser
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nine-role-preview-qa
+          path: test-results/
+          if-no-files-found: warn
