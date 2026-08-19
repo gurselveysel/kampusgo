@@ -1,6 +1,7 @@
 name: Temporary - alias MYYS nine-role Preview
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
