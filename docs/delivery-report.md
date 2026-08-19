@@ -8,12 +8,16 @@ Karar: **Production NO-GO**
 | Çıktı | Durum | Not |
 | --- | --- | --- |
 | Çalışan uygulama | Hazır | Gerçek HTML/CSS/ES module bileşenleri; ekran görüntüsü tabanlı arayüz değildir |
-| Vercel Preview | Hazır | Korumalı Preview dağıtımı; production terfisi yapılmadı |
+| Vercel Preview | Hazır | Preview-only dağıtım; uygulama `/pilot.html` rotasında, production terfisi yapılmadı |
+| Public alias | Doğrulama bekliyor | `kampusgo.uzemgo.com/pilot.html`; alias doğrulaması PENDING |
 | Supabase pilot şeması | Hazır | `xpjkrwzgimdxsasqszfi`; RLS + FORCE RLS, yalnız sentetik ve salt-okunur başlangıç görünümü |
 | Yerel Git sürüm kaydı | Hazır | Kaynak teslimi yerel commit ve arşivle sabitlendi |
 | GitHub uzak deposu | Hazır | `gurselveysel/kampusgo`; yalnız kaynak aynası, production otomatik yayını yok |
 
-Korumalı Preview: <https://kdpu-myys-mockup-r3rr3iuv8-info-64116029s-projects.vercel.app>
+- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-o9qjtt3wr-info-64116029s-projects.vercel.app/pilot.html>
+- Public alias: <https://kampusgo.uzemgo.com/pilot.html>
+- Alias doğrulaması: **PENDING**
+- Kök rota: `/` → `/pilot.html`
 
 ## Tamamlanan ekranlar
 
@@ -53,9 +57,11 @@ Tüm logolar özgün yüklenen dosyalardan ayrı `<img>` bileşenleriyle kullan�
 
 ## Test özeti
 
-- Kaynak söz dizimi, yapı/secret taraması, build ve iş akışı testleri başarılıdır.
-- Senaryo 1'in 12 ve Senaryo 2'nin 8 adımı canlı Preview'da çalıştırılmıştır; durum yenileme sonrasında korunmuştur.
-- 1440, 1024, 768 ve 390 px hedeflerinde belge düzeyinde yatay taşma `0 px`, pilot uyarısı görünür ve kırık görsel sayısı sıfırdır.
+- Kaynak söz dizimi, yapı/secret taraması ve build doğrulamaları başarılıdır.
+- Dokuz rolün sahiplik, görünürlük, kritik eylem, değerlendirme kararı, audit ve iki uçtan uca senaryo domain sözleşmeleri **18/18 başarılıdır**.
+- Domain testinde Senaryo 1'in 12 ve Senaryo 2'nin 8 adımı tamamlanmış; kalıcı durum ve `realDataSent=false` değişmezleri doğrulanmıştır.
+- Dokuz rol × 1440, 1024, 768 ve 390 px hedeflerinden oluşan 9×4 tarayıcı QA matrisi **36/36 başarılıdır** ([run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557); [kanıt paketi](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557/artifacts/9371422369)).
+- Public alias üzerinde rota, içerik ve asset smoke doğrulaması **PENDING** durumundadır.
 - Supabase katmanında RLS + FORCE RLS, salt-okunur grant'ler, sentetik veri ve `real_data_sent=false` değişmezleri doğrulanmıştır.
 
 ## Bilinen pilot sınırları
@@ -67,7 +73,7 @@ Tüm logolar özgün yüklenen dosyalardan ayrı `<img>` bileşenleriyle kullan�
 - Gösterilen QR yalnız dekoratif pilot simülasyonudur; taranabilir üretim QR'ı, kurumsal imza ve W3C/Open Badges uygunluk iddiası yoktur.
 - Gerçek kimlik, kişisel veri, dosya içeriği, ödeme, e-fatura, kamera/mikrofon, biyometri, SMS/e-posta ve dış servis çağrısı yoktur.
 - Kural oranları, mevzuat yorumu ve EK-1 alanları yetkili kurumsal birim doğrulamasına açıktır.
-- Preview korumalıdır; ekip dışı erişim için süreli paylaşım bağlantısı gerekir.
+- Public alias için son HTTP/asset doğrulaması PENDING durumundadır; doğrulama bitmeden alias için PASS iddiası yapılmaz.
 
 ## Kurulum
 
@@ -80,10 +86,10 @@ npm test
 npm run build
 ```
 
-Yerel adres: `http://localhost:3000` (`npm run dev:static` için `http://localhost:4173`)
+Yerel adres: `http://localhost:3000` (kök rota `/pilot.html`'e yönlenir; `npm run dev:static` için `http://localhost:4173`)
 
 ## Production teyidi
 
-Production deployment yapılmadı; `kampusgo.uzemgo.com` yalnız Preview alias hedefi
-olarak yapılandırılır. Production branch, gerçek Supabase mutasyonu veya canlı kurumsal servis
-bağlantısı oluşturulmadı.
+**Production deployment yapılmadı ve bu teslim için kesin karar NO-GO'dur.**
+`kampusgo.uzemgo.com/pilot.html` yalnız public Preview alias hedefidir; production branch,
+gerçek Supabase mutasyonu veya canlı kurumsal servis bağlantısı oluşturulmadı.
