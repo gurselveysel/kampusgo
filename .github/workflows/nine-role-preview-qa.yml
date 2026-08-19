@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      QA_BASE_URL: https://kdpu-myys-mockup-79ovpstj6-info-64116029s-projects.vercel.app/
+      QA_BASE_URL: https://kdpu-myys-mockup-o9qjtt3wr-info-64116029s-projects.vercel.app/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
