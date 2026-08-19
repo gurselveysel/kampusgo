@@ -90,6 +90,9 @@ Yerel adres: `http://localhost:3000` (kök rota `/pilot.html`'e yönlenir; `npm 
 
 ## Production teyidi
 
-**Production deployment yapılmadı ve bu teslim için kesin karar NO-GO'dur.**
+Bu teslimde kabul edilen `dpl_7bRivLenkyMotUP4ytRFjZ5FVdv7` dağıtımı READY **Preview**'dır
+(`target: null`) ve production'a terfi ettirilmedi; karar kesin **NO-GO**'dur. Vercel proje
+ilk kurulumundan kalan eski `dpl_4kwgoosKHY1aw5H8QbjNthZ5j1JC` production hedefi
+değiştirilmedi, özel alan adına bağlanmadı ve bu kabulde kullanılmadı.
 `kampusgo.uzemgo.com/pilot.html` yalnız public Preview alias hedefidir; production branch,
 gerçek Supabase mutasyonu veya canlı kurumsal servis bağlantısı oluşturulmadı.
