@@ -77,5 +77,8 @@ durum, audit ve güvenli aktarım değişmezleri doğrulanmıştır.
 
 ## Production teyidi
 
-**Production deployment yapılmamıştır.** Kesin Preview URL'si ve public alias yalnız
-kontrollü pilotu göstermelidir; production terfisi, canlı veri veya gerçek servis çağrısı yoktur.
+Kabul edilen `dpl_7bRivLenkyMotUP4ytRFjZ5FVdv7` dağıtımı READY **Preview**'dır
+(`target: null`) ve production'a terfi ettirilmemiştir. Proje ilk kurulumundan kalan eski
+`dpl_4kwgoosKHY1aw5H8QbjNthZ5j1JC` production hedefi bu teslimde değiştirilmemiş,
+özel alan adına bağlanmamış ve kabul sürümü olarak kullanılmamıştır. Canlı veri veya
+gerçek servis çağrısı yoktur.
