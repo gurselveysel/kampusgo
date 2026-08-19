@@ -1,7 +1,10 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawn } = require("node:child_process");
-const { chromium } = require(path.join(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES, "playwright"));
+const playwrightModule = process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES
+  ? path.join(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES, "playwright")
+  : "playwright";
+const { chromium } = require(playwrightModule);
 
 const qaPort = Number(process.env.QA_PORT || 4173);
 const suppliedBaseURL = process.env.QA_BASE_URL;
