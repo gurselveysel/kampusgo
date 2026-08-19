@@ -88,6 +88,25 @@ async function waitForRole(page, role) {
   }, role, { timeout: 3000 });
 }
 
+async function waitForOpenDrawerPersona(page, role) {
+  if (!role?.id || !role?.label?.trim() || !role?.name?.trim()) {
+    throw new Error("Seçili demo rolü için doğrulanabilir persona bilgisi bulunamadı");
+  }
+  await page.waitForFunction(({ id, label, name }) => {
+    const sidebar = document.querySelector("#sidebar");
+    const toggle = document.querySelector('[data-action="toggle-nav"]');
+    if (!sidebar || !toggle) return false;
+    const persona = document.querySelector("#persona-card")?.innerText?.trim() || "";
+    return document.body.classList.contains("nav-open")
+      && toggle?.getAttribute("aria-expanded") === "true"
+      && document.querySelector("#role-select")?.value === id
+      && getComputedStyle(sidebar).visibility === "visible"
+      && persona.length > 0
+      && persona.includes(label)
+      && persona.includes(name);
+  }, role, { timeout: 3000 });
+}
+
 async function visibleNavTargets(page) {
   return page.locator("[data-nav]").evaluateAll((nodes) => nodes
     .filter((node) => {
@@ -385,17 +404,30 @@ async function verifyUnauthorizedRoute(page, errors) {
         }
         if (viewport.width === 390) {
           await setHash(page, "overview");
-          await page.locator('[data-action="toggle-nav"]').click();
-          check(await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü açılmadı", errors);
           const selectedRoleId = await page.locator("#role-select").inputValue();
           const selectedRole = roles.find((role) => role.id === selectedRoleId);
-          const openPersona = await page.locator("#persona-card").innerText();
-          check(openPersona.includes(selectedRole?.label || "") && openPersona.includes(selectedRole?.name || ""), "mobile: açılan menü seçili rolün persona bilgisini göstermedi", errors);
+          if (!selectedRole?.label?.trim() || !selectedRole?.name?.trim()) {
+            errors.push(`mobile: seçili ${selectedRoleId || "boş"} rolü için persona kaydı bulunamadı`);
+          } else {
+            try {
+              // `setHash` yalnız URL değişimini doğrular; render/hashchange bir
+              // sonraki görevde tamamlanabilir. Drawer'ı açmadan önce seçili
+              // rolün görünümünü, açtıktan sonra da görünür persona metnini bekle.
+              await waitForRole(page, selectedRole);
+              await page.locator('[data-action="toggle-nav"]').click();
+              await waitForOpenDrawerPersona(page, selectedRole);
+            } catch {
+              errors.push("mobile: açılan menü seçili rolün görünür persona bilgisini göstermedi");
+            }
+          }
           // The backdrop spans the full viewport, including the area underneath
           // the higher-z-index sidebar. Click its exposed right edge, matching
           // an actual mobile user tap outside the drawer.
-          await page.locator('[data-action="close-nav"]').click({ position: { x: viewport.width - 8, y: 40 } });
-          check(!await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü kapanmadı", errors);
+          const drawerOpen = await page.locator("body").evaluate((body) => body.classList.contains("nav-open"));
+          if (drawerOpen) {
+            await page.locator('[data-action="close-nav"]').click({ position: { x: viewport.width - 8, y: 40 } });
+            await page.waitForFunction(() => !document.body.classList.contains("nav-open"), undefined, { timeout: 3000 });
+          }
         }
         await page.screenshot({ path: `test-results/${viewport.name}-nine-role-qa.png`, fullPage: true });
       } catch (error) {
