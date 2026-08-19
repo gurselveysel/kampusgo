@@ -6,9 +6,19 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/nine-role-preview-qa.yml"
+      - "scripts/browser-qa.cjs"
+      - "src/**"
+      - "index.html"
+      - "styles.css"
+      - "package.json"
+      - "package-lock.json"
 
 permissions:
   contents: read
+
+concurrency:
+  group: nine-role-preview-qa
+  cancel-in-progress: true
 
 jobs:
   browser-qa:
