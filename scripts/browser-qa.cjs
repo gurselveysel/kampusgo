@@ -78,7 +78,11 @@ async function setHash(page, route) {
 async function waitForRole(page, role) {
   await page.waitForFunction(({ id, label, name }) => {
     const select = document.querySelector("#role-select");
-    const persona = document.querySelector("#persona-card")?.innerText || "";
+    // At tablet/mobile widths the closed sidebar is intentionally hidden from
+    // the keyboard and accessibility trees. `innerText` is therefore empty
+    // even though role-specific drawer content has rendered. Use textContent
+    // for the state assertion and test the opened drawer separately below.
+    const persona = document.querySelector("#persona-card")?.textContent || "";
     const heading = document.querySelector("#main-content h1")?.textContent || "";
     return select?.value === id && persona.includes(label) && persona.includes(name) && heading.includes(`${label} genel bakışı`);
   }, role, { timeout: 3000 });
@@ -383,6 +387,10 @@ async function verifyUnauthorizedRoute(page, errors) {
           await setHash(page, "overview");
           await page.locator('[data-action="toggle-nav"]').click();
           check(await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü açılmadı", errors);
+          const selectedRoleId = await page.locator("#role-select").inputValue();
+          const selectedRole = roles.find((role) => role.id === selectedRoleId);
+          const openPersona = await page.locator("#persona-card").innerText();
+          check(openPersona.includes(selectedRole?.label || "") && openPersona.includes(selectedRole?.name || ""), "mobile: açılan menü seçili rolün persona bilgisini göstermedi", errors);
           // The backdrop spans the full viewport, including the area underneath
           // the higher-z-index sidebar. Click its exposed right edge, matching
           // an actual mobile user tap outside the drawer.
