@@ -383,7 +383,10 @@ async function verifyUnauthorizedRoute(page, errors) {
           await setHash(page, "overview");
           await page.locator('[data-action="toggle-nav"]').click();
           check(await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü açılmadı", errors);
-          await page.locator('[data-action="close-nav"]').click();
+          // The backdrop spans the full viewport, including the area underneath
+          // the higher-z-index sidebar. Click its exposed right edge, matching
+          // an actual mobile user tap outside the drawer.
+          await page.locator('[data-action="close-nav"]').click({ position: { x: viewport.width - 8, y: 40 } });
           check(!await page.locator("body").evaluate((body) => body.classList.contains("nav-open")), "mobile: menü kapanmadı", errors);
         }
         await page.screenshot({ path: `test-results/${viewport.name}-nine-role-qa.png`, fullPage: true });
