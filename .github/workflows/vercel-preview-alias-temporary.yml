@@ -1,0 +1,183 @@
+name: Temporary Vercel Preview Alias
+
+on:
+  push:
+    paths:
+      - ".github/workflows/vercel-preview-alias-temporary.yml"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: vercel-preview-alias-temporary
+  cancel-in-progress: true
+
+jobs:
+  alias-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install pinned Vercel CLI
+        run: npm install --global vercel@59.1.4
+
+      - name: Authorize and assign the existing Preview deployment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node <<'NODE'
+          const { spawnSync } = require("node:child_process");
+
+          const clientId = "cl_HYyOPBNtFMfHhaUn9L4QPfTZz6TP47bp";
+          const deploymentUrl = "kdpu-myys-mockup-r3rr3iuv8-info-64116029s-projects.vercel.app";
+          const domain = "kampusgo.uzemgo.com";
+          const teamSlug = "info-64116029s-projects";
+          const repo = process.env.GITHUB_REPOSITORY;
+          const githubToken = process.env.GITHUB_TOKEN;
+          const apiHeaders = {
+            Accept: "application/vnd.github+json",
+            Authorization: `Bearer ${githubToken}`,
+            "X-GitHub-Api-Version": "2022-11-28",
+            "Content-Type": "application/json"
+          };
+
+          async function jsonRequest(url, options = {}) {
+            const response = await fetch(url, options);
+            const text = await response.text();
+            let data;
+            try { data = text ? JSON.parse(text) : {}; }
+            catch { data = { message: text.slice(0, 500) }; }
+            return { response, data };
+          }
+
+          async function updateIssue(issueNumber, body, state) {
+            await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}`, {
+              method: "PATCH",
+              headers: apiHeaders,
+              body: JSON.stringify({ body, ...(state ? { state } : {}) })
+            });
+          }
+
+          let issueNumber;
+          try {
+            const discovery = await jsonRequest("https://vercel.com/.well-known/openid-configuration");
+            if (!discovery.response.ok) throw new Error("Vercel OAuth discovery failed");
+            const deviceEndpoint = discovery.data.device_authorization_endpoint;
+            const tokenEndpoint = discovery.data.token_endpoint;
+
+            const device = await jsonRequest(deviceEndpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({
+                client_id: clientId,
+                scope: "openid offline_access"
+              })
+            });
+            if (!device.response.ok) throw new Error("Vercel device authorization could not start");
+
+            const issue = await jsonRequest(`https://api.github.com/repos/${repo}/issues`, {
+              method: "POST",
+              headers: apiHeaders,
+              body: JSON.stringify({
+                title: "[GEÇİCİ] Vercel Preview alan adı yetkilendirmesi",
+                body: [
+                  "Bu geçici işlem **kampusgo.uzemgo.com** alan adını mevcut Vercel **Preview** deploymentına bağlar.",
+                  "",
+                  "Production deployment oluşturmaz veya promote etmez.",
+                  "",
+                  `[Vercel’de yetkilendir](${device.data.verification_uri_complete})`,
+                  "",
+                  `Tek kullanımlık kod: **${device.data.user_code}**`,
+                  "",
+                  "İşlem tamamlanınca bu kayıt otomatik kapatılacaktır."
+                ].join("\n")
+              })
+            });
+            if (!issue.response.ok) throw new Error("Temporary authorization notice could not be created");
+            issueNumber = issue.data.number;
+            console.log(`AUTHORIZATION_NOTICE=${issue.data.html_url}`);
+
+            let intervalMs = Math.max(5, Number(device.data.interval || 5)) * 1000;
+            const deadline = Date.now() + Math.min(Number(device.data.expires_in || 600), 720) * 1000;
+            let accessToken;
+
+            while (Date.now() < deadline) {
+              await new Promise(resolve => setTimeout(resolve, intervalMs));
+              const token = await jsonRequest(tokenEndpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                  client_id: clientId,
+                  grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+                  device_code: device.data.device_code
+                })
+              });
+
+              if (token.response.ok && token.data.access_token) {
+                accessToken = token.data.access_token;
+                break;
+              }
+              if (token.data.error === "authorization_pending") continue;
+              if (token.data.error === "slow_down") {
+                intervalMs += 5000;
+                continue;
+              }
+              throw new Error(`Vercel authorization failed: ${token.data.error || token.response.status}`);
+            }
+
+            if (!accessToken) throw new Error("Vercel authorization timed out");
+
+            const result = spawnSync(
+              "vercel",
+              [
+                "alias", "set",
+                deploymentUrl,
+                domain,
+                "--scope", teamSlug,
+                "--token", accessToken
+              ],
+              {
+                encoding: "utf8",
+                env: { ...process.env, CI: "1", NO_COLOR: "1" },
+                timeout: 120000
+              }
+            );
+
+            accessToken = undefined;
+            if (result.status !== 0) {
+              const message = (result.stderr || result.stdout || "Alias command failed")
+                .replace(/Bearer\s+\S+/gi, "Bearer [REDACTED]")
+                .slice(0, 800);
+              throw new Error(message);
+            }
+
+            await updateIssue(
+              issueNumber,
+              [
+                "Tamamlandı.",
+                "",
+                `**${domain}** mevcut Vercel **Preview** deploymentına bağlandı.`,
+                "",
+                "Production promote/deploy yapılmadı."
+              ].join("\n"),
+              "closed"
+            );
+            console.log(`ALIAS_ASSIGNED=https://${domain}`);
+          } catch (error) {
+            if (issueNumber) {
+              await updateIssue(
+                issueNumber,
+                [
+                  "İşlem tamamlanamadı.",
+                  "",
+                  "Hata özeti:",
+                  `\`\`\`text\n${String(error.message || error).slice(0, 800)}\n\`\`\``,
+                  "",
+                  "Hiçbir Production promote/deploy komutu çalıştırılmadı."
+                ].join("\n"),
+                "open"
+              );
+            }
+            throw error;
+          }
+          NODE
