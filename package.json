@@ -1,0 +1,29 @@
+{
+  "name": "kdpu-myys-mockup",
+  "version": "0.1.0",
+  "private": true,
+  "description": "KDPÜ Mikro Yeterlilik Yönetim Sistemi kontrollü pilotu",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/build-public.mjs && next dev",
+    "dev:static": "node server.mjs",
+    "start": "next start",
+    "build": "node scripts/build-public.mjs && next build",
+    "build:static": "node scripts/build-static.mjs",
+    "test": "node scripts/test.mjs && node scripts/validate.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "next": "16.3.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.9.0"
+  }
+}

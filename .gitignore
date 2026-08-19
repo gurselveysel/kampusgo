@@ -1,0 +1,10 @@
+.DS_Store
+.vercel
+.env.local
+node_modules
+.next
+public
+dist
+npm-debug.log*
+test-results
+playwright-report
