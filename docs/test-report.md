@@ -6,7 +6,7 @@ Karar: **Production NO-GO**
 
 ## Test edilen dağıtım ve rotalar
 
-- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-o9qjtt3wr-info-64116029s-projects.vercel.app/pilot.html>
+- Kesin Preview dağıtımı: <https://kdpu-myys-mockup-ltc17soi8-info-64116029s-projects.vercel.app/pilot.html>
 - Public alias: <https://kampusgo.uzemgo.com/pilot.html>
 - Uygulama rotası: `/pilot.html`
 - Kök rota davranışı: `/` → `/pilot.html`
@@ -20,7 +20,7 @@ Karar: **Production NO-GO**
 | Yapı doğrulama | Zorunlu dosyalar, marka/görsel referansları, production sır taraması | Başarılı |
 | Dokuz rol domain sözleşmesi | Sahiplik, görünürlük, geçiş yetkisi, değerlendirme kararı, audit ve iki uçtan uca senaryo | **18/18 başarılı** |
 | Supabase güvenlik | RLS + FORCE RLS, salt-okunur grant, sentetik/simülasyon değişmezleri | Başarılı |
-| 9×4 tarayıcı QA | 9 rol × 1440, 1024, 768 ve 390 px = 36 rol/görünüm kombinasyonu | **36/36 başarılı** — [run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557) |
+| 9×4 tarayıcı QA | 9 rol × 1440, 1024, 768 ve 390 px = 36 rol/görünüm kombinasyonu | **36/36 başarılı** — [run #17](https://github.com/gurselveysel/kampusgo/actions/runs/32275262333) |
 | Public alias smoke | `kampusgo.uzemgo.com/pilot.html`, rota, içerik ve asset yükleme | **PENDING** |
 
 ## 18/18 domain kabul kapsamı
@@ -54,9 +54,9 @@ Her hedef genişlikte dokuz rol için aşağıdaki davranışlar otomatik olarak
 - Modal, toast, menü backdrop, klavye odağı ve görünür pilot uyarısı
 - Kırık görsel, belge düzeyi yatay taşma ve mobil kontrol kesilmesi
 
-Matris 19 Ağustos 2026 15:17 UTC'de hatasız tamamlanmıştır: dört viewportun her birinde
+Matris 19 Ağustos 2026 16:20 UTC'de hatasız tamamlanmıştır: dört viewportun her birinde
 `rolesChecked: 9`, `errors: []`. Ekran görüntüleri ve JSON raporu
-[QA kanıt paketinde](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557/artifacts/9371422369) saklanır.
+[QA kanıt paketinde](https://github.com/gurselveysel/kampusgo/actions/runs/32275262333/artifacts/9373767031) saklanır.
 
 ## Ana demo senaryoları
 
@@ -77,7 +77,7 @@ durum, audit ve güvenli aktarım değişmezleri doğrulanmıştır.
 
 ## Production teyidi
 
-Kabul edilen `dpl_7bRivLenkyMotUP4ytRFjZ5FVdv7` dağıtımı READY **Preview**'dır
+Kabul edilen `dpl_7s2ZL879z7dYSUpgnkrHn8Jjdkzd` dağıtımı READY **Preview**'dır
 (`target: null`) ve production'a terfi ettirilmemiştir. Proje ilk kurulumundan kalan eski
 `dpl_4kwgoosKHY1aw5H8QbjNthZ5j1JC` production hedefi bu teslimde değiştirilmemiş,
 özel alan adına bağlanmamış ve kabul sürümü olarak kullanılmamıştır. Canlı veri veya
