@@ -1,0 +1,98 @@
+name: Temporary - make MYYS Preview public
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/vercel-preview-public-temporary.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  disable-vercel-authentication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PROJECT_ID: prj_yTNVgAcAkINcD485xB3LYEPZ6PsW
+      TEAM_ID: team_QH2k9edmHSXuybZK3Ay9RVAo
+      DEPLOYMENT_ID: dpl_FhBfxWbmM1FEnAotXZ3KMszzV4pu
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - name: Validate token and capture current protection
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$VERCEL_TOKEN"
+          curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v9/projects/$PROJECT_ID?teamId=$TEAM_ID" \
+            -o /tmp/project-before.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const p = JSON.parse(fs.readFileSync('/tmp/project-before.json', 'utf8'));
+          if (p.id !== process.env.PROJECT_ID) throw new Error('Unexpected Vercel project');
+          console.log('Protection before:', JSON.stringify(p.ssoProtection ?? null));
+          NODE
+
+      - name: Disable only Vercel Authentication for this project
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(curl --silent --show-error \
+            -X PATCH \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"ssoProtection":null}' \
+            -o /tmp/project-after.json \
+            -w '%{http_code}' \
+            "https://api.vercel.com/v9/projects/$PROJECT_ID?teamId=$TEAM_ID")"
+          test "$status" = "200"
+          node - <<'NODE'
+          const fs = require('fs');
+          const p = JSON.parse(fs.readFileSync('/tmp/project-after.json', 'utf8'));
+          if (p.id !== process.env.PROJECT_ID) throw new Error('Unexpected Vercel project');
+          if (p.ssoProtection !== null) throw new Error('Vercel Authentication is still enabled');
+          console.log('Protection after: disabled');
+          NODE
+
+      - name: Confirm deployment remains Preview and READY
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v13/deployments/$DEPLOYMENT_ID?teamId=$TEAM_ID" \
+            -o /tmp/deployment.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const d = JSON.parse(fs.readFileSync('/tmp/deployment.json', 'utf8'));
+          if (d.id !== process.env.DEPLOYMENT_ID) throw new Error('Unexpected deployment');
+          if (d.target != null) throw new Error(`Deployment target changed: ${d.target}`);
+          if (d.readyState !== 'READY') throw new Error(`Deployment is not READY: ${d.readyState}`);
+          console.log('Deployment remains READY Preview (target: null)');
+          NODE
+
+      - name: Verify anonymous custom-domain access
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5 6; do
+            result="$(curl --silent --show-error --location --max-time 20 \
+              -o /tmp/kampusgo.html \
+              -w '%{http_code} %{url_effective}' \
+              https://kampusgo.uzemgo.com/)"
+            code="${result%% *}"
+            final_url="${result#* }"
+            if [ "$code" = "200" ] \
+              && [[ "$final_url" == https://kampusgo.uzemgo.com/* ]] \
+              && grep -q 'KONTROLLÜ PİLOT' /tmp/kampusgo.html \
+              && grep -q 'Mikro Yeterlilik Yönetim Sistemi' /tmp/kampusgo.html; then
+              echo "Anonymous access verified: $code $final_url"
+              exit 0
+            fi
+            echo "Attempt $attempt not ready yet: $code $final_url"
+            sleep 5
+          done
+          echo 'Anonymous access verification failed' >&2
+          exit 1
