@@ -23,6 +23,8 @@ concurrency:
 jobs:
   browser-qa:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.0-noble
     timeout-minutes: 20
     env:
       QA_BASE_URL: https://kdpu-myys-mockup-16kdmksc9-info-64116029s-projects.vercel.app/
@@ -33,10 +35,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Install isolated browser QA runtime
-        run: |
-          npm install --no-save playwright@1.58.0
-          npx playwright install --with-deps chromium
+      - name: Install matching Playwright package
+        run: npm install --no-save --package-lock=false playwright@1.58.0
       - name: Run 9 roles x 4 viewport acceptance
         run: npm run test:browser
       - name: Upload QA evidence
