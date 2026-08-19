@@ -31,4 +31,17 @@ for (const forbidden of ["vercel --prod", "service_role", "sk_live_", "Gerçek v
   if (source.includes(forbidden)) throw new Error(`Yasaklı production ifadesi bulundu: ${forbidden}`);
 }
 
+const vercel = readFileSync("vercel.json", "utf8");
+for (const deniedCapability of ["camera=()", "microphone=()", "geolocation=()", "payment=()"]) {
+  if (!vercel.includes(deniedCapability)) throw new Error(`Pilot tarayıcı yetenek kapısı eksik: ${deniedCapability}`);
+}
+
+const supabase = readFileSync("src/supabase.js", "utf8");
+if (/method\s*:\s*["'](?:POST|PUT|PATCH|DELETE)["']/i.test(supabase)) {
+  throw new Error("Supabase pilot adaptöründe salt-okunur olmayan istek bulundu");
+}
+for (const forbiddenBrowserApi of ["getUserMedia", "mediaDevices", "geolocation.getCurrentPosition", "PaymentRequest"]) {
+  if (source.includes(forbiddenBrowserApi)) throw new Error(`Kontrollü pilotta yasak tarayıcı API'si bulundu: ${forbiddenBrowserApi}`);
+}
+
 console.log(`Doğrulama başarılı: ${required.length} zorunlu dosya bulundu; production güvenlik taraması temiz.`);
