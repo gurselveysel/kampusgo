@@ -38,7 +38,10 @@ const required = [
   "supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql"
 ];
 
-const missing = required.filter((file) => !existsSync(file));
+const missing = required.filter((file) => {
+  if (existsSync(file)) return false;
+  return !/\.(?:png|webp)$/i.test(file) || !existsSync(`${file}.b64`);
+});
 if (missing.length) throw new Error(`Eksik dosyalar: ${missing.join(", ")}`);
 
 if (!dpuInstitutionalSystems.length || pilotIntegrationMappings.length !== dpuInstitutionalSystems.length || pilotIntegrationScenarios.length !== dpuInstitutionalSystems.length || pilotIntegrationAuditEvents.length !== dpuInstitutionalSystems.length) {
