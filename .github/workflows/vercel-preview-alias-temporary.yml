@@ -1,5 +1,5 @@
 name: Temporary - alias MYYS nine-role Preview
-# One-time authorization attempt 2
+# One-time authorization attempt 3 — verified nine-role Preview only
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
           node <<'NODE'
           (async () => {
             const clientId = "cl_HYyOPBNtFMfHhaUn9L4QPfTZz6TP47bp";
-            const deploymentId = "dpl_EUt7ecD7qR9zvFMhePFCxdzqCpbM";
+            const deploymentId = "dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5";
             const teamId = "team_QH2k9edmHSXuybZK3Ay9RVAo";
             const domain = "kampusgo.uzemgo.com";
             const repo = process.env.GITHUB_REPOSITORY;
@@ -146,7 +146,7 @@ jobs:
                   cache: "no-store"
                 });
                 const source = await response.text();
-                if (response.status === 200 && source.includes("version: 6") && source.includes("recipientRoles")) {
+                if (response.status === 200 && source.includes("version: 8") && source.includes("recipientRoles")) {
                   const root = await fetch(`https://${domain}/?qa=${Date.now()}`, { redirect: "follow", cache: "no-store" });
                   const html = await root.text();
                   if (root.status === 200 && root.url.startsWith(`https://${domain}/pilot.html`) && html.includes("KONTROLLÜ PİLOT")) {
