@@ -11,23 +11,23 @@ Karar: **Production NO-GO**
 - Public Preview: <https://kampusgo.uzemgo.com/pilot.html>
 - Uygulama rotası: `/pilot.html`
 - Kök rota beklentisi: `/` → `/pilot.html`
-- Bu revizyonun son Preview kimliği ve alias smoke sonucu: **uygulama sonrası doğrulanacak**
+- Exact Preview: <https://kdpu-myys-mockup-rkqlwxtnd-info-64116029s-projects.vercel.app/pilot.html> — `dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5`, READY `target: null`, asset smoke **PASS**
+- Public aliasın bu exact Preview'a taşındığına ilişkin anonim erişim smoke: **PASS**
 
 ## Güncel yerel otomatik kontroller
 
 | Kontrol | Kapsam | Sonuç |
 | --- | --- | --- |
 | Domain kabul paketi | Dokuz rol, sahiplik, görünürlük, karar yetkisi, ödeme, TYÇ/AYÇ, DPÜ katalog UI'sı, audit ve iki uçtan uca senaryo | **25/25 başarılı** |
-| Yapı doğrulama | 23 zorunlu dosya, marka/görsel referansı, production/secret ve yasak tarayıcı API taraması | **Başarılı** |
+| Yapı doğrulama | 24 zorunlu dosya, marka/görsel referansı, production/secret ve yasak tarayıcı API taraması | **Başarılı** |
 | DPÜ entegrasyon sözleşmesi | 32 iç sistem, 32 eşleme, 32 dry-run senaryosu, 32 sentetik audit; 4 FORCE RLS tablo, 4 `security_invoker` görünüm | **Başarılı** |
 | TYÇ/AYÇ bütünlüğü | TYÇ 8 + AYÇ/EQF 8 tanımlayıcı; iki çerçevede 8'er şablon | **Başarılı** |
 | Ödeme RBAC | Öğrenen başlatır, Finans onaylar/revize eder/mutabakat yapar; admin mali karar veremez | **Başarılı** |
 | Mali açıklama görünürlüğü | Ana sayfada GİB/e-Arşiv ve MYS/MAYS kontrollü entegrasyon açıklamaları | **Başarılı** |
 | Canlı etki değişmezleri | Gerçek ödeme kanalı reddi; `realPayment=false`, dış aktarımda `realDataSent=false` | **Başarılı** |
-| Önceki temel sürüm tarayıcı QA | 9 rol × 1440, 1024, 768 ve 390 px | **36/36 başarılı** — [run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557) |
-| Güncel revizyon tarayıcı QA | Ödeme uçtan uca akışı, TYÇ/AYÇ düzenleme/salt-okunur kapıları ve dört viewport | **Uygulama sonrası doğrulanacak** |
+| Güncel revizyon tarayıcı QA | 9 rol × 1440, 1024, 768 ve 390 px; ödeme uçtan uca akışı, TYÇ/AYÇ, entegrasyon, sahiplik ve kalıcılık | **PASS** — [run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716) |
 | Genişletilmiş migration canlı testi | Apply, sayımlar, FORCE RLS/grant, kataloglar, security/performance advisor | **PASS** |
-| Public alias smoke | Rota, içerik, JS/CSS/görsel asset ve Vercel auth duvarı kontrolü | **Uygulama sonrası doğrulanacak** |
+| Public alias smoke | Rota, içerik, JS/CSS/görsel asset ve Vercel auth duvarı kontrolü | **PASS** |
 
 Yerel test komutları:
 
@@ -41,7 +41,7 @@ node scripts/validate.mjs
 
 - `Dokuz rol domain testi başarılı: 25/25 sözleşme`
 - `PASS institutional integration contract — 32 systems / 32 mappings / 32 scenarios / 32 audit events`
-- `Doğrulama başarılı: 23 zorunlu dosya bulundu; production güvenlik taraması temiz.`
+- `Doğrulama başarılı: 24 zorunlu dosya bulundu; production güvenlik taraması temiz.`
 
 ## 25/25 kabul kapsamı
 
@@ -95,9 +95,7 @@ node scripts/validate.mjs
 
 ## Tarayıcı QA durumu
 
-Önceki kabul sürümünde 9 rol × dört viewport matrisi 36/36 geçmiştir; ekran görüntüleri ve JSON raporu [GitHub Actions kanıt paketinde](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557/artifacts/9371422369) bulunur.
-
-Bu raporda ödeme ve TYÇ/AYÇ matrisleri eklendiği için önceki 36/36 sonucu yeni revizyonun nihai tarayıcı kabulü gibi sunulmaz. Güncellenmiş tarayıcı testi aşağıdakileri kapsayacak şekilde son Preview üzerinde yeniden çalıştırılacaktır:
+Güncel kabul sürümünde 9 rol × dört viewport matrisi, ödeme ve entegrasyon akışlarıyla birlikte geçmiştir. Koşu kaydı [GitHub Actions run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716), kanıt paketi ise [artifact 9390576383](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716/artifacts/9390576383) adresindedir. Test şu kapsamı doğrulamıştır:
 
 - Öğrenen ödeme talebi → Finans onayı → mutabakat → pilot kayıt
 - TYÇ ve AYÇ/EQF sekme geçişi ile 1–8 seviye seçenekleri
@@ -108,7 +106,7 @@ Bu raporda ödeme ve TYÇ/AYÇ matrisleri eklendiği için önceki 36/36 sonucu 
 - 1440, 1024, 768 ve 390 px'te yatay taşma, kırık görsel, modal, toast, odak ve mobil menü
 - Public alias üzerinde Vercel giriş duvarı olmadan erişim
 
-Sonuç durumu: **uygulama sonrası doğrulanacak**.
+Sonuç durumu: **PASS — 9/9 rol, dört viewport ve kritik uçtan uca akışlar başarılı**.
 
 ## Supabase canlı doğrulama sonucu
 
@@ -160,9 +158,9 @@ Security advisor: **0 bulgu**. Performance advisor'ın bildirdiği indekslenmemi
 - Portal verisinin tamamı kopyalanmaz; doğrulanmamış yeniden kullanım lisansı ve bulk API/export sınırı nedeniyle yalnız sınırlı üst veri tutulur.
 - DPÜ entegrasyon kataloğu kaynak izli bir aday tasarımdır; API/SSO/servis sözleşmesi, canlı bağlantı veya veri yazma yetkisi iddia etmez.
 - Tam kimlik doğrulamalı sayfa kazıması, kişi verisi alımı ve gerçek kurumsal otomasyon çağrısı yapılmamıştır.
-- Bu revizyonun Vercel Preview smoke ve GitHub SHA'sı henüz kesinleşmemiştir; canlı Supabase doğrulaması tamamlanmıştır.
+- Vercel exact Preview, public custom-domain alias, canlı Supabase doğrulaması ve güncel tarayıcı matrisi kesinleşmiştir. Uygulama kaynak sürümü `8a8aacfd55158f4a18eba22ab3401ef1548f8a38`, final QA koşusu `32323555716`'dır.
 - Production deployment, production branch yayını ve canlı kurumsal bağlantı kesin kapsam dışıdır.
 
 ## Production teyidi
 
-Kabul edilebilir hedef yalnız Vercel **Preview** (`target: null`) dağıtımıdır. Production'a terfi, production branch yayını, gerçek veri veya canlı servis çağrısı yapılmayacaktır. Bu revizyonun Preview kimliği ancak deployment ve smoke testi tamamlandıktan sonra rapora eklenmelidir.
+Kabul edilebilir hedef yalnız Vercel **Preview** (`target: null`) dağıtımıdır. Production'a terfi, production branch yayını, gerçek veri veya canlı servis çağrısı yapılmayacaktır. Bu revizyonun doğrulanan kimliği `dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5`'dır.

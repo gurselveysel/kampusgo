@@ -126,16 +126,17 @@ npm test
 
 - Domain, rol ve entegrasyon UI sözleşmeleri: **25/25 başarılı**
 - DPÜ entegrasyon veri sözleşmesi: **32/32/32/32 başarılı**
-- Zorunlu dosya / production güvenlik doğrulaması: **23/23 başarılı**
+- Zorunlu dosya / production güvenlik doğrulaması: **24/24 başarılı**
 - Canlı Supabase migration, RLS/grant ve advisor doğrulaması: **PASS**
-- Önceki temel sürüm 9 rol × 4 viewport tarayıcı matrisi: **36/36 başarılı** ([GitHub Actions run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557))
-- Bu ödeme/matris revizyonunun son Preview tarayıcı QA, asset ve alias smoke kontrolü: **uygulama sonrası doğrulanacak**
+- Güncel 9 rol × 4 viewport tarayıcı matrisi, ödeme uçtan uca akışı, sahiplik, kalıcılık, entegrasyon kataloğu ve CTA kontrolleri: **PASS** ([GitHub Actions run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716))
+- Asset, exact Preview ve public alias anonim erişim smoke kontrolü: **PASS**
 
 ## Vercel Preview
 
 - Public Preview adresi: <https://kampusgo.uzemgo.com/pilot.html>
+- Exact READY Preview: <https://kdpu-myys-mockup-rkqlwxtnd-info-64116029s-projects.vercel.app/pilot.html>
 - Kök rota: `/` → `/pilot.html`
-- Bu revizyonun son Vercel deployment kimliği, `target: null` teyidi ve public smoke sonucu: **uygulama sonrası doğrulanacak**
+- Deployment `dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5`: **READY Preview**, `target: null`; public alias, HTML, JS, CSS, logolar ve WebP asset smoke kontrolü **PASS**
 
 `vercel.json`, kamera, mikrofon, konum ve ödeme tarayıcı yeteneklerini kapatan güvenlik başlıklarını içerir. Production terfisi yapılmamalıdır.
 
