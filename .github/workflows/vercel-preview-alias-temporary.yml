@@ -1,5 +1,5 @@
-name: Temporary - alias MYYS nine-role Preview
-# One-time authorization refresh 2026-08-20T07:10:00Z
+name: Temporary - alias MYYS v15 Preview
+# One-time authorization refresh 2026-08-20T14:15:00Z
 
 on:
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
           node <<'NODE'
           (async () => {
             const clientId = "cl_HYyOPBNtFMfHhaUn9L4QPfTZz6TP47bp";
-            const deploymentId = "dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219";
+            const deploymentId = "dpl_2zaxrgj1ZUG3BjaVpo6AJyPgn8pX";
             const teamId = "team_QH2k9edmHSXuybZK3Ay9RVAo";
             const domain = "kampusgo.uzemgo.com";
             const repo = process.env.GITHUB_REPOSITORY;
@@ -73,9 +73,9 @@ jobs:
                 method: "POST",
                 headers: githubHeaders,
                 body: JSON.stringify({
-                  title: "[GEÇİCİ] MYYS akıllı eşleme 9 rol Preview alias yetkilendirmesi",
+                  title: "[GEÇİCİ] MYYS yönerge uyumlu MYYS v15 Preview alias yetkilendirmesi",
                   body: [
-                    "Bu tek kullanımlık işlem yeni, doğrulanmış **akıllı eşleme 9 rol Preview** dağıtımını **kampusgo.uzemgo.com** alanına bağlar.",
+                    "Bu tek kullanımlık işlem yeni, doğrulanmış **yönerge uyumlu MYYS v15 Preview** dağıtımını **kampusgo.uzemgo.com** alanına bağlar.",
                     "",
                     "Production deployment oluşturulmaz veya promote edilmez.",
                     "",
@@ -146,7 +146,7 @@ jobs:
                   cache: "no-store"
                 });
                 const source = await response.text();
-                if (response.status === 200 && source.includes("version: 11") && source.includes("recipientRoles")) {
+                if (response.status === 200 && source.includes("version: 15") && source.includes("recipientRoles")) {
                   const root = await fetch(`https://${domain}/?qa=${Date.now()}`, { redirect: "follow", cache: "no-store" });
                   const html = await root.text();
                   if (root.status === 200 && root.url.startsWith(`https://${domain}/pilot.html`) && html.includes("KONTROLLÜ PİLOT")) {
@@ -161,7 +161,7 @@ jobs:
               await updateIssue(issueNumber, [
                 "Tamamlandı.",
                 "",
-                `**https://${domain}** yeni akıllı eşleme 9 rol Preview dağıtımını gösteriyor.`,
+                `**https://${domain}** yeni yönerge uyumlu MYYS v15 Preview dağıtımını gösteriyor.`,
                 "",
                 `Deployment: **${deploymentId}** — **READY Preview** (target: null).`,
                 "",
