@@ -274,7 +274,9 @@ function isValidSavedState(saved) {
       isObject(item.samplePayload) && item.samplePayload.mode === "dry-run" && item.samplePayload.realData === false &&
       (item.publicUrl === "" || /^https:\/\//.test(item.publicUrl)) && (item.sourceUrl === "" || /^https:\/\//.test(item.sourceUrl)) &&
       isNumber(item.stage, 0, 5) && (item.attempts === undefined || isNumber(item.attempts)) && item.realDataEnabled === false && !item.secret) &&
-    saved.integrationJobs.every((item) => isObject(item) && isSafeId(item.id) && isSafeId(item.target) && ["status", "at"].every((key) => isText(item[key])) && isDate(item.at) && item.realDataSent === false) &&
+    saved.integrationJobs.every((item) => isObject(item) && isSafeId(item.id) && isSafeId(item.target) &&
+      item.targetId === item.target && isText(item.targetLabel) &&
+      ["status", "at"].every((key) => isText(item[key])) && isDate(item.at) && item.realDataSent === false) &&
     saved.notifications.every((item) => isObject(item) && isSafeId(item.id) && ["title", "body", "time"].every((key) => isText(item[key])) && Array.isArray(item.recipientRoles) && item.recipientRoles.length > 0 && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy) && item.readBy.every((role) => roleIds.has(role) && item.recipientRoles.includes(role))) &&
     saved.audit.every((item) => isObject(item) && isSafeId(item.id) && isSafeId(item.entityId) && ["at", "actor", "action", "from", "to", "reason"].every((key) => isText(item[key])) && isDate(item.at) && auditRoleIds.has(item.actorRole)) &&
     isObject(saved.finance) &&
@@ -488,7 +490,7 @@ function closeMobileNav(restoreFocus = false) {
 }
 
 function activateCommissionTab(tabId) {
-  if (!["summary", "evidence", "curriculum", "history"].includes(tabId)) return;
+  if (!["summary", "evidence", "curriculum", "smart", "history"].includes(tabId)) return;
   currentCommissionTab = tabId;
   render();
   setTimeout(() => document.querySelector(`#commission-tab-${currentCommissionTab}`)?.focus(), 0);
@@ -1560,7 +1562,7 @@ function integrationsPage() {
     <div class="grid grid-3 section" id="integration-catalog">${tierFilteredIntegrations.map(integrationCard).join("")}</div>
     <div id="integration-filter-empty" class="empty-state" hidden><strong>Eşleşen entegrasyon kaydı yok</strong><p>Arama ifadesini veya kategori filtresini değiştirin.</p></div>
     <section class="section"><div class="section-heading"><div><div class="page-kicker">DPÜ dışı kontrollü kapılar</div><h2>Kamu, mali ve bildirim taslakları</h2></div><p>Bu ${externalPilotIntegrationGates.length} kapı, ${state.integrations.length} kayıtlı canonical kurum sistemi kataloğundan ayrı tutulur; hiçbirinin canlı sözleşmesi veya erişim anahtarı tanımlı değildir.</p></div><div class="grid grid-3">${externalPilotIntegrationGates.map(externalIntegrationGateCard).join("")}</div></section>
-    ${state.integrationJobs.length ? `<section class="card section"><div class="card-header"><div><h2>Simülasyon iş günlüğü</h2><p>Başarı, hata ve yeniden deneme senaryoları; tüm kayıtlarda gerçek veri aktarımı kapalıdır.</p></div></div><div class="table-wrap"><table><caption class="sr-only">Entegrasyon simülasyon iş kayıtları</caption><thead><tr><th scope="col">Hedef / kategori</th><th scope="col">Durum</th><th scope="col">Hata / yeniden deneme</th><th scope="col">Gerçek veri</th><th scope="col">Zaman</th></tr></thead><tbody>${state.integrationJobs.map((job)=>`<tr><td><span class="table-title">${escapeHtml(job.target)}</span><span class="table-subtitle">${escapeHtml(job.category || "Pilot entegrasyon")}</span></td><td>${statusBadge(job.status === "simulation_failed" ? "failed" : "simulated", job.status === "simulation_failed" ? "Simüle hata" : "Simüle başarı")}</td><td>${escapeHtml(job.errorCode || "NONE")}<span class="table-subtitle">${job.retryAvailable ? "Yeniden deneme açık" : "Yeniden deneme gerekmiyor"}</span></td><td><strong>Gönderilmedi</strong><span class="table-subtitle">realDataSent=false</span></td><td>${formatDate(job.at,true)}</td></tr>`).join("")}</tbody></table></div></section>` : ""}
+    ${state.integrationJobs.length ? `<section class="card section"><div class="card-header"><div><h2>Simülasyon iş günlüğü</h2><p>Başarı, hata ve yeniden deneme senaryoları; tüm kayıtlarda gerçek veri aktarımı kapalıdır.</p></div></div><div class="table-wrap"><table><caption class="sr-only">Entegrasyon simülasyon iş kayıtları</caption><thead><tr><th scope="col">Hedef / kategori</th><th scope="col">Durum</th><th scope="col">Hata / yeniden deneme</th><th scope="col">Gerçek veri</th><th scope="col">Zaman</th></tr></thead><tbody>${state.integrationJobs.map((job)=>`<tr><td><span class="table-title">${escapeHtml(job.targetLabel || job.target)}</span><span class="table-subtitle">${escapeHtml(job.category || "Pilot entegrasyon")}</span></td><td>${statusBadge(job.status === "simulation_failed" ? "failed" : "simulated", job.status === "simulation_failed" ? "Simüle hata" : "Simüle başarı")}</td><td>${escapeHtml(job.errorCode || "NONE")}<span class="table-subtitle">${job.retryAvailable ? "Yeniden deneme açık" : "Yeniden deneme gerekmiyor"}</span></td><td><strong>Gönderilmedi</strong><span class="table-subtitle">realDataSent=false</span></td><td>${formatDate(job.at,true)}</td></tr>`).join("")}</tbody></table></div></section>` : ""}
   </div>`;
 }
 
