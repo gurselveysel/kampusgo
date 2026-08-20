@@ -1,5 +1,14 @@
-import { qualificationReferenceSnapshot } from "./reference-data.js";
+import { higherEducationCycleCrosswalk, qualificationReferenceSnapshot } from "./reference-data.js";
 import { dpuIntegrationReferenceSnapshot } from "./institutional-integration-reference.js";
+import {
+  QUALIFICATION_ADVISORY_NOTICE,
+  QUALIFICATION_SUGGESTION_ENGINE_VERSION,
+  applyManualQualificationOverride,
+  buildQualificationSelectionOptions,
+  recordHumanBoardQualificationDecision,
+  suggestOutcomeQualificationAlignment,
+  suggestProgramQualificationAlignment
+} from "./qualification-suggestion.js";
 
 // Supabase publishable keys identify a project but are not secrets. Access remains
 // constrained by explicit grants and RLS. No service-role/secret key is present.
@@ -40,7 +49,13 @@ const referenceViewQueries = Object.freeze({
   financeRoutes: ["pilot_finance_handoff_catalog", "select=*&order=route_order.asc"],
   roleWorkflowRows: ["pilot_role_workflow_catalog", "select=*&order=role_id.asc,step_order.asc"],
   paymentRequests: ["pilot_payment_request_catalog", "select=*&order=updated_at.desc"],
-  paymentEvents: ["pilot_payment_event_catalog", "select=*&order=payment_request_id.asc,event_order.asc"]
+  paymentEvents: ["pilot_payment_event_catalog", "select=*&order=payment_request_id.asc,event_order.asc"],
+  higherEducationCycles: ["qualification_higher_education_cycle_catalog", "select=*&order=tyc_level.asc"],
+  suggestionEngineProfiles: ["pilot_qualification_suggestion_profile_catalog", "select=*&order=engine_version.desc"],
+  programSuggestionSummaries: ["pilot_qualification_program_summary_catalog", "select=*&order=program_id.asc"],
+  learningOutcomeSuggestions: ["pilot_learning_outcome_suggestion_catalog", "select=*&order=program_id.asc,outcome_id.asc,framework_id.asc"],
+  manualOverrideExamples: ["pilot_qualification_manual_override_catalog", "select=*&order=outcome_id.asc,framework_id.asc"],
+  boardDecisionExamples: ["pilot_qualification_board_decision_catalog", "select=*&order=program_id.asc,id.asc"]
 });
 
 const institutionalViewQueries = Object.freeze({
@@ -106,6 +121,297 @@ function mapPaymentRequest(row) {
     reviewReason: item.reviewNote || undefined,
     realPayment: false,
     enrollmentCreated: Boolean(item.enrollmentCreated)
+  };
+}
+
+export function getLocalQualificationSuggestionCatalog() {
+  const outcomes = [
+    { id: "LO-1", text: "Karmaşık ve öngörülemeyen bir veri sorununu eleştirel olarak analiz eder ve yenilikçi çözüm geliştirir." },
+    { id: "LO-2", text: "Ekip performansını değerlendirir ve stratejik dönüşümü yönetir." }
+  ];
+  const program = suggestProgramQualificationAlignment({ programId: "program-smart-alignment-demo", outcomes });
+  const overridden = applyManualQualificationOverride(program, {
+    id: "OVR-DEMO-LO-1-TYC-1",
+    outcomeId: "LO-1",
+    frameworkId: "tyc",
+    level: 6,
+    dimension: "knowledge",
+    reason: "Aday eğitici, çıktının öncelikle eleştirel bilgi kanıtı ürettiğini gerekçelendirmiştir.",
+    actorRole: "instructor",
+    recordedAt: "2026-08-20T02:00:00.000Z"
+  });
+  const decided = recordHumanBoardQualificationDecision(overridden, {
+    actorRole: "commission",
+    decision: "approved",
+    decidedBy: "Sentetik Mikro Yeterlilik Komisyonu",
+    rationale: "Kurul; öğrenme çıktıları, ölçme kanıtları ve açıklanabilir önerileri insan incelemesiyle değerlendirmiştir.",
+    tycLevel: 6,
+    eqfLevel: 6,
+    decidedAt: "2026-08-20T02:10:00.000Z",
+    meetingReference: "SENTETIK-TOPLANTI-2026-08"
+  });
+  return {
+    higherEducationCycles: higherEducationCycleCrosswalk,
+    suggestionEngineProfiles: [{
+      id: "qualification-engine-2026-08-20-1",
+      engineVersion: QUALIFICATION_SUGGESTION_ENGINE_VERSION,
+      engineMode: "deterministic_explainable_pilot",
+      methodKey: "deterministic_weighted_rules_and_descriptor_overlap",
+      aggregationMethod: "score_weighted_median",
+      advisoryNotice: QUALIFICATION_ADVISORY_NOTICE,
+      editableRoles: ["instructor", "externalInstructor"],
+      reviewerRoles: ["coordinator", "commission"],
+      deterministic: true,
+      autoDecisionEnabled: false,
+      finalDecisionAuthority: "yetkili_kurul",
+      institutionalValidationRequired: true
+    }],
+    programSuggestionSummaries: [{ programId: program.programId, ...program.program }],
+    learningOutcomeSuggestions: program.outcomes.flatMap((outcome) => ["tyc", "eqf"].map((frameworkId) => ({
+      id: `SUG-DEMO-${outcome.outcomeId}-${frameworkId.toUpperCase()}`,
+      programId: program.programId,
+      outcomeId: outcome.outcomeId,
+      outcomeText: outcome.outcomeText,
+      inputQuality: outcome.inputQuality,
+      frameworkId,
+      ...outcome.suggestions[frameworkId],
+      crossFrameworkConsistency: outcome.crossFrameworkConsistency
+    }))),
+    manualOverrideExamples: overridden.manualOverrides,
+    boardDecisionExamples: [{ id: "DEC-DEMO-001", programId: program.programId, ...decided.finalDecision }]
+  };
+}
+
+function selectedDimensionDescriptor(row, frameworkId, level, dimension) {
+  const option = buildQualificationSelectionOptions(frameworkId).find((item) => item.level === level);
+  const canonical = option?.dimensions.find((item) => item.dimension === dimension);
+  const remoteDescriptor = row[`${dimension}Descriptor`];
+  return {
+    descriptor: remoteDescriptor || canonical?.descriptor || "",
+    descriptorDisplayTr: canonical?.descriptorDisplayTr || remoteDescriptor || "",
+    dimensionLabel: canonical?.dimensionLabel || dimension
+  };
+}
+
+function normalizeSignal(signal, fallbackSignal, dimension, level) {
+  const item = signal && typeof signal === "object" ? signal : { label: String(signal || "") };
+  const category = item.category || fallbackSignal?.category || "level";
+  return {
+    pattern: item.pattern || fallbackSignal?.pattern || item.label || "pilot-sinyal",
+    label: item.label || fallbackSignal?.label || "pilot sinyal",
+    weight: Number(item.weight ?? fallbackSignal?.weight ?? 0),
+    category,
+    ...(category === "dimension" ? { dimension: item.dimension || fallbackSignal?.dimension || dimension } : { level: Number(item.level ?? fallbackSignal?.level ?? level) })
+  };
+}
+
+function normalizeAssessment(item, fallback) {
+  return {
+    method: item?.method || fallback?.method || "Pilot ölçme yöntemi",
+    evidence: item?.evidence || fallback?.evidence || "Karşılaştırılabilir pilot kanıt",
+    rationale: item?.rationale || fallback?.rationale || "Önerilen ölçme yöntemi insan ve kurul incelemesi gerektirir."
+  };
+}
+
+function normalizeLearningOutcomeSuggestionRow(row) {
+  const item = camelizeRow(row);
+  const frameworkId = item.frameworkId;
+  const level = Number(item.proposedLevel ?? item.level);
+  const dimension = item.proposedDimension ?? item.dimension;
+  const engineOutcome = suggestOutcomeQualificationAlignment({ id: item.outcomeId, text: item.outcomeText });
+  const engineSuggestion = engineOutcome.suggestions[frameworkId];
+  const descriptor = selectedDimensionDescriptor(item, frameworkId, level, dimension);
+  const score = Number(item.score);
+  const confidence = item.confidence || engineSuggestion.confidence;
+  const rationale = item.rationale || engineSuggestion.rationale;
+  const remoteSignals = Array.isArray(item.matchedSignals) ? item.matchedSignals : [];
+  const matchedSignals = (remoteSignals.length ? remoteSignals : engineSuggestion.matchedSignals)
+    .map((signal, index) => normalizeSignal(signal, engineSuggestion.matchedSignals[index], dimension, level));
+  const remoteAssessments = Array.isArray(item.suggestedAssessments) ? item.suggestedAssessments : [];
+  const suggestedAssessments = (remoteAssessments.length ? remoteAssessments : engineSuggestion.suggestedAssessments)
+    .map((assessment, index) => normalizeAssessment(assessment, engineSuggestion.suggestedAssessments[index]));
+  const rowCrossFrameworkConsistency = item.crossFrameworkConsistency || {};
+  const peerLevel = Number(item.crossFrameworkPeerLevel ?? (
+    frameworkId === "tyc"
+      ? rowCrossFrameworkConsistency.eqfLevel
+      : rowCrossFrameworkConsistency.tycLevel
+  ));
+  const tycLevel = frameworkId === "tyc" ? level : peerLevel;
+  const eqfLevel = frameworkId === "eqf" ? level : peerLevel;
+  const levelDifference = Math.abs(tycLevel - eqfLevel);
+  const classification = item.crossFrameworkStatus || rowCrossFrameworkConsistency.classification || (
+    levelDifference === 0 ? "aligned" : levelDifference === 1 ? "adjacent_review" : "material_discrepancy"
+  );
+  const effectiveSelection = {
+    level,
+    dimension,
+    source: item.selectionSource || "engine_suggestion",
+    reason: rationale,
+    actorRole: null,
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired ?? true)
+  };
+  return {
+    id: item.id,
+    programId: item.programId,
+    outcomeId: item.outcomeId,
+    outcomeText: item.outcomeText,
+    inputQuality: { ...engineOutcome.inputQuality, ...(item.inputQuality || {}) },
+    frameworkId,
+    frameworkCode: item.frameworkCode || engineSuggestion.frameworkCode,
+    level,
+    dimension,
+    dimensionLabel: descriptor.dimensionLabel,
+    score,
+    confidence,
+    dimensionConfidence: engineSuggestion.dimensionConfidence,
+    descriptor: descriptor.descriptor,
+    descriptorDisplayTr: descriptor.descriptorDisplayTr,
+    officialSourceUrl: item.officialSourceUrl || engineSuggestion.officialSourceUrl,
+    matchedSignals,
+    suggestedContent: Array.isArray(item.suggestedContent) ? item.suggestedContent : engineSuggestion.suggestedContent,
+    suggestedAssessments,
+    alternatives: engineSuggestion.alternatives,
+    higherEducationCycleSuggestion: higherEducationCycleCrosswalk.find((cycle) => cycle.tycLevel === level && cycle.eqfLevel === level) || null,
+    method: engineSuggestion.method,
+    autonomousDecision: Boolean(item.autonomousDecision),
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired ?? true),
+    suggestedAssessmentMethods: suggestedAssessments.map((assessment) => assessment.method),
+    rationale,
+    computedSelection: { level, dimension, score, confidence },
+    effectiveSelection,
+    crossFrameworkConsistency: {
+      tycLevel,
+      eqfLevel,
+      levelDifference,
+      exactMatch: levelDifference === 0,
+      classification,
+      requiresHumanReview: levelDifference !== 0,
+      discrepancyRationale: item.crossFrameworkRationale || rowCrossFrameworkConsistency.discrepancyRationale || engineOutcome.crossFrameworkConsistency.discrepancyRationale,
+      institutionalValidationRequired: true,
+      equalityForced: false
+    }
+  };
+}
+
+function normalizeProgramSuggestionSummaryRow(row) {
+  const item = camelizeRow(row);
+  const cycle = item.higherEducationCycleSuggestion || higherEducationCycleCrosswalk.find((candidate) => candidate.id === item.higherEducationCycleId) || null;
+  return {
+    programId: item.programId,
+    suggestedLevels: item.suggestedLevels || { tyc: Number(item.suggestedTycLevel), eqf: Number(item.suggestedEqfLevel) },
+    levelSummaries: item.levelSummaries || {},
+    dimensionCoverage: item.dimensionCoverage || {},
+    coverage: item.coverage || {},
+    consistency: item.consistency || {},
+    crossFrameworkConsistency: item.crossFrameworkConsistency || {},
+    higherEducationCycleSuggestion: cycle,
+    rationale: item.rationale,
+    aggregationMethod: item.aggregationMethod || "score_weighted_median",
+    autonomousDecision: Boolean(item.autonomousDecision),
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired ?? true)
+  };
+}
+
+function normalizeManualOverrideRow(row) {
+  const item = camelizeRow(row);
+  const level = Number(item.level ?? item.selectedLevel);
+  const dimension = item.dimension ?? item.selectedDimension;
+  return {
+    id: item.id,
+    outcomeId: item.outcomeId,
+    frameworkId: item.frameworkId,
+    computedLevel: Number(item.computedLevel),
+    computedDimension: item.computedDimension,
+    level,
+    dimension,
+    selectedLevel: level,
+    selectedDimension: dimension,
+    reason: item.reason,
+    actorRole: item.actorRole,
+    recordedAt: item.recordedAt,
+    isHumanSelection: Boolean(item.isHumanSelection),
+    finalBoardDecision: Boolean(item.finalBoardDecision)
+  };
+}
+
+function normalizeBoardDecisionRow(row) {
+  const item = camelizeRow(row);
+  const rawSuggestionSnapshot = item.suggestionSnapshot || {};
+  const suggestionSnapshot = {
+    engineVersion: rawSuggestionSnapshot.engineVersion,
+    suggestedLevels: rawSuggestionSnapshot.suggestedLevels || {}
+  };
+  const decidedLevels = item.decidedLevels || { tyc: Number(item.decidedTycLevel), eqf: Number(item.decidedEqfLevel) };
+  const suggestedLevels = suggestionSnapshot.suggestedLevels || {};
+  return {
+    id: item.id,
+    programId: item.programId,
+    status: item.status || "recorded_human_board_decision",
+    decision: item.decision || item.decisionStatus,
+    source: item.source || "human_commission",
+    actorRole: item.actorRole,
+    decidedBy: item.decidedBy || item.decidedByLabel,
+    rationale: item.rationale,
+    decidedAt: item.decidedAt,
+    meetingReference: item.meetingReference || null,
+    decidedLevels,
+    differsFromSuggestion: item.differsFromSuggestion ?? (
+      decidedLevels.tyc !== suggestedLevels.tyc || decidedLevels.eqf !== suggestedLevels.eqf
+    ),
+    suggestionSnapshot,
+    suggestionMutated: Boolean(item.suggestionMutated),
+    autonomousDecision: Boolean(item.autonomousDecision),
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired ?? true)
+  };
+}
+
+function normalizeEngineProfileRow(row) {
+  const item = camelizeRow(row);
+  return {
+    id: item.id,
+    engineVersion: item.engineVersion,
+    engineMode: item.engineMode,
+    methodKey: item.methodKey,
+    aggregationMethod: item.aggregationMethod,
+    advisoryNotice: item.advisoryNotice,
+    editableRoles: item.editableRoles,
+    reviewerRoles: item.reviewerRoles,
+    deterministic: Boolean(item.deterministic),
+    autoDecisionEnabled: Boolean(item.autoDecisionEnabled),
+    finalDecisionAuthority: item.finalDecisionAuthority,
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired ?? true)
+  };
+}
+
+function normalizeCycleRow(row) {
+  const item = camelizeRow(row);
+  return {
+    id: item.id,
+    tycLevel: Number(item.tycLevel),
+    eqfLevel: Number(item.eqfLevel),
+    tyycCycleTr: item.tyycCycleTr,
+    bolognaCycleTr: item.bolognaCycleTr,
+    awardContextTr: item.awardContextTr,
+    mappingStatus: item.mappingStatus,
+    equivalenceClaim: Boolean(item.equivalenceClaim),
+    placementClaim: Boolean(item.placementClaim),
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired),
+    officialValidationRequired: Boolean(item.officialValidationRequired),
+    tyycSourceUrl: item.tyycSourceUrl,
+    bolognaSourceUrl: item.bolognaSourceUrl,
+    pilotNotice: item.pilotNotice
+  };
+}
+
+export function normalizeQualificationSuggestionCatalog(remote = {}, fallback = getLocalQualificationSuggestionCatalog()) {
+  const rowsOrFallback = (key) => Array.isArray(remote[key]) && remote[key].length ? remote[key] : fallback[key];
+  return {
+    higherEducationCycles: rowsOrFallback("higherEducationCycles").map(normalizeCycleRow),
+    suggestionEngineProfiles: rowsOrFallback("suggestionEngineProfiles").map(normalizeEngineProfileRow),
+    programSuggestionSummaries: rowsOrFallback("programSuggestionSummaries").map(normalizeProgramSuggestionSummaryRow),
+    learningOutcomeSuggestions: rowsOrFallback("learningOutcomeSuggestions").map(normalizeLearningOutcomeSuggestionRow),
+    manualOverrideExamples: rowsOrFallback("manualOverrideExamples").map(normalizeManualOverrideRow),
+    boardDecisionExamples: rowsOrFallback("boardDecisionExamples").map(normalizeBoardDecisionRow)
   };
 }
 
@@ -397,6 +703,15 @@ async function loadReferenceViews() {
   });
 
   const fallback = qualificationReferenceSnapshot;
+  const suggestionFallback = getLocalQualificationSuggestionCatalog();
+  const normalizedSuggestionCatalog = normalizeQualificationSuggestionCatalog({
+    higherEducationCycles: remote.higherEducationCycles,
+    suggestionEngineProfiles: remote.suggestionEngineProfiles,
+    programSuggestionSummaries: remote.programSuggestionSummaries,
+    learningOutcomeSuggestions: remote.learningOutcomeSuggestions,
+    manualOverrideExamples: remote.manualOverrideExamples,
+    boardDecisionExamples: remote.boardDecisionExamples
+  }, suggestionFallback);
   return {
     version: fallback.version,
     source: unavailable.length === 0 ? "supabase_read_only_views" : "supabase_with_local_reference_fallback",
@@ -410,7 +725,8 @@ async function loadReferenceViews() {
     financeRoutes: (remote.financeRoutes || fallback.financeRoutes).map(camelizeRow),
     roleWorkflowRows: (remote.roleWorkflowRows || fallback.roleSteps).map(camelizeRow),
     paymentRequests: remote.paymentRequests ? remote.paymentRequests.map(mapPaymentRequest) : fallback.paymentRequests,
-    paymentEvents: (remote.paymentEvents || fallback.paymentEvents).map(camelizeRow)
+    paymentEvents: (remote.paymentEvents || fallback.paymentEvents).map(camelizeRow),
+    ...normalizedSuggestionCatalog
   };
 }
 
@@ -422,12 +738,14 @@ export async function loadQualificationReferenceSnapshot() {
       ...referenceData
     };
   } catch (error) {
+    const suggestionFallback = getLocalQualificationSuggestionCatalog();
     return {
       ok: false,
       version: qualificationReferenceSnapshot.version,
       source: "local_reference_fallback",
       error: error instanceof Error ? error.message : "Bilinmeyen referans veri hatası",
-      ...qualificationReferenceSnapshot
+      ...qualificationReferenceSnapshot,
+      ...suggestionFallback
     };
   }
 }

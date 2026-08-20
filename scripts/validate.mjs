@@ -20,11 +20,15 @@ const required = [
   "src/institutional-integration-reference.js",
   "src/workflow.js",
   "src/reference-data.js",
+  "src/qualification-suggestion.js",
   "src/supabase.js",
   "scripts/build-static.mjs",
   "scripts/institutional-integration-contract.mjs",
+  "scripts/qualification-suggestion-contract.mjs",
   "scripts/reference-data-contract.mjs",
+  "scripts/smart-alignment-contract.mjs",
   "README.md",
+  "docs/smart-alignment-acceptance.md",
   "docs/source-traceability.md",
   "docs/test-report.md",
   "assets/brand/kdpu-logo-web.png",
@@ -35,7 +39,9 @@ const required = [
   "supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql",
   "supabase/migrations/20260820012000_dpu_institutional_integration_catalog.sql",
   "supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql",
-  "supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql"
+  "supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql",
+  "supabase/migrations/20260820020000_smart_qualification_suggestion_engine.sql",
+  "supabase/migrations/20260820021000_smart_qualification_performance_indexes.sql"
 ];
 
 const missing = required.filter((file) => {
@@ -73,7 +79,7 @@ for (const ref of ["styles.css", "src/app.js", "kdpu-logo-web.png", "go-icon-web
   if (!html.includes(ref)) throw new Error(`index.html içinde beklenen referans yok: ${ref}`);
 }
 
-const source = ["index.html", "styles.css", "src/app.js", "src/data.js"].map((file) => readFileSync(file, "utf8")).join("\n");
+const source = ["index.html", "styles.css", "src/app.js", "src/data.js", "src/qualification-suggestion.js"].map((file) => readFileSync(file, "utf8")).join("\n");
 for (const forbidden of ["vercel --prod", "service_role", "sk_live_", "Gerçek veri gönderildi"]) {
   if (source.includes(forbidden)) throw new Error(`Yasaklı production ifadesi bulundu: ${forbidden}`);
 }

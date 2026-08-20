@@ -36,6 +36,55 @@ export const qualificationFrameworks = Object.freeze([
   }
 ]);
 
+// This pilot crosswalk is an advisory bridge between TYÇ/AYÇ levels and the
+// higher-education cycle vocabulary used by TYYÇ/Bologna. It is deliberately
+// separate from the official level descriptors: suggesting a cycle does not
+// place, recognise or make a micro-credential equivalent to a degree.
+export const higherEducationCycleCrosswalk = Object.freeze([
+  {
+    id: "he-cycle-5",
+    tycLevel: 5,
+    eqfLevel: 5,
+    tyycCycleTr: "Kısa düzey — önlisans bağlamı",
+    bolognaCycleTr: "Kısa döngü (short cycle)",
+    awardContextTr: "Önlisans türü yükseköğretim yeterlilikleri için karşılaştırma bağlamı",
+  },
+  {
+    id: "he-cycle-6",
+    tycLevel: 6,
+    eqfLevel: 6,
+    tyycCycleTr: "Birinci düzey — lisans bağlamı",
+    bolognaCycleTr: "Birinci döngü (first cycle)",
+    awardContextTr: "Lisans türü yükseköğretim yeterlilikleri için karşılaştırma bağlamı",
+  },
+  {
+    id: "he-cycle-7",
+    tycLevel: 7,
+    eqfLevel: 7,
+    tyycCycleTr: "İkinci düzey — yüksek lisans bağlamı",
+    bolognaCycleTr: "İkinci döngü (second cycle)",
+    awardContextTr: "Yüksek lisans türü yükseköğretim yeterlilikleri için karşılaştırma bağlamı",
+  },
+  {
+    id: "he-cycle-8",
+    tycLevel: 8,
+    eqfLevel: 8,
+    tyycCycleTr: "Üçüncü düzey — doktora bağlamı",
+    bolognaCycleTr: "Üçüncü döngü (third cycle)",
+    awardContextTr: "Doktora türü yükseköğretim yeterlilikleri için karşılaştırma bağlamı",
+  }
+].map((item) => ({
+  ...item,
+  mappingStatus: "provisional_advisory_crosswalk",
+  equivalenceClaim: false,
+  placementClaim: false,
+  institutionalValidationRequired: true,
+  officialValidationRequired: true,
+  tyycSourceUrl: "https://uluslararasi.yok.gov.tr/Sayfalar/avrupa-yuksekogretim-alani-ile-uyum-projesi/yeterlikler-cercevesi/yuksekogretim-yeterlilik-turleri.aspx",
+  bolognaSourceUrl: "https://ehea.info/bologna-policy/qualification-frameworks/",
+  pilotNotice: "Yalnız karşılaştırmalı TYYÇ/Bologna döngüsü önerisidir; diploma eşdeğerliği, resmî yerleştirme veya kurul kararı değildir. Kurumsal doğrulama gerekir."
+})));
+
 export const qualificationDatasetRegistry = Object.freeze([
   {
     id: "tyc-portal",
@@ -437,6 +486,7 @@ export const qualificationReferenceSnapshot = Object.freeze({
   frameworks: qualificationFrameworks,
   descriptors: qualificationLevelDescriptors,
   descriptorTranslations: qualificationLevelTranslations,
+  higherEducationCycles: higherEducationCycleCrosswalk,
   datasetRegistry: qualificationDatasetRegistry,
   officialQualificationReferences,
   matrixTemplates: qualificationMatrixTemplates,
@@ -449,7 +499,7 @@ export const qualificationReferenceSnapshot = Object.freeze({
   roleSteps: roleWorkflowSteps,
   notices: {
     officialData: "TYÇ ve AYÇ/EQF seviye tanımlayıcıları kamuya açık resmî kaynaklardan doğrulanmıştır.",
-    pilotData: "Şablonlar, örnekler, mali yönlendirmeler ve rol akışları sentetiktir; kurumsal doğrulama gerekir.",
+    pilotData: "Şablonlar, örnekler, TYYÇ/Bologna döngüsü öneri köprüsü, mali yönlendirmeler ve rol akışları sentetiktir; kurumsal doğrulama gerekir.",
     noLiveEffects: "Gerçek ödeme, fatura, aktarım, kişisel veri veya canlı kurumsal sistem bağlantısı yoktur."
   }
 });

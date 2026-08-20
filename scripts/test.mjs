@@ -304,6 +304,48 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.deepEqual([...actions].sort(), [...handlers].sort(), "data-action ile olay işleyicileri birebir eşleşmiyor");
 });
 
+test("akıllı eşleme UI sözleşmesi v4/v11 kalıcılık, kalite kapısı ve insan karar sınırını taşıyor", () => {
+  const appSource = readFileSync(new URL("../src/app.js", import.meta.url), "utf8");
+  assert.equal(initialState.version, 11, "fingerprint ve kalite kapısı kalıcılık şeması seed version 11 olmalı");
+  assert.match(appSource, /const STORAGE_KEY = "kdpu-myys-pilot-v4"/, "canonical v4 storage key yok");
+  assert.doesNotMatch(appSource, /kdpu-myys-pilot-v3/, "eski v3 storage key hâlâ okunuyor");
+  for (const marker of [
+    'id="smart-alignment-form"',
+    "data-smart-outcome",
+    'data-action="reanalyze-smart-suggestions"',
+    "data-smart-suggestion",
+    'data-action="apply-smart-suggestion"',
+    'data-smart-framework="${escapeHtml(frameworkId.toUpperCase())}"',
+    "data-smart-coverage",
+    "data-smart-override",
+    'data-action="apply-smart-override"',
+    "data-smart-review"
+  ]) assert.ok(appSource.includes(marker), `akıllı eşleme DOM işareti eksik: ${marker}`);
+  assert.match(appSource, /PROPOSAL_ROLES = new Set\(\["instructor", "externalInstructor"\]\)/, "mutasyon rol kapısı iki eğitici rolüyle sınırlı değil");
+  assert.match(appSource, /state\.smartAlignments \|\|= \[\]/, "canonical smartAlignments pilot katmanı yok");
+  assert.match(appSource, /function smartOutcomeFingerprint\(text, index\)/, "öğrenme çıktısı fingerprint sözleşmesi yok");
+  assert.match(appSource, /orderedOutcomeFingerprint/, "çıktı sırasını değişiklikte geçersiz kılan fingerprint yok");
+  assert.match(appSource, /contextUnchanged = previousFingerprint === orderedOutcomeFingerprint/, "metin\/sıra değişikliğinde eski seçimlerin geçersiz kılınması yok");
+  assert.match(appSource, /failSmartQualificationAnalysis\("insufficient_outcome"/, "ölçülemeyen çıktı kalite kapısı yok");
+  assert.match(appSource, /QUALIFICATION_SUGGESTION_LIMITS\.maxOutcomeCount/, "40 çıktı üst sınırı UI kalite kapısında yok");
+  assert.match(appSource, /QUALIFICATION_SUGGESTION_LIMITS\.maxOutcomeLength/, "600 karakter üst sınırı UI kalite kapısında yok");
+  assert.match(appSource, /return \{ ok: false, code:[\s\S]{0,180}record: null \}/, "persistSmartAlignment yapılandırılmış başarısızlık döndürmüyor");
+  assert.match(appSource, /const stateBeforeMutation = structuredClone\(state\)/, "başvuru\/program mutasyonları kalite kapısından sonra transaction snapshot kullanmıyor");
+  assert.match(appSource, /state = stateBeforeMutation/, "kalıcılık hatasında state rollback yok");
+  assert.match(appSource, /application\.smartAlignmentId !== alignment\.id/, "zorunlu çift yönlü application backlink doğrulaması yok");
+  assert.match(appSource, /program\.smartAlignmentId !== alignment\.id/, "zorunlu çift yönlü program backlink doğrulaması yok");
+  assert.match(appSource, /normalizeSmartOutcomeText\(text\) !== normalizeSmartOutcomeText\(alignmentOutcomes\[index\]\)/, "application outcome semantik eşdeğerlik doğrulaması yok");
+  assert.match(appSource, /recordedAt: new Date\(\)\.toISOString\(\)/, "manuel override ISO recordedAt göndermiyor");
+  assert.match(appSource, /SAFE_ID_PATTERN/, "kalıcı ID allowlist koruması yok");
+  assert.match(appSource, /panel\.setAttribute\("aria-busy", "false"\)/, "akıllı analiz çıkışlarında aria-busy sıfırlanmıyor");
+  assert.match(appSource, /application\.smartAlignmentId = record\.id/, "proposal → alignment application bağı yok");
+  assert.match(appSource, /if \(program\) program\.smartAlignmentId = record\.id/, "program → alignment bağı yok");
+  assert.match(appSource, /applyManualQualificationOverride\(smartSuggestionReport/, "gerekçeli manuel override motor sözleşmesini kullanmıyor");
+  assert.match(appSource, /recordHumanBoardQualificationDecision\(/, "Komisyonun ayrı insan karar kaydı motor sözleşmesini kullanmıyor");
+  assert.match(appSource, /Motor önerisi değiştirilemez/, "Komisyon kararında öneri mutasyon yasağı görünür değil");
+  assert.match(appSource, /Öneri karar değildir/, "akıllı analiz pilot uyarısı görünür değil");
+});
+
 test("responsive QA dört kabul genişliğini gerçek pilot rotasına yönlendiriyor", () => {
   const qaSource = readFileSync(new URL("../qa-responsive.html", import.meta.url), "utf8");
   const browserSource = readFileSync(new URL("./browser-qa.cjs", import.meta.url), "utf8");
@@ -315,6 +357,9 @@ test("responsive QA dört kabul genişliğini gerçek pilot rotasına yönlendir
   assert.match(browserSource, /finalURL\.pathname === "\/pilot\.html"/, "Preview yönlendirme son rotası doğrulanmıyor");
   assert.match(browserSource, /reachablePageScroll/, "responsive QA iç tablo kaydırması ile sayfa taşmasını ayırmıyor");
   assert.match(browserSource, /undefined, \{ timeout: 3000 \}/, "ödeme durum beklemesinde Playwright timeout argümanı yanlış");
+  assert.match(browserSource, /verifySmartAlignmentResponsive\(page, viewport, errors\)/, "akıllı eşleme dört viewport QA döngüsüne bağlı değil");
+  assert.match(browserSource, /kdpu-myys-pilot-v4/, "tarayıcı QA canonical v4 state kullanmıyor");
+  assert.doesNotMatch(browserSource, /kdpu-myys-pilot-v3/, "tarayıcı QA eski v3 state okuyor");
 });
 
 test("başvuru sahipliği aynı role sahip farklı kişileri ayırıyor", () => {

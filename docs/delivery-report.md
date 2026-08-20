@@ -9,10 +9,10 @@ Karar: **Production NO-GO**
 | Çıktı | Durum | Not |
 | --- | --- | --- |
 | Çalışan uygulama kodu | Hazır | Gerçek HTML/CSS/ES module bileşenleri; ekran görüntüsü tabanlı arayüz değildir |
-| Dokuz rol kabulü | **PASS** | Dokuz rolün farklı özet, navigasyon, görünürlük ve işlem sınırları; 25/25 sözleşme ve dört viewport tarayıcı QA geçti |
+| Dokuz rol kabulü | **PASS** | Dokuz rolün farklı özet, navigasyon, görünürlük ve işlem sınırları; 26/26 yerel sözleşme geçti; önceki yayın dört viewport tarayıcı regresyonu PASS |
 | Ödeme ve finans akışı | **PASS** | Gerçek ödeme almayan öğrenen → Finans / Döner Sermaye akışı, revizyon/onay/mutabakat ve audit |
-| TYÇ / AYÇ matrisleri | **PASS** | TYÇ 8 + AYÇ/EQF 8 seviye, 16 şablon, eğitici girişi ve salt-okunur inceleme |
-| Supabase migration | **PASS** | Canlı sürümler `20260819234334`, `20260819234424`, `20260820003749`, `20260820003856`, `20260820005626`; 18 FORCE RLS tablo, 14 `security_invoker` görünüm ve security advisor 0 bulgu |
+| TYÇ / AYÇ matrisleri | **PASS** | TYÇ 8 + AYÇ/EQF 8 seviye, 16 şablon; çıktı bazlı açıklanabilir otomatik öneri, eğitici seçimi/düzeltmesi ve salt-okunur inceleme |
+| Supabase migration | **PASS** | Akıllı eşleme dahil canlı sürümler `20260820062225` ve `20260820062551`; toplam 24 FORCE RLS tablo, 20 `security_invoker` görünüm ve security advisor 0 bulgu |
 | DPÜ entegrasyon kataloğu | **PASS** | 32 iç sistem, 32 eşleme, 32 dry-run senaryosu ve 32 sentetik audit olayı; gerçek veri/canlı istek/production sayaçları 0 |
 | Vercel Preview | **READY / PASS** | [`dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5`](https://kdpu-myys-mockup-rkqlwxtnd-info-64116029s-projects.vercel.app/pilot.html), `target: null`; public alias ve asset smoke geçti |
 | GitHub uzak deposu | **PASS** | [`gurselveysel/kampusgo`](https://github.com/gurselveysel/kampusgo); uygulama kaynak sürümü [`8a8aacfd`](https://github.com/gurselveysel/kampusgo/commit/8a8aacfd55158f4a18eba22ab3401ef1548f8a38), final QA [run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716); Git bağlantılı otomatik production yayını yok |
@@ -40,6 +40,8 @@ Karar: **Production NO-GO**
 - GİB/e-Arşiv ve MYS/MAYS açıklama kartları; hata/yeniden deneme ve onay kapısı
 - Program önerisi ve dış kazanım tanıma formları; doğrulama, taslak ve sentetik dosya üst verisi
 - TYÇ 1–8 ile AYÇ/EQF 1–8 seviye seçimi, resmî tanımlayıcı kartları ve 16 matris şablonu
+- Her öğrenme çıktısı için ayrı TYÇ/AYÇ seviye, boyut, puan, gerekçe, içerik, ölçme ve kanıt önerisi; program kapsama/tutarlılık özeti
+- İç/dış eğitici için tek tek öneri seçimi veya gerekçeli düzeltme; koordinatörlük/Komisyon için salt-okunur inceleme ve ayrı insan kurul kararı
 - İç/dış eğitici için matris kaydı; koordinatörlük, Komisyon ve admin için salt-okunur inceleme
 - Başvuru arama/filtreleme, SLA, durum takibi ve denetim izi
 - Komisyon karşılaştırma, kanıt, görüş, gerekçeli onay/ret/revizyon/çekimser kayıtları
@@ -59,16 +61,18 @@ Canlı uygulanan kaynak migration'lar:
 - [`20260820012000_dpu_institutional_integration_catalog.sql`](../supabase/migrations/20260820012000_dpu_institutional_integration_catalog.sql) — Supabase sürümü `20260820003749`
 - [`20260820013000_dpu_institutional_integration_performance_indexes.sql`](../supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql) — Supabase sürümü `20260820003856`
 - [`20260820014000_dpu_institutional_source_provenance.sql`](../supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql) — Supabase sürümü `20260820005626`; sekiz genel dizin kaydını özgül resmî kaynak bağlantılarıyla sertleştirir
+- [`20260820020000_smart_qualification_suggestion_engine.sql`](../supabase/migrations/20260820020000_smart_qualification_suggestion_engine.sql) — Supabase sürümü `20260820062225`; akıllı öneri, program özeti, eğitici düzeltmesi ve insan kurul kararı katalogları
+- [`20260820021000_smart_qualification_performance_indexes.sql`](../supabase/migrations/20260820021000_smart_qualification_performance_indexes.sql) — Supabase sürümü `20260820062551`; bileşik öneri-provenans yabancı anahtar indeksi
 
 ### Tablolar
 
-`qualification_frameworks`, `qualification_level_descriptors`, `qualification_level_descriptor_translations`, `qualification_dataset_registry`, `official_qualification_references`, `pilot_matrix_templates`, `pilot_matrix_example_rows`, `pilot_matrix_drafts`, `pilot_matrix_draft_rows`, `pilot_finance_routes`, `pilot_payment_requests`, `pilot_payment_events`, `pilot_role_overviews`, `pilot_role_workflow_steps`, `institutional_system_registry`, `pilot_integration_mappings`, `pilot_integration_scenarios`, `pilot_integration_audit_events`.
+Önceki kataloglara ek olarak `qualification_higher_education_cycle_crosswalks`, `pilot_qualification_suggestion_engine_profiles`, `pilot_qualification_program_summaries`, `pilot_learning_outcome_suggestions`, `pilot_qualification_manual_override_examples` ve `pilot_qualification_board_decision_examples`.
 
 ### Salt-okunur katalog görünümleri
 
-`qualification_level_catalog`, `qualification_level_bilingual_catalog`, `qualification_dataset_catalog`, `official_qualification_reference_catalog`, `pilot_matrix_template_catalog`, `pilot_matrix_draft_catalog`, `pilot_finance_handoff_catalog`, `pilot_payment_request_catalog`, `pilot_payment_event_catalog`, `pilot_role_workflow_catalog`, `institutional_system_catalog`, `pilot_integration_mapping_catalog`, `pilot_integration_scenario_catalog`, `pilot_integration_audit_catalog`.
+Önceki kataloglara ek olarak `qualification_higher_education_cycle_catalog`, `pilot_qualification_suggestion_profile_catalog`, `pilot_qualification_program_summary_catalog`, `pilot_learning_outcome_suggestion_catalog`, `pilot_qualification_manual_override_catalog` ve `pilot_qualification_board_decision_catalog`.
 
-Migration'lar canlı projeye başarıyla uygulandı. Doğrulanan sözleşme: 18 FORCE RLS tablo; `anon`/`authenticated` için yalnız `SELECT`; 14 `security_invoker` görünüm; 32 benzersiz HTTPS kaynak izi; `real_payment=false`, `real_data_sent=false`, `live_request_made=false`, `production_allowed=false` ve `automated_ingestion_enabled=false` değişmezleri. Security advisor sonucu **0 bulgu**. Entegrasyon yabancı anahtar indeks bulgusu `20260820003856` takip migration'ıyla kapatıldı; yalnız yeni/boş pilotta beklenen unused-index INFO kayıtları ve `auth_db_connections_absolute` INFO kaydı kaldı.
+Migration'lar canlı projeye başarıyla uygulandı. Doğrulanan sözleşme: 24 FORCE RLS tablo; `anon`/`authenticated` için yalnız `SELECT`; 20 `security_invoker` görünüm; 32 benzersiz HTTPS kaynak izi; `real_payment=false`, `real_data_sent=false`, `live_request_made=false`, `production_allowed=false`, `autonomous_decision=false` ve `automated_ingestion_enabled=false` değişmezleri. Security advisor sonucu **0 bulgu**. Yabancı anahtar indeks bulguları takip migration'larıyla kapatıldı; yalnız yeni/boş pilotta beklenen unused-index INFO kayıtları ve `auth_db_connections_absolute` INFO kaydı kaldı.
 
 Canlı sayımlar: çerçeve `2`, tanımlayıcı `16`, şablon `16`, örnek satır `8`, mali rota `4`, rol özeti `9`, rol adımı `25`, veri kaynağı `2`, KDPÜ üst veri kaydı `6`, çeviri `8`, matris taslağı `2`, taslak satırı `6`, ödeme talebi `1`, ödeme olayı `2`.
 
@@ -92,8 +96,8 @@ Türkiye Yeterlilikler Veri Tabanı'nın tam kopyası oluşturulmamıştır. Por
 
 ## Test özeti
 
-- Güncel yerel domain/rol/ödeme/matris/entegrasyon kabul paketi: **25/25 başarılı**.
-- Yapı ve production güvenlik taraması: **24/24 zorunlu dosya başarılı**.
+- Güncel yerel domain/rol/ödeme/matris/entegrasyon ve akıllı UI sözleşmesi kabul paketi: **26/26 başarılı**.
+- Yapı ve production güvenlik taraması: **30/30 zorunlu dosya başarılı**.
 - Ödeme akışında yetkisiz rol, gerçek ödeme kanalı ve admin mali kararı reddedildi; `realPayment=false` korundu.
 - TYÇ ve AYÇ/EQF için ayrı ayrı sekiz seviye, sekiz şablon ve zorunlu matris alanları doğrulandı.
 - Güncel sürümün 9 rol × 1440/1024/768/390 px matrisi, ödeme uçtan uca akışı, entegrasyon kataloğu ve sahiplik kontrolleri: **PASS** ([run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716)).

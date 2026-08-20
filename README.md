@@ -71,6 +71,21 @@ Pilot, iki çerçeveyi ayrı sekmelerde sunar:
 
 Seviye tanımlayıcıları resmî kamu kaynaklarından doğrulanan referanslardır. Matris şablonları, örnekler ve kullanıcı taslakları resmî yeterlilik veya otomatik seviye kararı değildir; kurumsal doğrulama gerekir.
 
+### Akıllı öğrenme çıktısı eşleme pilotu
+
+Program önerisi formu, her satırdaki Türkçe öğrenme çıktısını ayrı değerlendirir. Ölçülebilir eylemden çıkarılan kanonik boyut analizi iki çerçevede ortak sinyal kümesini kullanabilir; TYÇ ve AYÇ/EQF seviyeleri, resmî tanımlayıcıları ve eşleşme puanları ise her çerçevenin kendi metni üzerinden ayrı hesaplanır ve eşitliğe zorlanmaz:
+
+- **TYÇ ve AYÇ/EQF:** Her çıktı için ayrı 1–8 seviye ve Bilgi/Beceri/Yetkinlik–Sorumluluk ve Özerklik boyutu
+- **Açıklanabilir puan:** Eşleşen ölçülebilir fiil, karmaşıklık ve özerklik sinyalleri; 0–100 pilot eşleşme puanı; resmî tanımlayıcı ve gerekçe
+- **Tasarım desteği:** İçerik, ölçme-değerlendirme, rubrik/kanıt ve gözlenebilir eylem önerileri
+- **Program özeti:** Çoklu çıktıda çerçeve seviyesi, boyut kapsaması, tutarlılık uyarısı ve geçici TYYÇ/Bologna döngüsü açıklaması
+- **İnsan kontrolü:** Öneri hiçbir alanı sessizce uygulamaz. İç veya kurum dışı eğitici öneriyi seçer ya da gerekçeli manuel seviye/boyut düzeltmesi yapar.
+- **İzlenebilir kalıcılık:** Seçimler `smartAlignments` pilot çalışma alanında `applicationId`/`programId` bağı ve sıralı öğrenme çıktısı fingerprint'iyle saklanır. Çıktı metni veya sırası değişirse eski seçimler yeniden uygulanmaz.
+- **Kalite kapısı:** Boş, ölçülemeyen, 40 adedi veya çıktı başına 600 karakteri aşan ya da analiz hatasına düşen öğrenme çıktıları taslak, program veya başvuru mutasyonu oluşturmaz.
+- **Rol sınırı:** Koordinatörlük ve Komisyon öneri/matris kaydını salt-okunur inceler. Komisyon kararı, öneriyi değiştirmeyen ayrı bir insan kurul kaydıdır.
+
+Kısa veya ölçülemeyen metinler kesin eşleme gibi sunulmaz; düşük güvenle işaretlenir ve çıktıyı iyileştirme yönlendirmesi gösterilir. Motor deterministik bir pilot yardımcıdır; resmî TYÇ yerleştirmesi, AYÇ eşdeğerliği veya nihai akademik karar üretmez.
+
 ## Resmî veri kapsamı ve yeniden kullanım sınırı
 
 Kullanılan başlıca kamu kaynakları:
@@ -98,8 +113,11 @@ Migration dosyaları:
 - [`20260820011000_framework_matrix_performance_indexes.sql`](supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql)
 - [`20260820012000_dpu_institutional_integration_catalog.sql`](supabase/migrations/20260820012000_dpu_institutional_integration_catalog.sql)
 - [`20260820013000_dpu_institutional_integration_performance_indexes.sql`](supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql)
+- [`20260820014000_dpu_institutional_source_provenance.sql`](supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql)
+- [`20260820020000_smart_qualification_suggestion_engine.sql`](supabase/migrations/20260820020000_smart_qualification_suggestion_engine.sql) — akıllı eşleme pilot şeması; Supabase sürümü `20260820062225`
+- [`20260820021000_smart_qualification_performance_indexes.sql`](supabase/migrations/20260820021000_smart_qualification_performance_indexes.sql) — bileşik öneri-provenans yabancı anahtarı indeksi; Supabase sürümü `20260820062551`
 
-Çerçeve ve pilot referans migration'ları canlı Supabase'e `20260819234334` ve `20260819234424`; DPÜ entegrasyon kataloğu, indeks takibi ve kaynak-provenans sertleştirmesi `20260820003749`, `20260820003856` ve `20260820005626` sürümleriyle uygulandı. Sonuç **PASS**: toplam 18 FORCE RLS tablo, 14 `security_invoker` katalog görünümü, `anon`/`authenticated` için yalnız `SELECT`, 32 benzersiz HTTPS kaynak bağlantısı ve security advisor'da 0 bulgu. Entegrasyon yabancı anahtar indeks uyarısı takip migration'ıyla kapatıldı; performance advisor'da yalnız boş pilotta beklenen unused-index INFO kayıtları ile `auth_db_connections_absolute` INFO kaydı kaldı.
+Çerçeve ve pilot referans migration'ları canlı Supabase'e `20260819234334` ve `20260819234424`; DPÜ entegrasyon kataloğu, indeks takibi ve kaynak-provenans sertleştirmesi `20260820003749`, `20260820003856` ve `20260820005626`; akıllı eşleme şeması ile bileşik yabancı anahtar indeksi `20260820062225` ve `20260820062551` sürümleriyle uygulandı. Sonuç **PASS**: toplam 24 FORCE RLS tablo, 20 `security_invoker` katalog görünümü, `anon`/`authenticated` için yalnız `SELECT`, 32 benzersiz HTTPS kaynak bağlantısı ve security advisor'da 0 bulgu. Akıllı eşleme seed sayıları 4 döngü köprüsü, 1 motor profili, 1 program özeti, 4 çıktı önerisi, 1 gerekçeli eğitici düzeltmesi ve 1 insan komisyon kararıdır. İndekslenmemiş yabancı anahtar uyarıları takip migration'larıyla kapatıldı; performance advisor'da yalnız boş pilotta beklenen unused-index INFO kayıtları ile `auth_db_connections_absolute` INFO kaydı kaldı.
 
 Canlı seed sayımları sırasıyla: 2 çerçeve, 16 seviye tanımlayıcısı, 16 matris şablonu, 8 örnek satır, 4 mali yönlendirme, 9 rol özeti, 25 rol adımı, 2 veri kaynağı, 6 KDPÜ üst veri kaydı, 8 çeviri, 2 matris taslağı, 6 taslak satırı, 1 ödeme talebi ve 2 ödeme olayı.
 
@@ -124,12 +142,12 @@ npm test
 
 19–20 Ağustos 2026 UTC yerel doğrulaması:
 
-- Domain, rol ve entegrasyon UI sözleşmeleri: **25/25 başarılı**
+- Domain, rol, entegrasyon ve akıllı eşleme UI sözleşmeleri: **26/26 başarılı**
 - DPÜ entegrasyon veri sözleşmesi: **32/32/32/32 başarılı**
-- Zorunlu dosya / production güvenlik doğrulaması: **24/24 başarılı**
+- Zorunlu dosya / production güvenlik doğrulaması: **30/30 başarılı**
 - Canlı Supabase migration, RLS/grant ve advisor doğrulaması: **PASS**
-- Güncel 9 rol × 4 viewport tarayıcı matrisi, ödeme uçtan uca akışı, sahiplik, kalıcılık, entegrasyon kataloğu ve CTA kontrolleri: **PASS** ([GitHub Actions run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716))
-- Asset, exact Preview ve public alias anonim erişim smoke kontrolü: **PASS**
+- Önceki yayın 9 rol × 4 viewport tarayıcı regresyonu: **PASS** ([GitHub Actions run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716)); akıllı eşleme genişletmesinin güncel CI koşusu yeni Preview üzerinde çalıştırılacaktır
+- Yeni akıllı eşleme exact Preview'ı: <https://kdpu-myys-mockup-3arzpv5l1-info-64116029s-projects.vercel.app/pilot.html> — `dpl_4UyfvQeXT3xB9T8MX8HoiWvDMgNk`, READY `target: null`; public alias ancak güncel tarayıcı kabulünden sonra taşınacaktır
 
 ## Vercel Preview
 

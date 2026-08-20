@@ -27,8 +27,17 @@ import {
   qualificationLevelDescriptors,
   qualificationMatrixExamples
 } from "./reference-data.js";
+import {
+  QUALIFICATION_ADVISORY_NOTICE,
+  QUALIFICATION_SUGGESTION_ENGINE_VERSION,
+  QUALIFICATION_SUGGESTION_LIMITS,
+  applyManualQualificationOverride,
+  buildQualificationSelectionOptions,
+  recordHumanBoardQualificationDecision,
+  suggestProgramQualificationAlignment
+} from "./qualification-suggestion.js";
 
-const STORAGE_KEY = "kdpu-myys-pilot-v3";
+const STORAGE_KEY = "kdpu-myys-pilot-v4";
 const root = document.querySelector("#main-content");
 const sideNav = document.querySelector("#side-nav");
 const roleSelect = document.querySelector("#role-select");
@@ -43,6 +52,7 @@ const ASSESSMENT_START_ROLES = new Set(["learner", "instructor", "externalInstru
 const INTEGRATION_BULK_ROLES = new Set(["it", "admin"]);
 const FINANCE_OPERATOR_ROLES = new Set(["finance", "admin"]);
 const PROPOSAL_ROLES = new Set(["instructor", "externalInstructor"]);
+const SAFE_ID_PATTERN = /^[A-Za-z][A-Za-z0-9._:-]{0,127}$/;
 
 let state = normalizePilotState(loadState());
 let lastFocused = null;
@@ -52,6 +62,10 @@ let currentFrameworkLevel = 6;
 let currentIntegrationCategory = "all";
 let currentIntegrationTier = "all";
 let uiMutationEpoch = 0;
+let smartSuggestionReport = null;
+let smartSuggestionApplied = [];
+let smartSuggestionTimer = null;
+let smartSuggestionRequest = 0;
 
 function loadState() {
   try {
@@ -70,6 +84,7 @@ function normalizePilotState(value) {
   value.finance.entitlements ||= [];
   value.finance.invoiceDrafts ||= [];
   value.qualificationDrafts ||= [];
+  value.smartAlignments ||= [];
   return value;
 }
 
@@ -81,7 +96,7 @@ function isValidSavedState(saved) {
   const assessmentStatuses = new Set(["scheduled", "active", "under_review", "completed"]);
   const ownerRoles = new Set(["learner", "instructor", "externalInstructor"]);
   const arrayKeys = [
-    "applications", "programs", "credentials", "integrations", "notifications", "audit",
+    "applications", "programs", "credentials", "integrations", "notifications", "audit", "smartAlignments",
     "enrollments", "assessmentSessions", "recognizedCredits", "integrationJobs"
   ];
   const isObject = (value) => Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -91,9 +106,9 @@ function isValidSavedState(saved) {
   const isScenario = (item, kind) => isObject(item) &&
     Number.isInteger(item.step) && item.step >= 0 && item.step <= scenarioDefinitions[kind].length &&
     typeof item.completed === "boolean" &&
-    (item.applicationId === null || item.applicationId === undefined || isText(item.applicationId)) &&
+    (item.applicationId === null || item.applicationId === undefined || isSafeId(item.applicationId)) &&
     Array.isArray(item.log) && item.log.every((entry) => isObject(entry) && Number.isInteger(entry.index) && auditRoleIds.has(entry.role) && isText(entry.label) && isDate(entry.at));
-  const isApplication = (item) => isObject(item) &&
+  const isApplication = (item) => isObject(item) && isSafeId(item.id) &&
     ["id", "code", "title", "applicant", "submittedAt", "targetAt", "comparedCourse", "notes"].every((key) => isText(item[key])) &&
     isDate(item.submittedAt) && isDate(item.targetAt) &&
     ["internal", "external"].includes(item.kind) && ownerRoles.has(item.ownerRole) &&
@@ -102,43 +117,136 @@ function isValidSavedState(saved) {
     isNumber(item.elapsedDays) && isNumber(item.similarity, 0, 100) && isNumber(item.tycMatch, 0, 100) &&
     isNumber(item.ects, 0.01) && isNumber(item.remoteRate, 0, 100) && isNumber(item.evidence) && isNumber(item.missing) &&
     (item.portfolioRemoteShare === undefined || isNumber(item.portfolioRemoteShare, 0, 100));
-  const isProgram = (item) => isObject(item) &&
+  const isProgram = (item) => isObject(item) && isSafeId(item.id) &&
     ["id", "code", "title", "unit", "instructor", "mode", "summary"].every((key) => isText(item[key])) &&
     programStatuses.has(item.status) && isNumber(item.ects, 0.01) && isNumber(item.workload) &&
     isNumber(item.level, 1, 8) && isNumber(item.remoteRate, 0, 100) && isNumber(item.learners) && isNumber(item.price) &&
     Array.isArray(item.outcomes) && item.outcomes.every(isText);
-  const isCredential = (item) => isObject(item) &&
+  const isCredential = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.code) &&
     ["id", "code", "title", "owner", "issuer", "issuedAt", "status", "verifyPath"].every((key) => isText(item[key])) &&
     isDate(item.issuedAt) && isNumber(item.ects, 0.01) && isNumber(item.level, 1, 8) &&
     Array.isArray(item.outcomes) && item.outcomes.every(isText);
-  const isEnrollment = (item) => isObject(item) &&
+  const isEnrollment = (item) => isObject(item) && isSafeId(item.id) &&
     ["id", "programCode", "title", "learner", "status"].every((key) => isText(item[key])) &&
     isNumber(item.progress, 0, 100) && isNumber(item.ects, 0.01) && isNumber(item.remoteEcts);
-  const isAssessment = (item) => isObject(item) &&
+  const isAssessment = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.enrollmentId) &&
     ["id", "enrollmentId", "title"].every((key) => isText(item[key])) && assessmentStatuses.has(item.status) &&
     (item.score === null || item.score === undefined || isNumber(item.score, 0, 100)) &&
     (item.evaluatorDecision === null || item.evaluatorDecision === undefined || isText(item.evaluatorDecision)) && isNumber(item.events);
-  const isRecognizedCredit = (item) => isObject(item) &&
+  const isRecognizedCredit = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.applicationId) &&
     ["id", "applicationId", "title", "status"].every((key) => isText(item[key])) &&
     isNumber(item.ects, 0.01) && isNumber(item.remoteEcts);
   const isFinanceRecord = (item, kind) => {
-    if (!isObject(item) || !isText(item.id)) return false;
+    if (!isObject(item) || !isSafeId(item.id)) return false;
     if (kind === "transaction") return ["program", "learner", "channel", "status"].every((key) => isText(item[key])) && isNumber(item.gross);
     if (kind === "entitlement") return ["instructor", "evidence", "status"].every((key) => isText(item[key])) && isNumber(item.hours) && isNumber(item.gross);
     return isText(item.entitlementId) && isText(item.status) && isDate(item.createdAt) && item.realDocument === false;
   };
-  const isPaymentRequest = (item) => isObject(item) &&
+  const isPaymentRequest = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.programId) &&
     ["id", "programId", "programCode", "program", "learner", "channel", "status", "createdAt", "updatedAt"].every((key) => isText(item[key])) &&
     ["draft", "pending_finance", "approved", "revision", "reconciled"].includes(item.status) &&
     isDate(item.createdAt) && isDate(item.updatedAt) && isNumber(item.amount) &&
     item.realPayment === false && typeof item.enrollmentCreated === "boolean";
-  const isQualificationDraft = (item) => isObject(item) &&
+  const isQualificationDraft = (item) => isObject(item) && isSafeId(item.id) &&
     ["id", "frameworkId", "programTitle", "ownerRole", "ownerName", "status", "updatedAt"].every((key) => isText(item[key])) &&
     ["tyc", "eqf"].includes(item.frameworkId) && ["instructor", "externalInstructor"].includes(item.ownerRole) &&
     isNumber(item.level, 1, 8) && item.status === "pilot_draft" && isDate(item.updatedAt) &&
     Array.isArray(item.rows) && item.rows.length === 3 && item.rows.every((row) => isObject(row) &&
       ["dimension", "learningOutcome", "learningLevel", "courseContent", "assessmentMethod", "evidence", "alignmentRationale"].every((key) => isText(row[key]))
     );
+  const isSmartAssessmentSuggestion = (item) => isObject(item) && ["method", "evidence", "rationale"].every((key) => isText(item[key]));
+  const isSmartSignal = (item) => isObject(item) && isText(item.label || item.pattern) && isText(item.category) && isNumber(item.weight, 0);
+  const isSmartSelection = (selection) => isObject(selection) && isSafeId(selection.outcomeId) && isSafeId(selection.outcomeFingerprint) &&
+    Number.isInteger(selection.outcomeIndex) && selection.outcomeIndex >= 0 && ["tyc", "eqf"].includes(selection.frameworkId) &&
+    isNumber(selection.level, 1, 8) && ["knowledge", "skills", "competence"].includes(selection.dimension) &&
+    isNumber(selection.score, 0, 100) && typeof selection.applied === "boolean" && selection.autonomousDecision === false &&
+    selection.institutionalValidationRequired === true && (selection.manual === undefined || typeof selection.manual === "boolean") &&
+    isText(selection.descriptor) && isText(selection.rationale) && /^https:\/\//.test(selection.officialSourceUrl) &&
+    Array.isArray(selection.matchedSignals) && selection.matchedSignals.every(isSmartSignal) &&
+    Array.isArray(selection.suggestedContent) && selection.suggestedContent.length > 0 && selection.suggestedContent.every(isText) &&
+    Array.isArray(selection.suggestedAssessments) && selection.suggestedAssessments.length > 0 && selection.suggestedAssessments.every(isSmartAssessmentSuggestion);
+  const isSmartAppliedSelection = (selection) => isObject(selection) && isSafeId(selection.id) && isSafeId(selection.outcomeId) && isSafeId(selection.outcomeFingerprint) && Number.isInteger(selection.outcomeIndex) && selection.outcomeIndex >= 0 &&
+    ["tyc", "eqf"].includes(selection.frameworkId) && isNumber(selection.level, 1, 8) && ["knowledge", "skills", "competence"].includes(selection.dimension) &&
+    isNumber(selection.score, 0, 100) && isDate(selection.recordedAt) && selection.autonomousDecision === false && selection.institutionalValidationRequired === true &&
+    isText(selection.descriptor) && isText(selection.rationale) && /^https:\/\//.test(selection.officialSourceUrl) &&
+    Array.isArray(selection.matchedSignals) && selection.matchedSignals.every(isSmartSignal) && Array.isArray(selection.suggestedContent) && selection.suggestedContent.every(isText) &&
+    Array.isArray(selection.suggestedAssessments) && selection.suggestedAssessments.every(isSmartAssessmentSuggestion);
+  const isSmartManualOverride = (override) => isObject(override) && isSafeId(override.id) && ["tyc", "eqf"].includes(override.frameworkId) && isSafeId(override.outcomeId) &&
+    /^OVR-[A-Za-z0-9._:-]+-(?:tyc|eqf)-\d+$/.test(override.id) && isSafeId(override.outcomeFingerprint) && Number.isInteger(override.outcomeIndex) && override.outcomeIndex >= 0 && isDate(override.recordedAt) &&
+    isNumber(override.selectedLevel, 1, 8) && ["knowledge", "skills", "competence"].includes(override.selectedDimension) &&
+    isText(override.reason) && ["instructor", "externalInstructor"].includes(override.actorRole) && override.isHumanSelection === true && override.finalBoardDecision === false;
+  const isSmartProgram = (program) => isObject(program) && isObject(program.suggestedLevels) && isNumber(program.suggestedLevels.tyc, 1, 8) &&
+    isNumber(program.suggestedLevels.eqf, 1, 8) && isObject(program.dimensionCoverage) && ["tyc", "eqf"].every((frameworkId) => isObject(program.dimensionCoverage[frameworkId]) &&
+      ["knowledge", "skills", "competence"].every((dimension) => isNumber(program.dimensionCoverage[frameworkId][dimension], 0))) &&
+    isObject(program.coverage) && isNumber(program.coverage.outcomeCount, 1, 40) && isObject(program.consistency) && ["tyc", "eqf"].every((frameworkId) =>
+      isObject(program.consistency[frameworkId]) && isNumber(program.consistency[frameworkId].min, 1, 8) && isNumber(program.consistency[frameworkId].max, 1, 8) &&
+      isNumber(program.consistency[frameworkId].spread, 0, 7) && typeof program.consistency[frameworkId].consistent === "boolean") && isText(program.rationale) &&
+    program.autonomousDecision === false && program.institutionalValidationRequired === true;
+  const isSmartCycle = (cycle) => isObject(cycle) && cycle.mappingStatus === "provisional_advisory_crosswalk" && cycle.equivalenceClaim === false &&
+    cycle.placementClaim === false && cycle.autonomousDecision === false && cycle.institutionalValidationRequired === true;
+  const isSmartBoardDecision = (decision) => isObject(decision) && decision.status === "recorded_human_board_decision" &&
+    ["approved", "revision_requested", "rejected", "deferred"].includes(decision.decision) && decision.source === "human_commission" &&
+    decision.actorRole === "commission" && isText(decision.decidedBy) && isText(decision.rationale) && isDate(decision.decidedAt) && isObject(decision.decidedLevels) &&
+    isNumber(decision.decidedLevels.tyc, 1, 8) && isNumber(decision.decidedLevels.eqf, 1, 8) && decision.suggestionMutated === false && decision.autonomousDecision === false;
+  const isSmartAlignment = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.applicationId) &&
+    (item.programId === "pending-program" || isSafeId(item.programId)) && isSafeId(item.orderedOutcomeFingerprint) &&
+    ["id", "applicationId", "programId", "applicationCode", "programTitle", "ownerRole", "ownerName", "status", "engineVersion", "advisoryNotice", "updatedAt"].every((key) => isText(item[key])) &&
+    ["instructor", "externalInstructor"].includes(item.ownerRole) && item.status === "pilot_suggestion" && isDate(item.updatedAt) &&
+    item.institutionalValidationRequired === true && Array.isArray(item.outcomes) && item.outcomes.length > 0 && item.outcomes.length <= QUALIFICATION_SUGGESTION_LIMITS.maxOutcomeCount &&
+    item.outcomes.every((outcome, outcomeIndex) => isObject(outcome) && isSafeId(outcome.outcomeId) && isSafeId(outcome.outcomeFingerprint) &&
+      outcome.outcomeIndex === outcomeIndex && outcome.outcomeFingerprint === smartOutcomeFingerprint(outcome.text, outcomeIndex) && isText(outcome.text) &&
+      normalizeSmartOutcomeText(outcome.text).length <= QUALIFICATION_SUGGESTION_LIMITS.maxOutcomeLength && Array.isArray(outcome.selections) &&
+      outcome.selections.length === 2 && outcome.selections.every((selection) => isSmartSelection(selection) && selection.outcomeId === outcome.outcomeId &&
+        selection.outcomeIndex === outcomeIndex && selection.outcomeFingerprint === outcome.outcomeFingerprint) && new Set(outcome.selections.map((selection) => selection.frameworkId)).size === 2) &&
+    new Set(item.outcomes.map((outcome) => outcome.outcomeId)).size === item.outcomes.length &&
+    item.orderedOutcomeFingerprint === smartOrderedOutcomeFingerprint(item.outcomes.map((outcome) => outcome.text)) &&
+    Array.isArray(item.manualOverrides) && item.manualOverrides.every(isSmartManualOverride) &&
+    Array.isArray(item.appliedSelections) && item.appliedSelections.every(isSmartAppliedSelection) &&
+    isSmartProgram(item.program) && isSmartCycle(item.higherEducationCycleSuggestion) &&
+    (item.boardDecision === null || item.boardDecision === undefined || isSmartBoardDecision(item.boardDecision));
+  const smartCrossReferencesAreValid = (alignments, applications, programs) => {
+    if (new Set(alignments.map((item) => item.id)).size !== alignments.length) return false;
+    if (new Set(alignments.map((item) => item.applicationId)).size !== alignments.length) return false;
+    const linkedProgramIds = alignments.filter((item) => item.programId !== "pending-program").map((item) => item.programId);
+    if (new Set(linkedProgramIds).size !== linkedProgramIds.length) return false;
+    if (!applications.every((application) => application.smartAlignmentId === undefined || alignments.some((item) => item.id === application.smartAlignmentId && item.applicationId === application.id))) return false;
+    if (!programs.every((program) => program.smartAlignmentId === undefined || alignments.some((item) => item.id === program.smartAlignmentId && item.programId === program.id))) return false;
+    return alignments.every((alignment) => {
+      const application = applications.find((item) => item.id === alignment.applicationId);
+      if (!application || application.kind !== "internal" || application.ownerRole !== alignment.ownerRole || application.applicant !== alignment.ownerName || application.code !== alignment.applicationCode) return false;
+      if (alignment.id !== `ALIGN-${application.id}` || alignment.outcomes.some((outcome, index) => outcome.outcomeId !== `LO-${index + 1}`)) return false;
+      if (application.smartAlignmentId !== alignment.id) return false;
+      const mappingBacklink = application.formData?.qualificationMapping;
+      if (!mappingBacklink || mappingBacklink.id !== alignment.id || mappingBacklink.applicationId !== application.id || mappingBacklink.programId !== alignment.programId) return false;
+      const applicationOutcomes = Array.isArray(application.formData?.outcomes)
+        ? application.formData.outcomes.map((item) => String(item).trim()).filter(Boolean)
+        : splitLearningOutcomes(application.formData?.outcomes || "");
+      const alignmentOutcomes = alignment.outcomes.map((outcome) => outcome.text);
+      if (applicationOutcomes.length !== alignmentOutcomes.length || applicationOutcomes.some((text, index) => normalizeSmartOutcomeText(text) !== normalizeSmartOutcomeText(alignmentOutcomes[index]))) return false;
+      if (mappingBacklink.orderedOutcomeFingerprint !== alignment.orderedOutcomeFingerprint || mappingBacklink.updatedAt !== alignment.updatedAt) return false;
+      if (alignment.programId !== "pending-program") {
+        const program = programs.find((item) => item.id === alignment.programId);
+        if (!program || program.code !== application.code || program.smartAlignmentId !== alignment.id) return false;
+        if (program.outcomes.length !== alignmentOutcomes.length || program.outcomes.some((text, index) => normalizeSmartOutcomeText(text) !== normalizeSmartOutcomeText(alignmentOutcomes[index]))) return false;
+      } else if (application.status !== "draft") {
+        return false;
+      }
+      const outcomeById = new Map(alignment.outcomes.map((outcome) => [outcome.outcomeId, outcome]));
+      if (!alignment.manualOverrides.every((override) => {
+        const outcome = outcomeById.get(override.outcomeId);
+        return outcome && override.actorRole === alignment.ownerRole && override.outcomeIndex === outcome.outcomeIndex && override.outcomeFingerprint === outcome.outcomeFingerprint;
+      })) return false;
+      if (new Set(alignment.manualOverrides.map((override) => override.id)).size !== alignment.manualOverrides.length) return false;
+      if (new Set(alignment.manualOverrides.map((override) => `${override.outcomeFingerprint}:${override.frameworkId}`)).size !== alignment.manualOverrides.length) return false;
+      if (!alignment.appliedSelections.every((selection) => {
+        const outcome = outcomeById.get(selection.outcomeId);
+        return outcome && selection.id === `APPLIED-${selection.outcomeFingerprint}-${selection.frameworkId}` && selection.outcomeIndex === outcome.outcomeIndex && selection.outcomeFingerprint === outcome.outcomeFingerprint &&
+          outcome.selections.some((item) => item.frameworkId === selection.frameworkId && item.outcomeFingerprint === selection.outcomeFingerprint);
+      })) return false;
+      return new Set(alignment.appliedSelections.map((selection) => selection.id)).size === alignment.appliedSelections.length &&
+        new Set(alignment.appliedSelections.map((selection) => `${selection.outcomeFingerprint}:${selection.frameworkId}`)).size === alignment.appliedSelections.length;
+    });
+  };
   const selectedApplicationIsValid = (applications) => saved.selectedApplicationId === null ||
     saved.selectedApplicationId === undefined ||
     (isText(saved.selectedApplicationId) && applications.some((item) => item.id === saved.selectedApplicationId));
@@ -157,17 +265,18 @@ function isValidSavedState(saved) {
     isObject(saved.scenarios) && isScenario(saved.scenarios.internal, "internal") && isScenario(saved.scenarios.recognition, "recognition") &&
     saved.applications.every(isApplication) && selectedApplicationIsValid(saved.applications) &&
     saved.programs.every(isProgram) && saved.credentials.every(isCredential) && saved.enrollments.every(isEnrollment) &&
+    saved.smartAlignments.every(isSmartAlignment) && smartCrossReferencesAreValid(saved.smartAlignments, saved.applications, saved.programs) &&
     saved.assessmentSessions.every(isAssessment) && saved.recognizedCredits.every(isRecognizedCredit) &&
-    hasCanonicalIntegrationCatalog(saved.integrations) && saved.integrations.every((item) => isObject(item) &&
+    hasCanonicalIntegrationCatalog(saved.integrations) && saved.integrations.every((item) => isObject(item) && isSafeId(item.id) &&
       ["id", "name", "category", "systemClass", "owner", "status", "lastTest", "sourceStatus", "purposeProposal", "dataDirection", "approvalGate", "errorScenario", "retryPolicy", "auditPolicy", "integrationTier", "myysRelevance", "publicUrl"].every((key) => isText(item[key])) &&
       ["tier1", "tier2", "tier3"].includes(item.integrationTier) && ["core", "supporting", "adjacent"].includes(item.myysRelevance) && typeof item.consultationOnly === "boolean" &&
       Array.isArray(item.operatorRoles) && item.operatorRoles.length > 0 && item.operatorRoles.every((role) => roleIds.has(role)) &&
       isObject(item.samplePayload) && item.samplePayload.mode === "dry-run" && item.samplePayload.realData === false &&
       (item.publicUrl === "" || /^https:\/\//.test(item.publicUrl)) && (item.sourceUrl === "" || /^https:\/\//.test(item.sourceUrl)) &&
       isNumber(item.stage, 0, 5) && (item.attempts === undefined || isNumber(item.attempts)) && item.realDataEnabled === false && !item.secret) &&
-    saved.integrationJobs.every((item) => isObject(item) && ["id", "target", "status", "at"].every((key) => isText(item[key])) && isDate(item.at) && item.realDataSent === false) &&
-    saved.notifications.every((item) => isObject(item) && ["id", "title", "body", "time"].every((key) => isText(item[key])) && Array.isArray(item.recipientRoles) && item.recipientRoles.length > 0 && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy) && item.readBy.every((role) => roleIds.has(role) && item.recipientRoles.includes(role))) &&
-    saved.audit.every((item) => isObject(item) && ["id", "entityId", "at", "actor", "action", "from", "to", "reason"].every((key) => isText(item[key])) && isDate(item.at) && auditRoleIds.has(item.actorRole)) &&
+    saved.integrationJobs.every((item) => isObject(item) && isSafeId(item.id) && isSafeId(item.target) && ["status", "at"].every((key) => isText(item[key])) && isDate(item.at) && item.realDataSent === false) &&
+    saved.notifications.every((item) => isObject(item) && isSafeId(item.id) && ["title", "body", "time"].every((key) => isText(item[key])) && Array.isArray(item.recipientRoles) && item.recipientRoles.length > 0 && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy) && item.readBy.every((role) => roleIds.has(role) && item.recipientRoles.includes(role))) &&
+    saved.audit.every((item) => isObject(item) && isSafeId(item.id) && isSafeId(item.entityId) && ["at", "actor", "action", "from", "to", "reason"].every((key) => isText(item[key])) && isDate(item.at) && auditRoleIds.has(item.actorRole)) &&
     isObject(saved.finance) &&
     Array.isArray(saved.finance.transactions) &&
     Array.isArray(saved.finance.entitlements) &&
@@ -414,6 +523,11 @@ function render() {
     const renderer = pages[page] || pages.overview;
     root.innerHTML = renderer(detail);
   }
+  if (page === "proposal" && isAllowed("proposal")) {
+    smartSuggestionReport = null;
+    smartSuggestionApplied = [];
+    window.clearTimeout(smartSuggestionTimer);
+  }
   closeMobileNav();
   const announcedTitle = page === "verify" ? "Pilot belge doğrulama" : (pageMeta[page]?.label || "Sayfa");
   routeAnnouncer.textContent = `${announcedTitle} sayfası açıldı`;
@@ -608,7 +722,519 @@ function paymentStatusBadge(request) {
 }
 
 function programCard(program) {
-  return `<article class="card program-card" data-program-level="${program.level}" data-searchable="${escapeHtml(`${program.title} ${program.unit} ${program.instructor}`.toLocaleLowerCase("tr-TR"))}"><div class="program-accent"></div><div class="card-body"><div class="program-meta"><span class="meta-pill">${program.ects} AKTS • Pilot</span><span class="meta-pill">TYÇ ${program.level} önerisi</span><span class="meta-pill">${escapeHtml(program.mode)}</span></div><h3>${escapeHtml(program.title)}</h3><p>${escapeHtml(program.summary)}</p><small class="table-subtitle">${escapeHtml(program.unit)} • ${escapeHtml(program.instructor)}</small></div><div class="card-footer">${statusBadge(program.status)}<button class="button button--secondary button--sm" data-action="open-program" data-id="${program.id}">Ayrıntıları gör ${icon("arrow")}</button></div></article>`;
+  return `<article class="card program-card" data-program-level="${program.level}" data-searchable="${escapeHtml(`${program.title} ${program.unit} ${program.instructor}`.toLocaleLowerCase("tr-TR"))}"><div class="program-accent"></div><div class="card-body"><div class="program-meta"><span class="meta-pill">${program.ects} AKTS • Pilot</span><span class="meta-pill">TYÇ ${program.level} önerisi</span><span class="meta-pill">${escapeHtml(program.mode)}</span></div><h3>${escapeHtml(program.title)}</h3><p>${escapeHtml(program.summary)}</p><small class="table-subtitle">${escapeHtml(program.unit)} • ${escapeHtml(program.instructor)}</small></div><div class="card-footer">${statusBadge(program.status)}<button class="button button--secondary button--sm" data-action="open-program" data-id="${escapeHtml(program.id)}">Ayrıntıları gör ${icon("arrow")}</button></div></article>`;
+}
+
+function splitLearningOutcomes(value = "") {
+  return String(value)
+    .split(/\n+/)
+    .map((item) => item.replace(/^\s*(?:[-*•]|(?:ÖÇ|LO)?\s*\d+[.)-]?)\s*/iu, "").trim())
+    .filter(Boolean);
+}
+
+function normalizeSmartOutcomeText(value = "") {
+  return String(value)
+    .normalize("NFKC")
+    .toLocaleLowerCase("tr-TR")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function smartStableHash(value = "") {
+  let hash = 0x811c9dc5;
+  for (const character of String(value)) {
+    hash ^= character.codePointAt(0);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+function smartOutcomeFingerprint(text, index) {
+  return `LOFP-${Number(index) + 1}-${smartStableHash(normalizeSmartOutcomeText(text))}`;
+}
+
+function smartOrderedOutcomeFingerprint(outcomes = []) {
+  return `ORDER-${smartStableHash(outcomes.map((text, index) => smartOutcomeFingerprint(text, index)).join("|"))}`;
+}
+
+function isSafeId(value) {
+  return typeof value === "string" && SAFE_ID_PATTERN.test(value);
+}
+
+function smartOutcomeId(outcome, index) {
+  return outcome?.id || outcome?.outcomeId || `outcome-${index + 1}`;
+}
+
+function smartOutcomeText(outcome) {
+  return outcome?.outcomeText || outcome?.outcome || outcome?.text || outcome?.learningOutcome || "";
+}
+
+function smartSuggestionFor(outcome, frameworkId) {
+  return outcome?.suggestions?.[frameworkId] || outcome?.[frameworkId] || null;
+}
+
+function smartEffectiveSelection(suggestion) {
+  if (!suggestion) return null;
+  const effective = suggestion.effectiveSelection || {};
+  return {
+    ...suggestion,
+    ...effective,
+    score: Number(suggestion.score || effective.score || 0),
+    confidence: suggestion.confidence || effective.confidence || "low",
+    descriptor: effective.descriptor || suggestion.descriptor || "",
+    descriptorDisplayTr: effective.descriptorDisplayTr || suggestion.descriptorDisplayTr || suggestion.descriptor || "",
+    rationale: effective.reason || suggestion.rationale || "",
+    suggestedContent: suggestion.suggestedContent || effective.suggestedContent || [],
+    suggestedAssessments: suggestion.suggestedAssessments || effective.suggestedAssessments || [],
+    isManualOverride: effective.source === "manual_override"
+  };
+}
+
+function smartDimensionLabel(dimension, frameworkId) {
+  const labels = frameworkId === "eqf"
+    ? { knowledge: "Bilgi / Knowledge", skills: "Beceriler / Skills", competence: "Sorumluluk ve özerklik" }
+    : { knowledge: "Bilgi", skills: "Beceri", competence: "Yetkinlik" };
+  return labels[dimension] || dimension || "Boyut belirtilmedi";
+}
+
+function smartConfidenceLabel(value) {
+  return ({ high: "Yüksek", medium: "Orta", low: "Düşük" })[value] || "Düşük";
+}
+
+function smartDescriptorForSelection(frameworkId, level, dimension) {
+  const option = (buildQualificationSelectionOptions(frameworkId) || []).find((item) => Number(item.level) === Number(level));
+  const selected = option?.dimensions?.find((item) => item.dimension === dimension);
+  return selected?.descriptorDisplayTr || selected?.descriptor || "Seçili tanımlayıcı bulunamadı; kurumsal doğrulama gerekir.";
+}
+
+function measurableVerb(outcome = "") {
+  const verbs = [
+    "geliştirir", "tasarlar", "üretir", "değerlendirir", "analiz eder", "yorumlar", "uygular",
+    "karşılaştırır", "sınıflandırır", "çözer", "oluşturur", "açıklar", "tanımlar", "saptar",
+    "yönetir", "doğrular", "gerekçelendirir", "eleştirir", "bütünleştirir"
+  ];
+  const normalized = String(outcome).toLocaleLowerCase("tr-TR");
+  return verbs.find((verb) => normalized.includes(verb)) || "Ölçülebilir eylem fiili ekleyin";
+}
+
+function smartCycleCrosswalk(level) {
+  const cycles = {
+    5: { cycle: "Kısa döngü / önlisans bandı", note: "TYYÇ kısa döngü ile Bologna kısa döngüsü için açıklayıcı aday." },
+    6: { cycle: "Birinci döngü / lisans bandı", note: "TYYÇ birinci döngü ile Bologna birinci döngüsü için açıklayıcı aday." },
+    7: { cycle: "İkinci döngü / yüksek lisans bandı", note: "TYYÇ ikinci döngü ile Bologna ikinci döngüsü için açıklayıcı aday." },
+    8: { cycle: "Üçüncü döngü / doktora bandı", note: "TYYÇ üçüncü döngü ile Bologna üçüncü döngüsü için açıklayıcı aday." }
+  };
+  return {
+    ...(cycles[Number(level)] || { cycle: "Yükseköğretim döngüsü önerilmedi", note: "TYÇ/AYÇ 1–4 için bu pilot yükseköğretim döngüsü eşlemesi üretmez." }),
+    mappingStatus: "provisional_advisory_crosswalk",
+    equivalenceClaim: false,
+    placementClaim: false,
+    autonomousDecision: false,
+    institutionalValidationRequired: true
+  };
+}
+
+function smartSuggestionLevels(suggestion, frameworkId) {
+  const primary = smartEffectiveSelection(suggestion);
+  const alternatives = Array.isArray(suggestion?.alternatives) ? suggestion.alternatives : [];
+  const byLevel = new Map();
+  [primary, ...alternatives].filter(Boolean).forEach((item) => {
+    const level = Number(item.level);
+    if (level >= 1 && level <= 8 && !byLevel.has(level)) byLevel.set(level, item);
+  });
+  const selectionOptions = buildQualificationSelectionOptions(frameworkId) || [];
+  const options = Array.isArray(selectionOptions) ? selectionOptions : (selectionOptions.options || selectionOptions.levels || []);
+  options.forEach((item) => {
+    const level = Number(item.level || item.value);
+    if (level >= 1 && level <= 8 && !byLevel.has(level)) byLevel.set(level, item);
+  });
+  return Array.from({ length: 8 }, (_, index) => {
+    const level = index + 1;
+    return { level, ...(byLevel.get(level) || {}), score: Number(byLevel.get(level)?.score || 0) };
+  });
+}
+
+function smartAppliedSelection(outcomeId, frameworkId, outcomeFingerprint) {
+  return smartSuggestionApplied.find((item) => item.outcomeId === outcomeId && item.frameworkId === frameworkId && item.outcomeFingerprint === outcomeFingerprint) || null;
+}
+
+function smartEvidenceHint(suggestion) {
+  const assessments = suggestion?.suggestedAssessments || [];
+  const first = Array.isArray(assessments) ? assessments[0] : assessments;
+  if (first && typeof first === "object") return first.evidence || `${first.method || "Performans görevi"} çıktısı ve değerlendirici kayıt izi`;
+  return `${first || "Performans görevi"} çıktısı, analitik rubrik ve değerlendirici kayıt izi`;
+}
+
+function smartAssessmentText(value) {
+  if (!value) return "";
+  const items = Array.isArray(value) ? value : [value];
+  return items.map((item) => typeof item === "object" ? `${item.method}${item.evidence ? ` — Kanıt: ${item.evidence}` : ""}` : String(item)).join(" • ");
+}
+
+function smartCycleLabel(cycle) {
+  if (!cycle) return "Yükseköğretim döngüsü önerilmedi";
+  if (typeof cycle === "string") return cycle;
+  return [cycle.tyycCycleTr, cycle.bolognaCycleTr, cycle.awardContextTr, cycle.cycle, cycle.label, cycle.note].filter(Boolean).join(" • ");
+}
+
+function smartSafeCycle(cycle, level) {
+  return {
+    ...(cycle || smartCycleCrosswalk(level)),
+    mappingStatus: "provisional_advisory_crosswalk",
+    equivalenceClaim: false,
+    placementClaim: false,
+    autonomousDecision: false,
+    institutionalValidationRequired: true
+  };
+}
+
+function smartMappingSnapshot(report = smartSuggestionReport) {
+  if (!report) return null;
+  const outcomes = (report.outcomes || []).map((outcome, index) => {
+    const outcomeId = smartOutcomeId(outcome, index);
+    const text = smartOutcomeText(outcome);
+    const outcomeFingerprint = smartOutcomeFingerprint(text, index);
+    return {
+      outcomeId,
+      outcomeIndex: index,
+      outcomeFingerprint,
+      text,
+      selections: ["tyc", "eqf"].map((frameworkId) => {
+        const applied = smartAppliedSelection(outcomeId, frameworkId, outcomeFingerprint);
+        const suggestion = smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId));
+        const selection = applied || suggestion;
+        return selection ? {
+          outcomeId,
+          outcomeIndex: index,
+          outcomeFingerprint,
+          frameworkId,
+          frameworkCode: frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF",
+          level: Number(selection.level),
+          dimension: selection.dimension,
+          score: Number(selection.score || 0),
+          descriptor: selection.descriptor || "",
+          descriptorDisplayTr: selection.descriptorDisplayTr || selection.descriptor || "",
+          rationale: selection.rationale || "",
+          officialSourceUrl: selection.officialSourceUrl || "",
+          matchedSignals: selection.matchedSignals || [],
+          suggestedContent: selection.suggestedContent || [],
+          suggestedAssessments: selection.suggestedAssessments || [],
+          applied: Boolean(applied),
+          manual: Boolean(selection.manual || selection.isManualOverride),
+          autonomousDecision: false,
+          institutionalValidationRequired: true
+        } : null;
+      }).filter(Boolean)
+    };
+  });
+  const topTyC = outcomes.flatMap((item) => item.selections).filter((item) => item.frameworkId === "tyc" && item.applied).sort((a, b) => b.score - a.score)[0]
+    || outcomes.flatMap((item) => item.selections).filter((item) => item.frameworkId === "tyc").sort((a, b) => b.score - a.score)[0];
+  return {
+    engineVersion: QUALIFICATION_SUGGESTION_ENGINE_VERSION,
+    advisoryNotice: QUALIFICATION_ADVISORY_NOTICE,
+    orderedOutcomeFingerprint: smartOrderedOutcomeFingerprint(outcomes.map((outcome) => outcome.text)),
+    outcomes,
+    program: report.program || {},
+    manualOverrides: report.manualOverrides || [],
+    appliedSelections: structuredClone(smartSuggestionApplied),
+    higherEducationCycleSuggestion: smartSafeCycle(report.program?.higherEducationCycleSuggestion, topTyC?.level)
+  };
+}
+
+function syncSmartMappingField() {
+  const field = document.querySelector("#proposal-smart-mapping");
+  if (field) field.value = JSON.stringify(smartMappingSnapshot() || {});
+}
+
+function renderSmartLevelCandidates(suggestion, frameworkId) {
+  const code = frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF";
+  return `<details class="smart-levels"><summary>Tüm ${code} seviye adaylarını görüntüle</summary><div class="smart-level-list">${smartSuggestionLevels(suggestion, frameworkId).map((item) => `<span class="${Number(item.score) > 0 ? "has-score" : ""}"><strong>${item.level}</strong><small>${Number(item.score) > 0 ? `%${Math.round(item.score)}` : "Aday"}</small></span>`).join("")}</div></details>`;
+}
+
+function smartSuggestionCard(outcome, outcomeIndex, frameworkId, interactive = true, appliedSelections = smartSuggestionApplied) {
+  const rawSuggestion = smartSuggestionFor(outcome, frameworkId);
+  if (!rawSuggestion) return "";
+  const suggestion = smartEffectiveSelection(rawSuggestion);
+  const outcomeId = smartOutcomeId(outcome, outcomeIndex);
+  const outcomeFingerprint = smartOutcomeFingerprint(smartOutcomeText(outcome), outcomeIndex);
+  const applied = appliedSelections.find((item) => item.outcomeId === outcomeId && item.outcomeFingerprint === outcomeFingerprint && item.frameworkId === frameworkId) || null;
+  const selection = applied || suggestion;
+  const code = frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF";
+  const score = Math.max(0, Math.min(100, Math.round(Number(selection.score || 0))));
+  const content = Array.isArray(selection.suggestedContent) ? selection.suggestedContent.join(" • ") : selection.suggestedContent;
+  const assessments = smartAssessmentText(selection.suggestedAssessments);
+  const cycle = selection.higherEducationCycleSuggestion || smartCycleCrosswalk(selection.level);
+  const signals = Array.isArray(selection.matchedSignals) ? selection.matchedSignals : [];
+  return `<article class="smart-suggestion ${applied ? "is-applied" : ""}" data-smart-suggestion data-smart-framework="${escapeHtml(frameworkId.toUpperCase())}" data-outcome-index="${Number(outcomeIndex)}" data-outcome-fingerprint="${escapeHtml(outcomeFingerprint)}" data-framework="${escapeHtml(frameworkId.toUpperCase())}" data-level="${Number(selection.level)}" data-dimension="${escapeHtml(selection.dimension)}" data-score="${score}">
+    <div class="smart-suggestion__head"><div><span class="table-subtitle">${code} • ${smartDimensionLabel(selection.dimension, frameworkId)}</span><h4>${code} ${Number(selection.level)}. seviye</h4><span class="smart-confidence">${selection.isManualOverride ? "İnsan düzeltmesi" : `${smartConfidenceLabel(selection.confidence)} güven`} • ${escapeHtml(selection.method || "açıklanabilir kural motoru")}</span></div><span class="smart-score" aria-label="Öneri puanı yüzde ${score}">%${score}</span></div>
+    <div class="progress" role="progressbar" aria-label="${code} öneri puanı" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${score}"><span style="width:${score}%"></span></div>
+    <dl class="smart-suggestion__details"><dt>Gerekçe</dt><dd>${escapeHtml(selection.rationale || "Gözlenebilir fiil, karmaşıklık ve özerklik işaretleri birlikte değerlendirildi.")}</dd><dt>Kanonik tanımlayıcı</dt><dd>${escapeHtml(selection.descriptor || "Seviye tanımlayıcısı için kurumsal inceleme gerekir.")}</dd>${selection.descriptorDisplayTr && selection.descriptorDisplayTr !== selection.descriptor ? `<dt>Türkçe görünüm</dt><dd>${escapeHtml(selection.descriptorDisplayTr)}</dd>` : ""}<dt>Ölçülebilir eylem fiili</dt><dd>${escapeHtml(measurableVerb(smartOutcomeText(outcome)))}</dd><dt>İçerik ipucu</dt><dd>${escapeHtml(content || "Çıktıyı uygulamaya dönüştüren vaka ve etkinlik planı")}</dd><dt>Ölçme-değerlendirme</dt><dd>${escapeHtml(assessments || "Performans görevi + analitik rubrik")}</dd><dt>Kanıt önerisi</dt><dd>${escapeHtml(smartEvidenceHint(selection))}</dd></dl>
+    ${signals.length ? `<div class="smart-signals" aria-label="Eşlemeyi açıklayan sinyaller">${signals.slice(0, 8).map((signal) => `<span>${escapeHtml(signal.label || signal.pattern || String(signal))}</span>`).join("")}</div>` : `<div class="permission-note"><strong>Düşük sinyal yoğunluğu</strong><span>Daha ölçülebilir bir eylem fiili, karmaşıklık veya özerklik ifadesi ekleyerek öneriyi güçlendirin.</span></div>`}
+    ${selection.officialSourceUrl ? `<a class="text-button smart-source-link" href="${escapeHtml(selection.officialSourceUrl)}" target="_blank" rel="noreferrer">Resmî seviye kaynağını aç ${icon("external")}</a>` : ""}
+    <div class="smart-cycle"><strong>TYYÇ / Bologna açıklayıcı aday</strong><span>${escapeHtml(smartCycleLabel(cycle))}</span><small>${Number(selection.level) < 5 ? "TYÇ/AYÇ 1–4 için yükseköğretim döngüsü eşlemesi yapılmaz." : "Resmî eşdeğerlik veya yerleştirme değildir; kurumsal doğrulama gerekir."}</small></div>
+    ${renderSmartLevelCandidates(rawSuggestion, frameworkId)}
+    ${interactive ? `<div class="smart-suggestion__actions"><button class="button button--secondary button--sm" type="button" data-action="apply-smart-suggestion" data-outcome-index="${Number(outcomeIndex)}" data-outcome-fingerprint="${escapeHtml(outcomeFingerprint)}" data-framework="${escapeHtml(frameworkId)}">${applied ? `${icon("check")} Uygulandı` : "Bu öneriyi seç ve uygula"}</button></div>
+    <div class="smart-override" data-smart-override data-outcome-index="${Number(outcomeIndex)}" data-outcome-fingerprint="${escapeHtml(outcomeFingerprint)}" data-framework="${escapeHtml(frameworkId)}"><details><summary>Seviye veya boyutu manuel düzelt</summary><div class="smart-override__fields"><div class="field"><label for="smart-level-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">Seviye</label><select id="smart-level-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="select smart-override-level">${Array.from({ length: 8 }, (_, index) => index + 1).map((level) => `<option value="${level}" ${level === Number(selection.level) ? "selected" : ""}>${code} ${level}</option>`).join("")}</select></div><div class="field"><label for="smart-dimension-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">Boyut</label><select id="smart-dimension-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="select smart-override-dimension">${["knowledge", "skills", "competence"].map((dimension) => `<option value="${escapeHtml(dimension)}" ${dimension === selection.dimension ? "selected" : ""}>${smartDimensionLabel(dimension, frameworkId)}</option>`).join("")}</select></div><div class="field full"><span class="table-subtitle">Seçili seviye/boyut tanımlayıcısı</span><p class="smart-override-descriptor">${escapeHtml(smartDescriptorForSelection(frameworkId, selection.level, selection.dimension))}</p></div><div class="field full"><label class="required" for="smart-reason-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">İnsan gerekçesi</label><input id="smart-reason-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="smart-override-reason" minlength="12" placeholder="Neden farklı seviye/boyut seçildi?" /></div><button class="button button--secondary button--sm" type="button" data-action="apply-smart-override">Manuel düzeltmeyi uygula</button></div></details></div>` : `<div class="permission-note"><strong>Salt-okunur pilot öneri</strong><span>Komisyon öneriyi ve insan düzeltmesini inceler; bu alanda motor çıktısını değiştiremez.</span></div>`}
+  </article>`;
+}
+
+function smartCoverageMatrix(report) {
+  const outcomes = report?.outcomes || [];
+  const dimensions = ["knowledge", "skills", "competence"];
+  const cell = (outcome, frameworkId, dimension) => {
+    const selection = smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId));
+    if (!selection || selection.dimension !== dimension) return `<span class="coverage-empty" aria-label="Eşleşme yok">—</span>`;
+    return `<strong aria-label="${frameworkId === "tyc" ? "TYÇ" : "AYÇ"} ${smartDimensionLabel(dimension, frameworkId)} yüzde ${Math.round(selection.score)}">%${Math.round(selection.score)}</strong>`;
+  };
+  return `<div class="table-wrap smart-coverage" data-smart-coverage><table><caption>Öğrenme çıktısı, çerçeve ve yeterlilik boyutu kapsam matrisi</caption><thead><tr><th rowspan="2" scope="col">Öğrenme çıktısı</th><th colspan="3" scope="colgroup">TYÇ</th><th colspan="3" scope="colgroup">AYÇ/EQF</th></tr><tr>${["Bilgi", "Beceri", "Yetkinlik", "Bilgi", "Beceri", "Sorumluluk/özerklik"].map((label) => `<th scope="col">${label}</th>`).join("")}</tr></thead><tbody>${outcomes.map((outcome, index) => `<tr><th scope="row"><span class="table-title">ÖÇ-${index + 1}</span><span class="table-subtitle">${escapeHtml(smartOutcomeText(outcome))}</span></th>${["tyc", "eqf"].flatMap((frameworkId) => dimensions.map((dimension) => `<td>${cell(outcome, frameworkId, dimension)}</td>`)).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+
+function smartCoverageWarnings(report) {
+  const outcomes = report?.outcomes || [];
+  const missing = [];
+  for (const frameworkId of ["tyc", "eqf"]) {
+    const used = new Set(outcomes.map((outcome) => smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId))?.dimension).filter(Boolean));
+    for (const dimension of ["knowledge", "skills", "competence"]) {
+      if (!used.has(dimension)) missing.push(`${frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF"} ${smartDimensionLabel(dimension, frameworkId)}`);
+    }
+  }
+  const dimensionNotice = missing.length
+    ? notice("warning", "Boyut kapsamı insan incelemesi gerektiriyor", `Program genelinde henüz görünmeyen boyutlar: ${missing.join(", ")}. Bu uyarı gönderimi otomatik engellemez.`)
+    : notice("success", "Altı boyut görünür", "TYÇ ve AYÇ/EQF için bilgi, beceri ve yetkinlik/özerklik boyutlarının her biri en az bir öğrenme çıktısıyla ilişkilendirildi.");
+  const consistency = report?.program?.consistency || {};
+  const consistencyWarnings = [consistency.tyc?.warning, consistency.eqf?.warning].filter(Boolean);
+  const suggested = report?.program?.suggestedLevels || {};
+  const frameworkDifference = Number(suggested.tyc) && Number(suggested.eqf) && Number(suggested.tyc) !== Number(suggested.eqf)
+    ? `TYÇ ${suggested.tyc} ile AYÇ/EQF ${suggested.eqf} program önerileri ayrışıyor; çerçeveler ayrı incelenmelidir.`
+    : "";
+  const alignmentNotice = consistencyWarnings.length || frameworkDifference
+    ? notice("warning", "Seviye tutarlılığı kontrolü", [...consistencyWarnings, frameworkDifference].filter(Boolean).join(" "))
+    : notice("success", "Seviye dağılımı tutarlı", "Motorun program düzeyi önerilerinde üç veya daha fazla seviye yayılımı ya da TYÇ/AYÇ ayrışması görülmedi.");
+  return `${dimensionNotice}${alignmentNotice}`;
+}
+
+function smartProgramSummary(report) {
+  const tycLevel = report?.program?.suggestedLevels?.tyc || "—";
+  const eqfLevel = report?.program?.suggestedLevels?.eqf || "—";
+  const cycle = report?.program?.higherEducationCycleSuggestion || smartCycleCrosswalk(tycLevel);
+  return `<div class="smart-program-summary"><div><span>Program TYÇ adayı</span><strong>Seviye ${tycLevel}</strong></div><div><span>Program AYÇ/EQF adayı</span><strong>Seviye ${eqfLevel}</strong></div><div><span>TYYÇ / Bologna döngüsü</span><strong>${escapeHtml(smartCycleLabel(cycle))}</strong></div></div>`;
+}
+
+function renderSmartSuggestionReport(report, { interactive = true, appliedSelections = smartSuggestionApplied } = {}) {
+  const outcomes = report?.outcomes || [];
+  if (!outcomes.length) return `<div class="smart-empty"><div class="empty-icon">${icon("layers")}</div><strong>Öğrenme çıktılarınızı yazın</strong><span>Her satıra bir ölçülebilir çıktı eklediğinizde TYÇ ve AYÇ/EQF önerileri otomatik oluşur.</span></div>`;
+  return `${smartProgramSummary(report)}${outcomes.map((outcome, index) => `<section class="smart-outcome"><div class="smart-outcome__title"><span>ÖÇ-${index + 1}</span><h4>${escapeHtml(smartOutcomeText(outcome) || "Öğrenme çıktısı")}</h4></div><div class="smart-suggestion-grid">${smartSuggestionCard(outcome, index, "tyc", interactive, appliedSelections)}${smartSuggestionCard(outcome, index, "eqf", interactive, appliedSelections)}</div></section>`).join("")}<section class="smart-coverage-section"><div class="section-heading"><div><span class="page-kicker">Program kapsamı</span><h3>TYÇ + AYÇ boyut matrisi</h3></div></div>${smartCoverageMatrix(report)}${smartCoverageWarnings(report)}</section>`;
+}
+
+function writeSmartReportToPanel() {
+  const panel = document.querySelector("#smart-suggestion-results");
+  if (panel) {
+    panel.innerHTML = renderSmartSuggestionReport(smartSuggestionReport, { interactive: true });
+    panel.setAttribute("aria-busy", "false");
+  }
+  syncSmartMappingField();
+}
+
+function failSmartQualificationAnalysis(code, message, panel, { empty = false } = {}) {
+  smartSuggestionReport = null;
+  smartSuggestionApplied = [];
+  if (panel) {
+    panel.innerHTML = empty ? renderSmartSuggestionReport(null) : notice("risk", "Akıllı eşleme kalite kapısı", message);
+    panel.setAttribute("aria-busy", "false");
+  }
+  syncSmartMappingField();
+  return { ok: false, code, message, report: null };
+}
+
+function analyzeProposalQualifications(form = document.querySelector("#proposal-form"), { announce = false } = {}) {
+  const panel = document.querySelector("#smart-suggestion-results");
+  if (!form || !PROPOSAL_ROLES.has(state.roleId)) {
+    if (panel) panel.setAttribute("aria-busy", "false");
+    return { ok: false, code: "unauthorized_or_missing_form", message: "Akıllı eşleme formu veya düzenleme yetkisi bulunamadı.", report: null };
+  }
+  const outcomes = splitLearningOutcomes(form.elements.outcomes?.value);
+  if (!outcomes.length) {
+    return failSmartQualificationAnalysis("empty_outcomes", "En az bir ölçülebilir öğrenme çıktısı yazın.", panel, { empty: true });
+  }
+  if (outcomes.length > QUALIFICATION_SUGGESTION_LIMITS.maxOutcomeCount) {
+    return failSmartQualificationAnalysis("too_many_outcomes", `Bir programda en fazla ${QUALIFICATION_SUGGESTION_LIMITS.maxOutcomeCount} öğrenme çıktısı analiz edilebilir.`, panel);
+  }
+  const oversizedIndex = outcomes.findIndex((text) => text.length > QUALIFICATION_SUGGESTION_LIMITS.maxOutcomeLength);
+  if (oversizedIndex >= 0) {
+    return failSmartQualificationAnalysis("outcome_too_long", `ÖÇ-${oversizedIndex + 1} en fazla ${QUALIFICATION_SUGGESTION_LIMITS.maxOutcomeLength} karakter olabilir.`, panel);
+  }
+  if (panel) panel.setAttribute("aria-busy", "true");
+  const orderedOutcomeFingerprint = smartOrderedOutcomeFingerprint(outcomes);
+  const previousFingerprint = smartSuggestionReport?.orderedOutcomeFingerprint;
+  const currentOutcomeMeta = outcomes.map((text, index) => ({
+    outcomeId: `LO-${index + 1}`,
+    outcomeIndex: index,
+    outcomeFingerprint: smartOutcomeFingerprint(text, index)
+  }));
+  const contextUnchanged = previousFingerprint === orderedOutcomeFingerprint;
+  const previousOverrides = contextUnchanged
+    ? (smartSuggestionReport?.manualOverrides || []).filter((override) => currentOutcomeMeta.some((meta) =>
+      meta.outcomeId === override.outcomeId && meta.outcomeIndex === override.outcomeIndex && meta.outcomeFingerprint === override.outcomeFingerprint))
+    : [];
+  const previousApplied = contextUnchanged
+    ? smartSuggestionApplied.filter((selection) => currentOutcomeMeta.some((meta) =>
+      meta.outcomeId === selection.outcomeId && meta.outcomeIndex === selection.outcomeIndex && meta.outcomeFingerprint === selection.outcomeFingerprint))
+    : [];
+  try {
+    const nextReport = suggestProgramQualificationAlignment({
+      programId: String(form.elements.title?.value || "pilot-program"),
+      outcomes: outcomes.map((text, index) => ({ id: `LO-${index + 1}`, text })),
+      preferredLevels: { tyc: Number(form.elements.level?.value || 6), eqf: Number(form.elements.level?.value || 6) },
+      manualOverrides: previousOverrides
+    });
+    const insufficient = (nextReport.outcomes || []).find((outcome) => outcome.inputQuality?.isMeasurable !== true);
+    if (insufficient) {
+      const warnings = insufficient.inputQuality?.warnings?.join(" ") || "Öğrenme çıktısı ölçülebilir bir eylem, bağlam ve gözlenebilir kanıt içermelidir.";
+      return failSmartQualificationAnalysis("insufficient_outcome", `${smartOutcomeText(insufficient)}: ${warnings}`, panel);
+    }
+    nextReport.orderedOutcomeFingerprint = orderedOutcomeFingerprint;
+    nextReport.outcomes.forEach((outcome, index) => {
+      outcome.outcomeIndex = index;
+      outcome.outcomeFingerprint = currentOutcomeMeta[index].outcomeFingerprint;
+    });
+    nextReport.manualOverrides = (nextReport.manualOverrides || []).map((override) => {
+      const meta = previousOverrides.find((item) => item.id === override.id) || currentOutcomeMeta.find((item) => item.outcomeId === override.outcomeId);
+      return { ...override, outcomeIndex: meta?.outcomeIndex, outcomeFingerprint: meta?.outcomeFingerprint, recordedAt: override.recordedAt || meta?.recordedAt || null };
+    });
+    smartSuggestionReport = nextReport;
+    smartSuggestionApplied = previousApplied;
+    writeSmartReportToPanel();
+    if (announce) toast(`${outcomes.length} öğrenme çıktısı için TYÇ ve AYÇ/EQF önerileri yenilendi.`);
+    return { ok: true, code: "ready", message: "Akıllı eşleme kalite kapısı geçildi.", report: smartSuggestionReport };
+  } catch (error) {
+    return failSmartQualificationAnalysis("analysis_error", `${error.message}. Taslak veya başvuru oluşturulmadı; öğrenme çıktılarını düzeltip yeniden analiz edin.`, panel);
+  } finally {
+    if (panel) panel.setAttribute("aria-busy", "false");
+  }
+}
+
+function scheduleSmartQualificationAnalysis(form) {
+  window.clearTimeout(smartSuggestionTimer);
+  const request = ++smartSuggestionRequest;
+  const panel = document.querySelector("#smart-suggestion-results");
+  if (panel) panel.setAttribute("aria-busy", "true");
+  smartSuggestionTimer = window.setTimeout(() => {
+    if (request !== smartSuggestionRequest) {
+      if (panel) panel.setAttribute("aria-busy", "false");
+      return;
+    }
+    analyzeProposalQualifications(form);
+  }, 320);
+}
+
+function applySmartSelection(outcomeIndex, frameworkId, { quiet = false } = {}) {
+  if (!PROPOSAL_ROLES.has(state.roleId)) { deny("Yeterlilik önerisini yalnız iç veya kurum dışı eğitici uygulayabilir."); return; }
+  const outcome = smartSuggestionReport?.outcomes?.[Number(outcomeIndex)];
+  const suggestion = smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId));
+  if (!outcome || !suggestion) { deny("Uygulanabilir yeterlilik önerisi bulunamadı."); return; }
+  const outcomeId = smartOutcomeId(outcome, Number(outcomeIndex));
+  const outcomeFingerprint = smartOutcomeFingerprint(smartOutcomeText(outcome), Number(outcomeIndex));
+  const liveOutcomes = splitLearningOutcomes(document.querySelector("#proposal-form")?.elements?.outcomes?.value || "");
+  if (outcome.outcomeFingerprint !== outcomeFingerprint || smartSuggestionReport?.orderedOutcomeFingerprint !== smartOrderedOutcomeFingerprint(liveOutcomes)) {
+    failSmartQualificationAnalysis("stale_outcome_context", "Öğrenme çıktısı değiştiği için eski seçim temizlendi. Çıktıları yeniden analiz edin.", document.querySelector("#smart-suggestion-results"));
+    deny("Öğrenme çıktısı bağlamı değişti; eski öneri uygulanmadı.");
+    return;
+  }
+  const next = {
+    id: `APPLIED-${outcomeFingerprint}-${frameworkId}`,
+    outcomeId,
+    outcomeIndex: Number(outcomeIndex),
+    outcomeFingerprint,
+    frameworkId,
+    level: Number(suggestion.level),
+    dimension: suggestion.dimension,
+    score: Number(suggestion.score || 0),
+    descriptor: suggestion.descriptor || "",
+    descriptorDisplayTr: suggestion.descriptorDisplayTr || suggestion.descriptor || "",
+    rationale: suggestion.rationale || "",
+    officialSourceUrl: suggestion.officialSourceUrl || "",
+    matchedSignals: suggestion.matchedSignals || [],
+    suggestedContent: suggestion.suggestedContent || [],
+    suggestedAssessments: suggestion.suggestedAssessments || [],
+    manual: Boolean(suggestion.isManualOverride || suggestion.manual),
+    recordedAt: new Date().toISOString(),
+    autonomousDecision: false,
+    institutionalValidationRequired: true
+  };
+  const existing = smartSuggestionApplied.findIndex((item) => item.outcomeId === outcomeId && item.outcomeFingerprint === outcomeFingerprint && item.frameworkId === frameworkId);
+  if (existing >= 0) smartSuggestionApplied.splice(existing, 1, next);
+  else smartSuggestionApplied.push(next);
+  if (frameworkId === "tyc") {
+    const levelField = document.querySelector("#proposal-level");
+    if (levelField && [...levelField.options].some((option) => Number(option.value) === Number(next.level))) levelField.value = String(next.level);
+  }
+  const sorted = [...smartSuggestionApplied].sort((a, b) => a.outcomeIndex - b.outcomeIndex || a.frameworkId.localeCompare(b.frameworkId));
+  const valueFor = (key, fallback) => sorted.map((item) => {
+    const value = item[key];
+    const label = `${item.frameworkId === "tyc" ? "TYÇ" : "AYÇ"} ÖÇ-${item.outcomeIndex + 1}`;
+    const rendered = key === "suggestedAssessments"
+      ? smartAssessmentText(value)
+      : Array.isArray(value) ? value.join("; ") : (value || fallback);
+    return `${label}: ${rendered || fallback}`;
+  }).join("\n");
+  const contentField = document.querySelector("#proposal-smart-content");
+  const assessmentField = document.querySelector("#proposal-smart-assessment");
+  const evidenceField = document.querySelector("#proposal-smart-evidence");
+  if (contentField) contentField.value = valueFor("suggestedContent", "Çıktıya bağlı vaka ve uygulama etkinliği");
+  if (assessmentField) assessmentField.value = valueFor("suggestedAssessments", "Performans görevi + analitik rubrik");
+  if (evidenceField) evidenceField.value = sorted.map((item) => `${item.frameworkId === "tyc" ? "TYÇ" : "AYÇ"} ÖÇ-${item.outcomeIndex + 1}: ${smartEvidenceHint(item)}`).join("\n");
+  writeSmartReportToPanel();
+  if (!quiet) toast(`${frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF"} önerisi programa uygulandı; alanlar hâlâ eğitici tarafından düzenlenebilir.`);
+}
+
+function applySmartOverride(container) {
+  if (!PROPOSAL_ROLES.has(state.roleId)) { deny("Manuel yeterlilik düzeltmesini yalnız iç veya kurum dışı eğitici yapabilir."); return; }
+  const outcomeIndex = Number(container?.dataset.outcomeIndex);
+  const frameworkId = String(container?.dataset.framework || "");
+  const outcome = smartSuggestionReport?.outcomes?.[outcomeIndex];
+  const reason = String(container?.querySelector(".smart-override-reason")?.value || "").trim();
+  if (!outcome || !["tyc", "eqf"].includes(frameworkId)) { deny("Manuel düzeltme hedefi geçersiz."); return; }
+  const liveOutcomes = splitLearningOutcomes(document.querySelector("#proposal-form")?.elements?.outcomes?.value || "");
+  const currentFingerprint = smartOutcomeFingerprint(liveOutcomes[outcomeIndex] || "", outcomeIndex);
+  if (container?.dataset.outcomeFingerprint !== currentFingerprint || smartSuggestionReport?.orderedOutcomeFingerprint !== smartOrderedOutcomeFingerprint(liveOutcomes)) {
+    failSmartQualificationAnalysis("stale_outcome_context", "Öğrenme çıktısı değiştiği için eski manuel düzeltme temizlendi. Çıktıları yeniden analiz edin.", document.querySelector("#smart-suggestion-results"));
+    deny("Öğrenme çıktısı bağlamı değişti; eski manuel düzeltme uygulanmadı.");
+    return;
+  }
+  if (reason.length < 12) { deny("Manuel düzeltme için en az 12 karakterlik insan gerekçesi yazın."); return; }
+  try {
+    smartSuggestionReport = applyManualQualificationOverride(smartSuggestionReport, {
+      outcomeId: smartOutcomeId(outcome, outcomeIndex),
+      frameworkId,
+      level: Number(container.querySelector(".smart-override-level")?.value),
+      dimension: container.querySelector(".smart-override-dimension")?.value,
+      reason,
+      actorRole: state.roleId,
+      recordedAt: new Date().toISOString()
+    });
+    const outcomeFingerprint = smartOutcomeFingerprint(smartOutcomeText(outcome), outcomeIndex);
+    smartSuggestionReport.orderedOutcomeFingerprint ||= smartOrderedOutcomeFingerprint((smartSuggestionReport.outcomes || []).map(smartOutcomeText));
+    smartSuggestionReport.outcomes.forEach((item, index) => {
+      item.outcomeIndex = index;
+      item.outcomeFingerprint = smartOutcomeFingerprint(smartOutcomeText(item), index);
+    });
+    smartSuggestionReport.manualOverrides = (smartSuggestionReport.manualOverrides || []).map((override) => override.outcomeId === smartOutcomeId(outcome, outcomeIndex) && override.frameworkId === frameworkId
+      ? { ...override, outcomeIndex, outcomeFingerprint, recordedAt: override.recordedAt || new Date().toISOString() }
+      : override);
+    applySmartSelection(outcomeIndex, frameworkId, { quiet: true });
+    toast("İnsan gerekçeli manuel düzeltme uygulandı ve pilot eşleme kaydına eklendi.");
+  } catch (error) {
+    deny(error.message);
+  }
+}
+
+function updateSmartOverrideDescriptor(container) {
+  if (!container) return;
+  const frameworkId = container.dataset.framework;
+  const level = Number(container.querySelector(".smart-override-level")?.value);
+  const dimension = container.querySelector(".smart-override-dimension")?.value;
+  const target = container.querySelector(".smart-override-descriptor");
+  if (target && ["tyc", "eqf"].includes(frameworkId)) target.textContent = smartDescriptorForSelection(frameworkId, level, dimension);
 }
 
 function proposalPage() {
@@ -619,7 +1245,14 @@ function proposalPage() {
     <div class="form-shell"><aside class="card steps" aria-label="Form adımları"><div class="step active"><span>1</span><div><strong>Program bilgileri</strong><small>Ad, birim, hedef kitle</small></div></div><div class="step"><span>2</span><div><strong>Akademik yapı</strong><small>Çıktı, AKTS, TYÇ</small></div></div><div class="step"><span>3</span><div><strong>Değerlendirme</strong><small>Kanıt ve rubrik</small></div></div><div class="step"><span>4</span><div><strong>Önizleme</strong><small>Pilot kontrol ve gönderim</small></div></div></aside>
       <form class="card form-card" id="proposal-form">
         <section class="form-section"><h3>Program kimliği</h3><p>Başvuru, seçili demo rolü adına oluşturulur.</p><div class="form-grid"><div class="field full"><label class="required" for="proposal-title">Program adı</label><input id="proposal-title" name="title" required minlength="8" placeholder="Örn. Dijital Üretimde Veri Okuryazarlığı" /></div><div class="field"><label for="proposal-unit">Akademik birim</label><select id="proposal-unit" name="unit"><option>Mühendislik Fakültesi</option><option>Eğitim Fakültesi</option><option>Lisansüstü Eğitim Enstitüsü</option><option>Sürekli Eğitim Merkezi</option></select></div><div class="field"><label for="proposal-audience">Hedef kitle</label><input id="proposal-audience" name="audience" value="Lisans öğrencileri ve yeni mezunlar" /></div><div class="field full"><label class="required" for="proposal-summary">Program özeti</label><textarea id="proposal-summary" name="summary" required minlength="20" placeholder="Programın amacı ve kapsamı"></textarea></div></div></section>
-        <section class="form-section"><h3>Akademik yapı ve pilot parametreler</h3><p>1 AKTS = 25 saat, TYÇ düzeyi ve oranlar yalnız pilot ön kontrolüdür; kurumsal doğrulama gerekir.</p><div class="form-grid"><div class="field"><label class="required" for="proposal-ects">Önerilen AKTS</label><input id="proposal-ects" name="ects" type="number" min="1" max="12" value="3" required /></div><div class="field"><label for="proposal-workload">Kavramsal iş yükü</label><input id="proposal-workload" name="workload" type="number" value="75" readonly /><small>AKTS × 25 saat pilot hesabı</small></div><div class="field"><label for="proposal-level">Önerilen TYÇ düzeyi</label><select id="proposal-level" name="level"><option value="5">5 • Önlisans</option><option value="6" selected>6 • Lisans</option><option value="7">7 • Yüksek lisans</option><option value="8">8 • Doktora</option></select></div><div class="field"><label for="proposal-remote">Uzaktan sunum oranı (%)</label><input id="proposal-remote" name="remoteRate" type="number" min="0" max="100" value="40" /></div><div class="field full"><label class="required" for="proposal-outcomes">Öğrenme çıktıları</label><textarea id="proposal-outcomes" name="outcomes" required minlength="20" placeholder="Her satıra bir ölçülebilir öğrenme çıktısı yazın"></textarea></div></div></section>
+        <section class="form-section"><h3>Akademik yapı ve pilot parametreler</h3><p>1 AKTS = 25 saat, TYÇ düzeyi ve oranlar yalnız pilot ön kontrolüdür; kurumsal doğrulama gerekir.</p><div class="form-grid"><div class="field"><label class="required" for="proposal-ects">Önerilen AKTS</label><input id="proposal-ects" name="ects" type="number" min="1" max="12" value="3" required /></div><div class="field"><label for="proposal-workload">Kavramsal iş yükü</label><input id="proposal-workload" name="workload" type="number" value="75" readonly /><small>AKTS × 25 saat pilot hesabı</small></div><div class="field"><label for="proposal-level">Eğiticinin başlangıç TYÇ düzeyi</label><select id="proposal-level" name="level"><option value="1">1 • Temel başlangıç</option><option value="2">2 • Temel olgusal</option><option value="3">3 • Başlangıç kuramsal</option><option value="4">4 • Orta düzey</option><option value="5">5 • Önlisans bandı</option><option value="6" selected>6 • Lisans bandı</option><option value="7">7 • Yüksek lisans bandı</option><option value="8">8 • Doktora bandı</option></select><small>Motor TYÇ ve AYÇ düzeylerini ayrı önerir. 1–4 seviyelerinde TYYÇ/Bologna yükseköğretim döngüsü crosswalk'u üretilmez.</small></div><div class="field"><label for="proposal-remote">Uzaktan sunum oranı (%)</label><input id="proposal-remote" name="remoteRate" type="number" min="0" max="100" value="40" /></div><div class="field full"><label class="required" for="proposal-outcomes">Öğrenme çıktıları</label><textarea id="proposal-outcomes" name="outcomes" data-smart-outcome required minlength="20" placeholder="Her satıra bir ölçülebilir öğrenme çıktısı yazın&#10;Örn. Karmaşık bir veri setinin güvenilirliğini eleştirel ölçütlerle değerlendirir.&#10;Örn. Kanıta dayalı bir görselleştirme tasarlar ve gerekçelendirir."></textarea><small>Her satır ayrı analiz edilir. Ölçülebilir fiil, karmaşıklık, özerklik ve kanıt işaretleri 320 ms sonra otomatik değerlendirilir.</small></div></div></section>
+        <section class="form-section smart-qualification-shell" id="smart-alignment-form" aria-labelledby="smart-alignment-title"><div class="smart-alignment-header"><div><span class="page-kicker">Açıklanabilir pilot analiz</span><h3 id="smart-alignment-title">Akıllı Yeterlilik Eşleme</h3><p>Her öğrenme çıktısı için TYÇ ve AYÇ/EQF ayrı önerilir; seçme ve uygulama yalnız sizin onayınızla gerçekleşir.</p></div><button class="button button--secondary button--sm" type="button" data-action="reanalyze-smart-suggestions">${icon("refresh")} Yeniden analiz et</button></div>
+          ${notice("warning", "Öneri karar değildir", QUALIFICATION_ADVISORY_NOTICE)}
+          <input id="proposal-smart-mapping" name="qualificationMapping" type="hidden" value="{}" />
+          <div id="smart-suggestion-results" class="smart-suggestion-results" aria-live="polite" aria-busy="false">${renderSmartSuggestionReport(null)}</div>
+          <div class="smart-applied-fields" data-smart-override><div class="field full"><label for="proposal-smart-content">Uygulanan içerik önerileri</label><textarea id="proposal-smart-content" name="smartContent" placeholder="Bir TYÇ/AYÇ önerisini uyguladığınızda doldurulur; eğitici tarafından serbestçe düzeltilebilir."></textarea></div><div class="field full"><label for="proposal-smart-assessment">Uygulanan ölçme-değerlendirme önerileri</label><textarea id="proposal-smart-assessment" name="smartAssessment" placeholder="Öneriyi uygulayın veya kendi ölçme yönteminizi yazın."></textarea></div><div class="field full"><label for="proposal-smart-evidence">Uygulanan başarı kanıtı önerileri</label><textarea id="proposal-smart-evidence" name="smartEvidence" placeholder="Rubrik, ürün, performans veya değerlendirici kayıt izini düzenleyin."></textarea></div></div>
+          <div class="permission-note"><strong>İnsan kontrolü zorunlu</strong><span>Otomatik analiz hiçbir alanı sessizce uygulamaz. Eğitici öneriyi seçer, gerekirse insan gerekçesiyle düzeltir; Komisyon aynı kaydı salt-okunur inceler.</span></div>
+        </section>
         <section class="form-section"><h3>Ölçme, kanıt ve kalite güvencesi</h3><p>Gerçek kimlik veya biyometrik veri yüklemeyin. Dosya alanı yalnız üst veri simülasyonudur.</p><div class="form-grid"><div class="field"><label for="proposal-assessment">Birincil değerlendirme</label><select id="proposal-assessment" name="assessment"><option>Proje + rubrik</option><option>Portfolyo + sözlü sunum</option><option>Uygulama + kısa sınav</option></select></div><div class="field"><label for="proposal-evidence">Pilot kanıt sayısı</label><input id="proposal-evidence" name="evidence" type="number" min="1" value="3" /></div><div class="field full"><label class="required" for="proposal-qualifications">Eğitici yeterlilikleri</label><textarea id="proposal-qualifications" name="qualifications" required minlength="15" placeholder="Alan uzmanlığı, öğretim deneyimi ve doğrulanacak kanıtlar"></textarea></div><div class="field full"><label class="required" for="proposal-quality">Kalite güvence planı</label><textarea id="proposal-quality" name="quality" required minlength="15" placeholder="Rubrik kalibrasyonu, geri bildirim ve kanıt saklama yaklaşımı"></textarea></div><div class="field"><label for="proposal-fee-mode">Program türü</label><select id="proposal-fee-mode" name="feeMode"><option>Ücretsiz</option><option>Ücretli • Pilot taslak</option></select></div><div class="field"><label for="proposal-fee">Örnek ücret (TL)</label><input id="proposal-fee" name="fee" type="number" min="0" value="0" /><small>Pilot parametre — mali birim doğrulaması gerekir</small></div><button class="dropzone full" type="button" data-action="mock-upload">${icon("upload")}<strong>Sentetik kanıt üst verisi ekle</strong><span>PDF, PNG veya JPG • Dosya içeriği aktarılmaz</span></button></div></section>
         <div class="form-actions"><button class="button button--secondary" type="button" data-action="save-draft">Taslağı kaydet</button><button class="button button--secondary" type="button" data-action="preview-proposal">Ön izle</button><button class="button" type="submit">${submitLabel} ${icon("arrow")}</button></div>
       </form>
@@ -640,7 +1273,7 @@ function applicationsPage() {
 function applicationRow(item) {
   const progress = Math.min(100, Math.round(item.elapsedDays / 30 * 100));
   const remaining = Math.max(0, 30 - item.elapsedDays);
-  return `<tr data-application-status="${item.status}" data-searchable="${escapeHtml(`${item.code} ${item.title} ${item.applicant}`.toLocaleLowerCase("tr-TR"))}"><td><span class="table-title">${escapeHtml(item.title)}</span><span class="table-subtitle">${escapeHtml(item.code)} • ${formatDate(item.submittedAt)}</span></td><td>${item.kind === "external" ? "Dış kazanım" : "Program önerisi"}<span class="table-subtitle">${escapeHtml(item.applicant)}</span></td><td>${statusBadge(item.status)}</td><td><div class="progress ${progress > 65 ? "progress--warning" : ""}" role="progressbar" aria-label="${escapeHtml(item.code)} değerlendirme süresi" aria-valuemin="0" aria-valuemax="30" aria-valuenow="${Math.min(30, item.elapsedDays)}" aria-valuetext="${item.elapsedDays} gün geçti, ${remaining} gün kaldı"><span style="width:${progress}%"></span></div><div class="progress-labels"><span>${item.elapsedDays}/30 gün</span><span>${remaining} gün</span></div></td><td><strong>%${item.similarity}</strong> benzerlik<span class="table-subtitle">TYÇ önerisi %${item.tycMatch}</span></td><td><button class="button button--secondary button--sm" data-action="open-application" data-id="${item.id}">İncele</button></td></tr>`;
+  return `<tr data-application-status="${escapeHtml(item.status)}" data-searchable="${escapeHtml(`${item.code} ${item.title} ${item.applicant}`.toLocaleLowerCase("tr-TR"))}"><td><span class="table-title">${escapeHtml(item.title)}</span><span class="table-subtitle">${escapeHtml(item.code)} • ${formatDate(item.submittedAt)}</span></td><td>${item.kind === "external" ? "Dış kazanım" : "Program önerisi"}<span class="table-subtitle">${escapeHtml(item.applicant)}</span></td><td>${statusBadge(item.status)}</td><td><div class="progress ${progress > 65 ? "progress--warning" : ""}" role="progressbar" aria-label="${escapeHtml(item.code)} değerlendirme süresi" aria-valuemin="0" aria-valuemax="30" aria-valuenow="${Math.min(30, item.elapsedDays)}" aria-valuetext="${item.elapsedDays} gün geçti, ${remaining} gün kaldı"><span style="width:${progress}%"></span></div><div class="progress-labels"><span>${item.elapsedDays}/30 gün</span><span>${remaining} gün</span></div></td><td><strong>%${item.similarity}</strong> benzerlik<span class="table-subtitle">TYÇ önerisi %${item.tycMatch}</span></td><td><button class="button button--secondary button--sm" data-action="open-application" data-id="${escapeHtml(item.id)}">İncele</button></td></tr>`;
 }
 
 function recognitionPage() {
@@ -658,13 +1291,13 @@ function commissionPage() {
   if (!application) {
     return `<div class="page-container">${pageHeader("Evre 2 • Akademik karar desteği", "Komisyon karar masası", "Seçili demo rolünün görev kapsamında incelenebilir bir başvuru bulunmuyor.")}${notice("warning", "Karar değil, pilot analiz", "Yapay zekâ hiçbir durumda akademik karar vermez; karar yetkili Komisyon ve kuruldadır.")}<div class="card empty-state section"><div class="empty-icon">${icon("file")}</div><h3>İncelenecek başvuru yok</h3><p>Gönderilmiş bir program veya dış kazanım başvurusu oluştuğunda yalnız role açık kayıtlar burada görünür.</p><button class="button button--secondary" data-nav="applications">Başvurulara dön</button></div></div>`;
   }
-  const tabs = [["summary","Özet"],["evidence","Kanıtlar"],["curriculum","Müfredat eşleme"],["history","Karar geçmişi"]];
+  const tabs = [["summary","Özet"],["smart","Akıllı eşleme"],["evidence","Kanıtlar"],["curriculum","Müfredat eşleme"],["history","Karar geçmişi"]];
   const decisionActions = application.status !== "commission"
     ? notice("success", "Karar kaydı kapalı", "Bu başvuru artık Komisyon gündeminde değildir. Geçmiş ve kanıtlar salt-okunur görüntülenebilir.")
     : state.roleId === "commission"
-    ? `<div class="decision-buttons"><button class="button button--success" data-action="decision" data-id="${application.id}" data-status="approved">${icon("check")} Pilot onayını kaydet</button><button class="button button--secondary" data-action="decision" data-id="${application.id}" data-status="revision">Revizyon iste</button><button class="button button--secondary" data-action="decision" data-id="${application.id}" data-status="commission">Çekimser görüş ekle</button><button class="button button--danger" data-action="decision" data-id="${application.id}" data-status="rejected">Gerekçeli pilot ret</button></div>`
+    ? `<div class="decision-buttons"><button class="button button--success" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="approved">${icon("check")} Pilot onayını kaydet</button><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="revision">Revizyon iste</button><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="commission">Çekimser görüş ekle</button><button class="button button--danger" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="rejected">Gerekçeli pilot ret</button></div>`
     : state.roleId === "coordinator"
-      ? `<div class="decision-buttons"><button class="button button--secondary" data-action="decision" data-id="${application.id}" data-status="revision">Eksik kanıt için revizyon iste</button></div>${notice("warning", "Koordinatörlük yetkisi", "Koordinatörlük ön inceleme ve revizyon isteği oluşturabilir; akademik onay veya ret Komisyon demo rolüne aittir.")}`
+      ? `<div class="decision-buttons"><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="revision">Eksik kanıt için revizyon iste</button></div>${notice("warning", "Koordinatörlük yetkisi", "Koordinatörlük ön inceleme ve revizyon isteği oluşturabilir; akademik onay veya ret Komisyon demo rolüne aittir.")}`
       : notice("warning", "Salt-okunur karar görünümü", "Sistem yöneticisi akademik karar kaydedemez. Bu rol yalnız pilot yapılandırma ve denetim görünümünü inceler.");
   return `<div class="page-container">${pageHeader("Evre 2 • Akademik karar desteği", "Komisyon karar masası", "Yapay zekâ karar vermez; komisyonun karşılaştırılabilir kanıt, pilot mevzuat ön kontrolleri ve denetim izi üzerinden gerekçeli karar oluşturmasını destekler.")}
     ${notice("warning", "Karar değil, pilot analiz", "Bu çıktı komisyon incelemesini destekleyen karşılaştırılabilir bir pilot analizidir. Nihai akademik karar yetkili kurulundur.")}
@@ -676,6 +1309,11 @@ function commissionPage() {
 }
 
 function commissionTab(application, tab) {
+  if (tab === "smart") {
+    const record = smartAlignmentForApplication(application);
+    const report = smartReportForAlignment(record, application);
+    return `<div class="section">${smartReadOnlyReview(record, report, { application })}</div>`;
+  }
   if (tab === "evidence") return `<div class="section"><div class="grid grid-2">${["Program bilgi paketi","Öğrenme çıktısı matrisi","Ölçme rubriği","Eğitici yeterlilik kanıtı","İş yükü hesabı","Kalite güvence planı"].map((title,index) => `<article class="card"><div class="card-body"><div class="integration-head"><div><strong>${escapeHtml(title)}</strong><span class="table-subtitle">Sentetik belge metadata • PDF</span></div>${index < application.evidence ? statusBadge("approved","Mevcut") : statusBadge("review","Bekliyor")}</div></div></article>`).join("")}</div></div>`;
   if (tab === "curriculum") return `<div class="section"><h3>Öğrenme çıktısı eşleme matrisi</h3><div class="matrix">${[["Veri kaynağını değerlendirir","Veri güvenilirliği ölçütlerini uygular",82],["Temel görselleştirmeyi yorumlar","Grafik ve tablo yorumlar",64],["Kanıta dayalı kısa analiz üretir","İstatistiksel çıkarım yapar",38]].map(([a,b,value]) => `<div class="matrix-row"><span>${a}<small class="table-subtitle">Önerilen program</small></span><span>${b}<small class="table-subtitle">${escapeHtml(application.comparedCourse)}</small></span><strong>%${value}</strong></div>`).join("")}</div>${notice("warning", "Yorum gerektirir", "Eşleme oranları deterministik pilot örnektir; otomatik onay veya ret üretmez.")}</div>`;
   if (tab === "history") return `<div class="section"><div class="timeline">${state.audit.filter((event) => event.entityId === application.id).map(auditTimeline).join("") || `<p class="page-subtitle">Bu başvuru için kayıtlı olay bulunamadı.</p>`}</div></div>`;
@@ -714,7 +1352,7 @@ function walletPage() {
     ? state.credentials.map(credentialCard).join("")
     : `<section class="card empty-state"><div class="empty-icon">${icon("wallet")}</div><h3>Henüz pilot yeterlilik yok</h3><p>Uçtan uca program senaryosu tamamlandığında yapılandırılmış belge burada görünür.</p></section>`;
   const verifyAction = state.credentials[0]
-    ? `<button class="button button--secondary button--sm" data-action="open-credential" data-code="${state.credentials[0].code}">Doğrulama sayfasını aç</button>`
+    ? `<button class="button button--secondary button--sm" data-action="open-credential" data-code="${escapeHtml(state.credentials[0].code)}">Doğrulama sayfasını aç</button>`
     : `<span class="table-subtitle">Doğrulama için önce pilot yeterlilik oluşturulmalıdır.</span>`;
   return `<div class="page-container">${pageHeader("Evre 4 • Yapılandırılmış belge", "Dijital yeterlilik cüzdanı", "Pilot belgeler yalnız bu Preview ortamında doğrulanır; gerçek W3C/Open Badges uygunluk testi, kurumsal imza veya dış cüzdan yayını yapılmaz.", `<button class="button button--secondary" data-action="verify-code">${icon("search")} Kodla doğrula</button>`)}
     <figure class="editorial-figure editorial-figure--wide"><img src="assets/illustrations/digital-wallet.webp" alt="Üniversite kaydı, öğrenen dijital cüzdanı ve doğrulayıcı kurum arasındaki güven zinciri illüstrasyonu" width="960" height="668" loading="lazy" /><figcaption>Taşınabilirlik hedefi, iptal farkındalığı ve Preview içi doğrulama birlikte görünür.</figcaption></figure>
@@ -791,6 +1429,76 @@ function matrixDimensionCard(dimension, label, descriptorText, row, editable, ca
   </fieldset>`;
 }
 
+function visibleSmartAlignments() {
+  const records = state.smartAlignments || [];
+  if (PROPOSAL_ROLES.has(state.roleId)) return records.filter((item) => item.ownerRole === state.roleId && item.ownerName === currentRole().name);
+  if (["coordinator", "commission", "admin"].includes(state.roleId)) return records;
+  return [];
+}
+
+function smartReportForAlignment(record, application = null) {
+  const program = state.programs.find((item) => item.id === record?.programId || item.code === record?.applicationCode || item.code === application?.code);
+  const outcomeTexts = program?.outcomes?.length
+    ? program.outcomes
+    : record?.outcomes?.map((item) => item.text).filter(Boolean)?.length
+      ? record.outcomes.map((item) => item.text)
+      : Array.isArray(application?.formData?.outcomes) && application.formData.outcomes.length
+        ? application.formData.outcomes
+        : [
+          "Veri kaynağının güvenilirliğini eleştirel ölçütlerle değerlendirir.",
+          "Karmaşık bir veri problemi için kanıta dayalı çözüm tasarlar.",
+          "Proje sürecinde etik sorumluluk alır ve ekip kararlarını gerekçelendirir."
+        ];
+  try {
+    return suggestProgramQualificationAlignment({
+      programId: program?.id || record?.programId || application?.id || "pilot-program",
+      outcomes: outcomeTexts.map((text, index) => ({ id: record?.outcomes?.[index]?.outcomeId || `LO-${index + 1}`, text })),
+      preferredLevels: { tyc: Number(program?.level || 6), eqf: Number(program?.level || 6) },
+      manualOverrides: record?.manualOverrides || [],
+      boardDecision: record?.boardDecision?.source === "human_commission" ? {
+        actorRole: "commission",
+        decision: record.boardDecision.decision,
+        decidedBy: record.boardDecision.decidedBy,
+        rationale: record.boardDecision.rationale,
+        tycLevel: record.boardDecision.decidedLevels?.tyc,
+        eqfLevel: record.boardDecision.decidedLevels?.eqf,
+        decidedAt: record.boardDecision.decidedAt,
+        meetingReference: record.boardDecision.meetingReference
+      } : null
+    });
+  } catch {
+    return null;
+  }
+}
+
+function smartAlignmentForApplication(application) {
+  return (state.smartAlignments || []).find((item) => item.applicationId === application?.id || item.applicationCode === application?.code) || null;
+}
+
+function smartAlignmentDecisionStatus(record) {
+  const decision = record?.boardDecision;
+  if (!decision || decision.source !== "human_commission") return notice("warning", "İnsan kurul kararı bekleniyor", "Motor önerisi ve eğitici seçimi akademik karar değildir. Komisyon kararı ayrı bir kayıt olarak tutulur.");
+  const labels = { approved: "İnsan kurul onayı", revision_requested: "İnsan kurul revizyon isteği", rejected: "İnsan kurul reddi", deferred: "İnsan kurul ertelemesi" };
+  return notice(decision.decision === "approved" ? "success" : "warning", labels[decision.decision] || "İnsan kurul kararı", `${decision.decidedBy} • ${decision.rationale} • TYÇ ${decision.decidedLevels?.tyc} / AYÇ ${decision.decidedLevels?.eqf}. Öneri kaydı değiştirilmedi.`);
+}
+
+function smartReadOnlyReview(record, report, { application = null, compact = false } = {}) {
+  if (!report) return notice("risk", "Akıllı eşleme okunamadı", "Kayıt için güvenli pilot öneri yeniden üretilemedi; insan incelemesi ve kaynak matrisi kullanılmalıdır.");
+  const appliedSelections = record?.appliedSelections || [];
+  const boardAction = record && application && state.roleId === "commission" && application.status === "commission"
+    ? `<button class="button button--secondary button--sm" type="button" data-action="qualification-board-decision" data-id="${escapeHtml(application.id)}">${record.boardDecision ? "Ayrı kurul kaydını güncelle" : "Ayrı insan kurul kararı kaydet"}</button>`
+    : "";
+  const header = `<div class="smart-review-head"><div><span class="page-kicker">${escapeHtml(record?.applicationCode || application?.code || "Pilot kayıt")}</span><h3>${escapeHtml(record?.programTitle || application?.title || "Akıllı yeterlilik eşlemesi")}</h3><p>${escapeHtml(record?.ownerName || application?.applicant || "Eğitici pilot kullanıcısı")} • ${appliedSelections.length} kullanıcı onaylı seçim • Motor ${escapeHtml(record?.engineVersion || QUALIFICATION_SUGGESTION_ENGINE_VERSION)}</p></div>${boardAction}</div>`;
+  if (compact) return `<article class="card smart-review-card" data-smart-review><div class="card-body">${header}${smartProgramSummary(report)}${smartAlignmentDecisionStatus(record)}<details><summary>Salt-okunur eşleme ayrıntısını aç</summary><div class="smart-review-details">${renderSmartSuggestionReport(report, { interactive: false, appliedSelections })}</div></details></div></article>`;
+  return `<section class="smart-readonly-review" data-smart-review>${header}${notice("warning", "Öneri karar değildir", QUALIFICATION_ADVISORY_NOTICE)}${smartAlignmentDecisionStatus(record)}${renderSmartSuggestionReport(report, { interactive: false, appliedSelections })}</section>`;
+}
+
+function smartAlignmentLibrary() {
+  const records = visibleSmartAlignments();
+  if (!records.length) return `<section class="card section" data-smart-review><div class="card-body"><h2>Programla bağlı akıllı eşleme kayıtları</h2><p class="page-subtitle">Henüz bu role görünür bir akıllı eşleme kaydı yok. İç veya dış eğitici, program önerisinde öğrenme çıktılarını analiz edip taslağı kaydettiğinde applicationId/programId bağlantısı burada salt-okunur görünür.</p></div></section>`;
+  return `<section class="section" aria-labelledby="smart-library-title"><div class="section-heading"><div><span class="page-kicker">Aynı pilot kayıtları</span><h2 id="smart-library-title">Programla bağlı akıllı eşlemeler</h2><p>Program önerisi ekranındaki TYÇ/AYÇ seçimleri burada aynı applicationId/programId bağıyla incelenir.</p></div></div><div class="grid">${records.map((record) => smartReadOnlyReview(record, smartReportForAlignment(record), { compact: true })).join("")}</div></section>`;
+}
+
 function frameworksPage() {
   const framework = qualificationFrameworks.find((item) => item.id === currentFrameworkTab) || qualificationFrameworks[0];
   const descriptor = findQualificationDescriptor(framework.id, currentFrameworkLevel) || qualificationLevelDescriptors.find((item) => item.frameworkId === framework.id);
@@ -824,6 +1532,7 @@ function frameworksPage() {
       <div class="matrix-editor">${dimensions.map(([dimension, label, text, canonical], index) => matrixDimensionCard(dimension, label, text, rows[index], editable, canonical, eqfTranslationNote)).join("")}</div>
       <div class="form-actions"><span class="table-subtitle">Şablon ve örnekler sentetiktir; resmî metinler salt okunur kaynak alanlarıdır.</span>${actions}</div>
     </form>
+    ${smartAlignmentLibrary()}
     <section class="card section"><div class="card-header"><div><h2>Veri kapsamı ve provenans</h2><p>Supabase kataloğu resmî referans ile pilot çalışma verisini ayırır.</p></div>${statusBadge("approved", "16/16 seviye")}</div><div class="card-body"><div class="grid grid-3"><div><strong>8 TYÇ seviyesi</strong><p class="page-subtitle">MYK resmî Türkçe tanımlayıcıları</p></div><div><strong>8 AYÇ/EQF seviyesi</strong><p class="page-subtitle">Europass kanonik İngilizce + ayrı Türkçe görünüm</p></div><div><strong>Toplu portal aynası yok</strong><p class="page-subtitle">Yalnız kaynak, lisans ve yerleştirme durumu izlenen sınırlı kamu üst verisi alınır.</p></div></div></div></section>
     <section class="card section"><div class="card-header"><div><h2>KDPÜ program referansları</h2><p>Türkiye Yeterlilikler Veri Tabanı'ndan doğrulanan sınırlı kamu üst verisi; tam katalog değildir.</p></div>${statusBadge("simulated", `${officialQualificationReferences.length} kaynak kayıt`)}</div><div class="table-wrap"><table><caption class="sr-only">KDPÜ resmî yeterlilik referansları</caption><thead><tr><th scope="col">Kod / program</th><th scope="col">Tür</th><th scope="col">Seviye</th><th scope="col">Yerleştirme durumu</th><th scope="col">Kaynak</th></tr></thead><tbody>${officialQualificationReferences.map((item) => `<tr><td><span class="table-title">${escapeHtml(item.qualificationCode)}</span><span class="table-subtitle">${escapeHtml(item.qualificationTitle)}</span></td><td>${escapeHtml(item.qualificationType)}</td><td>TYÇ ${item.tycLevel}${item.eqfLevel ? ` • AYÇ ${item.eqfLevel}` : ""}</td><td>${item.placementStatus === "not_placed" ? statusBadge("disconnected", "TYÇ'ye yerleştirilmedi") : statusBadge("simulated", "Yerleştirme doğrulanmadı")}</td><td><a class="text-button" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kaydı aç</a></td></tr>`).join("")}</tbody></table></div></section>
     <section class="grid grid-2 section" aria-label="Yeterlilik veri kaynağı kütüğü">${qualificationDatasetRegistry.map((dataset) => `<article class="card"><div class="card-body"><span class="table-subtitle">${escapeHtml(dataset.publisherName)}</span><h3>${escapeHtml(dataset.datasetName)}</h3><p class="page-subtitle">${escapeHtml(dataset.coverageNote)}</p><div class="permission-note"><strong>Alım: manuel doğrulanmış anlık görüntü</strong><span>${escapeHtml(dataset.licenceNote)}</span></div><a class="button button--secondary button--sm" href="${escapeHtml(dataset.documentationUrl)}" target="_blank" rel="noreferrer">Kaynak açıklaması</a></div></article>`).join("")}</section>
@@ -873,7 +1582,7 @@ function integrationCard(item) {
     : `<span class="integration-governance">Kontrollü pilot adayı</span>`;
   const relevanceLabels = { core: "Core", supporting: "Supporting", adjacent: "Adjacent" };
   const detailLabel = item.consultationOnly ? "Referans ayrıntısı" : "Dry-run ayrıntısı";
-  return `<article class="card integration-card" data-system-id="${escapeHtml(item.id)}" data-integration-tier="${escapeHtml(item.integrationTier)}" data-myys-relevance="${escapeHtml(item.myysRelevance)}" data-consultation-only="${item.consultationOnly}" data-public-url="${escapeHtml(item.publicUrl)}" data-source-url="${escapeHtml(item.sourceUrl)}" data-searchable="${escapeHtml(searchable)}"><div class="card-body"><div class="integration-head"><span class="integration-mark">${escapeHtml(item.name.split(" ")[0].slice(0,5))}</span>${statusBadge(item.status)}</div><div class="integration-tags"><span>Tier ${item.stage}</span><span>MYYS: ${relevanceLabels[item.myysRelevance] || escapeHtml(item.myysRelevance)}</span><span>${escapeHtml(item.category)}</span><span>${escapeHtml(item.systemClass)}</span></div>${governanceBadge}<h3>${escapeHtml(item.name)}</h3><p class="page-subtitle integration-purpose">${escapeHtml(item.purposeProposal)}</p><dl><dt>Veri yönü</dt><dd>${escapeHtml(item.dataDirection)}</dd><dt>Onay kapısı</dt><dd>${escapeHtml(item.approvalGate)}</dd><dt>Deneme</dt><dd>${item.attempts || 0}</dd><dt>Son durum</dt><dd>${escapeHtml(item.lastTest)}</dd></dl>${referenceLinks}</div><div class="card-footer"><span class="status status--neutral">Gerçek veri yok</span><button class="button button--secondary button--sm" data-action="open-integration" data-id="${item.id}">${detailLabel}</button></div></article>`;
+  return `<article class="card integration-card" data-system-id="${escapeHtml(item.id)}" data-integration-tier="${escapeHtml(item.integrationTier)}" data-myys-relevance="${escapeHtml(item.myysRelevance)}" data-consultation-only="${item.consultationOnly}" data-public-url="${escapeHtml(item.publicUrl)}" data-source-url="${escapeHtml(item.sourceUrl)}" data-searchable="${escapeHtml(searchable)}"><div class="card-body"><div class="integration-head"><span class="integration-mark">${escapeHtml(item.name.split(" ")[0].slice(0,5))}</span>${statusBadge(item.status)}</div><div class="integration-tags"><span>Tier ${item.stage}</span><span>MYYS: ${relevanceLabels[item.myysRelevance] || escapeHtml(item.myysRelevance)}</span><span>${escapeHtml(item.category)}</span><span>${escapeHtml(item.systemClass)}</span></div>${governanceBadge}<h3>${escapeHtml(item.name)}</h3><p class="page-subtitle integration-purpose">${escapeHtml(item.purposeProposal)}</p><dl><dt>Veri yönü</dt><dd>${escapeHtml(item.dataDirection)}</dd><dt>Onay kapısı</dt><dd>${escapeHtml(item.approvalGate)}</dd><dt>Deneme</dt><dd>${item.attempts || 0}</dd><dt>Son durum</dt><dd>${escapeHtml(item.lastTest)}</dd></dl>${referenceLinks}</div><div class="card-footer"><span class="status status--neutral">Gerçek veri yok</span><button class="button button--secondary button--sm" data-action="open-integration" data-id="${escapeHtml(item.id)}">${detailLabel}</button></div></article>`;
 }
 
 function financePage() {
@@ -899,9 +1608,9 @@ function financePaymentQueue(requests) {
     ? requests.map((request) => {
         const actionButtons = state.roleId === "finance"
           ? request.status === "pending_finance"
-            ? `<button class="button button--success button--sm" data-action="payment-review" data-id="${request.id}" data-status="approved">Mali ön onay</button><button class="button button--secondary button--sm" data-action="payment-review" data-id="${request.id}" data-status="revision">Düzeltme iste</button>`
+            ? `<button class="button button--success button--sm" data-action="payment-review" data-id="${escapeHtml(request.id)}" data-status="approved">Mali ön onay</button><button class="button button--secondary button--sm" data-action="payment-review" data-id="${escapeHtml(request.id)}" data-status="revision">Düzeltme iste</button>`
             : request.status === "approved"
-              ? `<button class="button button--success button--sm" data-action="payment-review" data-id="${request.id}" data-status="reconciled">Mutabakatı tamamla</button><button class="button button--secondary button--sm" data-action="payment-review" data-id="${request.id}" data-status="revision">Düzeltme iste</button>`
+              ? `<button class="button button--success button--sm" data-action="payment-review" data-id="${escapeHtml(request.id)}" data-status="reconciled">Mutabakatı tamamla</button><button class="button button--secondary button--sm" data-action="payment-review" data-id="${escapeHtml(request.id)}" data-status="revision">Düzeltme iste</button>`
               : `<span class="table-subtitle">${request.status === "revision" ? "Öğrenen düzeltmesi bekleniyor" : request.status === "draft" ? "Öğrenen gönderimi bekleniyor" : "İşlem tamamlandı"}</span>`
           : `<span class="table-subtitle">Teknik salt-okunur görünüm</span>`;
         return `<tr><td><span class="table-title">${escapeHtml(request.id)}</span><span class="table-subtitle">${formatDate(request.createdAt, true)}</span></td><td>${escapeHtml(request.learner)}</td><td>${escapeHtml(request.program)}<span class="table-subtitle">${escapeHtml(request.programCode)}</span></td><td>${formatCurrency(request.amount)}<span class="table-subtitle">${escapeHtml(request.channel)}</span></td><td>${paymentStatusBadge(request)}</td><td><div class="table-actions">${actionButtons}</div></td></tr>`;
@@ -1007,7 +1716,7 @@ function openProgram(id) {
   if (!program) return;
   if (!visiblePrograms().some((item)=>item.id===program.id)) { deny("Bu program seçili demo rolünün görünür kayıtları arasında değildir."); return; }
   const applyLabel = Number(program.price) > 0 ? "Başvuru ve ödeme demosuna geç" : "Ücretsiz pilot kayıt oluştur";
-  const applyAction = state.roleId === "learner" ? `<button class="button" data-action="apply-program" data-id="${program.id}">${applyLabel}</button>` : "";
+  const applyAction = state.roleId === "learner" ? `<button class="button" data-action="apply-program" data-id="${escapeHtml(program.id)}">${applyLabel}</button>` : "";
   openModal(modalTemplate(program.title, `<div class="program-meta"><span class="meta-pill">${program.code}</span><span class="meta-pill">${program.ects} AKTS</span><span class="meta-pill">${program.workload} saat</span><span class="meta-pill">TYÇ ${program.level} önerisi</span><span class="meta-pill">${Number(program.price) > 0 ? `${formatCurrency(program.price)} • ödeme demosu` : "Ücretsiz • pilot"}</span></div><p class="page-subtitle">${escapeHtml(program.summary)}</p><div class="section"><h3>Öğrenme çıktıları</h3><ul class="page-subtitle">${program.outcomes.map((item)=>`<li>${escapeHtml(item)}</li>`).join("")}</ul></div>${notice("warning","Pilot program", Number(program.price) > 0 ? "Gerçek kayıt veya ödeme alınmaz. Devam ettiğinizde ödeme aracı bilgisi istemeyen demo sayfasına ve ardından Finans / Döner Sermaye inceleme kuyruğuna yönlendirilirsiniz." : "Bu ücretsiz program yalnızca sentetik pilot eğitim kaydı oluşturur; gerçek öğrenci kaydı değildir.")}`, `<button class="button button--secondary" data-action="close-modal">Kapat</button>${applyAction}`));
 }
 
@@ -1028,7 +1737,100 @@ function decisionModal(id, nextStatus) {
     return;
   }
   const labels = { approved: "Pilot onayı", revision: "Revizyon isteği", rejected: "Pilot ret", commission: "Çekimser görüş" };
-  openModal(modalTemplate(`${labels[nextStatus]} kaydı`, `<form id="decision-form"><input type="hidden" name="id" value="${item.id}" /><input type="hidden" name="status" value="${nextStatus}" /><div class="field"><label class="required" for="decision-reason">Gerekçe</label><textarea id="decision-reason" name="reason" required minlength="12" placeholder="Kanıtları, akademik değerlendirmeyi ve karar gerekçesini yazın"></textarea><small>Gerekçe audit izine eklenir ve sonradan görünür kalır.</small></div><div class="field" style="margin-top:14px"><label><input type="checkbox" name="confirm" required /> Bu kaydın yalnız kontrollü pilot kararı olduğunu onaylıyorum.</label></div></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "rejected" ? "button--danger" : nextStatus === "approved" ? "button--success" : ""}" data-action="submit-decision">Gerekçeli kaydı oluştur</button>`));
+  openModal(modalTemplate(`${labels[nextStatus]} kaydı`, `<form id="decision-form"><input type="hidden" name="id" value="${escapeHtml(item.id)}" /><input type="hidden" name="status" value="${escapeHtml(nextStatus)}" /><div class="field"><label class="required" for="decision-reason">Gerekçe</label><textarea id="decision-reason" name="reason" required minlength="12" placeholder="Kanıtları, akademik değerlendirmeyi ve karar gerekçesini yazın"></textarea><small>Gerekçe audit izine eklenir ve sonradan görünür kalır.</small></div><div class="field" style="margin-top:14px"><label><input type="checkbox" name="confirm" required /> Bu kaydın yalnız kontrollü pilot kararı olduğunu onaylıyorum.</label></div></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "rejected" ? "button--danger" : nextStatus === "approved" ? "button--success" : ""}" data-action="submit-decision">Gerekçeli kaydı oluştur</button>`));
+}
+
+function qualificationBoardDecisionModal(id) {
+  if (state.roleId !== "commission") { deny("Yeterlilik kurul kararını yalnız Komisyon demo rolü kaydedebilir."); return; }
+  const application = state.applications.find((item) => item.id === id);
+  if (!application || application.status !== "commission") { deny("Yalnız Komisyon gündemindeki başvuru için ayrı yeterlilik kararı kaydedilebilir."); return; }
+  const record = smartAlignmentForApplication(application);
+  if (!record) { deny("Ayrı kurul kararı için eğitici tarafından kaydedilmiş akıllı eşleme bulunmalıdır."); return; }
+  const report = smartReportForAlignment(record, application);
+  if (!report) { deny("Kurul kararı için yeterlilik öneri anlık görüntüsü üretilemedi."); return; }
+  const existing = record?.boardDecision;
+  const tycLevel = existing?.decidedLevels?.tyc || report.program.suggestedLevels.tyc;
+  const eqfLevel = existing?.decidedLevels?.eqf || report.program.suggestedLevels.eqf;
+  openModal(modalTemplate("Ayrı insan kurul yeterlilik kararı", `<form id="qualification-board-form"><input type="hidden" name="id" value="${escapeHtml(application.id)}" /><div class="notice notice--warning">${icon("alert")}<div><strong>Motor önerisi değiştirilemez</strong>Bu kayıt, otomatik öneri ve eğitici manuel seçimini değiştirmeyen ayrı bir insan Komisyon kararıdır.</div></div><div class="form-grid section"><div class="field"><label class="required" for="qualification-board-decision">Karar</label><select id="qualification-board-decision" name="decision" required><option value="approved" ${existing?.decision === "approved" ? "selected" : ""}>Onay</option><option value="revision_requested" ${existing?.decision === "revision_requested" ? "selected" : ""}>Revizyon isteği</option><option value="rejected" ${existing?.decision === "rejected" ? "selected" : ""}>Ret</option><option value="deferred" ${existing?.decision === "deferred" ? "selected" : ""}>Erteleme</option></select></div><div class="field"><label for="qualification-board-reference">Toplantı referansı</label><input id="qualification-board-reference" name="meetingReference" value="${escapeHtml(existing?.meetingReference || "MYK-KOM-PILOT-2026-08")}" /></div><div class="field"><label class="required" for="qualification-board-tyc">İnsan kararı TYÇ düzeyi</label><select id="qualification-board-tyc" name="tycLevel">${Array.from({ length: 8 }, (_, index) => index + 1).map((level) => `<option value="${level}" ${level === Number(tycLevel) ? "selected" : ""}>TYÇ ${level}</option>`).join("")}</select></div><div class="field"><label class="required" for="qualification-board-eqf">İnsan kararı AYÇ/EQF düzeyi</label><select id="qualification-board-eqf" name="eqfLevel">${Array.from({ length: 8 }, (_, index) => index + 1).map((level) => `<option value="${level}" ${level === Number(eqfLevel) ? "selected" : ""}>AYÇ/EQF ${level}</option>`).join("")}</select></div><div class="field full"><label class="required" for="qualification-board-rationale">İnsan kurul gerekçesi</label><textarea id="qualification-board-rationale" name="rationale" required minlength="12" placeholder="Öğrenme çıktısı, tanımlayıcı, ölçme kanıtı ve program bütünlüğüne dayalı gerekçeyi yazın">${escapeHtml(existing?.rationale || "Komisyon, motor önerisini karar olarak değil karşılaştırılabilir inceleme girdisi olarak değerlendirmiştir.")}</textarea></div><label class="consent-row full"><input type="checkbox" name="confirm" required /><span>Bu kararın insan Komisyon kaydı olduğunu ve motor önerisini değiştirmediğini onaylıyorum.</span></label></div></form>`, `<button class="button button--secondary" type="button" data-action="close-modal">Vazgeç</button><button class="button" type="button" data-action="submit-qualification-board-decision">Ayrı kurul kaydını oluştur</button>`));
+}
+
+function storedAlignmentOutcomes(report, appliedSelections = []) {
+  return (report.outcomes || []).map((outcome, index) => {
+    const outcomeId = smartOutcomeId(outcome, index);
+    const text = smartOutcomeText(outcome);
+    const outcomeFingerprint = smartOutcomeFingerprint(text, index);
+    return {
+      outcomeId,
+      outcomeIndex: index,
+      outcomeFingerprint,
+      text,
+      selections: ["tyc", "eqf"].map((frameworkId) => {
+        const suggestion = smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId));
+        const applied = appliedSelections.some((item) => item.outcomeFingerprint === outcomeFingerprint && item.frameworkId === frameworkId);
+        return {
+          outcomeId,
+          outcomeIndex: index,
+          outcomeFingerprint,
+          frameworkId,
+          frameworkCode: frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF",
+          level: Number(suggestion.level),
+          dimension: suggestion.dimension,
+          score: Number(suggestion.score || 0),
+          descriptor: suggestion.descriptor || "",
+          descriptorDisplayTr: suggestion.descriptorDisplayTr || suggestion.descriptor || "",
+          rationale: suggestion.rationale || "",
+          officialSourceUrl: suggestion.officialSourceUrl || "",
+          matchedSignals: suggestion.matchedSignals || [],
+          suggestedContent: suggestion.suggestedContent || [],
+          suggestedAssessments: suggestion.suggestedAssessments || [],
+          applied,
+          manual: Boolean(suggestion.isManualOverride),
+          autonomousDecision: false,
+          institutionalValidationRequired: true
+        };
+      })
+    };
+  });
+}
+
+function submitQualificationBoardDecision(form) {
+  if (!form.reportValidity()) return;
+  if (state.roleId !== "commission") { deny("Yeterlilik kurul kararını yalnız Komisyon demo rolü kaydedebilir."); return; }
+  const data = new FormData(form);
+  const application = state.applications.find((item) => item.id === data.get("id"));
+  if (!application || application.status !== "commission") { deny("Başvuru Komisyon gündeminde değil."); return; }
+  const existing = smartAlignmentForApplication(application);
+  if (!existing) { deny("İnsan kurul kararı için eğitici tarafından kaydedilmiş akıllı eşleme bulunmalıdır."); return; }
+  const report = smartReportForAlignment(existing, application);
+  if (!report) { deny("Yeterlilik öneri anlık görüntüsü oluşturulamadı."); return; }
+  try {
+    const decidedAt = new Date().toISOString();
+    const result = recordHumanBoardQualificationDecision(report, {
+      actorRole: "commission",
+      decision: String(data.get("decision")),
+      decidedBy: currentRole().name,
+      rationale: String(data.get("rationale")),
+      tycLevel: Number(data.get("tycLevel")),
+      eqfLevel: Number(data.get("eqfLevel")),
+      decidedAt,
+      meetingReference: String(data.get("meetingReference") || "")
+    });
+    const program = state.programs.find((item) => item.id === existing.programId);
+    const record = existing;
+    record.boardDecision = result.finalDecision;
+    record.updatedAt = decidedAt;
+    application.smartAlignmentId = record.id;
+    application.formData ||= {};
+    application.formData.qualificationMapping = record;
+    if (program) program.smartAlignmentId = record.id;
+    state.audit.unshift({ id: `AUD-${Date.now()}-BOARD`, entityId: application.id, at: decidedAt, actor: currentRole().name, actorRole: "commission", action: "İnsan kurul yeterlilik kararı ayrı kaydedildi", from: application.status, to: application.status, reason: `${result.finalDecision.decision} • TYÇ ${result.finalDecision.decidedLevels.tyc} / AYÇ ${result.finalDecision.decidedLevels.eqf} • motor önerisi değiştirilmedi` });
+    saveState();
+    closeModal();
+    render();
+    toast("Ayrı insan Komisyon kararı kaydedildi; motor önerisi ve eğitici seçimi değiştirilmedi.");
+  } catch (error) {
+    deny(error.message);
+  }
 }
 
 function paymentReviewModal(id, nextStatus) {
@@ -1041,7 +1843,7 @@ function paymentReviewModal(id, nextStatus) {
     : nextStatus === "revision"
       ? "Ödeme kanalı veya program başvuru bilgisi için öğrenen düzeltmesi gerekiyor."
       : "Mali ön onay ile sentetik tahsilat kaydı eşleştirildi; gerçek para hareketi yoktur.";
-  openModal(modalTemplate(`${labels[nextStatus]} • ${request.id}`, `<form id="payment-review-form"><input type="hidden" name="id" value="${request.id}" /><input type="hidden" name="status" value="${nextStatus}" /><div class="grid grid-2"><div><span class="table-subtitle">Program</span><h3>${escapeHtml(request.program)}</h3><p class="page-subtitle">${escapeHtml(request.learner)} • ${formatCurrency(request.amount)} • ${escapeHtml(request.channel)}</p></div><div>${paymentStatusBadge(request)}</div></div><div class="field section"><label class="required" for="payment-review-reason">Mali demo gerekçesi</label><textarea id="payment-review-reason" name="reason" required minlength="12">${escapeHtml(defaultReason)}</textarea><small>Gerekçe, role açık bildirim ve denetim izinde görünür.</small></div><label class="consent-row"><input type="checkbox" name="confirm" required /><span>Gerçek ödeme, fatura, GİB/e-Arşiv veya MYS/MAYS aktarımı oluşturmadığımı onaylıyorum.</span></label></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "revision" ? "button--secondary" : "button--success"}" type="button" data-action="submit-payment-review">${labels[nextStatus]} kaydını oluştur</button>`));
+  openModal(modalTemplate(`${labels[nextStatus]} • ${escapeHtml(request.id)}`, `<form id="payment-review-form"><input type="hidden" name="id" value="${escapeHtml(request.id)}" /><input type="hidden" name="status" value="${escapeHtml(nextStatus)}" /><div class="grid grid-2"><div><span class="table-subtitle">Program</span><h3>${escapeHtml(request.program)}</h3><p class="page-subtitle">${escapeHtml(request.learner)} • ${formatCurrency(request.amount)} • ${escapeHtml(request.channel)}</p></div><div>${paymentStatusBadge(request)}</div></div><div class="field section"><label class="required" for="payment-review-reason">Mali demo gerekçesi</label><textarea id="payment-review-reason" name="reason" required minlength="12">${escapeHtml(defaultReason)}</textarea><small>Gerekçe, role açık bildirim ve denetim izinde görünür.</small></div><label class="consent-row"><input type="checkbox" name="confirm" required /><span>Gerçek ödeme, fatura, GİB/e-Arşiv veya MYS/MAYS aktarımı oluşturmadığımı onaylıyorum.</span></label></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "revision" ? "button--secondary" : "button--success"}" type="button" data-action="submit-payment-review">${labels[nextStatus]} kaydını oluştur</button>`));
 }
 
 function openIntegration(id) {
@@ -1051,7 +1853,7 @@ function openIntegration(id) {
   const samplePayload = escapeHtml(JSON.stringify({ ...item.samplePayload, target: item.id, realDataSent: false }, null, 2));
   const lastResult = item.status === "failed" ? `,\n  "error": "${escapeHtml(item.errorScenario)}",\n  "retryAvailable": true` : "";
   const operationAction = canOperateIntegration(item.id)
-    ? `<button class="button" data-action="simulate-integration" data-id="${item.id}">${item.status === "failed" ? "Yeniden dene" : "Deneme çalıştırması"}</button>`
+    ? `<button class="button" data-action="simulate-integration" data-id="${escapeHtml(item.id)}">${item.status === "failed" ? "Yeniden dene" : "Deneme çalıştırması"}</button>`
     : "";
   const publicAccess = item.publicUrl
     ? `<a class="button button--secondary button--sm integration-public" href="${escapeHtml(item.publicUrl)}" target="_blank" rel="noreferrer">Kamu erişim noktasını aç</a>`
@@ -1106,6 +1908,13 @@ document.addEventListener("click", (event) => {
     closeModal(); navigate("commission");
   }
   if (action === "decision") decisionModal(trigger.dataset.id, trigger.dataset.status);
+  if (action === "qualification-board-decision") qualificationBoardDecisionModal(trigger.dataset.id);
+  if (action === "submit-qualification-board-decision") {
+    event.preventDefault();
+    const form = document.querySelector("#qualification-board-form");
+    if (form) submitQualificationBoardDecision(form);
+    return;
+  }
   if (action === "commission-tab") activateCommissionTab(trigger.dataset.tab);
   if (action === "framework-tab") {
     if (!["tyc", "eqf"].includes(trigger.dataset.framework)) { deny("Geçersiz yeterlilik çerçevesi seçildi."); return; }
@@ -1125,6 +1934,9 @@ document.addEventListener("click", (event) => {
     if (form?.id === "recognition-form") saveRecognitionDraft(form);
   }
   if (action === "preview-proposal") previewProposal(trigger.closest("form"));
+  if (action === "reanalyze-smart-suggestions") analyzeProposalQualifications(trigger.closest("form"), { announce: true });
+  if (action === "apply-smart-suggestion") applySmartSelection(Number(trigger.dataset.outcomeIndex), trigger.dataset.framework);
+  if (action === "apply-smart-override") applySmartOverride(trigger.closest("[data-smart-override]"));
   if (action === "mock-upload") toast("Sentetik dosya üst verisi eklendi; dosya içeriği aktarılmadı.");
   if (action === "open-integration") openIntegration(trigger.dataset.id);
   if (action === "simulate-integration") simulateIntegration(trigger.dataset.id);
@@ -1183,6 +1995,7 @@ document.addEventListener("submit", (event) => {
   if (event.target.id === "proposal-form") submitProposal(event.target);
   if (event.target.id === "recognition-form") submitRecognition(event.target);
   if (event.target.id === "decision-form") submitDecision(event.target);
+  if (event.target.id === "qualification-board-form") submitQualificationBoardDecision(event.target);
   if (event.target.id === "verify-form") submitVerify();
   if (event.target.id === "finance-parameters") saveFinanceParameters(event.target);
   if (event.target.id === "payment-request-form") submitPaymentDemo(event.target);
@@ -1195,6 +2008,7 @@ document.addEventListener("input", (event) => {
   // has started editing it. The epoch is intentionally local to this tab.
   uiMutationEpoch += 1;
   if (event.target.id === "proposal-ects") document.querySelector("#proposal-workload").value = Number(event.target.value || 0) * 25;
+  if (["proposal-outcomes", "proposal-level", "proposal-title"].includes(event.target.id)) scheduleSmartQualificationAnalysis(event.target.closest("form"));
   if (["catalog-search","catalog-level"].includes(event.target.id)) filterCatalog();
   if (["application-search","application-status"].includes(event.target.id)) filterApplications();
   if (event.target.id === "integration-search") filterIntegrations();
@@ -1204,6 +2018,8 @@ document.addEventListener("change", (event) => {
   // Native selects and checkboxes may emit only change in some automation or
   // assistive-technology paths; mark those edits before a late refresh lands.
   if (event.target.matches("input, select, textarea")) uiMutationEpoch += 1;
+  if (["proposal-level"].includes(event.target.id)) scheduleSmartQualificationAnalysis(event.target.closest("form"));
+  if (event.target.matches(".smart-override-level, .smart-override-dimension")) updateSmartOverrideDescriptor(event.target.closest("[data-smart-override]"));
 });
 
 roleSelect.addEventListener("change", () => {
@@ -1262,19 +2078,87 @@ function runNextScenario(kind) {
 
 function previewProposal(form) {
   if (!form) return;
+  analyzeProposalQualifications(form);
   const data = new FormData(form);
-  openModal(modalTemplate("Program önerisi ön izlemesi", `<div class="program-meta"><span class="meta-pill">${escapeHtml(data.get("ects") || "—")} AKTS • Pilot</span><span class="meta-pill">TYÇ ${escapeHtml(data.get("level") || "—")} önerisi</span><span class="meta-pill">%${escapeHtml(data.get("remoteRate") || "0")} uzaktan sunum</span></div><h3>${escapeHtml(data.get("title") || "Başlıksız taslak")}</h3><p class="page-subtitle">${escapeHtml(data.get("summary") || "Program özeti henüz girilmedi.")}</p><div class="grid grid-2 section"><div><strong>Hedef kitle</strong><p class="page-subtitle">${escapeHtml(data.get("audience") || "—")}</p></div><div><strong>Eğitici yeterliliği</strong><p class="page-subtitle">${escapeHtml(data.get("qualifications") || "—")}</p></div><div><strong>Kalite güvence kanıtı</strong><p class="page-subtitle">${escapeHtml(data.get("quality") || "—")}</p></div><div><strong>Ücret modu</strong><p class="page-subtitle">${escapeHtml(data.get("feeMode") || "Ücretsiz")} • ${escapeHtml(data.get("fee") || "0")} TL pilot taslak</p></div></div>${notice("warning","Ön izleme — karar değildir","Bu görünüm yalnız form alanlarını denetlemek içindir; Komisyona gönderim veya kurumsal onay oluşturmaz.")}`, `<button class="button" data-action="close-modal">Düzenlemeye dön</button>`));
+  const snapshot = smartMappingSnapshot();
+  const appliedCount = snapshot?.appliedSelections?.length || 0;
+  openModal(modalTemplate("Program önerisi ön izlemesi", `<div class="program-meta"><span class="meta-pill">${escapeHtml(data.get("ects") || "—")} AKTS • Pilot</span><span class="meta-pill">TYÇ ${escapeHtml(data.get("level") || "—")} başlangıç bağlamı</span><span class="meta-pill">${appliedCount} akıllı eşleme uygulandı</span><span class="meta-pill">%${escapeHtml(data.get("remoteRate") || "0")} uzaktan sunum</span></div><h3>${escapeHtml(data.get("title") || "Başlıksız taslak")}</h3><p class="page-subtitle">${escapeHtml(data.get("summary") || "Program özeti henüz girilmedi.")}</p><div class="grid grid-2 section"><div><strong>Hedef kitle</strong><p class="page-subtitle">${escapeHtml(data.get("audience") || "—")}</p></div><div><strong>Eğitici yeterliliği</strong><p class="page-subtitle">${escapeHtml(data.get("qualifications") || "—")}</p></div><div><strong>Kalite güvence kanıtı</strong><p class="page-subtitle">${escapeHtml(data.get("quality") || "—")}</p></div><div><strong>Ücret modu</strong><p class="page-subtitle">${escapeHtml(data.get("feeMode") || "Ücretsiz")} • ${escapeHtml(data.get("fee") || "0")} TL pilot taslak</p></div></div>${snapshot ? `<section class="section" data-smart-review><h3>Akıllı yeterlilik eşleme ön izlemesi</h3>${smartProgramSummary(smartSuggestionReport)}<p class="table-subtitle">${appliedCount ? `${appliedCount} öneri eğitici tarafından seçilip uygulandı.` : "Öneriler üretildi; henüz eğitici tarafından uygulanmış seçim yok."}</p></section>` : ""}${notice("warning","Ön izleme — karar değildir","Bu görünüm yalnız form alanlarını ve açıklanabilir pilot öneriyi denetlemek içindir; Komisyona gönderim veya kurumsal onay oluşturmaz.")}`, `<button class="button" data-action="close-modal">Düzenlemeye dön</button>`));
+}
+
+function persistSmartAlignment(application, program, form, { analysisResult = null } = {}) {
+  const analysis = analysisResult || analyzeProposalQualifications(form);
+  if (!analysis?.ok || !analysis.report) return { ok: false, code: analysis?.code || "analysis_unavailable", message: analysis?.message || "Akıllı eşleme kalite kapısı geçilemedi.", record: null };
+  const snapshot = smartMappingSnapshot(analysis.report);
+  const liveOutcomes = splitLearningOutcomes(form?.elements?.outcomes?.value || "");
+  if (!snapshot?.outcomes?.length || snapshot.outcomes.length !== liveOutcomes.length || snapshot.orderedOutcomeFingerprint !== smartOrderedOutcomeFingerprint(liveOutcomes)) {
+    return { ok: false, code: "stale_snapshot", message: "Öğrenme çıktıları ile eşleme anlık görüntüsü uyuşmuyor; yeniden analiz gerekir.", record: null };
+  }
+  if (snapshot.manualOverrides.some((override) => !override.outcomeFingerprint || !override.recordedAt) || snapshot.appliedSelections.some((selection) => !selection.outcomeFingerprint)) {
+    return { ok: false, code: "invalid_human_selection", message: "Eski veya bağlamsız insan seçimi algılandı; seçimleri yeniden uygulayın.", record: null };
+  }
+  state.smartAlignments ||= [];
+  const now = new Date().toISOString();
+  const record = {
+    id: `ALIGN-${application.id}`,
+    applicationId: application.id,
+    programId: program?.id || "pending-program",
+    applicationCode: application.code,
+    programTitle: application.title,
+    ownerRole: state.roleId,
+    ownerName: currentRole().name,
+    status: "pilot_suggestion",
+    engineVersion: snapshot.engineVersion,
+    advisoryNotice: snapshot.advisoryNotice,
+    orderedOutcomeFingerprint: snapshot.orderedOutcomeFingerprint,
+    updatedAt: now,
+    outcomes: snapshot.outcomes,
+    program: snapshot.program,
+    manualOverrides: snapshot.manualOverrides,
+    appliedSelections: snapshot.appliedSelections,
+    higherEducationCycleSuggestion: snapshot.higherEducationCycleSuggestion,
+    institutionalValidationRequired: true,
+    boardDecision: null
+  };
+  const existingIndex = state.smartAlignments.findIndex((item) => item.applicationId === application.id);
+  if (existingIndex >= 0) state.smartAlignments.splice(existingIndex, 1, record);
+  else state.smartAlignments.unshift(record);
+  application.smartAlignmentId = record.id;
+  application.formData ||= {};
+  application.formData.qualificationMapping = record;
+  if (program) program.smartAlignmentId = record.id;
+  state.audit.unshift({
+    id: `AUD-${Date.now()}-ALIGN`,
+    entityId: application.id,
+    at: now,
+    actor: currentRole().name,
+    actorRole: state.roleId,
+    action: "Açıklanabilir yeterlilik eşleme önerisi kaydedildi",
+    from: application.status,
+    to: application.status,
+    reason: `${record.outcomes.length} öğrenme çıktısı • ${record.appliedSelections.length} eğitici seçimi • karar değildir`
+  });
+  return { ok: true, code: "persisted", message: "Akıllı eşleme kaydedildi.", record };
 }
 
 function saveProposalDraft(form) {
   if (!form) return;
   if (!PROPOSAL_ROLES.has(state.roleId)) { deny("Program önerisi yalnız iç veya kurum dışı eğitici rolüyle oluşturulabilir."); return; }
+  const analysis = analyzeProposalQualifications(form);
+  if (!analysis?.ok) { deny(analysis?.message || "Öğrenme çıktıları akıllı eşleme kalite kapısını geçmedi; taslak oluşturulmadı."); return; }
+  const stateBeforeMutation = structuredClone(state);
   const data = new FormData(form);
   const title = String(data.get("title") || "Başlıksız program taslağı");
-  const application = createApplication(state, { kind: "internal", status: "draft", title, applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects") || 1, remoteRate: data.get("remoteRate") || 0, evidence: data.get("evidence") || 0, comparedCourse: "Kurumsal Bologna kataloğu" });
-  application.formData = Object.fromEntries(data.entries());
-  saveState();
-  toast(`${application.code} taslağı tarayıcıdaki izole pilot çalışma alanına kaydedildi.`);
+  try {
+    const application = createApplication(state, { kind: "internal", status: "draft", title, applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects") || 1, remoteRate: data.get("remoteRate") || 0, evidence: data.get("evidence") || 0, comparedCourse: "Kurumsal Bologna kataloğu" });
+    application.formData = Object.fromEntries(data.entries());
+    const persisted = persistSmartAlignment(application, null, form, { analysisResult: analysis });
+    if (!persisted.ok) throw new Error(persisted.message);
+    saveState();
+    toast(`${application.code} taslağı tarayıcıdaki izole pilot çalışma alanına kaydedildi.`);
+  } catch (error) {
+    state = stateBeforeMutation;
+    deny(`${error.message} Taslak veya denetim izi oluşturulmadı.`);
+  }
 }
 
 function saveRecognitionDraft(form) {
@@ -1395,15 +2279,26 @@ function decideAssessment() {
 }
 
 function submitProposal(form) {
-  if (!form.reportValidity()) return;
   if (!PROPOSAL_ROLES.has(state.roleId)) { deny("Program önerisi yalnız iç veya kurum dışı eğitici rolüyle gönderilebilir."); return; }
+  const analysis = analyzeProposalQualifications(form);
+  if (!analysis?.ok) { deny(analysis?.message || "Öğrenme çıktıları akıllı eşleme kalite kapısını geçmedi; başvuru oluşturulmadı."); return; }
+  if (!form.reportValidity()) return;
+  const stateBeforeMutation = structuredClone(state);
   const data = new FormData(form);
-  const application = createApplication(state, { kind: "internal", title: data.get("title"), applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects"), remoteRate: data.get("remoteRate"), evidence: data.get("evidence"), comparedCourse: "Kurumsal Bologna kataloğu" });
-  application.formData = { audience:data.get("audience"), assessment:data.get("assessment"), qualifications:data.get("qualifications"), quality:data.get("quality"), feeMode:data.get("feeMode"), fee:Number(data.get("fee") || 0) };
-  state.programs.unshift({ id:`program-${Date.now()}`, code:application.code, title:data.get("title"), unit:data.get("unit"), instructor:currentRole().name, ects:Number(data.get("ects")), workload:Number(data.get("workload")), level:Number(data.get("level")), mode:Number(data.get("remoteRate")) ? "Karma" : "Yüz yüze", remoteRate:Number(data.get("remoteRate")), status:"review", learners:0, price:Number(data.get("fee") || 0), summary:data.get("summary"), outcomes:String(data.get("outcomes")).split("\n").filter(Boolean) });
-  saveState();
-  toast(`${application.code} pilot veri katmanına kaydedildi.`);
-  navigate("applications");
+  try {
+    const application = createApplication(state, { kind: "internal", title: data.get("title"), applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects"), remoteRate: data.get("remoteRate"), evidence: data.get("evidence"), comparedCourse: "Kurumsal Bologna kataloğu" });
+    application.formData = { audience:data.get("audience"), outcomes:splitLearningOutcomes(data.get("outcomes")), assessment:data.get("assessment"), smartContent:data.get("smartContent"), smartAssessment:data.get("smartAssessment"), smartEvidence:data.get("smartEvidence"), qualifications:data.get("qualifications"), quality:data.get("quality"), feeMode:data.get("feeMode"), fee:Number(data.get("fee") || 0) };
+    const program = { id:`program-${Date.now()}`, code:application.code, title:data.get("title"), unit:data.get("unit"), instructor:currentRole().name, ects:Number(data.get("ects")), workload:Number(data.get("workload")), level:Number(data.get("level")), mode:Number(data.get("remoteRate")) ? "Karma" : "Yüz yüze", remoteRate:Number(data.get("remoteRate")), status:"review", learners:0, price:Number(data.get("fee") || 0), summary:data.get("summary"), outcomes:splitLearningOutcomes(data.get("outcomes")) };
+    state.programs.unshift(program);
+    const persisted = persistSmartAlignment(application, program, form, { analysisResult: analysis });
+    if (!persisted.ok) throw new Error(persisted.message);
+    saveState();
+    toast(`${application.code} pilot veri katmanına kaydedildi.`);
+    navigate("applications");
+  } catch (error) {
+    state = stateBeforeMutation;
+    deny(`${error.message} Başvuru, program veya denetim izi oluşturulmadı.`);
+  }
 }
 
 function submitRecognition(form) {

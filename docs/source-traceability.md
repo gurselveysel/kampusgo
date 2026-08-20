@@ -144,10 +144,10 @@ Bu altı doğrulanmış KDPÜ kamu üst veri kaydı yalnız `minimal_public_meta
 
 ## Doğrulama durumu
 
-- Yerel domain/rol/ödeme/matris/entegrasyon kabulü: **25/25 başarılı**.
+- Yerel domain/rol/ödeme/matris/entegrasyon ve akıllı UI sözleşmesi kabulü: **26/26 başarılı**.
 - DPÜ entegrasyon sözleşmesi: **32 sistem / 32 eşleme / 32 dry-run / 32 sentetik audit**.
-- Yapı ve production güvenlik doğrulaması: **24/24 başarılı**.
-- Canlı Supabase migration sürümleri `20260819234334`, `20260819234424`, `20260820003749`, `20260820003856` ve `20260820005626`: **PASS**; 18 FORCE RLS tablo, 14 `security_invoker` görünüm, 32 benzersiz HTTPS kaynak izi, security advisor 0 bulgu. [Çerçeve takip migration'ı](../supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql) ile [entegrasyon takip migration'ı](../supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql) indekslenmemiş yabancı anahtar uyarılarını kapattı; [provenans migration'ı](../supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql) sekiz genel dizin kaydını özgül resmî kaynaklarla değiştirdi. Yalnız beklenen unused-index ve `auth_db_connections_absolute` INFO girdileri kaldı.
+- Yapı ve production güvenlik doğrulaması: **30/30 başarılı**.
+- Canlı Supabase migration sürümlerine `20260820062225` akıllı öneri şeması ve `20260820062551` performans takibi eklendi: **PASS**; toplam 24 FORCE RLS tablo, 20 `security_invoker` görünüm, 32 benzersiz HTTPS kaynak izi, security advisor 0 bulgu. [Çerçeve](../supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql), [entegrasyon](../supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql) ve [akıllı öneri](../supabase/migrations/20260820021000_smart_qualification_performance_indexes.sql) takip migration'ları indekslenmemiş yabancı anahtar uyarılarını kapattı; [provenans migration'ı](../supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql) sekiz genel dizin kaydını özgül resmî kaynaklarla değiştirdi. Yalnız beklenen unused-index ve `auth_db_connections_absolute` INFO girdileri kaldı.
 - Canlı etki güvenlik sayımları: gerçek veri etkin `0`, gerçek veri gönderilmiş `0`, canlı istek yapılmış `0`, production izinli `0`.
 - Yeni revizyonun exact Vercel Preview ve public alias smoke sonucu: **PASS** — `dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5`, READY `target: null`; anonim erişim, uygulama sürümü 9, dokuz rol ve asset yüklemeleri doğrulandı.
 - Dokuz rol, TYÇ 8 + AYÇ/EQF 8 seviye, ödeme simülasyonu ve mali açıklamalar için ortak public Preview hedefi: <https://kampusgo.uzemgo.com/pilot.html>.

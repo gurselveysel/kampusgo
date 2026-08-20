@@ -199,7 +199,7 @@ function buildInstitutionalIntegrationCatalog() {
 }
 
 export const initialState = {
-  version: 9,
+  version: 11,
   roleId: "learner",
   activePage: "home",
   mobileNavOpen: false,
@@ -219,6 +219,7 @@ export const initialState = {
   recognizedCredits: [],
   integrationJobs: [],
   qualificationDrafts: [],
+  smartAlignments: [],
   programs: [
     {
       id: "program-data-literacy",

@@ -215,7 +215,7 @@ async function verifyAssessmentActions(page, errors) {
   await page.locator('[data-action="assessment-decision"]').click();
   check(await page.locator('[data-action="assessment-decision"]').count() === 0, "instructor: tamamlanan karardan sonra CTA kapanmadı", errors);
   const instructorAudit = await page.evaluate(() => {
-    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     return saved.audit.find((event) => event.entityId === "ASM-DEMO-LIVE" && event.action === "İnsan değerlendirici kararı kaydedildi");
   });
   check(instructorAudit?.actorRole === "instructor", "instructor: değerlendirici kararı doğru rolle audit izine yazılmadı", errors);
@@ -245,7 +245,7 @@ async function verifyExternalInstructorProposal(page, errors) {
   await page.locator('#proposal-form button[type="submit"]').click();
   await page.waitForFunction((expected) => document.querySelector("#main-content")?.innerText.includes(expected), title, { timeout: 3000 });
   const ownership = await page.evaluate((expected) => {
-    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     const application = saved.applications.find((item) => item.title === expected);
     const audit = saved.audit.find((event) => event.entityId === application?.id);
     return { ownerRole: application?.ownerRole, applicant: application?.applicant, auditRole: audit?.actorRole };
@@ -265,14 +265,14 @@ async function verifyScenarioActions(page, scenarioDefinitions, errors) {
     for (let index = 0; index < steps.length; index += 1) {
       await page.locator(`[data-action="run-scenario"][data-kind="${kind}"]`).click();
       await page.waitForFunction(({ scenarioKind, expectedStep }) => {
-        const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+        const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
         return saved.scenarios?.[scenarioKind]?.step === expectedStep;
       }, { scenarioKind: kind, expectedStep: index + 1 }, { timeout: 3000 });
     }
     check(await page.locator(`[data-action="run-scenario"][data-kind="${kind}"]`).count() === 0, `${kind}: tamamlanan senaryoda sonraki-adım CTA kaldı`, errors);
   }
   const scenarioState = await page.evaluate(() => {
-    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     return {
       internal: saved.scenarios.internal.completed,
       recognition: saved.scenarios.recognition.completed,
@@ -312,7 +312,7 @@ async function verifyDecisionActions(page, errors) {
 
 async function verifyPaymentDemoFlow(page, errors) {
   await page.evaluate(() => {
-    const key = "kdpu-myys-pilot-v3";
+    const key = "kdpu-myys-pilot-v4";
     const saved = JSON.parse(localStorage.getItem(key));
     saved.finance.paymentRequests = [];
     localStorage.setItem(key, JSON.stringify(saved));
@@ -334,14 +334,14 @@ async function verifyPaymentDemoFlow(page, errors) {
   await page.locator('[data-action="submit-payment-request"]').click();
   try {
     await page.waitForFunction(() => {
-      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
       return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "pending_finance");
     }, undefined, { timeout: 3000 });
   } catch (error) {
     const diagnostics = await page.evaluate(() => {
       const form = document.querySelector("#payment-request-form");
       return {
-        request: JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"))?.finance?.paymentRequests?.find((item) => item.programId === "program-green-skills"),
+        request: JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"))?.finance?.paymentRequests?.find((item) => item.programId === "program-green-skills"),
         channel: document.querySelector("#payment-channel")?.value || null,
         confirmed: document.querySelector('#payment-request-form input[name="confirm"]')?.checked ?? null,
         formValid: form?.checkValidity() ?? null,
@@ -364,7 +364,7 @@ async function verifyPaymentDemoFlow(page, errors) {
   await page.check('#payment-review-form input[name="confirm"]');
   await page.locator('[data-action="submit-payment-review"]').click();
   await page.waitForFunction(() => {
-    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "approved");
   }, undefined, { timeout: 3000 });
   const approvedRow = page.locator('tr:has-text("Yeşil Dönüşüm İçin Temel Yetkinlikler")').filter({ has: page.locator('[data-action="payment-review"][data-status="reconciled"]') }).first();
@@ -372,12 +372,12 @@ async function verifyPaymentDemoFlow(page, errors) {
   await page.check('#payment-review-form input[name="confirm"]');
   await page.locator('[data-action="submit-payment-review"]').click();
   await page.waitForFunction(() => {
-    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "reconciled");
   }, undefined, { timeout: 3000 });
 
   const paymentState = await page.evaluate(() => {
-    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     const request = saved.finance.paymentRequests.find((item) => item.programId === "program-green-skills");
     return {
       status: request?.status,
@@ -418,7 +418,7 @@ async function verifyQualificationMatrixFlow(page, errors) {
   await page.fill("#matrix-knowledge-outcome", outcome);
   await page.locator('#qualification-matrix-form button[type="submit"]').click();
   await page.waitForFunction((title) => {
-    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     return saved.qualificationDrafts?.some((item) => item.frameworkId === "tyc" && item.level === 6 && item.programTitle === title && item.ownerRole === "instructor");
   }, programTitle, { timeout: 3000 });
 
@@ -436,14 +436,215 @@ async function verifyQualificationMatrixFlow(page, errors) {
   check(readonlyFlags.length > 0 && readonlyFlags.every(Boolean), "coordinator: matris alanlarının tamamı salt-okunur değil", errors);
   check((await page.locator('#qualification-matrix-form button[type="submit"]').count()) === 0, "coordinator: matris kaydetme CTA'sı görünür", errors);
   check((await page.locator("#main-content").innerText()).includes("Salt-okunur inceleme"), "coordinator: salt-okunur açıklaması yok", errors);
-  const before = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3")).qualificationDrafts.length);
+  const before = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).qualificationDrafts.length);
   await page.locator("#qualification-matrix-form").evaluate((form) => form.requestSubmit());
-  const after = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3")).qualificationDrafts.length);
+  const after = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).qualificationDrafts.length);
   check(after === before, "coordinator: doğrudan submit denemesi matris taslağını değiştirdi", errors);
-  const coordinatorMutation = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3")).audit.some((item) => item.actorRole === "coordinator" && item.action === "TYÇ / AYÇ pilot matris taslağı kaydedildi"));
+  const coordinatorMutation = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).audit.some((item) => item.actorRole === "coordinator" && item.action === "TYÇ / AYÇ pilot matris taslağı kaydedildi"));
   check(!coordinatorMutation, "coordinator: yetkisiz matris kaydı audit izine yazıldı", errors);
   await setHash(page, "overview");
   await page.locator('[data-action="reset-demo"]').click();
+}
+
+const smartOutcomeSamples = [
+  "Alanındaki ileri düzey kuramsal ve olgusal bilgiyi sorgulayıcı bir bakışla açıklar.",
+  "Karmaşık ve öngörülemeyen bir veri problemini eleştirel olarak analiz eder ve kanıta dayalı yenilikçi çözüm tasarlar.",
+  "Öngörülemeyen çalışma ortamında karmaşık projeleri yönetir ve ekiplerin mesleki gelişim sorumluluğunu alır."
+];
+
+async function verifySmartAlignmentResponsive(page, viewport, errors) {
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "instructor");
+  await setHash(page, "proposal");
+  await page.waitForSelector("#smart-alignment-form");
+
+  check(await page.locator("[data-smart-outcome]").count() === 1, `${viewport.name}/smart: öğrenme çıktısı giriş sözleşmesi yok`, errors);
+  check(await page.locator("[data-smart-suggestion]").count() === 0, `${viewport.name}/smart: boş durumda öneri kartı gösterildi`, errors);
+  check((await page.locator("#smart-suggestion-results").innerText()).includes("Öğrenme çıktılarınızı yazın"), `${viewport.name}/smart: boş durum açıklaması yok`, errors);
+  await page.fill("[data-smart-outcome]", "   \n  ");
+  await page.waitForTimeout(380);
+  check(await page.locator("[data-smart-suggestion]").count() === 0, `${viewport.name}/smart: yalnız boşluk girdisi analiz edildi`, errors);
+  const stateCountsBeforeQualityGate = await page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
+    return { applications: saved.applications.length, programs: saved.programs.length, alignments: saved.smartAlignments.length, audit: saved.audit.length };
+  });
+  const rejectedOutcomeSets = [
+    { label: "empty", value: "   \n  " },
+    { label: "insufficient", value: "Katılımcı bu konunun genel kapsamı hakkında farkındalık kazanır." },
+    { label: "over-40", value: Array.from({ length: 41 }, (_, index) => `ÖÇ ${index + 1}: Kuramsal bilgiyi açıklar.`).join("\n") },
+    { label: "over-600", value: `Karmaşık problemi analiz eder ${"x".repeat(610)}` }
+  ];
+  for (const rejected of rejectedOutcomeSets) {
+    await page.fill("[data-smart-outcome]", rejected.value);
+    await page.locator('[data-action="save-draft"]').click();
+    await page.waitForTimeout(80);
+    const gateState = await page.evaluate(() => {
+      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
+      return {
+        applications: saved.applications.length,
+        programs: saved.programs.length,
+        alignments: saved.smartAlignments.length,
+        audit: saved.audit.length,
+        mapping: document.querySelector("#proposal-smart-mapping")?.value,
+        busy: document.querySelector("#smart-suggestion-results")?.getAttribute("aria-busy")
+      };
+    });
+    check(JSON.stringify({ applications: gateState.applications, programs: gateState.programs, alignments: gateState.alignments, audit: gateState.audit }) === JSON.stringify(stateCountsBeforeQualityGate), `${viewport.name}/smart/gate/${rejected.label}: reddedilen girdi state mutasyonu oluşturdu`, errors);
+    check(gateState.mapping === "{}", `${viewport.name}/smart/gate/${rejected.label}: eski öneri snapshot'ı temizlenmedi`, errors);
+    check(gateState.busy === "false", `${viewport.name}/smart/gate/${rejected.label}: aria-busy false olmadı`, errors);
+  }
+
+  await page.fill("[data-smart-outcome]", smartOutcomeSamples.join("\n"));
+  await page.locator('[data-action="reanalyze-smart-suggestions"]').click();
+  try {
+    await page.waitForFunction(() => document.querySelectorAll("[data-smart-suggestion]").length === 6
+      && document.querySelector("#smart-suggestion-results")?.getAttribute("aria-busy") === "false", undefined, { timeout: 5000 });
+  } catch {
+    errors.push(`${viewport.name}/smart: üç çıktı × iki çerçeve önerisi zamanında oluşmadı`);
+    return;
+  }
+
+  const cards = await page.locator("[data-smart-suggestion]").evaluateAll((nodes) => nodes.map((node) => ({
+    outcomeIndex: Number(node.dataset.outcomeIndex),
+    framework: node.dataset.smartFramework || node.dataset.framework,
+    level: Number(node.dataset.level),
+    dimension: node.dataset.dimension,
+    score: Number(node.dataset.score),
+    text: node.textContent || ""
+  })));
+  check(cards.length === 6, `${viewport.name}/smart: altı primary öneri yerine ${cards.length} kart var`, errors);
+  const expectedDimensions = ["knowledge", "skills", "competence"];
+  for (let index = 0; index < smartOutcomeSamples.length; index += 1) {
+    const outcomeCards = cards.filter((item) => item.outcomeIndex === index);
+    check(JSON.stringify(outcomeCards.map((item) => item.framework).sort()) === JSON.stringify(["EQF", "TYC"]), `${viewport.name}/smart/ÖÇ-${index + 1}: TYÇ ve AYÇ/EQF ayrı önerilmedi`, errors);
+    check(outcomeCards.every((item) => item.dimension === expectedDimensions[index]), `${viewport.name}/smart/ÖÇ-${index + 1}: Türkçe eylem boyutu ${expectedDimensions[index]} değil`, errors);
+  }
+  for (const card of cards) {
+    check(Number.isInteger(card.level) && card.level >= 1 && card.level <= 8, `${viewport.name}/smart: ${card.framework} seviye 1–8 dışında`, errors);
+    check(Number.isFinite(card.score) && card.score >= 0 && card.score <= 100, `${viewport.name}/smart: açıklanabilir skor 0–100 dışında`, errors);
+    for (const label of ["Gerekçe", "Tanımlayıcı", "İçerik ipucu", "Ölçme-değerlendirme", "Kanıt önerisi"]) {
+      check(card.text.includes(label), `${viewport.name}/smart: ${card.framework} kartında ${label} yok`, errors);
+    }
+  }
+  check(await page.locator('[data-smart-framework="TYC"]').count() === 3, `${viewport.name}/smart: TYÇ semantic kart işaretleri eksik`, errors);
+  check(await page.locator('[data-smart-framework="EQF"]').count() === 3, `${viewport.name}/smart: AYÇ/EQF semantic kart işaretleri eksik`, errors);
+  check(await page.locator("[data-smart-coverage]").count() === 1, `${viewport.name}/smart: program düzeyi kapsama matrisi yok`, errors);
+  const smartText = await page.locator("#smart-alignment-form").innerText();
+  check(smartText.includes("Öneri karar değildir") && smartText.includes("Nihai akademik") && smartText.includes("yetkili kurul"), `${viewport.name}/smart: insan kararı ve kurumsal doğrulama sınırı görünür değil`, errors);
+  check(!/(otomatik olarak onaylandı|nihai seviye belirlendi|resmî yerleştirme tamamlandı|komisyon kararı oluşturuldu)/i.test(smartText), `${viewport.name}/smart: otomatik/nihai karar dili sızdı`, errors);
+  await assertNoOverflow(page, `${viewport.name}/smart/proposal`, errors);
+
+  if (viewport.width !== 1440) return;
+
+  const firstApply = page.locator('[data-action="apply-smart-suggestion"][data-outcome-index="0"][data-framework="tyc"]');
+  await firstApply.click();
+  check((await page.locator("#proposal-smart-content").inputValue()).includes("TYÇ ÖÇ-1"), "smart/apply: içerik önerisi eğitici alanına uygulanmadı", errors);
+  check((await page.locator("#proposal-smart-assessment").inputValue()).includes("TYÇ ÖÇ-1"), "smart/apply: ölçme önerisi eğitici alanına uygulanmadı", errors);
+
+  const override = page.locator('[data-smart-override][data-outcome-index="1"][data-framework="tyc"]');
+  await override.locator("summary").click();
+  await override.locator(".smart-override-level").selectOption("7");
+  await override.locator(".smart-override-dimension").selectOption("skills");
+  const overrideReason = "Eğitici, disiplinler arası yeni yöntem geliştirme kanıtını ayrıca incelemiştir.";
+  await override.locator(".smart-override-reason").fill(overrideReason);
+  await override.locator('[data-action="apply-smart-override"]').click();
+  await page.waitForFunction((reason) => document.querySelector("#proposal-smart-mapping")?.value.includes(reason), overrideReason, { timeout: 3000 });
+
+  const originalSelectionSnapshot = await page.evaluate(() => JSON.parse(document.querySelector("#proposal-smart-mapping").value));
+  check(originalSelectionSnapshot.appliedSelections?.every((item) => /^LOFP-/.test(item.outcomeFingerprint)), "smart/fingerprint: uygulanmış seçimlerde çıktı fingerprint'i yok", errors);
+  check(originalSelectionSnapshot.manualOverrides?.every((item) => /^LOFP-/.test(item.outcomeFingerprint) && Number.isFinite(Date.parse(item.recordedAt))), "smart/fingerprint: manuel override fingerprint/recordedAt eksik", errors);
+  await page.fill("[data-smart-outcome]", [smartOutcomeSamples[1], smartOutcomeSamples[0], smartOutcomeSamples[2]].join("\n"));
+  await page.locator('[data-action="reanalyze-smart-suggestions"]').click();
+  await page.waitForFunction(() => document.querySelector("#smart-suggestion-results")?.getAttribute("aria-busy") === "false", undefined, { timeout: 3000 });
+  const reorderedSnapshot = await page.evaluate(() => JSON.parse(document.querySelector("#proposal-smart-mapping").value));
+  check(reorderedSnapshot.appliedSelections?.length === 0 && reorderedSnapshot.manualOverrides?.length === 0, "smart/fingerprint: çıktı sırası değişince eski seçim/override geçersizleşmedi", errors);
+  check(reorderedSnapshot.orderedOutcomeFingerprint !== originalSelectionSnapshot.orderedOutcomeFingerprint, "smart/fingerprint: sıralı çıktı fingerprint'i sıra değişimini algılamadı", errors);
+  await page.fill("[data-smart-outcome]", smartOutcomeSamples.join("\n"));
+  await page.locator('[data-action="reanalyze-smart-suggestions"]').click();
+  await page.waitForFunction(() => document.querySelector("#smart-suggestion-results")?.getAttribute("aria-busy") === "false", undefined, { timeout: 3000 });
+  const restoredInputSnapshot = await page.evaluate(() => JSON.parse(document.querySelector("#proposal-smart-mapping").value));
+  check(restoredInputSnapshot.appliedSelections?.length === 0 && restoredInputSnapshot.manualOverrides?.length === 0, "smart/fingerprint: önceki metin geri gelince geçersiz seçimler yeniden canlandı", errors);
+  await page.locator('[data-action="apply-smart-suggestion"][data-outcome-index="0"][data-framework="tyc"]').click();
+  const restoredOverride = page.locator('[data-smart-override][data-outcome-index="1"][data-framework="tyc"]');
+  await restoredOverride.locator("summary").click();
+  await restoredOverride.locator(".smart-override-level").selectOption("7");
+  await restoredOverride.locator(".smart-override-dimension").selectOption("skills");
+  await restoredOverride.locator(".smart-override-reason").fill(overrideReason);
+  await restoredOverride.locator('[data-action="apply-smart-override"]').click();
+  await page.waitForFunction((reason) => document.querySelector("#proposal-smart-mapping")?.value.includes(reason), overrideReason, { timeout: 3000 });
+
+  await page.fill("#proposal-title", "Akıllı Eşleme Tarayıcı QA Programı");
+  await page.fill("#proposal-summary", "Akıllı yeterlilik önerisi, seçim, manuel düzeltme ve kurul inceleme sınırını test eden sentetik program.");
+  await page.fill("#proposal-qualifications", "Alan uzmanlığı ve öğretim deneyimi için yalnız sentetik pilot kanıt üst verisi.");
+  await page.fill("#proposal-quality", "Rubrik kalibrasyonu, insan incelemesi ve izlenebilir gerekçe planı.");
+  await page.locator('[data-action="save-draft"]').click();
+  await page.waitForFunction((reason) => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
+    return saved.smartAlignments?.some((item) => item.manualOverrides?.some((entry) => entry.reason === reason));
+  }, overrideReason, { timeout: 3000 });
+
+  const linkage = await page.evaluate((reason) => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
+    const alignment = saved.smartAlignments.find((item) => item.manualOverrides?.some((entry) => entry.reason === reason));
+    const application = saved.applications.find((item) => item.id === alignment?.applicationId);
+    return {
+      alignment,
+      applicationId: application?.id,
+      applicationLink: application?.smartAlignmentId,
+      formLink: application?.formData?.qualificationMapping?.id,
+      formFingerprint: application?.formData?.qualificationMapping?.orderedOutcomeFingerprint,
+      semanticOutcomes: String(application?.formData?.outcomes || "").split(/\n+/).map((item) => item.trim()).filter(Boolean),
+      unsafeDecision: /"autonomousDecision":true/.test(JSON.stringify(alignment || {}))
+    };
+  }, overrideReason);
+  check(Boolean(linkage.alignment), "smart/persist: canonical smartAlignments kaydı oluşmadı", errors);
+  check(linkage.applicationId === linkage.alignment?.applicationId, "smart/linkage: applicationId bağlantısı kopuk", errors);
+  check(linkage.applicationLink === linkage.alignment?.id && linkage.formLink === linkage.alignment?.id, "smart/linkage: proposal → alignment çift yönlü bağı yok", errors);
+  check(linkage.formFingerprint === linkage.alignment?.orderedOutcomeFingerprint, "smart/linkage: formData fingerprint backlink'i alignment ile eşleşmiyor", errors);
+  check(JSON.stringify(linkage.semanticOutcomes) === JSON.stringify(linkage.alignment?.outcomes?.map((item) => item.text)), "smart/linkage: application formData çıktıları alignment metinleriyle semantik eşleşmiyor", errors);
+  check(linkage.alignment?.outcomes?.length === 3 && linkage.alignment?.appliedSelections?.length >= 2, "smart/persist: çıktı/seçim snapshot eksik", errors);
+  check(linkage.alignment?.institutionalValidationRequired === true && linkage.unsafeDecision === false, "smart/persist: doğrulama veya auto-decision sınırı kayboldu", errors);
+
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="commission"]', { state: "attached" });
+  const restored = await page.evaluate((id) => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).smartAlignments?.find((item) => item.id === id), linkage.alignment.id);
+  check(restored?.manualOverrides?.some((item) => item.reason === overrideReason), "smart/hydration: reload sonrası manuel insan seçimi korunmadı", errors);
+
+  await page.selectOption("#role-select", "coordinator");
+  await setHash(page, "frameworks");
+  check(await page.locator("[data-smart-review]").count() >= 1, "coordinator: akıllı eşleme salt-okunur kayıt kütüğü yok", errors);
+  check(await page.locator('[data-action="apply-smart-suggestion"], [data-action="apply-smart-override"]').count() === 0, "coordinator: öneri mutasyon CTA'sı görünür", errors);
+
+  await page.selectOption("#role-select", "commission");
+  await setHash(page, "commission");
+  const smartTab = page.locator('[data-action="commission-tab"]', { hasText: "Akıllı eşleme" });
+  check(await smartTab.count() === 1, "commission: Akıllı eşleme inceleme sekmesi yok", errors);
+  if (await smartTab.count()) await smartTab.click();
+  check(await page.locator("[data-smart-review]").count() >= 1, "commission: salt-okunur akıllı eşleme incelemesi yok", errors);
+  check(await page.locator('[data-action="apply-smart-suggestion"], [data-action="apply-smart-override"]').count() === 0, "commission: öneri mutasyon CTA'sı görünür", errors);
+
+  await page.evaluate((alignmentId) => {
+    const key = "kdpu-myys-pilot-v4";
+    const saved = JSON.parse(localStorage.getItem(key));
+    const record = saved.smartAlignments.find((item) => item.id === alignmentId);
+    record.outcomes[0].selections[0].level = 99;
+    record.id = 'ALIGN-XSS"><img data-smart-xss src=x onerror=alert(1)>';
+    const application = saved.applications.find((item) => item.id === record.applicationId);
+    application.smartAlignmentId = record.id;
+    application.formData.qualificationMapping.id = record.id;
+    localStorage.setItem(key, JSON.stringify(saved));
+  }, linkage.alignment.id);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="admin"]', { state: "attached" });
+  check(await page.locator("#role-select").inputValue() === "learner", "smart/invalid-state: bozuk v4 durum çalışma zamanında güvenli öğrenen seed'ine dönmedi", errors);
+  check(await page.locator("[data-smart-xss]").count() === 0, "smart/invalid-state: kötü niyetli kalıcı ID DOM'a enjekte edildi", errors);
+  await setHash(page, "overview");
+  await page.locator('[data-action="reset-demo"]').click();
+  const safeFallback = await page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
+    return { roleId: saved.roleId, hasInvalidLevel: saved.smartAlignments?.some((item) => item.outcomes?.some((outcome) => outcome.selections?.some((selection) => selection.level === 99))) };
+  });
+  check(safeFallback.roleId === "learner" && safeFallback.hasInvalidLevel !== true, "smart/invalid-state: bozuk 99. seviye güvenli seed ile temizlenip kalıcılaştırılmadı", errors);
 }
 
 async function verifyIntegrationCatalog(page, integrations, errors) {
@@ -531,7 +732,7 @@ async function verifyIntegrationCatalog(page, integrations, errors) {
     check(await page.locator('#modal [data-action="simulate-integration"]').count() === 1, `${operable.id}: Bilgi İşlem dry-run CTA'sı yok`, errors);
     await page.locator('#modal [data-action="simulate-integration"]').click();
     const first = await page.evaluate((systemId) => {
-      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
       const integration = saved.integrations.find((item) => item.id === systemId);
       const job = saved.integrationJobs.find((item) => item.targetId === systemId);
       return { status: integration?.status, job };
@@ -543,7 +744,7 @@ async function verifyIntegrationCatalog(page, integrations, errors) {
     check((await page.locator('#modal [data-action="simulate-integration"]').innerText()).includes("Yeniden dene"), `${operable.id}: retry CTA metni yok`, errors);
     await page.locator('#modal [data-action="simulate-integration"]').click();
     const second = await page.evaluate((systemId) => {
-      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
       const integration = saved.integrations.find((item) => item.id === systemId);
       const jobs = saved.integrationJobs.filter((item) => item.targetId === systemId);
       return { status: integration?.status, jobs, unsafe: saved.integrationJobs.some((item) => item.realDataSent !== false) };
@@ -585,7 +786,7 @@ async function verifyPersistenceAndStateGuard(page, roles, integrations, errors)
   }
 
   await page.evaluate(() => {
-    const key = "kdpu-myys-pilot-v3";
+    const key = "kdpu-myys-pilot-v4";
     const saved = JSON.parse(localStorage.getItem(key));
     saved.roleId = "intruder-role";
     localStorage.setItem(key, JSON.stringify(saved));
@@ -595,7 +796,7 @@ async function verifyPersistenceAndStateGuard(page, roles, integrations, errors)
   check(await page.locator("#role-select").inputValue() === "learner", "bozuk/kayıtsız rol kimliği güvenli varsayılana dönmedi", errors);
 
   await page.evaluate(() => {
-    const key = "kdpu-myys-pilot-v3";
+    const key = "kdpu-myys-pilot-v4";
     const saved = JSON.parse(localStorage.getItem(key));
     saved.integrations = saved.integrations.slice(0, -1);
     localStorage.setItem(key, JSON.stringify(saved));
@@ -657,6 +858,7 @@ async function verifyUnauthorizedRoute(page, errors) {
         if (imageFailures.length) errors.push(`${viewport.name}: kırık görsel: ${imageFailures.join(",")}`);
 
         await verifyRoleMatrix(page, roles, roleNavigation, viewport, errors);
+        await verifySmartAlignmentResponsive(page, viewport, errors);
         if (viewport.width === 1440) {
           await verifyExternalInstructorProposal(page, errors);
           await verifyAssessmentActions(page, errors);
