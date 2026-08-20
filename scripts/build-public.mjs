@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
 await import("./validate.mjs");
@@ -28,7 +28,12 @@ const files = [
 for (const [source, destination] of files) {
   const target = `${output}/${destination}`;
   mkdirSync(dirname(target), { recursive: true });
-  cpSync(source, target);
+  const base64Sidecar = `${source}.b64`;
+  if (existsSync(base64Sidecar)) {
+    writeFileSync(target, Buffer.from(readFileSync(base64Sidecar, "utf8").trim(), "base64"));
+  } else {
+    cpSync(source, target);
+  }
 }
 
 console.log("Next.js public/ pilot paketi hazırlandı.");
