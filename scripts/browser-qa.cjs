@@ -329,7 +329,7 @@ async function verifyPaymentDemoFlow(page, errors) {
   check((await page.locator("#payment-request-form").count()) === 1, "learner: ücretli program ödeme demo formuna yönlenmedi", errors);
   await page.selectOption("#payment-channel", "Havale/EFT simülasyonu");
   await page.check('#payment-request-form input[name="confirm"]');
-  await page.locator('#payment-request-form [data-action="submit-payment-request"]').click();
+  await page.locator('#payment-request-form button[type="submit"]').click();
   try {
     await page.waitForFunction(() => {
       const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));

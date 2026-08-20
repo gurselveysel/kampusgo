@@ -289,6 +289,7 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(styleSource, /:focus-visible\s*\{[^}]+outline:\s*3px solid #fff[^}]+box-shadow:\s*0 0 0 5px #255f95/s, "yüksek kontrastlı çift katmanlı odak göstergesi yok");
   assert.match(styleSource, /html\s*\{[^}]+overflow-x:\s*clip[^}]+\}[\s\S]+body\s*\{[^}]+overflow-x:\s*clip/s, "kök sayfa yatay kaydırması engellenmiyor");
   assert.match(styleSource, /\.table-wrap\s*\{[^}]+display:\s*block[^}]+overflow-x:\s*auto/s, "geniş tablolar bağımsız yatay kaydırma konteyneri değil");
+  assert.match(styleSource, /#main-content\s*\{[^}]+overflow-x:\s*clip[^}]+contain:\s*inline-size/s, "ana içerik geniş tablo overflow alanını kök sayfadan ayırmıyor");
   assert.match(styleSource, /\.sidebar\s*\{[^}]+visibility:\s*hidden[^}]+\}[\s\S]+body\.nav-open \.sidebar\s*\{[^}]+visibility:\s*visible/s, "kapalı mobil menü klavye sırasından çıkarılmıyor");
 
   const actions = new Set([...appSource.matchAll(/data-action="([a-z0-9-]+)"/g), ...htmlSource.matchAll(/data-action="([a-z0-9-]+)"/g)].map((match) => match[1]));
