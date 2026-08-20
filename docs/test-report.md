@@ -8,29 +8,29 @@ Karar: **Production NO-GO**
 
 ## Test kapsamındaki rotalar
 
-- Public Preview: <https://kampusgo.uzemgo.com/pilot.html>
 - Uygulama rotası: `/pilot.html`
 - Kök rota beklentisi: `/` → `/pilot.html`
-- Exact Preview: <https://kdpu-myys-mockup-1fnbhb7yb-info-64116029s-projects.vercel.app/pilot.html> — `dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219`, READY `target: null`, asset smoke **PASS**
-- Public aliasın bu exact Preview'a taşınması: **PASS** — <https://kampusgo.uzemgo.com/pilot.html>, anonim HTTP 200, `version: 11`
+- Exact Preview: <https://kdpu-myys-mockup-roliiwx2o-info-64116029s-projects.vercel.app/pilot.html> — `dpl_2zaxrgj1ZUG3BjaVpo6AJyPgn8pX`, READY, `target: null`, alias `[]`, asset smoke **PASS**
+- Özel alias <https://kampusgo.uzemgo.com/pilot.html> bu çalışmada güncellenmedi; final exact Preview değildir.
 
 ## Güncel yerel otomatik kontroller
 
 | Kontrol | Kapsam | Sonuç |
 | --- | --- | --- |
-| Domain kabul paketi | Dokuz rol, sahiplik, görünürlük, karar yetkisi, ödeme, TYÇ/AYÇ, akıllı eşleme UI sözleşmesi, DPÜ katalog UI'sı, audit ve iki uçtan uca senaryo | **26/26 başarılı** |
-| Yapı doğrulama | 30 zorunlu dosya, marka/görsel referansı, production/secret ve yasak tarayıcı API taraması | **Başarılı** |
+| Domain kabul paketi | Dokuz rol, sahiplik, görünürlük, karar yetkisi, ödeme, TYÇ/AYÇ/TYYÇ, yönerge UI sözleşmesi, DPÜ katalog UI'sı, audit ve uçtan uca senaryolar | **36/36 başarılı** |
+| Yapı doğrulama | 47 zorunlu dosya, marka/görsel referansı, production/secret ve yasak tarayıcı API taraması | **Başarılı** |
 | DPÜ entegrasyon sözleşmesi | 32 iç sistem, 32 eşleme, 32 dry-run senaryosu, 32 sentetik audit; 4 FORCE RLS tablo, 4 `security_invoker` görünüm | **Başarılı** |
-| TYÇ/AYÇ bütünlüğü | TYÇ 8 + AYÇ/EQF 8 tanımlayıcı; iki çerçevede 8'er şablon | **Başarılı** |
-| Akıllı eşleme motoru | Türkçe çıktı bazlı TYÇ+AYÇ önerisi, açıklanabilir skor/gerekçe, içerik/ölçme, aggregate, override hydration ve RBAC | **10/10 başarılı** |
-| Akıllı eşleme şema sözleşmesi | 6 salt-okunur tablo + 6 `security_invoker` görünüm; TYYÇ/Bologna geçici crosswalk; remote/fallback yapısal paritesi | **Canlı PASS — `20260820062225`** |
+| TYÇ/AYÇ/TYYÇ bütünlüğü | TYÇ 1–8 + AYÇ/EQF 1–8 + TYYÇ 5–8; üç çerçevede ayrı öneri ve toplam 20 şablon | **Başarılı** |
+| Akıllı eşleme motoru | Türkçe çıktı bazlı üç çerçeveli öneri, açıklanabilir skor/gerekçe, içerik/ölçme, aggregate, v15 değişmez snapshot, override hydration ve RBAC | **12/12 başarılı** |
+| Akıllı eşleme şema sözleşmesi | TYYÇ/Bologna crosswalk, directive program/version composite FK, constructive-alignment zinciri ve remote/fallback yapısal paritesi | **Canlı PASS — `20260820123559` + `20260820124546`** |
+| Anonim Supabase okuma sınırı | Yalnız 2 kaynak tablosu + 2 kamu görünümü; korumalı view isteği, Bearer ve anonim yazma yok | **Başarılı** |
 | Ödeme RBAC | Öğrenen başlatır, Finans onaylar/revize eder/mutabakat yapar; admin mali karar veremez | **Başarılı** |
 | Mali açıklama görünürlüğü | Ana sayfada GİB/e-Arşiv ve MYS/MAYS kontrollü entegrasyon açıklamaları | **Başarılı** |
 | Canlı etki değişmezleri | Gerçek ödeme kanalı reddi; `realPayment=false`, dış aktarımda `realDataSent=false` | **Başarılı** |
-| Güncel tarayıcı regresyonu | 9 rol × 1440, 1024, 768 ve 390 px; ödeme uçtan uca akışı, TYÇ/AYÇ, entegrasyon, sahiplik ve kalıcılık | **PASS** — 36 bileşim/0 hata, [run #46](https://github.com/gurselveysel/kampusgo/actions/runs/32342418329) |
-| Akıllı eşleme genişletilmiş tarayıcı QA | Çıktı bazlı TYÇ/AYÇ önerileri, içerik/ölçme uygulama, manuel override, v4 kalıcılık, proposal bağlantısı, komisyon salt-okunur inceleme, bozuk state fallback ve dört viewport | **PASS** — job `96344019129`, artifact `9396848395` |
+| Güncel tarayıcı regresyonu | v15; 9 rol × 1440, 1024, 768 ve 390 px; ödeme, TYÇ/AYÇ/TYYÇ, yönerge, entegrasyon, sahiplik, kalıcılık ve anonim ağ sınırı | **PASS** — 36 bileşim/0 hata, [run `32375917382`](https://github.com/gurselveysel/kampusgo/actions/runs/32375917382) |
+| Akıllı eşleme genişletilmiş tarayıcı QA | Üç çerçeveli öneriler, içerik/ölçme, override, tam snapshot/historical evidence, komisyon salt-okunur inceleme, bozuk state fallback ve dört viewport | **PASS** — job `96447182122`, artifact `9409045414` |
 | Genişletilmiş migration canlı testi | Apply, sayımlar, FORCE RLS/grant, kataloglar, security/performance advisor | **PASS** |
-| Public alias smoke | Rota, içerik, JS/CSS/görsel asset ve Vercel auth duvarı kontrolü | **PASS** |
+| Exact Preview smoke | Rota, içerik, JS/CSS/görsel asset ve Vercel auth duvarı kontrolü | **PASS** |
 
 Yerel test komutları:
 
@@ -41,15 +41,15 @@ npm run test:browser
 
 Çalıştırma çıktısı:
 
-- `Dokuz rol domain testi başarılı: 26/26 sözleşme`
-- `Akıllı yeterlilik eşleme sözleşmesi başarılı: 10/10`
+- `Dokuz rol domain testi başarılı: 36/36 sözleşme`
+- `Akıllı yeterlilik eşleme sözleşmesi başarılı: 12/12`
 - `qualification-suggestion-contract: OK`
 - `PASS institutional integration contract — 32 systems / 32 mappings / 32 scenarios / 32 audit events`
-- `Doğrulama başarılı: 30 zorunlu dosya bulundu; production güvenlik taraması temiz.`
+- `Doğrulama başarılı: 47 zorunlu dosya bulundu; production güvenlik taraması temiz.`
 
-## 26/26 kabul kapsamı
+## 36/36 kabul kapsamı
 
-26 alanlık regresyon paketine ek olarak akıllı eşleme motoru için ayrı 10/10 kabul sözleşmesi çalışır. Ayrı paket; TYÇ/AYÇ 1–8 katalog bütünlüğünü, çıktı bazlı boyut/seviye ayrımını, açıklanabilir skor ve gerekçeyi, içerik/ölçme önerilerini, program aggregate'ini, eğitici seçimi/manuel düzeltmeyi, serialize/hydrate kalıcılığını, koordinatörlük–Komisyon salt-okunur sınırını, bozuk girdiyi ve otomatik karar yasağını doğrular.
+36 alanlık regresyon paketine ek olarak akıllı eşleme motoru için ayrı 12/12 kabul sözleşmesi çalışır. Ayrı paket; TYÇ/AYÇ 1–8 ile TYYÇ 5–8 katalog bütünlüğünü, çıktı bazlı boyut/seviye ayrımını, açıklanabilir skor ve gerekçeyi, içerik/ölçme önerilerini, program aggregate'ini, eğitici seçimi/manuel düzeltmeyi, kaynak sürümü ve hash taşıyan değişmez tam snapshot'ı, tarihsel kanıtın yeniden hesaplanmamasını, koordinatörlük–Komisyon salt-okunur sınırını, bozuk girdiyi ve otomatik karar yasağını doğrular.
 
 ### Rol ve erişim
 
@@ -61,11 +61,12 @@ npm run test:browser
 - Taslak, başvuru ve program görünürlüğünün rol/kişi bazında süzülmesi
 - Koordinatör, Komisyon, Öğrenci İşleri, Bilgi İşlem, Finans ve admin yetki ayrımı
 
-### TYÇ ve AYÇ/EQF
+### TYÇ, AYÇ/EQF ve TYYÇ
 
 - TYÇ ve AYÇ/EQF için ayrı ayrı 1–8 seviye dizisi
 - Her seviye için Bilgi/Beceri/Yetkinlik veya Knowledge/Skills/Responsibility and autonomy alanları
-- Her çerçeve için sekiz hazır matris şablonu
+- TYÇ ve AYÇ/EQF için sekizer hazır matris şablonu
+- TYYÇ için 5–8 düzey, altı yükseköğretim yeterlilik türü adayı ve dört hazır şablon
 - Yedi zorunlu matris sütunu ve 5–8. seviyeler için sentetik örnekler
 - Matris rotasının yalnız iç/dış eğitici, koordinatörlük, Komisyon ve admin navigasyonunda görünmesi
 - Taslak kaydının yalnız iç/dış eğiticiye; incelemenin koordinatörlük/Komisyon/admin'e salt-okunur açılması
@@ -101,18 +102,18 @@ npm run test:browser
 
 ## Tarayıcı QA durumu
 
-Güncel akıllı eşleme yayını 9 rol × dört viewport matrisini ödeme, entegrasyon ve yeterlilik öneri akışlarıyla geçmiştir. Koşu kaydı [GitHub Actions run #46](https://github.com/gurselveysel/kampusgo/actions/runs/32342418329), kanıt paketi ise `9396848395` numaralı `nine-role-preview-qa` artifact'ıdır. Chromium içeren CI koşusunda 36 rol/viewport bileşimi ve aşağıdaki kapsam 0 hatayla doğrulanmıştır:
+Güncel v15 yayını 9 rol × dört viewport matrisini ödeme, entegrasyon, yönerge ve yeterlilik öneri akışlarıyla geçmiştir. Koşu kaydı [GitHub Actions run `32375917382`](https://github.com/gurselveysel/kampusgo/actions/runs/32375917382), job `96447182122`; kanıt paketi `9409045414` numaralı `nine-role-preview-qa` artifact'ıdır. ZIP 3.755.151 bayttır ve SHA-256 özeti `3cd1ee779d14fa68696f4c7885ada3a4a1a04cb915e957cd51e779fc153f3b8c` değeridir. Chromium içeren CI koşusunda 36 rol/viewport bileşimi ve aşağıdaki kapsam 0 hatayla doğrulanmıştır:
 
 - Öğrenen ödeme talebi → Finans onayı → mutabakat → pilot kayıt
-- TYÇ ve AYÇ/EQF sekme geçişi ile 1–8 seviye seçenekleri
+- TYÇ ve AYÇ/EQF için 1–8, TYYÇ için 5–8 seviye seçenekleri ve üç çerçeve arasında geçiş
 - İç eğitici matris kaydı ve `localStorage` geri yükleme
-- Türkçe üç öğrenme çıktısında TYÇ/AYÇ için altı açıklanabilir öneri, içerik/ölçme uygulama ve gerekçeli manuel override
-- `smartAlignments` v4 serialize/hydrate, proposal–framework bağlantısı ve bozuk seviye için güvenli seed fallback
+- Türkçe öğrenme çıktılarında TYÇ/AYÇ/TYYÇ açıklanabilir önerileri, içerik/ölçme uygulama ve gerekçeli manuel override
+- `smartAlignments` v15 serialize/hydrate; kaynak/referans sürümü, seçim bağlamı ve hash taşıyan tam snapshot; tarihsel TYYÇ kanıtının yeniden hesaplanmaması
 - Kurum dışı eğitici düzenleme; koordinatör ve Komisyon salt-okunur görünümü
 - Dokuz rolün ayrı overview başlığı, görev ve navigasyonu
 - Entegrasyon Merkezi'nde 32 iç sistem, bağımsız Tier/MYYS önemi filtreleri, ana-veri sınırı ve beş dış kapı
 - 1440, 1024, 768 ve 390 px'te yatay taşma, kırık görsel, modal, toast, odak ve mobil menü
-- Public alias üzerinde Vercel giriş duvarı olmadan erişim
+- Exact Preview üzerinde Vercel giriş duvarı olmadan erişim; özel aliasın final kanıt olarak kullanılmaması
 
 Sonuç durumu: **Güncel akıllı eşleme yayını PASS — 9/9 rol, 4/4 viewport, 36/36 bileşim, 0 hata**.
 
@@ -127,12 +128,21 @@ Canlı Supabase migration sürümleri:
 - `20260820005626` — [DPÜ kaynak-provenans sertleştirmesi](../supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql)
 - `20260820062225` — [akıllı yeterlilik öneri şeması](../supabase/migrations/20260820020000_smart_qualification_suggestion_engine.sql)
 - `20260820062551` — [akıllı öneri bileşik yabancı anahtar performans indeksi](../supabase/migrations/20260820021000_smart_qualification_performance_indexes.sql)
+- `20260820113725` — [yönerge kontrollü pilot program/version omurgası](../supabase/migrations/20260820030000_directive_alignment_pilot_schema.sql)
+- `20260820114057` — [yönerge performans indeksleri](../supabase/migrations/20260820031000_directive_alignment_performance_indexes.sql)
+- `20260820123559` — [TYYÇ akıllı eşleme program omurgası](../supabase/migrations/20260820032000_tyyc_smart_alignment_program_spine.sql)
+- `20260820123602` — [yönerge kaynak ve erişim sertleştirmesi](../supabase/migrations/20260820033000_directive_reference_access_hardening.sql)
+- `20260820124546` — [TYYÇ omurga bütünlüğü ve performans indeksleri](../supabase/migrations/20260820034000_tyyc_spine_integrity_performance.sql)
+
+Canlı migration sayısı: **15**.
 
 Doğrulanan güvenlik ve veri sözleşmeleri:
 
-- 24 tabloda RLS + FORCE RLS
-- `anon` ve `authenticated` için yalnız `SELECT`
-- 20 `security_invoker`/`security_barrier` katalog görünümü
+- Yönerge kapsamındaki 34 tabloda RLS + FORCE RLS
+- 15 yönerge görünümünde `security_invoker`
+- 27 resmî kaynak ve 33 madde–kaynak bağlantısı
+- Anonim yüzey tam olarak 2 kaynak tablosu + 2 kamu görünümü; korumalı view isteği ve anonim yazma grant/policy'si yok
+- Dokuz rol için rol, birim, organ üyeliği, görev süresi ve karar kapsamı birebir DTO sözleşmesi
 - Çerçeve → tanımlayıcı/çeviri → matris ve taslak satırı yabancı anahtarları
 - Ödeme talebi → ödeme olayı zinciri
 - `real_payment=false`, `has_financial_identifiers=false`, `real_data_sent=false`
@@ -143,37 +153,36 @@ Doğrulanan güvenlik ve veri sözleşmeleri:
 - Akıllı öneri kayıtlarında `autonomous_decision=false`; kurul kararı ayrı insan kaydıdır ve `suggestion_mutated=false`
 - Bütün canlı-etki sayaçlarının sıfır olması: gerçek veri etkin/gönderilmiş, canlı istek yapılmış ve production izinli kayıt yok
 
-Canlı sayımlar:
+Canlı doğrulama sayımları:
 
-| Veri kümesi | Sayı |
+| Veri/güvenlik kümesi | Sayı |
 | --- | ---: |
-| Çerçeve / seviye tanımlayıcısı / matris şablonu / örnek satır | 2 / 16 / 16 / 8 |
-| Mali rota / rol özeti / rol adımı | 4 / 9 / 25 |
-| Veri kaynağı / doğrulanmış KDPÜ üst verisi / Türkçe çeviri | 2 / 6 / 8 |
-| Matris taslağı / taslak satırı | 2 / 6 |
-| Ödeme talebi / ödeme olayı | 1 / 2 |
+| Uygulanmış migration | 15 |
+| Yönerge FORCE RLS tablo / `security_invoker` görünüm | 34 / 15 |
+| Resmî kaynak / madde–kaynak bağlantısı | 27 / 33 |
+| Rol kapsam DTO'su | 9 |
+| Anonim kaynak tablosu / kamu görünümü / korumalı istek / yazma | 2 / 2 / 0 / 0 |
 | DPÜ iç sistem / eşleme / dry-run senaryosu / sentetik audit | 32 / 32 / 32 / 32 |
-| Döngü köprüsü / motor profili / program özeti / çıktı önerisi / eğitici düzeltmesi / insan kurul kararı | 4 / 1 / 1 / 4 / 1 / 1 |
 
-Security advisor: **0 bulgu**. Performance advisor'ın bildirdiği indekslenmemiş çeviri, entegrasyon ve akıllı öneri yabancı anahtarları `20260819234424`, `20260820003856` ve `20260820062551` takip migration'larıyla kapatıldı. Kalan kayıtlar yalnız yeni/boş pilot şemada beklenen unused-index INFO girdileri ve `auth_db_connections_absolute` INFO girdisidir. Sonuç: **PASS**.
+Security advisor: **0 bulgu**. İndekslenmemiş yabancı anahtar: **0**. Performance advisor'da yalnız yeni/boş pilotta beklenen unused-index girdileri ile Auth bağlantı stratejisi girdisi olmak üzere **96 INFO** kaydı vardır; hata veya uyarı değildir. Sonuç: **PASS**.
 
 ## Ana demo senaryoları
 
-1. İç eğitici programı ve TYÇ/AYÇ matrisini taslaklar; koordinatörlük/Komisyon incelemesi, gerekçeli karar, katalog, öğrenen kaydı, değerlendirme ve cüzdan adımları pilot durumda güncellenir.
+1. İç eğitici programı ve TYÇ/AYÇ/TYYÇ matrisini taslaklar; koordinatörlük/Komisyon incelemesi, gerekçeli karar, katalog, öğrenen kaydı, değerlendirme ve cüzdan adımları pilot durumda güncellenir.
 2. Öğrenen dış kazanım formunu gönderir; deterministik analiz işaretleri, Komisyon görüşü, tanınan kredi ve ÖBİS/YÖKSİS aktarım simülasyonu dış servis çağrısı olmadan izlenir.
 3. Öğrenen ücretli programa başvurur; kanal etiketini seçer, Finans demo kuyruğuna aktarır, mali onay/mutabakat sonrası sentetik eğitime kaydolur. Gerçek ödeme veya e-belge oluşmaz.
 
 ## Bilinen pilot sınırları
 
-- Supabase referans katmanı salt-okunurdur; kullanıcı mutasyonları izole ve sürümlü `localStorage` alanında kalır.
+- Supabase anonim referans katmanı yalnız iki kamu görünümünü okur; korumalı DTO'lar JWT kapsamı ister. Kullanıcı mutasyonları izole ve sürümlü `localStorage` alanında kalır.
 - Gerçek QR, dijital imza, e-posta/SMS, ödeme, banka/kart verisi, dosya aktarımı veya dış entegrasyon yoktur.
 - Matris, seviye ve mali parametreler otomatik karar veya kesin mevzuat kuralı değildir.
 - Portal verisinin tamamı kopyalanmaz; doğrulanmamış yeniden kullanım lisansı ve bulk API/export sınırı nedeniyle yalnız sınırlı üst veri tutulur.
 - DPÜ entegrasyon kataloğu kaynak izli bir aday tasarımdır; API/SSO/servis sözleşmesi, canlı bağlantı veya veri yazma yetkisi iddia etmez.
 - Tam kimlik doğrulamalı sayfa kazıması, kişi verisi alımı ve gerçek kurumsal otomasyon çağrısı yapılmamıştır.
-- Vercel exact Preview, canlı Supabase doğrulaması, güncel tarayıcı matrisi ve public alias kesinleşmiştir. Uygulama kaynak sürümü `543a1097c84f8cf1abaa180dcb9e48b4b70cd494`, final QA koşusu `32342418329`'dır; alias doğrulaması [issue #23](https://github.com/gurselveysel/kampusgo/issues/23) ile tamamlanmıştır.
+- Vercel exact Preview, canlı Supabase doğrulaması ve güncel tarayıcı matrisi kesinleşmiştir. Uygulama v15 kod/QA kanıtı [`1dd8dd6`](https://github.com/gurselveysel/kampusgo/commit/1dd8dd699992cf06463d9feeff522cb8a1a3d1cb), final workflow [`b966813`](https://github.com/gurselveysel/kampusgo/commit/b966813d1d6fb154eea209ff70e28c5b6a6b43ba), final QA koşusu `32375917382`'dir. Özel custom-domain alias güncellenmemiştir ve final Preview değildir.
 - Production deployment, production branch yayını ve canlı kurumsal bağlantı kesin kapsam dışıdır.
 
 ## Production teyidi
 
-Kabul edilebilir hedef yalnız Vercel **Preview** (`target: null`) dağıtımıdır. Production'a terfi, production branch yayını, gerçek veri veya canlı servis çağrısı yapılmayacaktır. Bu revizyonun doğrulanan kimliği `dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219`'dır.
+Kabul edilebilir hedef yalnız Vercel **Preview** (`target: null`) dağıtımıdır. Production'a terfi, production branch yayını, gerçek veri veya canlı servis çağrısı yapılmayacaktır. Bu revizyonun doğrulanan kimliği `dpl_2zaxrgj1ZUG3BjaVpo6AJyPgn8pX`'dır; alias listesi boştur.

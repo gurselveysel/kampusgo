@@ -1,13 +1,13 @@
 # Kaynak ve gereksinim izlenebilirliği
 
-Bu belge; `MYYS_KDPU_Komisyon_Sunumu_Nihai_20_Slayt(1).pdf`, `DOC-20260811-WA0039 (1)(3).pdf`, 19 Ağustos 2026 tarihli kullanıcı geri bildirimi ve resmî TYÇ/AYÇ kaynaklarının pilot bilgi mimarisine dönüşümünü özetler. Sunum ve çalışma belgeleri resmî mevzuat metninin kendisi olarak kabul edilmez.
+Bu belge; `MYYS_KDPU_Komisyon_Sunumu_Nihai_20_Slayt(1).pdf`, `DOC-20260811-WA0039 (1)(3).pdf`, 19 Ağustos 2026 tarihli kullanıcı geri bildirimi ve resmî TYÇ/AYÇ/TYYÇ kaynaklarının pilot bilgi mimarisine dönüşümünü özetler. Sunum ve çalışma belgeleri resmî mevzuat metninin kendisi olarak kabul edilmez.
 
 ## Yaşam döngüsü izi
 
 | Evre | Kaynak odağı | Uygulamadaki karşılık | Pilot sınırı |
 | --- | --- | --- | --- |
 | 1. Başvuru | Tek kapıda program önerisi ve dış kazanım tanıma | Çok alanlı formlar, üst veri yükleme alanı, doğrulama, taslak/gönderim, durum kaydı | Gerçek kimlik, kurum teyidi veya dosya içeriği yok |
-| 2. Ön inceleme | Koordinatörlük kontrolü, Komisyon kararı, karşılaştırma desteği | 30 günlük sayaç, eksik kanıt, TYÇ/AYÇ matrisi, AKTS ve uzaktan kredi göstergeleri, gerekçeli karar/audit | AI ve matris karar vermez; değerler pilot parametredir |
+| 2. Ön inceleme | Koordinatörlük kontrolü, Komisyon kararı, karşılaştırma desteği | 30 günlük sayaç, eksik kanıt, TYÇ/AYÇ/TYYÇ matrisi, AKTS ve uzaktan kredi göstergeleri, gerekçeli karar/audit | AI ve matris karar vermez; değerler pilot parametredir |
 | 3. Eğitim ve değerlendirme | Proje/portfolyo/sınav kanıtı, insan incelemesi | Örnek oturum, rubrik, güvenilirlik göstergesi, metinsel olay günlüğü, değerlendirici eylemi | Kamera, mikrofon, yüz tanıma veya biyometri yok |
 | 4. Dijital yeterlilik | Yapılandırılmış belge, QR doğrulama, birlikte çalışabilirlik hedefi | Cüzdan, belge alanları, pilot QR görünümü, doğrulama rotası, geçerlilik durumu | Üretim imzası veya W3C/Open Badges uygunluk iddiası yok |
 | 5. Akademik entegrasyon | Doğrudan DB yerine servis/onay katmanı | ÖBİS, YÖKSİS, e-Devlet ve diğer entegrasyonlarda redakte paket, dry-run, onay kapısı ve audit | Tümü bağlı değil/simülasyon; gerçek veri gönderilmez |
@@ -20,7 +20,8 @@ Bu belge; `MYYS_KDPU_Komisyon_Sunumu_Nihai_20_Slayt(1).pdf`, `DOC-20260811-WA003
 | Ödeme akışı eksik | Ücretli programdan ödeme demo sayfasına ve Finans rolüne yönlendirme | `pilot_finance_routes`, `pilot_payment_requests`, `pilot_payment_events` |
 | GİB ve MYS/MAYS açıklamaları eksik | Ana sayfa ile finans akışında amaç, görev ayrılığı, hata/yeniden deneme ve “bağlı değil” uyarısı | `gib_explanation`, `mys_mays_explanation`, gerçek etkiyi kapatan boolean değişmezler |
 | Rol değişince overview değişmiyor | Dokuz ayrı overview, rol görevleri, veri filtreleri, navigasyon ve mutasyon kapıları | `pilot_role_overviews`, `pilot_role_workflow_steps` |
-| Avrupa ve Türkiye yeterlilik şablonları | TYÇ ve AYÇ/EQF ayrı sekme; 1–8 seviye; eğitici girişi; kurul için salt-okunur inceleme | `qualification_frameworks`, `qualification_level_descriptors`, `qualification_level_descriptor_translations`, matris tabloları |
+| Avrupa, Türkiye ve yükseköğretim yeterlilik şablonları | TYÇ/AYÇ 1–8 ve TYYÇ 5–8 ayrı sekme; altı TYYÇ yeterlilik türü adayı; eğitici girişi; kurul için salt-okunur inceleme | `qualification_frameworks`, `qualification_level_descriptors`, `qualification_tyyc_type_descriptors`, `qualification_level_descriptor_translations`, matris tabloları |
+| Akıllı öneri kanıtı ve tarihsel iz | Üç çerçevenin ayrı önerileri, eğitici seçimi/override'ı ve insan kurul kararı; kaynak/referans sürümü ve hash taşıyan v15 değişmez snapshot | `pilot_learning_outcome_suggestions`, `pilot_qualification_manual_override_examples`, `pilot_qualification_board_decision_examples`, directive program/version composite FK omurgası |
 | Öğrenme hedefi–içerik–ölçme matrisi | Yedi zorunlu alan, aday eğitici yönergesi ve örnek satırlar | `pilot_matrix_templates`, `pilot_matrix_example_rows`, `pilot_matrix_drafts`, `pilot_matrix_draft_rows` |
 | Resmî veri ve Supabase uyumu | Kaynak kütüğü, sınırlı KDPÜ üst verisi, lisans/alım durumu | `qualification_dataset_registry`, `official_qualification_references` |
 | DPÜ otomasyon keşfi | 32 iç sistem için kaynak, Tier, MYYS önemi, kayıt sahibi, ana-veri sınırı, eşleme, dry-run ve audit | `institutional_system_registry`, `pilot_integration_mappings`, `pilot_integration_scenarios`, `pilot_integration_audit_events` |
@@ -34,6 +35,8 @@ Bu belge; `MYYS_KDPU_Komisyon_Sunumu_Nihai_20_Slayt(1).pdf`, `DOC-20260811-WA003
 | [Europass — sekiz AYÇ/EQF seviyesi](https://europass.europa.eu/en/description-eight-eqf-levels) | Knowledge, Skills, Responsibility and autonomy tanımlayıcıları | Resmî İngilizce referans; 8 seviye |
 | [Europass Türkçe seviye görünümü](https://europass.europa.eu/tr/description-eight-eqf-levels) | Türkçe gösterim katmanı | Kaynak/basis alanlarıyla ayrı çeviri tablosu; kurumsal doğrulama gerekir |
 | [2017 AYÇ/EQF Tavsiye Kararı](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017H0615(01)) | AYÇ/EQF'nin hukuki referansı | Çerçeve kaynak üst verisi |
+| [YÖK — Yükseköğretim Yeterlilik Türleri](https://uluslararasi.yok.gov.tr/Sayfalar/avrupa-yuksekogretim-alani-ile-uyum-projesi/yeterlikler-cercevesi/yuksekogretim-yeterlilik-turleri.aspx) | 5–8 düzey ve altı yeterlilik türü yapısı | Resmî form yapısı; operational boyut özeti verbatim değildir |
+| [MYK — TYYÇ form sicili](https://www.myk.gov.tr/tr/page/174) | Önlisans genel/mesleki, lisans, yüksek lisans tezli/tezsiz ve doktora form türleri | `official_form_registry_verified`; yerleştirme/eşdeğerlik/logo iddiası yok |
 | [Türkiye Yeterlilikler Veri Tabanı](https://portal.tyc.gov.tr/) | Sınırlı KDPÜ yeterlilik üst verisi | Elle doğrulanmış snapshot; tam scrape yok |
 | [Europass Qualifications Dataset Register](https://europass.europa.eu/en/stakeholders/qdr) | ELM/JSON-LD/TTL/SPARQL veri ekosistemi ve veri sağlayıcı yaklaşımı | Kaynak kütüğünde; otomatik alım kapalı |
 
@@ -85,7 +88,7 @@ DPÜ dışı **beş** hedef — GİB/e-Arşiv, mali MYS/MAYS, YÖKSİS/TÖMERSİ
 
 Her adaptör varsayılan `simulation/disconnected` durumundadır. Kaynak parola, T.C. kimlik, pasaport, kart veya canlı token saklanmaz; outbox/inbox, idempotency, onay kapısı ve denetim izi olmadan hiçbir aktarım kurgulanmaz.
 
-Canlı Supabase güvenlik sorgularında `real_data_enabled`, `real_data_sent`, `live_request_made` ve `production_allowed` için unsafe kayıt sayıları ayrı ayrı `0` bulunmuştur. Kamuya açık kaynak keşfi; giriş gerektiren sayfaların kazınması, kişi verisi alınması, tam içerik aynası veya gerçek API çağrısı anlamına gelmez.
+Canlı Supabase güvenlik sorgularında `real_data_enabled`, `real_data_sent`, `live_request_made` ve `production_allowed` için unsafe kayıt sayıları ayrı ayrı `0` bulunmuştur. Anonim istemci yalnız iki resmî kaynak tablosunun iki kamu görünümünü okur; korumalı operasyonel DTO'lara istek atmaz ve yazamaz. Kamuya açık kaynak keşfi; giriş gerektiren sayfaların kazınması, kişi verisi alınması, tam içerik aynası veya gerçek API çağrısı anlamına gelmez.
 
 ## Sınırlı KDPÜ kamu üst verisi
 
@@ -112,7 +115,7 @@ Bu altı doğrulanmış KDPÜ kamu üst veri kaydı yalnız `minimal_public_meta
 
 | Matris alanı | Kaynak / amaç | Karar sınırı |
 | --- | --- | --- |
-| Seviye tanımlayıcısı | Seçilen TYÇ veya AYÇ/EQF seviyesinin resmî referansı | Kilitli referans; kullanıcı değiştiremez |
+| Seviye tanımlayıcısı | Seçilen TYÇ, AYÇ/EQF veya TYYÇ düzey/tür referansı | Kilitli referans; kullanıcı değiştiremez |
 | Öğrenme hedefi / çıktısı | Aday eğiticinin gözlenebilir kazanımı | Kurumsal inceleme gerekir |
 | Öğrenme düzeyi ve eylem fiili | Seviye ile ölçülebilir fiil ilişkisi | Otomatik seviye tayini değildir |
 | Ders içeriği / öğrenme etkinliği | Çıktıyı sağlayacak içerik ve etkinlik | Eğitici taslağıdır |
@@ -123,8 +126,8 @@ Bu altı doğrulanmış KDPÜ kamu üst veri kaydı yalnız `minimal_public_meta
 ## Rol–yetki izi
 
 - Öğrenen: katalog, program başvurusu, ödeme demo yönlendirmesi, eğitim, değerlendirme, cüzdan
-- İç eğitici: program ve TYÇ/AYÇ matris önerisi, kendi başvuru/program takibi
-- Kurum dışı eğitici: kendi program ve matris önerisi; öğrenci dış kazanım başvurusu yapamaz
+- İç eğitici: program ve TYÇ/AYÇ/TYYÇ matris önerisi, kendi başvuru/program takibi
+- Kurum dışı eğitici: kendi program ve TYÇ/AYÇ/TYYÇ matris önerisi; öğrenci dış kazanım başvurusu yapamaz
 - Koordinatörlük/SEM: idari ön kontrol, eksik belge ve revizyon; matris salt-okunur
 - Komisyon: gerekçeli akademik pilot karar; AI/şablon karar değildir
 - Öğrenci İşleri: AKTS, kayıt ve aktarım ön kontrolü
@@ -144,12 +147,13 @@ Bu altı doğrulanmış KDPÜ kamu üst veri kaydı yalnız `minimal_public_meta
 
 ## Doğrulama durumu
 
-- Yerel domain/rol/ödeme/matris/entegrasyon ve akıllı UI sözleşmesi kabulü: **26/26 başarılı**.
+- Yerel domain/rol/ödeme/matris/entegrasyon ve yönerge UI sözleşmesi kabulü: **36/36 başarılı**.
+- Akıllı TYÇ/AYÇ/TYYÇ öneri, immutable snapshot ve insan karar sınırı sözleşmesi: **12/12 başarılı**; uygulama veri sürümü v15.
 - DPÜ entegrasyon sözleşmesi: **32 sistem / 32 eşleme / 32 dry-run / 32 sentetik audit**.
-- Yapı ve production güvenlik doğrulaması: **30/30 başarılı**.
-- Canlı Supabase migration sürümlerine `20260820062225` akıllı öneri şeması ve `20260820062551` performans takibi eklendi: **PASS**; toplam 24 FORCE RLS tablo, 20 `security_invoker` görünüm, 32 benzersiz HTTPS kaynak izi, security advisor 0 bulgu. [Çerçeve](../supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql), [entegrasyon](../supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql) ve [akıllı öneri](../supabase/migrations/20260820021000_smart_qualification_performance_indexes.sql) takip migration'ları indekslenmemiş yabancı anahtar uyarılarını kapattı; [provenans migration'ı](../supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql) sekiz genel dizin kaydını özgül resmî kaynaklarla değiştirdi. Yalnız beklenen unused-index ve `auth_db_connections_absolute` INFO girdileri kaldı.
+- Yapı ve production güvenlik doğrulaması: **47/47 başarılı**.
+- Toplam **15 canlı Supabase migration** vardır. Son beş sürüm: `20260820113725` ([30000](../supabase/migrations/20260820030000_directive_alignment_pilot_schema.sql)), `20260820114057` ([31000](../supabase/migrations/20260820031000_directive_alignment_performance_indexes.sql)), `20260820123559` ([32000](../supabase/migrations/20260820032000_tyyc_smart_alignment_program_spine.sql)), `20260820123602` ([33000](../supabase/migrations/20260820033000_directive_reference_access_hardening.sql)) ve `20260820124546` ([34000](../supabase/migrations/20260820034000_tyyc_spine_integrity_performance.sql)). **PASS**: yönerge kapsamında 34 FORCE RLS tablo, 15 `security_invoker` görünüm, S01–S27 olarak 27 resmî kaynak, 33 madde–kaynak bağlantısı ve dokuz tam kapsamlı rol DTO'su. Anonim yüzey tam olarak 2 kaynak tablosu + 2 kamu görünümüdür; korumalı okuma ve anonim yazma yoktur. Security advisor **0**, indekslenmemiş yabancı anahtar **0**; performance advisor yalnız beklenen **96 INFO** girdisi içerir.
 - Canlı etki güvenlik sayımları: gerçek veri etkin `0`, gerçek veri gönderilmiş `0`, canlı istek yapılmış `0`, production izinli `0`.
-- Yeni akıllı eşleme revizyonunun exact Vercel Preview sonucu: **PASS** — `dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219`, READY `target: null`; 9 rol × 4 viewport, akıllı TYÇ/AYÇ önerileri, komisyon incelemesi, kalıcılık ve asset yüklemeleri [run #46](https://github.com/gurselveysel/kampusgo/actions/runs/32342418329) ile doğrulandı. Public alias <https://kampusgo.uzemgo.com/pilot.html> anonim erişimde `version: 11` ile [issue #23](https://github.com/gurselveysel/kampusgo/issues/23) üzerinden doğrulandı.
-- Dokuz rol, TYÇ 8 + AYÇ/EQF 8 seviye, ödeme simülasyonu ve mali açıklamalar için ortak public Preview hedefi: <https://kampusgo.uzemgo.com/pilot.html>.
+- v15 exact Vercel Preview sonucu: **PASS** — [`dpl_2zaxrgj1ZUG3BjaVpo6AJyPgn8pX`](https://kdpu-myys-mockup-roliiwx2o-info-64116029s-projects.vercel.app/pilot.html), READY, `target: null`, alias `[]`; 9 rol × 4 viewport, akıllı TYÇ/AYÇ/TYYÇ önerileri, tarihsel kanıt, komisyon incelemesi, kalıcılık ve asset yüklemeleri [run `32375917382`](https://github.com/gurselveysel/kampusgo/actions/runs/32375917382), job `96447182122`, artifact `9409045414` ile 0 hatayla doğrulandı. Artifact 3.755.151 bayt, SHA-256 `3cd1ee779d14fa68696f4c7885ada3a4a1a04cb915e957cd51e779fc153f3b8c`.
+- GitHub kayıtları: [v15 kod/QA düzeltmesi `1dd8dd6`](https://github.com/gurselveysel/kampusgo/commit/1dd8dd699992cf06463d9feeff522cb8a1a3d1cb) ve [final workflow `b966813`](https://github.com/gurselveysel/kampusgo/commit/b966813d1d6fb154eea209ff70e28c5b6a6b43ba). Özel alias <https://kampusgo.uzemgo.com/pilot.html> güncellenmemiştir ve final exact Preview değildir.
 - Tam portal aynası için lisans ve bulk API/export koşulları doğrulanmadığından otomatik alım kapalıdır.
 - **Production NO-GO**.
