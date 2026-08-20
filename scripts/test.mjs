@@ -191,6 +191,8 @@ test("entegrasyon dry-run rol kapısı, hata-retry ve audit zinciri gerçek veri
   assert.equal(first.job.status, "simulation_failed");
   assert.equal(first.job.retryAvailable, true);
   assert.equal(first.job.realDataSent, false);
+  assert.equal(first.job.target, "dpu-obs");
+  assert.equal(first.job.targetLabel, studentState.integrations.find((item) => item.id === "dpu-obs")?.name);
   const second = runIntegrationDryRun(studentState, "dpu-obs", "studentAffairs", actorNameForRole("studentAffairs"));
   assert.equal(second.job.status, "simulation_succeeded");
   assert.equal(second.job.retryAvailable, false);
@@ -204,6 +206,7 @@ test("entegrasyon dry-run rol kapısı, hata-retry ve audit zinciri gerçek veri
   const jobs = runIntegrationBulkDryRun(bulkState, "it", actorNameForRole("it"));
   assert.equal(jobs.length, bulkState.integrations.filter((item) => item.consultationOnly === false).length);
   assert.ok(jobs.every((job) => job.realDataSent === false && job.status === "simulation_succeeded"));
+  assert.ok(jobs.every((job) => job.target === job.targetId && /^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(job.target) && job.targetLabel));
   const consultationId = consultationOnlyIntegrationIds.find((id) => bulkState.integrations.some((item) => item.id === id));
   assert.ok(consultationId, "istişare-only canonical kayıt bulunamadı");
   assert.throws(() => runIntegrationDryRun(bulkState, consultationId, "it", actorNameForRole("it")), /dry-run/);
@@ -575,9 +578,10 @@ test("iki uçtan uca senaryo veri katmanını ve güvenli aktarım loglarını g
   }
   assert.ok(state.credentials.some((item) => item.code.startsWith("MY-BEL-SCN-")));
   assert.ok(state.recognizedCredits.length > 0);
-  const transfers = state.integrationJobs.filter((item) => ["ÖBİS", "YÖKSİS"].includes(item.target));
+  const transfers = state.integrationJobs.filter((item) => ["obis", "yoksis"].includes(item.target));
   assert.equal(transfers.length, 2);
-  assert.ok(transfers.every((item) => item.realDataSent === false && item.status === "simulation_succeeded"));
+  assert.deepEqual(new Set(transfers.map((item) => item.targetLabel)), new Set(["ÖBİS", "YÖKSİS"]));
+  assert.ok(transfers.every((item) => item.target === item.targetId && item.realDataSent === false && item.status === "simulation_succeeded"));
 });
 
 const failures = results.filter((result) => !result.ok);
