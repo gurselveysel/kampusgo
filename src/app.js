@@ -1037,7 +1037,7 @@ function paymentReviewModal(id, nextStatus) {
     : nextStatus === "revision"
       ? "Ödeme kanalı veya program başvuru bilgisi için öğrenen düzeltmesi gerekiyor."
       : "Mali ön onay ile sentetik tahsilat kaydı eşleştirildi; gerçek para hareketi yoktur.";
-  openModal(modalTemplate(`${labels[nextStatus]} • ${request.id}`, `<form id="payment-review-form"><input type="hidden" name="id" value="${request.id}" /><input type="hidden" name="status" value="${nextStatus}" /><div class="grid grid-2"><div><span class="table-subtitle">Program</span><h3>${escapeHtml(request.program)}</h3><p class="page-subtitle">${escapeHtml(request.learner)} • ${formatCurrency(request.amount)} • ${escapeHtml(request.channel)}</p></div><div>${paymentStatusBadge(request)}</div></div><div class="field section"><label class="required" for="payment-review-reason">Mali demo gerekçesi</label><textarea id="payment-review-reason" name="reason" required minlength="12">${escapeHtml(defaultReason)}</textarea><small>Gerekçe, role açık bildirim ve denetim izinde görünür.</small></div><label class="consent-row"><input type="checkbox" name="confirm" required /><span>Gerçek ödeme, fatura, GİB/e-Arşiv veya MYS/MAYS aktarımı oluşturmadığımı onaylıyorum.</span></label></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "revision" ? "button--secondary" : "button--success"}" data-action="submit-payment-review">${labels[nextStatus]} kaydını oluştur</button>`));
+  openModal(modalTemplate(`${labels[nextStatus]} • ${request.id}`, `<form id="payment-review-form"><input type="hidden" name="id" value="${request.id}" /><input type="hidden" name="status" value="${nextStatus}" /><div class="grid grid-2"><div><span class="table-subtitle">Program</span><h3>${escapeHtml(request.program)}</h3><p class="page-subtitle">${escapeHtml(request.learner)} • ${formatCurrency(request.amount)} • ${escapeHtml(request.channel)}</p></div><div>${paymentStatusBadge(request)}</div></div><div class="field section"><label class="required" for="payment-review-reason">Mali demo gerekçesi</label><textarea id="payment-review-reason" name="reason" required minlength="12">${escapeHtml(defaultReason)}</textarea><small>Gerekçe, role açık bildirim ve denetim izinde görünür.</small></div><label class="consent-row"><input type="checkbox" name="confirm" required /><span>Gerçek ödeme, fatura, GİB/e-Arşiv veya MYS/MAYS aktarımı oluşturmadığımı onaylıyorum.</span></label></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "revision" ? "button--secondary" : "button--success"}" type="button" data-action="submit-payment-review">${labels[nextStatus]} kaydını oluştur</button>`));
 }
 
 function openIntegration(id) {
@@ -1135,7 +1135,12 @@ document.addEventListener("click", (event) => {
     if (form) submitPaymentDemo(form);
     return;
   }
-  if (action === "submit-payment-review") document.querySelector("#payment-review-form")?.requestSubmit();
+  if (action === "submit-payment-review") {
+    event.preventDefault();
+    const form = document.querySelector("#payment-review-form");
+    if (form) submitPaymentReview(form);
+    return;
+  }
   if (action === "handoff-finance") {
     state.roleId = "finance";
     state.selectedApplicationId = null;

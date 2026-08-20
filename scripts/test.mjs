@@ -266,6 +266,8 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /Finans \/ Döner Sermaye'ye gönder/, "öğrenen ödeme demosunda mali işlere yönlendirme CTA'sı yok");
   assert.match(appSource, /type="button" data-action="submit-payment-request"/, "ödeme demo CTA'sı deterministik eylem olarak tanımlı değil");
   assert.match(appSource, /action === "submit-payment-request"[\s\S]{0,220}submitPaymentDemo\(form\)/, "ödeme demo CTA'sı doğrulamalı ödeme gönderim yolunu doğrudan tetiklemiyor");
+  assert.match(appSource, /type="button" data-action="submit-payment-review"/, "mali inceleme CTA'sı deterministik eylem olarak tanımlı değil");
+  assert.match(appSource, /action === "submit-payment-review"[\s\S]{0,260}submitPaymentReview\(form\)/, "mali inceleme CTA'sı doğrulamalı durum geçişini doğrudan tetiklemiyor");
   assert.match(appSource, /data-role-overview="\$\{state\.roleId\}"/, "rol değişiminde ayırt edici çalışma alanı işareti yok");
   assert.match(appSource, /const editable = PROPOSAL_ROLES\.has\(state\.roleId\)/, "matris düzenleme yetkisi eğitici rolleriyle sınırlandırılmıyor");
   assert.match(appSource, /if \(!PROPOSAL_ROLES\.has\(state\.roleId\)\) \{ deny\("TYÇ \/ AYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir\./, "matris kayıt mutasyonunda rol kapısı yok");

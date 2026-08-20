@@ -363,10 +363,18 @@ async function verifyPaymentDemoFlow(page, errors) {
   await requestRow.locator('[data-action="payment-review"][data-status="approved"]').click();
   await page.check('#payment-review-form input[name="confirm"]');
   await page.locator('[data-action="submit-payment-review"]').click();
+  await page.waitForFunction(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "approved");
+  }, undefined, { timeout: 3000 });
   const approvedRow = page.locator('tr:has-text("Yeşil Dönüşüm İçin Temel Yetkinlikler")').filter({ has: page.locator('[data-action="payment-review"][data-status="reconciled"]') }).first();
   await approvedRow.locator('[data-action="payment-review"][data-status="reconciled"]').click();
   await page.check('#payment-review-form input[name="confirm"]');
   await page.locator('[data-action="submit-payment-review"]').click();
+  await page.waitForFunction(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "reconciled");
+  }, undefined, { timeout: 3000 });
 
   const paymentState = await page.evaluate(() => {
     const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
