@@ -595,7 +595,7 @@ function paymentRequestPanel(request) {
   ];
   const editable = ["draft", "revision"].includes(request.status);
   const form = editable
-    ? `<form class="card payment-form" id="payment-request-form"><div class="card-header"><div><h2>Ödeme kanalı demosu</h2><p>Yalnız kanal adı seçilir; ödeme aracı bilgisi alınmaz.</p></div>${paymentStatusBadge(request)}</div><div class="card-body form-grid"><input type="hidden" name="id" value="${escapeHtml(request.id)}" /><div class="field full"><label class="required" for="payment-channel">Pilot kanal</label><select id="payment-channel" name="channel" required><option value="">Kanal seçin</option><option>Sanal POS simülasyonu</option><option>Havale/EFT simülasyonu</option></select><small>Her iki seçenek de yalnız iş akışı etiketidir; gerçek tahsilat başlatmaz.</small></div><label class="consent-row full"><input type="checkbox" name="confirm" required /><span>Bu işlemin gerçek ödeme veya kayıt oluşturmadığını ve yalnız mali inceleme demosu olduğunu anlıyorum.</span></label></div><div class="card-footer"><span><strong>${formatCurrency(request.amount)}</strong><span class="table-subtitle">Pilot program ücreti • mali birim doğrulaması gerekir</span></span><button class="button" type="submit">Finans / Döner Sermaye'ye gönder ${icon("arrow")}</button></div></form>`
+    ? `<form class="card payment-form" id="payment-request-form"><div class="card-header"><div><h2>Ödeme kanalı demosu</h2><p>Yalnız kanal adı seçilir; ödeme aracı bilgisi alınmaz.</p></div>${paymentStatusBadge(request)}</div><div class="card-body form-grid"><input type="hidden" name="id" value="${escapeHtml(request.id)}" /><div class="field full"><label class="required" for="payment-channel">Pilot kanal</label><select id="payment-channel" name="channel" required><option value="">Kanal seçin</option><option>Sanal POS simülasyonu</option><option>Havale/EFT simülasyonu</option></select><small>Her iki seçenek de yalnız iş akışı etiketidir; gerçek tahsilat başlatmaz.</small></div><label class="consent-row full"><input type="checkbox" name="confirm" required /><span>Bu işlemin gerçek ödeme veya kayıt oluşturmadığını ve yalnız mali inceleme demosu olduğunu anlıyorum.</span></label></div><div class="card-footer"><span><strong>${formatCurrency(request.amount)}</strong><span class="table-subtitle">Pilot program ücreti • mali birim doğrulaması gerekir</span></span><button class="button" type="button" data-action="submit-payment-request">Finans / Döner Sermaye'ye gönder ${icon("arrow")}</button></div></form>`
     : `<section class="card"><div class="card-header"><div><h2>${escapeHtml(request.program)}</h2><p>${escapeHtml(request.id)} • ${formatCurrency(request.amount)} • ${escapeHtml(request.channel)}</p></div>${paymentStatusBadge(request)}</div><div class="card-body">${request.reviewReason ? notice(request.status === "revision" ? "warning" : "success", "Mali birim notu", request.reviewReason) : notice("success", "Mali işlere iletildi", "Başvuru Finans / Döner Sermaye demo kuyruğunda görünür; gerçek tahsilat veya dış bildirim oluşmaz.")}${request.status === "reconciled" ? `<button class="button" data-nav="learning">Pilot eğitim kaydını aç</button>` : `<button class="button button--secondary" data-action="handoff-finance">Finans / Döner Sermaye demo rolüne geç</button>`}</div></section>`;
   return `<section class="payment-flow section" aria-label="Ödeme demo ilerlemesi"><ol>${steps.map(([step, title, note]) => `<li class="${step < rank ? "done" : step === rank ? "current" : ""}"><span>${step < rank ? icon("check") : step}</span><div><strong>${escapeHtml(title)}</strong><small>${escapeHtml(note)}</small></div></li>`).join("")}</ol></section>${form}`;
 }
@@ -1129,6 +1129,12 @@ document.addEventListener("click", (event) => {
   if (action === "finance-simulate") simulateFinance();
   if (action === "finance-draft") createFinanceDraft();
   if (action === "payment-review") paymentReviewModal(trigger.dataset.id, trigger.dataset.status);
+  if (action === "submit-payment-request") {
+    event.preventDefault();
+    const form = trigger.closest("form");
+    if (form) submitPaymentDemo(form);
+    return;
+  }
   if (action === "submit-payment-review") document.querySelector("#payment-review-form")?.requestSubmit();
   if (action === "handoff-finance") {
     state.roleId = "finance";
@@ -1179,6 +1185,12 @@ document.addEventListener("input", (event) => {
   if (["catalog-search","catalog-level"].includes(event.target.id)) filterCatalog();
   if (["application-search","application-status"].includes(event.target.id)) filterApplications();
   if (event.target.id === "integration-search") filterIntegrations();
+});
+
+document.addEventListener("change", (event) => {
+  // Native selects and checkboxes may emit only change in some automation or
+  // assistive-technology paths; mark those edits before a late refresh lands.
+  if (event.target.matches("input, select, textarea")) uiMutationEpoch += 1;
 });
 
 roleSelect.addEventListener("change", () => {

@@ -329,19 +329,26 @@ async function verifyPaymentDemoFlow(page, errors) {
   check((await page.locator("#payment-request-form").count()) === 1, "learner: ücretli program ödeme demo formuna yönlenmedi", errors);
   await page.selectOption("#payment-channel", "Havale/EFT simülasyonu");
   await page.check('#payment-request-form input[name="confirm"]');
-  await page.locator('#payment-request-form button[type="submit"]').click();
+  const paymentFormValid = await page.locator("#payment-request-form").evaluate((form) => form.checkValidity());
+  check(paymentFormValid, "learner: doldurulan ödeme demo formu tarayıcı doğrulamasını geçmedi", errors);
+  await page.locator('[data-action="submit-payment-request"]').click();
   try {
     await page.waitForFunction(() => {
       const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
       return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "pending_finance");
     }, undefined, { timeout: 3000 });
   } catch (error) {
-    const diagnostics = await page.evaluate(() => ({
-      request: JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"))?.finance?.paymentRequests?.find((item) => item.programId === "program-green-skills"),
-      channel: document.querySelector("#payment-channel")?.value || null,
-      confirmed: document.querySelector('#payment-request-form input[name="confirm"]')?.checked ?? null,
-      toast: document.querySelector("#toast-region")?.textContent?.trim() || null
-    }));
+    const diagnostics = await page.evaluate(() => {
+      const form = document.querySelector("#payment-request-form");
+      return {
+        request: JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"))?.finance?.paymentRequests?.find((item) => item.programId === "program-green-skills"),
+        channel: document.querySelector("#payment-channel")?.value || null,
+        confirmed: document.querySelector('#payment-request-form input[name="confirm"]')?.checked ?? null,
+        formValid: form?.checkValidity() ?? null,
+        invalidFields: form ? [...form.querySelectorAll(":invalid")].map((field) => field.name || field.id || field.tagName) : [],
+        toast: document.querySelector("#toast-region")?.textContent?.trim() || null
+      };
+    });
     throw new Error(`Ödeme demo kaydı pending_finance durumuna geçmedi: ${JSON.stringify(diagnostics)}; ${error.message}`);
   }
   await page.waitForSelector('[data-action="handoff-finance"]', { state: "visible" });

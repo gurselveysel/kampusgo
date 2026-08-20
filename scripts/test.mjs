@@ -264,6 +264,8 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /GİB \/ e-Arşiv taslak kapısı/, "ana sayfada GİB\/e-Arşiv açıklaması yok");
   assert.match(appSource, /MYS \/ MAYS kontrollü aktarım taslağı/, "ana sayfada MYS\/MAYS açıklaması yok");
   assert.match(appSource, /Finans \/ Döner Sermaye'ye gönder/, "öğrenen ödeme demosunda mali işlere yönlendirme CTA'sı yok");
+  assert.match(appSource, /type="button" data-action="submit-payment-request"/, "ödeme demo CTA'sı deterministik eylem olarak tanımlı değil");
+  assert.match(appSource, /action === "submit-payment-request"[\s\S]{0,220}submitPaymentDemo\(form\)/, "ödeme demo CTA'sı doğrulamalı ödeme gönderim yolunu doğrudan tetiklemiyor");
   assert.match(appSource, /data-role-overview="\$\{state\.roleId\}"/, "rol değişiminde ayırt edici çalışma alanı işareti yok");
   assert.match(appSource, /const editable = PROPOSAL_ROLES\.has\(state\.roleId\)/, "matris düzenleme yetkisi eğitici rolleriyle sınırlandırılmıyor");
   assert.match(appSource, /if \(!PROPOSAL_ROLES\.has\(state\.roleId\)\) \{ deny\("TYÇ \/ AYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir\./, "matris kayıt mutasyonunda rol kapısı yok");
@@ -282,6 +284,7 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /runIntegrationDryRun\(state, id, state\.roleId/, "dry-run domain iş akışı arayüzde kullanılmıyor");
   assert.match(appSource, /const refreshGuard = createAsyncRefreshGuard\(\);[\s\S]+canCommitAsyncRefresh\(refreshGuard\)/, "gecikmeli Supabase yanıtı için başlangıç snapshot koruması yok");
   assert.match(appSource, /uiMutationEpoch \+= 1;[\s\S]+event\.target\.id === "proposal-ects"/, "form etkileşimi gecikmeli refresh yarışından korunmuyor");
+  assert.match(appSource, /document\.addEventListener\("change",[\s\S]{0,300}uiMutationEpoch \+= 1/, "select ve checkbox change olayları gecikmeli refresh yarışından korunmuyor");
   assert.match(appSource, /Kamu, mali ve bildirim taslakları/, "haricî GİB\/mali MYS\/YÖKSİS kapıları ayrı gösterilmiyor");
   assert.match(appSource, /\["ArrowLeft", "ArrowRight", "Home", "End"\]/, "Komisyon sekmelerinin klavye yön tuşu desteği yok");
   assert.match(htmlSource, /id="notification-button"[^>]+data-nav="notifications"/, "bildirim düğmesi sabit seçicisi yok");
