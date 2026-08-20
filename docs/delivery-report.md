@@ -9,13 +9,13 @@ Karar: **Production NO-GO**
 | Çıktı | Durum | Not |
 | --- | --- | --- |
 | Çalışan uygulama kodu | Hazır | Gerçek HTML/CSS/ES module bileşenleri; ekran görüntüsü tabanlı arayüz değildir |
-| Dokuz rol kabulü | **PASS** | Dokuz rolün farklı özet, navigasyon, görünürlük ve işlem sınırları; 26/26 yerel sözleşme geçti; önceki yayın dört viewport tarayıcı regresyonu PASS |
+| Dokuz rol kabulü | **PASS** | Dokuz rolün farklı özet, navigasyon, görünürlük ve işlem sınırları; 26/26 yerel sözleşme ve 36 rol/viewport tarayıcı bileşimi geçti |
 | Ödeme ve finans akışı | **PASS** | Gerçek ödeme almayan öğrenen → Finans / Döner Sermaye akışı, revizyon/onay/mutabakat ve audit |
 | TYÇ / AYÇ matrisleri | **PASS** | TYÇ 8 + AYÇ/EQF 8 seviye, 16 şablon; çıktı bazlı açıklanabilir otomatik öneri, eğitici seçimi/düzeltmesi ve salt-okunur inceleme |
 | Supabase migration | **PASS** | Akıllı eşleme dahil canlı sürümler `20260820062225` ve `20260820062551`; toplam 24 FORCE RLS tablo, 20 `security_invoker` görünüm ve security advisor 0 bulgu |
 | DPÜ entegrasyon kataloğu | **PASS** | 32 iç sistem, 32 eşleme, 32 dry-run senaryosu ve 32 sentetik audit olayı; gerçek veri/canlı istek/production sayaçları 0 |
-| Vercel Preview | **READY / PASS** | [`dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5`](https://kdpu-myys-mockup-rkqlwxtnd-info-64116029s-projects.vercel.app/pilot.html), `target: null`; public alias ve asset smoke geçti |
-| GitHub uzak deposu | **PASS** | [`gurselveysel/kampusgo`](https://github.com/gurselveysel/kampusgo); uygulama kaynak sürümü [`8a8aacfd`](https://github.com/gurselveysel/kampusgo/commit/8a8aacfd55158f4a18eba22ab3401ef1548f8a38), final QA [run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716); Git bağlantılı otomatik production yayını yok |
+| Vercel Preview | **READY / PASS** | [`dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219`](https://kdpu-myys-mockup-1fnbhb7yb-info-64116029s-projects.vercel.app/pilot.html), `target: null`; asset smoke ve public alias doğrulaması geçti |
+| GitHub uzak deposu | **PASS** | [`gurselveysel/kampusgo`](https://github.com/gurselveysel/kampusgo); uygulama kaynak sürümü [`543a109`](https://github.com/gurselveysel/kampusgo/commit/543a1097c84f8cf1abaa180dcb9e48b4b70cd494), final QA [run #46](https://github.com/gurselveysel/kampusgo/actions/runs/32342418329); Git bağlantılı otomatik production yayını yok |
 | Production | Yapılmayacak | Kesin NO-GO; terfi, production branch yayını veya production hedefi yok |
 
 ## Birsen Hoca geri bildirimlerinin karşılığı
@@ -100,7 +100,7 @@ Türkiye Yeterlilikler Veri Tabanı'nın tam kopyası oluşturulmamıştır. Por
 - Yapı ve production güvenlik taraması: **30/30 zorunlu dosya başarılı**.
 - Ödeme akışında yetkisiz rol, gerçek ödeme kanalı ve admin mali kararı reddedildi; `realPayment=false` korundu.
 - TYÇ ve AYÇ/EQF için ayrı ayrı sekiz seviye, sekiz şablon ve zorunlu matris alanları doğrulandı.
-- Güncel sürümün 9 rol × 1440/1024/768/390 px matrisi, ödeme uçtan uca akışı, entegrasyon kataloğu ve sahiplik kontrolleri: **PASS** ([run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716)).
+- Güncel sürümün 9 rol × 1440/1024/768/390 px matrisi, ödeme uçtan uca akışı, akıllı TYÇ/AYÇ eşleme, entegrasyon kataloğu ve sahiplik kontrolleri: **PASS** — 36 bileşim/0 hata ([run #46](https://github.com/gurselveysel/kampusgo/actions/runs/32342418329), artifact `9396848395`).
 - Exact Preview, public custom-domain alias ve asset/smoke kontrolü: **PASS**.
 - Genişletilmiş migration'ın canlı apply/RLS/grant/advisor doğrulaması: **PASS**.
 - DPÜ entegrasyon sözleşmesi: **32/32/32/32**; dört yeni FORCE RLS tablo, dört `security_invoker` görünüm ve tüm unsafe sayaçlar `0`.
@@ -138,7 +138,7 @@ Logolar yüklenen özgün dosyalardan ayrı `<img>` bileşenleriyle kullanılır
 - DPÜ katalog kaydı, resmî kamu sayfası üzerinden sistemin varlığı/amacı için kaynak izidir; API, SSO, servis sözleşmesi, veri yazma yetkisi veya aktif entegrasyon kanıtı değildir.
 - Giriş gerektiren ekranlar, kişi kayıtları, tam portal içerikleri ve kurumsal veri tabanları kazınmamış; gerçek kişisel veri, token veya parola depolanmamıştır.
 - QR görünümü dekoratif simülasyondur; üretim imzası veya standart uygunluk iddiası yoktur.
-- Uygulama kaynak SHA `8a8aacfd55158f4a18eba22ab3401ef1548f8a38`, READY Preview `dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5` ve public custom-domain alias olarak kesinleşti.
+- Uygulama kaynak SHA `543a1097c84f8cf1abaa180dcb9e48b4b70cd494`, READY Preview `dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219` ve public custom-domain alias kesinleşti; anonim erişim `version: 11` olarak doğrulandı.
 
 ## Kurulum
 
@@ -153,4 +153,4 @@ Yerel adres: `http://localhost:3000`; kök rota `/pilot.html`'e yönlenir. Stati
 
 ## Production teyidi
 
-Karar kesin **NO-GO**'dur. Bu çalışma production deployment, production branch yayını, canlı kurumsal sistem bağlantısı, gerçek Supabase kullanıcı mutasyonu veya production alan adı hedefi oluşturmaz. Kabul edilen dağıtım `dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5` kimlikli READY `target: null` Vercel Preview'dır.
+Karar kesin **NO-GO**'dur. Bu çalışma production deployment, production branch yayını, canlı kurumsal sistem bağlantısı, gerçek Supabase kullanıcı mutasyonu veya production alan adı hedefi oluşturmaz. Kabul edilen dağıtım `dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219` kimlikli READY `target: null` Vercel Preview'dır.
