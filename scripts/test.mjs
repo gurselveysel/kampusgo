@@ -277,6 +277,8 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /id="integration-search"/, "entegrasyon katalog araması yok");
   assert.match(appSource, /id="integration-category"/, "entegrasyon kategori filtresi yok");
   assert.match(appSource, /id="integration-tier"/, "entegrasyon Tier filtresi yok");
+  assert.match(appSource, /data-public-url="\$\{escapeHtml\(item\.publicUrl\)\}"/, "entegrasyon kartında doğrudan kamu erişim adresi yok");
+  assert.match(appSource, /Kaynak kanıtını aç/, "entegrasyon kartında erişim adresinden ayrı kaynak kanıtı yok");
   assert.match(appSource, /Tier, erişim ve işlem sınıfıdır; sistemin hazır, bağlı veya onaylanmış olduğunu göstermez/, "Tier hazırlık uyarısı yok");
   assert.match(appSource, /MYYS: \$\{relevanceLabels\[item\.myysRelevance\]/, "MYYS core\/supporting\/adjacent etiketi yok");
   assert.match(appSource, /Tier \$\{item\.stage\}/, "entegrasyon tier\/katman işareti yok");

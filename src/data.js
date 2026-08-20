@@ -179,6 +179,7 @@ function buildInstitutionalIntegrationCatalog() {
       myysRelevance: system.myysRelevance,
       consultationOnly: consultationOnlyIntegrationIds.includes(system.id),
       attempts: 0,
+      publicUrl: system.publicUrl || "",
       sourceUrl: system.sourceUrl || system.publicUrl || "",
       sourceStatus: `${system.verificationStatus}; entegrasyon sözleşmesi: ${system.integrationContractStatus}`,
       purposeProposal: system.scopeNote,
@@ -198,7 +199,7 @@ function buildInstitutionalIntegrationCatalog() {
 }
 
 export const initialState = {
-  version: 8,
+  version: 9,
   roleId: "learner",
   activePage: "home",
   mobileNavOpen: false,

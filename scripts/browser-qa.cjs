@@ -466,6 +466,7 @@ async function verifyIntegrationCatalog(page, integrations, errors) {
     tier: node.dataset.integrationTier,
     relevance: node.dataset.myysRelevance,
     consultationOnly: node.dataset.consultationOnly,
+    publicURL: node.dataset.publicUrl,
     sourceURL: node.dataset.sourceUrl
   })));
   check(cards.length === integrations.length, `integrations: UI ${cards.length} kart ile canonical ${integrations.length} kaydı eşleşmiyor`, errors);
@@ -475,6 +476,7 @@ async function verifyIntegrationCatalog(page, integrations, errors) {
     check(card.tier === expected?.integrationTier, `${card.id}: Tier etiketi canonical kayıtla farklı`, errors);
     check(card.relevance === expected?.myysRelevance, `${card.id}: MYYS relevance etiketi canonical kayıtla farklı`, errors);
     check(card.consultationOnly === String(expected?.consultationOnly), `${card.id}: consultationOnly kart sözleşmesi farklı`, errors);
+    check(card.publicURL === expected?.publicUrl, `${card.id}: kamu erişim adresi canonical kayıtla farklı`, errors);
   }
 
   const integrationText = await page.locator("#main-content").innerText();
@@ -488,8 +490,8 @@ async function verifyIntegrationCatalog(page, integrations, errors) {
     "dpu-central-identity", "dpu-obs", "dpu-bologna", "dpu-oys", "dpu-bkys", "dpu-ebys", "dpu-doner-sermaye"
   ]), "integrations: canonical ana-veri sahipliği öncelik sırası hatalı", errors);
   for (const url of requiredURLs) {
-    const matching = page.locator(`#integration-catalog .integration-card[data-source-url="${url}"] a.integration-source[href="${url}"]`);
-    check(await matching.count() === 1, `integrations: verilen resmî kaynak linki kartta yok: ${url}`, errors);
+    const matching = page.locator(`#integration-catalog .integration-card[data-public-url="${url}"] a.integration-public[href="${url}"]`);
+    check(await matching.count() === 1, `integrations: verilen resmî erişim linki kartta yok: ${url}`, errors);
   }
 
   const searchTarget = integrations.find((item) => item.id === "dpu-bologna") || integrations[0];
@@ -519,7 +521,7 @@ async function verifyIntegrationCatalog(page, integrations, errors) {
     await consultationCard.locator('[data-action="open-integration"]').click();
     check((await page.locator("#modal").innerText()).includes("Aktarıma yönelik dry-run kapalı"), `${consultation.id}: consultation-only modal sınırı eksik`, errors);
     check(await page.locator('#modal [data-action="simulate-integration"]').count() === 0, `${consultation.id}: consultation-only aktarım dry-run CTA'sı görünür`, errors);
-    await page.locator('#modal [data-action="close-modal"]').click();
+    await page.locator('#modal [data-action="close-modal"]').first().click();
   }
 
   const operable = integrations.find((item) => !item.consultationOnly && item.operatorRoles.includes("it"));

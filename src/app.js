@@ -159,11 +159,11 @@ function isValidSavedState(saved) {
     saved.programs.every(isProgram) && saved.credentials.every(isCredential) && saved.enrollments.every(isEnrollment) &&
     saved.assessmentSessions.every(isAssessment) && saved.recognizedCredits.every(isRecognizedCredit) &&
     hasCanonicalIntegrationCatalog(saved.integrations) && saved.integrations.every((item) => isObject(item) &&
-      ["id", "name", "category", "systemClass", "owner", "status", "lastTest", "sourceStatus", "purposeProposal", "dataDirection", "approvalGate", "errorScenario", "retryPolicy", "auditPolicy", "integrationTier", "myysRelevance"].every((key) => isText(item[key])) &&
+      ["id", "name", "category", "systemClass", "owner", "status", "lastTest", "sourceStatus", "purposeProposal", "dataDirection", "approvalGate", "errorScenario", "retryPolicy", "auditPolicy", "integrationTier", "myysRelevance", "publicUrl"].every((key) => isText(item[key])) &&
       ["tier1", "tier2", "tier3"].includes(item.integrationTier) && ["core", "supporting", "adjacent"].includes(item.myysRelevance) && typeof item.consultationOnly === "boolean" &&
       Array.isArray(item.operatorRoles) && item.operatorRoles.length > 0 && item.operatorRoles.every((role) => roleIds.has(role)) &&
       isObject(item.samplePayload) && item.samplePayload.mode === "dry-run" && item.samplePayload.realData === false &&
-      (item.sourceUrl === "" || /^https:\/\//.test(item.sourceUrl)) &&
+      (item.publicUrl === "" || /^https:\/\//.test(item.publicUrl)) && (item.sourceUrl === "" || /^https:\/\//.test(item.sourceUrl)) &&
       isNumber(item.stage, 0, 5) && (item.attempts === undefined || isNumber(item.attempts)) && item.realDataEnabled === false && !item.secret) &&
     saved.integrationJobs.every((item) => isObject(item) && ["id", "target", "status", "at"].every((key) => isText(item[key])) && isDate(item.at) && item.realDataSent === false) &&
     saved.notifications.every((item) => isObject(item) && ["id", "title", "body", "time"].every((key) => isText(item[key])) && Array.isArray(item.recipientRoles) && item.recipientRoles.length > 0 && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy) && item.readBy.every((role) => roleIds.has(role) && item.recipientRoles.includes(role))) &&
@@ -860,16 +860,20 @@ function externalIntegrationGateCard(item) {
 }
 
 function integrationCard(item) {
-  const sourceLink = item.sourceUrl
-    ? `<a class="text-button integration-source" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kamu kaynağını aç</a>`
-    : `<span class="table-subtitle integration-source">Servis adresi tanımlı değil</span>`;
+  const publicLink = item.publicUrl
+    ? `<a class="text-button integration-public" href="${escapeHtml(item.publicUrl)}" target="_blank" rel="noreferrer">Kamu erişim noktasını aç</a>`
+    : `<span class="table-subtitle integration-public">Erişim adresi tanımlı değil</span>`;
+  const evidenceLink = item.sourceUrl && item.sourceUrl !== item.publicUrl
+    ? `<a class="text-button integration-source" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kaynak kanıtını aç</a>`
+    : "";
+  const referenceLinks = `<div class="integration-links">${publicLink}${evidenceLink}</div>`;
   const searchable = [item.name, item.category, item.systemClass, item.purposeProposal, item.owner].join(" ").toLocaleLowerCase("tr-TR");
   const governanceBadge = item.consultationOnly
     ? `<span class="integration-governance">Yalnızca istişare / taslak</span>`
     : `<span class="integration-governance">Kontrollü pilot adayı</span>`;
   const relevanceLabels = { core: "Core", supporting: "Supporting", adjacent: "Adjacent" };
   const detailLabel = item.consultationOnly ? "Referans ayrıntısı" : "Dry-run ayrıntısı";
-  return `<article class="card integration-card" data-system-id="${escapeHtml(item.id)}" data-integration-tier="${escapeHtml(item.integrationTier)}" data-myys-relevance="${escapeHtml(item.myysRelevance)}" data-consultation-only="${item.consultationOnly}" data-source-url="${escapeHtml(item.sourceUrl)}" data-searchable="${escapeHtml(searchable)}"><div class="card-body"><div class="integration-head"><span class="integration-mark">${escapeHtml(item.name.split(" ")[0].slice(0,5))}</span>${statusBadge(item.status)}</div><div class="integration-tags"><span>Tier ${item.stage}</span><span>MYYS: ${relevanceLabels[item.myysRelevance] || escapeHtml(item.myysRelevance)}</span><span>${escapeHtml(item.category)}</span><span>${escapeHtml(item.systemClass)}</span></div>${governanceBadge}<h3>${escapeHtml(item.name)}</h3><p class="page-subtitle integration-purpose">${escapeHtml(item.purposeProposal)}</p><dl><dt>Veri yönü</dt><dd>${escapeHtml(item.dataDirection)}</dd><dt>Onay kapısı</dt><dd>${escapeHtml(item.approvalGate)}</dd><dt>Deneme</dt><dd>${item.attempts || 0}</dd><dt>Son durum</dt><dd>${escapeHtml(item.lastTest)}</dd></dl>${sourceLink}</div><div class="card-footer"><span class="status status--neutral">Gerçek veri yok</span><button class="button button--secondary button--sm" data-action="open-integration" data-id="${item.id}">${detailLabel}</button></div></article>`;
+  return `<article class="card integration-card" data-system-id="${escapeHtml(item.id)}" data-integration-tier="${escapeHtml(item.integrationTier)}" data-myys-relevance="${escapeHtml(item.myysRelevance)}" data-consultation-only="${item.consultationOnly}" data-public-url="${escapeHtml(item.publicUrl)}" data-source-url="${escapeHtml(item.sourceUrl)}" data-searchable="${escapeHtml(searchable)}"><div class="card-body"><div class="integration-head"><span class="integration-mark">${escapeHtml(item.name.split(" ")[0].slice(0,5))}</span>${statusBadge(item.status)}</div><div class="integration-tags"><span>Tier ${item.stage}</span><span>MYYS: ${relevanceLabels[item.myysRelevance] || escapeHtml(item.myysRelevance)}</span><span>${escapeHtml(item.category)}</span><span>${escapeHtml(item.systemClass)}</span></div>${governanceBadge}<h3>${escapeHtml(item.name)}</h3><p class="page-subtitle integration-purpose">${escapeHtml(item.purposeProposal)}</p><dl><dt>Veri yönü</dt><dd>${escapeHtml(item.dataDirection)}</dd><dt>Onay kapısı</dt><dd>${escapeHtml(item.approvalGate)}</dd><dt>Deneme</dt><dd>${item.attempts || 0}</dd><dt>Son durum</dt><dd>${escapeHtml(item.lastTest)}</dd></dl>${referenceLinks}</div><div class="card-footer"><span class="status status--neutral">Gerçek veri yok</span><button class="button button--secondary button--sm" data-action="open-integration" data-id="${item.id}">${detailLabel}</button></div></article>`;
 }
 
 function financePage() {
@@ -1049,9 +1053,13 @@ function openIntegration(id) {
   const operationAction = canOperateIntegration(item.id)
     ? `<button class="button" data-action="simulate-integration" data-id="${item.id}">${item.status === "failed" ? "Yeniden dene" : "Deneme çalıştırması"}</button>`
     : "";
-  const source = item.sourceUrl
-    ? `<a class="button button--secondary button--sm" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kamu erişim noktasını aç</a>`
-    : `<span class="status status--neutral">Servis adresi tanımlı değil</span>`;
+  const publicAccess = item.publicUrl
+    ? `<a class="button button--secondary button--sm integration-public" href="${escapeHtml(item.publicUrl)}" target="_blank" rel="noreferrer">Kamu erişim noktasını aç</a>`
+    : `<span class="status status--neutral">Erişim adresi tanımlı değil</span>`;
+  const sourceEvidence = item.sourceUrl && item.sourceUrl !== item.publicUrl
+    ? `<a class="button button--secondary button--sm integration-source" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kaynak kanıtını aç</a>`
+    : "";
+  const source = `<div class="integration-links">${publicAccess}${sourceEvidence}</div>`;
   const governance = item.consultationOnly
     ? notice("warning", "Yalnızca istişare ve taslak", "Bu hedef için aktarım kurgulanmaz; önce kurumlar/birimler arası yetki, amaç ve veri sözlüğü netleştirilir.")
     : "";
