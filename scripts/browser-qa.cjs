@@ -319,7 +319,11 @@ async function verifyPaymentDemoFlow(page, errors) {
   check((await page.locator("#payment-request-form").count()) === 1, "learner: ücretli program ödeme demo formuna yönlenmedi", errors);
   await page.selectOption("#payment-channel", "Havale/EFT simülasyonu");
   await page.check('#payment-request-form input[name="confirm"]');
-  await page.locator('#payment-request-form button[type="submit"]').click();
+  await page.locator('#payment-request-form [data-action="submit-payment-request"]').click();
+  await page.waitForFunction(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+    return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "pending_finance");
+  }, { timeout: 3000 });
   await page.waitForSelector('[data-action="handoff-finance"]', { state: "visible" });
   check((await page.locator('[data-action="handoff-finance"]').count()) === 1, "learner: mali işlere gönderim sonrası Finans rolü devir CTA'sı yok", errors);
   await page.locator('[data-action="handoff-finance"]').click();
