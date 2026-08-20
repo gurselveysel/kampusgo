@@ -299,13 +299,13 @@ globalThis.fetch = async (url) => {
   return { ok: true, status: 200, json: async () => mockedViewRows[view] };
 };
 try {
-  const acceptedSnapshot = await loadInstitutionalIntegrationSnapshot();
+  const acceptedSnapshot = await loadInstitutionalIntegrationSnapshot({ accessToken: "test.claim.scoped.jwt" });
   assert.equal(acceptedSnapshot.ok, true, "İlişkisel olarak tutarlı remote snapshot kabul edilmeli");
   assert.equal(acceptedSnapshot.source, "supabase_read_only_institutional_views");
 
   mockedViewRows = structuredClone(validViewRows);
   mockedViewRows.pilot_integration_scenario_catalog[0].system_id = sqlScenarios[1].system_id;
-  const rejectedSnapshot = await loadInstitutionalIntegrationSnapshot();
+  const rejectedSnapshot = await loadInstitutionalIntegrationSnapshot({ accessToken: "test.claim.scoped.jwt" });
   assert.equal(rejectedSnapshot.ok, false, "Mapping/system ilişkisi bozuk remote snapshot reddedilmeli");
   assert.equal(rejectedSnapshot.source, "local_institutional_reference_fallback");
   assert.match(rejectedSnapshot.validationErrors.join(" | "), /relationship mismatch/);

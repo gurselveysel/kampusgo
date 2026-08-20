@@ -160,10 +160,22 @@ async function verifyRoleMatrix(page, roles, roleNavigation, viewport, errors) {
     await assertNoOverflow(page, `${viewport.name}/${role.id}/overview`, errors);
 
     await setHash(page, "governance");
+    const governanceScope = page.locator(`[data-directive-governance] [data-governance-role="${role.id}"]`);
+    try {
+      await governanceScope.waitFor({ state: "attached", timeout: 3000 });
+    } catch {
+      errors.push(`${viewport.name}/${role.id}: rol kapsam kartı yönerge görünümünde zamanında oluşmadı`);
+    }
     const governanceText = await page.locator("#main-content").innerText();
     check(governanceText.includes("Yönerge ve kural merkezi"), `${viewport.name}/${role.id}: yönerge/kural merkezi açılmadı`, errors);
     check(governanceText.includes("Kurumsal değerlendirme taslağı") && governanceText.includes("Production"), `${viewport.name}/${role.id}: taslak ve production sınırı görünür değil`, errors);
-    check(governanceText.includes(role.label) && governanceText.includes("unit_id") && governanceText.includes("decision_scope"), `${viewport.name}/${role.id}: örgütsel kapsam alanları eksik`, errors);
+    const governanceScopeContract = await governanceScope.count() ? await governanceScope.evaluate((node) => ({
+      roleId: node.dataset.governanceRole,
+      heading: node.querySelector("h2")?.textContent?.trim() || "",
+      fields: [...node.querySelectorAll("dt")].map((item) => item.textContent?.trim() || "")
+    })) : { roleId: "", heading: "", fields: [] };
+    const requiredScopeFields = ["unit_id", "unit_type", "body_type / membership_role", "body_membership", "mandate_from / mandate_to", "decision_scope"];
+    check(governanceScopeContract.roleId === role.id && governanceScopeContract.heading === role.label && requiredScopeFields.every((field) => governanceScopeContract.fields.includes(field)), `${viewport.name}/${role.id}: örgütsel kapsam alanları eksik`, errors);
     await assertNoOverflow(page, `${viewport.name}/${role.id}/governance`, errors);
 
     await setHash(page, "home");

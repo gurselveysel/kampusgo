@@ -32,6 +32,7 @@ const required = [
   "scripts/smart-alignment-contract.mjs",
   "scripts/directive-pilot-contract.mjs",
   "scripts/directive-access-hardening-contract.mjs",
+  "scripts/supabase-anonymous-read-contract.mjs",
   "README.md",
   "docs/smart-alignment-acceptance.md",
   "docs/source-traceability.md",

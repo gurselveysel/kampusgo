@@ -389,7 +389,8 @@ function isValidSavedState(saved) {
     isObject(saved.finance.parameters) && ["withholding", "vat", "stamp"].every((key) => isNumber(saved.finance.parameters[key], 0, 100)) &&
     (saved.remoteSnapshot === null || saved.remoteSnapshot === undefined || (isObject(saved.remoteSnapshot) &&
       ["programs", "applications", "credentials", "integrations"].every((key) => isNumber(saved.remoteSnapshot[key])) &&
-      ["qualificationLevels", "officialQualifications", "matrixTemplates", "matrixDrafts", "paymentRequests", "roleWorkflowRows", "unavailableReferenceViews", "institutionalSystems", "institutionalMappings", "institutionalScenarios", "institutionalAuditEvents", "unavailableInstitutionalViews"].every((key) => saved.remoteSnapshot[key] === undefined || isNumber(saved.remoteSnapshot[key])) &&
+      ["qualificationLevels", "officialQualifications", "matrixTemplates", "matrixDrafts", "paymentRequests", "roleWorkflowRows", "unavailableReferenceViews", "institutionalSystems", "institutionalMappings", "institutionalScenarios", "institutionalAuditEvents", "unavailableInstitutionalViews", "publicOfficialSources", "publicOfficialSourceSupports"].every((key) => saved.remoteSnapshot[key] === undefined || isNumber(saved.remoteSnapshot[key])) &&
+      ["protectedRemoteVerified", "coreRemoteVerified", "publicSourceRemoteVerified"].every((key) => saved.remoteSnapshot[key] === undefined || typeof saved.remoteSnapshot[key] === "boolean") &&
       (saved.remoteSnapshot.referenceSource === undefined || isText(saved.remoteSnapshot.referenceSource)) &&
       isDate(saved.remoteSnapshot.checkedAt)))
   );
@@ -1171,6 +1172,13 @@ function failSmartQualificationAnalysis(code, message, panel, { empty = false } 
 }
 
 function analyzeProposalQualifications(form = document.querySelector("#proposal-form"), { announce = false } = {}) {
+  // An explicit analysis (button, submit or draft save) supersedes the
+  // debounced input analysis. Without cancelling that queued callback it can
+  // redraw the suggestion cards while an instructor is completing a manual
+  // override, detaching the focused select/details controls.
+  window.clearTimeout(smartSuggestionTimer);
+  smartSuggestionTimer = null;
+  smartSuggestionRequest += 1;
   const panel = document.querySelector("#smart-suggestion-results");
   if (!form || !PROPOSAL_ROLES.has(state.roleId)) {
     if (panel) panel.setAttribute("aria-busy", "false");
@@ -1878,10 +1886,16 @@ function showPilotInfo() {
 function showDataMode() {
   const config = getSupabasePublicConfig();
   const snapshot = state.remoteSnapshot;
+  const protectedFallback = snapshot?.protectedRemoteVerified === false;
   const referenceSummary = snapshot?.qualificationLevels === undefined
     ? ""
     : `<br />Referans kataloğu: ${snapshot.qualificationLevels} seviye, ${snapshot.officialQualifications} KDPÜ kaydı, ${snapshot.matrixTemplates} şablon, ${snapshot.matrixDrafts} örnek taslak, ${snapshot.paymentRequests} ödeme demo kaydı, ${snapshot.roleWorkflowRows} rol adımı${snapshot.institutionalSystems === undefined ? "" : `<br />Kurumsal envanter: ${snapshot.institutionalSystems} sistem, ${snapshot.institutionalMappings} eşleme, ${snapshot.institutionalScenarios} dry-run senaryosu, ${snapshot.institutionalAuditEvents} kaynak-audit olayı`}${snapshot.unavailableReferenceViews ? `<br />Yerel güvenli fallback kullanan referans view: ${snapshot.unavailableReferenceViews}` : ""}${snapshot.unavailableInstitutionalViews ? `<br />Yerel güvenli fallback kullanan kurumsal view: ${snapshot.unavailableInstitutionalViews}` : ""}`;
-  openModal(modalTemplate("Pilot veri katmanı", `<div class="grid grid-2"><article class="card"><div class="card-body"><h3>Etkin çalışma modu</h3><p class="page-subtitle">${escapeHtml(state.dataMode)}</p><span class="status status--success">Yerel mutasyonlar çalışıyor</span></div></article><article class="card"><div class="card-body"><h3>Supabase başlangıç görünümü</h3><p class="page-subtitle">Proje: ${config.projectRef}<br />${config.mode}${snapshot ? `<br />Doğrulanan: ${snapshot.programs} program, ${snapshot.applications} başvuru, ${snapshot.credentials} belge, ${snapshot.integrations} entegrasyon${referenceSummary}<br />Kaynak modu: ${escapeHtml(snapshot.referenceSource || "eski pilot seed")}` : "<br />Son bağlantı doğrulanamadı"}</p><span class="status status--neutral">Gizli anahtar kullanılmıyor</span></div></article></div><div class="section">${notice("success","Katmanların sınırı açık","Supabase, sentetik başlangıç satırları ile resmî kaynak izli TYÇ/AYÇ kataloglarını ve resmî TYYÇ form siciline dayalı advisory özetleri salt-okunur doğrular. Formlar ve iki demo iş akışındaki değişiklikler tarayıcıdaki sürümlü, izole çalışma alanında kalır; gerçek ödeme veya kurumsal aktarım yapılmaz.")}</div>`, `<button class="button button--secondary" data-action="refresh-data">Bağlantıyı yeniden dene</button><button class="button" data-action="close-modal">Kapat</button>`));
+  const snapshotSummary = !snapshot
+    ? "<br />Son bağlantı doğrulanamadı"
+    : protectedFallback
+      ? `<br />Anonim doğrulanan kamu kaynağı: ${snapshot.publicOfficialSources || 0} kaynak, ${snapshot.publicOfficialSourceSupports || 0} izlenebilirlik bağı<br />Korumalı DTO'lar: ağ isteği yapılmadı; ${snapshot.programs} program, ${snapshot.applications} başvuru, ${snapshot.credentials} belge ve ${snapshot.integrations} entegrasyon yerel sentetik fallback'ten geldi${referenceSummary}<br />Kaynak modu: ${escapeHtml(snapshot.referenceSource || "anonim kamu kataloğu + yerel korumalı fallback")}`
+      : `<br />Claim-kapsamlı doğrulanan: ${snapshot.programs} program, ${snapshot.applications} başvuru, ${snapshot.credentials} belge, ${snapshot.integrations} entegrasyon${referenceSummary}<br />Kaynak modu: ${escapeHtml(snapshot.referenceSource || "claim-kapsamlı salt-okunur görünüm")}`;
+  openModal(modalTemplate("Pilot veri katmanı", `<div class="grid grid-2"><article class="card"><div class="card-body"><h3>Etkin çalışma modu</h3><p class="page-subtitle">${escapeHtml(state.dataMode)}</p><span class="status status--success">Yerel mutasyonlar çalışıyor</span></div></article><article class="card"><div class="card-body"><h3>Supabase başlangıç görünümü</h3><p class="page-subtitle">Proje: ${config.projectRef}<br />${config.mode}${snapshotSummary}</p><span class="status status--neutral">Gizli anahtar kullanılmıyor</span></div></article></div><div class="section">${notice("success","Katmanların sınırı açık","Anonim Preview yalnız iki allowlist'li resmî kaynak kataloğunu okur. Yönerge, akıllı eşleme, rol ve kurumsal operasyon DTO'ları anonim ağ isteği üretmeden doğrulanmamış yerel sentetik fallback'ten sunulur; claim-kapsamlı oturum ayrı bir yoldur. Gerçek ödeme veya kurumsal aktarım yapılmaz.")}</div>`, `<button class="button button--secondary" data-action="refresh-data">Bağlantıyı yeniden dene</button><button class="button" data-action="close-modal">Kapat</button>`));
 }
 
 function openProgram(id) {
@@ -2803,6 +2817,8 @@ async function refreshRemote(fromModal = false) {
   }
   const referenceData = snapshot.referenceData;
   const institutionalData = snapshot.institutionalData;
+  const publicSourceRemoteVerified = snapshot.publicSourceData?.remoteVerified === true;
+  const protectedRemoteVerified = snapshot.protectedRemoteVerified === true;
   state.remoteSnapshot = snapshot.ok ? {
     programs: snapshot.programs.length,
     applications: snapshot.applications.length,
@@ -2820,17 +2836,29 @@ async function refreshRemote(fromModal = false) {
     institutionalScenarios: institutionalData?.scenarios?.length || 0,
     institutionalAuditEvents: institutionalData?.auditEvents?.length || 0,
     unavailableInstitutionalViews: institutionalData?.unavailableViews?.length || 0,
+    publicOfficialSources: snapshot.publicSourceData?.sources?.length || 0,
+    publicOfficialSourceSupports: snapshot.publicSourceData?.supports?.length || 0,
+    publicSourceRemoteVerified,
+    protectedRemoteVerified,
+    coreRemoteVerified: snapshot.coreRemoteVerified === true,
     referenceSource: referenceData?.source || "local_reference_fallback",
     checkedAt: new Date().toISOString()
   } : null;
   const referenceIsFullyRemote = referenceData?.source === "supabase_read_only_views";
-  state.dataMode = snapshot.ok
-    ? `Yerel çalışma alanı • Supabase ${referenceIsFullyRemote ? "salt-okunur katalog doğrulandı" : "çekirdek seed doğrulandı; referans fallback etkin"} (${snapshot.programs.length} program, ${referenceData?.qualificationLevels?.length || 0} seviye)`
-    : snapshot.mode;
+  state.dataMode = publicSourceRemoteVerified && !protectedRemoteVerified
+    ? `Yerel çalışma alanı • Supabase kamu kaynak kataloğu doğrulandı (${snapshot.publicSourceData.sources.length} kaynak); korumalı DTO'larda anonim ağ isteği yok, yerel sentetik fallback etkin`
+    : snapshot.ok
+      ? `Yerel çalışma alanı • Supabase ${referenceIsFullyRemote ? "claim-kapsamlı salt-okunur katalog doğrulandı" : "korumalı DTO fallback etkin"} (${snapshot.programs.length} program, ${referenceData?.qualificationLevels?.length || 0} seviye)`
+      : snapshot.mode;
   saveState();
   if (fromModal) closeModal();
   render();
-  toast(snapshot.ok ? "Supabase salt-okunur pilot görünümü doğrulandı." : "Supabase erişilemedi; güvenli yerel pilot verisi kullanılmaya devam ediyor.", snapshot.ok ? "success" : "error");
+  const refreshMessage = publicSourceRemoteVerified && !protectedRemoteVerified
+    ? "Resmî kamu kaynak kataloğu doğrulandı; korumalı pilot DTO'larda güvenli yerel fallback kullanılıyor."
+    : snapshot.ok
+      ? "Supabase claim-kapsamlı salt-okunur pilot görünümü doğrulandı."
+      : "Supabase kamu kaynağı doğrulanamadı; güvenli yerel pilot verisi kullanılmaya devam ediyor.";
+  toast(refreshMessage, snapshot.ok ? "success" : "error");
 }
 
 // Persist the canonical v15 seed immediately when an older, snapshot-less,

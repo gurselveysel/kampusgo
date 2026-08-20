@@ -3,6 +3,7 @@ import {
   qualificationReferenceSnapshot,
   tyycQualificationTypeDescriptors
 } from "./reference-data.js";
+import { initialState } from "./data.js";
 import { dpuIntegrationReferenceSnapshot } from "./institutional-integration-reference.js";
 import {
   QUALIFICATION_ADVISORY_NOTICE,
@@ -21,20 +22,41 @@ import { directiveRoleScopeRows } from "./directive-pilot.js";
 const SUPABASE_URL = "https://xpjkrwzgimdxsasqszfi.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_v_AI0cizKIbiJqeqWYHDSQ__g2fSY4p";
 
-const headers = {
-  apikey: SUPABASE_PUBLISHABLE_KEY,
-  Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-  Accept: "application/json"
-};
+export function createSupabaseReadContext(options = {}) {
+  const accessToken = typeof options?.accessToken === "string" && options.accessToken.trim()
+    ? options.accessToken.trim()
+    : null;
+  const fetchImpl = typeof options?.fetchImpl === "function" ? options.fetchImpl : globalThis.fetch;
+  if (typeof fetchImpl !== "function") throw new Error("Supabase read context requires fetch");
+  return Object.freeze({
+    accessToken,
+    fetchImpl,
+    authenticated: Boolean(accessToken),
+    mode: accessToken ? "authenticated_claim_scoped" : "anonymous_public_reference_only"
+  });
+}
 
-async function readTable(table, query = "select=*") {
+function requestHeaders(context) {
+  // A publishable key identifies the public client; it is not a user session.
+  // Only an explicit access token is forwarded as Authorization so anonymous
+  // Preview traffic remains the Postgres `anon` role and never impersonates an
+  // authenticated principal.
+  return {
+    apikey: SUPABASE_PUBLISHABLE_KEY,
+    ...(context.authenticated ? { Authorization: `Bearer ${context.accessToken}` } : {}),
+    Accept: "application/json"
+  };
+}
+
+async function readTable(table, query = "select=*", options = {}) {
+  const context = createSupabaseReadContext(options);
   const controller = new AbortController();
   // Public Preview may cold-start the PostgREST path. Keep the read bounded,
   // but allow enough time for all catalog views to return before falling back.
   const timeout = setTimeout(() => controller.abort(), 9000);
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${query}`, {
-      headers,
+    const response = await context.fetchImpl(`${SUPABASE_URL}/rest/v1/${table}?${query}`, {
+      headers: requestHeaders(context),
       signal: controller.signal,
       cache: "no-store"
     });
@@ -44,6 +66,11 @@ async function readTable(table, query = "select=*") {
     clearTimeout(timeout);
   }
 }
+
+const publicOfficialSourceViewQueries = Object.freeze({
+  sources: ["pilot_directive_public_source_catalog", "select=*&order=source_id.asc"],
+  supports: ["pilot_directive_public_source_support_catalog", "select=*&order=source_id.asc,id.asc"]
+});
 
 const referenceViewQueries = Object.freeze({
   qualificationLevels: ["qualification_level_catalog", "select=*&order=framework_code.asc,level.asc"],
@@ -95,6 +122,91 @@ function camelizeRow(row) {
     key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
     value
   ]));
+}
+
+export function validatePublicOfficialSourceSnapshot(snapshot) {
+  const errors = [];
+  const sources = Array.isArray(snapshot?.sources) ? snapshot.sources : [];
+  const supports = Array.isArray(snapshot?.supports) ? snapshot.supports : [];
+  const expectedSourceIds = new Set(Array.from({ length: 27 }, (_, index) => `S${String(index + 1).padStart(2, "0")}`));
+  const actualSourceIds = new Set(sources.map((row) => row.sourceId));
+  if (sources.length !== 27 || actualSourceIds.size !== 27 || [...expectedSourceIds].some((id) => !actualSourceIds.has(id))) {
+    errors.push("public sources: exact S01-S27 catalog required");
+  }
+  if (supports.length !== 33 || new Set(supports.map((row) => row.id)).size !== 33) {
+    errors.push("public supports: exact 33-row catalog required");
+  }
+  if (supports.some((row) => !expectedSourceIds.has(row.sourceId))) {
+    errors.push("public supports: unknown source relationship");
+  }
+  const serialized = JSON.stringify({ sources, supports });
+  if (/(?:tckn|ykn|holder_internal|synthetic_actor|decision_scope|app_metadata)/i.test(serialized) || /(^|[^0-9])[0-9]{11}([^0-9]|$)/.test(serialized)) {
+    errors.push("public sources: protected or identity-bearing field detected");
+  }
+  if (sources.some((row) => row.officialPrimarySource !== true || row.institutionalValidationRequired !== true || !/^https:\/\//.test(row.sourceUrl || ""))) {
+    errors.push("public sources: official/source-validation contract mismatch");
+  }
+  if (supports.some((row) => row.institutionalValidationRequired !== true)) {
+    errors.push("public supports: institutional-validation contract mismatch");
+  }
+  return errors;
+}
+
+export async function loadPublicOfficialSourceSnapshot(options = {}) {
+  const context = createSupabaseReadContext(options);
+  const entries = Object.entries(publicOfficialSourceViewQueries);
+  const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query, context)));
+  const remote = {};
+  const unavailableViews = [];
+  results.forEach((result, index) => {
+    const [key, [view]] = entries[index];
+    if (result.status === "fulfilled" && Array.isArray(result.value)) remote[key] = result.value.map(camelizeRow);
+    else unavailableViews.push(view);
+  });
+  const validationErrors = unavailableViews.length === 0
+    ? validatePublicOfficialSourceSnapshot(remote)
+    : ["Both anonymous official-source views must be available"];
+  const remoteVerified = unavailableViews.length === 0 && validationErrors.length === 0;
+  return {
+    ok: remoteVerified,
+    source: remoteVerified ? "supabase_anon_allowlisted_official_source_catalogs" : "public_official_source_catalog_unavailable",
+    accessMode: context.mode,
+    remoteVerified,
+    protectedDataIncluded: false,
+    realIdentityDataIncluded: false,
+    unavailableViews,
+    validationErrors,
+    sources: remoteVerified ? remote.sources : [],
+    supports: remoteVerified ? remote.supports : []
+  };
+}
+
+function localCorePilotFallback() {
+  return {
+    programs: structuredClone(initialState.programs),
+    applications: structuredClone(initialState.applications),
+    credentials: structuredClone(initialState.credentials),
+    integrations: structuredClone(initialState.integrations)
+  };
+}
+
+function localQualificationReferenceCatalog() {
+  const suggestionFallback = normalizeQualificationSuggestionCatalog({}, getLocalQualificationSuggestionCatalog());
+  return {
+    version: qualificationReferenceSnapshot.version,
+    qualificationLevels: structuredClone(qualificationReferenceSnapshot.descriptors),
+    tyycTypeDescriptors: structuredClone(qualificationReferenceSnapshot.tyycTypeDescriptors),
+    bilingualEqfLevels: structuredClone(qualificationReferenceSnapshot.descriptorTranslations),
+    datasetRegistry: structuredClone(qualificationReferenceSnapshot.datasetRegistry),
+    officialQualificationReferences: structuredClone(qualificationReferenceSnapshot.officialQualificationReferences),
+    matrixTemplates: structuredClone(qualificationReferenceSnapshot.matrixTemplates),
+    matrixDrafts: structuredClone(qualificationReferenceSnapshot.matrixDrafts),
+    financeRoutes: structuredClone(qualificationReferenceSnapshot.financeRoutes),
+    roleWorkflowRows: structuredClone(qualificationReferenceSnapshot.roleSteps),
+    paymentRequests: structuredClone(qualificationReferenceSnapshot.paymentRequests),
+    paymentEvents: structuredClone(qualificationReferenceSnapshot.paymentEvents),
+    ...suggestionFallback
+  };
 }
 
 export function getLocalDirectivePilotCatalog() {
@@ -1113,11 +1225,30 @@ function validateInstitutionalRemoteSnapshot(remote) {
   return errors;
 }
 
-export async function loadInstitutionalIntegrationSnapshot() {
+export async function loadInstitutionalIntegrationSnapshot(options = {}) {
+  const context = createSupabaseReadContext(options);
   const fallback = localInstitutionalCatalogFallback();
+  if (!context.authenticated) {
+    return {
+      ok: false,
+      version: dpuIntegrationReferenceSnapshot.version,
+      catalogVersion: dpuIntegrationReferenceSnapshot.catalogVersion,
+      seedBatch: dpuIntegrationReferenceSnapshot.seedBatch,
+      source: "local_institutional_reference_fallback",
+      accessMode: context.mode,
+      protectedViewsRequested: false,
+      remoteVerified: false,
+      unavailableViews: [],
+      deferredProtectedViews: Object.values(institutionalViewQueries).map(([view]) => view),
+      validationErrors: ["Anonymous Preview does not request protected institutional DTO views"],
+      liveInstitutionalRequestsEnabled: false,
+      ...fallback,
+      boundaries: dpuIntegrationReferenceSnapshot.boundaries
+    };
+  }
   try {
     const entries = Object.entries(institutionalViewQueries);
-    const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query)));
+    const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query, context)));
     const remote = {};
     const unavailableViews = [];
     results.forEach((result, index) => {
@@ -1135,6 +1266,9 @@ export async function loadInstitutionalIntegrationSnapshot() {
       catalogVersion: dpuIntegrationReferenceSnapshot.catalogVersion,
       seedBatch: dpuIntegrationReferenceSnapshot.seedBatch,
       source: remoteAccepted ? "supabase_read_only_institutional_views" : "local_institutional_reference_fallback",
+      accessMode: context.mode,
+      protectedViewsRequested: true,
+      remoteVerified: remoteAccepted,
       unavailableViews,
       validationErrors,
       liveInstitutionalRequestsEnabled: false,
@@ -1151,6 +1285,9 @@ export async function loadInstitutionalIntegrationSnapshot() {
       catalogVersion: dpuIntegrationReferenceSnapshot.catalogVersion,
       seedBatch: dpuIntegrationReferenceSnapshot.seedBatch,
       source: "local_institutional_reference_fallback",
+      accessMode: context.mode,
+      protectedViewsRequested: true,
+      remoteVerified: false,
       unavailableViews: Object.keys(institutionalViewQueries),
       validationErrors: ["Institutional view read failed; complete local catalog selected"],
       liveInstitutionalRequestsEnabled: false,
@@ -1161,11 +1298,36 @@ export async function loadInstitutionalIntegrationSnapshot() {
   }
 }
 
-export async function loadDirectivePilotSnapshot() {
+export async function loadDirectivePilotSnapshot(options = {}) {
+  const context = createSupabaseReadContext(options);
   const fallback = getLocalDirectivePilotCatalog();
+  const publicSourceData = await loadPublicOfficialSourceSnapshot(context);
+  if (!context.authenticated) {
+    return {
+      ...fallback,
+      ok: publicSourceData.remoteVerified,
+      version: fallback.readiness[0].contractVersion,
+      source: "local_directive_contract_fallback_anonymous_public_sources",
+      accessMode: context.mode,
+      unavailableViews: [],
+      deferredProtectedViews: Object.values(directiveViewQueries).map(([view]) => view),
+      validationErrors: ["Anonymous Preview does not request protected directive DTO views"],
+      remoteAccepted: false,
+      remoteVerified: false,
+      protectedViewsRequested: false,
+      fallbackUsed: true,
+      productionAllowed: false,
+      liveInstitutionalRequestsEnabled: false,
+      realPaymentsEnabled: false,
+      realIdentityDataEnabled: false,
+      publicSourceData,
+      publicOfficialSources: publicSourceData.sources,
+      publicOfficialSourceSupports: publicSourceData.supports
+    };
+  }
   try {
     const entries = Object.entries(directiveViewQueries);
-    const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query)));
+    const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query, context)));
     const remote = {};
     const unavailableViews = [];
     results.forEach((result, index) => {
@@ -1179,14 +1341,19 @@ export async function loadDirectivePilotSnapshot() {
       ok: remoteAccepted,
       version: fallback.readiness[0].contractVersion,
       source: remoteAccepted ? "supabase_read_only_directive_views" : "local_directive_contract_fallback_unverified_remote",
+      accessMode: context.mode,
       unavailableViews,
       validationErrors: normalized.validationErrors,
       remoteVerified: remoteAccepted,
+      protectedViewsRequested: true,
       fallbackUsed: !remoteAccepted,
       productionAllowed: false,
       liveInstitutionalRequestsEnabled: false,
       realPaymentsEnabled: false,
       realIdentityDataEnabled: false,
+      publicSourceData,
+      publicOfficialSources: publicSourceData.sources,
+      publicOfficialSourceSupports: publicSourceData.supports,
       ...normalized
     };
   } catch (error) {
@@ -1194,23 +1361,29 @@ export async function loadDirectivePilotSnapshot() {
       ok: false,
       version: fallback.readiness[0].contractVersion,
       source: "local_directive_contract_fallback_unverified_remote",
+      accessMode: context.mode,
       unavailableViews: Object.keys(directiveViewQueries),
       validationErrors: ["Directive catalog read failed; complete local contract selected"],
       remoteVerified: false,
+      protectedViewsRequested: true,
       fallbackUsed: true,
       productionAllowed: false,
       liveInstitutionalRequestsEnabled: false,
       realPaymentsEnabled: false,
       realIdentityDataEnabled: false,
+      publicSourceData,
+      publicOfficialSources: publicSourceData.sources,
+      publicOfficialSourceSupports: publicSourceData.supports,
       error: error instanceof Error ? error.message : "Bilinmeyen yönerge pilot veri hatası",
       ...fallback
     };
   }
 }
 
-async function loadReferenceViews() {
+async function loadReferenceViews(options = {}) {
+  const context = createSupabaseReadContext(options);
   const entries = Object.entries(referenceViewQueries);
-  const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query)));
+  const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query, context)));
   const remote = {};
   const unavailable = [];
   results.forEach((result, index) => {
@@ -1251,11 +1424,28 @@ async function loadReferenceViews() {
   };
 }
 
-export async function loadQualificationReferenceSnapshot() {
+export async function loadQualificationReferenceSnapshot(options = {}) {
+  const context = createSupabaseReadContext(options);
+  if (!context.authenticated) {
+    return {
+      ok: false,
+      ...localQualificationReferenceCatalog(),
+      source: "local_reference_fallback_anonymous_protected",
+      accessMode: context.mode,
+      protectedViewsRequested: false,
+      remoteVerified: false,
+      unavailableViews: [],
+      deferredProtectedViews: Object.values(referenceViewQueries).map(([view]) => view),
+      validationErrors: ["Anonymous Preview does not request protected qualification/operational DTO views"]
+    };
+  }
   try {
-    const referenceData = await loadReferenceViews();
+    const referenceData = await loadReferenceViews(context);
     return {
       ok: referenceData.unavailableViews.length === 0,
+      accessMode: context.mode,
+      protectedViewsRequested: true,
+      remoteVerified: referenceData.unavailableViews.length === 0,
       ...referenceData
     };
   } catch (error) {
@@ -1263,29 +1453,59 @@ export async function loadQualificationReferenceSnapshot() {
     const normalizedSuggestionFallback = normalizeQualificationSuggestionCatalog({}, suggestionFallback);
     return {
       ok: false,
-      version: qualificationReferenceSnapshot.version,
+      ...localQualificationReferenceCatalog(),
       source: "local_reference_fallback",
+      accessMode: context.mode,
+      protectedViewsRequested: true,
+      remoteVerified: false,
       error: error instanceof Error ? error.message : "Bilinmeyen referans veri hatası",
-      ...qualificationReferenceSnapshot,
       ...normalizedSuggestionFallback
     };
   }
 }
 
-export async function loadPilotSnapshot() {
+export async function loadPilotSnapshot(options = {}) {
+  const context = createSupabaseReadContext(options);
+  if (!context.authenticated) {
+    const [referenceData, institutionalData, directiveData] = await Promise.all([
+      loadQualificationReferenceSnapshot(context),
+      loadInstitutionalIntegrationSnapshot(context),
+      loadDirectivePilotSnapshot(context)
+    ]);
+    return {
+      ok: directiveData.publicSourceData.remoteVerified,
+      mode: directiveData.publicSourceData.remoteVerified
+        ? "Supabase anonim resmî kaynak kataloğu + yerel korumalı pilot DTO fallback"
+        : "Yerel korumalı pilot DTO ve resmî kaynak fallback",
+      accessMode: context.mode,
+      protectedViewsRequested: false,
+      protectedRemoteVerified: false,
+      coreRemoteVerified: false,
+      publicSourceData: directiveData.publicSourceData,
+      ...localCorePilotFallback(),
+      referenceData,
+      institutionalData,
+      directiveData
+    };
+  }
   try {
     const [programs, applications, credentials, integrations, referenceData, institutionalData, directiveData] = await Promise.all([
-      readTable("pilot_programs", "select=*&order=code.asc"),
-      readTable("pilot_applications", "select=*&order=submitted_at.desc"),
-      readTable("pilot_credentials", "select=*&order=issued_at.desc"),
-      readTable("pilot_integrations", "select=*&order=name.asc"),
-      loadQualificationReferenceSnapshot(),
-      loadInstitutionalIntegrationSnapshot(),
-      loadDirectivePilotSnapshot()
+      readTable("pilot_programs", "select=*&order=code.asc", context),
+      readTable("pilot_applications", "select=*&order=submitted_at.desc", context),
+      readTable("pilot_credentials", "select=*&order=issued_at.desc", context),
+      readTable("pilot_integrations", "select=*&order=name.asc", context),
+      loadQualificationReferenceSnapshot(context),
+      loadInstitutionalIntegrationSnapshot(context),
+      loadDirectivePilotSnapshot(context)
     ]);
     return {
       ok: true,
       mode: "Supabase salt-okunur pilot görünümü",
+      accessMode: context.mode,
+      protectedViewsRequested: true,
+      protectedRemoteVerified: Boolean(referenceData.remoteVerified && institutionalData.remoteVerified && directiveData.remoteVerified),
+      coreRemoteVerified: true,
+      publicSourceData: directiveData.publicSourceData,
       programs,
       applications,
       credentials,
@@ -1300,5 +1520,5 @@ export async function loadPilotSnapshot() {
 }
 
 export function getSupabasePublicConfig() {
-  return { projectRef: "xpjkrwzgimdxsasqszfi", mode: "Salt-okunur sentetik pilot veri" };
+  return { projectRef: "xpjkrwzgimdxsasqszfi", mode: "Anonim resmî kaynak kataloğu • korumalı DTO'lar yalnız claim-kapsamlı oturumda" };
 }
