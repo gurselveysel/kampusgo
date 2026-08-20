@@ -39,6 +39,28 @@ import {
   pilotIntegrationMappings,
   pilotIntegrationScenarios
 } from "../src/institutional-integration-reference.js";
+import {
+  DIRECTIVE_PILOT_NOTICE,
+  cloneDirectivePilotState,
+  createFinancePersonnelDryRun,
+  createPublicCredentialView,
+  ectsWorkloadBands,
+  euMicroCredentialMandatoryFields,
+  evaluatePilotRule,
+  generateMydCode,
+  directiveRoleScopeRows,
+  organizationScopes,
+  policyVersionRegistry,
+  recordRecognitionDecision,
+  requestOfferingSeat,
+  splitCredentialOutcomes,
+  submitIndependentAppeal,
+  validateCommissionMeeting,
+  validateEctsWorkload,
+  validateEk1Credential,
+  versionedPilotRules,
+  workloadComponents
+} from "../src/directive-pilot.js";
 
 const results = [];
 
@@ -89,16 +111,17 @@ test("rol kimliği ile sentetik aktör adı birebir eşleşiyor", () => {
   for (const role of roles) assert.equal(actorNameForRole(role.id), role.name, role.id);
 });
 
-test("TYÇ ve AYÇ ayrı ayrı sekiz resmî seviye tanımlayıcısı ve hazır şablon sağlıyor", () => {
-  assert.deepEqual(qualificationFrameworks.map((item) => item.id), ["tyc", "eqf"]);
+test("TYÇ, AYÇ ve TYYÇ desteklenen düzeylerde kaynak izli tanımlayıcı ve hazır şablon sağlıyor", () => {
+  assert.deepEqual(qualificationFrameworks.map((item) => item.id), ["tyc", "eqf", "tyyc"]);
   assert.ok(qualificationFrameworks.every((item) => item.sourceStatus === "official" && /^https:\/\//.test(item.officialSourceUrl)));
-  for (const frameworkId of ["tyc", "eqf"]) {
+  for (const frameworkId of ["tyc", "eqf", "tyyc"]) {
     const descriptors = qualificationLevelDescriptors.filter((item) => item.frameworkId === frameworkId);
     const templates = qualificationMatrixTemplates.filter((item) => item.frameworkId === frameworkId);
-    assert.equal(descriptors.length, 8, `${frameworkId}: 8 seviye tanımlayıcısı yok`);
-    assert.deepEqual(descriptors.map((item) => item.level), [1, 2, 3, 4, 5, 6, 7, 8], `${frameworkId}: seviye dizisi hatalı`);
-    assert.equal(templates.length, 8, `${frameworkId}: 8 matris şablonu yok`);
-    for (let level = 1; level <= 8; level += 1) {
+    const expectedLevels = frameworkId === "tyyc" ? [5, 6, 7, 8] : [1, 2, 3, 4, 5, 6, 7, 8];
+    assert.equal(descriptors.length, expectedLevels.length, `${frameworkId}: seviye tanımlayıcısı eksik`);
+    assert.deepEqual(descriptors.map((item) => item.level), expectedLevels, `${frameworkId}: seviye dizisi hatalı`);
+    assert.equal(templates.length, expectedLevels.length, `${frameworkId}: matris şablonu eksik`);
+    for (const level of expectedLevels) {
       const descriptor = findQualificationDescriptor(frameworkId, level);
       const template = findQualificationTemplate(frameworkId, level);
       assert.ok(descriptor, `${frameworkId}-${level}: tanımlayıcı bulunamadı`);
@@ -116,13 +139,15 @@ test("TYÇ ve AYÇ ayrı ayrı sekiz resmî seviye tanımlayıcısı ve hazır �
   assert.ok(qualificationMatrixColumns.every((column) => column.required === true));
   assert.equal(qualificationMatrixExamples.filter((item) => item.frameworkId === "tyc").length, 4);
   assert.equal(qualificationMatrixExamples.filter((item) => item.frameworkId === "eqf").length, 4);
+  assert.equal(qualificationMatrixExamples.filter((item) => item.frameworkId === "tyyc").length, 4);
+  assert.ok(qualificationLevelDescriptors.filter((item) => item.frameworkId === "tyyc").every((item) => item.contentBasis === "official_form_operational_summary" && item.descriptorStatus === "advisory_summary_not_verbatim"));
 });
 
-test("TYÇ / AYÇ matris rotası yalnız beş yetkili rol navigasyonunda", () => {
+test("TYÇ / AYÇ / TYYÇ matris rotası yalnız beş yetkili rol navigasyonunda", () => {
   const expected = ["instructor", "externalInstructor", "coordinator", "commission", "admin"];
   const actual = roles.filter((role) => roleNavigation[role.id].includes("frameworks")).map((role) => role.id);
   assert.deepEqual(actual, expected);
-  assert.equal(pageMeta.frameworks.label, "TYÇ / AYÇ Matrisleri");
+  assert.equal(pageMeta.frameworks.label, "TYÇ / AYÇ / TYYÇ Matrisleri");
   for (const roleId of ["learner", "studentAffairs", "it", "finance"]) {
     assert.equal(roleNavigation[roleId].includes("frameworks"), false, `${roleId}: yetkisiz frameworks rotası`);
   }
@@ -273,7 +298,7 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /action === "submit-payment-review"[\s\S]{0,260}submitPaymentReview\(form\)/, "mali inceleme CTA'sı doğrulamalı durum geçişini doğrudan tetiklemiyor");
   assert.match(appSource, /data-role-overview="\$\{state\.roleId\}"/, "rol değişiminde ayırt edici çalışma alanı işareti yok");
   assert.match(appSource, /const editable = PROPOSAL_ROLES\.has\(state\.roleId\)/, "matris düzenleme yetkisi eğitici rolleriyle sınırlandırılmıyor");
-  assert.match(appSource, /if \(!PROPOSAL_ROLES\.has\(state\.roleId\)\) \{ deny\("TYÇ \/ AYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir\./, "matris kayıt mutasyonunda rol kapısı yok");
+  assert.match(appSource, /if \(!PROPOSAL_ROLES\.has\(state\.roleId\)\) \{ deny\("TYÇ \/ AYÇ \/ TYYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir\./, "matris kayıt mutasyonunda rol kapısı yok");
   assert.match(appSource, /Salt-okunur inceleme/, "koordinatör\/komisyon salt-okunur matris görünümü yok");
   assert.match(appSource, /state\.qualificationDrafts \|\|= \[\]/, "matris taslak veri katmanı yok");
   assert.match(appSource, /Ana veri sahipliği ve karar kaynağı/, "entegrasyon ana veri sahipliği tablosu yok");
@@ -307,9 +332,11 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.deepEqual([...actions].sort(), [...handlers].sort(), "data-action ile olay işleyicileri birebir eşleşmiyor");
 });
 
-test("akıllı eşleme UI sözleşmesi v4/v11 kalıcılık, kalite kapısı ve insan karar sınırını taşıyor", () => {
+test("akıllı eşleme UI sözleşmesi v4/v15 tam snapshot kalıcılığı, kalite kapısı ve insan karar sınırını taşıyor", () => {
   const appSource = readFileSync(new URL("../src/app.js", import.meta.url), "utf8");
-  assert.equal(initialState.version, 11, "fingerprint ve kalite kapısı kalıcılık şeması seed version 11 olmalı");
+  const snapshotSource = readFileSync(new URL("../src/smart-snapshot.js", import.meta.url), "utf8");
+  const buildPublicSource = readFileSync(new URL("./build-public.mjs", import.meta.url), "utf8");
+  assert.equal(initialState.version, 15, "tam öneri snapshot bütünlüğü için seed version 15 olmalı");
   assert.match(appSource, /const STORAGE_KEY = "kdpu-myys-pilot-v4"/, "canonical v4 storage key yok");
   assert.doesNotMatch(appSource, /kdpu-myys-pilot-v3/, "eski v3 storage key hâlâ okunuyor");
   for (const marker of [
@@ -328,6 +355,15 @@ test("akıllı eşleme UI sözleşmesi v4/v11 kalıcılık, kalite kapısı ve i
   assert.match(appSource, /state\.smartAlignments \|\|= \[\]/, "canonical smartAlignments pilot katmanı yok");
   assert.match(appSource, /function smartOutcomeFingerprint\(text, index\)/, "öğrenme çıktısı fingerprint sözleşmesi yok");
   assert.match(appSource, /orderedOutcomeFingerprint/, "çıktı sırasını değişiklikte geçersiz kılan fingerprint yok");
+  assert.match(appSource, /createSmartSuggestionSnapshot\(analysis\.report/, "tam öneri raporu kalıcı snapshot'a alınmıyor");
+  assert.match(appSource, /readSmartSuggestionSnapshot\(record\.suggestionSnapshot/, "salt-okunur inceleme saklanan snapshot yerine güncel motoru kullanıyor");
+  assert.match(appSource, /applied \? \{ \.\.\.suggestion, \.\.\.applied \} : suggestion/, "azaltılmış insan seçimi tam snapshot ayrıntılarının üzerine güvenli biçimde birleştirilmiyor");
+  assert.doesNotMatch(appSource, /function smartReportForAlignment[\s\S]{0,1800}suggestProgramQualificationAlignment\(/, "tarihsel inceleme güncel motorla sessizce yeniden hesaplanıyor");
+  assert.match(appSource, /immutableSuggestionSnapshotBefore/, "insan kurul kararı öncesi snapshot değişmezlik koruması yok");
+  assert.match(snapshotSource, /referenceDataVersion/, "snapshot kaynak veri sürümünü saklamıyor");
+  assert.match(snapshotSource, /sourceContext/, "snapshot resmî kaynak bağlamını saklamıyor");
+  assert.match(snapshotSource, /integrityHash/, "snapshot bütünlük hash'i taşımıyor");
+  assert.match(buildPublicSource, /src\/smart-snapshot\.js/, "tam snapshot modülü Preview public paketine kopyalanmıyor");
   assert.match(appSource, /contextUnchanged = previousFingerprint === orderedOutcomeFingerprint/, "metin\/sıra değişikliğinde eski seçimlerin geçersiz kılınması yok");
   assert.match(appSource, /failSmartQualificationAnalysis\("insufficient_outcome"/, "ölçülemeyen çıktı kalite kapısı yok");
   assert.match(appSource, /QUALIFICATION_SUGGESTION_LIMITS\.maxOutcomeCount/, "40 çıktı üst sınırı UI kalite kapısında yok");
@@ -472,7 +508,7 @@ test("komisyon, koordinatör ve admin akademik karar sınırları doğru", () =>
   const commissionItem = cloneState(initialState).applications.find((item) => item.status === "commission");
   assert.deepEqual(
     getAllowedApplicationTransitions(commissionItem, "commission", actorNameForRole("commission")).sort(),
-    ["approved", "commission", "rejected", "revision"].sort()
+    ["deferred", "commission", "rejected", "revision"].sort()
   );
   assert.deepEqual(
     getAllowedApplicationTransitions(commissionItem, "coordinator", actorNameForRole("coordinator")),
@@ -480,11 +516,12 @@ test("komisyon, koordinatör ve admin akademik karar sınırları doğru", () =>
   );
   assert.deepEqual(getAllowedApplicationTransitions(commissionItem, "admin", actorNameForRole("admin")), []);
 
-  const approvedState = cloneState(initialState);
-  const approved = approvedState.applications.find((item) => item.status === "commission");
-  transitionApplication(approvedState, approved.id, "approved", "commission", "Pilot kurul kararı");
-  assert.equal(approved.status, "approved");
-  assert.ok(approvedState.audit.some((event) => event.entityId === approved.id && event.to === "approved"));
+  const deferredState = cloneState(initialState);
+  const deferred = deferredState.applications.find((item) => item.status === "commission");
+  assert.throws(() => transitionApplication(deferredState, deferred.id, "approved", "commission", "Pilot kurul kararı"), /Kurumsal doğrulama/);
+  transitionApplication(deferredState, deferred.id, "deferred", "commission", "Kurumsal karar ve hukuk doğrulaması bekleniyor");
+  assert.equal(deferred.status, "deferred");
+  assert.ok(deferredState.audit.some((event) => event.entityId === deferred.id && event.to === "deferred"));
 
   const revisionState = cloneState(initialState);
   const revision = revisionState.applications.find((item) => item.status === "commission");
@@ -560,28 +597,247 @@ test("pilot dijital yeterlilik oluşturma ve mükerrer kod kontrolü çalışıy
   const state = cloneState(initialState);
   const before = state.credentials.length;
   const source = state.applications.find((item) => item.status === "commission");
-  transitionApplication(state, source.id, "approved", "commission", "Pilot yeterlilik testi için gerekçeli onay");
+  assert.throws(() => transitionApplication(state, source.id, "approved", "commission", "Pilot yeterlilik testi için gerekçeli onay"), /Kurumsal doğrulama/);
+  source.institutionalValidationConfirmed = true;
+  transitionApplication(state, source.id, "approved", "commission", "Yalıtılmış birim testi için doğrulama bayrağı");
   const payload = { sourceApplicationId: source.id, code: "MY-BEL-TEST-001", title: "Test Pilot Yeterliliği", ects: 1, level: 6, owner: "Derya Örnek" };
+  assert.throws(() => issueCredential(state, payload, "system"), /production uygunluğu/);
+  assert.throws(() => transitionApplication(state, source.id, "credentialed", "system", "Belge durumu güvenlik kapısı"), /production uygunluğu/);
+  source.productionEligible = true;
   issueCredential(state, payload, "system");
   assert.equal(state.credentials.length, before + 1);
   assert.equal(state.credentials[0].sourceApplicationId, source.id);
   assert.throws(() => issueCredential(state, { ...payload, title: "Tekrar" }, "system"), /zaten var/);
   assert.throws(() => issueCredential(state, { ...payload, code: "MY-BEL-TEST-002" }, "commission"), /yalnız sistem/);
+  transitionApplication(state, source.id, "credentialed", "system", "Yalıtılmış birim testinde iki güvenlik kapısı sağlandı");
+  assert.equal(source.status, "credentialed");
 });
 
 test("iki uçtan uca senaryo veri katmanını ve güvenli aktarım loglarını güncelliyor", () => {
   const state = cloneState(initialState);
+  const credentialCount = state.credentials.length;
+  const recognizedCreditCount = state.recognizedCredits.length;
+  const enrollmentCount = state.enrollments.length;
+  const assessmentCount = state.assessmentSessions.length;
   for (const kind of Object.keys(scenarioDefinitions)) {
     for (let index = 0; index < scenarioDefinitions[kind].length; index += 1) runScenarioStep(state, kind);
     assert.equal(state.scenarios[kind].completed, true, kind);
     assert.equal(state.scenarios[kind].step, scenarioDefinitions[kind].length, kind);
   }
-  assert.ok(state.credentials.some((item) => item.code.startsWith("MY-BEL-SCN-")));
-  assert.ok(state.recognizedCredits.length > 0);
+  assert.equal(state.credentials.length, credentialCount, "kurumsal doğrulamasız senaryo belge üretti");
+  assert.equal(state.recognizedCredits.length, recognizedCreditCount, "kurumsal doğrulamasız senaryo kredi tanıdı");
+  assert.equal(state.enrollments.length, enrollmentCount, "ertelenen program için kayıt üretildi");
+  assert.equal(state.assessmentSessions.length, assessmentCount, "ertelenen program için değerlendirme üretildi");
+  for (const kind of Object.keys(scenarioDefinitions)) {
+    const application = state.applications.find((item) => item.id === state.scenarios[kind].applicationId);
+    assert.equal(application.status, "deferred", kind);
+    assert.equal(application.institutionalValidationConfirmed, false, kind);
+    assert.equal(application.productionEligible, false, kind);
+    assert.equal(Object.keys(application.workloadComponents).length, 8, `${kind}: iş yükü bileşenleri eksik`);
+    assert.equal(Object.values(application.workloadComponents).reduce((sum, value) => sum + value, 0), application.totalWorkload, `${kind}: iş yükü toplamı uyuşmuyor`);
+  }
   const transfers = state.integrationJobs.filter((item) => ["obis", "yoksis"].includes(item.target));
   assert.equal(transfers.length, 2);
   assert.deepEqual(new Set(transfers.map((item) => item.targetLabel)), new Set(["ÖBİS", "YÖKSİS"]));
-  assert.ok(transfers.every((item) => item.target === item.targetId && item.realDataSent === false && item.status === "simulation_succeeded"));
+  assert.ok(transfers.every((item) => item.target === item.targetId && item.realDataSent === false && item.status === "simulation_blocked" && item.errorCode === "INSTITUTIONAL_VALIDATION_REQUIRED"));
+});
+
+test("yönerge ve kural merkezi dokuz rolün tamamında kapsamlı ama rol-sınırlı görünür", () => {
+  assert.match(DIRECTIVE_PILOT_NOTICE, /KURUMSAL DEĞERLENDİRME TASLAĞI/);
+  assert.equal(policyVersionRegistry[0].senateApproval, false);
+  assert.equal(policyVersionRegistry[0].productionEligible, false);
+  assert.equal(directiveRoleScopeRows.length, 9);
+  const canonicalByRole = new Map(directiveRoleScopeRows.map((row) => [row.roleKey, row]));
+  for (const role of roles) {
+    assert.ok(roleNavigation[role.id].includes("governance"), `${role.id}: governance rotası eksik`);
+    const scope = organizationScopes[role.id];
+    const canonical = canonicalByRole.get(role.id);
+    assert.ok(canonical, `${role.id}: kanonik Supabase DTO satırı eksik`);
+    assert.equal(scope.membership_id, canonical.id, `${role.id}: membership_id uyuşmuyor`);
+    assert.equal(scope.unit_id, canonical.unitId, `${role.id}: unit_id uyuşmuyor`);
+    assert.equal(scope.unit_type, canonical.unitType, `${role.id}: unit_type uyuşmuyor`);
+    assert.equal(scope.body_type, canonical.bodyType, `${role.id}: body_type uyuşmuyor`);
+    assert.equal(scope.membership_role, canonical.membershipRole, `${role.id}: membership_role uyuşmuyor`);
+    assert.deepEqual(scope.body_membership, [canonical.id], `${role.id}: body_membership uyuşmuyor`);
+    assert.equal(scope.mandate_from, canonical.mandateFrom, `${role.id}: mandate_from uyuşmuyor`);
+    assert.equal(scope.mandate_to, canonical.mandateTo, `${role.id}: mandate_to uyuşmuyor`);
+    assert.deepEqual(scope.decision_scope, canonical.decisionScope, `${role.id}: decision_scope uyuşmuyor`);
+    assert.equal(scope.may_make_academic_decision, canonical.mayMakeAcademicDecision, `${role.id}: akademik yetki uyuşmuyor`);
+    assert.equal(scope.may_make_financial_decision, canonical.mayMakeFinancialDecision, `${role.id}: mali yetki uyuşmuyor`);
+    assert.match(scope.mandate, /2026-08-20.*2027-08-19/, `${role.id}: okunur görev dönemi eksik`);
+    assert.ok(scope.decision_scope_note.length > 20, `${role.id}: okunur kapsam açıklaması eksik`);
+  }
+  assert.deepEqual(organizationScopes.admin.decision_scope, ["configuration_only"]);
+  assert.equal(organizationScopes.admin.may_make_academic_decision, false);
+  assert.equal(organizationScopes.admin.may_make_financial_decision, false);
+  assert.match(organizationScopes.admin.decision_scope_note, /akademik, tanıma, mali veya personel kararı veremez/i);
+  assert.equal(pageMeta.governance.label, "Yönerge ve Kural Merkezi");
+});
+
+test("AKTS iş yükü 1–6 bantlarını, sekiz bileşeni, yuvarlamayı ve band dışını doğruluyor", () => {
+  assert.deepEqual(ectsWorkloadBands, [
+    { ects: 1, minHours: 25, maxHours: 30 }, { ects: 2, minHours: 50, maxHours: 60 },
+    { ects: 3, minHours: 75, maxHours: 90 }, { ects: 4, minHours: 100, maxHours: 120 },
+    { ects: 5, minHours: 125, maxHours: 150 }, { ects: 6, minHours: 150, maxHours: 180 }
+  ]);
+  assert.equal(workloadComponents.length, 8);
+  for (const record of [...initialState.applications.map((item) => ({ ...item, total: item.totalWorkload })), ...initialState.programs.map((item) => ({ ...item, total: item.workload }))]) {
+    assert.deepEqual(Object.keys(record.workloadComponents), workloadComponents.map(([key]) => key));
+    assert.equal(Object.values(record.workloadComponents).reduce((sum, value) => sum + value, 0), record.total);
+    assert.ok(record.total >= 25 * record.ects && record.total <= 30 * record.ects);
+  }
+  for (const band of ectsWorkloadBands) {
+    assert.equal(validateEctsWorkload({ ects: band.ects, totalWorkload: band.minHours }).valid, true);
+    assert.equal(validateEctsWorkload({ ects: band.ects, totalWorkload: band.maxHours }).valid, true);
+    assert.equal(validateEctsWorkload({ ects: band.ects, totalWorkload: band.minHours - 0.25 }).valid, false);
+    assert.equal(validateEctsWorkload({ ects: band.ects, totalWorkload: band.maxHours + 0.25 }).valid, false);
+  }
+  const components = { synchronous: 10, asynchronous: 10, preparation: 10, practice: 10, project: 15, independent: 10, assessment: 5, feedback: 5 };
+  const valid = validateEctsWorkload({ ects: 3, totalWorkload: 75, components });
+  assert.equal(valid.valid, true);
+  assert.equal(valid.componentTotal, 75);
+  assert.match(valid.equation, /75 ≤ 75 ≤ 90/);
+  assert.equal(validateEctsWorkload({ ects: 3, totalWorkload: 76, components }).valid, false, "bileşen toplamı uyuşmazlığı yakalanmadı");
+  assert.ok(validateEctsWorkload({ ects: 3, totalWorkload: 75.5 }).warnings.some((item) => item.includes("yuvarlama")));
+  assert.equal(validateEctsWorkload({ ects: 3, totalWorkload: 75, requireComponents: true }).valid, false, "zorunlu sekiz bileşen eksikliği işlemi bloke etmedi");
+  assert.equal(validateEctsWorkload({ ects: 3, totalWorkload: 75, components: { ...components, feedback: "" }, requireComponents: true }).valid, false, "boş bileşen alanı yakalanmadı");
+  assert.equal(validateEctsWorkload({ ects: 7, totalWorkload: 175 }).valid, false);
+});
+
+test("belirsiz sayısal sınırlar sürümlü, uyarı-only ve kurumsal blok olarak değerlendirilir", () => {
+  assert.equal(versionedPilotRules.length, 6);
+  for (const rule of versionedPilotRules) {
+    for (const field of ["source_clause", "effective_from", "effective_to", "program_type", "calculation_basis", "numerator", "denominator", "rounding_rule", "exception_rule", "interpretation_note", "institutional_validation_required"]) {
+      assert.ok(Object.hasOwn(rule, field), `${rule.id}: ${field} eksik`);
+    }
+    const result = evaluatePilotRule(rule.id);
+    assert.equal(result.outcome, "warning_only");
+    assert.equal(result.completionBlocked, true);
+    assert.equal(result.autonomousDecision, false);
+  }
+  assert.ok(evaluatePilotRule("RULE-TERM-5", { requestedEcts: 6 }).warnings.some((item) => item.includes("6 AKTS")));
+  assert.ok(evaluatePilotRule("RULE-REMOTE-50", { singleProgram: true }).warnings.some((item) => item.includes("Tek program")));
+  assert.ok(evaluatePilotRule("RULE-SEMESTER-3-8", { programCycle: "associate" }).warnings.some((item) => item.includes("tanımlı değildir")));
+});
+
+test("MYD kodu koordinatörlükçe, idempotent ve production kapalı üretiliyor", () => {
+  const state = cloneDirectivePilotState();
+  assert.throws(() => generateMydCode(state, { actorRole: "admin", unitCode: "SEM" }), /yalnız Koordinatörlük/);
+  const first = generateMydCode(state, { actorRole: "coordinator", unitCode: "SEM", year: 2026, sequence: 1 });
+  const replay = generateMydCode(state, { actorRole: "coordinator", unitCode: "SEM", year: 2026, sequence: 1 });
+  const otherUnit = generateMydCode(state, { actorRole: "coordinator", unitCode: "MUH", year: 2026, sequence: 1, version: 2 });
+  assert.equal(first.code, "MYD-2026-SEM-001");
+  assert.equal(first.versionNo, 1);
+  assert.equal(first.id, "MYDREC-2026-SEM-001");
+  assert.equal(otherUnit.code, "MYD-2026-MUH-001");
+  assert.equal(otherUnit.versionNo, 2);
+  assert.notEqual(otherUnit.id, first.id);
+  assert.equal(replay.id, first.id);
+  assert.equal(state.codes.length, 2);
+  assert.equal(first.productionEligible, false);
+});
+
+test("tanıma üç ayrı karar, ayrı gerekçe ve bağımsız itiraz mercii olarak işler", () => {
+  const state = cloneDirectivePilotState();
+  assert.deepEqual(state.recognitionDecisions.map((item) => item.kind), ["credential", "ects", "course_substitution"]);
+  assert.throws(() => recordRecognitionDecision(state, { applicationId: "APP-042", kind: "ects", status: "recognized", rationale: "Yetkisiz sistem yöneticisi kararı", actorRole: "admin" }), /yalnız Komisyon/);
+  assert.throws(() => recordRecognitionDecision(state, { applicationId: "APP-042", kind: "credential", status: "additional_evidence_required", rationale: "Ek kanıt insan incelemesiyle talep edildi.", actorRole: "commission", decisionBody: "MY-KOM" }), /Geçerli toplantı/);
+  const meetingResult = validateCommissionMeeting({ actorRole: "commission", members: state.commission.members, quorumRequired: 2, votes: [{ memberId: "MEM-1", vote: "approve" }, { memberId: "MEM-2", vote: "approve" }] });
+  state.commission.lastValidation = { ...meetingResult, validatedAt: new Date().toISOString(), bodyId: state.commission.bodyId, mandate: state.commission.mandate };
+  assert.throws(() => recordRecognitionDecision(state, { applicationId: "APP-042", kind: "credential", status: "recognized", rationale: "Olumlu tanıma için insan gerekçesi yazıldı.", actorRole: "commission", decisionBody: "MY-KOM" }), /olumlu nihai tanıma/);
+  assert.throws(() => recordRecognitionDecision(state, { applicationId: "APP-042", kind: "credential", status: "partially_recognized", rationale: "Kısmi tanıma için insan gerekçesi yazıldı.", actorRole: "commission", decisionBody: "MY-KOM" }), /olumlu nihai tanıma/);
+  const credential = recordRecognitionDecision(state, { applicationId: "APP-042", kind: "credential", status: "additional_evidence_required", rationale: "Belge sağlayıcısı için ek kanıt insan gözüyle talep edildi.", actorRole: "commission", decisionBody: "MY-KOM" });
+  assert.equal(credential.status, "additional_evidence_required");
+  assert.equal(state.recognitionDecisions.find((item) => item.kind === "ects").status, "pending_human_review");
+  assert.equal(state.recognitionDecisions.find((item) => item.kind === "course_substitution").status, "pending_human_review");
+  assert.throws(() => submitIndependentAppeal(state, { applicationId: "APP-042", decisionKind: "credential", actorRole: "learner", reason: "İnsan üst incelemesi talep ediyorum.", initialDecisionBody: "MY-KOM", appealBody: "MY-KOM" }), /farklı mercilerde/);
+  const appeal = submitIndependentAppeal(state, { applicationId: "APP-042", decisionKind: "credential", actorRole: "learner", reason: "Kanıtların bağımsız insan üst incelemesinde değerlendirilmesi talep edilir.", initialDecisionBody: "MY-KOM", appealBody: "EGITIM-OGRETIM-KOM" });
+  assert.equal(appeal.status, "submitted");
+  assert.notEqual(appeal.initialDecisionBody, appeal.appealBody);
+  const split = splitCredentialOutcomes({ applicationId: "APP-042", badgeStatus: "earned", creditStatus: "not_decided", substitutionStatus: "not_decided" });
+  assert.equal(split.independentStates, true);
+  assert.equal(split.credential.status, "earned");
+  assert.equal(split.ects.status, "not_decided");
+});
+
+test("EK-1 on bir asgari alanı ve kamu TCKN/kurum içi kimlik sızıntısını engelliyor", () => {
+  assert.equal(euMicroCredentialMandatoryFields.length, 11);
+  const source = {
+    document_id: "MYBEL-2026-0007", learner_identification: "Gerçek Ad Soyad", title: "Pilot Program",
+    issuer_country_region: "Türkiye", awarding_body: "Kütahya Dumlupınar Üniversitesi • Kontrollü Pilot", issue_date: "2026-08-04",
+    learning_outcomes: ["Ölçülebilir çıktı"], notional_workload: "2 AKTS • 50 saat", level: "Önerilen pedagojik referans düzeyi 6",
+    participation_form: "Yüz yüze • SİMÜLASYON", assessment_type: "Proje + rubrik", quality_assurance: "İnsan incelemesi",
+    status: "pilot_valid", revocation_status: "not_revoked"
+  };
+  const view = createPublicCredentialView(source);
+  assert.equal(view.learner_identification, "Maskeli pilot katılımcı");
+  assert.notEqual(view.learner_identification, source.learner_identification);
+  assert.equal(validateEk1Credential(view, { publicView: true }).valid, true);
+  assert.equal(Object.hasOwn(view, "internal_learner_id"), false);
+  assert.equal(validateEk1Credential({ ...view, tckn: "12345678901" }, { publicView: true }).valid, false);
+  assert.equal(validateEk1Credential({ ...view, learner_identification: "12345678901" }, { publicView: true }).personalNumberLeak, true);
+  assert.equal(validateEk1Credential({ ...view, quality_assurance: "" }, { publicView: true }).missing.includes("quality_assurance"), true);
+});
+
+test("komisyon nisabı, görev süresi, çekilme, tekil oy ve yönetici negatif yetkisi çalışıyor", () => {
+  const state = cloneDirectivePilotState();
+  const meeting = state.commission;
+  assert.throws(() => validateCommissionMeeting({ actorRole: "admin", members: meeting.members, quorumRequired: 2 }), /Sistem yöneticisi/);
+  const valid = validateCommissionMeeting({ actorRole: "commission", members: meeting.members, quorumRequired: 2, votes: [{ memberId: "MEM-1", vote: "approve" }, { memberId: "MEM-2", vote: "approve" }] });
+  assert.equal(valid.valid, true);
+  assert.equal(valid.eligibleCount, 2);
+  const recusedVote = validateCommissionMeeting({ actorRole: "commission", members: meeting.members, quorumRequired: 2, votes: [{ memberId: "MEM-3", vote: "approve" }] });
+  assert.equal(recusedVote.valid, false);
+  assert.equal(recusedVote.conflictViolations.length, 1);
+  const duplicate = validateCommissionMeeting({ actorRole: "commission", members: meeting.members, quorumRequired: 2, votes: [{ memberId: "MEM-1", vote: "approve" }, { memberId: "MEM-1", vote: "reject" }] });
+  assert.equal(duplicate.duplicateVotes, true);
+  const unknown = validateCommissionMeeting({ actorRole: "commission", members: meeting.members, quorumRequired: 2, votes: [{ memberId: "UNKNOWN", vote: "approve" }, { memberId: "MEM-1", vote: "approve" }] });
+  assert.equal(unknown.valid, false);
+  assert.equal(unknown.unknownVotes.length, 1);
+  const invalidVote = validateCommissionMeeting({ actorRole: "commission", members: meeting.members, quorumRequired: 2, votes: [{ memberId: "MEM-1", vote: "auto_approve" }, { memberId: "MEM-2", vote: "approve" }] });
+  assert.equal(invalidVote.valid, false);
+  assert.equal(invalidVote.invalidVotes.length, 1);
+});
+
+test("kontenjan eşzamanlı son yer, FIFO, bekleme ve idempotency sözleşmesini koruyor", () => {
+  const state = cloneDirectivePilotState();
+  const first = requestOfferingSeat(state, { offeringId: "OFF-2026-GUZ-001", learnerId: "SENTETIK-L-002", actorRole: "learner", requestedAt: "2026-08-20T08:00:01Z", idempotencyKey: "last-seat" });
+  assert.equal(first.status, "enrolled");
+  const wait = requestOfferingSeat(state, { offeringId: "OFF-2026-GUZ-001", learnerId: "SENTETIK-L-003", actorRole: "learner", requestedAt: "2026-08-20T08:00:01Z", idempotencyKey: "wait-seat" });
+  assert.equal(wait.status, "waitlisted");
+  assert.equal(wait.waitlistPosition, 1);
+  const replay = requestOfferingSeat(state, { offeringId: "OFF-2026-GUZ-001", learnerId: "SENTETIK-L-003", actorRole: "learner", requestedAt: "2026-08-20T08:00:05Z", idempotencyKey: "wait-seat" });
+  assert.equal(replay.id, wait.id);
+  const learnerReplay = requestOfferingSeat(state, { offeringId: "OFF-2026-GUZ-001", learnerId: "SENTETIK-L-003", actorRole: "learner", requestedAt: "2026-08-20T08:00:06Z", idempotencyKey: "different-key-same-learner" });
+  assert.equal(learnerReplay.id, wait.id);
+  assert.equal(state.offerings[0].requests.length, 3);
+  assert.throws(() => requestOfferingSeat(state, { offeringId: "OFF-2026-GUZ-001", learnerId: "SENTETIK-L-004", actorRole: "admin", idempotencyKey: "admin" }), /yalnız öğrenen/);
+});
+
+test("mali ve personel dry-run yalnız finans rolünde, gerçek işlem kapalıdır", () => {
+  const state = cloneDirectivePilotState();
+  assert.throws(() => createFinancePersonnelDryRun(state, { actorRole: "admin", amount: 9600 }), /yalnız Finans/);
+  const record = createFinancePersonnelDryRun(state, { actorRole: "finance", kind: "teaching_entitlement", amount: 9600 });
+  assert.equal(record.status, "approval_required");
+  assert.equal(record.realPayment, false);
+  assert.equal(record.realDocument, false);
+  assert.equal(record.externalRequestSent, false);
+  assert.equal(record.personnelApprovalRequired, true);
+  assert.equal(record.financialApprovalRequired, true);
+});
+
+test("yönerge UI sözleşmesi kritik güvenlik ve ayrık karar dilini içeriyor", () => {
+  const appSource = readFileSync(new URL("../src/app.js", import.meta.url), "utf8");
+  const domainSource = readFileSync(new URL("../src/directive-pilot.js", import.meta.url), "utf8");
+  for (const phrase of ["Yönerge ve kural merkezi", "Kurumsal değerlendirme taslağı — yürürlük yok", "Üç ayrı tanıma sonucu", "Sistem yöneticisi akademik toplantı veya karar kaydedemez"]) {
+    assert.match(`${appSource}\n${domainSource}`, new RegExp(phrase, "i"), `${phrase}: UI/domain sözleşmesinde yok`);
+  }
+  assert.match(appSource, /const FINANCE_OPERATOR_ROLES = new Set\(\["finance"\]\)/);
+  assert.doesNotMatch(appSource, /FINANCE_OPERATOR_ROLES = new Set\(\["finance",\s*"admin"\]\)/);
+  assert.match(appSource, /requireComponents:\s*true/);
+  assert.match(appSource, /workloadComponents:persistedComponents/);
+  assert.doesNotMatch(appSource, /Pilot tavan:\s*24 AKTS|\$\{total\}\/24/);
+  assert.match(appSource, /escapeHtml\(lastCode\?\.code/);
 });
 
 const failures = results.filter((result) => !result.ok);

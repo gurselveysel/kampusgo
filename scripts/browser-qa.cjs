@@ -159,6 +159,13 @@ async function verifyRoleMatrix(page, roles, roleNavigation, viewport, errors) {
     check(unauthorizedTargets.length === 0, `${viewport.name}/${role.id}: yetkisiz görünür CTA: ${unauthorizedTargets.join(",")}`, errors);
     await assertNoOverflow(page, `${viewport.name}/${role.id}/overview`, errors);
 
+    await setHash(page, "governance");
+    const governanceText = await page.locator("#main-content").innerText();
+    check(governanceText.includes("Yönerge ve kural merkezi"), `${viewport.name}/${role.id}: yönerge/kural merkezi açılmadı`, errors);
+    check(governanceText.includes("Kurumsal değerlendirme taslağı") && governanceText.includes("Production"), `${viewport.name}/${role.id}: taslak ve production sınırı görünür değil`, errors);
+    check(governanceText.includes(role.label) && governanceText.includes("unit_id") && governanceText.includes("decision_scope"), `${viewport.name}/${role.id}: örgütsel kapsam alanları eksik`, errors);
+    await assertNoOverflow(page, `${viewport.name}/${role.id}/governance`, errors);
+
     await setHash(page, "home");
     await page.waitForSelector("#hero-title");
     const catalogCTAVisible = await page.locator('.hero-actions [data-nav="catalog"]').isVisible().catch(() => false);
@@ -247,12 +254,23 @@ async function verifyExternalInstructorProposal(page, errors) {
   const ownership = await page.evaluate((expected) => {
     const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     const application = saved.applications.find((item) => item.title === expected);
+    const program = saved.programs.find((item) => item.code === application?.code);
     const audit = saved.audit.find((event) => event.entityId === application?.id);
-    return { ownerRole: application?.ownerRole, applicant: application?.applicant, auditRole: audit?.actorRole };
+    const components = application?.formData?.workloadComponents || {};
+    return {
+      ownerRole: application?.ownerRole,
+      applicant: application?.applicant,
+      auditRole: audit?.actorRole,
+      componentCount: Object.keys(components).length,
+      componentTotal: Object.values(components).reduce((sum, value) => sum + Number(value || 0), 0),
+      programComponentsMatch: JSON.stringify(program?.workloadComponents) === JSON.stringify(components)
+    };
   }, title);
   check(ownership.ownerRole === "externalInstructor", "externalInstructor: UI gönderimi ownerRole kimliğini kaybetti", errors);
   check(ownership.applicant === "Uzman Eğitici Selin Ada", "externalInstructor: UI gönderimi demo persona adını kaybetti", errors);
   check(ownership.auditRole === "externalInstructor", "externalInstructor: UI gönderimi audit rolünü kaybetti", errors);
+  check(ownership.componentCount === 8 && ownership.componentTotal === 75, "externalInstructor: sekiz iş yükü bileşeni başvuruya kaydedilmedi", errors);
+  check(ownership.programComponentsMatch, "externalInstructor: başvuru/program iş yükü bileşenleri ayrıştı", errors);
 
   await setHash(page, "overview");
   await page.locator('[data-action="reset-demo"]').click();
@@ -273,21 +291,37 @@ async function verifyScenarioActions(page, scenarioDefinitions, errors) {
   }
   const scenarioState = await page.evaluate(() => {
     const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
+    const scenarioApplications = [saved.scenarios.internal.applicationId, saved.scenarios.recognition.applicationId]
+      .map((id) => saved.applications.find((item) => item.id === id));
     return {
       internal: saved.scenarios.internal.completed,
       recognition: saved.scenarios.recognition.completed,
       credentials: saved.credentials.filter((item) => item.code.startsWith("MY-BEL-SCN-")).length,
+      recognizedScenarioCredits: saved.recognizedCredits.filter((item) => scenarioApplications.some((application) => application?.id === item.applicationId)).length,
+      scenarioApplications: scenarioApplications.map((application) => ({
+        status: application?.status,
+        institutionalValidationConfirmed: application?.institutionalValidationConfirmed,
+        productionEligible: application?.productionEligible,
+        componentCount: Object.keys(application?.workloadComponents || {}).length,
+        componentTotal: Object.values(application?.workloadComponents || {}).reduce((sum, value) => sum + Number(value || 0), 0),
+        totalWorkload: application?.totalWorkload
+      })),
       safeTransfers: saved.integrationJobs.filter((item) =>
         ["obis", "yoksis"].includes(item.target) &&
         ["ÖBİS", "YÖKSİS"].includes(item.targetLabel) &&
         item.target === item.targetId &&
-        item.realDataSent === false
+        item.realDataSent === false &&
+        item.status === "simulation_blocked" &&
+        item.errorCode === "INSTITUTIONAL_VALIDATION_REQUIRED"
       ).length
     };
   });
   check(scenarioState.internal && scenarioState.recognition, "iki uçtan uca senaryo tarayıcı veri katmanında tamamlanmadı", errors);
-  check(scenarioState.credentials >= 1, "senaryo 1 tarayıcıda pilot yeterlilik üretmedi", errors);
-  check(scenarioState.safeTransfers >= 2, "senaryo 2 güvenli aktarım loglarını üretmedi", errors);
+  check(scenarioState.credentials === 0, "senaryo 1 kurumsal doğrulama olmadan pilot yeterlilik üretti", errors);
+  check(scenarioState.recognizedScenarioCredits === 0, "senaryo 2 kurumsal doğrulama olmadan kredi tanıdı", errors);
+  check(scenarioState.scenarioApplications.every((item) => item.status === "deferred" && item.institutionalValidationConfirmed === false && item.productionEligible === false), "senaryo başvuruları güvenli deferred kapısında kalmadı", errors);
+  check(scenarioState.scenarioApplications.every((item) => item.componentCount === 8 && item.componentTotal === item.totalWorkload), "iki E2E başvurusunda sekiz iş yükü bileşeni/toplam semantiği bozuk", errors);
+  check(scenarioState.safeTransfers === 2, "senaryo 2 iki güvenli bloke aktarım logunu üretmedi", errors);
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForSelector('#role-select option[value="admin"]', { state: "attached" });
   check(await page.locator('[data-action="run-scenario"]').count() === 0, "yenileme sonrası senaryo tamamlanma durumu korunmadı", errors);
@@ -304,7 +338,8 @@ async function verifyDecisionActions(page, errors) {
   await page.selectOption("#role-select", "commission");
   await setHash(page, "commission");
   check(await page.locator('[data-action="decision"]').count() === 4, "commission: dört gerekçeli karar eylemi görünmüyor", errors);
-  await page.locator('[data-action="decision"][data-status="approved"]').click();
+  check(await page.locator('[data-action="decision"][data-status="approved"]').count() === 0, "commission: kurumsal doğrulamasız nihai onay eylemi görünür", errors);
+  await page.locator('[data-action="decision"][data-status="deferred"]').click();
   check(await page.locator("#decision-form").count() === 1, "commission: karar modalı açılmadı", errors);
   await page.locator('[data-action="close-modal"]').first().click();
 
@@ -405,13 +440,16 @@ async function verifyQualificationMatrixFlow(page, errors) {
   await setHash(page, "overview");
   await page.selectOption("#role-select", "instructor");
   await setHash(page, "frameworks");
-  await page.waitForFunction(() => document.querySelector("#main-content h1")?.textContent?.includes("TYÇ ve AYÇ yeterlilik eşleme matrisleri"));
-  check(await page.locator('.framework-tabs [data-action="framework-tab"]').count() === 2, "frameworks: TYÇ ve AYÇ sekmeleri birlikte görünmüyor", errors);
+  await page.waitForFunction(() => document.querySelector("#main-content h1")?.textContent?.includes("TYÇ, AYÇ ve TYYÇ yeterlilik eşleme matrisleri"));
+  check(await page.locator('.framework-tabs [data-action="framework-tab"]').count() === 3, "frameworks: TYÇ, AYÇ ve TYYÇ sekmeleri birlikte görünmüyor", errors);
   check(await page.locator("#framework-level option").count() === 8, "frameworks: TYÇ 1–8 seviye seçenekleri eksik", errors);
 
   await page.locator('[data-action="framework-tab"][data-framework="eqf"]').click();
   check(await page.locator("#framework-level option").count() === 8, "frameworks: AYÇ/EQF 1–8 seviye seçenekleri eksik", errors);
   check((await page.locator(".framework-source-card").innerText()).includes("Avrupa Yeterlilikler Çerçevesi"), "frameworks: AYÇ/EQF resmî referansı yüklenmedi", errors);
+  await page.locator('[data-action="framework-tab"][data-framework="tyyc"]').click();
+  check(await page.locator("#framework-level option").count() === 4, "frameworks: TYYÇ 5–8 seviye seçenekleri eksik", errors);
+  check((await page.locator(".framework-source-card").innerText()).includes("advisory") || (await page.locator(".framework-source-card").innerText()).includes("form"), "frameworks: TYYÇ form sicili/advisory sınırı görünmüyor", errors);
   await page.locator('[data-action="framework-tab"][data-framework="tyc"]').click();
   await page.selectOption("#framework-level", "6");
   await page.locator('[data-action="load-framework-level"]').click();
@@ -445,7 +483,7 @@ async function verifyQualificationMatrixFlow(page, errors) {
   await page.locator("#qualification-matrix-form").evaluate((form) => form.requestSubmit());
   const after = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).qualificationDrafts.length);
   check(after === before, "coordinator: doğrudan submit denemesi matris taslağını değiştirdi", errors);
-  const coordinatorMutation = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).audit.some((item) => item.actorRole === "coordinator" && item.action === "TYÇ / AYÇ pilot matris taslağı kaydedildi"));
+  const coordinatorMutation = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).audit.some((item) => item.actorRole === "coordinator" && item.action === "TYÇ / AYÇ / TYYÇ pilot matris taslağı kaydedildi"));
   check(!coordinatorMutation, "coordinator: yetkisiz matris kaydı audit izine yazıldı", errors);
   await setHash(page, "overview");
   await page.locator('[data-action="reset-demo"]').click();
@@ -502,10 +540,10 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   await page.fill("[data-smart-outcome]", smartOutcomeSamples.join("\n"));
   await page.locator('[data-action="reanalyze-smart-suggestions"]').click();
   try {
-    await page.waitForFunction(() => document.querySelectorAll("[data-smart-suggestion]").length === 6
+    await page.waitForFunction(() => document.querySelectorAll("[data-smart-suggestion]").length === 9
       && document.querySelector("#smart-suggestion-results")?.getAttribute("aria-busy") === "false", undefined, { timeout: 5000 });
   } catch {
-    errors.push(`${viewport.name}/smart: üç çıktı × iki çerçeve önerisi zamanında oluşmadı`);
+    errors.push(`${viewport.name}/smart: üç çıktı × üç çerçeve önerisi zamanında oluşmadı`);
     return;
   }
 
@@ -515,24 +553,35 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
     level: Number(node.dataset.level),
     dimension: node.dataset.dimension,
     score: Number(node.dataset.score),
+    descriptorKind: node.querySelector("[data-smart-descriptor-kind]")?.dataset.smartDescriptorKind || "",
+    descriptorLabel: node.querySelector("[data-smart-descriptor-kind]")?.textContent?.trim() || "",
     text: node.textContent || ""
   })));
-  check(cards.length === 6, `${viewport.name}/smart: altı primary öneri yerine ${cards.length} kart var`, errors);
+  check(cards.length === 9, `${viewport.name}/smart: dokuz primary öneri yerine ${cards.length} kart var`, errors);
   const expectedDimensions = ["knowledge", "skills", "competence"];
   for (let index = 0; index < smartOutcomeSamples.length; index += 1) {
     const outcomeCards = cards.filter((item) => item.outcomeIndex === index);
-    check(JSON.stringify(outcomeCards.map((item) => item.framework).sort()) === JSON.stringify(["EQF", "TYC"]), `${viewport.name}/smart/ÖÇ-${index + 1}: TYÇ ve AYÇ/EQF ayrı önerilmedi`, errors);
+    check(JSON.stringify(outcomeCards.map((item) => item.framework).sort()) === JSON.stringify(["EQF", "TYC", "TYYC"]), `${viewport.name}/smart/ÖÇ-${index + 1}: TYÇ, AYÇ/EQF ve TYYÇ ayrı önerilmedi`, errors);
     check(outcomeCards.every((item) => item.dimension === expectedDimensions[index]), `${viewport.name}/smart/ÖÇ-${index + 1}: Türkçe eylem boyutu ${expectedDimensions[index]} değil`, errors);
   }
   for (const card of cards) {
-    check(Number.isInteger(card.level) && card.level >= 1 && card.level <= 8, `${viewport.name}/smart: ${card.framework} seviye 1–8 dışında`, errors);
+    check(Number.isInteger(card.level) && card.level >= (card.framework === "TYYC" ? 5 : 1) && card.level <= 8, `${viewport.name}/smart: ${card.framework} desteklenen seviye dışında`, errors);
     check(Number.isFinite(card.score) && card.score >= 0 && card.score <= 100, `${viewport.name}/smart: açıklanabilir skor 0–100 dışında`, errors);
-    for (const label of ["Gerekçe", "Kanonik tanımlayıcı", "İçerik ipucu", "Ölçme-değerlendirme", "Kanıt önerisi"]) {
+    for (const label of ["Gerekçe", "İçerik ipucu", "Ölçme-değerlendirme", "Kanıt önerisi"]) {
       check(card.text.includes(label), `${viewport.name}/smart: ${card.framework} kartında ${label} yok`, errors);
+    }
+    if (card.framework === "TYYC") {
+      check(card.descriptorKind === "pilot-operational-summary-not-verbatim", `${viewport.name}/smart: TYYÇ tanımlayıcısı pilot özet provenansıyla işaretli değil`, errors);
+      check(card.descriptorLabel === "YÖK/MYK form siciline dayalı pilot operasyonel özet — birebir alıntı değildir", `${viewport.name}/smart: TYYÇ form sicili/pilot özet/birebir olmayan metin etiketi eksik`, errors);
+      check(!card.text.includes("Kanonik tanımlayıcı"), `${viewport.name}/smart: TYYÇ pilot operasyonel özeti kanonik tanımlayıcı olarak etiketlendi`, errors);
+    } else {
+      check(card.descriptorKind === "canonical-descriptor", `${viewport.name}/smart: ${card.framework} kanonik tanımlayıcı provenansı eksik`, errors);
+      check(card.descriptorLabel === "Kanonik tanımlayıcı", `${viewport.name}/smart: ${card.framework} kartında Kanonik tanımlayıcı etiketi yok`, errors);
     }
   }
   check(await page.locator('[data-smart-framework="TYC"]').count() === 3, `${viewport.name}/smart: TYÇ semantic kart işaretleri eksik`, errors);
   check(await page.locator('[data-smart-framework="EQF"]').count() === 3, `${viewport.name}/smart: AYÇ/EQF semantic kart işaretleri eksik`, errors);
+  check(await page.locator('[data-smart-framework="TYYC"]').count() === 3, `${viewport.name}/smart: TYYÇ semantic kart işaretleri eksik`, errors);
   check(await page.locator("[data-smart-coverage]").count() === 1, `${viewport.name}/smart: program düzeyi kapsama matrisi yok`, errors);
   const smartText = await page.locator("#smart-alignment-form").innerText();
   check(smartText.includes("Öneri karar değildir") && smartText.includes("Nihai akademik") && smartText.includes("yetkili kurul"), `${viewport.name}/smart: insan kararı ve kurumsal doğrulama sınırı görünür değil`, errors);
@@ -545,6 +594,8 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   await firstApply.click();
   check((await page.locator("#proposal-smart-content").inputValue()).includes("TYÇ ÖÇ-1"), "smart/apply: içerik önerisi eğitici alanına uygulanmadı", errors);
   check((await page.locator("#proposal-smart-assessment").inputValue()).includes("TYÇ ÖÇ-1"), "smart/apply: ölçme önerisi eğitici alanına uygulanmadı", errors);
+  await page.locator('[data-action="apply-smart-suggestion"][data-outcome-index="0"][data-framework="tyyc"]').click();
+  check((await page.locator("#proposal-smart-content").inputValue()).includes("TYYÇ ÖÇ-1"), "smart/apply: TYYÇ içerik önerisi eğitici alanına uygulanmadı", errors);
 
   const override = page.locator('[data-smart-override][data-outcome-index="1"][data-framework="tyc"]');
   await override.locator("summary").click();
@@ -570,6 +621,7 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   const restoredInputSnapshot = await page.evaluate(() => JSON.parse(document.querySelector("#proposal-smart-mapping").value));
   check(restoredInputSnapshot.appliedSelections?.length === 0 && restoredInputSnapshot.manualOverrides?.length === 0, "smart/fingerprint: önceki metin geri gelince geçersiz seçimler yeniden canlandı", errors);
   await page.locator('[data-action="apply-smart-suggestion"][data-outcome-index="0"][data-framework="tyc"]').click();
+  await page.locator('[data-action="apply-smart-suggestion"][data-outcome-index="0"][data-framework="tyyc"]').click();
   const restoredOverride = page.locator('[data-smart-override][data-outcome-index="1"][data-framework="tyc"]');
   await restoredOverride.locator("summary").click();
   await restoredOverride.locator(".smart-override-level").selectOption("7");
@@ -577,6 +629,14 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   await restoredOverride.locator(".smart-override-reason").fill(overrideReason);
   await restoredOverride.locator('[data-action="apply-smart-override"]').click();
   await page.waitForFunction((reason) => document.querySelector("#proposal-smart-mapping")?.value.includes(reason), overrideReason, { timeout: 3000 });
+  const tyycOverride = page.locator('[data-smart-override][data-outcome-index="2"][data-framework="tyyc"]');
+  await tyycOverride.locator("summary").click();
+  await tyycOverride.locator(".smart-override-level").selectOption("7");
+  await tyycOverride.locator(".smart-override-dimension").selectOption("competence");
+  const tyycOverrideReason = "Eğitici, stratejik sorumluluk ve özerklik kanıtını TYYÇ yükseköğretim bağlamında ayrıca incelemiştir.";
+  await tyycOverride.locator(".smart-override-reason").fill(tyycOverrideReason);
+  await tyycOverride.locator('[data-action="apply-smart-override"]').click();
+  await page.waitForFunction((reason) => document.querySelector("#proposal-smart-mapping")?.value.includes(reason), tyycOverrideReason, { timeout: 3000 });
 
   await page.fill("#proposal-title", "Akıllı Eşleme Tarayıcı QA Programı");
   await page.fill("#proposal-summary", "Akıllı yeterlilik önerisi, seçim, manuel düzeltme ve kurul inceleme sınırını test eden sentetik program.");
@@ -610,7 +670,52 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   check(linkage.formFingerprint === linkage.alignment?.orderedOutcomeFingerprint, "smart/linkage: formData fingerprint backlink'i alignment ile eşleşmiyor", errors);
   check(JSON.stringify(linkage.semanticOutcomes) === JSON.stringify(linkage.alignment?.outcomes?.map((item) => item.text)), "smart/linkage: application formData çıktıları alignment metinleriyle semantik eşleşmiyor", errors);
   check(linkage.alignment?.outcomes?.length === 3 && linkage.alignment?.appliedSelections?.length >= 2, "smart/persist: çıktı/seçim snapshot eksik", errors);
+  check(linkage.alignment?.manualOverrides?.some((item) => item.frameworkId === "tyyc" && item.reason === tyycOverrideReason), "smart/persist: TYYÇ gerekçeli eğitici override kaydı eksik", errors);
   check(linkage.alignment?.institutionalValidationRequired === true && linkage.unsafeDecision === false, "smart/persist: doğrulama veya auto-decision sınırı kayboldu", errors);
+  check(linkage.alignment?.suggestionSnapshot?.schemaVersion === "smart-suggestion-report-snapshot-v1", "smart/snapshot: tam rapor snapshot şeması eksik", errors);
+  check(/^FNV1A32-[0-9a-f]{8}$/.test(linkage.alignment?.suggestionSnapshot?.integrityHash || ""), "smart/snapshot: bütünlük hash'i eksik", errors);
+  check(Boolean(linkage.alignment?.suggestionSnapshot?.referenceDataVersion) && linkage.alignment?.suggestionSnapshot?.sourceContext?.frameworks?.length === 3, "smart/snapshot: referans veri sürümü veya üç çerçeve kaynak bağlamı eksik", errors);
+
+  const historicalSnapshot = await page.evaluate(async (alignmentId) => {
+    const key = "kdpu-myys-pilot-v4";
+    const saved = JSON.parse(localStorage.getItem(key));
+    const { createSmartSuggestionSnapshot } = await import("/src/smart-snapshot.js");
+    const alignment = saved.smartAlignments.find((item) => item.id === alignmentId);
+    const application = saved.applications.find((item) => item.id === alignment.applicationId);
+    const program = saved.programs.find((item) => item.id === alignment.programId);
+    const previous = alignment.suggestionSnapshot;
+    const report = structuredClone(previous.report);
+    const tyyc = report.outcomes[0].suggestions.tyyc;
+    tyyc.qualificationTypeSuggestion.selected.titleTr = "Tarihsel snapshot lisans türü";
+    tyyc.alternatives.reverse();
+    tyyc.evidenceGapWarnings = ["Tarihsel snapshot eksik kanıt uyarısı yeniden hesaplanmadan korunmalıdır."];
+    tyyc.descriptorStatus = "advisory_summary_not_verbatim";
+    tyyc.method = "historical_snapshot_method_v1";
+    tyyc.confidence = "low";
+    const next = createSmartSuggestionSnapshot(report, previous.selectionContext, {
+      capturedAt: previous.capturedAt,
+      referenceDataVersion: previous.referenceDataVersion,
+      sourceContext: previous.sourceContext
+    });
+    alignment.suggestionSnapshot = structuredClone(next);
+    application.formData.qualificationMapping.suggestionSnapshot = structuredClone(next);
+    if (program) program.level = 8;
+    localStorage.setItem(key, JSON.stringify(saved));
+    return {
+      integrityHash: next.integrityHash,
+      typeTitle: tyyc.qualificationTypeSuggestion.selected.titleTr,
+      alternativeLevels: tyyc.alternatives.map((item) => item.level),
+      evidenceGapWarnings: tyyc.evidenceGapWarnings,
+      descriptorStatus: tyyc.descriptorStatus,
+      method: tyyc.method,
+      confidence: tyyc.confidence,
+      currentEnginePreferredLevel: program?.level
+    };
+  }, linkage.alignment.id);
+  check(historicalSnapshot.currentEnginePreferredLevel === 8, "smart/snapshot: güncel motor yolunu farklılaştıran program düzeyi kurulamadı", errors);
+  check(historicalSnapshot.typeTitle === "Tarihsel snapshot lisans türü", "smart/snapshot: tarihsel TYYÇ yeterlilik türü hazırlanamadı", errors);
+  check(historicalSnapshot.evidenceGapWarnings.length === 1 && historicalSnapshot.descriptorStatus === "advisory_summary_not_verbatim", "smart/snapshot: kanıt uyarısı/tanımlayıcı statüsü tam snapshot'a alınmadı", errors);
+  check(historicalSnapshot.method === "historical_snapshot_method_v1" && historicalSnapshot.confidence === "low", "smart/snapshot: tarihsel yöntem/güven düzeyi hazırlanamadı", errors);
 
   await page.evaluate(async (applicationId) => {
     const key = "kdpu-myys-pilot-v4";
@@ -632,11 +737,20 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   await page.waitForSelector('#role-select option[value="commission"]', { state: "attached" });
   const restored = await page.evaluate((id) => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).smartAlignments?.find((item) => item.id === id), linkage.alignment.id);
   check(restored?.manualOverrides?.some((item) => item.reason === overrideReason), "smart/hydration: reload sonrası manuel insan seçimi korunmadı", errors);
+  const restoredTyyc = restored?.suggestionSnapshot?.report?.outcomes?.[0]?.suggestions?.tyyc;
+  check(restored?.suggestionSnapshot?.integrityHash === historicalSnapshot.integrityHash, "smart/hydration: tam snapshot bütünlük hash'i reload sonrası değişti", errors);
+  check(restoredTyyc?.qualificationTypeSuggestion?.selected?.titleTr === historicalSnapshot.typeTitle, "smart/hydration: TYYÇ yeterlilik türü güncel motorla değiştirildi", errors);
+  check(JSON.stringify(restoredTyyc?.alternatives?.map((item) => item.level)) === JSON.stringify(historicalSnapshot.alternativeLevels), "smart/hydration: tarihsel TYYÇ alternatif sırası değişti", errors);
+  check(JSON.stringify(restoredTyyc?.evidenceGapWarnings) === JSON.stringify(historicalSnapshot.evidenceGapWarnings), "smart/hydration: tarihsel eksik kanıt uyarıları değişti", errors);
+  check(restoredTyyc?.descriptorStatus === historicalSnapshot.descriptorStatus && restoredTyyc?.method === historicalSnapshot.method && restoredTyyc?.confidence === historicalSnapshot.confidence, "smart/hydration: descriptorStatus/method/confidence tam snapshot'tan okunmadı", errors);
 
   await page.selectOption("#role-select", "coordinator");
   await setHash(page, "frameworks");
   check(await page.locator("[data-smart-review]").count() >= 1, "coordinator: akıllı eşleme salt-okunur kayıt kütüğü yok", errors);
   check(await page.locator('[data-action="apply-smart-suggestion"], [data-action="apply-smart-override"]').count() === 0, "coordinator: öneri mutasyon CTA'sı görünür", errors);
+  const historicalReviewText = await page.locator("[data-smart-review]").first().innerText();
+  check(historicalReviewText.includes("Tarihsel snapshot lisans türü") && historicalReviewText.includes("historical_snapshot_method_v1"), "smart/review: tarihsel TYYÇ tür/yöntem stored snapshot yerine güncel motordan render edildi", errors);
+  check(historicalReviewText.includes("Tarihsel snapshot eksik kanıt uyarısı") && historicalReviewText.includes("Düşük güven"), "smart/review: tarihsel kanıt uyarısı/güven düzeyi stored snapshot'tan render edilmedi", errors);
 
   await page.selectOption("#role-select", "commission");
   await setHash(page, "commission");
@@ -645,6 +759,24 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   if (await smartTab.count()) await smartTab.click();
   check(await page.locator("[data-smart-review]").count() >= 1, "commission: salt-okunur akıllı eşleme incelemesi yok", errors);
   check(await page.locator('[data-action="apply-smart-suggestion"], [data-action="apply-smart-override"]').count() === 0, "commission: öneri mutasyon CTA'sı görünür", errors);
+  const snapshotBeforeBoard = await page.evaluate((alignmentId) => {
+    const record = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).smartAlignments.find((item) => item.id === alignmentId);
+    return JSON.stringify(record.suggestionSnapshot);
+  }, linkage.alignment.id);
+  const boardButton = page.locator(`[data-action="qualification-board-decision"][data-id="${linkage.applicationId}"]`);
+  check(await boardButton.count() === 1, "commission: ayrı insan kurul kararı CTA'sı eksik", errors);
+  if (await boardButton.count()) {
+    await boardButton.click();
+    await page.locator('#qualification-board-form input[name="confirm"]').check();
+    await page.locator('[data-action="submit-qualification-board-decision"]').click();
+    await page.waitForFunction((alignmentId) => Boolean(JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).smartAlignments.find((item) => item.id === alignmentId)?.boardDecision), linkage.alignment.id, { timeout: 3000 });
+  }
+  const boardState = await page.evaluate((alignmentId) => {
+    const record = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).smartAlignments.find((item) => item.id === alignmentId);
+    return { snapshot: JSON.stringify(record.suggestionSnapshot), decision: record.boardDecision };
+  }, linkage.alignment.id);
+  check(boardState.snapshot === snapshotBeforeBoard, "smart/board: ayrı insan kurul kararı tam öneri snapshot'ını mutasyona uğrattı", errors);
+  check(boardState.decision?.source === "human_commission" && boardState.decision?.suggestionMutated === false, "smart/board: ayrı insan kurul karar sınırı kayboldu", errors);
 
   await page.evaluate((alignmentId) => {
     const key = "kdpu-myys-pilot-v4";
@@ -811,6 +943,21 @@ async function verifyPersistenceAndStateGuard(page, roles, integrations, errors)
   await page.evaluate(() => {
     const key = "kdpu-myys-pilot-v4";
     const saved = JSON.parse(localStorage.getItem(key));
+    saved.version = 14;
+    saved.roleId = "admin";
+    localStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="admin"]', { state: "attached" });
+  const versionFallback = await page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
+    return { version: saved.version, roleId: saved.roleId };
+  });
+  check(versionFallback.version === 15 && versionFallback.roleId === "learner", "snapshot'sız v14 state v15 güvenli canonical seed'e dönmedi", errors);
+
+  await page.evaluate(() => {
+    const key = "kdpu-myys-pilot-v4";
+    const saved = JSON.parse(localStorage.getItem(key));
     saved.roleId = "intruder-role";
     localStorage.setItem(key, JSON.stringify(saved));
   });
@@ -829,6 +976,59 @@ async function verifyPersistenceAndStateGuard(page, roles, integrations, errors)
   await page.selectOption("#role-select", "it");
   await setHash(page, "integrations");
   check(await page.locator("#integration-catalog .integration-card").count() === integrations.length, "eksik/eski entegrasyon localStorage kataloğu canonical seed ile yenilenmedi", errors);
+
+  await page.evaluate(() => {
+    const key = "kdpu-myys-pilot-v4";
+    const saved = JSON.parse(localStorage.getItem(key));
+    saved.applications[0].workloadComponents.feedback += 1;
+    saved.programs[0].workloadComponents.feedback += 1;
+    localStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="admin"]', { state: "attached" });
+  const workloadFallback = await page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
+    const summarize = (record, totalKey) => ({
+      count: Object.keys(record.workloadComponents || {}).length,
+      sum: Object.values(record.workloadComponents || {}).reduce((total, value) => total + Number(value || 0), 0),
+      total: record[totalKey]
+    });
+    return { application: summarize(saved.applications[0], "totalWorkload"), program: summarize(saved.programs[0], "workload") };
+  });
+  check([workloadFallback.application, workloadFallback.program].every((item) => item.count === 8 && item.sum === item.total), "bozuk başvuru/program iş yükü state'i güvenli seed'e dönmedi", errors);
+
+  await page.evaluate(() => {
+    const key = "kdpu-myys-pilot-v4";
+    const saved = JSON.parse(localStorage.getItem(key));
+    saved.directivePilot.codes = [{
+      id: "MYDREC-2026-SEM-001",
+      code: "<img src=x onerror=alert(1)>",
+      unitCode: "SEM",
+      versionNo: 1,
+      status: "pilot_reserved",
+      policyVersionId: "POL-DRAFT-2026-08",
+      productionEligible: false,
+      createdAt: new Date().toISOString()
+    }];
+    localStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="coordinator"]', { state: "attached" });
+  await page.selectOption("#role-select", "coordinator");
+  await setHash(page, "governance");
+  check(!(await page.locator("#main-content").innerHTML()).includes("onerror=alert"), "bozuk directivePilot MYD/XSS state'i canonical seed'e dönmedi", errors);
+
+  await page.evaluate(() => {
+    const key = "kdpu-myys-pilot-v4";
+    const saved = JSON.parse(localStorage.getItem(key));
+    const duplicate = { ...saved.directivePilot.offerings[0].requests[0], id: "SEAT-DUP-2", idempotencyKey: "dup-2" };
+    saved.directivePilot.offerings[0].requests.push(duplicate);
+    localStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="learner"]', { state: "attached" });
+  const directiveState = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")).directivePilot);
+  check(directiveState.offerings[0].requests.length === 1, "aynı offering/learner duplicate localStorage kaydı güvenli seed'e dönmedi", errors);
 }
 
 async function verifyUnauthorizedRoute(page, errors) {
@@ -838,6 +1038,67 @@ async function verifyUnauthorizedRoute(page, errors) {
   const text = await page.locator("#main-content").innerText();
   check(text.includes("Bu bölüm seçili demo rolüne açık değil"), "learner: finance doğrudan rotası engellenmedi", errors);
   check(!text.includes("Tahsilatı simüle et"), "learner: yetkisiz finans eylemi sızdı", errors);
+}
+
+async function verifyDirectiveGovernanceActions(page, errors) {
+  await setHash(page, "overview");
+  await page.locator('[data-action="reset-demo"]').click();
+
+  await page.selectOption("#role-select", "instructor");
+  await setHash(page, "governance");
+  await page.fill("#directive-total", "74");
+  await page.locator("#directive-workload-form").evaluate((form) => form.requestSubmit());
+  check((await page.locator("#directive-workload-result").innerText()).includes("başarısız"), "governance/workload: band dışı saat reddedilmedi", errors);
+  await page.fill("#directive-total", "75");
+  await page.locator("#directive-workload-form").evaluate((form) => form.requestSubmit());
+  check((await page.locator("#directive-workload-result").innerText()).includes("geçerli"), "governance/workload: geçerli 3 AKTS/75 saat kabul edilmedi", errors);
+
+  await page.selectOption("#role-select", "coordinator");
+  await setHash(page, "governance");
+  await page.locator('[data-action="directive-myd-generate"]').click();
+  check((await page.locator("#main-content").innerText()).includes("MYD-2026-SEM-001") && (await page.locator("#main-content").innerText()).includes("Ayrı program sürümü V1"), "governance/MYD: DB uyumlu kod + ayrı sürüm üretilmedi", errors);
+
+  await page.selectOption("#role-select", "commission");
+  await setHash(page, "governance");
+  await page.locator('[data-action="directive-recognition-decision"][data-kind="credential"]').click();
+  let commissionState = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")));
+  check(commissionState.directivePilot.recognitionDecisions.find((item) => item.kind === "credential")?.status === "pending_human_review", "governance/recognition: toplantı kontrolü olmadan karar bloke edilmedi", errors);
+  await page.locator('[data-action="directive-commission-check"]').click();
+  commissionState = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")));
+  check(commissionState.directivePilot.commission.lastValidation?.valid === true && commissionState.directivePilot.commission.lastValidation?.voteQuorumMet === true, "governance/commission: toplantı doğrulaması state'e kaydedilmedi", errors);
+  await page.locator('[data-action="directive-recognition-decision"][data-kind="credential"]').click();
+  commissionState = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")));
+  check(commissionState.directivePilot.recognitionDecisions.find((item) => item.kind === "credential")?.status === "additional_evidence_required", "governance/recognition: unresolved kuralda yalnız ek kanıt talebi kaydedilmedi", errors);
+  check(commissionState.directivePilot.recognitionDecisions.find((item) => item.kind === "ects")?.status === "pending_human_review", "governance/recognition: belge kararı AKTS durumunu değiştirdi", errors);
+
+  await page.selectOption("#role-select", "learner");
+  await setHash(page, "governance");
+  await page.locator('[data-action="directive-appeal"][data-kind="credential"]').click();
+  await page.locator('[data-action="directive-seat-request"]').click();
+  await page.locator('[data-action="directive-seat-request"]').click();
+  const learnerState = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")));
+  check(learnerState.directivePilot.appeals.length === 1 && learnerState.directivePilot.appeals[0].initialDecisionBody !== learnerState.directivePilot.appeals[0].appealBody, "governance/appeal: bağımsız mercii kaydı yok", errors);
+  check(learnerState.directivePilot.offerings[0].requests.some((item) => item.status === "waitlisted"), "governance/capacity: ikinci eşzamanlı talep bekleme listesine alınmadı", errors);
+  check(new Set(learnerState.directivePilot.offerings[0].requests.map((item) => item.learnerId)).size === learnerState.directivePilot.offerings[0].requests.length, "governance/capacity: aynı öğrenen offering kuyruğuna iki kez yazıldı", errors);
+
+  await page.selectOption("#role-select", "it");
+  await setHash(page, "governance");
+  await page.locator('[data-action="directive-ek1-validate"]').click();
+  check((await page.locator("#modal").innerText()).includes("11 alan tam") && !(await page.locator("#modal").innerText()).includes("12345678901"), "governance/EK1: kamu görünümü veya TCKN sızıntı sınırı hatalı", errors);
+  await page.locator('#modal [data-action="close-modal"]').click();
+
+  await page.selectOption("#role-select", "finance");
+  await setHash(page, "governance");
+  await page.locator('[data-action="directive-finance-dryrun"]').click();
+  const financeState = await page.evaluate(() => JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4")));
+  check(financeState.directivePilot.financePersonnelDryRuns[0]?.realPayment === false && financeState.directivePilot.financePersonnelDryRuns[0]?.externalRequestSent === false, "governance/finance: dry-run güvenlik bayrakları eksik", errors);
+
+  await page.selectOption("#role-select", "admin");
+  await setHash(page, "governance");
+  check(await page.locator('[data-action="directive-recognition-decision"], [data-action="directive-myd-generate"], [data-action="directive-finance-dryrun"], [data-action="directive-commission-check"]').count() === 0, "governance/admin: akademik veya mali işlem CTA'sı görünür", errors);
+  check((await page.locator("#main-content").innerText()).includes("Yönetici karar veremez"), "governance/admin: salt-okunur yetki sınırı yok", errors);
+  await setHash(page, "finance");
+  check(await page.locator('[data-action="finance-simulate"], [data-action="finance-draft"], [data-action="payment-review"]').count() === 0, "finance/admin: mali karar CTA'sı görünür", errors);
 }
 
 (async () => {
@@ -891,6 +1152,7 @@ async function verifyUnauthorizedRoute(page, errors) {
           await verifyIntegrationCatalog(page, initialState.integrations, errors);
           await verifyPersistenceAndStateGuard(page, roles, initialState.integrations, errors);
           await verifyUnauthorizedRoute(page, errors);
+          await verifyDirectiveGovernanceActions(page, errors);
           await verifyScenarioActions(page, scenarioDefinitions, errors);
         }
         if (viewport.width === 390) {

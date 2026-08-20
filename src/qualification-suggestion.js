@@ -2,12 +2,14 @@ import {
   higherEducationCycleCrosswalk,
   qualificationFrameworks,
   qualificationLevelDescriptors,
-  qualificationLevelTranslations
+  qualificationLevelTranslations,
+  tyycQualificationTypeDescriptors
 } from "./reference-data.js";
 
-export const QUALIFICATION_SUGGESTION_ENGINE_VERSION = "2026-08-20.1";
-export const QUALIFICATION_ADVISORY_NOTICE = "Bu çıktı karar değil; öğrenme çıktısını TYÇ ve AYÇ/EQF tanımlayıcılarıyla karşılaştıran açıklanabilir, deterministik bir pilot öneridir. Nihai akademik seviye ve yeterlilik kararı yetkili kurulundur.";
+export const QUALIFICATION_SUGGESTION_ENGINE_VERSION = "2026-08-20.2";
+export const QUALIFICATION_ADVISORY_NOTICE = "Bu çıktı karar değil; öğrenme çıktısını TYÇ, AYÇ/EQF ve yükseköğretime özgü TYYÇ tür bağlamıyla ayrı ayrı karşılaştıran açıklanabilir, deterministik bir pilot öneridir. TYYÇ sonucu yalnız önerilen pedagojik referans düzeyidir; resmî yerleştirme, eşdeğerlik, akreditasyon veya logo hakkı değildir. Nihai akademik karar yetkili kurulundur.";
 export const QUALIFICATION_DIMENSIONS = Object.freeze(["knowledge", "skills", "competence"]);
+export const QUALIFICATION_FRAMEWORK_IDS = Object.freeze(["tyc", "eqf", "tyyc"]);
 export const QUALIFICATION_SUGGESTION_LIMITS = Object.freeze({ maxOutcomeCount: 40, maxOutcomeLength: 600 });
 
 const FRAMEWORK_META = Object.freeze({
@@ -18,6 +20,10 @@ const FRAMEWORK_META = Object.freeze({
   eqf: {
     frameworkCode: "AYÇ/EQF",
     dimensionLabels: { knowledge: "Bilgi / Knowledge", skills: "Beceri / Skills", competence: "Sorumluluk ve özerklik / Responsibility and autonomy" }
+  },
+  tyyc: {
+    frameworkCode: "TYYÇ",
+    dimensionLabels: { knowledge: "Bilgi", skills: "Beceri", competence: "Yetkinlik" }
   }
 });
 
@@ -176,7 +182,7 @@ function descriptorRecord(frameworkId, level) {
 }
 
 function translatedDescriptor(frameworkId, level) {
-  if (frameworkId === "tyc") return descriptorRecord(frameworkId, level);
+  if (frameworkId !== "eqf") return descriptorRecord(frameworkId, level);
   return qualificationLevelTranslations.find((item) => item.frameworkId === frameworkId && item.level === level);
 }
 
@@ -188,6 +194,39 @@ function descriptorText(frameworkId, level, dimension, displayTr = false) {
 function cycleForLevel(level) {
   const match = higherEducationCycleCrosswalk.find((item) => item.tycLevel === level && item.eqfLevel === level);
   return match ? plainClone(match) : null;
+}
+
+function supportedLevelsFor(frameworkId) {
+  return frameworkId === "tyyc" ? [5, 6, 7, 8] : [1, 2, 3, 4, 5, 6, 7, 8];
+}
+
+function qualificationTypeCandidatesFor(outcomeText, level) {
+  const normalized = normalizeText(outcomeText);
+  const candidates = tyycQualificationTypeDescriptors
+    .filter((item) => item.level === Number(level))
+    .map((item) => {
+      const matchedSignals = item.contextSignals.filter((signal) => normalized.includes(normalizeText(signal)));
+      return {
+        ...plainClone(item),
+        typeFitScore: Math.min(100, 52 + matchedSignals.length * 12),
+        matchedTypeSignals: matchedSignals
+      };
+    })
+    .sort((left, right) => right.typeFitScore - left.typeFitScore || left.id.localeCompare(right.id));
+  return candidates;
+}
+
+function suggestedQualificationType(outcomeText, level) {
+  const candidates = qualificationTypeCandidatesFor(outcomeText, level);
+  return {
+    selected: candidates[0] || null,
+    alternatives: candidates.slice(1),
+    advisoryOnly: true,
+    officialPlacementClaim: false,
+    equivalenceClaim: false,
+    logoRightClaim: false,
+    institutionalValidationRequired: true
+  };
 }
 
 function tokenize(value) {
@@ -243,18 +282,20 @@ function matchedLevelSignals(normalized) {
 function rankLevels(outcomeText, frameworkId, dimension, preferredLevel) {
   const normalized = normalizeText(outcomeText);
   const levelMatches = matchedLevelSignals(normalized);
-  const candidates = Array.from({ length: 8 }, (_, index) => index + 1).map((level) => {
+  const supportedLevels = supportedLevelsFor(frameworkId);
+  const candidates = supportedLevels.map((level) => {
     const matched = levelMatches.find((item) => item.level === level)?.signals || [];
     const official = descriptorText(frameworkId, level, dimension, false);
     const displayTr = descriptorText(frameworkId, level, dimension, true) || official;
-    const fallbackBias = Math.max(0, 3 - Math.abs(level - 4) * 0.6);
+    const fallbackCenter = frameworkId === "tyyc" ? 6 : 4;
+    const fallbackBias = Math.max(0, 3 - Math.abs(level - fallbackCenter) * 0.6);
     const preferredBoost = Number(preferredLevel) === level ? 5 : 0;
     const rawScore = fallbackBias + preferredBoost + matched.reduce((total, signal) => total + signal.weight, 0) + overlapScore(outcomeText, displayTr);
     return { level, rawScore, matchedSignals: matched, official, displayTr };
   }).sort((a, b) => b.rawScore - a.rawScore || a.level - b.level);
   const selected = candidates[0];
   const margin = selected.rawScore - candidates[1].rawScore;
-  const hasLevelSignals = levelMatches.some((item) => item.signals.length > 0);
+  const hasLevelSignals = levelMatches.some((item) => supportedLevels.includes(item.level) && item.signals.length > 0);
   const score = hasLevelSignals
     ? Math.round(Math.min(98, 52 + selected.rawScore * 1.7 + Math.max(0, margin)))
     : Math.round(Math.min(58, 38 + selected.rawScore * 3));
@@ -294,6 +335,7 @@ function outcomeFrameworkSuggestion(outcome, frameworkId, dimensionProfile, opti
   const ranking = rankLevels(outcome.text, frameworkId, dimensionProfile.dimension, preferredLevel);
   const { selected } = ranking;
   const framework = qualificationFrameworks.find((item) => item.id === frameworkId);
+  if (!framework) throw new RangeError(`Desteklenmeyen yeterlilik çerçevesi: ${frameworkId}`);
   const dimensionLabel = FRAMEWORK_META[frameworkId].dimensionLabels[dimensionProfile.dimension];
   const signals = [...dimensionProfile.matchedSignals, ...selected.matchedSignals]
     .filter((signal, index, all) => all.findIndex((candidate) => candidate.label === signal.label && candidate.category === signal.category) === index);
@@ -321,10 +363,21 @@ function outcomeFrameworkSuggestion(outcome, frameworkId, dimensionProfile, opti
     suggestedAssessments: assessmentSuggestions(dimensionProfile.dimension, selected.level),
     alternatives,
     higherEducationCycleSuggestion: cycleForLevel(selected.level),
+    qualificationTypeSuggestion: frameworkId === "tyyc" ? suggestedQualificationType(outcome.text, selected.level) : null,
+    evidenceGapWarnings: [],
     method: "deterministic_weighted_rules_and_descriptor_overlap",
     autonomousDecision: false,
     institutionalValidationRequired: true
   };
+  if (frameworkId === "tyyc") {
+    if (ranking.confidence === "low") suggestion.evidenceGapWarnings.push("TYYÇ düzeyi için yükseköğretim karmaşıklığı, araştırma/uygulama bağlamı veya özerklik kanıtı güçlendirilmelidir.");
+    if ((suggestion.qualificationTypeSuggestion?.selected?.matchedTypeSignals || []).length === 0) suggestion.evidenceGapWarnings.push("Yeterlilik türü seçimi için program yönelimi (genel, mesleki, tezli, tezsiz veya doktora) açıkça belirtilmemiştir.");
+    suggestion.descriptorStatus = "advisory_summary_not_verbatim";
+    suggestion.pedagogicalReferenceLevelLabel = `Önerilen pedagojik referans düzeyi: TYYÇ ${selected.level}`;
+    suggestion.officialPlacementClaim = false;
+    suggestion.equivalenceClaim = false;
+    suggestion.logoRightClaim = false;
+  }
   suggestion.suggestedAssessmentMethods = suggestion.suggestedAssessments.map((item) => item.method);
   suggestion.rationale = rationaleFor({
     frameworkId,
@@ -355,7 +408,7 @@ function outcomeFrameworkSuggestion(outcome, frameworkId, dimensionProfile, opti
 export function buildQualificationSelectionOptions(frameworkId) {
   if (!FRAMEWORK_META[frameworkId]) throw new RangeError(`Desteklenmeyen yeterlilik çerçevesi: ${frameworkId}`);
   const framework = qualificationFrameworks.find((item) => item.id === frameworkId);
-  return Array.from({ length: 8 }, (_, index) => index + 1).map((level) => ({
+  return supportedLevelsFor(frameworkId).map((level) => ({
     frameworkId,
     frameworkCode: framework.code,
     level,
@@ -366,6 +419,7 @@ export function buildQualificationSelectionOptions(frameworkId) {
       descriptorDisplayTr: descriptorText(frameworkId, level, dimension, true) || descriptorText(frameworkId, level, dimension, false)
     })),
     higherEducationCycleSuggestion: cycleForLevel(level),
+    qualificationTypeCandidates: frameworkId === "tyyc" ? plainClone(tyycQualificationTypeDescriptors.filter((item) => item.level === level)) : [],
     officialSourceUrl: framework.descriptorSourceUrl || framework.officialSourceUrl,
     institutionalValidationRequired: true,
     autonomousDecision: false
@@ -382,13 +436,14 @@ export function suggestOutcomeQualificationAlignment(outcome, options = {}) {
     outcomeMetadata: Object.fromEntries(Object.entries(normalizedOutcome).filter(([key]) => !["id", "text"].includes(key))),
     suggestions: {
       tyc: outcomeFrameworkSuggestion(normalizedOutcome, "tyc", dimensionProfile, options),
-      eqf: outcomeFrameworkSuggestion(normalizedOutcome, "eqf", dimensionProfile, options)
+      eqf: outcomeFrameworkSuggestion(normalizedOutcome, "eqf", dimensionProfile, options),
+      tyyc: outcomeFrameworkSuggestion(normalizedOutcome, "tyyc", dimensionProfile, options)
     },
     inputQuality,
     advisoryNotice: QUALIFICATION_ADVISORY_NOTICE
   };
   if (!inputQuality.isMeasurable) {
-    for (const frameworkId of ["tyc", "eqf"]) {
+    for (const frameworkId of QUALIFICATION_FRAMEWORK_IDS) {
       result.suggestions[frameworkId].confidence = "low";
       result.suggestions[frameworkId].score = Math.min(45, result.suggestions[frameworkId].score);
       result.suggestions[frameworkId].rationale += ` Girdi kalitesi yetersizdir: ${inputQuality.warnings.join(" ")}`;
@@ -415,21 +470,32 @@ function effectiveDimension(outcome, frameworkId) {
 function crossFrameworkConsistencyForOutcome(outcome) {
   const tycLevel = effectiveLevel(outcome, "tyc");
   const eqfLevel = effectiveLevel(outcome, "eqf");
+  const tyycLevel = effectiveLevel(outcome, "tyyc");
   const levelDifference = Math.abs(tycLevel - eqfLevel);
   const exactMatch = levelDifference === 0;
   const classification = exactMatch ? "aligned" : levelDifference === 1 ? "adjacent_review" : "material_discrepancy";
+  const threeLevels = [tycLevel, eqfLevel, tyycLevel];
+  const threeFrameworkSpread = Math.max(...threeLevels) - Math.min(...threeLevels);
+  const allExact = threeFrameworkSpread === 0;
+  const threeFrameworkClassification = allExact ? "aligned" : threeFrameworkSpread === 1 ? "adjacent_review" : "material_discrepancy";
   return {
     tycLevel,
     eqfLevel,
+    tyycLevel,
     levelDifference,
     exactMatch,
     classification,
-    requiresHumanReview: !exactMatch,
-    discrepancyRationale: exactMatch
-      ? `TYÇ ve AYÇ/EQF önerileri ${tycLevel}. seviyede aynı açıklanabilir sinyal kümesine yakınsamıştır.`
-      : `TYÇ ${tycLevel} ve AYÇ/EQF ${eqfLevel} önerileri farklı tanımlayıcı metinleri ve sözcüksel yakınlıklar nedeniyle ayrışmıştır. Bu fark eşdeğerlik iddiası değildir; aday eğitici gerekçesi ve komisyon incelemesi gerekir.`,
+    threeFrameworkSpread,
+    allExact,
+    threeFrameworkClassification,
+    requiresHumanReview: !allExact,
+    discrepancyRationale: allExact
+      ? `TYÇ, AYÇ/EQF ve TYYÇ önerileri ${tycLevel}. seviyede aynı açıklanabilir sinyal kümesine yakınsamıştır; bu yakınsama eşdeğerlik veya yerleştirme değildir.`
+      : `TYÇ ${tycLevel}, AYÇ/EQF ${eqfLevel} ve TYYÇ ${tyycLevel} önerileri çerçeve kapsamları ve tanımlayıcı metinleri nedeniyle ayrışmıştır. Bu fark eşdeğerlik iddiası değildir; aday eğitici gerekçesi ve komisyon incelemesi gerekir.`,
     institutionalValidationRequired: true,
-    equalityForced: false
+    equalityForced: false,
+    officialPlacementClaim: false,
+    equivalenceClaim: false
   };
 }
 
@@ -451,7 +517,7 @@ function aggregateProgram(outcomes) {
   const dimensionCoverage = {};
   const frameworkCoverage = {};
   const consistency = {};
-  for (const frameworkId of ["tyc", "eqf"]) {
+  for (const frameworkId of QUALIFICATION_FRAMEWORK_IDS) {
     const weighted = outcomes.map((outcome) => ({
       level: effectiveLevel(outcome, frameworkId),
       weight: Math.max(1, outcome.suggestions[frameworkId].score)
@@ -489,16 +555,16 @@ function aggregateProgram(outcomes) {
     };
   }
   const lowConfidenceOutcomeIds = outcomes
-    .filter((outcome) => ["tyc", "eqf"].some((frameworkId) => outcome.suggestions[frameworkId].confidence === "low"))
+    .filter((outcome) => QUALIFICATION_FRAMEWORK_IDS.some((frameworkId) => outcome.suggestions[frameworkId].confidence === "low"))
     .map((outcome) => outcome.outcomeId);
   const explainableSignalOutcomeCount = outcomes.filter((outcome) =>
-    ["tyc", "eqf"].some((frameworkId) => outcome.suggestions[frameworkId].matchedSignals.length > 0)
+    QUALIFICATION_FRAMEWORK_IDS.some((frameworkId) => outcome.suggestions[frameworkId].matchedSignals.length > 0)
   ).length;
   const crossFrameworkOutcomes = outcomes.map(crossFrameworkConsistencyForOutcome);
   const discrepancyOutcomeIds = outcomes
-    .filter((_, index) => crossFrameworkOutcomes[index].levelDifference > 0)
+    .filter((_, index) => crossFrameworkOutcomes[index].threeFrameworkSpread > 0)
     .map((outcome) => outcome.outcomeId);
-  const cycleLevel = suggestedLevels.tyc === suggestedLevels.eqf ? suggestedLevels.tyc : null;
+  const cycleLevel = suggestedLevels.tyyc || null;
   return {
     suggestedLevels,
     levelSummaries,
@@ -512,16 +578,16 @@ function aggregateProgram(outcomes) {
     },
     consistency,
     crossFrameworkConsistency: {
-      exactMatchCount: crossFrameworkOutcomes.filter((item) => item.exactMatch).length,
-      adjacentReviewCount: crossFrameworkOutcomes.filter((item) => item.classification === "adjacent_review").length,
-      materialDiscrepancyCount: crossFrameworkOutcomes.filter((item) => item.classification === "material_discrepancy").length,
+      exactMatchCount: crossFrameworkOutcomes.filter((item) => item.allExact).length,
+      adjacentReviewCount: crossFrameworkOutcomes.filter((item) => item.threeFrameworkClassification === "adjacent_review").length,
+      materialDiscrepancyCount: crossFrameworkOutcomes.filter((item) => item.threeFrameworkClassification === "material_discrepancy").length,
       discrepancyOutcomeIds,
       allExact: discrepancyOutcomeIds.length === 0,
       equalityForced: false,
       institutionalValidationRequired: true
     },
     higherEducationCycleSuggestion: cycleLevel ? cycleForLevel(cycleLevel) : null,
-    rationale: `Program düzeyi, ${outcomes.length} öğrenme çıktısının puanla ağırlıklandırılmış medyanından üretildi. TYÇ ${suggestedLevels.tyc ?? "—"} ve AYÇ/EQF ${suggestedLevels.eqf ?? "—"} önerileri karar değildir; tek tek çıktılar, ölçme kanıtları, iş yükü ve kurul değerlendirmesi birlikte incelenmelidir.`,
+    rationale: `Program düzeyi, ${outcomes.length} öğrenme çıktısının puanla ağırlıklandırılmış medyanından üretildi. TYÇ ${suggestedLevels.tyc ?? "—"}, AYÇ/EQF ${suggestedLevels.eqf ?? "—"} ve önerilen pedagojik referans düzeyi TYYÇ ${suggestedLevels.tyyc ?? "—"} birbirinden ayrı, karar olmayan adaylardır; tek tek çıktılar, yeterlilik türü, ölçme kanıtları, iş yükü ve kurul değerlendirmesi birlikte incelenmelidir.`,
     aggregationMethod: "score_weighted_median",
     autonomousDecision: false,
     institutionalValidationRequired: true
@@ -570,9 +636,9 @@ export function applyManualQualificationOverride(result, override) {
   if (!["instructor", "externalInstructor"].includes(override.actorRole)) {
     throw new Error("Manuel öneri seçimi yalnız üniversite içi veya kurum dışı eğitici tarafından yapılabilir; koordinatörlük ve komisyon salt-okunur inceleme yapar.");
   }
-  if (!FRAMEWORK_META[override.frameworkId]) throw new RangeError("Manuel seçim çerçevesi tyc veya eqf olmalıdır.");
+  if (!FRAMEWORK_META[override.frameworkId]) throw new RangeError("Manuel seçim çerçevesi tyc, eqf veya tyyc olmalıdır.");
   const level = Number(override.level ?? override.selectedLevel);
-  if (!Number.isInteger(level) || level < 1 || level > 8) throw new RangeError("Manuel seçim düzeyi 1–8 arasında olmalıdır.");
+  if (!supportedLevelsFor(override.frameworkId).includes(level)) throw new RangeError(override.frameworkId === "tyyc" ? "TYYÇ manuel seçim düzeyi 5–8 arasında olmalıdır." : "Manuel seçim düzeyi 1–8 arasında olmalıdır.");
   const selectedDimension = override.dimension ?? override.selectedDimension;
   if (!QUALIFICATION_DIMENSIONS.includes(selectedDimension)) throw new RangeError("Manuel seçim boyutu knowledge, skills veya competence olmalıdır.");
   const reason = String(override.reason || "").trim();
@@ -588,6 +654,7 @@ export function applyManualQualificationOverride(result, override) {
     dimensionLabel: FRAMEWORK_META[override.frameworkId].dimensionLabels[selectedDimension],
     descriptor: descriptorText(override.frameworkId, level, selectedDimension, false),
     descriptorDisplayTr: descriptorText(override.frameworkId, level, selectedDimension, true) || descriptorText(override.frameworkId, level, selectedDimension, false),
+    qualificationTypeSuggestion: override.frameworkId === "tyyc" ? suggestedQualificationType(outcome.outcomeText, level) : null,
     source: "manual_override",
     reason,
     actorRole: override.actorRole,
@@ -629,8 +696,9 @@ export function recordHumanBoardQualificationDecision(result, decision) {
   if (rationale.length < 10) throw new Error("Kurul kararı için en az 10 karakterlik insan gerekçesi gerekir.");
   const tycLevel = Number(decision.tycLevel ?? result.program.suggestedLevels.tyc);
   const eqfLevel = Number(decision.eqfLevel ?? result.program.suggestedLevels.eqf);
-  for (const [frameworkId, level] of [["tyc", tycLevel], ["eqf", eqfLevel]]) {
-    if (!Number.isInteger(level) || level < 1 || level > 8) throw new RangeError(`${frameworkId.toUpperCase()} kurul düzeyi 1–8 arasında olmalıdır.`);
+  const tyycLevel = Number(decision.tyycLevel ?? result.program.suggestedLevels.tyyc);
+  for (const [frameworkId, level] of [["tyc", tycLevel], ["eqf", eqfLevel], ["tyyc", tyycLevel]]) {
+    if (!supportedLevelsFor(frameworkId).includes(level)) throw new RangeError(frameworkId === "tyyc" ? "TYYÇ kurul düzeyi 5–8 arasında olmalıdır." : `${frameworkId.toUpperCase()} kurul düzeyi 1–8 arasında olmalıdır.`);
   }
   const clone = plainClone(result);
   clone.finalDecision = {
@@ -642,8 +710,8 @@ export function recordHumanBoardQualificationDecision(result, decision) {
     rationale,
     decidedAt: decision.decidedAt || null,
     meetingReference: decision.meetingReference || null,
-    decidedLevels: { tyc: tycLevel, eqf: eqfLevel },
-    differsFromSuggestion: tycLevel !== clone.program.suggestedLevels.tyc || eqfLevel !== clone.program.suggestedLevels.eqf,
+    decidedLevels: { tyc: tycLevel, eqf: eqfLevel, tyyc: tyycLevel },
+    differsFromSuggestion: tycLevel !== clone.program.suggestedLevels.tyc || eqfLevel !== clone.program.suggestedLevels.eqf || tyycLevel !== clone.program.suggestedLevels.tyyc,
     suggestionSnapshot: {
       engineVersion: clone.engineVersion,
       suggestedLevels: plainClone(clone.program.suggestedLevels)

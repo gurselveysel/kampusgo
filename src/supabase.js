@@ -1,7 +1,12 @@
-import { higherEducationCycleCrosswalk, qualificationReferenceSnapshot } from "./reference-data.js";
+import {
+  higherEducationCycleCrosswalk,
+  qualificationReferenceSnapshot,
+  tyycQualificationTypeDescriptors
+} from "./reference-data.js";
 import { dpuIntegrationReferenceSnapshot } from "./institutional-integration-reference.js";
 import {
   QUALIFICATION_ADVISORY_NOTICE,
+  QUALIFICATION_FRAMEWORK_IDS,
   QUALIFICATION_SUGGESTION_ENGINE_VERSION,
   applyManualQualificationOverride,
   buildQualificationSelectionOptions,
@@ -9,6 +14,7 @@ import {
   suggestOutcomeQualificationAlignment,
   suggestProgramQualificationAlignment
 } from "./qualification-suggestion.js";
+import { directiveRoleScopeRows } from "./directive-pilot.js";
 
 // Supabase publishable keys identify a project but are not secrets. Access remains
 // constrained by explicit grants and RLS. No service-role/secret key is present.
@@ -52,10 +58,13 @@ const referenceViewQueries = Object.freeze({
   paymentEvents: ["pilot_payment_event_catalog", "select=*&order=payment_request_id.asc,event_order.asc"],
   higherEducationCycles: ["qualification_higher_education_cycle_catalog", "select=*&order=tyc_level.asc"],
   suggestionEngineProfiles: ["pilot_qualification_suggestion_profile_catalog", "select=*&order=engine_version.desc"],
-  programSuggestionSummaries: ["pilot_qualification_program_summary_catalog", "select=*&order=program_id.asc"],
-  learningOutcomeSuggestions: ["pilot_learning_outcome_suggestion_catalog", "select=*&order=program_id.asc,outcome_id.asc,framework_id.asc"],
+  tyycTypeDescriptors: ["qualification_tyyc_type_descriptor_catalog", "select=*&order=level.asc,qualification_type.asc"],
+  programSuggestionSummaries: ["pilot_qualification_program_summary_v2_catalog", "select=*&order=program_id.asc"],
+  learningOutcomeSuggestions: ["pilot_learning_outcome_suggestion_v2_catalog", "select=*&order=program_id.asc,outcome_order.asc,framework_id.asc"],
   manualOverrideExamples: ["pilot_qualification_manual_override_catalog", "select=*&order=outcome_id.asc,framework_id.asc"],
-  boardDecisionExamples: ["pilot_qualification_board_decision_catalog", "select=*&order=program_id.asc,id.asc"]
+  boardDecisionExamples: ["pilot_qualification_board_decision_v2_catalog", "select=*&order=program_id.asc,id.asc"],
+  programSpine: ["pilot_qualification_program_spine_catalog", "select=*&order=smart_program_id.asc"],
+  constructiveAlignment: ["pilot_constructive_alignment_catalog", "select=*&order=smart_program_id.asc,outcome_order.asc"]
 });
 
 const institutionalViewQueries = Object.freeze({
@@ -65,11 +74,276 @@ const institutionalViewQueries = Object.freeze({
   auditEvents: ["pilot_integration_audit_catalog", "select=*&order=occurred_at.asc,event_order.asc"]
 });
 
+// Directive alignment contract views are intentionally read-only and synthetic.
+// Migrations 20260820030000 and 20260820033000 define these views with
+// security_invoker=true; incomplete/unauthorized snapshots fail closed.
+const directiveViewQueries = Object.freeze({
+  policyVersions: ["pilot_directive_policy_catalog", "select=*&order=version_label.desc"],
+  rules: ["pilot_directive_rule_catalog", "select=*&order=rule_key.asc,version_no.desc"],
+  governance: ["pilot_directive_role_scope_catalog", "select=*&order=role_key.asc,id.asc"],
+  programs: ["pilot_directive_program_compliance_catalog", "select=*&order=myd_code.asc,version_no.desc"],
+  recognitionDecisions: ["pilot_directive_recognition_catalog", "select=*&order=case_reference.asc,decision_type.asc"],
+  commission: ["pilot_directive_commission_catalog", "select=*&order=meeting_reference.asc,resolution_key.asc"],
+  publicCredentials: ["pilot_directive_credential_public_catalog", "select=*&order=issue_date.desc"],
+  awardStates: ["pilot_directive_award_state_catalog", "select=*&order=program_id.asc,id.asc"],
+  qualityFinance: ["pilot_directive_quality_finance_catalog", "select=*&order=program_id.asc,program_version_no.desc"],
+  readiness: ["pilot_directive_readiness_catalog", "select=*"]
+});
+
 function camelizeRow(row) {
   return Object.fromEntries(Object.entries(row).map(([key, value]) => [
     key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
     value
   ]));
+}
+
+export function getLocalDirectivePilotCatalog() {
+  // The fail-closed local catalog and the UI role-scope projection share the
+  // exact normalized DTO rows of pilot_directive_role_scope_catalog.
+  const roleScopeCatalog = directiveRoleScopeRows.map((row) => ({
+    ...row,
+    decisionScope: [...row.decisionScope]
+  }));
+  return {
+    policyVersions: [{
+      id: "DIR-DPU-MY-2026-DRAFT",
+      documentType: "yonerge",
+      versionLabel: "2026.08.20-review-1",
+      title: "DPÜ Mikro Yeterlilik Programları Yönergesi — Kurumsal Değerlendirme Taslağı",
+      status: "draft_for_institutional_review",
+      legalCounselValidationStatus: "pending",
+      institutionalValidationRequired: true,
+      productionAllowed: false,
+      sourceKey: "dpu_micro_directive_draft_v3",
+      sourceUrl: "https://www.dpu.edu.tr/",
+      verificationStatus: "source_not_verified"
+    }],
+    rules: [
+      ["total_program_ects_ten_percent", "manual_block_pending_validation"],
+      ["remote_recognition_fifty_percent", "warning_only"],
+      ["term_five_ects", "manual_block_pending_validation"],
+      ["activity_half_of_allowed_load", "warning_only"],
+      ["eligible_semesters_three_to_eight", "warning_only"],
+      ["review_target_thirty_days", "warning_only"]
+    ].map(([ruleKey, enforcementMode], index) => ({
+      id: `RULE-LOCAL-${index + 1}`,
+      directiveVersionId: "DIR-DPU-MY-2026-DRAFT",
+      ruleKey,
+      versionNo: 1,
+      sourceClause: "Taslak hüküm — payda, istisna veya yorum kurumsal doğrulama bekliyor",
+      effectiveFrom: null,
+      effectiveTo: null,
+      programType: "all",
+      calculationBasis: "Kurumsal doğrulama bekleyen sürümlü pilot hesap",
+      numerator: null,
+      denominator: null,
+      roundingRule: "Kurumsal karar bekliyor",
+      exceptionRule: "İnsan incelemesi gerekir",
+      interpretationNote: "Kesin mevzuat sınırı değildir; otomatik nihai karar üretmez.",
+      enforcementMode,
+      institutionalValidationRequired: true
+    })),
+    governance: roleScopeCatalog,
+    programs: [{
+      programId: "PROGRAM-DATA-LITERACY",
+      mydCode: "MYD-2026-DPU-001",
+      title: "Veri Okuryazarlığı Mikro Yeterliliği — SENTETİK",
+      programType: "formal_elective",
+      versionNo: 1,
+      versionLabel: "1.0-SENTETIK",
+      ects: 3,
+      totalLearnerWorkloadHours: 82.5,
+      workloadComponentTotal: 82.5,
+      ectsBandValid: true,
+      componentSumValid: true,
+      workloadComponentCount: 8,
+      deliveryMode: "hybrid",
+      pedagogicalReferenceLevel: 6,
+      levelClaimStatus: "advisory_only",
+      status: "simulation_ready",
+      institutionalValidationRequired: true
+    }],
+    recognitionDecisions: [
+      ["credential_verification_or_recognition", "additional_evidence_required", null, null],
+      ["ects_credit_recognition", "deferred", null, null],
+      ["course_or_requirement_substitution", "rejected", null, "SEC-2XX"]
+    ].map(([decisionType, outcome, recognizedEcts, substitutedCourseCode], index) => ({
+      caseId: "REC-CASE-001",
+      caseReference: "SENTETIK-TANIMA-2026-001",
+      providerName: "SENTETİK dış sağlayıcı",
+      awardingBodyName: "SENTETİK awarding body",
+      requestedEcts: 2.5,
+      requestedCourseCode: "SEC-2XX",
+      onlineDelivery: true,
+      decisionId: `REC-DEC-LOCAL-${index + 1}`,
+      decisionType,
+      decisionRound: 1,
+      outcome,
+      recognizedEcts,
+      substitutedCourseCode,
+      decidingBody: "SENTETİK Birim Komisyonu",
+      rationale: "Üç ayrı insan kararı modelinde kaydedilmiş sentetik sonuç.",
+      appealPath: "Bağımsız üst inceleme — SENTETİK",
+      appealRecorded: decisionType === "course_or_requirement_substitution",
+      institutionalValidationRequired: true,
+      institutionalValidationConfirmed: false
+    })),
+    commission: [{
+      meetingId: "MEETING-001",
+      meetingReference: "SENTETIK-TOPLANTI-2026-08-20",
+      quorumRequired: 2,
+      presentVoters: 2,
+      quorumMet: true,
+      resolutionId: "RESOLUTION-001",
+      resolutionKey: "RES-PROGRAM-DATA-001",
+      subjectType: "program_version",
+      subjectReference: "PROGRAM-DATA-LITERACY:1",
+      decisionStage: "first_instance",
+      outcome: "deferred",
+      rationale: "Kurumsal kural doğrulaması bulunmadığından ertelenen sentetik insan komisyon kaydı.",
+      independentReviewConfirmed: false,
+      recordedVoteCount: 2,
+      eligibleVoterCount: 2,
+      quorumIntegrityValid: true,
+      conflictCount: 1,
+      recusalCount: 1,
+      institutionalValidationRequired: true,
+      institutionalValidationConfirmed: false
+    }],
+    publicCredentials: [{
+      publicDocumentId: "MYD-VERIFY-A1B2C3D4E5F6",
+      holderDisplayMasked: "Ö***** Ö*****",
+      credentialTitle: "Veri Okuryazarlığı Mikro Yeterliliği — SENTETİK",
+      issuingCountryOrRegion: "Türkiye",
+      awardingBody: "Kütahya Dumlupınar Üniversitesi — SENTETİK PİLOT",
+      issueDate: "2026-08-20",
+      learningOutcomes: ["Veri problemini kanıta dayalı analiz eder"],
+      learnerWorkloadHours: 82.5,
+      learnerWorkloadUnit: "hours",
+      pedagogicalReferenceLevel: 6,
+      levelStatus: "advisory_not_official_placement",
+      participationForm: "Hibrit — SENTETİK",
+      assessmentType: "Proje, rubrik ve sözlü savunma — SENTETİK",
+      qualityAssuranceBasis: "İnsan incelemeli PUKÖ pilot kaydı",
+      status: "issued_simulation",
+      expiresOn: null,
+      institutionalValidationRequired: true,
+      officialTycPlacementClaim: false,
+      realCredential: false
+    }],
+    awardStates: [{
+      id: "AWARD-STATE-001",
+      syntheticHolderRef: "SENTETIK-OGRENEN-001",
+      programId: "PROGRAM-DATA-LITERACY",
+      programVersionNo: 1,
+      completionStatus: "completed_simulation",
+      badgeStatus: "issued_simulation",
+      credentialStatus: "issued_simulation",
+      ectsRecognitionStatus: "not_recognized",
+      courseSubstitutionStatus: "not_substituted",
+      stateRationale: { badgeAndCredential: "achievement_recorded", ects: "separate_human_decision_not_granted" },
+      institutionalValidationRequired: true
+    }],
+    qualityFinance: [{
+      qualityReviewId: "QUALITY-REVIEW-001",
+      programId: "PROGRAM-DATA-LITERACY",
+      programVersionNo: 1,
+      reviewType: "initial_quality_gate",
+      pdcaStage: "check",
+      reviewOutcome: "improvement_required",
+      nextReviewOn: "2027-02-20",
+      financeCaseId: "FINANCE-CASE-001",
+      workloadApprovalStatus: "pending_personnel_validation",
+      budgetApprovalStatus: "pending_financial_validation",
+      paymentEligibilityStatus: "not_evaluated",
+      estimatedAmount: 0,
+      dryRunOnly: true,
+      paymentExecuted: false,
+      invoiceCreated: false,
+      institutionalValidationRequired: true
+    }],
+    readiness: [{
+      contractVersion: "directive-alignment-2026-08-20-1",
+      versionedRuleCount: 6,
+      roleMembershipCount: 9,
+      distinctRoleCount: 9,
+      workloadComponentCount: 8,
+      recognitionDecisionTypeCount: 3,
+      institutionalDecisionCount: 4,
+      productionNoGo: true,
+      integrationDryRunOnly: true,
+      financeDryRunOnly: true,
+      syntheticDataOnly: true,
+      senateApprovalAbsent: true,
+      pilotNotice: "KURUMSAL DEĞERLENDİRME TASLAĞI — SENATO ONAYI YOKTUR — PRODUCTION NO-GO"
+    }]
+  };
+}
+
+export function validateDirectivePilotCatalog(catalog) {
+  const errors = [];
+  const requiredArrays = [
+    "policyVersions", "rules", "governance", "programs", "recognitionDecisions",
+    "commission", "publicCredentials", "awardStates", "qualityFinance", "readiness"
+  ];
+  requiredArrays.forEach((key) => {
+    if (!Array.isArray(catalog[key]) || catalog[key].length === 0) errors.push(`${key}: missing`);
+  });
+  const readiness = catalog.readiness?.[0];
+  if (readiness) {
+    if (readiness.distinctRoleCount < 9) errors.push("readiness: nine roles are not represented");
+    if (readiness.workloadComponentCount !== 8) errors.push("readiness: workload component contract mismatch");
+    if (readiness.recognitionDecisionTypeCount !== 3) errors.push("readiness: recognition decisions are not separated");
+    if (!readiness.productionNoGo || !readiness.integrationDryRunOnly || !readiness.financeDryRunOnly) errors.push("readiness: NO-GO/dry-run boundary invalid");
+    if (!readiness.syntheticDataOnly || !readiness.senateApprovalAbsent) errors.push("readiness: draft/synthetic flags invalid");
+  }
+  const expectedRoles = new Set(["learner", "instructor", "externalInstructor", "coordinator", "commission", "studentAffairs", "it", "finance", "admin"]);
+  const actualRoles = new Set((catalog.governance || []).map((row) => row.roleKey));
+  if ((catalog.governance || []).length !== 9 || expectedRoles.size !== actualRoles.size || [...expectedRoles].some((role) => !actualRoles.has(role))) errors.push("governance: canonical nine-role set mismatch");
+  if ((catalog.governance || []).some((row) => !row.unitId || !row.unitType || !row.bodyType || !row.syntheticActorRef || !row.membershipRole || !row.mandateFrom || !Array.isArray(row.decisionScope) || row.decisionScope.length === 0)) errors.push("governance: unit/body/mandate/decision-scope DTO incomplete");
+  const adminScope = (catalog.governance || []).find((row) => row.roleKey === "admin");
+  if (adminScope && (!adminScope.systemAdminRestriction || adminScope.mayMakeAcademicDecision || adminScope.mayMakeFinancialDecision || !adminScope.decisionScope.includes("configuration_only"))) errors.push("governance: system administrator decision boundary invalid");
+  const expectedDecisionTypes = new Set(["credential_verification_or_recognition", "ects_credit_recognition", "course_or_requirement_substitution"]);
+  const actualDecisionTypes = new Set((catalog.recognitionDecisions || []).map((row) => row.decisionType));
+  if ([...expectedDecisionTypes].some((type) => !actualDecisionTypes.has(type))) errors.push("recognition: three-decision contract mismatch");
+  if ((catalog.recognitionDecisions || []).some((row) =>
+    ["approved", "partially_approved"].includes(row.outcome) && row.institutionalValidationConfirmed !== true
+  )) errors.push("recognition: unvalidated positive outcome detected");
+  if ((catalog.programs || []).some((row) => !row.ectsBandValid || !row.componentSumValid || row.workloadComponentCount !== 8)) errors.push("programs: ECTS/workload contract invalid");
+  if ((catalog.commission || []).some((row) => !row.quorumMet || !row.quorumIntegrityValid || row.recordedVoteCount > row.eligibleVoterCount)) errors.push("commission: quorum/vote integrity invalid");
+  if ((catalog.commission || []).some((row) => row.outcome === "approved" && row.institutionalValidationConfirmed !== true)) errors.push("commission: unvalidated approval detected");
+  if ((catalog.publicCredentials || []).some((row) =>
+    row.realCredential !== false
+    || row.officialTycPlacementClaim !== false
+    || "holderInternalRef" in row
+    || "tckn" in row
+    || "ykn" in row
+    || /(^|[^0-9])[0-9]{11}([^0-9]|$)/.test(JSON.stringify(row))
+  )) errors.push("credentials: public minimization contract invalid");
+  if ((catalog.policyVersions || []).some((row) => !row.institutionalValidationRequired || row.productionAllowed !== false || !String(row.status).includes("draft"))) errors.push("policy: draft validation boundary invalid");
+  if ((catalog.rules || []).some((row) => !row.institutionalValidationRequired || row.enforcementMode === "validated_block")) errors.push("rules: unvalidated block detected");
+  if ((catalog.qualityFinance || []).some((row) => !row.dryRunOnly || row.paymentExecuted || row.invoiceCreated || Number(row.estimatedAmount) !== 0)) errors.push("finance: real-effect boundary invalid");
+  return errors;
+}
+
+export function normalizeDirectivePilotCatalog(remote = {}, fallback = getLocalDirectivePilotCatalog()) {
+  const requiredKeys = Object.keys(directiveViewQueries);
+  const completeRemoteSnapshot = requiredKeys.every((key) => Array.isArray(remote[key]) && remote[key].length > 0);
+  if (!completeRemoteSnapshot) {
+    return {
+      ...fallback,
+      validationErrors: ["Directive remote snapshot incomplete; partial rows discarded and complete local fallback selected"],
+      remoteAccepted: false,
+      remoteVerified: false,
+      fallbackUsed: true,
+      partialRemoteDiscarded: requiredKeys.some((key) => Array.isArray(remote[key]) && remote[key].length > 0)
+    };
+  }
+  const normalized = Object.fromEntries(requiredKeys.map((key) => [key, remote[key].map(camelizeRow)]));
+  const validationErrors = validateDirectivePilotCatalog(normalized);
+  return validationErrors.length === 0
+    ? { ...normalized, validationErrors, remoteAccepted: true, remoteVerified: true, fallbackUsed: false, partialRemoteDiscarded: false }
+    : { ...fallback, validationErrors, remoteAccepted: false, remoteVerified: false, fallbackUsed: true, partialRemoteDiscarded: false };
 }
 
 function groupMatrixDraftRows(rows) {
@@ -147,6 +421,7 @@ export function getLocalQualificationSuggestionCatalog() {
     rationale: "Kurul; öğrenme çıktıları, ölçme kanıtları ve açıklanabilir önerileri insan incelemesiyle değerlendirmiştir.",
     tycLevel: 6,
     eqfLevel: 6,
+    tyycLevel: 6,
     decidedAt: "2026-08-20T02:10:00.000Z",
     meetingReference: "SENTETIK-TOPLANTI-2026-08"
   });
@@ -166,10 +441,19 @@ export function getLocalQualificationSuggestionCatalog() {
       finalDecisionAuthority: "yetkili_kurul",
       institutionalValidationRequired: true
     }],
-    programSuggestionSummaries: [{ programId: program.programId, ...program.program }],
-    learningOutcomeSuggestions: program.outcomes.flatMap((outcome) => ["tyc", "eqf"].map((frameworkId) => ({
+    tyycTypeDescriptors: tyycQualificationTypeDescriptors,
+    programSuggestionSummaries: [{
+      programId: program.programId,
+      directiveProgramId: "PROGRAM-DATA-LITERACY",
+      directiveProgramVersionNo: 1,
+      ...program.program
+    }],
+    learningOutcomeSuggestions: program.outcomes.flatMap((outcome, outcomeIndex) => QUALIFICATION_FRAMEWORK_IDS.map((frameworkId) => ({
       id: `SUG-DEMO-${outcome.outcomeId}-${frameworkId.toUpperCase()}`,
       programId: program.programId,
+      directiveProgramId: "PROGRAM-DATA-LITERACY",
+      directiveProgramVersionNo: 1,
+      outcomeOrder: outcomeIndex + 1,
       outcomeId: outcome.outcomeId,
       outcomeText: outcome.outcomeText,
       inputQuality: outcome.inputQuality,
@@ -178,7 +462,55 @@ export function getLocalQualificationSuggestionCatalog() {
       crossFrameworkConsistency: outcome.crossFrameworkConsistency
     }))),
     manualOverrideExamples: overridden.manualOverrides,
-    boardDecisionExamples: [{ id: "DEC-DEMO-001", programId: program.programId, ...decided.finalDecision }]
+    boardDecisionExamples: [{
+      id: "DEC-DEMO-001",
+      programId: program.programId,
+      directiveProgramId: "PROGRAM-DATA-LITERACY",
+      directiveProgramVersionNo: 1,
+      ...decided.finalDecision
+    }],
+    programSpine: [{
+      smartProgramId: program.programId,
+      engineProfileId: "qualification-engine-2026-08-20-1",
+      directiveProgramId: "PROGRAM-DATA-LITERACY",
+      directiveProgramVersionNo: 1,
+      linkStatus: "canonical_demo_mapping",
+      outcomeCount: 2,
+      suggestionCount: 6,
+      manualOverrideCount: 1,
+      matrixDraftCount: 3,
+      constructiveAlignmentRowCount: 2,
+      boardDecisionCount: 1,
+      institutionalValidationRequired: true
+    }],
+    constructiveAlignment: [
+      {
+        id: "ALIGN-LO-1", smartProgramId: program.programId,
+        engineProfileId: "qualification-engine-2026-08-20-1", outcomeId: "LO-1", outcomeOrder: 1,
+        outcomeText: outcomes[0].text, directiveProgramId: "PROGRAM-DATA-LITERACY", directiveProgramVersionNo: 1,
+        contentItem: "Veri kalitesi, kaynak güvenilirliği, çözüm tasarımı ve doğrulama",
+        learningActivity: "Karmaşık vaka laboratuvarı, prototipleme ve insan geri bildirimi",
+        assessmentTask: "Performans görevi, ürün dosyası ve sözlü savunma",
+        rubricReference: "RUBRIC-DATA-LO1-V1 — SENTETİK",
+        successThreshold: "Analitik rubrikte en az %70 — kurumsal doğrulama gerekir",
+        evidenceRequirement: "Çalışan ürün, karar günlüğü, kaynak izi, rubrik ve savunma tutanağı",
+        workloadComponentType: "project_assignment_portfolio", workloadHours: 16, componentPlannedHours: 16,
+        chainStatus: "human_review_required", institutionalValidationRequired: true
+      },
+      {
+        id: "ALIGN-LO-2", smartProgramId: program.programId,
+        engineProfileId: "qualification-engine-2026-08-20-1", outcomeId: "LO-2", outcomeOrder: 2,
+        outcomeText: outcomes[1].text, directiveProgramId: "PROGRAM-DATA-LITERACY", directiveProgramVersionNo: 1,
+        contentItem: "Stratejik dönüşüm, ekip performansı, etik ve erişilebilirlik",
+        learningActivity: "Ekip simülasyonu, değişim senaryosu ve yansıtıcı değerlendirme",
+        assessmentTask: "Stratejik etki dosyası, ekip savunması ve çok kaynaklı rubrik",
+        rubricReference: "RUBRIC-TEAM-LO2-V1 — SENTETİK",
+        successThreshold: "Rubrikte yeterli düzey ve kritik etik ölçütlerde başarısızlık bulunmaması — doğrulama gerekir",
+        evidenceRequirement: "Karar günlüğü, risk kaydı, ekip geri bildirimi, rubrik ve savunma tutanağı",
+        workloadComponentType: "feedback_and_revision", workloadHours: 4.5, componentPlannedHours: 4.5,
+        chainStatus: "human_review_required", institutionalValidationRequired: true
+      }
+    ]
   };
 }
 
@@ -213,6 +545,67 @@ function normalizeAssessment(item, fallback) {
   };
 }
 
+function normalizeTyycTypeDescriptorRow(row) {
+  const item = camelizeRow(row);
+  const fallback = tyycQualificationTypeDescriptors.find((candidate) => candidate.id === item.id) || {};
+  return {
+    id: item.id || fallback.id,
+    frameworkId: item.frameworkId || fallback.frameworkId || "tyyc",
+    level: Number(item.level ?? fallback.level),
+    qualificationType: item.qualificationType || fallback.qualificationType,
+    titleTr: item.titleTr || fallback.titleTr,
+    orientation: item.orientation || fallback.orientation,
+    contextSignals: Array.isArray(item.contextSignals) ? item.contextSignals : (fallback.contextSignals || []),
+    officialSourceUrl: item.officialSourceUrl || fallback.officialSourceUrl,
+    officialFormRegistryUrl: item.officialFormRegistryUrl || fallback.officialFormRegistryUrl,
+    sourcePublisher: item.sourcePublisher || fallback.sourcePublisher,
+    sourceStatus: item.sourceStatus || fallback.sourceStatus || "official_form_registry_verified",
+    operationalDescriptorStatus: item.operationalDescriptorStatus || fallback.operationalDescriptorStatus || "advisory_summary_not_verbatim",
+    equivalenceClaim: Boolean(item.equivalenceClaim),
+    placementClaim: Boolean(item.placementClaim),
+    logoRightClaim: Boolean(item.logoRightClaim),
+    autonomousDecision: Boolean(item.autonomousDecision),
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired ?? true),
+    verifiedAt: item.verifiedAt || fallback.verifiedAt
+  };
+}
+
+function normalizeTyycTypeCandidate(row, index) {
+  const item = camelizeRow(row || {});
+  const descriptor = normalizeTyycTypeDescriptorRow(item);
+  return {
+    ...descriptor,
+    typeFitScore: Number(item.typeFitScore ?? item.score ?? 52),
+    matchedTypeSignals: Array.isArray(item.matchedTypeSignals) ? item.matchedTypeSignals : [],
+    rank: Number(item.rank ?? index + 1),
+    rationale: item.rationale || "Yeterlilik türü adayı yalnız pedagojik insan incelemesi için gösterilir."
+  };
+}
+
+function normalizeQualificationTypeSuggestion(item, engineSuggestion) {
+  if (engineSuggestion.frameworkId !== "tyyc") return null;
+  const remoteCandidates = Array.isArray(item.qualificationTypeCandidates) ? item.qualificationTypeCandidates : [];
+  const engineCandidates = [
+    engineSuggestion.qualificationTypeSuggestion?.selected,
+    ...(engineSuggestion.qualificationTypeSuggestion?.alternatives || [])
+  ].filter(Boolean);
+  const engineCandidateById = new Map(engineCandidates.map((candidate) => [candidate.id, candidate]));
+  const candidates = (remoteCandidates.length
+    ? remoteCandidates.map((candidate) => ({ ...(engineCandidateById.get(candidate.id) || {}), ...candidate }))
+    : engineCandidates)
+    .map(normalizeTyycTypeCandidate)
+    .sort((left, right) => left.rank - right.rank || right.typeFitScore - left.typeFitScore);
+  return {
+    selected: candidates[0] || null,
+    alternatives: candidates.slice(1),
+    advisoryOnly: true,
+    officialPlacementClaim: false,
+    equivalenceClaim: false,
+    logoRightClaim: false,
+    institutionalValidationRequired: true
+  };
+}
+
 function normalizeLearningOutcomeSuggestionRow(row) {
   const item = camelizeRow(row);
   const frameworkId = item.frameworkId;
@@ -221,7 +614,7 @@ function normalizeLearningOutcomeSuggestionRow(row) {
   const engineOutcome = suggestOutcomeQualificationAlignment({ id: item.outcomeId, text: item.outcomeText });
   const engineSuggestion = engineOutcome.suggestions[frameworkId];
   const descriptor = selectedDimensionDescriptor(item, frameworkId, level, dimension);
-  const score = Number(item.score);
+  const score = Number(item.score ?? engineSuggestion.score);
   const confidence = item.confidence || engineSuggestion.confidence;
   const rationale = item.rationale || engineSuggestion.rationale;
   const remoteSignals = Array.isArray(item.matchedSignals) ? item.matchedSignals : [];
@@ -231,17 +624,22 @@ function normalizeLearningOutcomeSuggestionRow(row) {
   const suggestedAssessments = (remoteAssessments.length ? remoteAssessments : engineSuggestion.suggestedAssessments)
     .map((assessment, index) => normalizeAssessment(assessment, engineSuggestion.suggestedAssessments[index]));
   const rowCrossFrameworkConsistency = item.crossFrameworkConsistency || {};
-  const peerLevel = Number(item.crossFrameworkPeerLevel ?? (
-    frameworkId === "tyc"
-      ? rowCrossFrameworkConsistency.eqfLevel
-      : rowCrossFrameworkConsistency.tycLevel
-  ));
-  const tycLevel = frameworkId === "tyc" ? level : peerLevel;
-  const eqfLevel = frameworkId === "eqf" ? level : peerLevel;
+  const crossFrameworkLevels = item.crossFrameworkLevels || {};
+  const engineCross = engineOutcome.crossFrameworkConsistency;
+  const peerLevel = Number(item.crossFrameworkPeerLevel ?? level);
+  const tycLevel = Number(crossFrameworkLevels.tyc ?? rowCrossFrameworkConsistency.tycLevel ?? (frameworkId === "tyc" ? level : engineCross.tycLevel ?? peerLevel));
+  const eqfLevel = Number(crossFrameworkLevels.eqf ?? rowCrossFrameworkConsistency.eqfLevel ?? (frameworkId === "eqf" ? level : engineCross.eqfLevel ?? peerLevel));
+  const tyycLevel = Number(crossFrameworkLevels.tyyc ?? rowCrossFrameworkConsistency.tyycLevel ?? (frameworkId === "tyyc" ? level : engineCross.tyycLevel ?? Math.max(5, peerLevel)));
   const levelDifference = Math.abs(tycLevel - eqfLevel);
+  const threeFrameworkSpread = Math.max(tycLevel, eqfLevel, tyycLevel) - Math.min(tycLevel, eqfLevel, tyycLevel);
+  const allExact = threeFrameworkSpread === 0;
   const classification = item.crossFrameworkStatus || rowCrossFrameworkConsistency.classification || (
     levelDifference === 0 ? "aligned" : levelDifference === 1 ? "adjacent_review" : "material_discrepancy"
   );
+  const threeFrameworkClassification = item.crossFrameworkStatus || rowCrossFrameworkConsistency.threeFrameworkClassification || (
+    allExact ? "aligned" : threeFrameworkSpread === 1 ? "adjacent_review" : "material_discrepancy"
+  );
+  const qualificationTypeSuggestion = normalizeQualificationTypeSuggestion(item, engineSuggestion);
   const effectiveSelection = {
     level,
     dimension,
@@ -253,6 +651,9 @@ function normalizeLearningOutcomeSuggestionRow(row) {
   return {
     id: item.id,
     programId: item.programId,
+    directiveProgramId: item.directiveProgramId || "PROGRAM-DATA-LITERACY",
+    directiveProgramVersionNo: Number(item.directiveProgramVersionNo ?? 1),
+    outcomeOrder: Number(item.outcomeOrder ?? (item.outcomeId === "LO-2" ? 2 : 1)),
     outcomeId: item.outcomeId,
     outcomeText: item.outcomeText,
     inputQuality: { ...engineOutcome.inputQuality, ...(item.inputQuality || {}) },
@@ -271,6 +672,13 @@ function normalizeLearningOutcomeSuggestionRow(row) {
     suggestedContent: Array.isArray(item.suggestedContent) ? item.suggestedContent : engineSuggestion.suggestedContent,
     suggestedAssessments,
     alternatives: engineSuggestion.alternatives,
+    qualificationTypeSuggestion,
+    evidenceGapWarnings: Array.isArray(item.evidenceGapWarnings) ? item.evidenceGapWarnings : engineSuggestion.evidenceGapWarnings,
+    descriptorStatus: frameworkId === "tyyc" ? (item.descriptorContentBasis === "official_form_operational_summary" ? "advisory_summary_not_verbatim" : engineSuggestion.descriptorStatus) : undefined,
+    pedagogicalReferenceLevelLabel: frameworkId === "tyyc" ? `Önerilen pedagojik referans düzeyi: TYYÇ ${level}` : undefined,
+    officialPlacementClaim: false,
+    equivalenceClaim: false,
+    logoRightClaim: false,
     higherEducationCycleSuggestion: higherEducationCycleCrosswalk.find((cycle) => cycle.tycLevel === level && cycle.eqfLevel === level) || null,
     method: engineSuggestion.method,
     autonomousDecision: Boolean(item.autonomousDecision),
@@ -282,10 +690,14 @@ function normalizeLearningOutcomeSuggestionRow(row) {
     crossFrameworkConsistency: {
       tycLevel,
       eqfLevel,
+      tyycLevel,
       levelDifference,
       exactMatch: levelDifference === 0,
       classification,
-      requiresHumanReview: levelDifference !== 0,
+      threeFrameworkSpread,
+      allExact,
+      threeFrameworkClassification,
+      requiresHumanReview: !allExact,
       discrepancyRationale: item.crossFrameworkRationale || rowCrossFrameworkConsistency.discrepancyRationale || engineOutcome.crossFrameworkConsistency.discrepancyRationale,
       institutionalValidationRequired: true,
       equalityForced: false
@@ -298,7 +710,13 @@ function normalizeProgramSuggestionSummaryRow(row) {
   const cycle = item.higherEducationCycleSuggestion || higherEducationCycleCrosswalk.find((candidate) => candidate.id === item.higherEducationCycleId) || null;
   return {
     programId: item.programId,
-    suggestedLevels: item.suggestedLevels || { tyc: Number(item.suggestedTycLevel), eqf: Number(item.suggestedEqfLevel) },
+    directiveProgramId: item.directiveProgramId || "PROGRAM-DATA-LITERACY",
+    directiveProgramVersionNo: Number(item.directiveProgramVersionNo ?? 1),
+    suggestedLevels: item.suggestedLevels || {
+      tyc: Number(item.suggestedTycLevel),
+      eqf: Number(item.suggestedEqfLevel),
+      tyyc: Number(item.suggestedTyycLevel)
+    },
     levelSummaries: item.levelSummaries || {},
     dimensionCoverage: item.dimensionCoverage || {},
     coverage: item.coverage || {},
@@ -341,11 +759,17 @@ function normalizeBoardDecisionRow(row) {
     engineVersion: rawSuggestionSnapshot.engineVersion,
     suggestedLevels: rawSuggestionSnapshot.suggestedLevels || {}
   };
-  const decidedLevels = item.decidedLevels || { tyc: Number(item.decidedTycLevel), eqf: Number(item.decidedEqfLevel) };
+  const decidedLevels = item.decidedLevels || {
+    tyc: Number(item.decidedTycLevel),
+    eqf: Number(item.decidedEqfLevel),
+    tyyc: Number(item.decidedTyycLevel)
+  };
   const suggestedLevels = suggestionSnapshot.suggestedLevels || {};
   return {
     id: item.id,
     programId: item.programId,
+    directiveProgramId: item.directiveProgramId || "PROGRAM-DATA-LITERACY",
+    directiveProgramVersionNo: Number(item.directiveProgramVersionNo ?? 1),
     status: item.status || "recorded_human_board_decision",
     decision: item.decision || item.decisionStatus,
     source: item.source || "human_commission",
@@ -356,12 +780,55 @@ function normalizeBoardDecisionRow(row) {
     meetingReference: item.meetingReference || null,
     decidedLevels,
     differsFromSuggestion: item.differsFromSuggestion ?? (
-      decidedLevels.tyc !== suggestedLevels.tyc || decidedLevels.eqf !== suggestedLevels.eqf
+      decidedLevels.tyc !== suggestedLevels.tyc || decidedLevels.eqf !== suggestedLevels.eqf || decidedLevels.tyyc !== suggestedLevels.tyyc
     ),
     suggestionSnapshot,
     suggestionMutated: Boolean(item.suggestionMutated),
     autonomousDecision: Boolean(item.autonomousDecision),
     institutionalValidationRequired: Boolean(item.institutionalValidationRequired ?? true)
+  };
+}
+
+function normalizeProgramSpineRow(row) {
+  const item = camelizeRow(row);
+  return {
+    smartProgramId: item.smartProgramId,
+    engineProfileId: item.engineProfileId,
+    directiveProgramId: item.directiveProgramId,
+    directiveProgramVersionNo: Number(item.directiveProgramVersionNo),
+    linkStatus: item.linkStatus,
+    outcomeCount: Number(item.outcomeCount),
+    suggestionCount: Number(item.suggestionCount),
+    manualOverrideCount: Number(item.manualOverrideCount),
+    matrixDraftCount: Number(item.matrixDraftCount),
+    constructiveAlignmentRowCount: Number(item.constructiveAlignmentRowCount),
+    boardDecisionCount: Number(item.boardDecisionCount),
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired)
+  };
+}
+
+function normalizeConstructiveAlignmentRow(row) {
+  const item = camelizeRow(row);
+  return {
+    id: item.id,
+    smartProgramId: item.smartProgramId,
+    engineProfileId: item.engineProfileId,
+    outcomeId: item.outcomeId,
+    outcomeOrder: Number(item.outcomeOrder),
+    outcomeText: item.outcomeText,
+    directiveProgramId: item.directiveProgramId,
+    directiveProgramVersionNo: Number(item.directiveProgramVersionNo),
+    contentItem: item.contentItem,
+    learningActivity: item.learningActivity,
+    assessmentTask: item.assessmentTask,
+    rubricReference: item.rubricReference,
+    successThreshold: item.successThreshold,
+    evidenceRequirement: item.evidenceRequirement,
+    workloadComponentType: item.workloadComponentType,
+    workloadHours: Number(item.workloadHours),
+    componentPlannedHours: Number(item.componentPlannedHours),
+    chainStatus: item.chainStatus,
+    institutionalValidationRequired: Boolean(item.institutionalValidationRequired)
   };
 }
 
@@ -408,10 +875,13 @@ export function normalizeQualificationSuggestionCatalog(remote = {}, fallback = 
   return {
     higherEducationCycles: rowsOrFallback("higherEducationCycles").map(normalizeCycleRow),
     suggestionEngineProfiles: rowsOrFallback("suggestionEngineProfiles").map(normalizeEngineProfileRow),
+    tyycTypeDescriptors: rowsOrFallback("tyycTypeDescriptors").map(normalizeTyycTypeDescriptorRow),
     programSuggestionSummaries: rowsOrFallback("programSuggestionSummaries").map(normalizeProgramSuggestionSummaryRow),
     learningOutcomeSuggestions: rowsOrFallback("learningOutcomeSuggestions").map(normalizeLearningOutcomeSuggestionRow),
     manualOverrideExamples: rowsOrFallback("manualOverrideExamples").map(normalizeManualOverrideRow),
-    boardDecisionExamples: rowsOrFallback("boardDecisionExamples").map(normalizeBoardDecisionRow)
+    boardDecisionExamples: rowsOrFallback("boardDecisionExamples").map(normalizeBoardDecisionRow),
+    programSpine: rowsOrFallback("programSpine").map(normalizeProgramSpineRow),
+    constructiveAlignment: rowsOrFallback("constructiveAlignment").map(normalizeConstructiveAlignmentRow)
   };
 }
 
@@ -691,6 +1161,53 @@ export async function loadInstitutionalIntegrationSnapshot() {
   }
 }
 
+export async function loadDirectivePilotSnapshot() {
+  const fallback = getLocalDirectivePilotCatalog();
+  try {
+    const entries = Object.entries(directiveViewQueries);
+    const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query)));
+    const remote = {};
+    const unavailableViews = [];
+    results.forEach((result, index) => {
+      const key = entries[index][0];
+      if (result.status === "fulfilled" && Array.isArray(result.value) && result.value.length > 0) remote[key] = result.value;
+      else unavailableViews.push(key);
+    });
+    const normalized = normalizeDirectivePilotCatalog(remote, fallback);
+    const remoteAccepted = unavailableViews.length === 0 && normalized.remoteAccepted && normalized.validationErrors.length === 0;
+    return {
+      ok: remoteAccepted,
+      version: fallback.readiness[0].contractVersion,
+      source: remoteAccepted ? "supabase_read_only_directive_views" : "local_directive_contract_fallback_unverified_remote",
+      unavailableViews,
+      validationErrors: normalized.validationErrors,
+      remoteVerified: remoteAccepted,
+      fallbackUsed: !remoteAccepted,
+      productionAllowed: false,
+      liveInstitutionalRequestsEnabled: false,
+      realPaymentsEnabled: false,
+      realIdentityDataEnabled: false,
+      ...normalized
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      version: fallback.readiness[0].contractVersion,
+      source: "local_directive_contract_fallback_unverified_remote",
+      unavailableViews: Object.keys(directiveViewQueries),
+      validationErrors: ["Directive catalog read failed; complete local contract selected"],
+      remoteVerified: false,
+      fallbackUsed: true,
+      productionAllowed: false,
+      liveInstitutionalRequestsEnabled: false,
+      realPaymentsEnabled: false,
+      realIdentityDataEnabled: false,
+      error: error instanceof Error ? error.message : "Bilinmeyen yönerge pilot veri hatası",
+      ...fallback
+    };
+  }
+}
+
 async function loadReferenceViews() {
   const entries = Object.entries(referenceViewQueries);
   const results = await Promise.allSettled(entries.map(([, [view, query]]) => readTable(view, query)));
@@ -707,16 +1224,20 @@ async function loadReferenceViews() {
   const normalizedSuggestionCatalog = normalizeQualificationSuggestionCatalog({
     higherEducationCycles: remote.higherEducationCycles,
     suggestionEngineProfiles: remote.suggestionEngineProfiles,
+    tyycTypeDescriptors: remote.tyycTypeDescriptors,
     programSuggestionSummaries: remote.programSuggestionSummaries,
     learningOutcomeSuggestions: remote.learningOutcomeSuggestions,
     manualOverrideExamples: remote.manualOverrideExamples,
-    boardDecisionExamples: remote.boardDecisionExamples
+    boardDecisionExamples: remote.boardDecisionExamples,
+    programSpine: remote.programSpine,
+    constructiveAlignment: remote.constructiveAlignment
   }, suggestionFallback);
   return {
     version: fallback.version,
     source: unavailable.length === 0 ? "supabase_read_only_views" : "supabase_with_local_reference_fallback",
     unavailableViews: unavailable,
     qualificationLevels: (remote.qualificationLevels || fallback.descriptors).map(camelizeRow),
+    tyycTypeDescriptors: normalizedSuggestionCatalog.tyycTypeDescriptors,
     bilingualEqfLevels: (remote.bilingualEqfLevels || fallback.descriptorTranslations).map(camelizeRow),
     datasetRegistry: (remote.datasetRegistry || fallback.datasetRegistry).map(camelizeRow),
     officialQualificationReferences: (remote.officialQualificationReferences || fallback.officialQualificationReferences).map(camelizeRow),
@@ -739,26 +1260,28 @@ export async function loadQualificationReferenceSnapshot() {
     };
   } catch (error) {
     const suggestionFallback = getLocalQualificationSuggestionCatalog();
+    const normalizedSuggestionFallback = normalizeQualificationSuggestionCatalog({}, suggestionFallback);
     return {
       ok: false,
       version: qualificationReferenceSnapshot.version,
       source: "local_reference_fallback",
       error: error instanceof Error ? error.message : "Bilinmeyen referans veri hatası",
       ...qualificationReferenceSnapshot,
-      ...suggestionFallback
+      ...normalizedSuggestionFallback
     };
   }
 }
 
 export async function loadPilotSnapshot() {
   try {
-    const [programs, applications, credentials, integrations, referenceData, institutionalData] = await Promise.all([
+    const [programs, applications, credentials, integrations, referenceData, institutionalData, directiveData] = await Promise.all([
       readTable("pilot_programs", "select=*&order=code.asc"),
       readTable("pilot_applications", "select=*&order=submitted_at.desc"),
       readTable("pilot_credentials", "select=*&order=issued_at.desc"),
       readTable("pilot_integrations", "select=*&order=name.asc"),
       loadQualificationReferenceSnapshot(),
-      loadInstitutionalIntegrationSnapshot()
+      loadInstitutionalIntegrationSnapshot(),
+      loadDirectivePilotSnapshot()
     ]);
     return {
       ok: true,
@@ -768,7 +1291,8 @@ export async function loadPilotSnapshot() {
       credentials,
       integrations,
       referenceData,
-      institutionalData
+      institutionalData,
+      directiveData
     };
   } catch (error) {
     return { ok: false, mode: "Yerel pilot veri katmanı", error: error instanceof Error ? error.message : "Bilinmeyen bağlantı hatası" };

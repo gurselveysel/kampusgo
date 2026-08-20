@@ -1,9 +1,10 @@
 export const allowedTransitions = {
   draft: ["review"],
   review: ["commission", "revision", "rejected"],
-  commission: ["approved", "revision", "rejected", "commission"],
+  commission: ["approved", "deferred", "revision", "rejected", "commission"],
   revision: ["review"],
   approved: ["credentialed"],
+  deferred: [],
   credentialed: [],
   rejected: []
 };
@@ -13,6 +14,7 @@ export const transitionPermissions = {
   commission: ["coordinator", "commission"],
   revision: ["coordinator", "commission"],
   approved: ["commission"],
+  deferred: ["commission"],
   rejected: ["commission"],
   credentialed: ["system"]
 };
@@ -21,6 +23,7 @@ const applicationOwnerRoles = new Set(["learner", "instructor", "externalInstruc
 const assessmentDecisionRoles = new Set(["instructor", "externalInstructor", "commission"]);
 const paymentChannels = new Set(["Sanal POS simülasyonu", "Havale/EFT simülasyonu"]);
 const paymentStatuses = new Set(["draft", "pending_finance", "approved", "revision", "reconciled"]);
+const workloadComponentKeys = ["synchronous", "asynchronous", "preparation", "practice", "project", "independent", "assessment", "feedback"];
 
 const actorNames = {
   learner: "Derya Örnek",
@@ -98,6 +101,8 @@ export function getAllowedApplicationTransitions(application, actorRole, actorNa
   if (!application) return [];
   return (allowedTransitions[application.status] || []).filter((nextStatus) => {
     if (!(transitionPermissions[nextStatus] || []).includes(actorRole)) return false;
+    if (nextStatus === "approved" && application.institutionalValidationConfirmed !== true) return false;
+    if (nextStatus === "credentialed" && (application.institutionalValidationConfirmed !== true || application.productionEligible !== true)) return false;
     if (nextStatus === "review") return ownsApplication(application, actorRole, actorName);
     // A same-state commission transition represents an abstention/opinion and
     // belongs to a commission member, not to the coordinator.
@@ -384,12 +389,12 @@ export const scenarioDefinitions = {
     ["system", "Karar vermeyen pilot ön kontrol üretilir"],
     ["coordinator", "Eksik belge kontrolü tamamlanır"],
     ["commission", "Komisyon karşılaştırma raporunu inceler"],
-    ["commission", "Gerekçeli pilot onayı kaydedilir"],
-    ["coordinator", "Onaylanan program kataloğa eklenir"],
-    ["learner", "Öğrenen programa kaydolur"],
-    ["instructor", "Eğitim ve insan değerlendirmesi tamamlanır"],
-    ["system", "Pilot dijital yeterlilik oluşturulur"],
-    ["learner", "Belge Preview doğrulama sayfasında görüntülenir"]
+    ["commission", "Kurumsal doğrulamaya kadar erteleme kaydı oluşturulur"],
+    ["coordinator", "Yayımlanmayan program taslak kaydı korunur"],
+    ["learner", "Kayıt işleminin bloke edildiği doğrulanır"],
+    ["instructor", "Değerlendirme işleminin bloke edildiği doğrulanır"],
+    ["system", "Belge üretim güvenlik kapısı doğrulanır"],
+    ["learner", "Ertelenmiş pilot kayıt Preview'da görüntülenir"]
   ],
   recognition: [
     ["learner", "Dış sertifika taslağı oluşturulur"],
@@ -397,9 +402,9 @@ export const scenarioDefinitions = {
     ["system", "Karar vermeyen müfredat örtüşme analizi üretilir"],
     ["system", "AKTS ve uzaktan kredi portföyü pilot kontrolü yapılır"],
     ["commission", "Komisyon kanıtları insan gözüyle inceler"],
-    ["commission", "Gerekçeli tanıma onayı kaydedilir"],
-    ["studentAffairs", "Tanınan kredi öğrenen kaydına eklenir"],
-    ["it", "ÖBİS ve YÖKSİS için yalnız simülasyon logu üretilir"]
+    ["commission", "Tanıma sonucu kurumsal doğrulamaya ertelenir"],
+    ["studentAffairs", "Kredi kaydının bloke edildiği doğrulanır"],
+    ["it", "ÖBİS ve YÖKSİS için bloke dry-run logu üretilir"]
   ]
 };
 
@@ -416,6 +421,12 @@ export function transitionApplication(state, applicationId, nextStatus, actorRol
   }
   if (!(transitionPermissions[nextStatus] || []).includes(actorRole)) {
     throw new Error(`${actorRole} rolü ${nextStatus} durumuna geçiş yapamaz`);
+  }
+  if (nextStatus === "approved" && application.institutionalValidationConfirmed !== true) {
+    throw new Error("Kurumsal doğrulama tamamlanmadan başvuru nihai onaya geçirilemez; deferred kullanılmalıdır");
+  }
+  if (nextStatus === "credentialed" && (application.institutionalValidationConfirmed !== true || application.productionEligible !== true)) {
+    throw new Error("Kurumsal doğrulama ve production uygunluğu olmadan belge durumu oluşturulamaz");
   }
   if (!getAllowedApplicationTransitions(application, actorRole, actorName).includes(nextStatus)) {
     if (nextStatus === "review") throw new Error("Başvuruyu yalnızca kayıt sahibi ön incelemeye gönderebilir");
@@ -448,6 +459,9 @@ export function issueCredential(state, payload, actorRole = "system") {
   const sourceApplication = state.applications.find((item) => item.id === payload.sourceApplicationId);
   if (!sourceApplication || sourceApplication.status !== "approved") {
     throw new Error("Pilot yeterlilik için gerekçeli onaylı kaynak başvuru gerekir");
+  }
+  if (sourceApplication.institutionalValidationConfirmed !== true || sourceApplication.productionEligible !== true) {
+    throw new Error("Kurumsal doğrulama ve production uygunluğu olmadan pilot yeterlilik oluşturulamaz");
   }
   if (state.credentials.some((item) => item.code === payload.code)) throw new Error("Bu kodla pilot yeterlilik zaten var");
   const credential = {
@@ -491,9 +505,10 @@ export function createApplication(state, payload) {
   const ects = Number(payload.ects);
   const remoteRate = Number(payload.remoteRate);
   const evidence = Number(payload.evidence ?? 1);
-  if (!Number.isFinite(ects) || ects <= 0 || ects > 30) throw new Error("Pilot AKTS değeri 0'dan büyük ve en fazla 30 olmalıdır");
+  if (!Number.isInteger(ects) || ects < 1 || ects > 6) throw new Error("Pilot mikro yeterlilik AKTS değeri 1–6 arasında tam sayı olmalıdır");
   if (!Number.isFinite(remoteRate) || remoteRate < 0 || remoteRate > 100) throw new Error("Uzaktan sunum oranı 0 ile 100 arasında olmalıdır");
   if (!Number.isFinite(evidence) || evidence < 0) throw new Error("Pilot kanıt sayısı negatif olamaz");
+  const normalizedWorkload = normalizeApplicationWorkload(payload.workloadComponents, payload.totalWorkload, ects);
   const ownerRole = resolveApplicationOwnerRole(payload);
   const id = `APP-${String(state.applications.length + 50).padStart(3, "0")}`;
   const codePrefix = payload.kind === "external" ? "MY-BSV" : "MY-PRG";
@@ -506,12 +521,16 @@ export function createApplication(state, payload) {
     ownerRole,
     provider: payload.provider || undefined,
     status: requestedStatus,
+    institutionalValidationConfirmed: false,
+    productionEligible: false,
     submittedAt: new Date().toISOString(),
     targetAt: new Date(Date.now() + 30 * 86400000).toISOString(),
     elapsedDays: 0,
     similarity: payload.kind === "external" ? 58 : 34,
     tycMatch: 76,
     ects,
+    totalWorkload: normalizedWorkload.total,
+    workloadComponents: normalizedWorkload.components,
     remoteRate,
     portfolioRemoteShare: payload.kind === "external" ? 45 : undefined,
     evidence,
@@ -603,29 +622,15 @@ export function runScenarioStep(state, kind) {
     if (index === 3) { application.similarity = 34; application.tycMatch = 86; log(application.id, label, "review", "review", "Deterministik bulgular; karar değildir"); }
     if (index === 4) transitionApplication(state, application.id, "commission", "coordinator", "Zorunlu sentetik kanıt metadata alanları tamamlandı");
     if (index === 5) log(application.id, label, "commission", "commission", "Müfredat, TYÇ, AKTS ve rubrik kanıtları karşılaştırıldı");
-    if (index === 6) transitionApplication(state, application.id, "approved", "commission", "Pilot kanıtları yeterli bulundu; nihai kurumsal doğrulama saklıdır");
+    if (index === 6) transitionApplication(state, application.id, "deferred", "commission", "Senato, hukuk ve ilgili kurumsal doğrulamalar tamamlanmadığı için pilot kayıt ertelendi");
     if (index === 7) {
-      if (!state.programs.some((item) => item.code === application.code)) state.programs.unshift({ id: `program-${application.id}`, code: application.code, title: application.title, unit: "Eğitim Fakültesi", instructor: application.applicant, ects: 3, workload: 75, level: 6, mode: "Karma", remoteRate: 40, status: "active", learners: 0, price: 0, summary: "Senaryo kapsamında onaylanan sentetik pilot program.", outcomes: ["Dijital kanıtı yapılandırır", "Rubrik ölçütlerini eşler", "Denetim izini yorumlar"] });
-      log(application.id, label, "approved", "published", "Yalnız pilot katalog görünümü");
+      if (!state.programs.some((item) => item.code === application.code)) state.programs.unshift({ id: `program-${application.id}`, code: application.code, title: application.title, unit: "Eğitim Fakültesi", instructor: application.applicant, ects: application.ects, workload: application.totalWorkload, workloadComponents: structuredClone(application.workloadComponents), level: 6, mode: "Karma", remoteRate: 40, status: "deferred", learners: 0, price: 0, productionEligible: false, summary: "Kurumsal doğrulama bekleyen, yayımlanmayan sentetik pilot program taslağı.", outcomes: ["Dijital kanıtı yapılandırır", "Rubrik ölçütlerini eşler", "Denetim izini yorumlar"] });
+      log(application.id, label, "deferred", "deferred", "Katalog yayını yapılmadı; productionEligible=false");
     }
-    if (index === 8) {
-      const enrollmentId = `ENR-${application.id}`;
-      if (!state.enrollments.some((item) => item.id === enrollmentId)) state.enrollments.unshift({ id: enrollmentId, programCode: application.code, title: application.title, learner: "Derya Örnek", status: "active", progress: 20, ects: application.ects, remoteEcts: 1.2 });
-      log(enrollmentId, label, "applied", "active", "Gerçek kayıt veya ödeme yok");
-    }
-    if (index === 9) {
-      const enrollment = state.enrollments.find((item) => item.id === `ENR-${application.id}`);
-      enrollment.status = "completed"; enrollment.progress = 100;
-      state.assessmentSessions.unshift({ id: `ASM-${application.id}`, enrollmentId: enrollment.id, title: "Proje + rubrik değerlendirmesi", status: "completed", score: 88, evaluatorDecision: "Başarılı • İnsan değerlendirici", events: 1 });
-      log(enrollment.id, label, "active", "completed", "Simüle olaylar insan değerlendirici tarafından incelendi");
-    }
-    if (index === 10) {
-      const code = `MY-BEL-SCN-${String(Date.now()).slice(-6)}`;
-      const credential = issueCredential(state, { sourceApplicationId: application.id, code, title: application.title, owner: "Derya Örnek", ects: application.ects, level: 6, outcomes: ["Dijital kanıtı yapılandırır", "Rubrik ölçütlerini eşler", "Denetim izini yorumlar"] }, "system");
-      application.status = "credentialed";
-      scenario.credentialCode = credential.code;
-    }
-    if (index === 11) log(`credential-${scenario.credentialCode}`, label, "issued", "verified", "Yalnız Preview içi doğrulama");
+    if (index === 8) log(application.id, label, "deferred", "enrollment_blocked", "Kurumsal doğrulama yok; kayıt veya ödeme oluşturulmadı");
+    if (index === 9) log(application.id, label, "enrollment_blocked", "assessment_blocked", "Kayıt yok; değerlendirme oturumu oluşturulmadı");
+    if (index === 10) log(application.id, label, "assessment_blocked", "credential_blocked", "institutionalValidationConfirmed=false; productionEligible=false");
+    if (index === 11) log(application.id, label, "deferred", "preview_only", "Yalnız ertelenmiş kayıt; belge doğrulama iddiası yok");
   } else {
     if (index === 0) {
       const application = createApplication(state, { kind: "external", status: "draft", title: "Açık Platform Veri Görselleştirme Sertifikası — Senaryo", applicant: "Derya Örnek", provider: "Örnek Açık Öğrenme Merkezi", ects: 2, remoteRate: 100, evidence: 0, comparedCourse: "İstatistiksel Veri Analizi" });
@@ -637,11 +642,8 @@ export function runScenarioStep(state, kind) {
     if (index === 2) { application.similarity = 58; log(application.id, label, "review", "review", "%58 karşılaştırılabilirlik işareti; karar değildir"); }
     if (index === 3) { application.portfolioRemoteShare = 45; log(application.id, label, "review", "review", "2 AKTS ve %45 uzaktan kaynaklı transfer portföyü pilot ön kontrolü"); }
     if (index === 4) transitionApplication(state, application.id, "commission", "commission", "Kanıtlar Komisyon insan incelemesine alındı");
-    if (index === 5) transitionApplication(state, application.id, "approved", "commission", "Dış kazanım sentetik pilot kanıtlarıyla gerekçeli olarak tanındı");
-    if (index === 6) {
-      if (!state.recognizedCredits.some((item) => item.applicationId === application.id)) state.recognizedCredits.unshift({ id: `CR-${application.id}`, applicationId: application.id, title: application.title, ects: application.ects, remoteEcts: 1, status: "recognized" });
-      log(application.id, label, "approved", "ledgered", "Öğrenci kaydı yalnız yerel pilot çalışma alanında güncellendi");
-    }
+    if (index === 5) transitionApplication(state, application.id, "deferred", "commission", "Kurumsal doğrulama ve bağımsız üç tanıma kararı tamamlanmadığı için ertelendi");
+    if (index === 6) log(application.id, label, "deferred", "credit_blocked", "AKTS veya ders ikamesi kaydı oluşturulmadı");
     if (index === 7) {
       for (const target of [{ id: "obis", label: "ÖBİS" }, { id: "yoksis", label: "YÖKSİS" }]) {
         state.integrationJobs.unshift({
@@ -651,14 +653,14 @@ export function runScenarioStep(state, kind) {
           targetLabel: target.label,
           category: "Akademik kayıt aktarımı",
           applicationId: application.id,
-          status: "simulation_succeeded",
-          errorCode: "NONE",
+          status: "simulation_blocked",
+          errorCode: "INSTITUTIONAL_VALIDATION_REQUIRED",
           retryAvailable: false,
           realDataSent: false,
           at: now
         });
       }
-      log(application.id, label, "ledgered", "simulation_logged", "realDataSent=false; canlı servis çağrısı yapılmadı");
+      log(application.id, label, "credit_blocked", "simulation_blocked", "Kurumsal doğrulama yok; realDataSent=false; canlı servis çağrısı yapılmadı");
     }
   }
 
@@ -691,11 +693,36 @@ function resolveApplicationOwnerRole(payload) {
   return ownerRole;
 }
 
+function normalizeApplicationWorkload(source, requestedTotal, ects) {
+  const defaults = {
+    synchronous: 5 * ects,
+    asynchronous: 4 * ects,
+    preparation: 3 * ects,
+    practice: 3 * ects,
+    project: 3 * ects,
+    independent: 3 * ects,
+    assessment: 2 * ects,
+    feedback: 2 * ects
+  };
+  const input = source === undefined ? defaults : source;
+  if (!input || typeof input !== "object" || Array.isArray(input) || Object.keys(input).length !== workloadComponentKeys.length || workloadComponentKeys.some((key) => !Object.hasOwn(input, key))) {
+    throw new Error("Öğrenen iş yükü sekiz kanonik bileşeni eksiksiz içermelidir");
+  }
+  const components = Object.fromEntries(workloadComponentKeys.map((key) => [key, Number(input[key])]));
+  if (Object.values(components).some((value) => !Number.isFinite(value) || value < 0)) throw new Error("Öğrenen iş yükü bileşenleri negatif veya geçersiz olamaz");
+  const sum = Object.values(components).reduce((total, value) => total + value, 0);
+  const total = requestedTotal === undefined ? sum : Number(requestedTotal);
+  if (!Number.isFinite(total) || Math.abs(total - sum) > 0.001) throw new Error("Toplam öğrenen iş yükü sekiz bileşenin toplamına eşit olmalıdır");
+  if (total < 25 * ects || total > 30 * ects) throw new Error("Toplam öğrenen iş yükü 25 × AKTS ile 30 × AKTS bandında olmalıdır");
+  return { total, components };
+}
+
 function statusAction(status) {
   return {
     review: "Ön incelemeye gönderildi",
     commission: "Komisyon gündemine alındı",
     approved: "Gerekçeli pilot onayı kaydedildi",
+    deferred: "Kurumsal doğrulamaya ertelendi",
     revision: "Revizyon istendi",
     rejected: "Gerekçeli pilot ret kaydı oluşturuldu",
     credentialed: "Pilot dijital yeterlilik oluşturuldu"

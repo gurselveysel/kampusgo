@@ -1,5 +1,5 @@
 const VERIFIED_AT = "2026-08-19T22:00:00.000Z";
-export const REFERENCE_DATA_VERSION = "2026-08-20.2";
+export const REFERENCE_DATA_VERSION = "2026-08-20.3";
 
 const TYC_SOURCE = "https://www.myk.gov.tr/images/articles/TYC/Tyc_bilgi_merkezi/Seviye_Tanimlay%C4%B1cilari/TYC_Seviye_Tanimlayicilari2.pdf";
 const TYC_PAGE = "https://myk.gov.tr/tr/page/90";
@@ -7,6 +7,8 @@ const TYC_LEGAL = "https://www.myk.gov.tr/images/articles/TYC/Tyc_bilgi_merkezi/
 const EQF_SOURCE = "https://europass.europa.eu/en/description-eight-eqf-levels";
 const EQF_DISPLAY_TR = "https://europass.europa.eu/tr/description-eight-eqf-levels";
 const EQF_LEGAL = "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017H0615(01)";
+const TYYC_SOURCE = "https://uluslararasi.yok.gov.tr/Sayfalar/avrupa-yuksekogretim-alani-ile-uyum-projesi/yeterlikler-cercevesi/yuksekogretim-yeterlilik-turleri.aspx";
+const TYYC_FORM_REGISTRY = "https://www.myk.gov.tr/tr/page/174";
 
 export const qualificationFrameworks = Object.freeze([
   {
@@ -33,6 +35,24 @@ export const qualificationFrameworks = Object.freeze([
     legalSourceUrl: EQF_LEGAL,
     verifiedAt: VERIFIED_AT,
     sourceStatus: "official"
+  },
+  {
+    id: "tyyc",
+    code: "TYYÇ",
+    nameTr: "Türkiye Yükseköğretim Yeterlilikleri Çerçevesi",
+    nameEn: "National Qualifications Framework for Higher Education in Türkiye",
+    jurisdiction: "Türkiye — yükseköğretim",
+    dimensions: ["Bilgi", "Beceri", "Yetkinlik"],
+    officialSourceUrl: TYYC_SOURCE,
+    descriptorSourceUrl: TYYC_FORM_REGISTRY,
+    legalSourceUrl: TYYC_SOURCE,
+    verifiedAt: VERIFIED_AT,
+    sourceStatus: "official",
+    supportedLevels: [5, 6, 7, 8],
+    descriptorContentStatus: "official_form_registry_with_advisory_operational_summary",
+    placementClaim: false,
+    equivalenceClaim: false,
+    pilotNotice: "YÖK/MYK tarafından yayımlanan yükseköğretim yeterlilik türü form sicili temel alınır. Ekrandaki boyut metinleri formun yerine geçmeyen, insan incelemesine yönelik pilot özetlerdir."
   }
 ]);
 
@@ -83,6 +103,34 @@ export const higherEducationCycleCrosswalk = Object.freeze([
   tyycSourceUrl: "https://uluslararasi.yok.gov.tr/Sayfalar/avrupa-yuksekogretim-alani-ile-uyum-projesi/yeterlikler-cercevesi/yuksekogretim-yeterlilik-turleri.aspx",
   bolognaSourceUrl: "https://ehea.info/bologna-policy/qualification-frameworks/",
   pilotNotice: "Yalnız karşılaştırmalı TYYÇ/Bologna döngüsü önerisidir; diploma eşdeğerliği, resmî yerleştirme veya kurul kararı değildir. Kurumsal doğrulama gerekir."
+})));
+
+// YÖK, 5-8. seviyelerde altı yükseköğretim yeterlilik türü formu
+// bulunduğunu; MYK ise bu formların resmî sicilini yayımlar. Aşağıdaki kayıtlar
+// form kimliğini ve seçim bağlamını modeller. Form metni uydurulmaması için
+// `operationalDescriptorStatus` açıkça advisory tutulur; bunlar diploma
+// eşdeğerliği, TYÇ yerleştirmesi veya logo hakkı oluşturmaz.
+export const tyycQualificationTypeDescriptors = Object.freeze([
+  { id: "tyyc-type-associate-general", level: 5, qualificationType: "associate_general", titleTr: "Önlisans Diploması (Genel)", orientation: "genel/akademik", contextSignals: ["kuramsal", "akademik", "genel"] },
+  { id: "tyyc-type-associate-vocational", level: 5, qualificationType: "associate_vocational", titleTr: "Önlisans Diploması (Mesleki)", orientation: "mesleki", contextSignals: ["uygulama", "mesleki", "iş", "laboratuvar"] },
+  { id: "tyyc-type-bachelor", level: 6, qualificationType: "bachelor", titleTr: "Lisans Diploması", orientation: "genel/mesleki program bağlamı", contextSignals: ["ileri", "karmaşık", "proje", "uzmanlık"] },
+  { id: "tyyc-type-master-thesis", level: 7, qualificationType: "master_thesis", titleTr: "Yüksek Lisans Diploması (Tezli)", orientation: "araştırma", contextSignals: ["araştırma", "tez", "yeni yöntem", "literatür"] },
+  { id: "tyyc-type-master-nonthesis", level: 7, qualificationType: "master_nonthesis", titleTr: "Yüksek Lisans Diploması (Tezsiz)", orientation: "mesleki/uygulamalı uzmanlık", contextSignals: ["mesleki", "uygulama", "stratejik", "yönetim"] },
+  { id: "tyyc-type-doctorate", level: 8, qualificationType: "doctorate", titleTr: "Doktora Diploması", orientation: "özgün araştırma ve ileri uzmanlık", contextSignals: ["özgün", "doktora", "yeni bilgi", "yeniden tanımlama", "ön cephe"] }
+].map((item) => ({
+  ...item,
+  frameworkId: "tyyc",
+  officialSourceUrl: TYYC_SOURCE,
+  officialFormRegistryUrl: TYYC_FORM_REGISTRY,
+  sourcePublisher: "Yükseköğretim Kurulu / Mesleki Yeterlilik Kurumu",
+  sourceStatus: "official_form_registry_verified",
+  operationalDescriptorStatus: "advisory_summary_not_verbatim",
+  equivalenceClaim: false,
+  placementClaim: false,
+  logoRightClaim: false,
+  autonomousDecision: false,
+  institutionalValidationRequired: true,
+  verifiedAt: VERIFIED_AT
 })));
 
 export const qualificationDatasetRegistry = Object.freeze([
@@ -192,6 +240,38 @@ const eqfDescriptors = [
   { level: 8, knowledge: "Knowledge at the most advanced frontier of a field of work or study and at the interface between fields", skills: "The most advanced and specialised skills and techniques, including synthesis and evaluation, required to solve critical problems in research and/or innovation and to extend and redefine existing knowledge or professional practice", competence: "Demonstrate substantial authority, innovation, autonomy, scholarly and professional integrity and sustained commitment to the development of new ideas or processes at the forefront of work or study contexts including research" }
 ];
 
+// These four records are not verbatim replacements for the six official YÖK
+// qualification-type forms. They are an operational, dimension-based pilot
+// summary used to compare a learning outcome with the relevant higher-
+// education context. The official form registry and the candidate form type
+// remain visible on every suggestion.
+const tyycDescriptors = [
+  {
+    level: 5,
+    knowledge: "Önlisans bağlamında bir alanın temel kuramsal ve olgusal bilgi tabanını, uygulama araçlarını ve bilginin sınırlarını ilişkilendirebilme",
+    skills: "Sınırları belirli yükseköğretim problemlerinde uygun veri, yöntem ve araçları seçerek bilişsel ve uygulamalı çözüm geliştirebilme",
+    competence: "Tanımlı bir çalışma veya öğrenme bağlamında bağımsız görev yürütebilme; sorumluluk alma, öğrenmeyi sürdürme, iletişim kurma ve etik sonuçları gözetme"
+  },
+  {
+    level: 6,
+    knowledge: "Lisans bağlamında ileri kuramsal, olgusal ve metodolojik bilgiyi eleştirel bakışla ilişkilendirebilme",
+    skills: "Uzmanlık gerektiren karmaşık ve öngörülemeyen problemlerde yöntem seçme, uygulama, analiz, tasarım ve doğrulama becerisi gösterebilme",
+    competence: "Bağımsız çalışma ve karar sorumluluğu üstlenebilme; karmaşık proje/etkinlikleri yönetme, meslekî gelişimi, iletişimi, toplumsal ve etik sonuçları gözetme"
+  },
+  {
+    level: 7,
+    knowledge: "Yüksek lisans bağlamında uzmanlık bilgisini, alanlar arası ilişkileri ve araştırma veya meslekî uygulamanın güncel sınırlarını eleştirel biçimde bütünleştirebilme",
+    skills: "Yeni bilgi, yöntem veya uygulama geliştirmek üzere ileri problem çözme, araştırma/yenilik, sentez ve çok alanlı bütünleştirme becerisi gösterebilme",
+    competence: "Karmaşık ve öngörülemeyen bağlamları yönetme ve dönüştürme; stratejik sorumluluk, bağımsız yargı, ekip gelişimi, etik ve toplumsal etkiyi gözetme"
+  },
+  {
+    level: 8,
+    knowledge: "Doktora bağlamında alanın ve alanlar arası arayüzlerin en ileri sistematik bilgisini özgün ve sorgulayıcı araştırma yaklaşımıyla geliştirebilme",
+    skills: "Araştırma ve yenilikte kritik problemleri çözmek, bilgiyi veya uygulamayı genişletmek ve yeniden tanımlamak için en ileri sentez, değerlendirme ve doğrulama becerilerini kullanabilme",
+    competence: "Özgün bilgi ve süreç geliştirmede yüksek özerklik, bilimsel/meslekî bütünlük ve liderlik gösterebilme; araştırma, etik ve toplumsal sorumlulukla sürdürülebilir katkı üretebilme"
+  }
+];
+
 const eqfDisplayTrSeed = [
   { level: 1, knowledge: "Temel genel bilgiler", skills: "Basit görevleri yerine getirmek için gerekli temel beceriler", competence: "Yapılandırılmış bir çalışma veya öğrenim bağlamında, doğrudan gözetim altında çalışabilme" },
   { level: 2, knowledge: "Bir çalışma veya öğrenim alanına ilişkin temel olgusal bilgi", skills: "Basit kurallar ve araçlardan yararlanarak rutin sorunları çözmek ve bir görevi yerine getirmek amacıyla konuya ilişkin bilgileri kullanmak için gerekli temel bilişsel ve pratik beceriler", competence: "Çalışırken veya öğrenirken gözetim altında ve belli düzeyde bağımsız çalışabilme" },
@@ -239,6 +319,23 @@ export const qualificationLevelDescriptors = Object.freeze([
     officialSourceUrl: EQF_SOURCE,
     verifiedAt: VERIFIED_AT,
     displayTranslationTr: qualificationLevelTranslations.find((translation) => translation.level === item.level)
+  })),
+  ...tyycDescriptors.map((item) => ({
+    id: `tyyc-${item.level}`,
+    frameworkId: "tyyc",
+    ...item,
+    competenceLabel: "Yetkinlik",
+    sourceLanguage: "tr",
+    contentBasis: "official_form_operational_summary",
+    descriptorStatus: "advisory_summary_not_verbatim",
+    officialSourceUrl: TYYC_SOURCE,
+    officialFormRegistryUrl: TYYC_FORM_REGISTRY,
+    verifiedAt: VERIFIED_AT,
+    qualificationTypeCandidates: tyycQualificationTypeDescriptors.filter((type) => type.level === item.level),
+    equivalenceClaim: false,
+    placementClaim: false,
+    autonomousDecision: false,
+    institutionalValidationRequired: true
   }))
 ]);
 
@@ -277,7 +374,11 @@ export const qualificationMatrixExamples = Object.freeze([
   { id: "example-eqf-5", templateId: "matrix-eqf-5", frameworkId: "eqf", level: 5, frameworkDimension: "skills", learningOutcomeCode: "LO-1", learningOutcomeSample: "Sınırları belirlenmiş soyut bir veri problemi için uygulanabilir ve yaratıcı bir çözüm geliştirir.", learningLevelSample: "Apply and develop", courseContentSample: "Veri problemi tanımlama, çözüm seçenekleri ve uygulama deneyi", assessmentMethodSample: "Performans görevi + analitik rubrik", evidenceSample: "Çalışan çözüm prototipi, süreç kaydı ve rubrik kanıtı", alignmentRationaleSample: "EQF 5 düzeyindeki kapsamlı bilişsel/uygulamalı beceri ve soyut problemlere yaratıcı çözüm beklentisini örnekler.", pilotNotice: "Türkçe pilot örneğidir; resmî AYÇ çevirisi veya yeterlilik kararı değildir." },
   { id: "example-eqf-6", templateId: "matrix-eqf-6", frameworkId: "eqf", level: 6, frameworkDimension: "skills", learningOutcomeCode: "LO-1", learningOutcomeSample: "Uzmanlık alanındaki karmaşık ve öngörülemeyen bir veri sorununa yenilikçi çözüm üretir.", learningLevelSample: "Analyse, evaluate and create", courseContentSample: "İleri veri kalite analizi ve yenilikçi görselleştirme", assessmentMethodSample: "Vaka analizi + ürün dosyası + akran/uzman rubriği", evidenceSample: "Gerekçeli çözüm, çalışan ürün ve değerlendirme kaydı", alignmentRationaleSample: "EQF 6 mastery, innovation ve complex/unpredictable problem çözme beklentisiyle ilişkilidir.", pilotNotice: "Türkçe pilot örneğidir; resmî AYÇ çevirisi veya yeterlilik kararı değildir." },
   { id: "example-eqf-7", templateId: "matrix-eqf-7", frameworkId: "eqf", level: 7, frameworkDimension: "competence", learningOutcomeCode: "LO-1", learningOutcomeSample: "Karmaşık bir öğrenme bağlamını yeni stratejik yaklaşımla dönüştürür ve ekip performansını değerlendirir.", learningLevelSample: "Transform and review", courseContentSample: "Stratejik öğrenme analitiği tasarımı ve değişim yönetimi", assessmentMethodSample: "Strateji dosyası + kurul simülasyonu + rubrik", evidenceSample: "Dönüşüm planı, risk kaydı, performans ölçütleri ve gerekçeli değerlendirme", alignmentRationaleSample: "EQF 7 complex/unpredictable contexts ile strategic performance review beklentisini örnekler.", pilotNotice: "Türkçe pilot örneğidir; resmî AYÇ çevirisi veya yeterlilik kararı değildir." },
-  { id: "example-eqf-8", templateId: "matrix-eqf-8", frameworkId: "eqf", level: 8, frameworkDimension: "competence", learningOutcomeCode: "LO-1", learningOutcomeSample: "Araştırmanın ön cephesinde yeni bir yöntem geliştirir ve bilimsel/meslekî bütünlükle sürdürülebilir biçimde doğrular.", learningLevelSample: "Originate, validate and lead", courseContentSample: "En ileri araştırma yöntemi, sentez, değerlendirme ve bilimsel bütünlük", assessmentMethodSample: "Özgün araştırma ürünü + bağımsız savunma + uzman değerlendirmesi", evidenceSample: "Tekrarlanabilir yöntem, bağımsız doğrulama, etik analiz ve uzman tutanağı", alignmentRationaleSample: "EQF 8 authority, innovation, autonomy, integrity ve sustained commitment beklentilerini örnekler.", pilotNotice: "Türkçe pilot örneğidir; resmî AYÇ çevirisi veya yeterlilik kararı değildir." }
+  { id: "example-eqf-8", templateId: "matrix-eqf-8", frameworkId: "eqf", level: 8, frameworkDimension: "competence", learningOutcomeCode: "LO-1", learningOutcomeSample: "Araştırmanın ön cephesinde yeni bir yöntem geliştirir ve bilimsel/meslekî bütünlükle sürdürülebilir biçimde doğrular.", learningLevelSample: "Originate, validate and lead", courseContentSample: "En ileri araştırma yöntemi, sentez, değerlendirme ve bilimsel bütünlük", assessmentMethodSample: "Özgün araştırma ürünü + bağımsız savunma + uzman değerlendirmesi", evidenceSample: "Tekrarlanabilir yöntem, bağımsız doğrulama, etik analiz ve uzman tutanağı", alignmentRationaleSample: "EQF 8 authority, innovation, autonomy, integrity ve sustained commitment beklentilerini örnekler.", pilotNotice: "Türkçe pilot örneğidir; resmî AYÇ çevirisi veya yeterlilik kararı değildir." },
+  { id: "example-tyyc-5", templateId: "matrix-tyyc-5", frameworkId: "tyyc", level: 5, frameworkDimension: "skills", learningOutcomeCode: "ÖÇ-1", learningOutcomeSample: "Sınırları belirli bir uygulama probleminde uygun yöntemi seçer ve sonucu kanıtla doğrular.", learningLevelSample: "Uygulama ve doğrulama", courseContentSample: "Yöntem seçimi, kontrollü uygulama ve sonuç doğrulama", assessmentMethodSample: "Uygulama görevi + analitik rubrik", evidenceSample: "Süreç kaydı, ürün ve rubrik sonucu", alignmentRationaleSample: "Önlisans genel/mesleki tür seçimi ayrıca insan gerekçesiyle yapılır.", pilotNotice: "YÖK/MYK resmî form siciline dayalı advisory örnektir; diploma eşdeğerliği değildir." },
+  { id: "example-tyyc-6", templateId: "matrix-tyyc-6", frameworkId: "tyyc", level: 6, frameworkDimension: "skills", learningOutcomeCode: "ÖÇ-1", learningOutcomeSample: "Karmaşık ve öngörülemeyen bir veri sorununa yenilikçi çözüm tasarlar ve doğrular.", learningLevelSample: "Analiz, tasarım ve doğrulama", courseContentSample: "İleri yöntem seçimi, prototipleme ve kanıt değerlendirme", assessmentMethodSample: "Performans görevi + ürün dosyası + savunma", evidenceSample: "Çalışan ürün, karar günlüğü, rubrik ve savunma tutanağı", alignmentRationaleSample: "Lisans türü için önerilen pedagojik referans düzeyi bağlamında ileri beceri kanıtı sunar.", pilotNotice: "TYYÇ tür formunun yerine geçmeyen pilot özettir; kurumsal doğrulama gerekir." },
+  { id: "example-tyyc-7", templateId: "matrix-tyyc-7", frameworkId: "tyyc", level: 7, frameworkDimension: "knowledge", learningOutcomeCode: "ÖÇ-1", learningOutcomeSample: "Alanlar arası uzmanlık bilgisini bütünleştirerek yeni bir yöntem önerir ve araştırma/uygulama gerekçesini savunur.", learningLevelSample: "Sentez, araştırma ve savunma", courseContentSample: "Uzmanlık literatürü, yöntem geliştirme ve alanlar arası bütünleştirme", assessmentMethodSample: "Araştırma/uygulama tasarısı + kurul savunması", evidenceSample: "Kaynak izi, yöntem protokolü, rubrik ve savunma tutanağı", alignmentRationaleSample: "Tezli/tezsiz yüksek lisans türü seçimi ayrı insan gerekçesi gerektirir.", pilotNotice: "Resmî derece veya tez eşdeğerliği iddiası taşımaz." },
+  { id: "example-tyyc-8", templateId: "matrix-tyyc-8", frameworkId: "tyyc", level: 8, frameworkDimension: "competence", learningOutcomeCode: "ÖÇ-1", learningOutcomeSample: "Alan sınırlarını genişleten özgün bir yaklaşım geliştirir, bağımsız doğrular ve bilimsel/etik etkisine liderlik eder.", learningLevelSample: "Özgün üretim, doğrulama ve liderlik", courseContentSample: "En ileri araştırma, özgün katkı, bilimsel bütünlük ve etik etki", assessmentMethodSample: "Özgün araştırma ürünü + bağımsız jüri savunması", evidenceSample: "Tekrarlanabilir yöntem, bağımsız doğrulama, etik analiz ve jüri kaydı", alignmentRationaleSample: "Yalnız önerilen TYYÇ doktora pedagojik referans düzeyi bağlamıdır.", pilotNotice: "Doktora derecesi, eşdeğerliği veya resmî yerleştirme iddiası değildir." }
 ]);
 
 export const financeHandoffRoutes = Object.freeze([
@@ -357,10 +458,10 @@ export const financeHandoffRoutes = Object.freeze([
 
 export const roleWorkflowOverviews = Object.freeze([
   { roleId: "learner", roleLabel: "Öğrenen / Öğrenci", title: "Öğrenen / Öğrenci genel bakışı", summary: "Katalog, başvuru, eğitim, değerlendirme, ödeme simülasyonu ve dijital yeterlilik durumlarını izler.", primaryPage: "catalog", responsibilities: ["Kataloğu inceleme", "Kendi başvurusunu oluşturma", "Ödeme simülasyonunu görme", "Pilot belgeyi doğrulama"], allowedActions: ["catalog.read", "application.create_own", "payment.simulate_own", "credential.verify_own"], prohibitedActions: ["commission.decide", "finance.reconcile", "integration.enable", "real_payment.send"], financeHandoffVisibility: true },
-  { roleId: "instructor", roleLabel: "Üniversite içi eğitici", title: "Üniversite içi eğitici genel bakışı", summary: "Program önerisini TYÇ/AYÇ matrisi, AKTS iş yükü, ölçme planı ve kalite kanıtlarıyla hazırlar.", primaryPage: "proposal", responsibilities: ["Program taslağı", "TYÇ/AYÇ matrisi", "İş yükü gerekçesi", "Revizyon yanıtı"], allowedActions: ["proposal.create_own", "matrix.fill_own", "proposal.submit_own", "revision.respond_own"], prohibitedActions: ["commission.decide", "finance.collect", "integration.enable", "other_application.read"], financeHandoffVisibility: false },
-  { roleId: "externalInstructor", roleLabel: "Kurum dışı eğitici", title: "Kurum dışı eğitici genel bakışı", summary: "Kendi program önerisini, sentetik kanıt üst verisini ve TYÇ/AYÇ uyum matrisini yönetir.", primaryPage: "proposal", responsibilities: ["Program önerisi", "TYÇ/AYÇ matrisi", "Kanıt üst verisi", "Revizyon yanıtı"], allowedActions: ["proposal.create_own", "matrix.fill_own", "evidence.metadata_add_own", "revision.respond_own"], prohibitedActions: ["commission.decide", "student_record.write", "finance.collect", "other_application.read"], financeHandoffVisibility: false },
+  { roleId: "instructor", roleLabel: "Üniversite içi eğitici", title: "Üniversite içi eğitici genel bakışı", summary: "Program önerisini TYÇ/AYÇ/TYYÇ matrisi, AKTS iş yükü, ölçme planı ve kalite kanıtlarıyla hazırlar.", primaryPage: "proposal", responsibilities: ["Program taslağı", "TYÇ/AYÇ/TYYÇ matrisi", "İş yükü gerekçesi", "Revizyon yanıtı"], allowedActions: ["proposal.create_own", "matrix.fill_own", "proposal.submit_own", "revision.respond_own"], prohibitedActions: ["commission.decide", "finance.collect", "integration.enable", "other_application.read"], financeHandoffVisibility: false },
+  { roleId: "externalInstructor", roleLabel: "Kurum dışı eğitici", title: "Kurum dışı eğitici genel bakışı", summary: "Kendi program önerisini, sentetik kanıt üst verisini ve TYÇ/AYÇ/TYYÇ uyum matrisini yönetir.", primaryPage: "proposal", responsibilities: ["Program önerisi", "TYÇ/AYÇ/TYYÇ matrisi", "Kanıt üst verisi", "Revizyon yanıtı"], allowedActions: ["proposal.create_own", "matrix.fill_own", "evidence.metadata_add_own", "revision.respond_own"], prohibitedActions: ["commission.decide", "student_record.write", "finance.collect", "other_application.read"], financeHandoffVisibility: false },
   { roleId: "coordinator", roleLabel: "Koordinatörlük / SEM", title: "Koordinatörlük / SEM genel bakışı", summary: "Eksik belge, süre ve idari ön kontrolleri yürütür; komisyon ve Mali İşler yönlendirmelerini koordine eder.", primaryPage: "applications", responsibilities: ["Ön kontrol", "Eksik belge/revizyon", "SLA izleme", "Komisyon sevki", "Mali yönlendirme"], allowedActions: ["application.review", "revision.request", "commission.queue", "finance.handoff", "report.read"], prohibitedActions: ["commission.final_decision", "finance.reconcile", "integration.enable", "real_notification.send"], financeHandoffVisibility: true },
-  { roleId: "commission", roleLabel: "Mikro Yeterlilik Komisyonu üyesi", title: "Mikro Yeterlilik Komisyonu genel bakışı", summary: "Kanıtları ve TYÇ/AYÇ matrislerini inceler; gerekçeli akademik pilot görüşünü insan olarak kaydeder.", primaryPage: "commission", responsibilities: ["Kanıt/matris inceleme", "Karar olmayan AI analizi", "Gerekçeli oy", "Karar geçmişi"], allowedActions: ["evidence.review", "matrix.review", "commission.vote", "commission.reason", "audit.read"], prohibitedActions: ["ai.autonomous_decision", "finance.collect", "integration.enable", "real_board_decision.publish"], financeHandoffVisibility: false },
+  { roleId: "commission", roleLabel: "Mikro Yeterlilik Komisyonu üyesi", title: "Mikro Yeterlilik Komisyonu genel bakışı", summary: "Kanıtları ve TYÇ/AYÇ/TYYÇ matrislerini inceler; gerekçeli akademik pilot görüşünü insan olarak kaydeder.", primaryPage: "commission", responsibilities: ["Kanıt/matris inceleme", "Karar olmayan AI analizi", "Gerekçeli oy", "Karar geçmişi"], allowedActions: ["evidence.review", "matrix.review", "commission.vote", "commission.reason", "audit.read"], prohibitedActions: ["ai.autonomous_decision", "finance.collect", "integration.enable", "real_board_decision.publish"], financeHandoffVisibility: false },
   { roleId: "studentAffairs", roleLabel: "Öğrenci İşleri", title: "Öğrenci İşleri genel bakışı", summary: "Pilot kayıtların AKTS, program ve belge alanlarını kontrol eder; ÖBİS/YÖKSİS aktarımını dry-run olarak görür.", primaryPage: "applications", responsibilities: ["AKTS kontrolü", "Belge alanı doğrulama", "Aktarım taslağı", "İstisna raporu"], allowedActions: ["student_record.review", "ects.validate", "credential.fields_review", "transfer.dry_run"], prohibitedActions: ["commission.decide", "integration.enable", "real_student_record.write", "real_transfer.send"], financeHandoffVisibility: false },
   { roleId: "it", roleLabel: "Bilgi İşlem", title: "Bilgi İşlem genel bakışı", summary: "Kapalı entegrasyon kartlarını, onay kapılarını, hata/yeniden deneme senaryolarını ve rol denetimini yönetir.", primaryPage: "integrations", responsibilities: ["Entegrasyon sağlığı", "Örnek istek/hata", "Yetki matrisi", "Audit log", "Mali entegrasyon taslağı"], allowedActions: ["integration.simulate", "integration.retry_dry_run", "rbac.audit", "audit.read", "finance.integration_review"], prohibitedActions: ["commission.decide", "real_endpoint.call", "secret.store_in_client", "production.promote"], financeHandoffVisibility: true },
   { roleId: "finance", roleLabel: "Finans / Döner Sermaye", title: "Finans / Döner Sermaye genel bakışı", summary: "Örnek tahsilat, mutabakat, fatura ve hak ediş taslaklarını; GİB ile MYS/MAYS kapılarını inceler.", primaryPage: "finance", responsibilities: ["Ödeme simülasyonu", "Mutabakat taslağı", "Fatura/e-Arşiv taslağı", "Hak ediş", "GİB ve MYS/MAYS"], allowedActions: ["payment.simulate", "finance.reconcile_draft", "invoice.draft", "entitlement.review", "finance.parameters_configure"], prohibitedActions: ["real_payment.collect", "real_invoice.issue", "real_tax_rule.assert", "real_accounting_transfer.send"], financeHandoffVisibility: true },
@@ -376,12 +477,12 @@ const roleStepSeed = {
   ],
   instructor: [
     ["proposal", "Program önerisini hazırla", "Öğrenme çıktısı, iş yükü ve yöntem alanlarını doldurur.", "Taslağı aç", null, false],
-    ["proposal", "TYÇ/AYÇ matrisini doldur", "Seviye, hedef, içerik, ölçme ve kanıt alanlarını eşler.", "Matrisi düzenle", null, false],
+    ["proposal", "TYÇ/AYÇ/TYYÇ matrisini doldur", "Üç çerçevede seviye, hedef, içerik, ölçme ve kanıt alanlarını ayrı eşler.", "Matrisi düzenle", null, false],
     ["applications", "Koordinatörlüğe gönder", "Kendi taslağını idari ön kontrole iletir.", "Ön kontrole gönder", "coordinator", false]
   ],
   externalInstructor: [
     ["proposal", "Dış eğitici önerisini hazırla", "Program ve sentetik kanıt üst verisini oluşturur.", "Öneriyi aç", null, false],
-    ["proposal", "TYÇ/AYÇ matrisini doldur", "Seçilen seviyeye göre hedef, içerik ve ölçme kanıtını açıklar.", "Matrisi düzenle", null, false],
+    ["proposal", "TYÇ/AYÇ/TYYÇ matrisini doldur", "Seçilen çerçeve ve seviyeye göre hedef, içerik ve ölçme kanıtını açıklar.", "Matrisi düzenle", null, false],
     ["applications", "Kanıt kontrolüne gönder", "Üst veri ve kontrol listesi koordinatörlüğe iletilir.", "Ön kontrole gönder", "coordinator", false]
   ],
   coordinator: [
@@ -390,7 +491,7 @@ const roleStepSeed = {
     ["commission", "Komisyon gündemi", "Tam dosya komisyon incelemesine sevk edilir.", "Komisyona sevk et", "commission", false]
   ],
   commission: [
-    ["commission", "Kanıt ve matris incelemesi", "TYÇ/AYÇ, Bologna, AKTS ve ölçme kanıtları karşılaştırılır.", "İncelemeyi aç", null, false],
+    ["commission", "Kanıt ve matris incelemesi", "TYÇ, AYÇ/EQF ve TYYÇ adayları; Bologna, AKTS ve ölçme kanıtlarıyla karşılaştırılır.", "İncelemeyi aç", null, false],
     ["commission", "Gerekçeli görüş", "İnsan üye onay, revizyon, ret veya çekimser görüşü gerekçelendirir.", "Görüş kaydet", null, false],
     ["audit", "Karar geçmişi", "Pilot görüş değişiklikleri denetim izinde görüntülenir.", "Geçmişi aç", null, false]
   ],
@@ -439,15 +540,21 @@ const pilotDraftRows = {
     { dimension: "knowledge", learningOutcome: "Explains complex data-quality assumptions from an advanced and critical perspective.", learningLevel: "Analysis", courseContent: "Data-quality dimensions, indicator validity and evidence limits", assessmentMethod: "Reasoned case analysis with an analytic rubric", evidence: "Case report, source trace and rubric record", alignmentRationale: "Mapped to advanced knowledge involving a critical understanding at EQF level 6." },
     { dimension: "competence", learningOutcome: "Manages a complex pilot task and takes responsibility for reviewing team performance.", learningLevel: "Evaluation and responsibility", courseContent: "Project controls, review criteria and improvement cycles", assessmentMethod: "Team simulation, observation checklist and reflective brief", evidence: "Decision log, observation record and improvement proposal", alignmentRationale: "Mapped to managing complex activities and responsibility for professional development at EQF level 6." },
     { dimension: "skills", learningOutcome: "Develops and validates an innovative response to an unpredictable data-quality problem.", learningLevel: "Evaluate and create", courseContent: "Solution alternatives, prototype construction and validation planning", assessmentMethod: "Performance task, product portfolio and analytic rubric", evidence: "Working prototype, decision trace and validation result", alignmentRationale: "Mapped to advanced skills demonstrating mastery and innovation at EQF level 6." }
+  ],
+  tyyc: [
+    { dimension: "knowledge", learningOutcome: "Karmaşık bir veri probleminin ileri kuramsal ve metodolojik bileşenlerini eleştirel biçimde ilişkilendirir.", learningLevel: "Analiz ve gerekçelendirme", courseContent: "Lisans bağlamında kuram, yöntem, kaynak güvenilirliği ve kanıt sınırları", assessmentMethod: "Gerekçeli vaka analizi ve analitik rubrik", evidence: "Kaynak izli rapor, rubrik ve insan değerlendirici kaydı", alignmentRationale: "TYYÇ lisans türü için yalnız önerilen pedagojik referans düzeyi bağlamında ileri bilgi kanıtı sunar." },
+    { dimension: "skills", learningOutcome: "Öngörülemeyen bir veri sorununa yöntem seçerek yenilikçi ve doğrulanabilir çözüm tasarlar.", learningLevel: "Değerlendirme ve üretme", courseContent: "Yöntem seçimi, prototip, doğrulama ve hata analizi", assessmentMethod: "Karmaşık performans görevi, ürün dosyası ve analitik rubrik", evidence: "Çalışan prototip, karar günlüğü ve doğrulama sonucu", alignmentRationale: "TYYÇ lisans türü için karmaşık problem, ileri beceri ve doğrulama kanıtı arasında açıklanabilir pilot bağ kurar." },
+    { dimension: "competence", learningOutcome: "Belirsiz proje koşullarında bağımsız karar alır; ekip gelişimi ile etik sonuçlar için sorumluluk üstlenir.", learningLevel: "Bağımsız karar ve sorumluluk", courseContent: "Proje yönetimi, ekip gelişimi, erişilebilirlik ve etik risk", assessmentMethod: "Ekip simülasyonu, karar savunması ve çok kaynaklı rubrik", evidence: "Karar günlüğü, risk kaydı, savunma tutanağı ve rubrik", alignmentRationale: "TYYÇ lisans türü bağlamında bağımsızlık, sorumluluk ve etik yargı için gözlenebilir pilot kanıt üretir." }
   ]
 };
 
 export const qualificationMatrixDrafts = Object.freeze([
   { id: "DRF-MAT-TYC-6-001", frameworkId: "tyc", level: 6, programTitle: "Veri ile karar verme — TYÇ 6 pilot matrisi", ownerRole: "instructor", ownerName: "Dr. Öğr. Üyesi Ekin Demir", status: "pilot_draft", updatedAt: "2026-08-19T23:50:00.000Z", rows: pilotDraftRows.tyc },
-  { id: "DRF-MAT-EQF-6-001", frameworkId: "eqf", level: 6, programTitle: "Veri ile karar verme — AYÇ/EQF 6 pilot matrisi", ownerRole: "externalInstructor", ownerName: "Uzman Eğitici Selin Ada", status: "pilot_draft", updatedAt: "2026-08-19T23:50:00.000Z", rows: pilotDraftRows.eqf }
+  { id: "DRF-MAT-EQF-6-001", frameworkId: "eqf", level: 6, programTitle: "Veri ile karar verme — AYÇ/EQF 6 pilot matrisi", ownerRole: "externalInstructor", ownerName: "Uzman Eğitici Selin Ada", status: "pilot_draft", updatedAt: "2026-08-19T23:50:00.000Z", rows: pilotDraftRows.eqf },
+  { id: "DRF-MAT-TYYC-6-001", frameworkId: "tyyc", level: 6, programTitle: "Veri ile karar verme — TYYÇ lisans türü pilot matrisi", ownerRole: "instructor", ownerName: "Dr. Öğr. Üyesi Ekin Demir", status: "pilot_draft", updatedAt: "2026-08-20T16:00:00.000Z", rows: pilotDraftRows.tyyc }
 ].map((draft) => ({
   ...draft,
-  sourceUrl: draft.frameworkId === "tyc" ? TYC_SOURCE : EQF_SOURCE,
+  sourceUrl: draft.frameworkId === "tyc" ? TYC_SOURCE : draft.frameworkId === "eqf" ? EQF_SOURCE : TYYC_FORM_REGISTRY,
   institutionalValidationRequired: true,
   realSystemEffect: false,
   isSynthetic: true
@@ -485,6 +592,7 @@ export const qualificationReferenceSnapshot = Object.freeze({
   verifiedAt: VERIFIED_AT,
   frameworks: qualificationFrameworks,
   descriptors: qualificationLevelDescriptors,
+  tyycTypeDescriptors: tyycQualificationTypeDescriptors,
   descriptorTranslations: qualificationLevelTranslations,
   higherEducationCycles: higherEducationCycleCrosswalk,
   datasetRegistry: qualificationDatasetRegistry,
@@ -498,8 +606,8 @@ export const qualificationReferenceSnapshot = Object.freeze({
   roleOverviews: roleWorkflowOverviews,
   roleSteps: roleWorkflowSteps,
   notices: {
-    officialData: "TYÇ ve AYÇ/EQF seviye tanımlayıcıları kamuya açık resmî kaynaklardan doğrulanmıştır.",
-    pilotData: "Şablonlar, örnekler, TYYÇ/Bologna döngüsü öneri köprüsü, mali yönlendirmeler ve rol akışları sentetiktir; kurumsal doğrulama gerekir.",
+    officialData: "TYÇ ve AYÇ/EQF seviye tanımlayıcıları ile TYYÇ 5–8 düzey/altı yeterlilik türü form sicili kamuya açık resmî kaynaklardan doğrulanmıştır.",
+    pilotData: "TYYÇ boyut metinleri verbatim form metni değil advisory operational özetlerdir; şablonlar, örnekler, öneri köprüsü, mali yönlendirmeler ve rol akışları sentetiktir ve kurumsal doğrulama gerekir.",
     noLiveEffects: "Gerçek ödeme, fatura, aktarım, kişisel veri veya canlı kurumsal sistem bağlantısı yoktur."
   }
 });

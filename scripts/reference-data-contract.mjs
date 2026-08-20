@@ -10,6 +10,7 @@ import {
   qualificationMatrixTemplates,
   qualificationMatrixExamples,
   qualificationMatrixDrafts,
+  tyycQualificationTypeDescriptors,
   financeHandoffRoutes,
   roleWorkflowOverviews,
   roleWorkflowSteps,
@@ -19,16 +20,19 @@ import {
 } from "../src/reference-data.js";
 
 const migrationPath = new URL("../supabase/migrations/20260820010000_framework_matrix_finance_role_seed.sql", import.meta.url);
+const tyycMigrationPath = new URL("../supabase/migrations/20260820032000_tyyc_smart_alignment_program_spine.sql", import.meta.url);
 const adapterPath = new URL("../src/supabase.js", import.meta.url);
 const sql = await readFile(migrationPath, "utf8");
+const tyycSql = await readFile(tyycMigrationPath, "utf8");
 const adapter = await readFile(adapterPath, "utf8");
-const normalizedSql = sql.replaceAll("''", "'");
+const normalizedSql = `${sql}\n${tyycSql}`.replaceAll("''", "'");
 
-assert.equal(REFERENCE_DATA_VERSION, "2026-08-20.2");
+assert.equal(REFERENCE_DATA_VERSION, "2026-08-20.3");
 assert.deepEqual(
   {
     frameworks: qualificationFrameworks.length,
     descriptors: qualificationLevelDescriptors.length,
+    tyycTypes: tyycQualificationTypeDescriptors.length,
     translations: qualificationLevelTranslations.length,
     datasets: qualificationDatasetRegistry.length,
     qualifications: officialQualificationReferences.length,
@@ -42,14 +46,15 @@ assert.deepEqual(
     paymentEvents: pilotPaymentEvents.length
   },
   {
-    frameworks: 2,
-    descriptors: 16,
+    frameworks: 3,
+    descriptors: 20,
+    tyycTypes: 6,
     translations: 8,
     datasets: 2,
     qualifications: 6,
-    templates: 16,
-    examples: 8,
-    drafts: 2,
+    templates: 20,
+    examples: 12,
+    drafts: 3,
     financeRoutes: 4,
     roles: 9,
     roleSteps: 25,
@@ -68,6 +73,7 @@ assert.doesNotMatch(sql, /service_role|secret[_-]?key|card_number|iban/i);
 for (const item of [
   ...qualificationFrameworks,
   ...qualificationLevelDescriptors,
+  ...tyycQualificationTypeDescriptors,
   ...qualificationLevelTranslations,
   ...qualificationDatasetRegistry,
   ...officialQualificationReferences,
@@ -102,6 +108,10 @@ for (const draft of qualificationMatrixDrafts) {
 }
 
 assert.equal(qualificationLevelDescriptors.filter((item) => item.frameworkId === "eqf" && item.sourceLanguage === "en").length, 8);
+assert.deepEqual(qualificationLevelDescriptors.filter((item) => item.frameworkId === "tyyc").map((item) => item.level), [5, 6, 7, 8]);
+assert.ok(qualificationLevelDescriptors.filter((item) => item.frameworkId === "tyyc").every((item) => item.contentBasis === "official_form_operational_summary" && item.descriptorStatus === "advisory_summary_not_verbatim"));
+assert.equal(tyycQualificationTypeDescriptors.length, 6);
+assert.ok(tyycQualificationTypeDescriptors.every((item) => item.sourceStatus === "official_form_registry_verified" && item.operationalDescriptorStatus === "advisory_summary_not_verbatim" && item.equivalenceClaim === false && item.placementClaim === false && item.logoRightClaim === false));
 assert.equal(qualificationLevelTranslations.find((item) => item.level === 7)?.skillsBasis, "institutional_operational_translation");
 assert.equal(officialQualificationReferences.filter((item) => item.responsibleInstitution === "Kütahya Dumlupınar Üniversitesi").length, 6);
 assert.equal(officialQualificationReferences.find((item) => item.qualificationCode === "TR0030009011")?.creditValueEcts, 240);
@@ -121,6 +131,13 @@ for (const view of [
   "pilot_payment_request_catalog",
   "pilot_payment_event_catalog"
 ]) assert.ok(adapter.includes(view), `Supabase adapter missing ${view}`);
+for (const view of [
+  "qualification_tyyc_type_descriptor_catalog",
+  "pilot_qualification_program_summary_v2_catalog",
+  "pilot_learning_outcome_suggestion_v2_catalog",
+  "pilot_qualification_program_spine_catalog",
+  "pilot_constructive_alignment_catalog"
+]) assert.ok(adapter.includes(view), `Supabase adapter missing TYYÇ/program-spine view ${view}`);
 
 console.log("reference-data-contract: OK", {
   version: REFERENCE_DATA_VERSION,

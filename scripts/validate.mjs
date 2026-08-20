@@ -2,7 +2,8 @@ import { existsSync, readFileSync } from "node:fs";
 import {
   qualificationFrameworks,
   qualificationLevelDescriptors,
-  qualificationMatrixTemplates
+  qualificationMatrixTemplates,
+  tyycQualificationTypeDescriptors
 } from "../src/reference-data.js";
 import {
   dpuInstitutionalSystems,
@@ -17,16 +18,20 @@ const required = [
   "styles.css",
   "src/app.js",
   "src/data.js",
+  "src/directive-pilot.js",
   "src/institutional-integration-reference.js",
   "src/workflow.js",
   "src/reference-data.js",
   "src/qualification-suggestion.js",
+  "src/smart-snapshot.js",
   "src/supabase.js",
   "scripts/build-static.mjs",
   "scripts/institutional-integration-contract.mjs",
   "scripts/qualification-suggestion-contract.mjs",
   "scripts/reference-data-contract.mjs",
   "scripts/smart-alignment-contract.mjs",
+  "scripts/directive-pilot-contract.mjs",
+  "scripts/directive-access-hardening-contract.mjs",
   "README.md",
   "docs/smart-alignment-acceptance.md",
   "docs/source-traceability.md",
@@ -41,7 +46,19 @@ const required = [
   "supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql",
   "supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql",
   "supabase/migrations/20260820020000_smart_qualification_suggestion_engine.sql",
-  "supabase/migrations/20260820021000_smart_qualification_performance_indexes.sql"
+  "supabase/migrations/20260820021000_smart_qualification_performance_indexes.sql",
+  "supabase/migrations/20260820030000_directive_alignment_pilot_schema.sql",
+  "supabase/migrations/20260820031000_directive_alignment_performance_indexes.sql",
+  "supabase/migrations/20260820032000_tyyc_smart_alignment_program_spine.sql",
+  "supabase/rollback/20260820032000_tyyc_smart_alignment_program_spine.rollback.sql",
+  "supabase/rollback/20260820031000_directive_alignment_performance_indexes.rollback.sql",
+  "supabase/migrations/20260820033000_directive_reference_access_hardening.sql",
+  "supabase/rollback/20260820033000_directive_reference_access_hardening.rollback.sql",
+  "supabase/migrations/20260820034000_tyyc_spine_integrity_performance.sql",
+  "supabase/rollback/20260820034000_tyyc_spine_integrity_performance.rollback.sql",
+  "supabase/reference/directive_official_sources.json",
+  "supabase/tests/20260820033000_directive_access_hardening.sql",
+  "supabase/tests/20260820034000_tyyc_spine_integrity.sql"
 ];
 
 const missing = required.filter((file) => {
@@ -57,21 +74,25 @@ if (dpuInstitutionalSystems.some((item) => item.realDataEnabled !== false || ite
   throw new Error("DPÜ kurumsal entegrasyon kataloğu güvenli pilot veya kaynak URL sınırını ihlal ediyor");
 }
 
-if (qualificationFrameworks.length !== 2 || !qualificationFrameworks.some((item) => item.id === "tyc") || !qualificationFrameworks.some((item) => item.id === "eqf")) {
-  throw new Error("TYÇ ve AYÇ/EQF çerçeve tanımları eksik");
+if (qualificationFrameworks.length !== 3 || !["tyc", "eqf", "tyyc"].every((frameworkId) => qualificationFrameworks.some((item) => item.id === frameworkId))) {
+  throw new Error("TYÇ, AYÇ/EQF ve TYYÇ çerçeve tanımları eksik");
 }
-for (const frameworkId of ["tyc", "eqf"]) {
+for (const frameworkId of ["tyc", "eqf", "tyyc"]) {
   const descriptors = qualificationLevelDescriptors.filter((item) => item.frameworkId === frameworkId);
   const templates = qualificationMatrixTemplates.filter((item) => item.frameworkId === frameworkId);
-  if (descriptors.length !== 8 || templates.length !== 8) {
-    throw new Error(`${frameworkId} için 8 seviye tanımlayıcısı ve 8 matris şablonu zorunludur`);
+  const expectedLevels = frameworkId === "tyyc" ? [5, 6, 7, 8] : [1, 2, 3, 4, 5, 6, 7, 8];
+  if (descriptors.length !== expectedLevels.length || templates.length !== expectedLevels.length) {
+    throw new Error(`${frameworkId} için ${expectedLevels.length} seviye tanımlayıcısı ve matris şablonu zorunludur`);
   }
-  if (descriptors.some((item, index) => item.level !== index + 1 || !item.knowledge || !item.skills || !item.competence)) {
-    throw new Error(`${frameworkId} seviye 1–8 tanımlayıcı bütünlüğü bozuk`);
+  if (descriptors.some((item, index) => item.level !== expectedLevels[index] || !item.knowledge || !item.skills || !item.competence)) {
+    throw new Error(`${frameworkId} seviye tanımlayıcı bütünlüğü bozuk`);
   }
   if (templates.some((item) => item.institutionalValidationRequired !== true || item.isSyntheticTemplate !== true)) {
     throw new Error(`${frameworkId} şablonlarında pilot/kurumsal doğrulama sınırı eksik`);
   }
+}
+if (tyycQualificationTypeDescriptors.length !== 6 || !tyycQualificationTypeDescriptors.every((item) => item.level >= 5 && item.level <= 8 && item.operationalDescriptorStatus === "advisory_summary_not_verbatim" && item.placementClaim === false && item.equivalenceClaim === false && item.logoRightClaim === false)) {
+  throw new Error("TYYÇ 5–8 düzeyindeki altı resmî form türü/advisory sınırı eksik");
 }
 
 const html = readFileSync("index.html", "utf8");
@@ -79,7 +100,14 @@ for (const ref of ["styles.css", "src/app.js", "kdpu-logo-web.png", "go-icon-web
   if (!html.includes(ref)) throw new Error(`index.html içinde beklenen referans yok: ${ref}`);
 }
 
-const source = ["index.html", "styles.css", "src/app.js", "src/data.js", "src/qualification-suggestion.js"].map((file) => readFileSync(file, "utf8")).join("\n");
+const source = ["index.html", "styles.css", "src/app.js", "src/data.js", "src/directive-pilot.js", "src/qualification-suggestion.js"].map((file) => readFileSync(file, "utf8")).join("\n");
+const appSource = readFileSync("src/app.js", "utf8");
+if (!appSource.includes('canonical: "Kanonik tanımlayıcı"') || !appSource.includes('tyyc: "YÖK/MYK form siciline dayalı pilot operasyonel özet — birebir alıntı değildir"')) {
+  throw new Error("Akıllı öneri UI'sında TYÇ/AYÇ kanonik tanımlayıcısı ile TYYÇ form siciline dayalı, birebir olmayan pilot özet provenansı ayrılmıyor");
+}
+if (/<dt>Kanonik tanımlayıcı<\/dt>/.test(appSource)) {
+  throw new Error("TYYÇ dahil bütün çerçevelere koşulsuz kanonik tanımlayıcı etiketi uygulanamaz");
+}
 for (const forbidden of ["vercel --prod", "service_role", "sk_live_", "Gerçek veri gönderildi"]) {
   if (source.includes(forbidden)) throw new Error(`Yasaklı production ifadesi bulundu: ${forbidden}`);
 }

@@ -506,6 +506,40 @@ tbody tr:hover td { background: #fbfaf8; }
 .smart-review-card [data-smart-suggestion] { box-shadow: none; }
 .smart-review-card .permission-note { margin-bottom: 0; }
 
+.governance-scope { border-top: 4px solid var(--purple); }
+.governance-definition { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
+.governance-definition > div { min-width: 0; padding: 12px; border: 1px solid var(--border-soft); border-radius: 9px; background: var(--paper); }
+.governance-definition dt { color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.governance-definition dd { margin: 5px 0 0; overflow-wrap: anywhere; color: var(--navy); font-size: 11px; line-height: 1.5; }
+.governance-policy-list { display: grid; gap: 10px; }
+.governance-policy-list article { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px 12px; padding: 12px; border: 1px solid var(--border-soft); border-radius: 9px; }
+.governance-policy-list article > div:first-child { min-width: 0; }
+.governance-policy-list strong, .governance-policy-list span, .governance-policy-list small { display: block; }
+.governance-policy-list strong { overflow-wrap: anywhere; color: var(--navy); font-size: 11px; line-height: 1.45; }
+.governance-policy-list span, .governance-policy-list small { color: var(--muted); font-size: 9.5px; }
+.governance-policy-list small { grid-column: 1 / -1; }
+.band-list { display: grid; gap: 7px; }
+.band-list > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid var(--border-soft); border-radius: 8px; }
+.band-list strong { color: var(--navy); font-size: 11px; }
+.band-list span { color: var(--purple); font-size: 11px; font-weight: 750; }
+.governance-rule-table table { min-width: 900px; }
+.recognition-decision-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.recognition-decision-grid article, .governance-operation-grid article { display: grid; align-content: start; gap: 6px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--paper); }
+.recognition-decision-grid span, .governance-operation-grid span { color: var(--muted); font-size: 9.5px; font-weight: 750; text-transform: uppercase; }
+.recognition-decision-grid strong, .governance-operation-grid strong { overflow-wrap: anywhere; color: var(--navy); font-size: 12px; }
+.recognition-decision-grid small, .governance-operation-grid small { color: var(--muted); font-size: 9.5px; line-height: 1.45; }
+.recognition-decision-grid .button { margin-top: 6px; width: 100%; }
+.split-outcome { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; overflow: hidden; padding-top: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--border); }
+.split-outcome > div { display: grid; gap: 4px; padding: 13px; background: var(--white); }
+.split-outcome span { color: var(--muted); font-size: 9.5px; }
+.split-outcome strong { color: var(--purple); font-size: 12px; }
+.governance-operation-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.governance-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+
+@media (max-width: 900px) {
+  .recognition-decision-grid, .governance-operation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (max-width: 1180px) {
   :root { --sidebar-w: 224px; }
   .data-mode { display: none; }
@@ -611,6 +645,10 @@ tbody tr:hover td { background: #fbfaf8; }
   .smart-suggestion__details dd { margin-bottom: 6px; }
   .smart-level-list { grid-template-columns: repeat(4, minmax(38px, 1fr)); }
   .smart-suggestion__actions .button { width: 100%; }
+  .governance-definition, .recognition-decision-grid, .governance-operation-grid, .split-outcome { grid-template-columns: 1fr; }
+  .governance-policy-list article { grid-template-columns: 1fr; }
+  .governance-policy-list small { grid-column: auto; }
+  .governance-actions .button { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

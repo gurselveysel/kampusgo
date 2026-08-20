@@ -29,6 +29,7 @@ import {
 } from "./reference-data.js";
 import {
   QUALIFICATION_ADVISORY_NOTICE,
+  QUALIFICATION_FRAMEWORK_IDS,
   QUALIFICATION_SUGGESTION_ENGINE_VERSION,
   QUALIFICATION_SUGGESTION_LIMITS,
   applyManualQualificationOverride,
@@ -36,6 +37,30 @@ import {
   recordHumanBoardQualificationDecision,
   suggestProgramQualificationAlignment
 } from "./qualification-suggestion.js";
+import {
+  createSmartSuggestionSnapshot,
+  readSmartSuggestionSnapshot,
+  validateSmartSuggestionSnapshot
+} from "./smart-snapshot.js";
+import {
+  DIRECTIVE_PILOT_NOTICE,
+  cloneDirectivePilotState,
+  createFinancePersonnelDryRun,
+  createPublicCredentialView,
+  ectsWorkloadBands,
+  evaluatePilotRule,
+  generateMydCode,
+  organizationScopes,
+  policyVersionRegistry,
+  recordRecognitionDecision,
+  requestOfferingSeat,
+  submitIndependentAppeal,
+  validateCommissionMeeting,
+  validateEctsWorkload,
+  validateEk1Credential,
+  versionedPilotRules,
+  workloadComponents
+} from "./directive-pilot.js";
 
 const STORAGE_KEY = "kdpu-myys-pilot-v4";
 const root = document.querySelector("#main-content");
@@ -50,9 +75,14 @@ const notificationButton = document.querySelector("[data-nav='notifications']");
 
 const ASSESSMENT_START_ROLES = new Set(["learner", "instructor", "externalInstructor"]);
 const INTEGRATION_BULK_ROLES = new Set(["it", "admin"]);
-const FINANCE_OPERATOR_ROLES = new Set(["finance", "admin"]);
+const FINANCE_OPERATOR_ROLES = new Set(["finance"]);
 const PROPOSAL_ROLES = new Set(["instructor", "externalInstructor"]);
 const SAFE_ID_PATTERN = /^[A-Za-z][A-Za-z0-9._:-]{0,127}$/;
+const PROPOSAL_WORKLOAD_SEED = Object.freeze({ synchronous: 10, asynchronous: 10, preparation: 10, practice: 10, project: 15, independent: 10, assessment: 5, feedback: 5 });
+const SMART_DESCRIPTOR_LABELS = Object.freeze({
+  canonical: "Kanonik tanımlayıcı",
+  tyyc: "YÖK/MYK form siciline dayalı pilot operasyonel özet — birebir alıntı değildir"
+});
 
 let state = normalizePilotState(loadState());
 let lastFocused = null;
@@ -85,13 +115,14 @@ function normalizePilotState(value) {
   value.finance.invoiceDrafts ||= [];
   value.qualificationDrafts ||= [];
   value.smartAlignments ||= [];
+  value.directivePilot ||= cloneDirectivePilotState();
   return value;
 }
 
 function isValidSavedState(saved) {
   const roleIds = new Set(roles.map((role) => role.id));
   const auditRoleIds = new Set([...roleIds, "system"]);
-  const applicationStatuses = new Set(["draft", "review", "commission", "revision", "approved", "rejected", "credentialed"]);
+  const applicationStatuses = new Set(["draft", "review", "commission", "revision", "approved", "deferred", "rejected", "credentialed"]);
   const programStatuses = new Set([...applicationStatuses, "active"]);
   const assessmentStatuses = new Set(["scheduled", "active", "under_review", "completed"]);
   const ownerRoles = new Set(["learner", "instructor", "externalInstructor"]);
@@ -103,6 +134,11 @@ function isValidSavedState(saved) {
   const isText = (value) => typeof value === "string" && value.trim().length > 0;
   const isNumber = (value, min = 0, max = Number.POSITIVE_INFINITY) => Number.isFinite(value) && value >= min && value <= max;
   const isDate = (value) => isText(value) && Number.isFinite(Date.parse(value));
+  const workloadKeys = workloadComponents.map(([key]) => key);
+  const isSemanticWorkload = (components, total, ects) => isObject(components) &&
+    Object.keys(components).length === workloadKeys.length && workloadKeys.every((key) => Object.hasOwn(components, key) && isNumber(components[key])) &&
+    isNumber(total) && Math.abs(Object.values(components).reduce((sum, value) => sum + value, 0) - total) <= 0.001 &&
+    total >= 25 * ects && total <= 30 * ects;
   const isScenario = (item, kind) => isObject(item) &&
     Number.isInteger(item.step) && item.step >= 0 && item.step <= scenarioDefinitions[kind].length &&
     typeof item.completed === "boolean" &&
@@ -113,13 +149,16 @@ function isValidSavedState(saved) {
     isDate(item.submittedAt) && isDate(item.targetAt) &&
     ["internal", "external"].includes(item.kind) && ownerRoles.has(item.ownerRole) &&
     (item.kind === "external" ? item.ownerRole === "learner" : ["instructor", "externalInstructor"].includes(item.ownerRole)) &&
-    applicationStatuses.has(item.status) &&
+    applicationStatuses.has(item.status) && !["approved", "credentialed"].includes(item.status) &&
+    typeof item.institutionalValidationConfirmed === "boolean" && item.productionEligible === false &&
     isNumber(item.elapsedDays) && isNumber(item.similarity, 0, 100) && isNumber(item.tycMatch, 0, 100) &&
-    isNumber(item.ects, 0.01) && isNumber(item.remoteRate, 0, 100) && isNumber(item.evidence) && isNumber(item.missing) &&
+    Number.isInteger(item.ects) && isNumber(item.ects, 1, 6) && isSemanticWorkload(item.workloadComponents, item.totalWorkload, item.ects) &&
+    (item.formData?.workloadComponents === undefined || (isSemanticWorkload(item.formData.workloadComponents, item.formData.totalWorkload, item.ects) && JSON.stringify(item.formData.workloadComponents) === JSON.stringify(item.workloadComponents))) &&
+    isNumber(item.remoteRate, 0, 100) && isNumber(item.evidence) && isNumber(item.missing) &&
     (item.portfolioRemoteShare === undefined || isNumber(item.portfolioRemoteShare, 0, 100));
   const isProgram = (item) => isObject(item) && isSafeId(item.id) &&
     ["id", "code", "title", "unit", "instructor", "mode", "summary"].every((key) => isText(item[key])) &&
-    programStatuses.has(item.status) && isNumber(item.ects, 0.01) && isNumber(item.workload) &&
+    programStatuses.has(item.status) && item.productionEligible === false && Number.isInteger(item.ects) && isNumber(item.ects, 1, 6) && isSemanticWorkload(item.workloadComponents, item.workload, item.ects) &&
     isNumber(item.level, 1, 8) && isNumber(item.remoteRate, 0, 100) && isNumber(item.learners) && isNumber(item.price) &&
     Array.isArray(item.outcomes) && item.outcomes.every(isText);
   const isCredential = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.code) &&
@@ -149,16 +188,65 @@ function isValidSavedState(saved) {
     item.realPayment === false && typeof item.enrollmentCreated === "boolean";
   const isQualificationDraft = (item) => isObject(item) && isSafeId(item.id) &&
     ["id", "frameworkId", "programTitle", "ownerRole", "ownerName", "status", "updatedAt"].every((key) => isText(item[key])) &&
-    ["tyc", "eqf"].includes(item.frameworkId) && ["instructor", "externalInstructor"].includes(item.ownerRole) &&
-    isNumber(item.level, 1, 8) && item.status === "pilot_draft" && isDate(item.updatedAt) &&
+    QUALIFICATION_FRAMEWORK_IDS.includes(item.frameworkId) && ["instructor", "externalInstructor"].includes(item.ownerRole) &&
+    isSmartFrameworkLevel(item.frameworkId, item.level) && item.status === "pilot_draft" && isDate(item.updatedAt) &&
     Array.isArray(item.rows) && item.rows.length === 3 && item.rows.every((row) => isObject(row) &&
       ["dimension", "learningOutcome", "learningLevel", "courseContent", "assessmentMethod", "evidence", "alignmentRationale"].every((key) => isText(row[key]))
     );
+  const directiveDecisionKinds = new Set(["credential", "ects", "course_substitution"]);
+  const directiveDecisionStatuses = new Set(["pending_human_review", "rejected", "additional_evidence_required"]);
+  const isDirectiveCode = (item) => {
+    if (!isObject(item) || !isSafeId(item.id) || !isText(item.code)) return false;
+    const match = item.code.match(/^MYD-(\d{4})-([A-Z0-9]{2,12})-(\d{3})$/);
+    return Boolean(match) && item.id === `MYDREC-${match[1]}-${match[2]}-${match[3]}` && item.unitCode === match[2] &&
+      Number.isInteger(item.versionNo) && item.versionNo >= 1 && item.versionNo <= 999 && item.status === "pilot_reserved" &&
+      item.policyVersionId === "POL-DRAFT-2026-08" && item.productionEligible === false && isDate(item.createdAt);
+  };
+  const isDirectiveDecision = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.applicationId) &&
+    directiveDecisionKinds.has(item.kind) && directiveDecisionStatuses.has(item.status) && typeof item.rationale === "string" &&
+    (item.decisionBody === null || isSafeId(item.decisionBody)) && item.ruleVersion === "POL-DRAFT-2026-08" &&
+    item.appealRoute === "independent_appeal_body_required" && (item.decidedAt === null || isDate(item.decidedAt)) &&
+    (item.autonomousDecision === undefined || item.autonomousDecision === false);
+  const isDirectiveAppeal = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.applicationId) && directiveDecisionKinds.has(item.decisionKind) &&
+    item.status === "submitted" && isText(item.reason) && isSafeId(item.initialDecisionBody) && isSafeId(item.appealBody) &&
+    item.initialDecisionBody !== item.appealBody && isDate(item.submittedAt) && item.productionEligible === false;
+  const isDirectiveMember = (item) => isObject(item) && isSafeId(item.id) && isText(item.name) && isSafeId(item.unit_id) && isText(item.unit_type) &&
+    isSafeId(item.body_membership) && isText(item.mandate) && isText(item.decision_scope) &&
+    ["activeMandate", "present", "recused"].every((key) => typeof item[key] === "boolean");
+  const isDirectiveSeatRequest = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.learnerId) && isDate(item.requestedAt) &&
+    isText(item.idempotencyKey) && ["pending", "enrolled", "waitlisted"].includes(item.status) &&
+    (item.waitlistPosition === null || item.waitlistPosition === undefined || (Number.isInteger(item.waitlistPosition) && item.waitlistPosition > 0));
+  const isDirectiveOffering = (item) => isObject(item) && isSafeId(item.id) && isText(item.term) && Number.isInteger(item.capacity) && item.capacity >= 0 &&
+    Array.isArray(item.requests) && item.requests.every(isDirectiveSeatRequest) &&
+    new Set(item.requests.map((request) => request.id)).size === item.requests.length &&
+    new Set(item.requests.map((request) => request.idempotencyKey)).size === item.requests.length &&
+    new Set(item.requests.map((request) => request.learnerId)).size === item.requests.length;
+  const isDirectiveMeetingValidation = (item) => item === null || (isObject(item) && item.valid === true && item.quorumMet === true && item.voteQuorumMet === true &&
+    Number.isInteger(item.eligibleCount) && item.eligibleCount > 0 && Number.isInteger(item.validEligibleVoteCount) && item.validEligibleVoteCount > 0 &&
+    Array.isArray(item.unknownVotes) && item.unknownVotes.length === 0 && Array.isArray(item.ineligibleVotes) && item.ineligibleVotes.length === 0 &&
+    Array.isArray(item.invalidVotes) && item.invalidVotes.length === 0 && Array.isArray(item.conflictViolations) && item.conflictViolations.length === 0 &&
+    item.duplicateVotes === false && item.autonomousDecision === false && isDate(item.validatedAt) && isSafeId(item.bodyId) && isText(item.mandate));
+  const isDirectiveDryRun = (item) => isObject(item) && isSafeId(item.id) && isText(item.kind) && isNumber(item.amount) && item.status === "approval_required" &&
+    item.realPayment === false && item.realDocument === false && item.externalRequestSent === false &&
+    item.personnelApprovalRequired === true && item.financialApprovalRequired === true && isDate(item.createdAt);
+  const isDirectiveState = (item) => isObject(item) && item.policyVersionId === "POL-DRAFT-2026-08" &&
+    Array.isArray(item.codes) && item.codes.every(isDirectiveCode) && new Set(item.codes.map((code) => code.id)).size === item.codes.length && new Set(item.codes.map((code) => code.code)).size === item.codes.length &&
+    Array.isArray(item.recognitionDecisions) && item.recognitionDecisions.length === 3 && item.recognitionDecisions.every(isDirectiveDecision) &&
+    new Set(item.recognitionDecisions.map((decision) => decision.id)).size === 3 && new Set(item.recognitionDecisions.map((decision) => decision.kind)).size === 3 &&
+    Array.isArray(item.appeals) && item.appeals.every(isDirectiveAppeal) && new Set(item.appeals.map((appeal) => appeal.id)).size === item.appeals.length &&
+    isObject(item.credentialOutcome) && item.credentialOutcome.applicationId === "APP-042" &&
+    item.credentialOutcome.independentStates === true && ["credential", "ects", "courseSubstitution"].every((key) => isObject(item.credentialOutcome[key]) && isText(item.credentialOutcome[key].status) && isText(item.credentialOutcome[key].decisionType)) &&
+    isObject(item.commission) && isSafeId(item.commission.bodyId) && isText(item.commission.mandate) && Number.isInteger(item.commission.quorumRequired) && item.commission.quorumRequired > 0 &&
+    Array.isArray(item.commission.members) && item.commission.members.length >= item.commission.quorumRequired && item.commission.members.every(isDirectiveMember) &&
+    new Set(item.commission.members.map((member) => member.id)).size === item.commission.members.length && isDirectiveMeetingValidation(item.commission.lastValidation) &&
+    Array.isArray(item.offerings) && item.offerings.length > 0 && item.offerings.every(isDirectiveOffering) &&
+    Array.isArray(item.financePersonnelDryRuns) && item.financePersonnelDryRuns.every(isDirectiveDryRun);
   const isSmartAssessmentSuggestion = (item) => isObject(item) && ["method", "evidence", "rationale"].every((key) => isText(item[key]));
   const isSmartSignal = (item) => isObject(item) && isText(item.label || item.pattern) && isText(item.category) && isNumber(item.weight, 0);
+  const isSmartFrameworkLevel = (frameworkId, level) => frameworkId === "tyyc" ? isNumber(level, 5, 8) : isNumber(level, 1, 8);
   const isSmartSelection = (selection) => isObject(selection) && isSafeId(selection.outcomeId) && isSafeId(selection.outcomeFingerprint) &&
-    Number.isInteger(selection.outcomeIndex) && selection.outcomeIndex >= 0 && ["tyc", "eqf"].includes(selection.frameworkId) &&
-    isNumber(selection.level, 1, 8) && ["knowledge", "skills", "competence"].includes(selection.dimension) &&
+    Number.isInteger(selection.outcomeIndex) && selection.outcomeIndex >= 0 && QUALIFICATION_FRAMEWORK_IDS.includes(selection.frameworkId) &&
+    isSmartFrameworkLevel(selection.frameworkId, selection.level) && ["knowledge", "skills", "competence"].includes(selection.dimension) &&
     isNumber(selection.score, 0, 100) && typeof selection.applied === "boolean" && selection.autonomousDecision === false &&
     selection.institutionalValidationRequired === true && (selection.manual === undefined || typeof selection.manual === "boolean") &&
     isText(selection.descriptor) && isText(selection.rationale) && /^https:\/\//.test(selection.officialSourceUrl) &&
@@ -166,19 +254,19 @@ function isValidSavedState(saved) {
     Array.isArray(selection.suggestedContent) && selection.suggestedContent.length > 0 && selection.suggestedContent.every(isText) &&
     Array.isArray(selection.suggestedAssessments) && selection.suggestedAssessments.length > 0 && selection.suggestedAssessments.every(isSmartAssessmentSuggestion);
   const isSmartAppliedSelection = (selection) => isObject(selection) && isSafeId(selection.id) && isSafeId(selection.outcomeId) && isSafeId(selection.outcomeFingerprint) && Number.isInteger(selection.outcomeIndex) && selection.outcomeIndex >= 0 &&
-    ["tyc", "eqf"].includes(selection.frameworkId) && isNumber(selection.level, 1, 8) && ["knowledge", "skills", "competence"].includes(selection.dimension) &&
+    QUALIFICATION_FRAMEWORK_IDS.includes(selection.frameworkId) && isSmartFrameworkLevel(selection.frameworkId, selection.level) && ["knowledge", "skills", "competence"].includes(selection.dimension) &&
     isNumber(selection.score, 0, 100) && isDate(selection.recordedAt) && selection.autonomousDecision === false && selection.institutionalValidationRequired === true &&
     isText(selection.descriptor) && isText(selection.rationale) && /^https:\/\//.test(selection.officialSourceUrl) &&
     Array.isArray(selection.matchedSignals) && selection.matchedSignals.every(isSmartSignal) && Array.isArray(selection.suggestedContent) && selection.suggestedContent.every(isText) &&
     Array.isArray(selection.suggestedAssessments) && selection.suggestedAssessments.every(isSmartAssessmentSuggestion);
-  const isSmartManualOverride = (override) => isObject(override) && isSafeId(override.id) && ["tyc", "eqf"].includes(override.frameworkId) && isSafeId(override.outcomeId) &&
-    /^OVR-[A-Za-z0-9._:-]+-(?:tyc|eqf)-\d+$/.test(override.id) && isSafeId(override.outcomeFingerprint) && Number.isInteger(override.outcomeIndex) && override.outcomeIndex >= 0 && isDate(override.recordedAt) &&
-    isNumber(override.selectedLevel, 1, 8) && ["knowledge", "skills", "competence"].includes(override.selectedDimension) &&
+  const isSmartManualOverride = (override) => isObject(override) && isSafeId(override.id) && QUALIFICATION_FRAMEWORK_IDS.includes(override.frameworkId) && isSafeId(override.outcomeId) &&
+    /^OVR-[A-Za-z0-9._:-]+-(?:tyc|eqf|tyyc)-\d+$/.test(override.id) && isSafeId(override.outcomeFingerprint) && Number.isInteger(override.outcomeIndex) && override.outcomeIndex >= 0 && isDate(override.recordedAt) &&
+    isSmartFrameworkLevel(override.frameworkId, override.selectedLevel) && ["knowledge", "skills", "competence"].includes(override.selectedDimension) &&
     isText(override.reason) && ["instructor", "externalInstructor"].includes(override.actorRole) && override.isHumanSelection === true && override.finalBoardDecision === false;
   const isSmartProgram = (program) => isObject(program) && isObject(program.suggestedLevels) && isNumber(program.suggestedLevels.tyc, 1, 8) &&
-    isNumber(program.suggestedLevels.eqf, 1, 8) && isObject(program.dimensionCoverage) && ["tyc", "eqf"].every((frameworkId) => isObject(program.dimensionCoverage[frameworkId]) &&
+    isNumber(program.suggestedLevels.eqf, 1, 8) && isNumber(program.suggestedLevels.tyyc, 5, 8) && isObject(program.dimensionCoverage) && QUALIFICATION_FRAMEWORK_IDS.every((frameworkId) => isObject(program.dimensionCoverage[frameworkId]) &&
       ["knowledge", "skills", "competence"].every((dimension) => isNumber(program.dimensionCoverage[frameworkId][dimension], 0))) &&
-    isObject(program.coverage) && isNumber(program.coverage.outcomeCount, 1, 40) && isObject(program.consistency) && ["tyc", "eqf"].every((frameworkId) =>
+    isObject(program.coverage) && isNumber(program.coverage.outcomeCount, 1, 40) && isObject(program.consistency) && QUALIFICATION_FRAMEWORK_IDS.every((frameworkId) =>
       isObject(program.consistency[frameworkId]) && isNumber(program.consistency[frameworkId].min, 1, 8) && isNumber(program.consistency[frameworkId].max, 1, 8) &&
       isNumber(program.consistency[frameworkId].spread, 0, 7) && typeof program.consistency[frameworkId].consistent === "boolean") && isText(program.rationale) &&
     program.autonomousDecision === false && program.institutionalValidationRequired === true;
@@ -187,7 +275,7 @@ function isValidSavedState(saved) {
   const isSmartBoardDecision = (decision) => isObject(decision) && decision.status === "recorded_human_board_decision" &&
     ["approved", "revision_requested", "rejected", "deferred"].includes(decision.decision) && decision.source === "human_commission" &&
     decision.actorRole === "commission" && isText(decision.decidedBy) && isText(decision.rationale) && isDate(decision.decidedAt) && isObject(decision.decidedLevels) &&
-    isNumber(decision.decidedLevels.tyc, 1, 8) && isNumber(decision.decidedLevels.eqf, 1, 8) && decision.suggestionMutated === false && decision.autonomousDecision === false;
+    isNumber(decision.decidedLevels.tyc, 1, 8) && isNumber(decision.decidedLevels.eqf, 1, 8) && isNumber(decision.decidedLevels.tyyc, 5, 8) && decision.suggestionMutated === false && decision.autonomousDecision === false;
   const isSmartAlignment = (item) => isObject(item) && isSafeId(item.id) && isSafeId(item.applicationId) &&
     (item.programId === "pending-program" || isSafeId(item.programId)) && isSafeId(item.orderedOutcomeFingerprint) &&
     ["id", "applicationId", "programId", "applicationCode", "programTitle", "ownerRole", "ownerName", "status", "engineVersion", "advisoryNotice", "updatedAt"].every((key) => isText(item[key])) &&
@@ -196,14 +284,23 @@ function isValidSavedState(saved) {
     item.outcomes.every((outcome, outcomeIndex) => isObject(outcome) && isSafeId(outcome.outcomeId) && isSafeId(outcome.outcomeFingerprint) &&
       outcome.outcomeIndex === outcomeIndex && outcome.outcomeFingerprint === smartOutcomeFingerprint(outcome.text, outcomeIndex) && isText(outcome.text) &&
       normalizeSmartOutcomeText(outcome.text).length <= QUALIFICATION_SUGGESTION_LIMITS.maxOutcomeLength && Array.isArray(outcome.selections) &&
-      outcome.selections.length === 2 && outcome.selections.every((selection) => isSmartSelection(selection) && selection.outcomeId === outcome.outcomeId &&
-        selection.outcomeIndex === outcomeIndex && selection.outcomeFingerprint === outcome.outcomeFingerprint) && new Set(outcome.selections.map((selection) => selection.frameworkId)).size === 2) &&
+      outcome.selections.length === 3 && outcome.selections.every((selection) => isSmartSelection(selection) && selection.outcomeId === outcome.outcomeId &&
+        selection.outcomeIndex === outcomeIndex && selection.outcomeFingerprint === outcome.outcomeFingerprint) && new Set(outcome.selections.map((selection) => selection.frameworkId)).size === 3) &&
     new Set(item.outcomes.map((outcome) => outcome.outcomeId)).size === item.outcomes.length &&
     item.orderedOutcomeFingerprint === smartOrderedOutcomeFingerprint(item.outcomes.map((outcome) => outcome.text)) &&
     Array.isArray(item.manualOverrides) && item.manualOverrides.every(isSmartManualOverride) &&
     Array.isArray(item.appliedSelections) && item.appliedSelections.every(isSmartAppliedSelection) &&
     isSmartProgram(item.program) && isSmartCycle(item.higherEducationCycleSuggestion) &&
-    (item.boardDecision === null || item.boardDecision === undefined || isSmartBoardDecision(item.boardDecision));
+    (item.boardDecision === null || item.boardDecision === undefined || isSmartBoardDecision(item.boardDecision)) &&
+    validateSmartSuggestionSnapshot(item.suggestionSnapshot, {
+      engineVersion: item.engineVersion,
+      orderedOutcomeFingerprint: item.orderedOutcomeFingerprint,
+      outcomes: item.outcomes,
+      program: item.program,
+      manualOverrides: item.manualOverrides,
+      appliedSelections: item.appliedSelections,
+      higherEducationCycleSuggestion: item.higherEducationCycleSuggestion
+    }).valid;
   const smartCrossReferencesAreValid = (alignments, applications, programs) => {
     if (new Set(alignments.map((item) => item.id)).size !== alignments.length) return false;
     if (new Set(alignments.map((item) => item.applicationId)).size !== alignments.length) return false;
@@ -223,7 +320,8 @@ function isValidSavedState(saved) {
         : splitLearningOutcomes(application.formData?.outcomes || "");
       const alignmentOutcomes = alignment.outcomes.map((outcome) => outcome.text);
       if (applicationOutcomes.length !== alignmentOutcomes.length || applicationOutcomes.some((text, index) => normalizeSmartOutcomeText(text) !== normalizeSmartOutcomeText(alignmentOutcomes[index]))) return false;
-      if (mappingBacklink.orderedOutcomeFingerprint !== alignment.orderedOutcomeFingerprint || mappingBacklink.updatedAt !== alignment.updatedAt) return false;
+      if (mappingBacklink.orderedOutcomeFingerprint !== alignment.orderedOutcomeFingerprint || mappingBacklink.updatedAt !== alignment.updatedAt ||
+          mappingBacklink.suggestionSnapshot?.integrityHash !== alignment.suggestionSnapshot?.integrityHash) return false;
       if (alignment.programId !== "pending-program") {
         const program = programs.find((item) => item.id === alignment.programId);
         if (!program || program.code !== application.code || program.smartAlignmentId !== alignment.id) return false;
@@ -280,6 +378,7 @@ function isValidSavedState(saved) {
     saved.notifications.every((item) => isObject(item) && isSafeId(item.id) && ["title", "body", "time"].every((key) => isText(item[key])) && Array.isArray(item.recipientRoles) && item.recipientRoles.length > 0 && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy) && item.readBy.every((role) => roleIds.has(role) && item.recipientRoles.includes(role))) &&
     saved.audit.every((item) => isObject(item) && isSafeId(item.id) && isSafeId(item.entityId) && ["at", "actor", "action", "from", "to", "reason"].every((key) => isText(item[key])) && isDate(item.at) && auditRoleIds.has(item.actorRole)) &&
     isObject(saved.finance) &&
+    isDirectiveState(saved.directivePilot) &&
     Array.isArray(saved.finance.transactions) &&
     Array.isArray(saved.finance.entitlements) &&
     saved.finance.transactions.every((item) => isFinanceRecord(item, "transaction")) &&
@@ -428,6 +527,7 @@ function formatCurrency(value) {
 const statusMap = {
   draft: ["Taslak", "neutral"], review: ["Ön incelemede", "warning"], commission: ["Komisyon gündeminde", "info"],
   revision: ["Revizyon bekliyor", "warning"], approved: ["Pilot onaylandı", "success"], rejected: ["Pilot reddedildi", "risk"],
+  deferred: ["Kurumsal doğrulama bekliyor", "warning"],
   active: ["Yayında • Pilot", "success"], credentialed: ["Yeterlilik üretildi • Pilot", "success"], valid: ["Geçerli • Pilot", "success"], disconnected: ["Bağlı değil", "neutral"],
   simulated: ["Simülasyon", "info"], matched: ["Eşleştirildi • Simülasyon", "success"], pending: ["Bekliyor • Simülasyon", "warning"],
   completed: ["Tamamlandı • Simülasyon", "success"], scheduled: ["Planlandı • Simülasyon", "info"],
@@ -622,8 +722,8 @@ function scenariosPage() {
   return `<div class="page-container">${pageHeader("Çalışan pilot akışlar", "Uçtan uca demo senaryoları", "Her “sonraki adım” eylemi tarayıcıdaki izole pilot veri katmanını, rolü ve denetim izini gerçekten günceller. Yenileme sonrasında durum korunur.", `<button class="button button--secondary" data-action="reset-demo">${icon("refresh")} Tüm senaryoları sıfırla</button>`)}
     ${notice("warning", "Kontrollü yürütme", "Adımlar sentetik veriyle çalışır. Yapay zekâ hiçbir adımda karar sahibi değildir; entegrasyon kayıtlarında realDataSent=false kalır.")}
     <div class="grid grid-2 section">
-      ${scenarioCard("internal", "Senaryo 1", "Üniversite içi program önerisi", "Öneri, akademik inceleme, katalog, kayıt, değerlendirme, yeterlilik ve doğrulama")}
-      ${scenarioCard("recognition", "Senaryo 2", "Kurum dışı kazanımın tanınması", "Kanıt, pilot karşılaştırma, Komisyon kararı, kredi kaydı ve aktarım simülasyonu")}
+      ${scenarioCard("internal", "Senaryo 1", "Üniversite içi program önerisi", "Öneri ve akademik inceleme sonrası kurumsal doğrulama kapısı; yayın, kayıt, değerlendirme ve belge bloke")}
+      ${scenarioCard("recognition", "Senaryo 2", "Kurum dışı kazanımın tanınması", "Kanıt ve pilot karşılaştırma sonrası erteleme; kredi/ikame kapalı, yalnız bloke aktarım dry-run")}
     </div>
   </div>`;
 }
@@ -633,7 +733,7 @@ function scenarioCard(kind, kicker, title, description) {
   const steps = scenarioDefinitions[kind];
   const percent = Math.round((scenario.step / steps.length) * 100);
   const next = steps[scenario.step];
-  return `<section class="card scenario-card"><div class="card-header"><div><span class="table-subtitle">${kicker}</span><h2>${title}</h2><p>${description}</p></div>${scenario.completed ? statusBadge("completed") : statusBadge("simulated", `${scenario.step}/${steps.length} adım`)}</div><div class="card-body"><div class="progress" role="progressbar" aria-label="${title} ilerlemesi" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><span style="width:${percent}%"></span></div><ol class="scenario-steps">${steps.map(([role,label], index) => `<li class="${index < scenario.step ? "done" : index === scenario.step ? "current" : ""}"><span>${index + 1}</span><div><strong>${escapeHtml(label)}</strong><small>${escapeHtml(roleLabel(role))}</small></div></li>`).join("")}</ol>${scenario.completed ? `<div class="notice notice--success">${icon("check")}<div><strong>Senaryo tamamlandı</strong>${kind === "internal" ? "Program, değerlendirme ve pilot yeterlilik durumu oluşturuldu." : "Tanınan kredi ile ÖBİS/YÖKSİS simülasyon kayıtları oluşturuldu."}</div></div>` : `<button class="button scenario-next" data-action="run-scenario" data-kind="${kind}">${icon("arrow")} Sonraki adım: ${escapeHtml(next[1])}</button>`}${scenario.completed ? `<button class="button button--secondary scenario-next" data-action="open-scenario-result" data-kind="${kind}">${kind === "internal" ? "Pilot yeterliliği aç" : "Aktarım loglarını aç"}</button>` : ""}</div></section>`;
+  return `<section class="card scenario-card"><div class="card-header"><div><span class="table-subtitle">${kicker}</span><h2>${title}</h2><p>${description}</p></div>${scenario.completed ? statusBadge("completed") : statusBadge("simulated", `${scenario.step}/${steps.length} adım`)}</div><div class="card-body"><div class="progress" role="progressbar" aria-label="${title} ilerlemesi" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><span style="width:${percent}%"></span></div><ol class="scenario-steps">${steps.map(([role,label], index) => `<li class="${index < scenario.step ? "done" : index === scenario.step ? "current" : ""}"><span>${index + 1}</span><div><strong>${escapeHtml(label)}</strong><small>${escapeHtml(roleLabel(role))}</small></div></li>`).join("")}</ol>${scenario.completed ? `<div class="notice notice--warning">${icon("shield")}<div><strong>Güvenli pilot senaryosu tamamlandı</strong>${kind === "internal" ? "Başvuru ertelendi; yayın, kayıt, değerlendirme veya belge oluşturulmadı." : "Tanıma ertelendi; AKTS, ders ikamesi veya canlı aktarım oluşturulmadı."}</div></div>` : `<button class="button scenario-next" data-action="run-scenario" data-kind="${kind}">${icon("arrow")} Sonraki adım: ${escapeHtml(next[1])}</button>`}${scenario.completed ? `<button class="button button--secondary scenario-next" data-action="open-scenario-result" data-kind="${kind}">${kind === "internal" ? "Ertelenmiş başvuruyu aç" : "Bloke dry-run loglarını aç"}</button>` : ""}</div></section>`;
 }
 
 function roleLabel(role) {
@@ -648,7 +748,7 @@ function learningPage() {
   const total = completedEcts + recognizedEcts;
   const remoteShare = total ? Math.round(remoteEcts / total * 100) : 0;
   return `<div class="page-container">${pageHeader("Öğrenen çalışma alanı", "Eğitimlerim, değerlendirmelerim ve AKTS", "Kayıtlar yalnız seçili sentetik öğrenenin yerel pilot çalışma alanındadır; resmî transkript veya ÖBİS kaydı değildir.")}
-    <div class="grid grid-4">${kpi("Tamamlanan pilot AKTS",completedEcts,"Eğitim kayıtlarından","book")}${kpi("Tanınan pilot AKTS",recognizedEcts,"Dış kazanım kayıtlarından","check")}${kpi("Toplam kullanılan",`${total}/24`,"%10 pilot ön kontrol tavanı","chart")}${kpi("Uzaktan kaynak payı",`%${remoteShare}`,"%50 pilot göstergesi; blok değildir","network")}</div>
+    <div class="grid grid-4">${kpi("Tamamlanan pilot AKTS",completedEcts,"Eğitim kayıtlarından","book")}${kpi("Tanınan pilot AKTS",recognizedEcts,"Dış kazanım kayıtlarından","check")}${kpi("Toplam pilot kayıt",`${total} AKTS`,"Payda ve üst sınır kurumsal doğrulama bekliyor","chart")}${kpi("Uzaktan kaynak payı",`%${remoteShare}`,"%50 doğrulanmamış örnek gösterge; blok değildir","network")}</div>
     <div class="grid grid-2 section"><section class="card"><div class="card-header"><div><h2>Eğitimlerim</h2><p>Kayıt ve ilerleme durumu</p></div></div><div class="card-body"><div class="timeline">${state.enrollments.map((item)=>`<div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.programCode)} • ${item.ects} AKTS • %${item.progress} ilerleme</span>${statusBadge(item.status)}</div></div>`).join("") || `<p class="page-subtitle">Henüz pilot eğitim kaydı yok.</p>`}</div></div></section><section class="card"><div class="card-header"><div><h2>Değerlendirmelerim</h2><p>İnsan değerlendirici kararları</p></div></div><div class="card-body"><div class="timeline">${state.assessmentSessions.map((item)=>`<div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>${escapeHtml(item.title)}</strong><span>${item.score ?? "—"}/100 • ${escapeHtml(item.evaluatorDecision || "İnceleme bekliyor")}</span>${statusBadge(item.status)}</div></div>`).join("") || `<p class="page-subtitle">Henüz pilot değerlendirme yok.</p>`}</div></div></section></div>
     ${state.recognizedCredits.length ? `<section class="card section"><div class="card-header"><div><h2>Tanınan dış kazanımlar</h2><p>Yalnız pilot kredi defteri</p></div></div><div class="card-body">${state.recognizedCredits.map((item)=>`<div class="integration-head"><div><strong>${escapeHtml(item.title)}</strong><span class="table-subtitle">${item.ects} AKTS • ${item.remoteEcts} uzaktan kaynaklı AKTS</span></div>${statusBadge("recognized")}</div>`).join("")}</div></section>` : ""}
   </div>`;
@@ -792,6 +892,22 @@ function smartEffectiveSelection(suggestion) {
   };
 }
 
+function smartFrameworkCode(frameworkId) {
+  return ({ tyc: "TYÇ", eqf: "AYÇ/EQF", tyyc: "TYYÇ" })[frameworkId] || frameworkId?.toUpperCase() || "Çerçeve";
+}
+
+function smartFrameworkLevels(frameworkId) {
+  return frameworkId === "tyyc" ? [5, 6, 7, 8] : [1, 2, 3, 4, 5, 6, 7, 8];
+}
+
+function smartDescriptorProvenanceLabel(frameworkId) {
+  return SMART_DESCRIPTOR_LABELS[frameworkId === "tyyc" ? "tyyc" : "canonical"];
+}
+
+function smartDescriptorProvenanceKind(frameworkId) {
+  return frameworkId === "tyyc" ? "pilot-operational-summary-not-verbatim" : "canonical-descriptor";
+}
+
 function smartDimensionLabel(dimension, frameworkId) {
   const labels = frameworkId === "eqf"
     ? { knowledge: "Bilgi / Knowledge", skills: "Beceriler / Skills", competence: "Sorumluluk ve özerklik" }
@@ -842,16 +958,15 @@ function smartSuggestionLevels(suggestion, frameworkId) {
   const byLevel = new Map();
   [primary, ...alternatives].filter(Boolean).forEach((item) => {
     const level = Number(item.level);
-    if (level >= 1 && level <= 8 && !byLevel.has(level)) byLevel.set(level, item);
+    if (smartFrameworkLevels(frameworkId).includes(level) && !byLevel.has(level)) byLevel.set(level, item);
   });
   const selectionOptions = buildQualificationSelectionOptions(frameworkId) || [];
   const options = Array.isArray(selectionOptions) ? selectionOptions : (selectionOptions.options || selectionOptions.levels || []);
   options.forEach((item) => {
     const level = Number(item.level || item.value);
-    if (level >= 1 && level <= 8 && !byLevel.has(level)) byLevel.set(level, item);
+    if (smartFrameworkLevels(frameworkId).includes(level) && !byLevel.has(level)) byLevel.set(level, item);
   });
-  return Array.from({ length: 8 }, (_, index) => {
-    const level = index + 1;
+  return smartFrameworkLevels(frameworkId).map((level) => {
     return { level, ...(byLevel.get(level) || {}), score: Number(byLevel.get(level)?.score || 0) };
   });
 }
@@ -901,7 +1016,7 @@ function smartMappingSnapshot(report = smartSuggestionReport) {
       outcomeIndex: index,
       outcomeFingerprint,
       text,
-      selections: ["tyc", "eqf"].map((frameworkId) => {
+      selections: QUALIFICATION_FRAMEWORK_IDS.map((frameworkId) => {
         const applied = smartAppliedSelection(outcomeId, frameworkId, outcomeFingerprint);
         const suggestion = smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId));
         const selection = applied || suggestion;
@@ -910,7 +1025,7 @@ function smartMappingSnapshot(report = smartSuggestionReport) {
           outcomeIndex: index,
           outcomeFingerprint,
           frameworkId,
-          frameworkCode: frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF",
+          frameworkCode: smartFrameworkCode(frameworkId),
           level: Number(selection.level),
           dimension: selection.dimension,
           score: Number(selection.score || 0),
@@ -929,8 +1044,8 @@ function smartMappingSnapshot(report = smartSuggestionReport) {
       }).filter(Boolean)
     };
   });
-  const topTyC = outcomes.flatMap((item) => item.selections).filter((item) => item.frameworkId === "tyc" && item.applied).sort((a, b) => b.score - a.score)[0]
-    || outcomes.flatMap((item) => item.selections).filter((item) => item.frameworkId === "tyc").sort((a, b) => b.score - a.score)[0];
+  const topTyyc = outcomes.flatMap((item) => item.selections).filter((item) => item.frameworkId === "tyyc" && item.applied).sort((a, b) => b.score - a.score)[0]
+    || outcomes.flatMap((item) => item.selections).filter((item) => item.frameworkId === "tyyc").sort((a, b) => b.score - a.score)[0];
   return {
     engineVersion: QUALIFICATION_SUGGESTION_ENGINE_VERSION,
     advisoryNotice: QUALIFICATION_ADVISORY_NOTICE,
@@ -939,7 +1054,7 @@ function smartMappingSnapshot(report = smartSuggestionReport) {
     program: report.program || {},
     manualOverrides: report.manualOverrides || [],
     appliedSelections: structuredClone(smartSuggestionApplied),
-    higherEducationCycleSuggestion: smartSafeCycle(report.program?.higherEducationCycleSuggestion, topTyC?.level)
+    higherEducationCycleSuggestion: smartSafeCycle(report.program?.higherEducationCycleSuggestion, topTyyc?.level)
   };
 }
 
@@ -949,7 +1064,7 @@ function syncSmartMappingField() {
 }
 
 function renderSmartLevelCandidates(suggestion, frameworkId) {
-  const code = frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF";
+  const code = smartFrameworkCode(frameworkId);
   return `<details class="smart-levels"><summary>Tüm ${code} seviye adaylarını görüntüle</summary><div class="smart-level-list">${smartSuggestionLevels(suggestion, frameworkId).map((item) => `<span class="${Number(item.score) > 0 ? "has-score" : ""}"><strong>${item.level}</strong><small>${Number(item.score) > 0 ? `%${Math.round(item.score)}` : "Aday"}</small></span>`).join("")}</div></details>`;
 }
 
@@ -960,23 +1075,29 @@ function smartSuggestionCard(outcome, outcomeIndex, frameworkId, interactive = t
   const outcomeId = smartOutcomeId(outcome, outcomeIndex);
   const outcomeFingerprint = smartOutcomeFingerprint(smartOutcomeText(outcome), outcomeIndex);
   const applied = appliedSelections.find((item) => item.outcomeId === outcomeId && item.outcomeFingerprint === outcomeFingerprint && item.frameworkId === frameworkId) || null;
-  const selection = applied || suggestion;
-  const code = frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF";
+  // Applied selections intentionally store a reduced human-action record. Merge
+  // that record over the immutable full suggestion so review still renders the
+  // captured confidence, method, alternatives, TYYÇ type and evidence gaps.
+  const selection = applied ? { ...suggestion, ...applied } : suggestion;
+  const code = smartFrameworkCode(frameworkId);
   const score = Math.max(0, Math.min(100, Math.round(Number(selection.score || 0))));
   const content = Array.isArray(selection.suggestedContent) ? selection.suggestedContent.join(" • ") : selection.suggestedContent;
   const assessments = smartAssessmentText(selection.suggestedAssessments);
   const cycle = selection.higherEducationCycleSuggestion || smartCycleCrosswalk(selection.level);
+  const qualificationType = selection.qualificationTypeSuggestion?.selected;
+  const evidenceGaps = Array.isArray(selection.evidenceGapWarnings) ? selection.evidenceGapWarnings : [];
   const signals = Array.isArray(selection.matchedSignals) ? selection.matchedSignals : [];
   return `<article class="smart-suggestion ${applied ? "is-applied" : ""}" data-smart-suggestion data-smart-framework="${escapeHtml(frameworkId.toUpperCase())}" data-outcome-index="${Number(outcomeIndex)}" data-outcome-fingerprint="${escapeHtml(outcomeFingerprint)}" data-framework="${escapeHtml(frameworkId.toUpperCase())}" data-level="${Number(selection.level)}" data-dimension="${escapeHtml(selection.dimension)}" data-score="${score}">
     <div class="smart-suggestion__head"><div><span class="table-subtitle">${code} • ${smartDimensionLabel(selection.dimension, frameworkId)}</span><h4>${code} ${Number(selection.level)}. seviye</h4><span class="smart-confidence">${selection.isManualOverride ? "İnsan düzeltmesi" : `${smartConfidenceLabel(selection.confidence)} güven`} • ${escapeHtml(selection.method || "açıklanabilir kural motoru")}</span></div><span class="smart-score" aria-label="Öneri puanı yüzde ${score}">%${score}</span></div>
     <div class="progress" role="progressbar" aria-label="${code} öneri puanı" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${score}"><span style="width:${score}%"></span></div>
-    <dl class="smart-suggestion__details"><dt>Gerekçe</dt><dd>${escapeHtml(selection.rationale || "Gözlenebilir fiil, karmaşıklık ve özerklik işaretleri birlikte değerlendirildi.")}</dd><dt>Kanonik tanımlayıcı</dt><dd>${escapeHtml(selection.descriptor || "Seviye tanımlayıcısı için kurumsal inceleme gerekir.")}</dd>${selection.descriptorDisplayTr && selection.descriptorDisplayTr !== selection.descriptor ? `<dt>Türkçe görünüm</dt><dd>${escapeHtml(selection.descriptorDisplayTr)}</dd>` : ""}<dt>Ölçülebilir eylem fiili</dt><dd>${escapeHtml(measurableVerb(smartOutcomeText(outcome)))}</dd><dt>İçerik ipucu</dt><dd>${escapeHtml(content || "Çıktıyı uygulamaya dönüştüren vaka ve etkinlik planı")}</dd><dt>Ölçme-değerlendirme</dt><dd>${escapeHtml(assessments || "Performans görevi + analitik rubrik")}</dd><dt>Kanıt önerisi</dt><dd>${escapeHtml(smartEvidenceHint(selection))}</dd></dl>
+    <dl class="smart-suggestion__details"><dt>Gerekçe</dt><dd>${escapeHtml(selection.rationale || "Gözlenebilir fiil, karmaşıklık ve özerklik işaretleri birlikte değerlendirildi.")}</dd><dt data-smart-descriptor-kind="${smartDescriptorProvenanceKind(frameworkId)}">${escapeHtml(smartDescriptorProvenanceLabel(frameworkId))}</dt><dd>${escapeHtml(selection.descriptor || "Seviye tanımlayıcısı için kurumsal inceleme gerekir.")}</dd>${selection.descriptorDisplayTr && selection.descriptorDisplayTr !== selection.descriptor ? `<dt>Türkçe görünüm</dt><dd>${escapeHtml(selection.descriptorDisplayTr)}</dd>` : ""}<dt>Ölçülebilir eylem fiili</dt><dd>${escapeHtml(measurableVerb(smartOutcomeText(outcome)))}</dd><dt>İçerik ipucu</dt><dd>${escapeHtml(content || "Çıktıyı uygulamaya dönüştüren vaka ve etkinlik planı")}</dd><dt>Ölçme-değerlendirme</dt><dd>${escapeHtml(assessments || "Performans görevi + analitik rubrik")}</dd><dt>Kanıt önerisi</dt><dd>${escapeHtml(smartEvidenceHint(selection))}</dd></dl>
     ${signals.length ? `<div class="smart-signals" aria-label="Eşlemeyi açıklayan sinyaller">${signals.slice(0, 8).map((signal) => `<span>${escapeHtml(signal.label || signal.pattern || String(signal))}</span>`).join("")}</div>` : `<div class="permission-note"><strong>Düşük sinyal yoğunluğu</strong><span>Daha ölçülebilir bir eylem fiili, karmaşıklık veya özerklik ifadesi ekleyerek öneriyi güçlendirin.</span></div>`}
     ${selection.officialSourceUrl ? `<a class="text-button smart-source-link" href="${escapeHtml(selection.officialSourceUrl)}" target="_blank" rel="noreferrer">Resmî seviye kaynağını aç ${icon("external")}</a>` : ""}
-    <div class="smart-cycle"><strong>TYYÇ / Bologna açıklayıcı aday</strong><span>${escapeHtml(smartCycleLabel(cycle))}</span><small>${Number(selection.level) < 5 ? "TYÇ/AYÇ 1–4 için yükseköğretim döngüsü eşlemesi yapılmaz." : "Resmî eşdeğerlik veya yerleştirme değildir; kurumsal doğrulama gerekir."}</small></div>
+    <div class="smart-cycle"><strong>${frameworkId === "tyyc" ? "TYYÇ yeterlilik türü adayı" : "TYYÇ / Bologna açıklayıcı crosswalk"}</strong><span>${frameworkId === "tyyc" ? escapeHtml(qualificationType ? `${qualificationType.titleTr} • ${qualificationType.orientation}` : "Yeterlilik türü için insan seçimi gerekir") : escapeHtml(smartCycleLabel(cycle))}</span><small>${frameworkId === "tyyc" ? "Önerilen pedagojik referans düzeyidir; resmî yerleştirme, eşdeğerlik, akreditasyon veya logo hakkı değildir." : Number(selection.level) < 5 ? "TYÇ/AYÇ 1–4 için yükseköğretim döngüsü eşlemesi yapılmaz." : "Resmî eşdeğerlik veya yerleştirme değildir; kurumsal doğrulama gerekir."}</small></div>
+    ${evidenceGaps.length ? `<div class="permission-note"><strong>Eksik kanıt uyarısı</strong><span>${escapeHtml(evidenceGaps.join(" "))}</span></div>` : ""}
     ${renderSmartLevelCandidates(rawSuggestion, frameworkId)}
     ${interactive ? `<div class="smart-suggestion__actions"><button class="button button--secondary button--sm" type="button" data-action="apply-smart-suggestion" data-outcome-index="${Number(outcomeIndex)}" data-outcome-fingerprint="${escapeHtml(outcomeFingerprint)}" data-framework="${escapeHtml(frameworkId)}">${applied ? `${icon("check")} Uygulandı` : "Bu öneriyi seç ve uygula"}</button></div>
-    <div class="smart-override" data-smart-override data-outcome-index="${Number(outcomeIndex)}" data-outcome-fingerprint="${escapeHtml(outcomeFingerprint)}" data-framework="${escapeHtml(frameworkId)}"><details><summary>Seviye veya boyutu manuel düzelt</summary><div class="smart-override__fields"><div class="field"><label for="smart-level-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">Seviye</label><select id="smart-level-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="select smart-override-level">${Array.from({ length: 8 }, (_, index) => index + 1).map((level) => `<option value="${level}" ${level === Number(selection.level) ? "selected" : ""}>${code} ${level}</option>`).join("")}</select></div><div class="field"><label for="smart-dimension-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">Boyut</label><select id="smart-dimension-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="select smart-override-dimension">${["knowledge", "skills", "competence"].map((dimension) => `<option value="${escapeHtml(dimension)}" ${dimension === selection.dimension ? "selected" : ""}>${smartDimensionLabel(dimension, frameworkId)}</option>`).join("")}</select></div><div class="field full"><span class="table-subtitle">Seçili seviye/boyut tanımlayıcısı</span><p class="smart-override-descriptor">${escapeHtml(smartDescriptorForSelection(frameworkId, selection.level, selection.dimension))}</p></div><div class="field full"><label class="required" for="smart-reason-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">İnsan gerekçesi</label><input id="smart-reason-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="smart-override-reason" minlength="12" placeholder="Neden farklı seviye/boyut seçildi?" /></div><button class="button button--secondary button--sm" type="button" data-action="apply-smart-override">Manuel düzeltmeyi uygula</button></div></details></div>` : `<div class="permission-note"><strong>Salt-okunur pilot öneri</strong><span>Komisyon öneriyi ve insan düzeltmesini inceler; bu alanda motor çıktısını değiştiremez.</span></div>`}
+    <div class="smart-override" data-smart-override data-outcome-index="${Number(outcomeIndex)}" data-outcome-fingerprint="${escapeHtml(outcomeFingerprint)}" data-framework="${escapeHtml(frameworkId)}"><details><summary>Seviye veya boyutu manuel düzelt</summary><div class="smart-override__fields"><div class="field"><label for="smart-level-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">Seviye</label><select id="smart-level-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="select smart-override-level">${smartFrameworkLevels(frameworkId).map((level) => `<option value="${level}" ${level === Number(selection.level) ? "selected" : ""}>${code} ${level}</option>`).join("")}</select></div><div class="field"><label for="smart-dimension-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">Boyut</label><select id="smart-dimension-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="select smart-override-dimension">${["knowledge", "skills", "competence"].map((dimension) => `<option value="${escapeHtml(dimension)}" ${dimension === selection.dimension ? "selected" : ""}>${smartDimensionLabel(dimension, frameworkId)}</option>`).join("")}</select></div><div class="field full"><span class="table-subtitle">${escapeHtml(smartDescriptorProvenanceLabel(frameworkId))}</span><p class="smart-override-descriptor">${escapeHtml(smartDescriptorForSelection(frameworkId, selection.level, selection.dimension))}</p></div><div class="field full"><label class="required" for="smart-reason-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}">İnsan gerekçesi</label><input id="smart-reason-${Number(outcomeIndex)}-${escapeHtml(frameworkId)}" class="smart-override-reason" minlength="12" placeholder="Neden farklı seviye/boyut seçildi?" /></div><button class="button button--secondary button--sm" type="button" data-action="apply-smart-override">Manuel düzeltmeyi uygula</button></div></details></div>` : `<div class="permission-note"><strong>Salt-okunur pilot öneri</strong><span>Komisyon öneriyi ve insan düzeltmesini inceler; bu alanda motor çıktısını değiştiremez.</span></div>`}
   </article>`;
 }
 
@@ -986,46 +1107,47 @@ function smartCoverageMatrix(report) {
   const cell = (outcome, frameworkId, dimension) => {
     const selection = smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId));
     if (!selection || selection.dimension !== dimension) return `<span class="coverage-empty" aria-label="Eşleşme yok">—</span>`;
-    return `<strong aria-label="${frameworkId === "tyc" ? "TYÇ" : "AYÇ"} ${smartDimensionLabel(dimension, frameworkId)} yüzde ${Math.round(selection.score)}">%${Math.round(selection.score)}</strong>`;
+    return `<strong aria-label="${smartFrameworkCode(frameworkId)} ${smartDimensionLabel(dimension, frameworkId)} yüzde ${Math.round(selection.score)}">%${Math.round(selection.score)}</strong>`;
   };
-  return `<div class="table-wrap smart-coverage" data-smart-coverage><table><caption>Öğrenme çıktısı, çerçeve ve yeterlilik boyutu kapsam matrisi</caption><thead><tr><th rowspan="2" scope="col">Öğrenme çıktısı</th><th colspan="3" scope="colgroup">TYÇ</th><th colspan="3" scope="colgroup">AYÇ/EQF</th></tr><tr>${["Bilgi", "Beceri", "Yetkinlik", "Bilgi", "Beceri", "Sorumluluk/özerklik"].map((label) => `<th scope="col">${label}</th>`).join("")}</tr></thead><tbody>${outcomes.map((outcome, index) => `<tr><th scope="row"><span class="table-title">ÖÇ-${index + 1}</span><span class="table-subtitle">${escapeHtml(smartOutcomeText(outcome))}</span></th>${["tyc", "eqf"].flatMap((frameworkId) => dimensions.map((dimension) => `<td>${cell(outcome, frameworkId, dimension)}</td>`)).join("")}</tr>`).join("")}</tbody></table></div>`;
+  return `<div class="table-wrap smart-coverage" data-smart-coverage><table><caption>Öğrenme çıktısı, çerçeve ve yeterlilik boyutu kapsam matrisi</caption><thead><tr><th rowspan="2" scope="col">Öğrenme çıktısı</th><th colspan="3" scope="colgroup">TYÇ</th><th colspan="3" scope="colgroup">AYÇ/EQF</th><th colspan="3" scope="colgroup">TYYÇ</th></tr><tr>${["Bilgi", "Beceri", "Yetkinlik", "Bilgi", "Beceri", "Sorumluluk/özerklik", "Bilgi", "Beceri", "Yetkinlik"].map((label) => `<th scope="col">${label}</th>`).join("")}</tr></thead><tbody>${outcomes.map((outcome, index) => `<tr><th scope="row"><span class="table-title">ÖÇ-${index + 1}</span><span class="table-subtitle">${escapeHtml(smartOutcomeText(outcome))}</span></th>${QUALIFICATION_FRAMEWORK_IDS.flatMap((frameworkId) => dimensions.map((dimension) => `<td>${cell(outcome, frameworkId, dimension)}</td>`)).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 
 function smartCoverageWarnings(report) {
   const outcomes = report?.outcomes || [];
   const missing = [];
-  for (const frameworkId of ["tyc", "eqf"]) {
+  for (const frameworkId of QUALIFICATION_FRAMEWORK_IDS) {
     const used = new Set(outcomes.map((outcome) => smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId))?.dimension).filter(Boolean));
     for (const dimension of ["knowledge", "skills", "competence"]) {
-      if (!used.has(dimension)) missing.push(`${frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF"} ${smartDimensionLabel(dimension, frameworkId)}`);
+      if (!used.has(dimension)) missing.push(`${smartFrameworkCode(frameworkId)} ${smartDimensionLabel(dimension, frameworkId)}`);
     }
   }
   const dimensionNotice = missing.length
     ? notice("warning", "Boyut kapsamı insan incelemesi gerektiriyor", `Program genelinde henüz görünmeyen boyutlar: ${missing.join(", ")}. Bu uyarı gönderimi otomatik engellemez.`)
-    : notice("success", "Altı boyut görünür", "TYÇ ve AYÇ/EQF için bilgi, beceri ve yetkinlik/özerklik boyutlarının her biri en az bir öğrenme çıktısıyla ilişkilendirildi.");
+    : notice("success", "Dokuz boyut görünür", "TYÇ, AYÇ/EQF ve TYYÇ için bilgi, beceri ve yetkinlik/özerklik boyutlarının her biri en az bir öğrenme çıktısıyla ilişkilendirildi.");
   const consistency = report?.program?.consistency || {};
-  const consistencyWarnings = [consistency.tyc?.warning, consistency.eqf?.warning].filter(Boolean);
+  const consistencyWarnings = [consistency.tyc?.warning, consistency.eqf?.warning, consistency.tyyc?.warning].filter(Boolean);
   const suggested = report?.program?.suggestedLevels || {};
-  const frameworkDifference = Number(suggested.tyc) && Number(suggested.eqf) && Number(suggested.tyc) !== Number(suggested.eqf)
-    ? `TYÇ ${suggested.tyc} ile AYÇ/EQF ${suggested.eqf} program önerileri ayrışıyor; çerçeveler ayrı incelenmelidir.`
+  const frameworkDifference = [suggested.tyc, suggested.eqf, suggested.tyyc].every(Number) && new Set([Number(suggested.tyc), Number(suggested.eqf), Number(suggested.tyyc)]).size > 1
+    ? `TYÇ ${suggested.tyc}, AYÇ/EQF ${suggested.eqf} ve TYYÇ ${suggested.tyyc} program önerileri ayrışıyor; çerçeveler ayrı incelenmelidir.`
     : "";
   const alignmentNotice = consistencyWarnings.length || frameworkDifference
     ? notice("warning", "Seviye tutarlılığı kontrolü", [...consistencyWarnings, frameworkDifference].filter(Boolean).join(" "))
-    : notice("success", "Seviye dağılımı tutarlı", "Motorun program düzeyi önerilerinde üç veya daha fazla seviye yayılımı ya da TYÇ/AYÇ ayrışması görülmedi.");
+    : notice("success", "Seviye dağılımı tutarlı", "Motorun program düzeyi önerilerinde üç veya daha fazla seviye yayılımı ya da TYÇ/AYÇ/TYYÇ ayrışması görülmedi.");
   return `${dimensionNotice}${alignmentNotice}`;
 }
 
 function smartProgramSummary(report) {
   const tycLevel = report?.program?.suggestedLevels?.tyc || "—";
   const eqfLevel = report?.program?.suggestedLevels?.eqf || "—";
+  const tyycLevel = report?.program?.suggestedLevels?.tyyc || "—";
   const cycle = report?.program?.higherEducationCycleSuggestion || smartCycleCrosswalk(tycLevel);
-  return `<div class="smart-program-summary"><div><span>Program TYÇ adayı</span><strong>Seviye ${tycLevel}</strong></div><div><span>Program AYÇ/EQF adayı</span><strong>Seviye ${eqfLevel}</strong></div><div><span>TYYÇ / Bologna döngüsü</span><strong>${escapeHtml(smartCycleLabel(cycle))}</strong></div></div>`;
+  return `<div class="smart-program-summary"><div><span>Program TYÇ adayı</span><strong>Seviye ${tycLevel}</strong></div><div><span>Program AYÇ/EQF adayı</span><strong>Seviye ${eqfLevel}</strong></div><div><span>Önerilen pedagojik TYYÇ düzeyi</span><strong>Seviye ${tyycLevel}</strong></div><div><span>TYYÇ / Bologna döngüsü</span><strong>${escapeHtml(smartCycleLabel(cycle))}</strong></div></div>`;
 }
 
 function renderSmartSuggestionReport(report, { interactive = true, appliedSelections = smartSuggestionApplied } = {}) {
   const outcomes = report?.outcomes || [];
-  if (!outcomes.length) return `<div class="smart-empty"><div class="empty-icon">${icon("layers")}</div><strong>Öğrenme çıktılarınızı yazın</strong><span>Her satıra bir ölçülebilir çıktı eklediğinizde TYÇ ve AYÇ/EQF önerileri otomatik oluşur.</span></div>`;
-  return `${smartProgramSummary(report)}${outcomes.map((outcome, index) => `<section class="smart-outcome"><div class="smart-outcome__title"><span>ÖÇ-${index + 1}</span><h4>${escapeHtml(smartOutcomeText(outcome) || "Öğrenme çıktısı")}</h4></div><div class="smart-suggestion-grid">${smartSuggestionCard(outcome, index, "tyc", interactive, appliedSelections)}${smartSuggestionCard(outcome, index, "eqf", interactive, appliedSelections)}</div></section>`).join("")}<section class="smart-coverage-section"><div class="section-heading"><div><span class="page-kicker">Program kapsamı</span><h3>TYÇ + AYÇ boyut matrisi</h3></div></div>${smartCoverageMatrix(report)}${smartCoverageWarnings(report)}</section>`;
+  if (!outcomes.length) return `<div class="smart-empty"><div class="empty-icon">${icon("layers")}</div><strong>Öğrenme çıktılarınızı yazın</strong><span>Her satıra bir ölçülebilir çıktı eklediğinizde TYÇ, AYÇ/EQF ve TYYÇ önerileri otomatik oluşur.</span></div>`;
+  return `${smartProgramSummary(report)}${outcomes.map((outcome, index) => `<section class="smart-outcome"><div class="smart-outcome__title"><span>ÖÇ-${index + 1}</span><h4>${escapeHtml(smartOutcomeText(outcome) || "Öğrenme çıktısı")}</h4></div><div class="smart-suggestion-grid">${QUALIFICATION_FRAMEWORK_IDS.map((frameworkId) => smartSuggestionCard(outcome, index, frameworkId, interactive, appliedSelections)).join("")}</div></section>`).join("")}<section class="smart-coverage-section"><div class="section-heading"><div><span class="page-kicker">Program kapsamı</span><h3>TYÇ + AYÇ + TYYÇ boyut matrisi</h3></div></div>${smartCoverageMatrix(report)}${smartCoverageWarnings(report)}</section>`;
 }
 
 function writeSmartReportToPanel() {
@@ -1086,7 +1208,7 @@ function analyzeProposalQualifications(form = document.querySelector("#proposal-
     const nextReport = suggestProgramQualificationAlignment({
       programId: String(form.elements.title?.value || "pilot-program"),
       outcomes: outcomes.map((text, index) => ({ id: `LO-${index + 1}`, text })),
-      preferredLevels: { tyc: Number(form.elements.level?.value || 6), eqf: Number(form.elements.level?.value || 6) },
+      preferredLevels: { tyc: Number(form.elements.level?.value || 6), eqf: Number(form.elements.level?.value || 6), tyyc: Math.max(5, Number(form.elements.level?.value || 6)) },
       manualOverrides: previousOverrides
     });
     const insufficient = (nextReport.outcomes || []).find((outcome) => outcome.inputQuality?.isMeasurable !== true);
@@ -1106,7 +1228,7 @@ function analyzeProposalQualifications(form = document.querySelector("#proposal-
     smartSuggestionReport = nextReport;
     smartSuggestionApplied = previousApplied;
     writeSmartReportToPanel();
-    if (announce) toast(`${outcomes.length} öğrenme çıktısı için TYÇ ve AYÇ/EQF önerileri yenilendi.`);
+    if (announce) toast(`${outcomes.length} öğrenme çıktısı için TYÇ, AYÇ/EQF ve TYYÇ önerileri yenilendi.`);
     return { ok: true, code: "ready", message: "Akıllı eşleme kalite kapısı geçildi.", report: smartSuggestionReport };
   } catch (error) {
     return failSmartQualificationAnalysis("analysis_error", `${error.message}. Taslak veya başvuru oluşturulmadı; öğrenme çıktılarını düzeltip yeniden analiz edin.`, panel);
@@ -1173,7 +1295,7 @@ function applySmartSelection(outcomeIndex, frameworkId, { quiet = false } = {}) 
   const sorted = [...smartSuggestionApplied].sort((a, b) => a.outcomeIndex - b.outcomeIndex || a.frameworkId.localeCompare(b.frameworkId));
   const valueFor = (key, fallback) => sorted.map((item) => {
     const value = item[key];
-    const label = `${item.frameworkId === "tyc" ? "TYÇ" : "AYÇ"} ÖÇ-${item.outcomeIndex + 1}`;
+    const label = `${smartFrameworkCode(item.frameworkId)} ÖÇ-${item.outcomeIndex + 1}`;
     const rendered = key === "suggestedAssessments"
       ? smartAssessmentText(value)
       : Array.isArray(value) ? value.join("; ") : (value || fallback);
@@ -1184,9 +1306,9 @@ function applySmartSelection(outcomeIndex, frameworkId, { quiet = false } = {}) 
   const evidenceField = document.querySelector("#proposal-smart-evidence");
   if (contentField) contentField.value = valueFor("suggestedContent", "Çıktıya bağlı vaka ve uygulama etkinliği");
   if (assessmentField) assessmentField.value = valueFor("suggestedAssessments", "Performans görevi + analitik rubrik");
-  if (evidenceField) evidenceField.value = sorted.map((item) => `${item.frameworkId === "tyc" ? "TYÇ" : "AYÇ"} ÖÇ-${item.outcomeIndex + 1}: ${smartEvidenceHint(item)}`).join("\n");
+  if (evidenceField) evidenceField.value = sorted.map((item) => `${smartFrameworkCode(item.frameworkId)} ÖÇ-${item.outcomeIndex + 1}: ${smartEvidenceHint(item)}`).join("\n");
   writeSmartReportToPanel();
-  if (!quiet) toast(`${frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF"} önerisi programa uygulandı; alanlar hâlâ eğitici tarafından düzenlenebilir.`);
+  if (!quiet) toast(`${smartFrameworkCode(frameworkId)} önerisi programa uygulandı; alanlar hâlâ eğitici tarafından düzenlenebilir.`);
 }
 
 function applySmartOverride(container) {
@@ -1195,7 +1317,7 @@ function applySmartOverride(container) {
   const frameworkId = String(container?.dataset.framework || "");
   const outcome = smartSuggestionReport?.outcomes?.[outcomeIndex];
   const reason = String(container?.querySelector(".smart-override-reason")?.value || "").trim();
-  if (!outcome || !["tyc", "eqf"].includes(frameworkId)) { deny("Manuel düzeltme hedefi geçersiz."); return; }
+  if (!outcome || !QUALIFICATION_FRAMEWORK_IDS.includes(frameworkId)) { deny("Manuel düzeltme hedefi geçersiz."); return; }
   const liveOutcomes = splitLearningOutcomes(document.querySelector("#proposal-form")?.elements?.outcomes?.value || "");
   const currentFingerprint = smartOutcomeFingerprint(liveOutcomes[outcomeIndex] || "", outcomeIndex);
   if (container?.dataset.outcomeFingerprint !== currentFingerprint || smartSuggestionReport?.orderedOutcomeFingerprint !== smartOrderedOutcomeFingerprint(liveOutcomes)) {
@@ -1236,23 +1358,24 @@ function updateSmartOverrideDescriptor(container) {
   const level = Number(container.querySelector(".smart-override-level")?.value);
   const dimension = container.querySelector(".smart-override-dimension")?.value;
   const target = container.querySelector(".smart-override-descriptor");
-  if (target && ["tyc", "eqf"].includes(frameworkId)) target.textContent = smartDescriptorForSelection(frameworkId, level, dimension);
+  if (target && QUALIFICATION_FRAMEWORK_IDS.includes(frameworkId)) target.textContent = smartDescriptorForSelection(frameworkId, level, dimension);
 }
 
 function proposalPage() {
   const role = currentRole();
   const submitLabel = state.roleId === "externalInstructor" ? "Kurum dışı eğitici olarak koordinatörlüğe ilet" : "Koordinatörlüğe ilet";
-  return `<div class="page-container">${pageHeader("Başvuru • Evre 1", "Yeni mikro yeterlilik programı önerisi", "Zorunlu alanları tamamlayın; bu form yalnızca tarayıcınızdaki pilot veri katmanına sentetik kayıt oluşturur.", `<button class="button button--secondary" data-nav="frameworks">${icon("layers")} TYÇ / AYÇ matrisini aç</button>`)}
+  return `<div class="page-container">${pageHeader("Başvuru • Evre 1", "Yeni mikro yeterlilik programı önerisi", "Zorunlu alanları tamamlayın; bu form yalnızca tarayıcınızdaki pilot veri katmanına sentetik kayıt oluşturur.", `<button class="button button--secondary" data-nav="frameworks">${icon("layers")} TYÇ / AYÇ / TYYÇ matrisini aç</button>`)}
     ${notice("success", "Başvuru sahibi demo kimliği", `${role.name} • ${role.label}. Gönderim bu rol ve kişi adına sahiplik ile denetim kaydı oluşturur.`)}
     <div class="form-shell"><aside class="card steps" aria-label="Form adımları"><div class="step active"><span>1</span><div><strong>Program bilgileri</strong><small>Ad, birim, hedef kitle</small></div></div><div class="step"><span>2</span><div><strong>Akademik yapı</strong><small>Çıktı, AKTS, TYÇ</small></div></div><div class="step"><span>3</span><div><strong>Değerlendirme</strong><small>Kanıt ve rubrik</small></div></div><div class="step"><span>4</span><div><strong>Önizleme</strong><small>Pilot kontrol ve gönderim</small></div></div></aside>
       <form class="card form-card" id="proposal-form">
         <section class="form-section"><h3>Program kimliği</h3><p>Başvuru, seçili demo rolü adına oluşturulur.</p><div class="form-grid"><div class="field full"><label class="required" for="proposal-title">Program adı</label><input id="proposal-title" name="title" required minlength="8" placeholder="Örn. Dijital Üretimde Veri Okuryazarlığı" /></div><div class="field"><label for="proposal-unit">Akademik birim</label><select id="proposal-unit" name="unit"><option>Mühendislik Fakültesi</option><option>Eğitim Fakültesi</option><option>Lisansüstü Eğitim Enstitüsü</option><option>Sürekli Eğitim Merkezi</option></select></div><div class="field"><label for="proposal-audience">Hedef kitle</label><input id="proposal-audience" name="audience" value="Lisans öğrencileri ve yeni mezunlar" /></div><div class="field full"><label class="required" for="proposal-summary">Program özeti</label><textarea id="proposal-summary" name="summary" required minlength="20" placeholder="Programın amacı ve kapsamı"></textarea></div></div></section>
-        <section class="form-section"><h3>Akademik yapı ve pilot parametreler</h3><p>1 AKTS = 25 saat, TYÇ düzeyi ve oranlar yalnız pilot ön kontrolüdür; kurumsal doğrulama gerekir.</p><div class="form-grid"><div class="field"><label class="required" for="proposal-ects">Önerilen AKTS</label><input id="proposal-ects" name="ects" type="number" min="1" max="12" value="3" required /></div><div class="field"><label for="proposal-workload">Kavramsal iş yükü</label><input id="proposal-workload" name="workload" type="number" value="75" readonly /><small>AKTS × 25 saat pilot hesabı</small></div><div class="field"><label for="proposal-level">Eğiticinin başlangıç TYÇ düzeyi</label><select id="proposal-level" name="level"><option value="1">1 • Temel başlangıç</option><option value="2">2 • Temel olgusal</option><option value="3">3 • Başlangıç kuramsal</option><option value="4">4 • Orta düzey</option><option value="5">5 • Önlisans bandı</option><option value="6" selected>6 • Lisans bandı</option><option value="7">7 • Yüksek lisans bandı</option><option value="8">8 • Doktora bandı</option></select><small>Motor TYÇ ve AYÇ düzeylerini ayrı önerir. 1–4 seviyelerinde TYYÇ/Bologna yükseköğretim döngüsü crosswalk'u üretilmez.</small></div><div class="field"><label for="proposal-remote">Uzaktan sunum oranı (%)</label><input id="proposal-remote" name="remoteRate" type="number" min="0" max="100" value="40" /></div><div class="field full"><label class="required" for="proposal-outcomes">Öğrenme çıktıları</label><textarea id="proposal-outcomes" name="outcomes" data-smart-outcome required minlength="20" placeholder="Her satıra bir ölçülebilir öğrenme çıktısı yazın&#10;Örn. Karmaşık bir veri setinin güvenilirliğini eleştirel ölçütlerle değerlendirir.&#10;Örn. Kanıta dayalı bir görselleştirme tasarlar ve gerekçelendirir."></textarea><small>Her satır ayrı analiz edilir. Ölçülebilir fiil, karmaşıklık, özerklik ve kanıt işaretleri 320 ms sonra otomatik değerlendirilir.</small></div></div></section>
-        <section class="form-section smart-qualification-shell" id="smart-alignment-form" aria-labelledby="smart-alignment-title"><div class="smart-alignment-header"><div><span class="page-kicker">Açıklanabilir pilot analiz</span><h3 id="smart-alignment-title">Akıllı Yeterlilik Eşleme</h3><p>Her öğrenme çıktısı için TYÇ ve AYÇ/EQF ayrı önerilir; seçme ve uygulama yalnız sizin onayınızla gerçekleşir.</p></div><button class="button button--secondary button--sm" type="button" data-action="reanalyze-smart-suggestions">${icon("refresh")} Yeniden analiz et</button></div>
+        <section class="form-section"><h3>Akademik yapı ve pilot parametreler</h3><p>AKTS ile toplam öğrenen iş yükü bağlıdır: 25 × AKTS ≤ iş yükü ≤ 30 × AKTS. Seviye ve oranlar yalnız pilot ön kontrolüdür.</p><div class="form-grid"><div class="field"><label class="required" for="proposal-ects">Önerilen AKTS</label><input id="proposal-ects" name="ects" type="number" min="1" max="6" step="1" value="3" required /></div><div class="field"><label class="required" for="proposal-workload">Toplam öğrenen iş yükü</label><input id="proposal-workload" name="workload" type="number" min="25" max="180" step="0.25" value="75" required /><small>3 AKTS için geçerli bant 75–90 saattir; aşağıdaki sekiz bileşenin toplamı bu alanla birebir eşleşmelidir.</small></div><div class="field"><label for="proposal-level">Eğiticinin başlangıç TYÇ düzeyi</label><select id="proposal-level" name="level"><option value="1">1 • Temel başlangıç</option><option value="2">2 • Temel olgusal</option><option value="3">3 • Başlangıç kuramsal</option><option value="4">4 • Orta düzey</option><option value="5">5 • Önlisans bandı</option><option value="6" selected>6 • Lisans bandı</option><option value="7">7 • Yüksek lisans bandı</option><option value="8">8 • Doktora bandı</option></select><small>Motor TYÇ, AYÇ/EQF ve TYYÇ adaylarını ayrı üretir. TYYÇ yalnız 5–8 aralığında önerilen pedagojik referans düzeyidir; diploma eşdeğerliği değildir.</small></div><div class="field"><label for="proposal-remote">Uzaktan sunum oranı (%)</label><input id="proposal-remote" name="remoteRate" type="number" min="0" max="100" value="40" /></div><div class="field full"><label class="required" for="proposal-outcomes">Öğrenme çıktıları</label><textarea id="proposal-outcomes" name="outcomes" data-smart-outcome required minlength="20" placeholder="Her satıra bir ölçülebilir öğrenme çıktısı yazın&#10;Örn. Karmaşık bir veri setinin güvenilirliğini eleştirel ölçütlerle değerlendirir.&#10;Örn. Kanıta dayalı bir görselleştirme tasarlar ve gerekçelendirir."></textarea><small>Her satır ayrı analiz edilir. Fiil, nesne, bağlam, karmaşıklık, özerklik, sorumluluk ve kanıt işaretleri 320 ms sonra otomatik değerlendirilir.</small></div></div></section>
+        <section class="form-section"><h3>Sekiz bileşenli öğrenen iş yükü</h3><p>Eksik alan veya toplam uyuşmazlığı taslak/gönderim işlemini bloke eder. Kesirli saatlerde yuvarlama gerekçesi insan incelemesinde kaydedilir.</p><div class="form-grid">${workloadComponents.map(([key, label]) => `<div class="field"><label class="required" for="proposal-workload-${escapeHtml(key)}">${escapeHtml(label)}</label><input id="proposal-workload-${escapeHtml(key)}" name="workload_${escapeHtml(key)}" type="number" min="0" step="0.25" value="${PROPOSAL_WORKLOAD_SEED[key]}" required /></div>`).join("")}</div></section>
+        <section class="form-section smart-qualification-shell" id="smart-alignment-form" aria-labelledby="smart-alignment-title"><div class="smart-alignment-header"><div><span class="page-kicker">Açıklanabilir pilot analiz</span><h3 id="smart-alignment-title">Akıllı Yeterlilik Eşleme</h3><p>Her öğrenme çıktısı için TYÇ, AYÇ/EQF ve TYYÇ ayrı önerilir; seçme ve uygulama yalnız sizin onayınızla gerçekleşir.</p></div><button class="button button--secondary button--sm" type="button" data-action="reanalyze-smart-suggestions">${icon("refresh")} Yeniden analiz et</button></div>
           ${notice("warning", "Öneri karar değildir", QUALIFICATION_ADVISORY_NOTICE)}
           <input id="proposal-smart-mapping" name="qualificationMapping" type="hidden" value="{}" />
           <div id="smart-suggestion-results" class="smart-suggestion-results" aria-live="polite" aria-busy="false">${renderSmartSuggestionReport(null)}</div>
-          <div class="smart-applied-fields" data-smart-override><div class="field full"><label for="proposal-smart-content">Uygulanan içerik önerileri</label><textarea id="proposal-smart-content" name="smartContent" placeholder="Bir TYÇ/AYÇ önerisini uyguladığınızda doldurulur; eğitici tarafından serbestçe düzeltilebilir."></textarea></div><div class="field full"><label for="proposal-smart-assessment">Uygulanan ölçme-değerlendirme önerileri</label><textarea id="proposal-smart-assessment" name="smartAssessment" placeholder="Öneriyi uygulayın veya kendi ölçme yönteminizi yazın."></textarea></div><div class="field full"><label for="proposal-smart-evidence">Uygulanan başarı kanıtı önerileri</label><textarea id="proposal-smart-evidence" name="smartEvidence" placeholder="Rubrik, ürün, performans veya değerlendirici kayıt izini düzenleyin."></textarea></div></div>
+          <div class="smart-applied-fields" data-smart-override><div class="field full"><label for="proposal-smart-content">Uygulanan içerik önerileri</label><textarea id="proposal-smart-content" name="smartContent" placeholder="Bir TYÇ/AYÇ/TYYÇ önerisini uyguladığınızda doldurulur; eğitici tarafından serbestçe düzeltilebilir."></textarea></div><div class="field full"><label for="proposal-smart-assessment">Uygulanan ölçme-değerlendirme önerileri</label><textarea id="proposal-smart-assessment" name="smartAssessment" placeholder="Öneriyi uygulayın veya kendi ölçme yönteminizi yazın."></textarea></div><div class="field full"><label for="proposal-smart-evidence">Uygulanan başarı kanıtı önerileri</label><textarea id="proposal-smart-evidence" name="smartEvidence" placeholder="Rubrik, ürün, performans veya değerlendirici kayıt izini düzenleyin."></textarea></div></div>
           <div class="permission-note"><strong>İnsan kontrolü zorunlu</strong><span>Otomatik analiz hiçbir alanı sessizce uygulamaz. Eğitici öneriyi seçer, gerekirse insan gerekçesiyle düzeltir; Komisyon aynı kaydı salt-okunur inceler.</span></div>
         </section>
         <section class="form-section"><h3>Ölçme, kanıt ve kalite güvencesi</h3><p>Gerçek kimlik veya biyometrik veri yüklemeyin. Dosya alanı yalnız üst veri simülasyonudur.</p><div class="form-grid"><div class="field"><label for="proposal-assessment">Birincil değerlendirme</label><select id="proposal-assessment" name="assessment"><option>Proje + rubrik</option><option>Portfolyo + sözlü sunum</option><option>Uygulama + kısa sınav</option></select></div><div class="field"><label for="proposal-evidence">Pilot kanıt sayısı</label><input id="proposal-evidence" name="evidence" type="number" min="1" value="3" /></div><div class="field full"><label class="required" for="proposal-qualifications">Eğitici yeterlilikleri</label><textarea id="proposal-qualifications" name="qualifications" required minlength="15" placeholder="Alan uzmanlığı, öğretim deneyimi ve doğrulanacak kanıtlar"></textarea></div><div class="field full"><label class="required" for="proposal-quality">Kalite güvence planı</label><textarea id="proposal-quality" name="quality" required minlength="15" placeholder="Rubrik kalibrasyonu, geri bildirim ve kanıt saklama yaklaşımı"></textarea></div><div class="field"><label for="proposal-fee-mode">Program türü</label><select id="proposal-fee-mode" name="feeMode"><option>Ücretsiz</option><option>Ücretli • Pilot taslak</option></select></div><div class="field"><label for="proposal-fee">Örnek ücret (TL)</label><input id="proposal-fee" name="fee" type="number" min="0" value="0" /><small>Pilot parametre — mali birim doğrulaması gerekir</small></div><button class="dropzone full" type="button" data-action="mock-upload">${icon("upload")}<strong>Sentetik kanıt üst verisi ekle</strong><span>PDF, PNG veya JPG • Dosya içeriği aktarılmaz</span></button></div></section>
@@ -1266,7 +1389,7 @@ function applicationsPage() {
   const applications = visibleApplications();
   const actions = `${state.roleId === "learner" ? `<button class="button button--secondary" data-nav="recognition">${icon("upload")} Dış kazanım başvurusu</button>` : ""}${["instructor","externalInstructor"].includes(state.roleId) ? `<button class="button" data-nav="proposal">${icon("plus")} Program önerisi</button>` : ""}`;
   return `<div class="page-container">${pageHeader("Başvuru yönetimi", "Başvurular ve süre takibi", "Program önerileri ile dış kazanım tanınma talepleri aynı denetim izi içinde, farklı kontrol yollarıyla izlenir.", actions)}
-    <div class="toolbar"><div class="search">${icon("search")}<label class="sr-only" for="application-search">Kod, başlık veya başvuran ara</label><input id="application-search" type="search" placeholder="Kod, başlık veya başvuran ara" /></div><div class="toolbar-group"><select id="application-status" class="select" aria-label="Durum filtresi"><option value="">Tüm durumlar</option><option value="review">Ön incelemede</option><option value="commission">Komisyon gündeminde</option><option value="revision">Revizyon bekliyor</option><option value="approved">Pilot onaylandı</option></select></div></div>
+    <div class="toolbar"><div class="search">${icon("search")}<label class="sr-only" for="application-search">Kod, başlık veya başvuran ara</label><input id="application-search" type="search" placeholder="Kod, başlık veya başvuran ara" /></div><div class="toolbar-group"><select id="application-status" class="select" aria-label="Durum filtresi"><option value="">Tüm durumlar</option><option value="review">Ön incelemede</option><option value="commission">Komisyon gündeminde</option><option value="revision">Revizyon bekliyor</option><option value="deferred">Kurumsal doğrulama bekliyor</option><option value="approved">Doğrulanmış onay</option></select></div></div>
     <div class="table-wrap"><table><caption class="sr-only">${escapeHtml(currentRole().label)} rolünün görebildiği başvurular</caption><thead><tr><th scope="col">Başvuru</th><th scope="col">Tür / Başvuran</th><th scope="col">Durum</th><th scope="col">30 günlük gösterge</th><th scope="col">Pilot analiz</th><th scope="col"><span class="sr-only">İşlem</span></th></tr></thead><tbody id="application-rows">${applications.length ? applications.map(applicationRow).join("") : `<tr class="empty-table-row"><td colspan="6"><strong>Bu role ait başvuru bulunamadı</strong><span>Yeni bir taslak oluşturduğunuzda yalnız kendi kaydınız burada görünür.</span></td></tr>`}</tbody></table></div><div class="card empty-state" id="application-filter-empty" hidden><div class="empty-icon">${icon("search")}</div><h3>Filtreyle eşleşen başvuru yok</h3><p>Arama metnini veya durum filtresini değiştirin.</p></div>
     <div class="section">${notice("warning", "Süre göstergesi hakkında", "30 günlük sayaç yalnızca kaynak dosyadaki pilot kuralı görselleştirir. Sürenin başlangıcı, durması ve kurumsal eskalasyon yöntemi ayrıca doğrulanmalıdır.")}</div>
   </div>`;
@@ -1279,11 +1402,12 @@ function applicationRow(item) {
 }
 
 function recognitionPage() {
-  return `<div class="page-container">${pageHeader("Başvuru • Evre 1", "Kurum dışı kazanım tanınma talebi", "Dış öğrenme kanıtını ve program bilgisini sentetik verilerle girin. Doğrulama bağlantısı sunucu tarafından açılmaz; gerçek belge yüklenmez.")}
+  const markup = `<div class="page-container">${pageHeader("Başvuru • Evre 1", "Kurum dışı kazanım tanınma talebi", "Dış öğrenme kanıtını ve program bilgisini sentetik verilerle girin. Doğrulama bağlantısı sunucu tarafından açılmaz; gerçek belge yüklenmez.")}
     <div class="grid grid-2"><form class="card form-card" id="recognition-form"><section class="form-section"><h3>Kazanım ve sağlayıcı</h3><div class="form-grid"><div class="field full"><label class="required" for="recognition-title">Eğitim adı</label><input id="recognition-title" name="title" required value="Veri Görselleştirme Temelleri" /></div><div class="field"><label class="required" for="recognition-provider">Sağlayıcı</label><input id="recognition-provider" name="provider" required value="Örnek Açık Öğrenme Merkezi" /></div><div class="field"><label for="recognition-url">Doğrulama bağlantısı</label><input id="recognition-url" name="url" type="url" value="https://example.invalid/pilot-belge" /></div></div></section><section class="form-section"><h3>Kredi ve karşılaştırma</h3><div class="form-grid"><div class="field"><label class="required" for="recognition-ects">Talep edilen AKTS</label><input id="recognition-ects" name="ects" type="number" min="1" max="12" value="2" required /></div><div class="field"><label class="required" for="recognition-remote">Uzaktan eğitim oranı (%)</label><input id="recognition-remote" name="remoteRate" type="number" min="0" max="100" value="100" required /></div><div class="field full"><label for="recognition-course">Karşılaştırılacak kurumsal ders</label><input id="recognition-course" name="comparedCourse" value="İstatistiksel Veri Analizi" /></div></div></section><section class="form-section"><h3>Kanıt üst veri simülasyonu</h3><button class="dropzone" type="button" data-action="mock-upload">${icon("upload")}<strong>Örnek sertifika ve içerik planı</strong><span>Dosya seçimi yalnız görünüm simülasyonudur; dosya içeriği aktarılmaz.</span></button></section><div class="form-actions"><button class="button button--secondary" type="button" data-action="save-draft">Taslağı kaydet</button><button class="button" type="submit">Ön incelemeye gönder ${icon("arrow")}</button></div></form>
-      <aside class="grid"><div class="card"><div class="card-header"><div><h2>Pilot ön kontrol özeti</h2><p>Başvurudan sonra deterministik örnek bulgular üretilir.</p></div>${statusBadge("simulated")}</div><div class="card-body"><div class="timeline"><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>Belge bütünlüğü</strong><span>Sağlayıcı teyidi insan incelemesine açıktır.</span></div></div><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>İçerik karşılaştırması</strong><span>Benzerlik işareti karar değildir.</span></div></div><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>AKTS portföy hesabı</strong><span>Toplam kredi ve uzaktan kaynak payı ayrı izlenir.</span></div></div></div></div></div>${notice("warning", "%50 ifadesi basitleştirilmez", "Kaynak, transfer edilen mikro yeterlilik kredilerinin uzaktan kaynaklı bölümüne ilişkindir. Tek eğitimin sunum oranı ile toplam portföy payı ayrı gösterilir.")}</aside>
+      <aside class="grid"><div class="card"><div class="card-header"><div><h2>Pilot ön kontrol özeti</h2><p>Başvurudan sonra deterministik örnek bulgular üretilir.</p></div>${statusBadge("simulated")}</div><div class="card-body"><div class="timeline"><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>Belge bütünlüğü</strong><span>Sağlayıcı teyidi insan incelemesine açıktır.</span></div></div><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>İçerik karşılaştırması</strong><span>Benzerlik işareti karar değildir.</span></div></div><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>Üç ayrı sonuç</strong><span>Belge, AKTS ve ders ikamesi bağımsız kararlardır.</span></div></div><div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>AKTS portföy hesabı</strong><span>Toplam kredi ve uzaktan kaynak payı ayrı izlenir.</span></div></div></div></div></div>${notice("warning", "%50 ifadesi basitleştirilmez", "Kaynak, transfer edilen mikro yeterlilik kredilerinin uzaktan kaynaklı bölümüne ilişkindir. Tek eğitimin sunum oranı ile toplam portföy payı ayrı gösterilir.")}</aside>
     </div>
   </div>`;
+  return markup.replace('id="recognition-ects" name="ects" type="number" min="1" max="12"', 'id="recognition-ects" name="ects" type="number" min="1" max="6" step="1"');
 }
 
 function commissionPage() {
@@ -1297,7 +1421,7 @@ function commissionPage() {
   const decisionActions = application.status !== "commission"
     ? notice("success", "Karar kaydı kapalı", "Bu başvuru artık Komisyon gündeminde değildir. Geçmiş ve kanıtlar salt-okunur görüntülenebilir.")
     : state.roleId === "commission"
-    ? `<div class="decision-buttons"><button class="button button--success" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="approved">${icon("check")} Pilot onayını kaydet</button><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="revision">Revizyon iste</button><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="commission">Çekimser görüş ekle</button><button class="button button--danger" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="rejected">Gerekçeli pilot ret</button></div>`
+    ? `<div class="decision-buttons"><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="deferred">${icon("shield")} Kurumsal doğrulamaya ertele</button><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="revision">Revizyon iste</button><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="commission">Çekimser görüş ekle</button><button class="button button--danger" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="rejected">Gerekçeli pilot ret</button></div>${notice("warning", "Nihai onay kapalı", "Kurumsal doğrulama tamamlanmadığı için bu kontrollü pilotta approved/credentialed işlemi sunulmaz.")}`
     : state.roleId === "coordinator"
       ? `<div class="decision-buttons"><button class="button button--secondary" data-action="decision" data-id="${escapeHtml(application.id)}" data-status="revision">Eksik kanıt için revizyon iste</button></div>${notice("warning", "Koordinatörlük yetkisi", "Koordinatörlük ön inceleme ve revizyon isteği oluşturabilir; akademik onay veya ret Komisyon demo rolüne aittir.")}`
       : notice("warning", "Salt-okunur karar görünümü", "Sistem yöneticisi akademik karar kaydedemez. Bu rol yalnız pilot yapılandırma ve denetim görünümünü inceler.");
@@ -1319,7 +1443,7 @@ function commissionTab(application, tab) {
   if (tab === "evidence") return `<div class="section"><div class="grid grid-2">${["Program bilgi paketi","Öğrenme çıktısı matrisi","Ölçme rubriği","Eğitici yeterlilik kanıtı","İş yükü hesabı","Kalite güvence planı"].map((title,index) => `<article class="card"><div class="card-body"><div class="integration-head"><div><strong>${escapeHtml(title)}</strong><span class="table-subtitle">Sentetik belge metadata • PDF</span></div>${index < application.evidence ? statusBadge("approved","Mevcut") : statusBadge("review","Bekliyor")}</div></div></article>`).join("")}</div></div>`;
   if (tab === "curriculum") return `<div class="section"><h3>Öğrenme çıktısı eşleme matrisi</h3><div class="matrix">${[["Veri kaynağını değerlendirir","Veri güvenilirliği ölçütlerini uygular",82],["Temel görselleştirmeyi yorumlar","Grafik ve tablo yorumlar",64],["Kanıta dayalı kısa analiz üretir","İstatistiksel çıkarım yapar",38]].map(([a,b,value]) => `<div class="matrix-row"><span>${a}<small class="table-subtitle">Önerilen program</small></span><span>${b}<small class="table-subtitle">${escapeHtml(application.comparedCourse)}</small></span><strong>%${value}</strong></div>`).join("")}</div>${notice("warning", "Yorum gerektirir", "Eşleme oranları deterministik pilot örnektir; otomatik onay veya ret üretmez.")}</div>`;
   if (tab === "history") return `<div class="section"><div class="timeline">${state.audit.filter((event) => event.entityId === application.id).map(auditTimeline).join("") || `<p class="page-subtitle">Bu başvuru için kayıtlı olay bulunamadı.</p>`}</div></div>`;
-  return `<div class="analysis-band"><div class="band"><span>Pilot müfredat benzerliği</span><strong>%${application.similarity}</strong><span>Karşılaştırılabilirlik işareti</span></div><div class="band is-active"><span>TYÇ öneri uyumu</span><strong>%${application.tycMatch}</strong><span>TYÇ ${application.kind === "internal" ? 6 : 5} • Gerekçeli öneri</span></div><div class="band"><span>Pilot kanıt durumu</span><strong>${application.evidence}/${application.evidence + application.missing}</strong><span>${application.missing ? `${application.missing} eksik` : "Zorunlu metadata tam"}</span></div></div><div class="grid grid-2"><article class="card"><div class="card-body"><h3>AKTS ön kontrolü</h3><div class="progress"><span style="width:${Math.min(100, application.ects / 24 * 100)}%"></span></div><div class="progress-labels"><span>Öneri: ${application.ects} AKTS</span><span>Pilot tavan: 24 AKTS</span></div><p class="table-subtitle">240 AKTS’lik örnek lisans programının %10’u varsayılmıştır; Senato doğrulaması gerekir.</p></div></article><article class="card"><div class="card-body"><h3>Uzaktan kredi portföyü</h3><div class="progress progress--warning"><span style="width:${application.portfolioRemoteShare || 42}%"></span></div><div class="progress-labels"><span>Portföy payı: %${application.portfolioRemoteShare || 42}</span><span>Pilot gösterge: %50</span></div><p class="table-subtitle">Tek programın sunum oranından ayrıdır ve nihai bloklama yapmaz.</p></div></article></div>`;
+  return `<div class="analysis-band"><div class="band"><span>Pilot müfredat benzerliği</span><strong>%${application.similarity}</strong><span>Karşılaştırılabilirlik işareti</span></div><div class="band is-active"><span>TYÇ öneri uyumu</span><strong>%${application.tycMatch}</strong><span>TYÇ ${application.kind === "internal" ? 6 : 5} • Gerekçeli öneri</span></div><div class="band"><span>Pilot kanıt durumu</span><strong>${application.evidence}/${application.evidence + application.missing}</strong><span>${application.missing ? `${application.missing} eksik` : "Zorunlu metadata tam"}</span></div></div><div class="grid grid-2"><article class="card"><div class="card-body"><h3>AKTS ön kontrolü</h3><div class="permission-note"><strong>${application.ects} AKTS önerisi</strong><span>Payda, yüzde hesabı, yuvarlama ve üst sınır kurumsal doğrulama olmadan hesaplanmaz.</span></div><p class="table-subtitle">%10 ifadesi yalnız doğrulanmamış örnek göstergedir; kesin tavan veya otomatik karar değildir.</p></div></article><article class="card"><div class="card-body"><h3>Uzaktan kredi portföyü</h3><div class="progress progress--warning"><span style="width:${application.portfolioRemoteShare || 42}%"></span></div><div class="progress-labels"><span>Portföy payı: %${application.portfolioRemoteShare || 42}</span><span>Doğrulanmamış örnek: %50</span></div><p class="table-subtitle">Tek programın sunum oranından ayrıdır ve nihai bloklama yapmaz.</p></div></article></div>`;
 }
 
 function programsPage() {
@@ -1439,38 +1563,17 @@ function visibleSmartAlignments() {
 }
 
 function smartReportForAlignment(record, application = null) {
-  const program = state.programs.find((item) => item.id === record?.programId || item.code === record?.applicationCode || item.code === application?.code);
-  const outcomeTexts = program?.outcomes?.length
-    ? program.outcomes
-    : record?.outcomes?.map((item) => item.text).filter(Boolean)?.length
-      ? record.outcomes.map((item) => item.text)
-      : Array.isArray(application?.formData?.outcomes) && application.formData.outcomes.length
-        ? application.formData.outcomes
-        : [
-          "Veri kaynağının güvenilirliğini eleştirel ölçütlerle değerlendirir.",
-          "Karmaşık bir veri problemi için kanıta dayalı çözüm tasarlar.",
-          "Proje sürecinde etik sorumluluk alır ve ekip kararlarını gerekçelendirir."
-        ];
-  try {
-    return suggestProgramQualificationAlignment({
-      programId: program?.id || record?.programId || application?.id || "pilot-program",
-      outcomes: outcomeTexts.map((text, index) => ({ id: record?.outcomes?.[index]?.outcomeId || `LO-${index + 1}`, text })),
-      preferredLevels: { tyc: Number(program?.level || 6), eqf: Number(program?.level || 6) },
-      manualOverrides: record?.manualOverrides || [],
-      boardDecision: record?.boardDecision?.source === "human_commission" ? {
-        actorRole: "commission",
-        decision: record.boardDecision.decision,
-        decidedBy: record.boardDecision.decidedBy,
-        rationale: record.boardDecision.rationale,
-        tycLevel: record.boardDecision.decidedLevels?.tyc,
-        eqfLevel: record.boardDecision.decidedLevels?.eqf,
-        decidedAt: record.boardDecision.decidedAt,
-        meetingReference: record.boardDecision.meetingReference
-      } : null
-    });
-  } catch {
-    return null;
-  }
+  if (!record) return null;
+  const stored = readSmartSuggestionSnapshot(record.suggestionSnapshot, {
+    engineVersion: record.engineVersion,
+    orderedOutcomeFingerprint: record.orderedOutcomeFingerprint,
+    outcomes: record.outcomes,
+    program: record.program,
+    manualOverrides: record.manualOverrides,
+    appliedSelections: record.appliedSelections,
+    higherEducationCycleSuggestion: record.higherEducationCycleSuggestion
+  });
+  return stored.ok ? stored.report : null;
 }
 
 function smartAlignmentForApplication(application) {
@@ -1481,16 +1584,17 @@ function smartAlignmentDecisionStatus(record) {
   const decision = record?.boardDecision;
   if (!decision || decision.source !== "human_commission") return notice("warning", "İnsan kurul kararı bekleniyor", "Motor önerisi ve eğitici seçimi akademik karar değildir. Komisyon kararı ayrı bir kayıt olarak tutulur.");
   const labels = { approved: "İnsan kurul onayı", revision_requested: "İnsan kurul revizyon isteği", rejected: "İnsan kurul reddi", deferred: "İnsan kurul ertelemesi" };
-  return notice(decision.decision === "approved" ? "success" : "warning", labels[decision.decision] || "İnsan kurul kararı", `${decision.decidedBy} • ${decision.rationale} • TYÇ ${decision.decidedLevels?.tyc} / AYÇ ${decision.decidedLevels?.eqf}. Öneri kaydı değiştirilmedi.`);
+  return notice(decision.decision === "approved" ? "success" : "warning", labels[decision.decision] || "İnsan kurul kararı", `${decision.decidedBy} • ${decision.rationale} • TYÇ ${decision.decidedLevels?.tyc} / AYÇ ${decision.decidedLevels?.eqf} / TYYÇ ${decision.decidedLevels?.tyyc}. Öneri kaydı değiştirilmedi.`);
 }
 
 function smartReadOnlyReview(record, report, { application = null, compact = false } = {}) {
-  if (!report) return notice("risk", "Akıllı eşleme okunamadı", "Kayıt için güvenli pilot öneri yeniden üretilemedi; insan incelemesi ve kaynak matrisi kullanılmalıdır.");
+  if (!report) return notice("risk", "Akıllı eşleme snapshot'ı doğrulanamadı", "Saklanan tam öneri raporunun bütünlük hash'i veya seçim bağları doğrulanamadı. Sistem güncel motorla sessizce yeniden hesaplama yapmaz; kayıt güvenli biçimde incelemeye kapatıldı.");
   const appliedSelections = record?.appliedSelections || [];
   const boardAction = record && application && state.roleId === "commission" && application.status === "commission"
     ? `<button class="button button--secondary button--sm" type="button" data-action="qualification-board-decision" data-id="${escapeHtml(application.id)}">${record.boardDecision ? "Ayrı kurul kaydını güncelle" : "Ayrı insan kurul kararı kaydet"}</button>`
     : "";
-  const header = `<div class="smart-review-head"><div><span class="page-kicker">${escapeHtml(record?.applicationCode || application?.code || "Pilot kayıt")}</span><h3>${escapeHtml(record?.programTitle || application?.title || "Akıllı yeterlilik eşlemesi")}</h3><p>${escapeHtml(record?.ownerName || application?.applicant || "Eğitici pilot kullanıcısı")} • ${appliedSelections.length} kullanıcı onaylı seçim • Motor ${escapeHtml(record?.engineVersion || QUALIFICATION_SUGGESTION_ENGINE_VERSION)}</p></div>${boardAction}</div>`;
+  const snapshotMeta = record?.suggestionSnapshot;
+  const header = `<div class="smart-review-head"><div><span class="page-kicker">${escapeHtml(record?.applicationCode || application?.code || "Pilot kayıt")}</span><h3>${escapeHtml(record?.programTitle || application?.title || "Akıllı yeterlilik eşlemesi")}</h3><p>${escapeHtml(record?.ownerName || application?.applicant || "Eğitici pilot kullanıcısı")} • ${appliedSelections.length} kullanıcı onaylı seçim • Motor ${escapeHtml(record?.engineVersion || QUALIFICATION_SUGGESTION_ENGINE_VERSION)} • Kaynak ${escapeHtml(snapshotMeta?.referenceDataVersion || "—")}</p><small data-smart-snapshot-hash="${escapeHtml(snapshotMeta?.integrityHash || "")}">Değişmez tam rapor snapshot'ı • ${escapeHtml(snapshotMeta?.integrityHash || "bütünlük hash'i yok")}</small></div>${boardAction}</div>`;
   if (compact) return `<article class="card smart-review-card" data-smart-review><div class="card-body">${header}${smartProgramSummary(report)}${smartAlignmentDecisionStatus(record)}<details><summary>Salt-okunur eşleme ayrıntısını aç</summary><div class="smart-review-details">${renderSmartSuggestionReport(report, { interactive: false, appliedSelections })}</div></details></div></article>`;
   return `<section class="smart-readonly-review" data-smart-review>${header}${notice("warning", "Öneri karar değildir", QUALIFICATION_ADVISORY_NOTICE)}${smartAlignmentDecisionStatus(record)}${renderSmartSuggestionReport(report, { interactive: false, appliedSelections })}</section>`;
 }
@@ -1498,7 +1602,7 @@ function smartReadOnlyReview(record, report, { application = null, compact = fal
 function smartAlignmentLibrary() {
   const records = visibleSmartAlignments();
   if (!records.length) return `<section class="card section" data-smart-review><div class="card-body"><h2>Programla bağlı akıllı eşleme kayıtları</h2><p class="page-subtitle">Henüz bu role görünür bir akıllı eşleme kaydı yok. İç veya dış eğitici, program önerisinde öğrenme çıktılarını analiz edip taslağı kaydettiğinde applicationId/programId bağlantısı burada salt-okunur görünür.</p></div></section>`;
-  return `<section class="section" aria-labelledby="smart-library-title"><div class="section-heading"><div><span class="page-kicker">Aynı pilot kayıtları</span><h2 id="smart-library-title">Programla bağlı akıllı eşlemeler</h2><p>Program önerisi ekranındaki TYÇ/AYÇ seçimleri burada aynı applicationId/programId bağıyla incelenir.</p></div></div><div class="grid">${records.map((record) => smartReadOnlyReview(record, smartReportForAlignment(record), { compact: true })).join("")}</div></section>`;
+  return `<section class="section" aria-labelledby="smart-library-title"><div class="section-heading"><div><span class="page-kicker">Aynı pilot kayıtları</span><h2 id="smart-library-title">Programla bağlı akıllı eşlemeler</h2><p>Program önerisi ekranındaki TYÇ/AYÇ/TYYÇ seçimleri burada aynı applicationId/programId bağıyla incelenir.</p></div></div><div class="grid">${records.map((record) => smartReadOnlyReview(record, smartReportForAlignment(record), { compact: true })).join("")}</div></section>`;
 }
 
 function frameworksPage() {
@@ -1512,9 +1616,9 @@ function frameworksPage() {
     ? `Europass Türkçe görünüm; ${descriptor.level === 7 ? "beceri alanı kurumsal operasyonel çeviri olarak işaretlidir" : "resmî Türkçe sayfadan doğrulanmıştır"}.`
     : "";
   const dimensions = [
-    ["knowledge", framework.id === "tyc" ? "Bilgi" : "Bilgi (Knowledge)", displayDescriptor.knowledge, framework.id === "eqf" ? descriptor.knowledge : ""],
-    ["skills", framework.id === "tyc" ? "Beceri" : "Beceriler (Skills)", displayDescriptor.skills, framework.id === "eqf" ? descriptor.skills : ""],
-    ["competence", framework.id === "tyc" ? descriptor.competenceLabel : "Sorumluluk ve özerklik", displayDescriptor.competence, framework.id === "eqf" ? descriptor.competence : ""]
+    ["knowledge", smartDimensionLabel("knowledge", framework.id), displayDescriptor.knowledge, framework.id === "eqf" ? descriptor.knowledge : ""],
+    ["skills", smartDimensionLabel("skills", framework.id), displayDescriptor.skills, framework.id === "eqf" ? descriptor.skills : ""],
+    ["competence", smartDimensionLabel("competence", framework.id), displayDescriptor.competence, framework.id === "eqf" ? descriptor.competence : ""]
   ];
   const rows = dimensions.map(([dimension]) => savedDraft?.rows.find((row) => row.dimension === dimension) || matrixSeedRow(dimension, framework.id, descriptor.level));
   const actions = editable
@@ -1523,11 +1627,11 @@ function frameworksPage() {
   const draftNotice = savedDraft
     ? notice("success", "Kayıtlı pilot matris taslağı", `${savedDraft.ownerName} • ${formatDate(savedDraft.updatedAt, true)}. Bu kayıt resmî seviye ataması veya komisyon kararı değildir.`)
     : notice("warning", "Hazır örnek alanlar", "Alanlar kullanım örneğiyle doldurulmuştur. Eğitici kendi ölçülebilir çıktısını, içeriğini, ölçme yöntemini, ölçütünü ve kanıtını yazmalıdır.");
-  return `<div class="page-container">${pageHeader("Akademik tasarım • Resmî referans + pilot şablon", "TYÇ ve AYÇ yeterlilik eşleme matrisleri", "Türkiye ve Avrupa çerçeveleri ayrı tutulur. Resmî seviye tanımlayıcıları kilitlidir; aday eğitici program hedefi, içerik, ölçme yöntemi, başarı ölçütü ve kanıt alanlarını doldurur.")}
-    ${notice("warning", "Seviye seçimi karar değildir", "Bu ekran yalnız program önerisi için gerekçeli seviye eşleme taslağı üretir. Nihai akademik karar yetkili kurulundur; portalda listelenme de tek başına TYÇ’ye yerleştirilme anlamına gelmez.")}
+  return `<div class="page-container">${pageHeader("Akademik tasarım • Resmî referans + pilot şablon", "TYÇ, AYÇ ve TYYÇ yeterlilik eşleme matrisleri", "Türkiye, Avrupa ve yükseköğretime özgü TYYÇ katmanları ayrı tutulur. TYÇ/AYÇ resmî seviye tanımlayıcıları ile TYYÇ form siciline dayalı advisory özetler salt okunurdur; aday eğitici program hedefi, içerik, ölçme yöntemi, başarı ölçütü ve kanıt alanlarını doldurur.")}
+    ${notice("warning", "Seviye seçimi karar değildir", "Bu ekran yalnız program önerisi için gerekçeli seviye eşleme taslağı üretir. TYYÇ metinleri exact form yerine geçmeyen pilot özetlerdir. Nihai akademik karar yetkili kurulundur; resmî yerleştirme, eşdeğerlik, akreditasyon veya logo hakkı iddia edilmez.")}
     <div class="framework-tabs" role="tablist" aria-label="Yeterlilik çerçevesi seçimi">${qualificationFrameworks.map((item) => `<button class="tab ${item.id === framework.id ? "active" : ""}" role="tab" aria-selected="${item.id === framework.id}" data-action="framework-tab" data-framework="${item.id}">${escapeHtml(item.code)}<small>${escapeHtml(item.nameTr)}</small></button>`).join("")}</div>
     <section class="card framework-source-card"><div class="card-body"><div><span class="table-subtitle">Kamuya açık resmî çerçeve referansı</span><h2>${escapeHtml(framework.nameTr)}</h2><p class="page-subtitle">${escapeHtml(framework.nameEn)} • ${escapeHtml(framework.jurisdiction)} • Doğrulama: ${formatDate(framework.verifiedAt)}</p></div><a class="button button--secondary button--sm" href="${escapeHtml(framework.officialSourceUrl)}" target="_blank" rel="noreferrer">Resmî kaynağı aç ${icon("arrow")}</a></div></section>
-    <div class="toolbar section"><div><strong>Hazır şablon</strong><span class="table-subtitle">1–8 arasında seviye seçin; üç resmî boyut birlikte yüklenir.</span></div><div class="toolbar-group"><label class="sr-only" for="framework-level">Seviye</label><select id="framework-level" class="select">${Array.from({ length: 8 }, (_, index) => index + 1).map((level) => `<option value="${level}" ${level === descriptor.level ? "selected" : ""}>${framework.code} ${level}. seviye</option>`).join("")}</select><button class="button button--secondary" data-action="load-framework-level">Şablonu yükle</button></div></div>
+    <div class="toolbar section"><div><strong>Hazır şablon</strong><span class="table-subtitle">${framework.id === "tyyc" ? "TYYÇ için 5–8" : "1–8"} arasında seviye seçin; üç boyut birlikte yüklenir.</span></div><div class="toolbar-group"><label class="sr-only" for="framework-level">Seviye</label><select id="framework-level" class="select">${smartFrameworkLevels(framework.id).map((level) => `<option value="${level}" ${level === descriptor.level ? "selected" : ""}>${framework.code} ${level}. seviye</option>`).join("")}</select><button class="button button--secondary" data-action="load-framework-level">Şablonu yükle</button></div></div>
     ${draftNotice}
     <form id="qualification-matrix-form" class="section"><input type="hidden" name="frameworkId" value="${framework.id}" /><input type="hidden" name="level" value="${descriptor.level}" />
       <section class="card matrix-intro"><div class="card-header"><div><h2>${escapeHtml(template.title)}</h2><p>${escapeHtml(template.candidateInstructions)}</p></div>${statusBadge("simulated", `${framework.code} ${descriptor.level} • Pilot öneri`)}</div><div class="card-body"><div class="field"><label class="required" for="matrix-program-title">Program adı</label><input id="matrix-program-title" name="programTitle" required minlength="8" value="${escapeHtml(savedDraft?.programTitle || "Dijital Öğrenme Tasarımı ve Değerlendirme")}"${editable ? "" : " readonly"} /></div><ol class="instruction-list"><li>Her resmî boyut için en az bir ölçülebilir çıktı yazın.</li><li>Çıktıyı içerik, öğretim etkinliği ve ölçme yöntemiyle eşleyin.</li><li>Başarı ölçütünü ve doğrulanabilir kanıtı açıkça belirtin.</li><li>AKTS/iş yükü ve uzaktan eğitim kontrollerini program formunda ayrıca tamamlayın.</li></ol></div></section>
@@ -1535,7 +1639,7 @@ function frameworksPage() {
       <div class="form-actions"><span class="table-subtitle">Şablon ve örnekler sentetiktir; resmî metinler salt okunur kaynak alanlarıdır.</span>${actions}</div>
     </form>
     ${smartAlignmentLibrary()}
-    <section class="card section"><div class="card-header"><div><h2>Veri kapsamı ve provenans</h2><p>Supabase kataloğu resmî referans ile pilot çalışma verisini ayırır.</p></div>${statusBadge("approved", "16/16 seviye")}</div><div class="card-body"><div class="grid grid-3"><div><strong>8 TYÇ seviyesi</strong><p class="page-subtitle">MYK resmî Türkçe tanımlayıcıları</p></div><div><strong>8 AYÇ/EQF seviyesi</strong><p class="page-subtitle">Europass kanonik İngilizce + ayrı Türkçe görünüm</p></div><div><strong>Toplu portal aynası yok</strong><p class="page-subtitle">Yalnız kaynak, lisans ve yerleştirme durumu izlenen sınırlı kamu üst verisi alınır.</p></div></div></div></section>
+    <section class="card section"><div class="card-header"><div><h2>Veri kapsamı ve provenans</h2><p>Supabase kataloğu resmî referans ile pilot çalışma verisini ayırır.</p></div>${statusBadge("approved", "20 düzey kaydı")}</div><div class="card-body"><div class="grid grid-3"><div><strong>8 TYÇ seviyesi</strong><p class="page-subtitle">MYK resmî Türkçe tanımlayıcıları</p></div><div><strong>8 AYÇ/EQF seviyesi</strong><p class="page-subtitle">Europass kanonik İngilizce + ayrı Türkçe görünüm</p></div><div><strong>4 TYYÇ düzeyi • 6 tür formu</strong><p class="page-subtitle">YÖK/MYK form sicili + exact metin yerine geçtiği iddia edilmeyen advisory boyut özeti</p></div></div></div></section>
     <section class="card section"><div class="card-header"><div><h2>KDPÜ program referansları</h2><p>Türkiye Yeterlilikler Veri Tabanı'ndan doğrulanan sınırlı kamu üst verisi; tam katalog değildir.</p></div>${statusBadge("simulated", `${officialQualificationReferences.length} kaynak kayıt`)}</div><div class="table-wrap"><table><caption class="sr-only">KDPÜ resmî yeterlilik referansları</caption><thead><tr><th scope="col">Kod / program</th><th scope="col">Tür</th><th scope="col">Seviye</th><th scope="col">Yerleştirme durumu</th><th scope="col">Kaynak</th></tr></thead><tbody>${officialQualificationReferences.map((item) => `<tr><td><span class="table-title">${escapeHtml(item.qualificationCode)}</span><span class="table-subtitle">${escapeHtml(item.qualificationTitle)}</span></td><td>${escapeHtml(item.qualificationType)}</td><td>TYÇ ${item.tycLevel}${item.eqfLevel ? ` • AYÇ ${item.eqfLevel}` : ""}</td><td>${item.placementStatus === "not_placed" ? statusBadge("disconnected", "TYÇ'ye yerleştirilmedi") : statusBadge("simulated", "Yerleştirme doğrulanmadı")}</td><td><a class="text-button" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kaydı aç</a></td></tr>`).join("")}</tbody></table></div></section>
     <section class="grid grid-2 section" aria-label="Yeterlilik veri kaynağı kütüğü">${qualificationDatasetRegistry.map((dataset) => `<article class="card"><div class="card-body"><span class="table-subtitle">${escapeHtml(dataset.publisherName)}</span><h3>${escapeHtml(dataset.datasetName)}</h3><p class="page-subtitle">${escapeHtml(dataset.coverageNote)}</p><div class="permission-note"><strong>Alım: manuel doğrulanmış anlık görüntü</strong><span>${escapeHtml(dataset.licenceNote)}</span></div><a class="button button--secondary button--sm" href="${escapeHtml(dataset.documentationUrl)}" target="_blank" rel="noreferrer">Kaynak açıklaması</a></div></article>`).join("")}</section>
   </div>`;
@@ -1588,20 +1692,21 @@ function integrationCard(item) {
 }
 
 function financePage() {
+  const canOperateFinance = state.roleId === "finance";
   const paymentRequests = visiblePaymentRequestsForRole(state, state.roleId, currentRole().name);
   const financeQueue = paymentRequests.filter((item) => ["pending_finance", "approved", "revision"].includes(item.status));
   const entitlement = state.finance.entitlements[0] || null;
   const gross = entitlement?.gross || 0;
   const withholding = gross * state.finance.parameters.withholding / 100;
   const entitlementPanel = entitlement
-    ? `<section class="card"><div class="card-header"><div><h2>Hak ediş taslağı</h2><p>${escapeHtml(entitlement.instructor)}</p></div>${statusBadge("draft")}</div><div class="card-body"><dl class="integration-card" style="min-height:0"><div class="integration-head"><dt>Ders kanıtı</dt><dd>${entitlement.evidence}</dd></div><div class="integration-head"><dt>Brüt taslak</dt><dd>${formatCurrency(gross)}</dd></div><div class="integration-head"><dt>Örnek kesinti</dt><dd>−${formatCurrency(withholding)}</dd></div><div class="integration-head"><dt>Net ön izleme</dt><dd><strong>${formatCurrency(gross-withholding)}</strong></dd></div></dl><button class="button button--secondary" data-action="finance-draft">Fatura / bordro taslağı oluştur</button><p class="table-subtitle">${state.finance.invoiceDrafts?.length || 0} sentetik taslak kayıtlı</p></div></section>`
+    ? `<section class="card"><div class="card-header"><div><h2>Hak ediş taslağı</h2><p>${escapeHtml(entitlement.instructor)}</p></div>${statusBadge("draft")}</div><div class="card-body"><dl class="integration-card" style="min-height:0"><div class="integration-head"><dt>Ders kanıtı</dt><dd>${entitlement.evidence}</dd></div><div class="integration-head"><dt>Brüt taslak</dt><dd>${formatCurrency(gross)}</dd></div><div class="integration-head"><dt>Örnek kesinti</dt><dd>−${formatCurrency(withholding)}</dd></div><div class="integration-head"><dt>Net ön izleme</dt><dd><strong>${formatCurrency(gross-withholding)}</strong></dd></div></dl>${canOperateFinance ? `<button class="button button--secondary" data-action="finance-draft">Fatura / bordro taslağı oluştur</button>` : `<span class="status status--neutral">Teknik salt-okunur görünüm</span>`}<p class="table-subtitle">${state.finance.invoiceDrafts?.length || 0} sentetik taslak kayıtlı</p></div></section>`
     : `<section class="card empty-state"><div class="empty-icon">${icon("file")}</div><h3>Hak ediş taslağı yok</h3><p>Ders ve katılım kanıtı olan sentetik bir kayıt oluştuğunda mali ön izleme burada görünür.</p></section>`;
-  return `<div class="page-container">${pageHeader("Evre 6 • Mali izlenebilirlik", "Finansal yönetim ve döner sermaye pilotu", "Öğrenenden gelen ödeme demo kuyruğu, mali ön onay, revizyon, mutabakat, fatura taslağı ve eğitici hak edişleri yalnız sentetik kayıtlarla örneklenir.", `<button class="button" data-action="finance-simulate">${icon("coins")} Tahsilatı simüle et</button>`)}
+  return `<div class="page-container">${pageHeader("Evre 6 • Mali izlenebilirlik", "Finansal yönetim ve döner sermaye pilotu", "Öğrenenden gelen ödeme demo kuyruğu, mali ön onay, revizyon, mutabakat, fatura taslağı ve eğitici hak edişleri yalnız sentetik kayıtlarla örneklenir.", canOperateFinance ? `<button class="button" data-action="finance-simulate">${icon("coins")} Tahsilatı simüle et</button>` : `<span class="status status--neutral">Sistem yöneticisi • salt-okunur</span>`)}
     ${notice("warning", "Pilot parametre — mali birim doğrulaması gerekir", "Vergi, kesinti ve ödeme kuralları kesin mevzuat veya canlı hesaplama olarak kodlanmamıştır; aşağıdaki değerler yalnız ekran davranışını örnekler.")}
     <div class="grid grid-4 section">${kpi("Mali inceleme kuyruğu", financeQueue.length, "Öğrenenden gelen demo kayıtları", "file")}${kpi("Simüle brüt tahsilat", formatCurrency(state.finance.transactions.reduce((sum,item)=>sum+item.gross,0)), "Gerçek ödeme alınmadı", "coins")}${kpi("Eşleşen kayıt", state.finance.transactions.filter((item)=>item.status==="matched").length, "Pilot mutabakat", "check")}${kpi("Hak ediş taslağı", formatCurrency(gross), "Mali onay gerekli", "chart")}</div>
     ${financePaymentQueue(paymentRequests)}
     <div class="grid grid-2 section"><section><div class="section-heading"><div><h2>Tahsilat simülasyonları</h2></div></div><div class="table-wrap"><table><caption class="sr-only">Sentetik tahsilat kayıtları</caption><thead><tr><th scope="col">Kayıt</th><th scope="col">Program</th><th scope="col">Tutar</th><th scope="col">Kanal</th><th scope="col">Durum</th></tr></thead><tbody>${state.finance.transactions.length ? state.finance.transactions.map((item)=>`<tr><td><span class="table-title">${item.id}</span><span class="table-subtitle">${escapeHtml(item.learner)}</span></td><td>${escapeHtml(item.program)}</td><td>${formatCurrency(item.gross)}</td><td>${escapeHtml(item.channel)}</td><td>${statusBadge(item.status)}</td></tr>`).join("") : `<tr><td colspan="5"><div class="table-empty"><strong>Tahsilat simülasyonu yok</strong><span>Gerçek ödeme alınmadan örnek kayıt oluşturabilirsiniz.</span></div></td></tr>`}</tbody></table></div></section>${entitlementPanel}</div>
-    <section class="card section"><div class="card-header"><div><h2>Yapılandırılabilir mali pilot parametreleri</h2><p>Değişiklikler yalnız yerel demo durumunu etkiler; mali onay değildir.</p></div></div><form class="card-body form-grid" id="finance-parameters"><div class="field"><label for="finance-withholding">Örnek kesinti (%)</label><input id="finance-withholding" name="withholding" type="number" min="0" max="100" step="0.01" value="${state.finance.parameters.withholding}" /></div><div class="field"><label for="finance-vat">Örnek KDV alanı (%)</label><input id="finance-vat" name="vat" type="number" min="0" max="100" step="0.01" value="${state.finance.parameters.vat}" /></div><div class="field"><label for="finance-stamp">Örnek damga alanı (%)</label><input id="finance-stamp" name="stamp" type="number" min="0" max="100" step="0.001" value="${state.finance.parameters.stamp}" /></div><div class="field"><span class="table-subtitle">Pilot parametre — mali birim doğrulaması gerekir</span><button class="button" type="submit">Parametre taslağını kaydet</button></div></form></section>
+    <section class="card section"><div class="card-header"><div><h2>Yapılandırılabilir mali pilot parametreleri</h2><p>Değişiklikler yalnız yerel demo durumunu etkiler; mali onay değildir.</p></div></div><form class="card-body form-grid" id="finance-parameters"><div class="field"><label for="finance-withholding">Örnek kesinti (%)</label><input id="finance-withholding" name="withholding" type="number" min="0" max="100" step="0.01" value="${state.finance.parameters.withholding}" ${canOperateFinance ? "" : "readonly"} /></div><div class="field"><label for="finance-vat">Örnek KDV alanı (%)</label><input id="finance-vat" name="vat" type="number" min="0" max="100" step="0.01" value="${state.finance.parameters.vat}" ${canOperateFinance ? "" : "readonly"} /></div><div class="field"><label for="finance-stamp">Örnek damga alanı (%)</label><input id="finance-stamp" name="stamp" type="number" min="0" max="100" step="0.001" value="${state.finance.parameters.stamp}" ${canOperateFinance ? "" : "readonly"} /></div><div class="field"><span class="table-subtitle">Pilot parametre — mali birim doğrulaması gerekir</span>${canOperateFinance ? `<button class="button" type="submit">Parametre taslağını kaydet</button>` : `<span class="status status--neutral">Değişiklik yetkisi yok</span>`}</div></form></section>
   </div>`;
 }
 
@@ -1672,6 +1777,72 @@ function verifyPage(code) {
   return `<div class="page-container">${pageHeader("Pilot doğrulama", "Dijital yeterlilik doğrulandı", "Bu sonuç yalnızca kontrollü Preview ortamındaki sentetik kayda dayanır; üretim imzası veya dış cüzdan uygunluğu değildir.", `<button class="button button--secondary" data-nav="${returnPage}">${returnLabel}</button>`)}${notice("success","Pilot kayıt eşleşti",`${credential.code} kodlu sentetik yeterlilik bu pilot veri katmanında geçerli görünüyor.`)}<div class="grid grid-2 section">${credentialCard(credential)}<section class="card"><div class="card-header"><div><h2>Yapılandırılmış alanlar</h2><p>Kurumsal doğrulamaya açık pilot görünüm</p></div>${statusBadge("valid")}</div><div class="card-body"><dl class="integration-card" style="min-height:0"><div class="integration-head"><dt>Sağlayan kurum</dt><dd>${escapeHtml(credential.issuer)}</dd></div><div class="integration-head"><dt>Öğrenen</dt><dd>${escapeHtml(credential.owner)}</dd></div><div class="integration-head"><dt>Pilot AKTS</dt><dd>${credential.ects}</dd></div><div class="integration-head"><dt>TYÇ düzeyi</dt><dd>${credential.level} • Öneri</dd></div><div class="integration-head"><dt>İmzalama modu</dt><dd>Simülasyon</dd></div><div class="integration-head"><dt>Dış paylaşım</dt><dd>Kapalı</dd></div></dl><h3>Öğrenme çıktıları</h3><ul class="page-subtitle">${credential.outcomes.map((outcome)=>`<li>${escapeHtml(outcome)}</li>`).join("")}</ul></div></section></div></div>`;
 }
 
+function directiveRoleScopeCard() {
+  const scope = organizationScopes[state.roleId];
+  return `<section class="card governance-scope" data-governance-role="${escapeHtml(state.roleId)}"><div class="card-header"><div><span class="table-subtitle">Seçili demo rolünün örgütsel kapsamı</span><h2>${escapeHtml(currentRole().label)}</h2><p>${escapeHtml(scope.mandate)}</p><p class="muted">${escapeHtml(scope.decision_scope_note)}</p></div>${statusBadge("simulated", "SENTETİK")}</div><div class="card-body"><dl class="governance-definition"><div><dt>unit_id</dt><dd>${escapeHtml(scope.unit_id)}</dd></div><div><dt>unit_type</dt><dd>${escapeHtml(scope.unit_type)}</dd></div><div><dt>body_type / membership_role</dt><dd>${escapeHtml(`${scope.body_type} / ${scope.membership_role}`)}</dd></div><div><dt>body_membership</dt><dd>${escapeHtml(scope.body_membership.join(", ") || "Yok")}</dd></div><div><dt>mandate_from / mandate_to</dt><dd>${escapeHtml(`${scope.mandate_from} / ${scope.mandate_to}`)}</dd></div><div><dt>decision_scope</dt><dd>${escapeHtml(scope.decision_scope.join(", ") || "Yok")}</dd></div></dl></div></section>`;
+}
+
+function directivePolicyRegistry() {
+  return `<section class="card"><div class="card-header"><div><h2>Politika ve kaynak sürüm sicili</h2><p>Taslak ile resmî kamu referansı aynı kayıt türü olarak gösterilmez.</p></div>${statusBadge("review", "Yürürlük yok")}</div><div class="card-body"><div class="governance-policy-list">${policyVersionRegistry.map((policy) => `<article><div><strong>${escapeHtml(policy.title)}</strong><span>${escapeHtml(policy.id)} • ${escapeHtml(policy.version)}</span></div><div>${statusBadge(policy.status === "reference_only" ? "approved" : "review", policy.status === "reference_only" ? "Salt-okunur referans" : "Kurumsal değerlendirme taslağı")}</div><small>Senato onayı: ${policy.senateApproval === false ? "Yok" : "Uygulanamaz"} • Production: NO-GO</small></article>`).join("")}</div></div></section>`;
+}
+
+function directiveWorkloadResult(result) {
+  const tone = result.valid ? "success" : "risk";
+  const text = result.valid
+    ? `${result.equation} doğrulandı. ${result.componentTotal === null ? result.warnings.join(" ") : `Sekiz bileşenin toplamı ${result.componentTotal} saat.`}`
+    : result.errors.join(" ");
+  return notice(tone, result.valid ? "AKTS–iş yükü bağı geçerli" : "AKTS–iş yükü kontrolü başarısız", text);
+}
+
+function directiveWorkloadPanel() {
+  const seed = { synchronous: 10, asynchronous: 10, preparation: 10, practice: 10, project: 15, independent: 10, assessment: 5, feedback: 5 };
+  const result = validateEctsWorkload({ ects: 3, totalWorkload: 75, components: seed });
+  return `<section class="card"><div class="card-header"><div><h2>AKTS ve iş yükü doğrulayıcı</h2><p>25 × AKTS ≤ toplam iş yükü ≤ 30 × AKTS; 10+20 evrensel kural değildir.</p></div><span class="status status--info">1–6 AKTS</span></div><form id="directive-workload-form" class="card-body"><div class="form-grid"><div class="field"><label for="directive-ects">AKTS</label><input id="directive-ects" name="ects" type="number" min="1" max="6" step="1" value="3" required /></div><div class="field"><label for="directive-total">Toplam öğrenen iş yükü</label><input id="directive-total" name="totalWorkload" type="number" min="25" max="180" step="0.25" value="75" required /></div>${workloadComponents.map(([key, label]) => `<div class="field"><label for="directive-${key}">${escapeHtml(label)}</label><input id="directive-${key}" name="${escapeHtml(key)}" type="number" min="0" step="0.25" value="${seed[key]}" required /></div>`).join("")}</div><div id="directive-workload-result" class="section" aria-live="polite">${directiveWorkloadResult(result)}</div><div class="form-actions"><span class="table-subtitle">Kesirli saatte yuvarlama gerekçesi ayrıca kaydedilir.</span><button class="button button--secondary" type="submit">Bağı doğrula</button></div></form></section>`;
+}
+
+function directiveRuleRegistry() {
+  return `<section class="card section"><div class="card-header"><div><h2>Sürümlü ve belirsizlik korumalı kural motoru</h2><p>Sayılar kesin mevzuat hükmü gibi kodlanmaz; doğrulama yoksa yalnız uyarı üretir.</p></div><span class="status status--warning">${versionedPilotRules.length} karar bekliyor</span></div><div class="table-wrap governance-rule-table"><table><caption class="sr-only">Kurumsal doğrulama bekleyen pilot kurallar</caption><thead><tr><th>Kural</th><th>Kaynak / hesap temeli</th><th>Sürüm alanları</th><th>Motor sonucu</th></tr></thead><tbody>${versionedPilotRules.map((rule) => { const evaluation = evaluatePilotRule(rule.id, { requestedEcts: 6, programCycle: "associate", singleProgram: true }); return `<tr><td><strong>${escapeHtml(rule.label)}</strong><span class="table-subtitle">${escapeHtml(rule.id)}</span></td><td>${escapeHtml(rule.source_clause)}<span class="table-subtitle">${escapeHtml(rule.calculation_basis)}</span></td><td>${escapeHtml(rule.rounding_rule)}<span class="table-subtitle">İstisna: ${escapeHtml(rule.exception_rule)}</span></td><td><span class="status status--warning">Uyarı + blok</span><span class="table-subtitle">${escapeHtml(evaluation.warnings.at(-1))}</span></td></tr>`; }).join("")}</tbody></table></div></section>`;
+}
+
+function recognitionDecisionLabel(kind) {
+  return { credential: "Belge / yeterlilik doğrulama", ects: "AKTS tanıma", course_substitution: "Ders / yükümlülük yerine sayma" }[kind] || kind;
+}
+
+function directiveRecognitionPanel() {
+  const decisions = state.directivePilot.recognitionDecisions;
+  const decisionActions = state.roleId === "commission";
+  const appealAction = state.roleId === "learner";
+  const outcome = state.directivePilot.credentialOutcome;
+  return `<section class="card section"><div class="card-header"><div><h2>Üç ayrı tanıma sonucu ve bağımsız itiraz</h2><p>Belge tanıma, AKTS ve ders ikamesi tek karara dönüştürülemez.</p></div>${statusBadge("review", "APP-042 • SİMÜLASYON")}</div><div class="card-body">${notice("warning", "Olumlu nihai sonuç bloke", "Kurumsal doğrulaması tamamlanmamış sürümlü kurallar varken Komisyon yalnız ek kanıt talebi kaydedebilir; tanıma veya kısmi tanıma oluşturulmaz.")}<div class="recognition-decision-grid">${decisions.map((decision) => `<article><span>${escapeHtml(recognitionDecisionLabel(decision.kind))}</span><strong>${escapeHtml(decision.status)}</strong><small>${escapeHtml(decision.decisionBody || "İnsan kararı bekleniyor")}</small>${decisionActions ? `<button class="button button--secondary button--sm" type="button" data-action="directive-recognition-decision" data-kind="${escapeHtml(decision.kind)}">Ek kanıt talebi kaydet</button>` : ""}${appealAction ? `<button class="button button--secondary button--sm" type="button" data-action="directive-appeal" data-kind="${escapeHtml(decision.kind)}">Bağımsız mercie itiraz</button>` : ""}</article>`).join("")}</div><div class="split-outcome section"><div><span>Dijital rozet / belge</span><strong>${escapeHtml(outcome.credential.status)}</strong></div><div><span>AKTS</span><strong>${escapeHtml(outcome.ects.status)}</strong></div><div><span>Ders ikamesi</span><strong>${escapeHtml(outcome.courseSubstitution.status)}</strong></div></div><p class="table-subtitle">Aynı programda rozet kazanılmış olsa bile AKTS veya ders ikamesi ayrıca karara bağlanır. ${state.directivePilot.appeals.length} bağımsız itiraz kaydı.</p></div></section>`;
+}
+
+function directiveRoleOperations() {
+  const offering = state.directivePilot.offerings[0];
+  const registered = offering.requests.filter((item) => item.status === "enrolled").length;
+  const waiting = offering.requests.filter((item) => item.status === "waitlisted").length;
+  const actions = [];
+  if (state.roleId === "coordinator") actions.push(`<button class="button" type="button" data-action="directive-myd-generate">MYD kod taslağı üret</button>`);
+  if (state.roleId === "commission") actions.push(`<button class="button" type="button" data-action="directive-commission-check">Nisap / çekilme kontrolü</button>`);
+  if (state.roleId === "learner") actions.push(`<button class="button" type="button" data-action="directive-seat-request">Kontenjan talebi oluştur</button>`);
+  if (state.roleId === "it") actions.push(`<button class="button" type="button" data-action="directive-ek1-validate">EK-1 kamu görünümünü doğrula</button>`);
+  if (state.roleId === "finance") actions.push(`<button class="button" type="button" data-action="directive-finance-dryrun">Hak ediş dry-run oluştur</button>`);
+  const readOnly = actions.length ? actions.join("") : `<span class="status status--neutral">Salt-okunur rol görünümü</span>`;
+  const lastCode = state.directivePilot.codes.at(-1);
+  const meetingStatus = state.directivePilot.commission.lastValidation?.valid ? "Toplantı kontrolü geçerli" : "Toplantı kontrolü bekleniyor";
+  return `<section class="card section"><div class="card-header"><div><h2>Role bağlı kontrollü pilot işlemler</h2><p>Sistem yöneticisine akademik, tanıma, mali veya personel karar yetkisi verilmez.</p></div>${state.roleId === "admin" ? statusBadge("review", "Teknik gözlem") : statusBadge("simulated")}</div><div class="card-body"><div class="governance-operation-grid"><article><span>MYD kod sicili</span><strong>${escapeHtml(lastCode?.code || "Kod üretilmedi")}</strong><small>${lastCode ? `Ayrı program sürümü V${lastCode.versionNo}` : "Yalnız Koordinatörlük / SEM taslak rezervasyonu"}</small></article><article><span>Dönem / kontenjan</span><strong>${registered}/${offering.capacity} kayıt • ${waiting} bekleme</strong><small>${escapeHtml(offering.term)} • FIFO + öğrenen tekilliği + idempotency</small></article><article><span>Komisyon kapısı</span><strong>${escapeHtml(meetingStatus)}</strong><small>Geçerli nisap/çekilme/oy kaydı olmadan tanıma işlemi yok</small></article><article><span>Mali/Personel</span><strong>${state.directivePilot.financePersonnelDryRuns.length} dry-run</strong><small>Gerçek ödeme, bordro, fatura veya dış istek yok</small></article><article><span>EK-1 güvenliği</span><strong>11 zorunlu alan + TCKN sızıntı testi</strong><small>Kamu görünümü yalnız rastgele belge kimliği ve asgari alanlar</small></article></div><div class="governance-actions">${readOnly}</div>${state.roleId === "admin" ? notice("warning", "Yönetici karar veremez", "Bu rol yalnız teknik yapılandırma ve denetim görünümünü inceler; akademik veya mali işlem düğmesi sunulmaz.") : ""}</div></section>`;
+}
+
+function governancePage() {
+  return `<div class="page-container" data-directive-governance>${pageHeader("Yönerge uyarlaması • kontrollü pilot", "Yönerge ve kural merkezi", "Taslak hükümler; rol, form, veri, durum, kural, audit, entegrasyon, rapor, RBAC ve test sözleşmesine ayrıştırılır. Production kesinlikle kapalıdır.")}
+    ${notice("warning", "Kurumsal değerlendirme taslağı — yürürlük yok", DIRECTIVE_PILOT_NOTICE)}
+    <div class="grid grid-2 section">${directiveRoleScopeCard()}${directivePolicyRegistry()}</div>
+    <div class="grid grid-2 section">${directiveWorkloadPanel()}<section class="card"><div class="card-header"><div><h2>AKTS saat bantları</h2><p>Toplam öğrenen iş yükü ile AKTS birbirinden bağımsız değildir.</p></div></div><div class="card-body"><div class="band-list">${ectsWorkloadBands.map((band) => `<div><strong>${band.ects} AKTS</strong><span>${band.minHours}–${band.maxHours} saat</span></div>`).join("")}</div>${notice("warning", "Örnek dağılım", "10 saat sınıf içi + 20 saat sınıf dışı yalnız 30 saatlik örnektir; evrensel eşik değildir.")}</div></section></div>
+    ${directiveRuleRegistry()}
+    ${directiveRecognitionPanel()}
+    ${directiveRoleOperations()}
+  </div>`;
+}
+
 function auditTimeline(event) {
   return `<div class="timeline-item"><div class="timeline-marker"></div><div class="timeline-content"><strong>${escapeHtml(event.action)}</strong><span>${formatDate(event.at,true)} • ${escapeHtml(event.actor)} • ${escapeHtml(event.reason)}</span></div></div>`;
 }
@@ -1679,6 +1850,7 @@ function auditTimeline(event) {
 const pages = {
   home: homePage,
   overview: overviewPage,
+  governance: governancePage,
   scenarios: scenariosPage,
   catalog: catalogPage,
   payments: paymentsPage,
@@ -1709,7 +1881,7 @@ function showDataMode() {
   const referenceSummary = snapshot?.qualificationLevels === undefined
     ? ""
     : `<br />Referans kataloğu: ${snapshot.qualificationLevels} seviye, ${snapshot.officialQualifications} KDPÜ kaydı, ${snapshot.matrixTemplates} şablon, ${snapshot.matrixDrafts} örnek taslak, ${snapshot.paymentRequests} ödeme demo kaydı, ${snapshot.roleWorkflowRows} rol adımı${snapshot.institutionalSystems === undefined ? "" : `<br />Kurumsal envanter: ${snapshot.institutionalSystems} sistem, ${snapshot.institutionalMappings} eşleme, ${snapshot.institutionalScenarios} dry-run senaryosu, ${snapshot.institutionalAuditEvents} kaynak-audit olayı`}${snapshot.unavailableReferenceViews ? `<br />Yerel güvenli fallback kullanan referans view: ${snapshot.unavailableReferenceViews}` : ""}${snapshot.unavailableInstitutionalViews ? `<br />Yerel güvenli fallback kullanan kurumsal view: ${snapshot.unavailableInstitutionalViews}` : ""}`;
-  openModal(modalTemplate("Pilot veri katmanı", `<div class="grid grid-2"><article class="card"><div class="card-body"><h3>Etkin çalışma modu</h3><p class="page-subtitle">${escapeHtml(state.dataMode)}</p><span class="status status--success">Yerel mutasyonlar çalışıyor</span></div></article><article class="card"><div class="card-body"><h3>Supabase başlangıç görünümü</h3><p class="page-subtitle">Proje: ${config.projectRef}<br />${config.mode}${snapshot ? `<br />Doğrulanan: ${snapshot.programs} program, ${snapshot.applications} başvuru, ${snapshot.credentials} belge, ${snapshot.integrations} entegrasyon${referenceSummary}<br />Kaynak modu: ${escapeHtml(snapshot.referenceSource || "eski pilot seed")}` : "<br />Son bağlantı doğrulanamadı"}</p><span class="status status--neutral">Gizli anahtar kullanılmıyor</span></div></article></div><div class="section">${notice("success","Katmanların sınırı açık","Supabase, sentetik başlangıç satırları ile resmî kaynak izli TYÇ/AYÇ kataloglarını salt-okunur doğrular. Formlar ve iki demo iş akışındaki değişiklikler tarayıcıdaki sürümlü, izole çalışma alanında kalır; gerçek ödeme veya kurumsal aktarım yapılmaz.")}</div>`, `<button class="button button--secondary" data-action="refresh-data">Bağlantıyı yeniden dene</button><button class="button" data-action="close-modal">Kapat</button>`));
+  openModal(modalTemplate("Pilot veri katmanı", `<div class="grid grid-2"><article class="card"><div class="card-body"><h3>Etkin çalışma modu</h3><p class="page-subtitle">${escapeHtml(state.dataMode)}</p><span class="status status--success">Yerel mutasyonlar çalışıyor</span></div></article><article class="card"><div class="card-body"><h3>Supabase başlangıç görünümü</h3><p class="page-subtitle">Proje: ${config.projectRef}<br />${config.mode}${snapshot ? `<br />Doğrulanan: ${snapshot.programs} program, ${snapshot.applications} başvuru, ${snapshot.credentials} belge, ${snapshot.integrations} entegrasyon${referenceSummary}<br />Kaynak modu: ${escapeHtml(snapshot.referenceSource || "eski pilot seed")}` : "<br />Son bağlantı doğrulanamadı"}</p><span class="status status--neutral">Gizli anahtar kullanılmıyor</span></div></article></div><div class="section">${notice("success","Katmanların sınırı açık","Supabase, sentetik başlangıç satırları ile resmî kaynak izli TYÇ/AYÇ kataloglarını ve resmî TYYÇ form siciline dayalı advisory özetleri salt-okunur doğrular. Formlar ve iki demo iş akışındaki değişiklikler tarayıcıdaki sürümlü, izole çalışma alanında kalır; gerçek ödeme veya kurumsal aktarım yapılmaz.")}</div>`, `<button class="button button--secondary" data-action="refresh-data">Bağlantıyı yeniden dene</button><button class="button" data-action="close-modal">Kapat</button>`));
 }
 
 function openProgram(id) {
@@ -1738,7 +1910,7 @@ function decisionModal(id, nextStatus) {
     deny("Seçili demo rolü bu başvuru için istenen durum geçişini oluşturamaz.");
     return;
   }
-  const labels = { approved: "Pilot onayı", revision: "Revizyon isteği", rejected: "Pilot ret", commission: "Çekimser görüş" };
+  const labels = { approved: "Doğrulanmış onay", deferred: "Kurumsal doğrulamaya erteleme", revision: "Revizyon isteği", rejected: "Pilot ret", commission: "Çekimser görüş" };
   openModal(modalTemplate(`${labels[nextStatus]} kaydı`, `<form id="decision-form"><input type="hidden" name="id" value="${escapeHtml(item.id)}" /><input type="hidden" name="status" value="${escapeHtml(nextStatus)}" /><div class="field"><label class="required" for="decision-reason">Gerekçe</label><textarea id="decision-reason" name="reason" required minlength="12" placeholder="Kanıtları, akademik değerlendirmeyi ve karar gerekçesini yazın"></textarea><small>Gerekçe audit izine eklenir ve sonradan görünür kalır.</small></div><div class="field" style="margin-top:14px"><label><input type="checkbox" name="confirm" required /> Bu kaydın yalnız kontrollü pilot kararı olduğunu onaylıyorum.</label></div></form>`, `<button class="button button--secondary" data-action="close-modal">Vazgeç</button><button class="button ${nextStatus === "rejected" ? "button--danger" : nextStatus === "approved" ? "button--success" : ""}" data-action="submit-decision">Gerekçeli kaydı oluştur</button>`));
 }
 
@@ -1753,7 +1925,8 @@ function qualificationBoardDecisionModal(id) {
   const existing = record?.boardDecision;
   const tycLevel = existing?.decidedLevels?.tyc || report.program.suggestedLevels.tyc;
   const eqfLevel = existing?.decidedLevels?.eqf || report.program.suggestedLevels.eqf;
-  openModal(modalTemplate("Ayrı insan kurul yeterlilik kararı", `<form id="qualification-board-form"><input type="hidden" name="id" value="${escapeHtml(application.id)}" /><div class="notice notice--warning">${icon("alert")}<div><strong>Motor önerisi değiştirilemez</strong>Bu kayıt, otomatik öneri ve eğitici manuel seçimini değiştirmeyen ayrı bir insan Komisyon kararıdır.</div></div><div class="form-grid section"><div class="field"><label class="required" for="qualification-board-decision">Karar</label><select id="qualification-board-decision" name="decision" required><option value="approved" ${existing?.decision === "approved" ? "selected" : ""}>Onay</option><option value="revision_requested" ${existing?.decision === "revision_requested" ? "selected" : ""}>Revizyon isteği</option><option value="rejected" ${existing?.decision === "rejected" ? "selected" : ""}>Ret</option><option value="deferred" ${existing?.decision === "deferred" ? "selected" : ""}>Erteleme</option></select></div><div class="field"><label for="qualification-board-reference">Toplantı referansı</label><input id="qualification-board-reference" name="meetingReference" value="${escapeHtml(existing?.meetingReference || "MYK-KOM-PILOT-2026-08")}" /></div><div class="field"><label class="required" for="qualification-board-tyc">İnsan kararı TYÇ düzeyi</label><select id="qualification-board-tyc" name="tycLevel">${Array.from({ length: 8 }, (_, index) => index + 1).map((level) => `<option value="${level}" ${level === Number(tycLevel) ? "selected" : ""}>TYÇ ${level}</option>`).join("")}</select></div><div class="field"><label class="required" for="qualification-board-eqf">İnsan kararı AYÇ/EQF düzeyi</label><select id="qualification-board-eqf" name="eqfLevel">${Array.from({ length: 8 }, (_, index) => index + 1).map((level) => `<option value="${level}" ${level === Number(eqfLevel) ? "selected" : ""}>AYÇ/EQF ${level}</option>`).join("")}</select></div><div class="field full"><label class="required" for="qualification-board-rationale">İnsan kurul gerekçesi</label><textarea id="qualification-board-rationale" name="rationale" required minlength="12" placeholder="Öğrenme çıktısı, tanımlayıcı, ölçme kanıtı ve program bütünlüğüne dayalı gerekçeyi yazın">${escapeHtml(existing?.rationale || "Komisyon, motor önerisini karar olarak değil karşılaştırılabilir inceleme girdisi olarak değerlendirmiştir.")}</textarea></div><label class="consent-row full"><input type="checkbox" name="confirm" required /><span>Bu kararın insan Komisyon kaydı olduğunu ve motor önerisini değiştirmediğini onaylıyorum.</span></label></div></form>`, `<button class="button button--secondary" type="button" data-action="close-modal">Vazgeç</button><button class="button" type="button" data-action="submit-qualification-board-decision">Ayrı kurul kaydını oluştur</button>`));
+  const tyycLevel = existing?.decidedLevels?.tyyc || report.program.suggestedLevels.tyyc;
+  openModal(modalTemplate("Ayrı insan kurul yeterlilik kararı", `<form id="qualification-board-form"><input type="hidden" name="id" value="${escapeHtml(application.id)}" /><div class="notice notice--warning">${icon("alert")}<div><strong>Motor önerisi değiştirilemez</strong>Bu kayıt, otomatik öneri ve eğitici manuel seçimini değiştirmeyen ayrı bir insan Komisyon kararıdır.</div></div><div class="form-grid section"><div class="field"><label class="required" for="qualification-board-decision">Karar</label><select id="qualification-board-decision" name="decision" required><option value="approved" ${existing?.decision === "approved" ? "selected" : ""}>Onay</option><option value="revision_requested" ${existing?.decision === "revision_requested" ? "selected" : ""}>Revizyon isteği</option><option value="rejected" ${existing?.decision === "rejected" ? "selected" : ""}>Ret</option><option value="deferred" ${existing?.decision === "deferred" ? "selected" : ""}>Erteleme</option></select></div><div class="field"><label for="qualification-board-reference">Toplantı referansı</label><input id="qualification-board-reference" name="meetingReference" value="${escapeHtml(existing?.meetingReference || "MYK-KOM-PILOT-2026-08")}" /></div><div class="field"><label class="required" for="qualification-board-tyc">İnsan kararı TYÇ düzeyi</label><select id="qualification-board-tyc" name="tycLevel">${smartFrameworkLevels("tyc").map((level) => `<option value="${level}" ${level === Number(tycLevel) ? "selected" : ""}>TYÇ ${level}</option>`).join("")}</select></div><div class="field"><label class="required" for="qualification-board-eqf">İnsan kararı AYÇ/EQF düzeyi</label><select id="qualification-board-eqf" name="eqfLevel">${smartFrameworkLevels("eqf").map((level) => `<option value="${level}" ${level === Number(eqfLevel) ? "selected" : ""}>AYÇ/EQF ${level}</option>`).join("")}</select></div><div class="field"><label class="required" for="qualification-board-tyyc">İnsan kararı TYYÇ pedagojik referans düzeyi</label><select id="qualification-board-tyyc" name="tyycLevel">${smartFrameworkLevels("tyyc").map((level) => `<option value="${level}" ${level === Number(tyycLevel) ? "selected" : ""}>TYYÇ ${level}</option>`).join("")}</select><small>Resmî yerleştirme veya eşdeğerlik kararı değildir.</small></div><div class="field full"><label class="required" for="qualification-board-rationale">İnsan kurul gerekçesi</label><textarea id="qualification-board-rationale" name="rationale" required minlength="12" placeholder="Öğrenme çıktısı, tanımlayıcı, ölçme kanıtı ve program bütünlüğüne dayalı gerekçeyi yazın">${escapeHtml(existing?.rationale || "Komisyon, motor önerisini karar olarak değil karşılaştırılabilir inceleme girdisi olarak değerlendirmiştir.")}</textarea></div><label class="consent-row full"><input type="checkbox" name="confirm" required /><span>Bu kararın insan Komisyon kaydı olduğunu ve motor önerisini değiştirmediğini onaylıyorum.</span></label></div></form>`, `<button class="button button--secondary" type="button" data-action="close-modal">Vazgeç</button><button class="button" type="button" data-action="submit-qualification-board-decision">Ayrı kurul kaydını oluştur</button>`));
 }
 
 function storedAlignmentOutcomes(report, appliedSelections = []) {
@@ -1766,7 +1939,7 @@ function storedAlignmentOutcomes(report, appliedSelections = []) {
       outcomeIndex: index,
       outcomeFingerprint,
       text,
-      selections: ["tyc", "eqf"].map((frameworkId) => {
+      selections: QUALIFICATION_FRAMEWORK_IDS.map((frameworkId) => {
         const suggestion = smartEffectiveSelection(smartSuggestionFor(outcome, frameworkId));
         const applied = appliedSelections.some((item) => item.outcomeFingerprint === outcomeFingerprint && item.frameworkId === frameworkId);
         return {
@@ -1774,7 +1947,7 @@ function storedAlignmentOutcomes(report, appliedSelections = []) {
           outcomeIndex: index,
           outcomeFingerprint,
           frameworkId,
-          frameworkCode: frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF",
+          frameworkCode: smartFrameworkCode(frameworkId),
           level: Number(suggestion.level),
           dimension: suggestion.dimension,
           score: Number(suggestion.score || 0),
@@ -1806,6 +1979,7 @@ function submitQualificationBoardDecision(form) {
   const report = smartReportForAlignment(existing, application);
   if (!report) { deny("Yeterlilik öneri anlık görüntüsü oluşturulamadı."); return; }
   try {
+    const immutableSuggestionSnapshotBefore = JSON.stringify(existing.suggestionSnapshot);
     const decidedAt = new Date().toISOString();
     const result = recordHumanBoardQualificationDecision(report, {
       actorRole: "commission",
@@ -1814,6 +1988,7 @@ function submitQualificationBoardDecision(form) {
       rationale: String(data.get("rationale")),
       tycLevel: Number(data.get("tycLevel")),
       eqfLevel: Number(data.get("eqfLevel")),
+      tyycLevel: Number(data.get("tyycLevel")),
       decidedAt,
       meetingReference: String(data.get("meetingReference") || "")
     });
@@ -1821,11 +1996,14 @@ function submitQualificationBoardDecision(form) {
     const record = existing;
     record.boardDecision = result.finalDecision;
     record.updatedAt = decidedAt;
+    if (JSON.stringify(record.suggestionSnapshot) !== immutableSuggestionSnapshotBefore) {
+      throw new Error("İnsan kurul kararı tam öneri snapshot'ını değiştiremez.");
+    }
     application.smartAlignmentId = record.id;
     application.formData ||= {};
     application.formData.qualificationMapping = record;
     if (program) program.smartAlignmentId = record.id;
-    state.audit.unshift({ id: `AUD-${Date.now()}-BOARD`, entityId: application.id, at: decidedAt, actor: currentRole().name, actorRole: "commission", action: "İnsan kurul yeterlilik kararı ayrı kaydedildi", from: application.status, to: application.status, reason: `${result.finalDecision.decision} • TYÇ ${result.finalDecision.decidedLevels.tyc} / AYÇ ${result.finalDecision.decidedLevels.eqf} • motor önerisi değiştirilmedi` });
+    state.audit.unshift({ id: `AUD-${Date.now()}-BOARD`, entityId: application.id, at: decidedAt, actor: currentRole().name, actorRole: "commission", action: "İnsan kurul yeterlilik kararı ayrı kaydedildi", from: application.status, to: application.status, reason: `${result.finalDecision.decision} • TYÇ ${result.finalDecision.decidedLevels.tyc} / AYÇ ${result.finalDecision.decidedLevels.eqf} / TYYÇ ${result.finalDecision.decidedLevels.tyyc} • snapshot ${record.suggestionSnapshot.integrityHash} • motor önerisi değiştirilmedi` });
     saveState();
     closeModal();
     render();
@@ -1899,9 +2077,9 @@ document.addEventListener("click", (event) => {
   if (action === "reset-demo") { const selectedRole = state.roleId; state = structuredClone(initialState); state.roleId = selectedRole; saveState(); render(); toast("Sentetik pilot verisi başlangıç durumuna döndürüldü; seçili rol korundu."); }
   if (action === "run-scenario") runNextScenario(trigger.dataset.kind);
   if (action === "open-scenario-result") {
-    state.roleId = trigger.dataset.kind === "internal" ? "learner" : "it";
+    state.roleId = trigger.dataset.kind === "internal" ? "coordinator" : "it";
     saveState();
-    navigate(trigger.dataset.kind === "internal" ? "wallet" : "integrations");
+    navigate(trigger.dataset.kind === "internal" ? "applications" : "integrations");
   }
   if (action === "open-program") openProgram(trigger.dataset.id);
   if (action === "open-application") openApplication(trigger.dataset.id);
@@ -1919,13 +2097,14 @@ document.addEventListener("click", (event) => {
   }
   if (action === "commission-tab") activateCommissionTab(trigger.dataset.tab);
   if (action === "framework-tab") {
-    if (!["tyc", "eqf"].includes(trigger.dataset.framework)) { deny("Geçersiz yeterlilik çerçevesi seçildi."); return; }
+    if (!QUALIFICATION_FRAMEWORK_IDS.includes(trigger.dataset.framework)) { deny("Geçersiz yeterlilik çerçevesi seçildi."); return; }
     currentFrameworkTab = trigger.dataset.framework;
+    if (!smartFrameworkLevels(currentFrameworkTab).includes(currentFrameworkLevel)) currentFrameworkLevel = smartFrameworkLevels(currentFrameworkTab)[0];
     render();
   }
   if (action === "load-framework-level") {
     const value = Number(document.querySelector("#framework-level")?.value);
-    if (!Number.isInteger(value) || value < 1 || value > 8) { deny("Yeterlilik seviyesi 1 ile 8 arasında olmalıdır."); return; }
+    if (!smartFrameworkLevels(currentFrameworkTab).includes(value)) { deny(currentFrameworkTab === "tyyc" ? "TYYÇ düzeyi 5–8 arasında olmalıdır." : "Yeterlilik seviyesi 1 ile 8 arasında olmalıdır."); return; }
     currentFrameworkLevel = value;
     render();
   }
@@ -1950,6 +2129,13 @@ document.addEventListener("click", (event) => {
   }
   if (action === "finance-simulate") simulateFinance();
   if (action === "finance-draft") createFinanceDraft();
+  if (action === "directive-myd-generate") generateDirectiveMydCode();
+  if (action === "directive-recognition-decision") recordDirectiveRecognition(trigger.dataset.kind);
+  if (action === "directive-appeal") submitDirectiveAppeal(trigger.dataset.kind);
+  if (action === "directive-commission-check") checkDirectiveCommission();
+  if (action === "directive-seat-request") requestDirectiveSeat();
+  if (action === "directive-ek1-validate") validateDirectiveEk1();
+  if (action === "directive-finance-dryrun") createDirectiveFinanceDryRun();
   if (action === "payment-review") paymentReviewModal(trigger.dataset.id, trigger.dataset.status);
   if (action === "submit-payment-request") {
     event.preventDefault();
@@ -2003,6 +2189,7 @@ document.addEventListener("submit", (event) => {
   if (event.target.id === "payment-request-form") submitPaymentDemo(event.target);
   if (event.target.id === "payment-review-form") submitPaymentReview(event.target);
   if (event.target.id === "qualification-matrix-form") saveQualificationMatrix(event.target);
+  if (event.target.id === "directive-workload-form") validateDirectiveWorkloadForm(event.target);
 });
 
 document.addEventListener("input", (event) => {
@@ -2100,6 +2287,26 @@ function persistSmartAlignment(application, program, form, { analysisResult = nu
   }
   state.smartAlignments ||= [];
   const now = new Date().toISOString();
+  const suggestionSnapshot = createSmartSuggestionSnapshot(analysis.report, {
+    orderedOutcomeFingerprint: snapshot.orderedOutcomeFingerprint,
+    outcomes: snapshot.outcomes,
+    program: snapshot.program,
+    manualOverrides: snapshot.manualOverrides,
+    appliedSelections: snapshot.appliedSelections,
+    higherEducationCycleSuggestion: snapshot.higherEducationCycleSuggestion
+  }, { capturedAt: now });
+  const snapshotValidation = validateSmartSuggestionSnapshot(suggestionSnapshot, {
+    engineVersion: snapshot.engineVersion,
+    orderedOutcomeFingerprint: snapshot.orderedOutcomeFingerprint,
+    outcomes: snapshot.outcomes,
+    program: snapshot.program,
+    manualOverrides: snapshot.manualOverrides,
+    appliedSelections: snapshot.appliedSelections,
+    higherEducationCycleSuggestion: snapshot.higherEducationCycleSuggestion
+  });
+  if (!snapshotValidation.valid) {
+    return { ok: false, code: "snapshot_integrity_failed", message: `Tam öneri snapshot'ı doğrulanamadı: ${snapshotValidation.errors.join("; ")}`, record: null };
+  }
   const record = {
     id: `ALIGN-${application.id}`,
     applicationId: application.id,
@@ -2118,6 +2325,7 @@ function persistSmartAlignment(application, program, form, { analysisResult = nu
     manualOverrides: snapshot.manualOverrides,
     appliedSelections: snapshot.appliedSelections,
     higherEducationCycleSuggestion: snapshot.higherEducationCycleSuggestion,
+    suggestionSnapshot,
     institutionalValidationRequired: true,
     boardDecision: null
   };
@@ -2137,9 +2345,17 @@ function persistSmartAlignment(application, program, form, { analysisResult = nu
     action: "Açıklanabilir yeterlilik eşleme önerisi kaydedildi",
     from: application.status,
     to: application.status,
-    reason: `${record.outcomes.length} öğrenme çıktısı • ${record.appliedSelections.length} eğitici seçimi • karar değildir`
+    reason: `${record.outcomes.length} öğrenme çıktısı • ${record.appliedSelections.length} eğitici seçimi • kaynak ${suggestionSnapshot.referenceDataVersion} • ${suggestionSnapshot.integrityHash} • karar değildir`
   });
   return { ok: true, code: "persisted", message: "Akıllı eşleme kaydedildi.", record };
+}
+
+function proposalWorkloadComponents(data) {
+  return Object.fromEntries(workloadComponents.map(([key]) => [key, data.get(`workload_${key}`)]));
+}
+
+function numericWorkloadComponents(components) {
+  return Object.fromEntries(workloadComponents.map(([key]) => [key, Number(components[key])]));
 }
 
 function saveProposalDraft(form) {
@@ -2150,9 +2366,13 @@ function saveProposalDraft(form) {
   const stateBeforeMutation = structuredClone(state);
   const data = new FormData(form);
   const title = String(data.get("title") || "Başlıksız program taslağı");
+  const components = proposalWorkloadComponents(data);
+  const workloadCheck = validateEctsWorkload({ ects: data.get("ects"), totalWorkload: data.get("workload"), components, requireComponents: true });
+  if (!workloadCheck.valid) { deny(workloadCheck.errors.join(" ")); return; }
+  const persistedComponents = numericWorkloadComponents(components);
   try {
-    const application = createApplication(state, { kind: "internal", status: "draft", title, applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects") || 1, remoteRate: data.get("remoteRate") || 0, evidence: data.get("evidence") || 0, comparedCourse: "Kurumsal Bologna kataloğu" });
-    application.formData = Object.fromEntries(data.entries());
+    const application = createApplication(state, { kind: "internal", status: "draft", title, applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects") || 1, remoteRate: data.get("remoteRate") || 0, evidence: data.get("evidence") || 0, comparedCourse: "Kurumsal Bologna kataloğu", workloadComponents: persistedComponents, totalWorkload: Number(data.get("workload")) });
+    application.formData = { ...Object.fromEntries(data.entries()), workloadComponents: persistedComponents, totalWorkload: Number(data.get("workload")) };
     const persisted = persistSmartAlignment(application, null, form, { analysisResult: analysis });
     if (!persisted.ok) throw new Error(persisted.message);
     saveState();
@@ -2173,12 +2393,12 @@ function saveRecognitionDraft(form) {
 }
 
 function saveQualificationMatrix(form) {
-  if (!PROPOSAL_ROLES.has(state.roleId)) { deny("TYÇ / AYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir."); return; }
+  if (!PROPOSAL_ROLES.has(state.roleId)) { deny("TYÇ / AYÇ / TYYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir."); return; }
   if (!form.reportValidity()) return;
   const data = new FormData(form);
   const frameworkId = String(data.get("frameworkId") || "");
   const level = Number(data.get("level"));
-  if (!["tyc", "eqf"].includes(frameworkId) || !Number.isInteger(level) || level < 1 || level > 8) {
+  if (!QUALIFICATION_FRAMEWORK_IDS.includes(frameworkId) || !smartFrameworkLevels(frameworkId).includes(level)) {
     deny("Yeterlilik çerçevesi veya seviyesi geçersiz.");
     return;
   }
@@ -2217,10 +2437,10 @@ function saveQualificationMatrix(form) {
     at: draft.updatedAt,
     actor: draft.ownerName,
     actorRole: draft.ownerRole,
-    action: "TYÇ / AYÇ pilot matris taslağı kaydedildi",
+    action: "TYÇ / AYÇ / TYYÇ pilot matris taslağı kaydedildi",
     from: "draft",
     to: "draft",
-    reason: `${frameworkId === "tyc" ? "TYÇ" : "AYÇ/EQF"} ${level}. seviye önerisi; resmî seviye veya akademik karar değildir`
+    reason: `${smartFrameworkCode(frameworkId)} ${level}. seviye önerisi; resmî seviye, eşdeğerlik veya akademik karar değildir`
   });
   saveState();
   render();
@@ -2287,10 +2507,14 @@ function submitProposal(form) {
   if (!form.reportValidity()) return;
   const stateBeforeMutation = structuredClone(state);
   const data = new FormData(form);
+  const components = proposalWorkloadComponents(data);
+  const workloadCheck = validateEctsWorkload({ ects: data.get("ects"), totalWorkload: data.get("workload"), components, requireComponents: true });
+  if (!workloadCheck.valid) { deny(workloadCheck.errors.join(" ")); return; }
+  const persistedComponents = numericWorkloadComponents(components);
   try {
-    const application = createApplication(state, { kind: "internal", title: data.get("title"), applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects"), remoteRate: data.get("remoteRate"), evidence: data.get("evidence"), comparedCourse: "Kurumsal Bologna kataloğu" });
-    application.formData = { audience:data.get("audience"), outcomes:splitLearningOutcomes(data.get("outcomes")), assessment:data.get("assessment"), smartContent:data.get("smartContent"), smartAssessment:data.get("smartAssessment"), smartEvidence:data.get("smartEvidence"), qualifications:data.get("qualifications"), quality:data.get("quality"), feeMode:data.get("feeMode"), fee:Number(data.get("fee") || 0) };
-    const program = { id:`program-${Date.now()}`, code:application.code, title:data.get("title"), unit:data.get("unit"), instructor:currentRole().name, ects:Number(data.get("ects")), workload:Number(data.get("workload")), level:Number(data.get("level")), mode:Number(data.get("remoteRate")) ? "Karma" : "Yüz yüze", remoteRate:Number(data.get("remoteRate")), status:"review", learners:0, price:Number(data.get("fee") || 0), summary:data.get("summary"), outcomes:splitLearningOutcomes(data.get("outcomes")) };
+    const application = createApplication(state, { kind: "internal", title: data.get("title"), applicant: currentRole().name, actorRole: state.roleId, ects: data.get("ects"), remoteRate: data.get("remoteRate"), evidence: data.get("evidence"), comparedCourse: "Kurumsal Bologna kataloğu", workloadComponents: persistedComponents, totalWorkload: Number(data.get("workload")) });
+    application.formData = { audience:data.get("audience"), outcomes:splitLearningOutcomes(data.get("outcomes")), ects:Number(data.get("ects")), totalWorkload:Number(data.get("workload")), workloadComponents:persistedComponents, assessment:data.get("assessment"), smartContent:data.get("smartContent"), smartAssessment:data.get("smartAssessment"), smartEvidence:data.get("smartEvidence"), qualifications:data.get("qualifications"), quality:data.get("quality"), feeMode:data.get("feeMode"), fee:Number(data.get("fee") || 0) };
+    const program = { id:`program-${Date.now()}`, code:application.code, title:data.get("title"), unit:data.get("unit"), instructor:currentRole().name, ects:Number(data.get("ects")), workload:Number(data.get("workload")), workloadComponents:persistedComponents, level:Number(data.get("level")), mode:Number(data.get("remoteRate")) ? "Karma" : "Yüz yüze", remoteRate:Number(data.get("remoteRate")), status:"review", productionEligible:false, learners:0, price:Number(data.get("fee") || 0), summary:data.get("summary"), outcomes:splitLearningOutcomes(data.get("outcomes")) };
     state.programs.unshift(program);
     const persisted = persistSmartAlignment(application, program, form, { analysisResult: analysis });
     if (!persisted.ok) throw new Error(persisted.message);
@@ -2427,6 +2651,136 @@ function createFinanceDraft() {
   saveState(); render(); toast("Fatura / hak ediş taslağı kaydedildi. Gerçek mali belge üretilmedi.");
 }
 
+function addDirectiveAudit(entityId, action, from, to, reason) {
+  state.audit.unshift({
+    id: `AUD-DIR-${Date.now()}-${state.audit.length}`,
+    entityId,
+    at: new Date().toISOString(),
+    actor: currentRole().name,
+    actorRole: state.roleId,
+    action,
+    from,
+    to,
+    reason
+  });
+}
+
+function validateDirectiveWorkloadForm(form) {
+  if (!form?.reportValidity()) return;
+  const data = new FormData(form);
+  const components = Object.fromEntries(workloadComponents.map(([key]) => [key, data.get(key)]));
+  const result = validateEctsWorkload({ ects: data.get("ects"), totalWorkload: data.get("totalWorkload"), components, requireComponents: true });
+  const target = document.querySelector("#directive-workload-result");
+  if (target) target.innerHTML = directiveWorkloadResult(result);
+  toast(result.valid ? "AKTS–iş yükü bağı ve sekiz bileşen doğrulandı." : "İş yükü kontrolü başarısız; alanları düzeltin.", result.valid ? "success" : "error");
+}
+
+function generateDirectiveMydCode() {
+  try {
+    const record = generateMydCode(state.directivePilot, { actorRole: state.roleId, unitCode: "SEM", year: 2026 });
+    addDirectiveAudit(record.id, "MYD pilot kodu rezerve edildi", "none", "pilot_reserved", `Program sürümü V${record.versionNo} ayrı kaydedildi; kurumsal değerlendirme taslağı; productionEligible=false`);
+    saveState(); render(); toast(`${record.code} • V${record.versionNo} yalnız pilot siciline kaydedildi.`);
+  } catch (error) { deny(error.message); }
+}
+
+function recordDirectiveRecognition(kind) {
+  try {
+    const record = recordRecognitionDecision(state.directivePilot, {
+      applicationId: "APP-042",
+      kind,
+      status: "additional_evidence_required",
+      rationale: `${recognitionDecisionLabel(kind)} için kurumsal kural doğrulaması tamamlanmadığından ek sentetik kanıt talep edildi.`,
+      actorRole: state.roleId,
+      decisionBody: "MY-KOM"
+    });
+    addDirectiveAudit(record.id, "Ayrı tanıma ek kanıt talebi kaydedildi", "pending_human_review", record.status, `${record.kind}; olumlu nihai sonuç bloke; diğer iki sonuç ve rozet/AKTS durumları değiştirilmedi`);
+    saveState(); render(); toast(`${recognitionDecisionLabel(kind)} için ayrı ek kanıt talebi kaydedildi.`);
+  } catch (error) { deny(error.message); }
+}
+
+function submitDirectiveAppeal(kind) {
+  try {
+    const decision = state.directivePilot.recognitionDecisions.find((item) => item.applicationId === "APP-042" && item.kind === kind);
+    if (!decision || decision.status === "pending_human_review") throw new Error("İtirazdan önce ilgili ayrı insan kararı kaydedilmelidir.");
+    const appeal = submitIndependentAppeal(state.directivePilot, {
+      applicationId: "APP-042",
+      decisionKind: kind,
+      actorRole: state.roleId,
+      reason: `${recognitionDecisionLabel(kind)} kararında kanıtların bağımsız üst incelemede yeniden değerlendirilmesi talep edilir.`,
+      initialDecisionBody: decision.decisionBody,
+      appealBody: "EGITIM-OGRETIM-KOM"
+    });
+    addDirectiveAudit(appeal.id, "Bağımsız itiraz gönderildi", decision.status, "submitted", `${appeal.initialDecisionBody} → ${appeal.appealBody}; karar mercileri ayrıdır`);
+    saveState(); render(); toast("İtiraz ilk karardan farklı sentetik inceleme merciine gönderildi.");
+  } catch (error) { deny(error.message); }
+}
+
+function checkDirectiveCommission() {
+  try {
+    const meeting = state.directivePilot.commission;
+    const result = validateCommissionMeeting({
+      actorRole: state.roleId,
+      members: meeting.members,
+      quorumRequired: meeting.quorumRequired,
+      votes: meeting.members.filter((member) => member.present && !member.recused).map((member) => ({ memberId: member.id, vote: "approve" }))
+    });
+    meeting.lastValidation = { ...result, validatedAt: new Date().toISOString(), bodyId: meeting.bodyId, mandate: meeting.mandate };
+    addDirectiveAudit("MEET-SENTETIK-2026-01", "Komisyon nisap ve çekilme kontrolü", "draft", result.valid ? "validated" : "blocked", `${result.eligibleCount} uygun üye; çıkar çatışması oy ihlali=${result.conflictViolations.length}; insan kararı üretilmedi`);
+    saveState(); render(); toast(result.valid ? "Nisap, görev süresi, çekilme ve oy tekilliği kontrol edildi." : "Toplantı kontrolü bloklandı.", result.valid ? "success" : "error");
+  } catch (error) { deny(error.message); }
+}
+
+function requestDirectiveSeat() {
+  try {
+    const offering = state.directivePilot.offerings[0];
+    const nextSyntheticIndex = offering.requests.length + 1;
+    const request = requestOfferingSeat(state.directivePilot, {
+      offeringId: offering.id,
+      learnerId: `SENTETIK-LEARNER-${String(nextSyntheticIndex).padStart(3, "0")}`,
+      actorRole: state.roleId,
+      requestedAt: new Date(Date.now() + offering.requests.length * 1000).toISOString(),
+      idempotencyKey: `UI-SENTETIK-${String(nextSyntheticIndex).padStart(3, "0")}`
+    });
+    addDirectiveAudit(request.id, "Kontenjan talebi işlendi", "pending", request.status, `FIFO; idempotency=${request.idempotencyKey}; gerçek öğrenci kaydı yok`);
+    saveState(); render(); toast(request.status === "enrolled" ? "Son pilot kontenjan ayrıldı." : `Bekleme listesi ${request.waitlistPosition}. sıra oluşturuldu.`);
+  } catch (error) { deny(error.message); }
+}
+
+function validateDirectiveEk1() {
+  if (state.roleId !== "it") { deny("EK-1 teknik kamu görünümü doğrulamasını yalnız Bilgi İşlem demo rolü çalıştırabilir."); return; }
+  try {
+    const record = {
+      document_id: "MYBEL-2026-0007",
+      learner_identification: "Maskeli pilot katılımcı",
+      title: "Proje Temelli Öğrenme Tasarımı",
+      issuer_country_region: "Türkiye",
+      awarding_body: "Kütahya Dumlupınar Üniversitesi • Kontrollü Pilot",
+      issue_date: "2026-08-04",
+      learning_outcomes: ["Proje problemi tasarlar", "Ölçüt temelli rubrik hazırlar"],
+      notional_workload: "2 AKTS • 50 saat",
+      level: "Önerilen pedagojik referans düzeyi 6",
+      participation_form: "Yüz yüze • SİMÜLASYON",
+      assessment_type: "Proje + analitik rubrik",
+      quality_assurance: "İnsan değerlendirmesi + sürümlü audit",
+      status: "pilot_valid",
+      revocation_status: "not_revoked"
+    };
+    const publicView = createPublicCredentialView(record);
+    const result = validateEk1Credential(publicView, { publicView: true });
+    addDirectiveAudit("MYBEL-2026-0007", "EK-1 kamu görünümü sızıntı kontrolü", "draft", result.valid ? "validated" : "blocked", `11 alan; personalNumberLeak=${result.personalNumberLeak}; gerçek kimlik yok`);
+    saveState();
+    openModal(modalTemplate("EK-1 kamu doğrulama görünümü", `${notice("success", "11 alan tam — kimlik sızıntısı yok", "Kamu görünümünde TCKN/YKN, iç kullanıcı kimliği, banka veya biyometrik veri bulunmaz.")}<pre class="integration-payload">${escapeHtml(JSON.stringify(publicView, null, 2))}</pre>`, `<button class="button" data-action="close-modal">Kapat</button>`));
+  } catch (error) { deny(error.message); }
+}
+
+function createDirectiveFinanceDryRun() {
+  try {
+    const record = createFinancePersonnelDryRun(state.directivePilot, { actorRole: state.roleId, kind: "teaching_entitlement", amount: 9600 });
+    addDirectiveAudit(record.id, "Mali/Personel hak ediş dry-run oluşturuldu", "none", record.status, "Gerçek ödeme/bordro/fatura yok; çift kurumsal onay gerekir");
+    saveState(); render(); toast("Mali ve Personel onayı bekleyen hak ediş dry-run kaydı oluşturuldu.");
+  } catch (error) { deny(error.message); }
+}
+
 function saveFinanceParameters(form) {
   if (!form.reportValidity()) return;
   if (!FINANCE_OPERATOR_ROLES.has(state.roleId)) { deny("Bu rol mali pilot parametrelerini değiştiremez."); return; }
@@ -2479,5 +2833,8 @@ async function refreshRemote(fromModal = false) {
   toast(snapshot.ok ? "Supabase salt-okunur pilot görünümü doğrulandı." : "Supabase erişilemedi; güvenli yerel pilot verisi kullanılmaya devam ediyor.", snapshot.ok ? "success" : "error");
 }
 
+// Persist the canonical v15 seed immediately when an older, snapshot-less,
+// malformed or semantically inconsistent local state was rejected by loadState().
+saveState();
 render();
 refreshRemote();
