@@ -277,7 +277,12 @@ async function verifyScenarioActions(page, scenarioDefinitions, errors) {
       internal: saved.scenarios.internal.completed,
       recognition: saved.scenarios.recognition.completed,
       credentials: saved.credentials.filter((item) => item.code.startsWith("MY-BEL-SCN-")).length,
-      safeTransfers: saved.integrationJobs.filter((item) => ["ÖBİS", "YÖKSİS"].includes(item.target) && item.realDataSent === false).length
+      safeTransfers: saved.integrationJobs.filter((item) =>
+        ["obis", "yoksis"].includes(item.target) &&
+        ["ÖBİS", "YÖKSİS"].includes(item.targetLabel) &&
+        item.target === item.targetId &&
+        item.realDataSent === false
+      ).length
     };
   });
   check(scenarioState.internal && scenarioState.recognition, "iki uçtan uca senaryo tarayıcı veri katmanında tamamlanmadı", errors);
