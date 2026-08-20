@@ -280,6 +280,8 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /Aktarıma yönelik dry-run kapalı/, "istişare-only modal güvenlik açıklaması yok");
   assert.match(appSource, /BKYS içindeki Memnuniyet Yönetim Sistemi \(kalite MYS\) ile mali MYS\/MAYS ayrı iş alanlarıdır/, "kalite MYS ile mali MYS\/MAYS ayrımı yok");
   assert.match(appSource, /runIntegrationDryRun\(state, id, state\.roleId/, "dry-run domain iş akışı arayüzde kullanılmıyor");
+  assert.match(appSource, /const refreshGuard = createAsyncRefreshGuard\(\);[\s\S]+canCommitAsyncRefresh\(refreshGuard\)/, "gecikmeli Supabase yanıtı için başlangıç snapshot koruması yok");
+  assert.match(appSource, /uiMutationEpoch \+= 1;[\s\S]+event\.target\.id === "proposal-ects"/, "form etkileşimi gecikmeli refresh yarışından korunmuyor");
   assert.match(appSource, /Kamu, mali ve bildirim taslakları/, "haricî GİB\/mali MYS\/YÖKSİS kapıları ayrı gösterilmiyor");
   assert.match(appSource, /\["ArrowLeft", "ArrowRight", "Home", "End"\]/, "Komisyon sekmelerinin klavye yön tuşu desteği yok");
   assert.match(htmlSource, /id="notification-button"[^>]+data-nav="notifications"/, "bildirim düğmesi sabit seçicisi yok");
@@ -301,6 +303,8 @@ test("responsive QA dört kabul genişliğini gerçek pilot rotasına yönlendir
   }
   assert.equal((qaSource.match(/src="\/pilot\.html#\/home"/g) || []).length, 4, "responsive iframe'ler /pilot.html uygulamasını açmıyor");
   assert.match(browserSource, /finalURL\.pathname === "\/pilot\.html"/, "Preview yönlendirme son rotası doğrulanmıyor");
+  assert.match(browserSource, /reachablePageScroll/, "responsive QA iç tablo kaydırması ile sayfa taşmasını ayırmıyor");
+  assert.match(browserSource, /undefined, \{ timeout: 3000 \}/, "ödeme durum beklemesinde Playwright timeout argümanı yanlış");
 });
 
 test("başvuru sahipliği aynı role sahip farklı kişileri ayırıyor", () => {

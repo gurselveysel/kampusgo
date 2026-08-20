@@ -97,12 +97,22 @@ async function visibleNavTargets(page) {
 }
 
 async function assertNoOverflow(page, label, errors) {
-  const overflow = await page.evaluate(() => ({
-    document: document.documentElement.scrollWidth - window.innerWidth,
-    body: document.body.scrollWidth - window.innerWidth
-  }));
-  if (overflow.document > 1 || overflow.body > 1) {
-    errors.push(`${label}: yatay taşma document=${overflow.document}px body=${overflow.body}px`);
+  const overflow = await page.evaluate(() => {
+    const scrollingElement = document.scrollingElement;
+    const originalScrollLeft = scrollingElement?.scrollLeft || 0;
+    if (scrollingElement) scrollingElement.scrollLeft = 1_000_000;
+    const reachablePageScroll = scrollingElement?.scrollLeft || 0;
+    if (scrollingElement) scrollingElement.scrollLeft = originalScrollLeft;
+    return {
+      document: document.documentElement.scrollWidth - window.innerWidth,
+      body: document.body.scrollWidth - window.innerWidth,
+      reachablePageScroll
+    };
+  });
+  // Wide tables and step lists intentionally scroll inside their own wrapper.
+  // Only a reachable document/body scroll is a page-level mobile overflow.
+  if (overflow.reachablePageScroll > 1 || overflow.body > 1) {
+    errors.push(`${label}: yatay sayfa taşması scroll=${overflow.reachablePageScroll}px body=${overflow.body}px (ham document=${overflow.document}px)`);
   }
   return overflow;
 }
@@ -320,10 +330,20 @@ async function verifyPaymentDemoFlow(page, errors) {
   await page.selectOption("#payment-channel", "Havale/EFT simülasyonu");
   await page.check('#payment-request-form input[name="confirm"]');
   await page.locator('#payment-request-form [data-action="submit-payment-request"]').click();
-  await page.waitForFunction(() => {
-    const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
-    return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "pending_finance");
-  }, { timeout: 3000 });
+  try {
+    await page.waitForFunction(() => {
+      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+      return saved.finance?.paymentRequests?.some((item) => item.programId === "program-green-skills" && item.status === "pending_finance");
+    }, undefined, { timeout: 3000 });
+  } catch (error) {
+    const diagnostics = await page.evaluate(() => ({
+      request: JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"))?.finance?.paymentRequests?.find((item) => item.programId === "program-green-skills"),
+      channel: document.querySelector("#payment-channel")?.value || null,
+      confirmed: document.querySelector('#payment-request-form input[name="confirm"]')?.checked ?? null,
+      toast: document.querySelector("#toast-region")?.textContent?.trim() || null
+    }));
+    throw new Error(`Ödeme demo kaydı pending_finance durumuna geçmedi: ${JSON.stringify(diagnostics)}; ${error.message}`);
+  }
   await page.waitForSelector('[data-action="handoff-finance"]', { state: "visible" });
   check((await page.locator('[data-action="handoff-finance"]').count()) === 1, "learner: mali işlere gönderim sonrası Finans rolü devir CTA'sı yok", errors);
   await page.locator('[data-action="handoff-finance"]').click();
