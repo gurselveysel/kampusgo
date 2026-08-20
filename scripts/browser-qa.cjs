@@ -355,7 +355,8 @@ async function verifyPaymentDemoFlow(page, errors) {
   check((await page.locator('[data-action="handoff-finance"]').count()) === 1, "learner: mali işlere gönderim sonrası Finans rolü devir CTA'sı yok", errors);
   await page.locator('[data-action="handoff-finance"]').click();
   await page.waitForFunction(() => document.querySelector("#role-select")?.value === "finance"
-    && document.querySelector("#main-content h1")?.textContent?.includes("Finans / Döner Sermaye genel bakışı"));
+    && window.location.hash === "#/finance"
+    && document.querySelector("#main-content h1")?.textContent?.includes("Finansal yönetim ve döner sermaye pilotu"));
   check(await page.locator("#role-select").inputValue() === "finance", "ödeme demo devir eylemi Finans rolünü açmadı", errors);
 
   const requestRow = page.locator('tr:has-text("Yeşil Dönüşüm İçin Temel Yetkinlikler")').filter({ has: page.locator('[data-action="payment-review"][data-status="approved"]') }).first();
