@@ -149,7 +149,8 @@ export function runIntegrationDryRun(state, integrationId, actorRole, actorName)
   state.audit ||= [];
   const job = {
     id: `JOB-${integration.id}-${Date.now()}`,
-    target: integration.name,
+    target: integration.id,
+    targetLabel: integration.name,
     targetId: integration.id,
     category: integration.category,
     status: shouldFail ? "simulation_failed" : "simulation_succeeded",
@@ -190,7 +191,8 @@ export function runIntegrationBulkDryRun(state, actorRole, actorName) {
     integration.lastTest = "Toplu kontrollü dry-run başarılı • simülasyon";
     const job = {
       id: `JOB-BULK-${integration.id}-${Date.now()}-${index}`,
-      target: integration.name,
+      target: integration.id,
+      targetLabel: integration.name,
       targetId: integration.id,
       category: integration.category,
       status: "simulation_succeeded",
@@ -641,7 +643,21 @@ export function runScenarioStep(state, kind) {
       log(application.id, label, "approved", "ledgered", "Öğrenci kaydı yalnız yerel pilot çalışma alanında güncellendi");
     }
     if (index === 7) {
-      for (const target of ["ÖBİS", "YÖKSİS"]) state.integrationJobs.unshift({ id: `JOB-${target}-${Date.now()}`, target, applicationId: application.id, status: "simulation_succeeded", realDataSent: false, at: now });
+      for (const target of [{ id: "obis", label: "ÖBİS" }, { id: "yoksis", label: "YÖKSİS" }]) {
+        state.integrationJobs.unshift({
+          id: `JOB-${target.id}-${Date.now()}`,
+          target: target.id,
+          targetId: target.id,
+          targetLabel: target.label,
+          category: "Akademik kayıt aktarımı",
+          applicationId: application.id,
+          status: "simulation_succeeded",
+          errorCode: "NONE",
+          retryAvailable: false,
+          realDataSent: false,
+          at: now
+        });
+      }
       log(application.id, label, "ledgered", "simulation_logged", "realDataSent=false; canlı servis çağrısı yapılmadı");
     }
   }
