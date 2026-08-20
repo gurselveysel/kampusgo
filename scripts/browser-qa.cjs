@@ -239,7 +239,7 @@ async function verifyExternalInstructorProposal(page, errors) {
   await setHash(page, "proposal");
   await page.fill("#proposal-title", title);
   await page.fill("#proposal-summary", "Kurum dışı eğitici sahipliği ve pilot audit zinciri için sentetik program özeti.");
-  await page.fill("#proposal-outcomes", "Kanıt zincirini yapılandırır\nPilot rubrik sonuçlarını yorumlar");
+  await page.fill("#proposal-outcomes", "Kanıt zincirindeki ilişkileri karşılaştırmalı ölçütlerle analiz eder.\nPilot rubrik sonuçlarını yorumlar ve kanıta dayalı geri bildirim oluşturur.");
   await page.fill("#proposal-qualifications", "Sentetik alan uzmanlığı ve öğretim deneyimi kanıtları");
   await page.fill("#proposal-quality", "Rubrik kalibrasyonu ve insan geri bildirimi pilot planı");
   await page.locator('#proposal-form button[type="submit"]').click();
@@ -522,7 +522,7 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   for (const card of cards) {
     check(Number.isInteger(card.level) && card.level >= 1 && card.level <= 8, `${viewport.name}/smart: ${card.framework} seviye 1–8 dışında`, errors);
     check(Number.isFinite(card.score) && card.score >= 0 && card.score <= 100, `${viewport.name}/smart: açıklanabilir skor 0–100 dışında`, errors);
-    for (const label of ["Gerekçe", "Tanımlayıcı", "İçerik ipucu", "Ölçme-değerlendirme", "Kanıt önerisi"]) {
+    for (const label of ["Gerekçe", "Kanonik tanımlayıcı", "İçerik ipucu", "Ölçme-değerlendirme", "Kanıt önerisi"]) {
       check(card.text.includes(label), `${viewport.name}/smart: ${card.framework} kartında ${label} yok`, errors);
     }
   }
@@ -577,7 +577,7 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   await page.fill("#proposal-summary", "Akıllı yeterlilik önerisi, seçim, manuel düzeltme ve kurul inceleme sınırını test eden sentetik program.");
   await page.fill("#proposal-qualifications", "Alan uzmanlığı ve öğretim deneyimi için yalnız sentetik pilot kanıt üst verisi.");
   await page.fill("#proposal-quality", "Rubrik kalibrasyonu, insan incelemesi ve izlenebilir gerekçe planı.");
-  await page.locator('[data-action="save-draft"]').click();
+  await page.locator('#proposal-form button[type="submit"]').click();
   await page.waitForFunction((reason) => {
     const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v4"));
     return saved.smartAlignments?.some((item) => item.manualOverrides?.some((entry) => entry.reason === reason));
@@ -593,7 +593,9 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
       applicationLink: application?.smartAlignmentId,
       formLink: application?.formData?.qualificationMapping?.id,
       formFingerprint: application?.formData?.qualificationMapping?.orderedOutcomeFingerprint,
-      semanticOutcomes: String(application?.formData?.outcomes || "").split(/\n+/).map((item) => item.trim()).filter(Boolean),
+      semanticOutcomes: Array.isArray(application?.formData?.outcomes)
+        ? application.formData.outcomes
+        : String(application?.formData?.outcomes || "").split(/\n+/).map((item) => item.trim()).filter(Boolean),
       unsafeDecision: /"autonomousDecision":true/.test(JSON.stringify(alignment || {}))
     };
   }, overrideReason);
@@ -604,6 +606,22 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   check(JSON.stringify(linkage.semanticOutcomes) === JSON.stringify(linkage.alignment?.outcomes?.map((item) => item.text)), "smart/linkage: application formData çıktıları alignment metinleriyle semantik eşleşmiyor", errors);
   check(linkage.alignment?.outcomes?.length === 3 && linkage.alignment?.appliedSelections?.length >= 2, "smart/persist: çıktı/seçim snapshot eksik", errors);
   check(linkage.alignment?.institutionalValidationRequired === true && linkage.unsafeDecision === false, "smart/persist: doğrulama veya auto-decision sınırı kayboldu", errors);
+
+  await page.evaluate(async (applicationId) => {
+    const key = "kdpu-myys-pilot-v4";
+    const saved = JSON.parse(localStorage.getItem(key));
+    const { transitionApplication } = await import("/src/workflow.js");
+    transitionApplication(
+      saved,
+      applicationId,
+      "commission",
+      "coordinator",
+      "Tarayıcı QA: zorunlu sentetik kanıtlar tamamlandı; Komisyon gündemine alındı.",
+      "Murat Akın"
+    );
+    saved.selectedApplicationId = applicationId;
+    localStorage.setItem(key, JSON.stringify(saved));
+  }, linkage.applicationId);
 
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForSelector('#role-select option[value="commission"]', { state: "attached" });
