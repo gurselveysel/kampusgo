@@ -146,7 +146,7 @@ jobs:
                   cache: "no-store"
                 });
                 const source = await response.text();
-                if (response.status === 200 && source.includes("version: 8") && source.includes("recipientRoles")) {
+                if (response.status === 200 && source.includes("version: 9") && source.includes("recipientRoles")) {
                   const root = await fetch(`https://${domain}/?qa=${Date.now()}`, { redirect: "follow", cache: "no-store" });
                   const html = await root.text();
                   if (root.status === 200 && root.url.startsWith(`https://${domain}/pilot.html`) && html.includes("KONTROLLÜ PİLOT")) {
