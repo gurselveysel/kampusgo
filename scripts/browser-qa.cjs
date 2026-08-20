@@ -560,12 +560,12 @@ async function verifyIntegrationCatalog(page, integrations, errors) {
   if (financeAllowed) {
     await page.locator(`.integration-card[data-system-id="${financeAllowed.id}"] [data-action="open-integration"]`).click();
     check(await page.locator('#modal [data-action="simulate-integration"]').count() === 1, `finance/${financeAllowed.id}: izinli dry-run CTA yok`, errors);
-    await page.locator('#modal [data-action="close-modal"]').click();
+    await page.locator('#modal [data-action="close-modal"]').first().click();
   }
   if (financeDenied) {
     await page.locator(`.integration-card[data-system-id="${financeDenied.id}"] [data-action="open-integration"]`).click();
     check(await page.locator('#modal [data-action="simulate-integration"]').count() === 0, `finance/${financeDenied.id}: yetkisiz dry-run CTA görünür`, errors);
-    await page.locator('#modal [data-action="close-modal"]').click();
+    await page.locator('#modal [data-action="close-modal"]').first().click();
   }
   await setHash(page, "overview");
   await page.locator('[data-action="reset-demo"]').click();
