@@ -1,4 +1,4 @@
-import { initialState, lifecycle, pageMeta, roleNavigation, roles } from "./data.js";
+import { externalPilotIntegrationGates, initialState, integrationMasterDataOwnership, lifecycle, pageMeta, roleNavigation, roles } from "./data.js";
 import {
   canRecordAssessmentDecision,
   canViewApplication,
@@ -7,6 +7,8 @@ import {
   getAllowedApplicationTransitions,
   recordAssessmentDecision,
   reviewPaymentRequest,
+  runIntegrationBulkDryRun,
+  runIntegrationDryRun,
   runScenarioStep,
   scenarioDefinitions,
   startPaymentRequest,
@@ -47,6 +49,8 @@ let lastFocused = null;
 let currentCommissionTab = "summary";
 let currentFrameworkTab = "tyc";
 let currentFrameworkLevel = 6;
+let currentIntegrationCategory = "all";
+let currentIntegrationTier = "all";
 
 function loadState() {
   try {
@@ -137,6 +141,12 @@ function isValidSavedState(saved) {
   const selectedApplicationIsValid = (applications) => saved.selectedApplicationId === null ||
     saved.selectedApplicationId === undefined ||
     (isText(saved.selectedApplicationId) && applications.some((item) => item.id === saved.selectedApplicationId));
+  const hasCanonicalIntegrationCatalog = (integrations) => {
+    if (!Array.isArray(integrations) || integrations.length !== initialState.integrations.length) return false;
+    const actual = integrations.map((item) => item?.id).sort();
+    const expected = initialState.integrations.map((item) => item.id).sort();
+    return actual.every((id, index) => id === expected[index]);
+  };
   return Boolean(
     isObject(saved) &&
     saved.version === initialState.version &&
@@ -147,7 +157,13 @@ function isValidSavedState(saved) {
     saved.applications.every(isApplication) && selectedApplicationIsValid(saved.applications) &&
     saved.programs.every(isProgram) && saved.credentials.every(isCredential) && saved.enrollments.every(isEnrollment) &&
     saved.assessmentSessions.every(isAssessment) && saved.recognizedCredits.every(isRecognizedCredit) &&
-    saved.integrations.every((item) => isObject(item) && ["id", "name", "owner", "status", "lastTest"].every((key) => isText(item[key])) && isNumber(item.stage, 0, 5) && (item.attempts === undefined || isNumber(item.attempts)) && item.realDataEnabled !== true && !item.secret) &&
+    hasCanonicalIntegrationCatalog(saved.integrations) && saved.integrations.every((item) => isObject(item) &&
+      ["id", "name", "category", "systemClass", "owner", "status", "lastTest", "sourceStatus", "purposeProposal", "dataDirection", "approvalGate", "errorScenario", "retryPolicy", "auditPolicy", "integrationTier", "myysRelevance"].every((key) => isText(item[key])) &&
+      ["tier1", "tier2", "tier3"].includes(item.integrationTier) && ["core", "supporting", "adjacent"].includes(item.myysRelevance) && typeof item.consultationOnly === "boolean" &&
+      Array.isArray(item.operatorRoles) && item.operatorRoles.length > 0 && item.operatorRoles.every((role) => roleIds.has(role)) &&
+      isObject(item.samplePayload) && item.samplePayload.mode === "dry-run" && item.samplePayload.realData === false &&
+      (item.sourceUrl === "" || /^https:\/\//.test(item.sourceUrl)) &&
+      isNumber(item.stage, 0, 5) && (item.attempts === undefined || isNumber(item.attempts)) && item.realDataEnabled === false && !item.secret) &&
     saved.integrationJobs.every((item) => isObject(item) && ["id", "target", "status", "at"].every((key) => isText(item[key])) && isDate(item.at) && item.realDataSent === false) &&
     saved.notifications.every((item) => isObject(item) && ["id", "title", "body", "time"].every((key) => isText(item[key])) && Array.isArray(item.recipientRoles) && item.recipientRoles.length > 0 && item.recipientRoles.every((role) => roleIds.has(role)) && Array.isArray(item.readBy) && item.readBy.every((role) => roleIds.has(role) && item.recipientRoles.includes(role))) &&
     saved.audit.every((item) => isObject(item) && ["id", "entityId", "at", "actor", "action", "from", "to", "reason"].every((key) => isText(item[key])) && isDate(item.at) && auditRoleIds.has(item.actorRole)) &&
@@ -162,7 +178,7 @@ function isValidSavedState(saved) {
     isObject(saved.finance.parameters) && ["withholding", "vat", "stamp"].every((key) => isNumber(saved.finance.parameters[key], 0, 100)) &&
     (saved.remoteSnapshot === null || saved.remoteSnapshot === undefined || (isObject(saved.remoteSnapshot) &&
       ["programs", "applications", "credentials", "integrations"].every((key) => isNumber(saved.remoteSnapshot[key])) &&
-      ["qualificationLevels", "officialQualifications", "matrixTemplates", "matrixDrafts", "paymentRequests", "roleWorkflowRows", "unavailableReferenceViews"].every((key) => saved.remoteSnapshot[key] === undefined || isNumber(saved.remoteSnapshot[key])) &&
+      ["qualificationLevels", "officialQualifications", "matrixTemplates", "matrixDrafts", "paymentRequests", "roleWorkflowRows", "unavailableReferenceViews", "institutionalSystems", "institutionalMappings", "institutionalScenarios", "institutionalAuditEvents", "unavailableInstitutionalViews"].every((key) => saved.remoteSnapshot[key] === undefined || isNumber(saved.remoteSnapshot[key])) &&
       (saved.remoteSnapshot.referenceSource === undefined || isText(saved.remoteSnapshot.referenceSource)) &&
       isDate(saved.remoteSnapshot.checkedAt)))
   );
@@ -246,7 +262,7 @@ function visibleAuditEvents(applications = visibleApplications()) {
     return state.audit.filter((event) => visibleIds.has(event.entityId) || event.actorRole === "commission" || /^(ASM-|credential-)/.test(event.entityId));
   }
   if (state.roleId === "studentAffairs") {
-    return state.audit.filter((event) => visibleIds.has(event.entityId) || event.actorRole === "studentAffairs" || /^(CR-|ENR-|credential-|INT-obis)/.test(event.entityId));
+    return state.audit.filter((event) => visibleIds.has(event.entityId) || event.actorRole === "studentAffairs" || /^(CR-|ENR-|credential-|INT-dpu-obs|INT-dpu-bologna)/.test(event.entityId));
   }
   if (state.roleId === "it") {
     return state.audit.filter((event) => event.actorRole === "it" || /^(INT-|JOB-)/.test(event.entityId));
@@ -267,7 +283,8 @@ function deny(message = "Seçili demo rolü bu işlemi gerçekleştiremez.") {
 }
 
 function canOperateIntegration(id) {
-  return INTEGRATION_BULK_ROLES.has(state.roleId) || (state.roleId === "studentAffairs" && id === "obis");
+  const item = state.integrations.find((integration) => integration.id === id);
+  return Boolean(item?.consultationOnly === false && item?.operatorRoles?.includes(state.roleId) && item.realDataEnabled === false);
 }
 
 function formatDate(value, includeTime = false) {
@@ -516,7 +533,7 @@ function roleTasks(roleId) {
     coordinator: [["Eksik belge kontrolünü tamamla", "applications", "1 başvuru"], ["Süre göstergelerini incele", "reports", "1 yaklaşan kayıt"], ["Komisyon gündemini aç", "commission", "2 kayıt"]],
     commission: [["Karşılaştırma analizini incele", "commission", "MY-PRG-2026-014"], ["Gerekçeli görüş ekle", "commission", "İnsan kararı"], ["Karar geçmişini denetle", "audit", "İzlenebilir kayıt"]],
     studentAffairs: [["AKTS ön kontrolünü incele", "applications", "%10 pilot sınırı"], ["ÖBİS dry-run kaydını aç", "integrations", "Bağlı değil"], ["Belge alanlarını karşılaştır", "wallet", "EK-1 taslağı"]],
-    it: [["Entegrasyon onay kapılarını test et", "integrations", "7 bağlı olmayan servis"], ["Audit kayıtlarını incele", "audit", "Gerçek veri yok"], ["Sistem sağlığı özetini aç", "reports", "Pilot görünüm"]],
+    it: [["Entegrasyon onay kapılarını test et", "integrations", `${state.integrations.length} kontrollü katalog kaydı`], ["Audit kayıtlarını incele", "audit", "Gerçek veri yok"], ["Sistem sağlığı özetini aç", "reports", "Pilot görünüm"]],
     finance: [["Öğrenen ödeme demo kuyruğunu incele", "finance", "Ön onay / revizyon / mutabakat"], ["Hak ediş taslağını doğrula", "finance", "Mali onay gerekli"], ["Bildirimleri kontrol et", "notifications", "Yalnız uygulama içi"]],
     admin: [["Rol ve kapsam görünümünü denetle", "overview", "9 demo rolü"], ["Entegrasyonları doğrula", "integrations", "Production kapalı"], ["Audit izini dışa aktarma simülasyonu", "audit", "Sentetik veri"]]
   }[roleId] || [];
@@ -798,16 +815,44 @@ function frameworksPage() {
 
 function integrationsPage() {
   const bulkAction = INTEGRATION_BULK_ROLES.has(state.roleId) ? `<button class="button button--secondary" data-action="integration-dryrun">${icon("refresh")} Toplu dry-run</button>` : "";
+  const categories = [...new Set(state.integrations.map((item) => item.category))].sort((a, b) => a.localeCompare(b, "tr"));
+  const visibleIntegrations = currentIntegrationCategory === "all"
+    ? state.integrations
+    : state.integrations.filter((item) => item.category === currentIntegrationCategory);
+  const tierFilteredIntegrations = currentIntegrationTier === "all"
+    ? visibleIntegrations
+    : visibleIntegrations.filter((item) => item.integrationTier === currentIntegrationTier);
+  const publicReferences = state.integrations.filter((item) => item.systemClass.includes("Kamuya açık")).length;
   return `<div class="page-container">${pageHeader("Evre 5 • Kontrollü servis katmanı", "Entegrasyon merkezi", "Bütün bağlantılar simülasyon veya bağlı değil durumundadır. Dry-run, onay kapısı, hata, yeniden deneme ve mutabakat kayıtları gerçek API çağrısı olmadan örneklenir.", bulkAction)}
     ${notice("success", "Canlı servis çağrısı kapalı", "Tarayıcı izin politikası kamera, mikrofon, konum ve ödeme özelliklerini devre dışı bırakır; bu pilot gerçek kurumsal uç noktalara istek göndermez.")}
+    ${notice("warning", "Envanter, entegrasyon taahhüdü değildir", "Kamuya açık web bağlantıları yalnızca kaynak envanteridir. Sistem işlevi, veri sahipliği, API erişimi, hukuki dayanak ve alan eşlemesi her hedef için kurumsal olarak doğrulanmalıdır.")}
     <figure class="editorial-figure editorial-figure--wide"><img src="assets/illustrations/integration-gates.webp" alt="Akademik kaydı doğrudan veri tabanı erişiminden koruyan rol, onay ve servis kapıları illüstrasyonu" width="1400" height="788" loading="lazy" /><figcaption>Servisler aşamalı ve bağlı değil; her geçiş rol, onay, audit ve geri alma kontrolüne tabidir.</figcaption></figure>
-    <div class="grid grid-3 section">${state.integrations.map(integrationCard).join("")}</div>
-    ${state.integrationJobs.length ? `<section class="card section"><div class="card-header"><div><h2>Simülasyon iş günlüğü</h2><p>Başarı ve hata senaryoları; tüm kayıtlarda gerçek veri aktarımı kapalıdır.</p></div></div><div class="table-wrap"><table><caption class="sr-only">Entegrasyon simülasyon iş kayıtları</caption><thead><tr><th scope="col">Hedef</th><th scope="col">Durum</th><th scope="col">Başvuru</th><th scope="col">Gerçek veri</th><th scope="col">Zaman</th></tr></thead><tbody>${state.integrationJobs.map((job)=>`<tr><td>${escapeHtml(job.target)}</td><td>${statusBadge(job.status === "simulation_failed" ? "failed" : "simulated", job.status === "simulation_failed" ? "Simüle hata" : "Simüle başarı")}</td><td>${escapeHtml(job.applicationId || "—")}</td><td><strong>Gönderilmedi</strong><span class="table-subtitle">realDataSent=false</span></td><td>${formatDate(job.at,true)}</td></tr>`).join("")}</tbody></table></div></section>` : ""}
+    <div class="grid grid-3 section integration-summary">${kpi("Katalog kaydı", state.integrations.length, `${categories.length} iş kategorisi`, "network")}${kpi("Kamu referansı", publicReferences, "API olduğu iddia edilmez", "book")}${kpi("Canlı veri aktarımı", "0", "Tüm kapılar kapalı", "shield")}</div>
+    <section class="card section master-data-card"><div class="card-header"><div><h2>Ana veri sahipliği ve karar kaynağı</h2><p>Bu tablo canonical sistemlerin masterDataDomains/masterDataBoundary alanlarından üretilir; MYYS kopya bir ana sistem kurmaz.</p></div>${statusBadge("simulated", "Yönetişim taslağı")}</div><div class="table-wrap"><table><caption class="sr-only">Entegrasyon ana veri sahipliği taslağı</caption><thead><tr><th scope="col">Veri alanı</th><th scope="col">Kaynak sistem</th><th scope="col">Yetkili sahip adayı</th><th scope="col">Canonical sınır</th></tr></thead><tbody>${integrationMasterDataOwnership.map((item) => `<tr data-owner-system-id="${escapeHtml(item.systemId)}"><td><strong>${escapeHtml(item.domain)}</strong></td><td><span class="table-title">${escapeHtml(item.system)}</span><span class="table-subtitle">${escapeHtml(item.integrationTier)} • ${escapeHtml(item.myysRelevance)}</span></td><td>${escapeHtml(item.authority)}</td><td>${escapeHtml(item.mode)}</td></tr>`).join("")}</tbody></table></div><div class="card-body"><div class="permission-note"><strong>Ad benzerliği uyarısı</strong><span>BKYS içindeki Memnuniyet Yönetim Sistemi (kalite MYS) ile mali MYS/MAYS ayrı iş alanlarıdır; veri ve onay kapıları birleştirilmez.</span></div></div></section>
+    <section class="card section integration-tier-legend" aria-labelledby="tier-legend-title"><div class="card-header"><div><h2 id="tier-legend-title">Entegrasyon Tier açıklaması</h2><p>Tier, erişim ve işlem sınıfıdır; sistemin hazır, bağlı veya onaylanmış olduğunu göstermez.</p></div>${statusBadge("disconnected", "Tümü bağlı değil")}</div><div class="card-body tier-legend-grid"><div><strong>Tier 1</strong><span>Kamu salt-okunur referans</span></div><div><strong>Tier 2</strong><span>Kontrollü servis / veri durumu</span></div><div><strong>Tier 3</strong><span>İşlem, belge veya mali handoff</span></div><div><strong>MYYS önemi</strong><span>core / supporting / adjacent ayrı etikettir</span></div></div></section>
+    <section class="toolbar section integration-toolbar" aria-label="Entegrasyon kataloğu filtresi"><div><strong>DPÜ sistem ve kaynak envanteri</strong><span class="table-subtitle">Ad veya amaç arayın; kategori ve Tier filtrelerini birlikte uygulayın.</span></div><div class="toolbar-group"><label class="sr-only" for="integration-search">Entegrasyon ara</label><input id="integration-search" type="search" placeholder="Sistem, kategori veya amaç ara" autocomplete="off" /><label class="sr-only" for="integration-category">Kategori</label><select id="integration-category" class="select"><option value="all">Tüm kategoriler (${state.integrations.length})</option>${categories.map((category) => `<option value="${escapeHtml(category)}" ${currentIntegrationCategory === category ? "selected" : ""}>${escapeHtml(category)} (${state.integrations.filter((item) => item.category === category).length})</option>`).join("")}</select><label class="sr-only" for="integration-tier">Tier</label><select id="integration-tier" class="select"><option value="all">Tüm Tier'lar</option>${["tier1", "tier2", "tier3"].map((tier) => `<option value="${tier}" ${currentIntegrationTier === tier ? "selected" : ""}>${tier.replace("tier", "Tier ")} (${state.integrations.filter((item) => item.integrationTier === tier).length})</option>`).join("")}</select><button class="button button--secondary" data-action="integration-category">Filtreleri uygula</button></div></section>
+    <div class="grid grid-3 section" id="integration-catalog">${tierFilteredIntegrations.map(integrationCard).join("")}</div>
+    <div id="integration-filter-empty" class="empty-state" hidden><strong>Eşleşen entegrasyon kaydı yok</strong><p>Arama ifadesini veya kategori filtresini değiştirin.</p></div>
+    <section class="section"><div class="section-heading"><div><div class="page-kicker">DPÜ dışı kontrollü kapılar</div><h2>Kamu, mali ve bildirim taslakları</h2></div><p>Bu ${externalPilotIntegrationGates.length} kapı, ${state.integrations.length} kayıtlı canonical kurum sistemi kataloğundan ayrı tutulur; hiçbirinin canlı sözleşmesi veya erişim anahtarı tanımlı değildir.</p></div><div class="grid grid-3">${externalPilotIntegrationGates.map(externalIntegrationGateCard).join("")}</div></section>
+    ${state.integrationJobs.length ? `<section class="card section"><div class="card-header"><div><h2>Simülasyon iş günlüğü</h2><p>Başarı, hata ve yeniden deneme senaryoları; tüm kayıtlarda gerçek veri aktarımı kapalıdır.</p></div></div><div class="table-wrap"><table><caption class="sr-only">Entegrasyon simülasyon iş kayıtları</caption><thead><tr><th scope="col">Hedef / kategori</th><th scope="col">Durum</th><th scope="col">Hata / yeniden deneme</th><th scope="col">Gerçek veri</th><th scope="col">Zaman</th></tr></thead><tbody>${state.integrationJobs.map((job)=>`<tr><td><span class="table-title">${escapeHtml(job.target)}</span><span class="table-subtitle">${escapeHtml(job.category || "Pilot entegrasyon")}</span></td><td>${statusBadge(job.status === "simulation_failed" ? "failed" : "simulated", job.status === "simulation_failed" ? "Simüle hata" : "Simüle başarı")}</td><td>${escapeHtml(job.errorCode || "NONE")}<span class="table-subtitle">${job.retryAvailable ? "Yeniden deneme açık" : "Yeniden deneme gerekmiyor"}</span></td><td><strong>Gönderilmedi</strong><span class="table-subtitle">realDataSent=false</span></td><td>${formatDate(job.at,true)}</td></tr>`).join("")}</tbody></table></div></section>` : ""}
   </div>`;
 }
 
+function externalIntegrationGateCard(item) {
+  return `<article class="card external-gate-card"><div class="card-body"><div class="integration-head"><span class="integration-mark">${escapeHtml(item.name.split(" ")[0].slice(0, 5))}</span>${statusBadge("disconnected")}</div><div class="integration-tags"><span>Haricî kapı</span><span>${escapeHtml(item.category)}</span></div><h3>${escapeHtml(item.name)}</h3><dl><dt>Veri yönü</dt><dd>${escapeHtml(item.direction)}</dd><dt>Onay kapısı</dt><dd>${escapeHtml(item.approvalGate)}</dd><dt>Pilot sınırı</dt><dd>${escapeHtml(item.boundary)}</dd></dl></div><div class="card-footer"><span class="status status--neutral">Gerçek veri gönderilmez</span></div></article>`;
+}
+
 function integrationCard(item) {
-  return `<article class="card integration-card"><div class="card-body"><div class="integration-head"><span class="integration-mark">${escapeHtml(item.name.split(" ")[0].slice(0,5))}</span>${statusBadge(item.status)}</div><h3 style="margin:15px 0 2px">${escapeHtml(item.name)}</h3><span class="table-subtitle">Gerçek veri gönderilmez</span><dl><dt>Sahip</dt><dd>${escapeHtml(item.owner)}</dd><dt>Aşama</dt><dd>${item.stage}/5 kontrollü kapı</dd><dt>Deneme</dt><dd>${item.attempts || 0}</dd><dt>Son test</dt><dd>${escapeHtml(item.lastTest)}</dd></dl></div><div class="card-footer"><span class="status status--neutral">Simülasyon</span><button class="button button--secondary button--sm" data-action="open-integration" data-id="${item.id}">Ayrıntı</button></div></article>`;
+  const sourceLink = item.sourceUrl
+    ? `<a class="text-button integration-source" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kamu kaynağını aç</a>`
+    : `<span class="table-subtitle integration-source">Servis adresi tanımlı değil</span>`;
+  const searchable = [item.name, item.category, item.systemClass, item.purposeProposal, item.owner].join(" ").toLocaleLowerCase("tr-TR");
+  const governanceBadge = item.consultationOnly
+    ? `<span class="integration-governance">Yalnızca istişare / taslak</span>`
+    : `<span class="integration-governance">Kontrollü pilot adayı</span>`;
+  const relevanceLabels = { core: "Core", supporting: "Supporting", adjacent: "Adjacent" };
+  const detailLabel = item.consultationOnly ? "Referans ayrıntısı" : "Dry-run ayrıntısı";
+  return `<article class="card integration-card" data-system-id="${escapeHtml(item.id)}" data-integration-tier="${escapeHtml(item.integrationTier)}" data-myys-relevance="${escapeHtml(item.myysRelevance)}" data-consultation-only="${item.consultationOnly}" data-source-url="${escapeHtml(item.sourceUrl)}" data-searchable="${escapeHtml(searchable)}"><div class="card-body"><div class="integration-head"><span class="integration-mark">${escapeHtml(item.name.split(" ")[0].slice(0,5))}</span>${statusBadge(item.status)}</div><div class="integration-tags"><span>Tier ${item.stage}</span><span>MYYS: ${relevanceLabels[item.myysRelevance] || escapeHtml(item.myysRelevance)}</span><span>${escapeHtml(item.category)}</span><span>${escapeHtml(item.systemClass)}</span></div>${governanceBadge}<h3>${escapeHtml(item.name)}</h3><p class="page-subtitle integration-purpose">${escapeHtml(item.purposeProposal)}</p><dl><dt>Veri yönü</dt><dd>${escapeHtml(item.dataDirection)}</dd><dt>Onay kapısı</dt><dd>${escapeHtml(item.approvalGate)}</dd><dt>Deneme</dt><dd>${item.attempts || 0}</dd><dt>Son durum</dt><dd>${escapeHtml(item.lastTest)}</dd></dl>${sourceLink}</div><div class="card-footer"><span class="status status--neutral">Gerçek veri yok</span><button class="button button--secondary button--sm" data-action="open-integration" data-id="${item.id}">${detailLabel}</button></div></article>`;
 }
 
 function financePage() {
@@ -931,7 +976,7 @@ function showDataMode() {
   const snapshot = state.remoteSnapshot;
   const referenceSummary = snapshot?.qualificationLevels === undefined
     ? ""
-    : `<br />Referans kataloğu: ${snapshot.qualificationLevels} seviye, ${snapshot.officialQualifications} KDPÜ kaydı, ${snapshot.matrixTemplates} şablon, ${snapshot.matrixDrafts} örnek taslak, ${snapshot.paymentRequests} ödeme demo kaydı, ${snapshot.roleWorkflowRows} rol adımı${snapshot.unavailableReferenceViews ? `<br />Yerel güvenli fallback kullanan view: ${snapshot.unavailableReferenceViews}` : ""}`;
+    : `<br />Referans kataloğu: ${snapshot.qualificationLevels} seviye, ${snapshot.officialQualifications} KDPÜ kaydı, ${snapshot.matrixTemplates} şablon, ${snapshot.matrixDrafts} örnek taslak, ${snapshot.paymentRequests} ödeme demo kaydı, ${snapshot.roleWorkflowRows} rol adımı${snapshot.institutionalSystems === undefined ? "" : `<br />Kurumsal envanter: ${snapshot.institutionalSystems} sistem, ${snapshot.institutionalMappings} eşleme, ${snapshot.institutionalScenarios} dry-run senaryosu, ${snapshot.institutionalAuditEvents} kaynak-audit olayı`}${snapshot.unavailableReferenceViews ? `<br />Yerel güvenli fallback kullanan referans view: ${snapshot.unavailableReferenceViews}` : ""}${snapshot.unavailableInstitutionalViews ? `<br />Yerel güvenli fallback kullanan kurumsal view: ${snapshot.unavailableInstitutionalViews}` : ""}`;
   openModal(modalTemplate("Pilot veri katmanı", `<div class="grid grid-2"><article class="card"><div class="card-body"><h3>Etkin çalışma modu</h3><p class="page-subtitle">${escapeHtml(state.dataMode)}</p><span class="status status--success">Yerel mutasyonlar çalışıyor</span></div></article><article class="card"><div class="card-body"><h3>Supabase başlangıç görünümü</h3><p class="page-subtitle">Proje: ${config.projectRef}<br />${config.mode}${snapshot ? `<br />Doğrulanan: ${snapshot.programs} program, ${snapshot.applications} başvuru, ${snapshot.credentials} belge, ${snapshot.integrations} entegrasyon${referenceSummary}<br />Kaynak modu: ${escapeHtml(snapshot.referenceSource || "eski pilot seed")}` : "<br />Son bağlantı doğrulanamadı"}</p><span class="status status--neutral">Gizli anahtar kullanılmıyor</span></div></article></div><div class="section">${notice("success","Katmanların sınırı açık","Supabase, sentetik başlangıç satırları ile resmî kaynak izli TYÇ/AYÇ kataloglarını salt-okunur doğrular. Formlar ve iki demo iş akışındaki değişiklikler tarayıcıdaki sürümlü, izole çalışma alanında kalır; gerçek ödeme veya kurumsal aktarım yapılmaz.")}</div>`, `<button class="button button--secondary" data-action="refresh-data">Bağlantıyı yeniden dene</button><button class="button" data-action="close-modal">Kapat</button>`));
 }
 
@@ -982,11 +1027,24 @@ function openIntegration(id) {
   if (!isAllowed("integrations")) { deny("Bu rol entegrasyon ayrıntılarını açamaz."); return; }
   const item = state.integrations.find((integration)=>integration.id===id);
   if (!item) { deny("Entegrasyon kaydı bulunamadı."); return; }
-  const lastResult = item.status === "failed" ? `,\n  "error": "SIMULATED_TIMEOUT",\n  "retryAvailable": true` : "";
+  const samplePayload = escapeHtml(JSON.stringify({ ...item.samplePayload, target: item.id, realDataSent: false }, null, 2));
+  const lastResult = item.status === "failed" ? `,\n  "error": "${escapeHtml(item.errorScenario)}",\n  "retryAvailable": true` : "";
   const operationAction = canOperateIntegration(item.id)
     ? `<button class="button" data-action="simulate-integration" data-id="${item.id}">${item.status === "failed" ? "Yeniden dene" : "Deneme çalıştırması"}</button>`
     : "";
-  openModal(modalTemplate(`${item.name} • Entegrasyon taslağı`, `${notice("warning","Bağlı değil — gerçek veri gönderilmez","Aşağıdaki istek ve yanıt yalnız redakte edilmiş sentetik veri paketi simülasyonudur.")}<div class="grid grid-2 section"><article class="card"><div class="card-body"><h3>Onay kapısı</h3><ul class="page-subtitle"><li>Yetkili rol kontrolü</li><li>Kurumsal servis erişimi</li><li>Redakte veri paketi doğrulaması</li><li>Denetim izi ve geri alma/mutabakat planı</li></ul></div></article><article class="card"><div class="card-body"><h3>Örnek deneme sonucu</h3><pre style="white-space:pre-wrap;font-size:10px;color:#3a4658">{\n  "mode": "simulation",\n  "target": "${item.id}",\n  "attempt": ${item.attempts || 0},\n  "realDataSent": false${lastResult}\n}</pre></div></article></div>`, `<button class="button button--secondary" data-action="close-modal">Kapat</button>${operationAction}`));
+  const source = item.sourceUrl
+    ? `<a class="button button--secondary button--sm" href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noreferrer">Kamu erişim noktasını aç</a>`
+    : `<span class="status status--neutral">Servis adresi tanımlı değil</span>`;
+  const governance = item.consultationOnly
+    ? notice("warning", "Yalnızca istişare ve taslak", "Bu hedef için aktarım kurgulanmaz; önce kurumlar/birimler arası yetki, amaç ve veri sözlüğü netleştirilir.")
+    : "";
+  const safetyNotice = item.consultationOnly
+    ? notice("warning", "Aktarıma yönelik dry-run kapalı", "Bu kayıtta yalnız kamu kaynağı, sahiplik adayı ve veri sözlüğü taslağı incelenir; başarı/hata aktarım denemesi oluşturulmaz.")
+    : notice("warning", "Bağlı değil — gerçek veri gönderilmez", "Aşağıdaki istek ve yanıt yalnız redakte edilmiş sentetik veri paketi simülasyonudur.");
+  const detailPanels = item.consultationOnly
+    ? `<div class="grid grid-2 section"><article class="card"><div class="card-body"><h3>Kaynak ve olası veri sözlüğü</h3><p class="page-subtitle"><strong>${escapeHtml(item.dataDirection)}</strong></p><p class="page-subtitle">${escapeHtml(item.purposeProposal)}</p><h4>Redakte referans üst verisi</h4><pre class="integration-payload">${samplePayload}</pre></div></article><article class="card"><div class="card-body"><h3>Kurumsal inceleme kapısı</h3><dl class="integration-detail-list"><dt>Onay adayı</dt><dd>${escapeHtml(item.approvalGate)}</dd><dt>Kaynak durumu</dt><dd>${escapeHtml(item.sourceStatus)}</dd><dt>Denetim izi</dt><dd>${escapeHtml(item.auditPolicy)}</dd></dl><div class="permission-note"><strong>Sonuç</strong><span>Yalnızca referans ayrıntısı gösterildi; entegrasyon işi veya retry kaydı üretilmedi.</span></div></div></article></div>`
+    : `<div class="grid grid-2 section"><article class="card"><div class="card-body"><h3>Veri yönü ve onay kapısı</h3><p class="page-subtitle"><strong>${escapeHtml(item.dataDirection)}</strong></p><p class="page-subtitle">${escapeHtml(item.approvalGate)}</p><h4>Dry-run örnek paketi</h4><pre class="integration-payload">${samplePayload}</pre></div></article><article class="card"><div class="card-body"><h3>Hata, retry ve audit</h3><dl class="integration-detail-list"><dt>Hata senaryosu</dt><dd>${escapeHtml(item.errorScenario)}</dd><dt>Yeniden deneme</dt><dd>${escapeHtml(item.retryPolicy)}</dd><dt>Denetim izi</dt><dd>${escapeHtml(item.auditPolicy)}</dd></dl><h4>Son deneme sonucu</h4><pre class="integration-payload">{\n  "mode": "simulation",\n  "target": "${escapeHtml(item.id)}",\n  "attempt": ${item.attempts || 0},\n  "realDataSent": false${lastResult}\n}</pre></div></article></div>`;
+  openModal(modalTemplate(`${item.name} • ${item.consultationOnly ? "Referans taslağı" : "Entegrasyon taslağı"}`, `${safetyNotice}${governance}<div class="integration-detail-meta"><span>Tier ${item.stage}</span><span>MYYS: ${escapeHtml(item.myysRelevance)}</span><span>${escapeHtml(item.category)}</span><span>${escapeHtml(item.systemClass)}</span></div><p class="page-subtitle"><strong>Kaynak durumu:</strong> ${escapeHtml(item.sourceStatus)}</p>${source}${detailPanels}`, `<button class="button button--secondary" data-action="close-modal">Kapat</button>${operationAction}`));
 }
 
 function verifyCodeModal() {
@@ -1046,6 +1104,11 @@ document.addEventListener("click", (event) => {
   if (action === "open-integration") openIntegration(trigger.dataset.id);
   if (action === "simulate-integration") simulateIntegration(trigger.dataset.id);
   if (action === "integration-dryrun") simulateAllIntegrations();
+  if (action === "integration-category") {
+    currentIntegrationCategory = document.querySelector("#integration-category")?.value || "all";
+    currentIntegrationTier = document.querySelector("#integration-tier")?.value || "all";
+    render();
+  }
   if (action === "finance-simulate") simulateFinance();
   if (action === "finance-draft") createFinanceDraft();
   if (action === "payment-review") paymentReviewModal(trigger.dataset.id, trigger.dataset.status);
@@ -1095,6 +1158,7 @@ document.addEventListener("input", (event) => {
   if (event.target.id === "proposal-ects") document.querySelector("#proposal-workload").value = Number(event.target.value || 0) * 25;
   if (["catalog-search","catalog-level"].includes(event.target.id)) filterCatalog();
   if (["application-search","application-status"].includes(event.target.id)) filterApplications();
+  if (event.target.id === "integration-search") filterIntegrations();
 });
 
 roleSelect.addEventListener("change", () => {
@@ -1351,24 +1415,31 @@ function filterApplications() {
   if (empty) empty.hidden = !filterableRows.length || filterableRows.some((row) => !row.hidden);
 }
 
+function filterIntegrations() {
+  const query = document.querySelector("#integration-search")?.value.toLocaleLowerCase("tr-TR") || "";
+  const cards = [...document.querySelectorAll("#integration-catalog .integration-card")];
+  cards.forEach((card) => { card.hidden = Boolean(query && !card.dataset.searchable.includes(query)); });
+  const empty = document.querySelector("#integration-filter-empty");
+  if (empty) empty.hidden = !cards.length || cards.some((card) => !card.hidden);
+}
+
 function simulateIntegration(id) {
-  if (!canOperateIntegration(id)) { deny("Bu rol bu entegrasyon için dry-run kaydı oluşturamaz."); return; }
-  const item = state.integrations.find((integration)=>integration.id===id);
-  if (!item) { deny("Entegrasyon kaydı bulunamadı."); return; }
-  item.attempts = (item.attempts || 0) + 1;
-  const previous = item.status;
-  const shouldFail = item.attempts === 1;
-  item.status = shouldFail ? "failed" : "simulated";
-  item.lastTest = `${shouldFail ? "Simüle zaman aşımı" : "Yeniden deneme başarılı"}: ${formatDate(new Date().toISOString(), true)}`;
-  state.integrationJobs.unshift({ id:`JOB-${id}-${Date.now()}`, target:item.name, status:shouldFail ? "simulation_failed" : "simulation_succeeded", realDataSent:false, at:new Date().toISOString() });
-  state.audit.unshift({ id:`AUD-${Date.now()}`, entityId:`INT-${id}`, at:new Date().toISOString(), actor:currentRole().name, actorRole:state.roleId, action:shouldFail ? "Entegrasyon hata senaryosu üretildi" : "Entegrasyon yeniden denemesi tamamlandı", from:previous, to:item.status, reason:"Redakte veri paketi; realDataSent=false; geri alma/mutabakat kaydı hazır" });
-  saveState(); closeModal(); render(); toast(shouldFail ? `${item.name} için simüle zaman aşımı üretildi; yeniden deneme kullanılabilir.` : `${item.name} yeniden denemesi tamamlandı; gerçek veri gönderilmedi.`, shouldFail ? "error" : "success");
+  try {
+    const { integration, job } = runIntegrationDryRun(state, id, state.roleId, currentRole().name);
+    saveState(); closeModal(); render();
+    toast(job.retryAvailable ? `${integration.name} için ${integration.errorScenario} simüle edildi; kontrollü yeniden deneme kullanılabilir.` : `${integration.name} yeniden denemesi tamamlandı; gerçek veri gönderilmedi.`, job.retryAvailable ? "error" : "success");
+  } catch (error) {
+    deny(error.message);
+  }
 }
 
 function simulateAllIntegrations() {
-  if (!INTEGRATION_BULK_ROLES.has(state.roleId)) { deny("Bu rol toplu entegrasyon dry-run çalıştıramaz."); return; }
-  state.integrations.forEach((item)=>{ item.status="simulated"; item.attempts=(item.attempts || 0)+1; item.lastTest="Toplu deneme çalıştırması başarılı"; state.integrationJobs.unshift({ id:`JOB-${item.id}-${Date.now()}`, target:item.name, status:"simulation_succeeded", realDataSent:false, at:new Date().toISOString() }); });
-  saveState(); render(); toast("7 entegrasyon için yalnız simülasyon logu üretildi.");
+  try {
+    const jobs = runIntegrationBulkDryRun(state, state.roleId, currentRole().name);
+    saveState(); render(); toast(`${jobs.length} entegrasyon kaydı için yalnız simülasyon logu üretildi.`);
+  } catch (error) {
+    deny(error.message);
+  }
 }
 
 function submitPaymentDemo(form) {
@@ -1434,6 +1505,7 @@ async function refreshRemote(fromModal = false) {
     return;
   }
   const referenceData = snapshot.referenceData;
+  const institutionalData = snapshot.institutionalData;
   state.remoteSnapshot = snapshot.ok ? {
     programs: snapshot.programs.length,
     applications: snapshot.applications.length,
@@ -1446,6 +1518,11 @@ async function refreshRemote(fromModal = false) {
     paymentRequests: referenceData?.paymentRequests?.length || 0,
     roleWorkflowRows: referenceData?.roleWorkflowRows?.length || 0,
     unavailableReferenceViews: referenceData?.unavailableViews?.length || 0,
+    institutionalSystems: institutionalData?.systems?.length || 0,
+    institutionalMappings: institutionalData?.mappings?.length || 0,
+    institutionalScenarios: institutionalData?.scenarios?.length || 0,
+    institutionalAuditEvents: institutionalData?.auditEvents?.length || 0,
+    unavailableInstitutionalViews: institutionalData?.unavailableViews?.length || 0,
     referenceSource: referenceData?.source || "local_reference_fallback",
     checkedAt: new Date().toISOString()
   } : null;

@@ -326,12 +326,29 @@ tbody tr:hover td { background: #fbfaf8; }
 .qr i { background: transparent; }
 .qr i.on { background: var(--navy); }
 
-.integration-card { min-height: 214px; }
+.integration-card, .external-gate-card { min-height: 330px; }
 .integration-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .integration-mark { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 12px; background: #f5f2ed; color: var(--navy); font-size: 11px; font-weight: 800; }
-.integration-card dl { display: grid; grid-template-columns: auto 1fr; gap: 7px 10px; margin: 16px 0 0; font-size: 10.5px; }
-.integration-card dt { color: var(--muted); }
-.integration-card dd { margin: 0; color: var(--navy); text-align: right; }
+.integration-card h3, .external-gate-card h3 { margin: 12px 0 4px; }
+.integration-card dl, .external-gate-card dl { display: grid; grid-template-columns: minmax(72px, .42fr) minmax(0, 1fr); gap: 8px 12px; margin: 16px 0 0; font-size: 10.5px; }
+.integration-card dt, .external-gate-card dt { color: var(--muted); }
+.integration-card dd, .external-gate-card dd { margin: 0; color: var(--navy); text-align: left; overflow-wrap: anywhere; }
+.integration-tags, .integration-detail-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 11px; }
+.integration-tags span, .integration-detail-meta span { padding: 4px 7px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-muted); color: var(--muted); font-size: 8.5px; font-weight: 700; }
+.integration-governance { display: inline-flex; margin-top: 8px; color: var(--purple); font-size: 9px; font-weight: 800; }
+.integration-purpose { min-height: 48px; }
+.integration-source { display: inline-flex; margin-top: 14px; }
+.integration-toolbar .toolbar-group { flex: 1; justify-content: flex-end; }
+.integration-toolbar input[type="search"] { width: min(290px, 100%); }
+.integration-payload { overflow: auto; margin: 10px 0 0; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: #f7f8fa; color: #3a4658; font-size: 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.integration-detail-list { display: grid; grid-template-columns: minmax(90px, .42fr) minmax(0, 1fr); gap: 8px 12px; margin: 12px 0 18px; font-size: 10.5px; }
+.integration-detail-list dt { color: var(--muted); }
+.integration-detail-list dd { margin: 0; color: var(--navy); overflow-wrap: anywhere; }
+.master-data-card .permission-note { margin: 0; }
+.tier-legend-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.tier-legend-grid > div { display: grid; gap: 4px; min-height: 78px; padding: 13px; border: 1px solid var(--border); border-radius: 10px; background: var(--paper); }
+.tier-legend-grid strong { color: var(--navy); font-size: 12px; }
+.tier-legend-grid span { color: var(--muted); font-size: 10.5px; line-height: 1.45; }
 .integration-explainer { border-top: 3px solid var(--purple); }
 .integration-explainer:nth-child(2) { border-top-color: var(--gold); }
 .scope-list { display: grid; gap: 7px; padding-left: 18px; margin: 15px 0 0; color: var(--muted); font-size: 11px; }
@@ -461,6 +478,9 @@ tbody tr:hover td { background: #fbfaf8; }
   .role-overview__boundary { border-left: 0; border-top: 1px solid #d9d0f1; padding-left: 0; }
   .role-overview .button { width: fit-content; }
   .payment-flow ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .integration-toolbar { align-items: stretch; flex-direction: column; }
+  .integration-toolbar .toolbar-group { justify-content: flex-start; }
+  .tier-legend-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 640px) {
@@ -507,6 +527,10 @@ tbody tr:hover td { background: #fbfaf8; }
   .payment-form .card-footer .button, .role-overview .button { width: 100%; }
   .framework-tabs, .instruction-list, .matrix-fields { grid-template-columns: 1fr; }
   .framework-source-card .card-body { align-items: flex-start; flex-direction: column; }
+  .integration-toolbar .toolbar-group { display: grid; width: 100%; }
+  .integration-toolbar input[type="search"], .integration-toolbar select, .integration-toolbar .button { width: 100%; }
+  .integration-detail-list, .integration-card dl, .external-gate-card dl { grid-template-columns: 1fr; }
+  .tier-legend-grid { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -4,6 +4,12 @@ import {
   qualificationLevelDescriptors,
   qualificationMatrixTemplates
 } from "../src/reference-data.js";
+import {
+  dpuInstitutionalSystems,
+  pilotIntegrationAuditEvents,
+  pilotIntegrationMappings,
+  pilotIntegrationScenarios
+} from "../src/institutional-integration-reference.js";
 
 const required = [
   "index.html",
@@ -11,10 +17,12 @@ const required = [
   "styles.css",
   "src/app.js",
   "src/data.js",
+  "src/institutional-integration-reference.js",
   "src/workflow.js",
   "src/reference-data.js",
   "src/supabase.js",
   "scripts/build-static.mjs",
+  "scripts/institutional-integration-contract.mjs",
   "scripts/reference-data-contract.mjs",
   "README.md",
   "docs/source-traceability.md",
@@ -24,11 +32,21 @@ const required = [
   "assets/illustrations/myys-hero.webp",
   "supabase/migrations/20260819010000_myys_pilot_schema.sql",
   "supabase/migrations/20260820010000_framework_matrix_finance_role_seed.sql",
-  "supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql"
+  "supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql",
+  "supabase/migrations/20260820012000_dpu_institutional_integration_catalog.sql",
+  "supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql",
+  "supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql"
 ];
 
 const missing = required.filter((file) => !existsSync(file));
 if (missing.length) throw new Error(`Eksik dosyalar: ${missing.join(", ")}`);
+
+if (!dpuInstitutionalSystems.length || pilotIntegrationMappings.length !== dpuInstitutionalSystems.length || pilotIntegrationScenarios.length !== dpuInstitutionalSystems.length || pilotIntegrationAuditEvents.length !== dpuInstitutionalSystems.length) {
+  throw new Error("DPÜ kurumsal entegrasyon referans sözleşmesinde her sistem için bir eşleme, senaryo ve audit kaydı olmalıdır");
+}
+if (dpuInstitutionalSystems.some((item) => item.realDataEnabled !== false || item.productionAllowed !== false || !/^https:\/\//.test(item.publicUrl))) {
+  throw new Error("DPÜ kurumsal entegrasyon kataloğu güvenli pilot veya kaynak URL sınırını ihlal ediyor");
+}
 
 if (qualificationFrameworks.length !== 2 || !qualificationFrameworks.some((item) => item.id === "tyc") || !qualificationFrameworks.some((item) => item.id === "eqf")) {
   throw new Error("TYÇ ve AYÇ/EQF çerçeve tanımları eksik");

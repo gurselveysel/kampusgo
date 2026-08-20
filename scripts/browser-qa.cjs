@@ -398,7 +398,130 @@ async function verifyQualificationMatrixFlow(page, errors) {
   await page.locator('[data-action="reset-demo"]').click();
 }
 
-async function verifyPersistenceAndStateGuard(page, roles, errors) {
+async function verifyIntegrationCatalog(page, integrations, errors) {
+  const requiredURLs = [
+    "https://dpusem.dpu.edu.tr/",
+    "https://oys.dpu.edu.tr/almsp",
+    "https://obs.dpu.edu.tr/oibs/bologna/index.aspx",
+    "https://obs.dpu.edu.tr/",
+    "https://dilmer.dpu.edu.tr/",
+    "https://tomer.dpu.edu.tr/",
+    "https://ydyo.dpu.edu.tr/tr/index/duyuru/21623/01-temmuz-2025-ydys-1-asama-sinav-sonuclari-2024-2025"
+  ];
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "it");
+  await setHash(page, "integrations");
+  await page.waitForSelector("#integration-catalog .integration-card");
+
+  const cards = await page.locator("#integration-catalog .integration-card").evaluateAll((nodes) => nodes.map((node) => ({
+    id: node.dataset.systemId,
+    tier: node.dataset.integrationTier,
+    relevance: node.dataset.myysRelevance,
+    consultationOnly: node.dataset.consultationOnly,
+    sourceURL: node.dataset.sourceUrl
+  })));
+  check(cards.length === integrations.length, `integrations: UI ${cards.length} kart ile canonical ${integrations.length} kaydı eşleşmiyor`, errors);
+  check(JSON.stringify(cards.map((item) => item.id).sort()) === JSON.stringify(integrations.map((item) => item.id).sort()), "integrations: canonical sistem kimlikleriyle kart kimlikleri farklı", errors);
+  for (const card of cards) {
+    const expected = integrations.find((item) => item.id === card.id);
+    check(card.tier === expected?.integrationTier, `${card.id}: Tier etiketi canonical kayıtla farklı`, errors);
+    check(card.relevance === expected?.myysRelevance, `${card.id}: MYYS relevance etiketi canonical kayıtla farklı`, errors);
+    check(card.consultationOnly === String(expected?.consultationOnly), `${card.id}: consultationOnly kart sözleşmesi farklı`, errors);
+  }
+
+  const integrationText = await page.locator("#main-content").innerText();
+  check(integrationText.includes("Tier 1") && integrationText.includes("Kamu salt-okunur referans"), "integrations: Tier 1 legend eksik", errors);
+  check(integrationText.includes("Tier 2") && integrationText.includes("Kontrollü servis / veri durumu"), "integrations: Tier 2 legend eksik", errors);
+  check(integrationText.includes("Tier 3") && integrationText.includes("İşlem, belge veya mali handoff"), "integrations: Tier 3 legend eksik", errors);
+  check(integrationText.includes("hazır, bağlı veya onaylanmış olduğunu göstermez"), "integrations: Tier hazırlık uyarısı eksik", errors);
+  check(integrationText.includes("kalite MYS") && integrationText.includes("mali MYS/MAYS"), "integrations: BKYS kalite MYS ile mali MYS/MAYS ayrımı eksik", errors);
+  const masterOwnerPriority = await page.locator('.master-data-card [data-owner-system-id]').evaluateAll((nodes) => nodes.slice(0, 7).map((node) => node.dataset.ownerSystemId));
+  check(JSON.stringify(masterOwnerPriority) === JSON.stringify([
+    "dpu-central-identity", "dpu-obs", "dpu-bologna", "dpu-oys", "dpu-bkys", "dpu-ebys", "dpu-doner-sermaye"
+  ]), "integrations: canonical ana-veri sahipliği öncelik sırası hatalı", errors);
+  for (const url of requiredURLs) {
+    const matching = page.locator(`#integration-catalog .integration-card[data-source-url="${url}"] a.integration-source[href="${url}"]`);
+    check(await matching.count() === 1, `integrations: verilen resmî kaynak linki kartta yok: ${url}`, errors);
+  }
+
+  const searchTarget = integrations.find((item) => item.id === "dpu-bologna") || integrations[0];
+  await page.fill("#integration-search", searchTarget.name);
+  const visibleAfterSearch = await page.locator("#integration-catalog .integration-card").evaluateAll((nodes) => nodes.filter((node) => !node.hidden).map((node) => node.dataset.systemId));
+  check(visibleAfterSearch.includes(searchTarget.id) && visibleAfterSearch.length >= 1 && visibleAfterSearch.length < integrations.length, "integrations: arama filtresi kataloğu daraltmadı", errors);
+
+  await page.fill("#integration-search", "");
+  await page.selectOption("#integration-category", searchTarget.category);
+  await page.selectOption("#integration-tier", searchTarget.integrationTier);
+  await page.locator('[data-action="integration-category"]').click();
+  await page.waitForSelector("#integration-catalog .integration-card");
+  const expectedFiltered = integrations.filter((item) => item.category === searchTarget.category && item.integrationTier === searchTarget.integrationTier);
+  const filteredCards = await page.locator("#integration-catalog .integration-card").evaluateAll((nodes) => nodes.map((node) => ({ id: node.dataset.systemId, tier: node.dataset.integrationTier })));
+  check(filteredCards.length === expectedFiltered.length, "integrations: kategori+Tier birleşik filtre sonucu hatalı", errors);
+  check(filteredCards.every((item) => item.tier === searchTarget.integrationTier), "integrations: Tier filtresi farklı Tier kartı gösterdi", errors);
+
+  await page.selectOption("#integration-category", "all");
+  await page.selectOption("#integration-tier", "all");
+  await page.locator('[data-action="integration-category"]').click();
+
+  const consultation = integrations.find((item) => item.consultationOnly);
+  check(Boolean(consultation), "integrations: consultation-only test kaydı yok", errors);
+  if (consultation) {
+    const consultationCard = page.locator(`.integration-card[data-system-id="${consultation.id}"]`);
+    check((await consultationCard.innerText()).includes("Referans ayrıntısı"), `${consultation.id}: consultation-only CTA referans ayrıntısı değil`, errors);
+    await consultationCard.locator('[data-action="open-integration"]').click();
+    check((await page.locator("#modal").innerText()).includes("Aktarıma yönelik dry-run kapalı"), `${consultation.id}: consultation-only modal sınırı eksik`, errors);
+    check(await page.locator('#modal [data-action="simulate-integration"]').count() === 0, `${consultation.id}: consultation-only aktarım dry-run CTA'sı görünür`, errors);
+    await page.locator('#modal [data-action="close-modal"]').click();
+  }
+
+  const operable = integrations.find((item) => !item.consultationOnly && item.operatorRoles.includes("it"));
+  check(Boolean(operable), "integrations: dry-run için Bilgi İşlem operable kaydı yok", errors);
+  if (operable) {
+    await page.locator(`.integration-card[data-system-id="${operable.id}"] [data-action="open-integration"]`).click();
+    check(await page.locator('#modal [data-action="simulate-integration"]').count() === 1, `${operable.id}: Bilgi İşlem dry-run CTA'sı yok`, errors);
+    await page.locator('#modal [data-action="simulate-integration"]').click();
+    const first = await page.evaluate((systemId) => {
+      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+      const integration = saved.integrations.find((item) => item.id === systemId);
+      const job = saved.integrationJobs.find((item) => item.targetId === systemId);
+      return { status: integration?.status, job };
+    }, operable.id);
+    check(first.status === "failed" && first.job?.status === "simulation_failed", `${operable.id}: ilk dry-run simüle hata üretmedi`, errors);
+    check(first.job?.realDataSent === false && first.job?.retryAvailable === true, `${operable.id}: ilk dry-run güvenlik/retry bayrakları hatalı`, errors);
+
+    await page.locator(`.integration-card[data-system-id="${operable.id}"] [data-action="open-integration"]`).click();
+    check((await page.locator('#modal [data-action="simulate-integration"]').innerText()).includes("Yeniden dene"), `${operable.id}: retry CTA metni yok`, errors);
+    await page.locator('#modal [data-action="simulate-integration"]').click();
+    const second = await page.evaluate((systemId) => {
+      const saved = JSON.parse(localStorage.getItem("kdpu-myys-pilot-v3"));
+      const integration = saved.integrations.find((item) => item.id === systemId);
+      const jobs = saved.integrationJobs.filter((item) => item.targetId === systemId);
+      return { status: integration?.status, jobs, unsafe: saved.integrationJobs.some((item) => item.realDataSent !== false) };
+    }, operable.id);
+    check(second.status === "simulated" && second.jobs[0]?.status === "simulation_succeeded", `${operable.id}: retry simüle başarı üretmedi`, errors);
+    check(second.jobs.length === 2 && second.unsafe === false, `${operable.id}: dry-run audit zinciri veya realDataSent=false koruması hatalı`, errors);
+  }
+
+  await setHash(page, "overview");
+  await page.selectOption("#role-select", "finance");
+  await setHash(page, "integrations");
+  const financeAllowed = integrations.find((item) => !item.consultationOnly && item.operatorRoles.includes("finance"));
+  const financeDenied = integrations.find((item) => !item.consultationOnly && !item.operatorRoles.includes("finance"));
+  if (financeAllowed) {
+    await page.locator(`.integration-card[data-system-id="${financeAllowed.id}"] [data-action="open-integration"]`).click();
+    check(await page.locator('#modal [data-action="simulate-integration"]').count() === 1, `finance/${financeAllowed.id}: izinli dry-run CTA yok`, errors);
+    await page.locator('#modal [data-action="close-modal"]').click();
+  }
+  if (financeDenied) {
+    await page.locator(`.integration-card[data-system-id="${financeDenied.id}"] [data-action="open-integration"]`).click();
+    check(await page.locator('#modal [data-action="simulate-integration"]').count() === 0, `finance/${financeDenied.id}: yetkisiz dry-run CTA görünür`, errors);
+    await page.locator('#modal [data-action="close-modal"]').click();
+  }
+  await setHash(page, "overview");
+  await page.locator('[data-action="reset-demo"]').click();
+}
+
+async function verifyPersistenceAndStateGuard(page, roles, integrations, errors) {
   const external = roles.find((role) => role.id === "externalInstructor");
   await setHash(page, "overview");
   await page.selectOption("#role-select", external.id);
@@ -420,6 +543,18 @@ async function verifyPersistenceAndStateGuard(page, roles, errors) {
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForSelector('#role-select option[value="admin"]', { state: "attached" });
   check(await page.locator("#role-select").inputValue() === "learner", "bozuk/kayıtsız rol kimliği güvenli varsayılana dönmedi", errors);
+
+  await page.evaluate(() => {
+    const key = "kdpu-myys-pilot-v3";
+    const saved = JSON.parse(localStorage.getItem(key));
+    saved.integrations = saved.integrations.slice(0, -1);
+    localStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.waitForSelector('#role-select option[value="it"]', { state: "attached" });
+  await page.selectOption("#role-select", "it");
+  await setHash(page, "integrations");
+  check(await page.locator("#integration-catalog .integration-card").count() === integrations.length, "eksik/eski entegrasyon localStorage kataloğu canonical seed ile yenilenmedi", errors);
 }
 
 async function verifyUnauthorizedRoute(page, errors) {
@@ -433,7 +568,7 @@ async function verifyUnauthorizedRoute(page, errors) {
 
 (async () => {
   fs.mkdirSync("test-results", { recursive: true });
-  const { roles, roleNavigation } = await import(path.join(process.cwd(), "src/data.js"));
+  const { initialState, roles, roleNavigation } = await import(path.join(process.cwd(), "src/data.js"));
   const { scenarioDefinitions } = await import(path.join(process.cwd(), "src/workflow.js"));
   let server = null;
   let browser = null;
@@ -478,7 +613,8 @@ async function verifyUnauthorizedRoute(page, errors) {
           await verifyDecisionActions(page, errors);
           await verifyPaymentDemoFlow(page, errors);
           await verifyQualificationMatrixFlow(page, errors);
-          await verifyPersistenceAndStateGuard(page, roles, errors);
+          await verifyIntegrationCatalog(page, initialState.integrations, errors);
+          await verifyPersistenceAndStateGuard(page, roles, initialState.integrations, errors);
           await verifyUnauthorizedRoute(page, errors);
           await verifyScenarioActions(page, scenarioDefinitions, errors);
         }

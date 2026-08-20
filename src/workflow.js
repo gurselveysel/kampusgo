@@ -112,6 +112,111 @@ export function canRecordAssessmentDecision(actorRole) {
 }
 
 /**
+ * Integration operations are data-driven: every catalog record declares the
+ * pilot roles that may create a dry-run. This never authorizes a live call.
+ */
+export function canRunIntegrationDryRun(integration, actorRole) {
+  return Boolean(
+    integration &&
+    integration.realDataEnabled === false &&
+    integration.consultationOnly === false &&
+    Array.isArray(integration.operatorRoles) &&
+    integration.operatorRoles.includes(actorRole)
+  );
+}
+
+/**
+ * Runs a deterministic failure/retry simulation and writes both job and audit
+ * records. No fetch, credential, endpoint or external mutation exists here.
+ */
+export function runIntegrationDryRun(state, integrationId, actorRole, actorName) {
+  const integration = state?.integrations?.find((item) => item.id === integrationId);
+  if (!integration) throw new Error("Entegrasyon kataloğu kaydı bulunamadı");
+  if (!canRunIntegrationDryRun(integration, actorRole)) {
+    throw new Error("Bu rol bu entegrasyon için dry-run kaydı oluşturamaz");
+  }
+
+  integration.attempts = Number(integration.attempts || 0) + 1;
+  const previous = integration.status;
+  const shouldFail = integration.attempts === 1;
+  const now = new Date().toISOString();
+  integration.status = shouldFail ? "failed" : "simulated";
+  integration.lastTest = shouldFail
+    ? `${integration.errorScenario} • simüle hata`
+    : "Kontrollü yeniden deneme başarılı • simülasyon";
+
+  state.integrationJobs ||= [];
+  state.audit ||= [];
+  const job = {
+    id: `JOB-${integration.id}-${Date.now()}`,
+    target: integration.name,
+    targetId: integration.id,
+    category: integration.category,
+    status: shouldFail ? "simulation_failed" : "simulation_succeeded",
+    approvalGate: integration.approvalGate,
+    errorCode: shouldFail ? integration.errorScenario : "NONE",
+    retryAvailable: shouldFail,
+    realDataSent: false,
+    at: now
+  };
+  state.integrationJobs.unshift(job);
+  state.audit.unshift({
+    id: `AUD-${Date.now()}-INT-${integration.id}`,
+    entityId: `INT-${integration.id}`,
+    at: now,
+    actor: actorName || actorNameForRole(actorRole),
+    actorRole,
+    action: shouldFail ? "Entegrasyon hata senaryosu üretildi" : "Entegrasyon yeniden denemesi tamamlandı",
+    from: previous,
+    to: integration.status,
+    reason: `${integration.approvalGate}; ${shouldFail ? integration.errorScenario : "simüle başarı"}; realDataSent=false`
+  });
+  return { integration, job };
+}
+
+/** IT and technical admin can produce a synthetic success log for all gates. */
+export function runIntegrationBulkDryRun(state, actorRole, actorName) {
+  if (!["it", "admin"].includes(actorRole)) {
+    throw new Error("Toplu entegrasyon dry-run yalnız Bilgi İşlem veya sistem yöneticisi rolüne açıktır");
+  }
+  const now = new Date().toISOString();
+  state.integrationJobs ||= [];
+  state.audit ||= [];
+  return (state.integrations || []).filter((integration) => integration.consultationOnly === false).map((integration, index) => {
+    if (integration.realDataEnabled !== false) throw new Error("Canlı veri etkin entegrasyon pilot toplu işlemine alınamaz");
+    const previous = integration.status;
+    integration.attempts = Number(integration.attempts || 0) + 1;
+    integration.status = "simulated";
+    integration.lastTest = "Toplu kontrollü dry-run başarılı • simülasyon";
+    const job = {
+      id: `JOB-BULK-${integration.id}-${Date.now()}-${index}`,
+      target: integration.name,
+      targetId: integration.id,
+      category: integration.category,
+      status: "simulation_succeeded",
+      approvalGate: integration.approvalGate,
+      errorCode: "NONE",
+      retryAvailable: false,
+      realDataSent: false,
+      at: now
+    };
+    state.integrationJobs.unshift(job);
+    state.audit.unshift({
+      id: `AUD-BULK-${Date.now()}-${index}`,
+      entityId: `INT-${integration.id}`,
+      at: now,
+      actor: actorName || actorNameForRole(actorRole),
+      actorRole,
+      action: "Toplu entegrasyon dry-run tamamlandı",
+      from: previous,
+      to: "simulated",
+      reason: `${integration.approvalGate}; yalnız redakte örnek paket; realDataSent=false`
+    });
+    return job;
+  });
+}
+
+/**
  * Returns payment-demo records through a strict role and identity boundary.
  * Learners see only their own synthetic requests; the finance role sees the
  * operational queue. Admin has read-only technical oversight in the UI.

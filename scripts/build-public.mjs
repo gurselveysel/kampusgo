@@ -13,6 +13,7 @@ const files = [
   ["styles.css", "styles.css"],
   ["src/app.js", "src/app.js"],
   ["src/data.js", "src/data.js"],
+  ["src/institutional-integration-reference.js", "src/institutional-integration-reference.js"],
   ["src/reference-data.js", "src/reference-data.js"],
   ["src/supabase.js", "src/supabase.js"],
   ["src/workflow.js", "src/workflow.js"],

@@ -19,6 +19,9 @@ Kütahya Dumlupınar Üniversitesi için hazırlanan MYYS; gerçek HTML/CSS/Java
 - Simüle değerlendirme ve olay günlüğü; kamera, mikrofon ve biyometri yok
 - Dijital yeterlilik cüzdanı ile Preview içi doğrulama
 - ÖBİS, YÖKSİS, e-Devlet, GİB/e-Arşiv, MYS/MAYS, kimlik ve bildirim entegrasyon taslakları
+- DPÜ kurumsal otomasyonları için kaynak izli **32 iç sistem**, 32 veri eşlemesi, 32 dry-run senaryosu ve 32 sentetik denetim olayı
+- DPÜ iç kataloğundan ayrı tutulan **5 dış pilot kapısı**: GİB/e-Arşiv, mali MYS/MAYS, YÖKSİS/TÖMERSİS, e-Devlet ve e-posta/SMS
+- Tier 1–3 teknik entegrasyon olgunluğu ile `core` / `supporting` / `adjacent` MYYS öneminin bağımsız sınıflandırılması
 - HTML/CSS/SVG grafikler, bildirimler ve denetim izi
 
 ## Dokuz demo rolü
@@ -40,6 +43,21 @@ Kütahya Dumlupınar Üniversitesi için hazırlanan MYYS; gerçek HTML/CSS/Java
 Ödeme akışı `draft → pending_finance → approved/revision → reconciled` durumlarını, öğrenen–finans görev ayrılığını ve denetim olaylarını örnekler. Sanal POS ve Havale/EFT seçenekleri yalnız etikettir; kart, banka hesabı, T.C. kimlik numarası veya gerçek dekont alınmaz.
 
 GİB/e-Arşiv kartı e-belge taslağının mali onaydan sonra hangi kontrollere ihtiyaç duyabileceğini; MYS/MAYS kartı bütçe, harcama, hak ediş ve mutabakat için önerilen kontrollü aktarım katmanını açıklar. İki entegrasyon da bağlı değildir; fatura, muhasebe fişi veya dış servis isteği oluşturmaz.
+
+## DPÜ kurumsal otomasyon mimarisi
+
+Entegrasyon Merkezi, resmî DPÜ kamu sayfalarında doğrulanabilen sistem ve hizmetleri **aday keşif kaydı** olarak gösterir. Kamuya açık bir sayfanın bulunması API, SSO, servis sözleşmesi veya canlı veri yetkisi bulunduğu anlamına gelmez. Her kayıtta kaynak URL'si, doğrulama temeli, muhtemel veri sahibi, veri sınıfı, onay kapısı, hata/yeniden deneme ve denetim izi ayrı tutulur.
+
+Katalog; 32 DPÜ iç sistem kaydı, her sistem için bir veri eşlemesi, bir kontrollü dry-run senaryosu ve bir sentetik denetim olayı içerir. Bunlar çalıştırılmış canlı entegrasyonlar değil; kaynak izli tasarım ve yönetişim kayıtlarıdır. `realDataEnabled`, `realDataSent`, `liveRequestMade` ve `productionAllowed` güvenlik bayraklarının tamamı sıfır/`false` değerindedir.
+
+- **Tier 1:** Kamuya açık, salt-okunur referans veya katalog adayı
+- **Tier 2:** Kurumsal kimlik, durum ya da kontrollü veri servisi adayı
+- **Tier 3:** İşlem, resmî belge, imza veya mali handoff adayı
+- **MYYS önemi:** `core`, `supporting` ve `adjacent` etiketi Tier'dan bağımsızdır
+
+Ana veri sınırı: öğrenci ve kazanılmış AKTS OBS'de; planlanan müfredat, ders çıktıları ve AKTS Bologna Bilgi Paketi'nde; eğitim teslimi ve değerlendirme kanıtı ÖYS'de; resmî karar EBYS'de; kalite/risk/PUKÖ BKYS'de; tahsilat ve hak ediş mali birimlerde kalır. MYYS bu sistemleri kopyalamaz, yalnız kurumsal olarak onaylanmış asgari veri sözleşmelerini orkestre edecek şekilde tasarlanır.
+
+BKYS içindeki **Memnuniyet Yönetim Sistemi (kalite MYS)** ile mali süreçlerdeki **MYS/MAYS** farklı sistemlerdir. GİB/e-Arşiv, mali MYS/MAYS, YÖKSİS/TÖMERSİS, e-Devlet ve dış bildirim kanalları DPÜ iç sistem kataloğundan ayrı, bağlı-olmayan dış kapılar olarak gösterilir.
 
 ## TYÇ ve AYÇ/EQF matrisi
 
@@ -64,6 +82,8 @@ Kullanılan başlıca kamu kaynakları:
 
 Türkiye Yeterlilikler Veri Tabanı için herkese açık, lisansı açıkça tanımlanmış bir toplu API/indirme sözleşmesi doğrulanamadığından portalın tamamı taranmamış veya kopyalanmamıştır. Bunun yerine altı doğrulanmış KDPÜ kamu üst veri kaydının kod, başlık, kurum, kredi değeri (kaynakta bulunduğunda), geçici seviye ve yerleştirme durumu kaynak bağlantısıyla tutulur. Portalda listelenmek, bir yeterliliğin TYÇ'ye resmen yerleştirildiği anlamına gelmez. Kaynak kütüğünde alım modu `manual_snapshot_only`, otomatik alım ise kapalıdır.
 
+DPÜ otomasyon araştırması da kamuya açık resmî sayfaların kaynak iziyle sınırlıdır. Giriş gerektiren sayfalar, kişi kayıtları ve tam portal içerikleri kazınmamış; gerçek kişisel veri, parola/token veya canlı API verisi çekilmemiştir. Katalogdaki bir kayıt, sistemin/amacın resmî kamu sayfasında görüldüğünü belirtir; çalışan API, SSO ya da yazma yetkisi iddiası değildir.
+
 ## Veri mimarisi
 
 Uygulama iki katman kullanır:
@@ -76,10 +96,14 @@ Migration dosyaları:
 - [`20260819010000_myys_pilot_schema.sql`](supabase/migrations/20260819010000_myys_pilot_schema.sql)
 - [`20260820010000_framework_matrix_finance_role_seed.sql`](supabase/migrations/20260820010000_framework_matrix_finance_role_seed.sql)
 - [`20260820011000_framework_matrix_performance_indexes.sql`](supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql)
+- [`20260820012000_dpu_institutional_integration_catalog.sql`](supabase/migrations/20260820012000_dpu_institutional_integration_catalog.sql)
+- [`20260820013000_dpu_institutional_integration_performance_indexes.sql`](supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql)
 
-Çerçeve ve pilot referans migration'ı canlı Supabase'e `20260819234334`, performans indeks takip migration'ı `20260819234424` sürümüyle uygulandı. Sonuç **PASS**: 14 tablo, 10 `security_invoker` katalog görünümü, 14 FORCE RLS tablo ve security advisor'da 0 bulgu. Takip migration'ı tanımlayıcı çeviri ilişkisindeki indekslenmemiş yabancı anahtar uyarısını kapattı. Performance advisor'da yalnız yeni/boş pilot şemada beklenen unused-index INFO kayıtları ile Auth connection strategy INFO kaydı kaldı.
+Çerçeve ve pilot referans migration'ları canlı Supabase'e `20260819234334` ve `20260819234424`; DPÜ entegrasyon kataloğu, indeks takibi ve kaynak-provenans sertleştirmesi `20260820003749`, `20260820003856` ve `20260820005626` sürümleriyle uygulandı. Sonuç **PASS**: toplam 18 FORCE RLS tablo, 14 `security_invoker` katalog görünümü, `anon`/`authenticated` için yalnız `SELECT`, 32 benzersiz HTTPS kaynak bağlantısı ve security advisor'da 0 bulgu. Entegrasyon yabancı anahtar indeks uyarısı takip migration'ıyla kapatıldı; performance advisor'da yalnız boş pilotta beklenen unused-index INFO kayıtları ile `auth_db_connections_absolute` INFO kaydı kaldı.
 
 Canlı seed sayımları sırasıyla: 2 çerçeve, 16 seviye tanımlayıcısı, 16 matris şablonu, 8 örnek satır, 4 mali yönlendirme, 9 rol özeti, 25 rol adımı, 2 veri kaynağı, 6 KDPÜ üst veri kaydı, 8 çeviri, 2 matris taslağı, 6 taslak satırı, 1 ödeme talebi ve 2 ödeme olayı.
+
+DPÜ entegrasyon katmanı ayrıca 32 sistem, 32 eşleme, 32 dry-run senaryosu ve 32 sentetik denetim olayı içerir. Dört yeni tabloda FORCE RLS, dört yeni görünümde `security_invoker` aktiftir. Hiçbir kayıtta gerçek kişi verisi, canlı API isteği, gerçek aktarım veya production işlemi yoktur.
 
 ## Yerel çalıştırma ve test
 
@@ -100,8 +124,9 @@ npm test
 
 19–20 Ağustos 2026 UTC yerel doğrulaması:
 
-- Domain ve rol sözleşmeleri: **22/22 başarılı**
-- Zorunlu dosya / production güvenlik doğrulaması: **17/17 başarılı**
+- Domain, rol ve entegrasyon UI sözleşmeleri: **25/25 başarılı**
+- DPÜ entegrasyon veri sözleşmesi: **32/32/32/32 başarılı**
+- Zorunlu dosya / production güvenlik doğrulaması: **23/23 başarılı**
 - Canlı Supabase migration, RLS/grant ve advisor doğrulaması: **PASS**
 - Önceki temel sürüm 9 rol × 4 viewport tarayıcı matrisi: **36/36 başarılı** ([GitHub Actions run #7](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557))
 - Bu ödeme/matris revizyonunun son Preview tarayıcı QA, asset ve alias smoke kontrolü: **uygulama sonrası doğrulanacak**

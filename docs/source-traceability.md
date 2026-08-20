@@ -23,6 +23,7 @@ Bu belge; `MYYS_KDPU_Komisyon_Sunumu_Nihai_20_Slayt(1).pdf`, `DOC-20260811-WA003
 | Avrupa ve Türkiye yeterlilik şablonları | TYÇ ve AYÇ/EQF ayrı sekme; 1–8 seviye; eğitici girişi; kurul için salt-okunur inceleme | `qualification_frameworks`, `qualification_level_descriptors`, `qualification_level_descriptor_translations`, matris tabloları |
 | Öğrenme hedefi–içerik–ölçme matrisi | Yedi zorunlu alan, aday eğitici yönergesi ve örnek satırlar | `pilot_matrix_templates`, `pilot_matrix_example_rows`, `pilot_matrix_drafts`, `pilot_matrix_draft_rows` |
 | Resmî veri ve Supabase uyumu | Kaynak kütüğü, sınırlı KDPÜ üst verisi, lisans/alım durumu | `qualification_dataset_registry`, `official_qualification_references` |
+| DPÜ otomasyon keşfi | 32 iç sistem için kaynak, Tier, MYYS önemi, kayıt sahibi, ana-veri sınırı, eşleme, dry-run ve audit | `institutional_system_registry`, `pilot_integration_mappings`, `pilot_integration_scenarios`, `pilot_integration_audit_events` |
 
 ## Resmî kaynaklar
 
@@ -35,6 +36,56 @@ Bu belge; `MYYS_KDPU_Komisyon_Sunumu_Nihai_20_Slayt(1).pdf`, `DOC-20260811-WA003
 | [2017 AYÇ/EQF Tavsiye Kararı](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017H0615(01)) | AYÇ/EQF'nin hukuki referansı | Çerçeve kaynak üst verisi |
 | [Türkiye Yeterlilikler Veri Tabanı](https://portal.tyc.gov.tr/) | Sınırlı KDPÜ yeterlilik üst verisi | Elle doğrulanmış snapshot; tam scrape yok |
 | [Europass Qualifications Dataset Register](https://europass.europa.eu/en/stakeholders/qdr) | ELM/JSON-LD/TTL/SPARQL veri ekosistemi ve veri sağlayıcı yaklaşımı | Kaynak kütüğünde; otomatik alım kapalı |
+
+## DPÜ otomasyon keşfi ve entegrasyon sınırı
+
+Resmî DPÜ sayfaları yalnız sistemin varlığı, kamuya açıklanan amacı veya görünür iş akışı için kanıt kabul edilir. API/protokol, veri sahipliği, kimlik yöntemi ve yazma yetkisi ayrıca BİDB ve ilgili süreç sahibi tarafından doğrulanmadan etkinleştirilmez.
+
+Sürüm `2026-08-20.2` kataloğu **32 DPÜ iç sistem**, 32 veri eşlemesi, 32 dry-run senaryosu ve 32 sentetik audit olayı içerir. Bu dört sayı birebir kapsama denetimidir; canlı entegrasyon sayısı değildir. Tier 1/2/3 teknik entegrasyon türü ile `core`/`supporting`/`adjacent` MYYS önemi birbirinden bağımsız tutulur.
+
+| Sistem / kaynak | MYYS'deki olası kullanım | Doğrulanan sınır |
+| --- | --- | --- |
+| [OBS](https://obs.dpu.edu.tr/) | Öğrenci referansı, aktif kayıt, kazanılmış AKTS ve kontrollü yeterlilik aktarımı | Amaç ve giriş yüzeyi görünür; API sözleşmesi doğrulanmadı, giriş ekranı kazınmaz |
+| [Bologna Bilgi Paketi](https://obs.dpu.edu.tr/oibs/bologna/index.aspx) | Program, ders, öğrenme çıktısı, TYYÇ, planlanan AKTS ve ölçme yöntemi karşılaştırması | Kamu referansı; kaynak zamanı ve sürümü tutulur, akademik karar üretmez |
+| [ÖYS](https://oys.dpu.edu.tr/almsp) ve [UZEM açıklaması](https://uzem.dpu.edu.tr/tr/index/duyuru/23087/2025-2026-bahar-donemi-uzaktan-ogretimle-ders-alan-ogrencilerimizin-dikkatine) | Ders kabuğu, kayıt, katılım, değerlendirme ve tamamlanma kanıtı taslağı | OBS/e-Devlet ilişkisi resmî açıklamada var; API kanıtı değildir, ürün adaptörü sürümlenebilir olmalıdır |
+| [DPÜSEM](https://dpusem.dpu.edu.tr/), [başvuru süreci](https://dpusem.dpu.edu.tr/tr/index/sayfa/18505/egitim-basvuru-sureci) | Program kataloğu, ön kayıt–uygunluk–ödeme–kesin kayıt handoff taslağı | Gerçek ödeme/dekont, iletişim ve kesin kayıt aktarımı yok |
+| [DİLMER](https://dilmer.dpu.edu.tr/), [KODSİS](https://kodsis.dpu.edu.tr/) | Dil/mesleki program kataloğu ve öğrenme kanıtı referansı | Kamu kataloğu görülebilir; kimlik/API sözleşmesi doğrulanmadı |
+| [TÖMER](https://tomer.dpu.edu.tr/), [başvuru](https://tomerbasvuru.dpu.edu.tr/), [doğrulama](https://tomer.dpu.edu.tr/tr/index/sayfa/10346/sertifika-dogrulama) | Dil programı, dış kazanım ve kullanıcı kontrollü belge doğrulama referansı | Pasaport, iletişim, sonuç veya güvenlik kodu otomatik sorgulanmaz |
+| [YDYO sonuç açıklaması](https://ydyo.dpu.edu.tr/tr/index/duyuru/21623/01-temmuz-2025-ydys-1-asama-sinav-sonuclari-2024-2025) | Dil ön koşulu için adayın sunduğu kanıt | Öğrenci numarası/OBS parolası isteyen ekran kazınmaz |
+| [Merkezî kimlik / BİDB](https://bidb.dpu.edu.tr/tr/index/sayfa/119/sistem-yonetimi-sube-mudurlugu) | Kurum ilişkisi ve rol claim'i için asgari SSO taslağı | OIDC/SAML/LDAP protokolü kamu sayfasından doğrulanmadı; parola MYYS'de tutulmaz |
+| [EBYS](https://ebys.dpu.edu.tr/) ve [BİDB açıklaması](https://bidb.dpu.edu.tr/index/slide/12/elektronik-belge-yonetim-sistemi-ebys) | Kurul karar numarası, belge durumu ve imzalı karar referansı | E-imza/resmî belge yazımı Tier 3'tür; pilotta belge oluşturulmaz |
+| [BKYS](https://bkys.dpu.edu.tr/) ve [Kalite Koordinatörlüğü](https://kalite.dpu.edu.tr/index/home/) | Kalite, risk, PUKÖ, kanıt ve toplulaştırılmış memnuniyet göstergesi | Bireysel cevap ve serbest metin aktarılmaz; kalite MYS mali MYS/MAYS değildir |
+| [Akademik Portal](https://portal.dpu.edu.tr/tr) | Eğitici profilini destekleyen kamu referansı | Tek başına yetkinlik veya aktif görev kanıtı değildir |
+| [Kütüphane](https://kutuphane.dpu.edu.tr/), [VETİS](https://kutuphane.dpu.edu.tr/tr/index/sayfa/13858/vetis-kutuphane-kaynaklarina-uzaktan-erisim), [Açık Arşiv](https://openaccess.dpu.edu.tr/xmlui/) | Kaynakça ve açık erişim kanıt bağlantısı | Lisanslı içerik veya kullanıcı arama geçmişi alınmaz |
+| [Mezun Portalı](https://mezun.dpu.edu.tr/) ve [KAMER](https://kamer.dpu.edu.tr/) | Opt-in cüzdan devamlılığı ve toplulaştırılmış etki | Mezun profili kazınmaz, kişi bazlı aktarım açık rıza ister |
+| [İME otomasyonu](https://dumlupinarmyo.dpu.edu.tr/tr/index/sayfa/19036/ime-otomasyon-sistemi) | İşyeri öğrenmesi için kanıt referansı | İşveren, sigorta ve öğrenci belgesi otomatik alınmaz |
+| [Döner Sermaye](https://ds.dpu.edu.tr/) | Ödeme talebi, tahsilat, fatura/hak ediş ve mutabakat handoff taslağı | Gerçek ödeme, vergi kuralı, fatura veya mali servis çağrısı yok |
+| [DPÜ ana sistem envanteri](https://www.dpu.edu.tr/) | Kamuya duyurulan otomasyon yüzeylerinin başlangıç keşfi | Envanter kaydı API, sahiplik veya erişim yetkisi kanıtı değildir |
+| [eBAP](https://ebap.dpu.edu.tr/) ve [EKBYS](https://etikkurul.dpu.edu.tr/) | Eğitici kanıtı ile etik izin üst verisi için insan incelemeli referans | Proje/başvuru içeriği ve özel nitelikli veri alınmaz |
+| [Kütüphane kataloğu](https://katalog.dpu.edu.tr/) | VETİS'ten ayrı bibliyografik kamu referansı | Kullanıcı hesabı, ödünç kaydı veya lisanslı içerik alınmaz |
+| [ULMER / Uluslararası İlişkiler](https://iro.dpu.edu.tr/) ve [LabSis](https://iltemlabsis.dpu.edu.tr/) | Uluslararası hareketlilik ve laboratuvar kanıtı için kaynak bağlantısı | Başvuru, kişi, analiz veya gizli araştırma verisi alınmaz |
+| [E-Randevu](https://www.dpu.edu.tr/index/duyuru/936/e-randevu-sistemi) ve [KAMER](https://kamer.dpu.edu.tr/) | İnsan tarafından başlatılan randevu/rehberlik yönlendirmesi | Randevu oluşturulmaz; sağlık/destek vakası veya kişi verisi taşınmaz |
+| [DPÜWEB yönetim duyurusu](https://bidb.dpu.edu.tr/tr/index/duyuru/20846/birimler-web-yonetim-paneli-guvenlik-guncellemesi) | Onaylanmış içerik için site sahibi handoff taslağı | Panele giriş, otomatik yayın veya kimlik bilgisi aktarımı yok |
+| [Akademik performans duyurusu](https://haber.dpu.edu.tr/tr/haber_oku/652655d14eea2/dpu-akademik-performans-modulu-yayinda) ve [OBS/otomasyon açıklaması](https://tubif.dpu.edu.tr/tr/index/sayfa/15505/obs-ogrenci-bilgi-sistemi) | Performans, puantaj ve personel durumuna yalnız kaynak referansı | Kişi puanı, puantaj detayı, bordro veya YÖKSİS sorgusu yok |
+| [DPU-Form duyurusu](https://www.dpu.edu.tr/index/duyuru/2985/2025-faaliyet-yili-akademik-tesvik-odenegi-basvuru-duyurusu) ve [DDYO iş akışları](https://ddyo.dpu.edu.tr/tr/index/sayfa/18068/is-akislari) | Başvuru yönlendirme ve entegrasyon değişikliği için yönetişim taslağı | Dosya yüklenmez, otomatik başvuru/talep açılmaz ve production değişikliği yapılmaz |
+| [BİDB](https://bidb.dpu.edu.tr/) ve [DPÜ otomasyon açıklaması](https://tubif.dpu.edu.tr/tr/index/sayfa/15505/obs-ogrenci-bilgi-sistemi) | Ek ders/hak ediş ve DPÜMobil gibi yardımcı yüzeyler için aday keşif kaydı | Mali/personel ana verisi veya push/iletişim verisi alınmaz; adaptör sözleşmesi doğrulanmalıdır |
+
+DPÜ dışı **beş** hedef — GİB/e-Arşiv, mali MYS/MAYS, YÖKSİS/TÖMERSİS, e-Devlet ve e-posta/SMS — ayrı dış kapı kataloğudur. Bunların hiçbiri 32 DPÜ iç sistem sayısına dahil değildir ve tamamı `simulation / disconnected / no real data` durumundadır. [TÖMER–SEM–DİLMER–DDYO istişare haberi](https://tomer.dpu.edu.tr/tr/index/slide/13110/bilgilendirme-ve-istisare-toplantisi-gerceklestirildi), YÖKSİS/TÖMERSİS hakkında görüşme yapıldığını doğrular; canlı entegrasyon bulunduğunu doğrulamaz.
+
+### Ana veri sahipliği ilkesi
+
+- Kimlik/kurum ilişkisi: merkezî kimlik
+- Öğrenci, program kaydı, kazanılmış AKTS ve mezuniyet: OBS
+- Müfredat, öğrenme çıktıları, TYYÇ ve planlanan AKTS: Bologna Bilgi Paketi
+- Eğitim teslimi, katılım ve değerlendirme kanıtı: ÖYS
+- Mikro-yeterlilik teklifi, komisyon, tanıma ve pilot yeterlilik: MYYS
+- Kalite/risk/PUKÖ: BKYS
+- Resmî karar ve belge numarası: EBYS
+- Tahsilat, hak ediş ve mutabakat: Döner Sermaye / mali birimler
+
+Her adaptör varsayılan `simulation/disconnected` durumundadır. Kaynak parola, T.C. kimlik, pasaport, kart veya canlı token saklanmaz; outbox/inbox, idempotency, onay kapısı ve denetim izi olmadan hiçbir aktarım kurgulanmaz.
+
+Canlı Supabase güvenlik sorgularında `real_data_enabled`, `real_data_sent`, `live_request_made` ve `production_allowed` için unsafe kayıt sayıları ayrı ayrı `0` bulunmuştur. Kamuya açık kaynak keşfi; giriş gerektiren sayfaların kazınması, kişi verisi alınması, tam içerik aynası veya gerçek API çağrısı anlamına gelmez.
 
 ## Sınırlı KDPÜ kamu üst verisi
 
@@ -93,9 +144,11 @@ Bu altı doğrulanmış KDPÜ kamu üst veri kaydı yalnız `minimal_public_meta
 
 ## Doğrulama durumu
 
-- Yerel domain/rol/ödeme/matris kabulü: **22/22 başarılı**.
-- Yapı ve production güvenlik doğrulaması: **17/17 başarılı**.
-- Canlı Supabase migration sürümleri `20260819234334` + `20260819234424`: **PASS**; 14 FORCE RLS tablo, 10 görünüm, security advisor 0 bulgu. [Performans takip migration'ı](../supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql) indekslenmemiş yabancı anahtar uyarısını kapattı; yalnız beklenen unused-index ve Auth connection strategy INFO girdileri kaldı.
+- Yerel domain/rol/ödeme/matris/entegrasyon kabulü: **25/25 başarılı**.
+- DPÜ entegrasyon sözleşmesi: **32 sistem / 32 eşleme / 32 dry-run / 32 sentetik audit**.
+- Yapı ve production güvenlik doğrulaması: **23/23 başarılı**.
+- Canlı Supabase migration sürümleri `20260819234334`, `20260819234424`, `20260820003749`, `20260820003856` ve `20260820005626`: **PASS**; 18 FORCE RLS tablo, 14 `security_invoker` görünüm, 32 benzersiz HTTPS kaynak izi, security advisor 0 bulgu. [Çerçeve takip migration'ı](../supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql) ile [entegrasyon takip migration'ı](../supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql) indekslenmemiş yabancı anahtar uyarılarını kapattı; [provenans migration'ı](../supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql) sekiz genel dizin kaydını özgül resmî kaynaklarla değiştirdi. Yalnız beklenen unused-index ve `auth_db_connections_absolute` INFO girdileri kaldı.
+- Canlı etki güvenlik sayımları: gerçek veri etkin `0`, gerçek veri gönderilmiş `0`, canlı istek yapılmış `0`, production izinli `0`.
 - Yeni revizyonun Vercel Preview ve public alias smoke sonucu: **uygulama sonrası doğrulanacak**.
 - Dokuz rol, TYÇ 8 + AYÇ/EQF 8 seviye, ödeme simülasyonu ve mali açıklamalar için ortak public Preview hedefi: <https://kampusgo.uzemgo.com/pilot.html>.
 - Tam portal aynası için lisans ve bulk API/export koşulları doğrulanmadığından otomatik alım kapalıdır.

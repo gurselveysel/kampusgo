@@ -17,8 +17,9 @@ Karar: **Production NO-GO**
 
 | Kontrol | Kapsam | Sonuç |
 | --- | --- | --- |
-| Domain kabul paketi | Dokuz rol, sahiplik, görünürlük, karar yetkisi, ödeme, TYÇ/AYÇ, audit ve iki uçtan uca senaryo | **22/22 başarılı** |
-| Yapı doğrulama | 17 zorunlu dosya, marka/görsel referansı, production/secret ve yasak tarayıcı API taraması | **Başarılı** |
+| Domain kabul paketi | Dokuz rol, sahiplik, görünürlük, karar yetkisi, ödeme, TYÇ/AYÇ, DPÜ katalog UI'sı, audit ve iki uçtan uca senaryo | **25/25 başarılı** |
+| Yapı doğrulama | 23 zorunlu dosya, marka/görsel referansı, production/secret ve yasak tarayıcı API taraması | **Başarılı** |
+| DPÜ entegrasyon sözleşmesi | 32 iç sistem, 32 eşleme, 32 dry-run senaryosu, 32 sentetik audit; 4 FORCE RLS tablo, 4 `security_invoker` görünüm | **Başarılı** |
 | TYÇ/AYÇ bütünlüğü | TYÇ 8 + AYÇ/EQF 8 tanımlayıcı; iki çerçevede 8'er şablon | **Başarılı** |
 | Ödeme RBAC | Öğrenen başlatır, Finans onaylar/revize eder/mutabakat yapar; admin mali karar veremez | **Başarılı** |
 | Mali açıklama görünürlüğü | Ana sayfada GİB/e-Arşiv ve MYS/MAYS kontrollü entegrasyon açıklamaları | **Başarılı** |
@@ -32,15 +33,17 @@ Yerel test komutları:
 
 ```bash
 node scripts/test.mjs
+node scripts/institutional-integration-contract.mjs
 node scripts/validate.mjs
 ```
 
 Çalıştırma çıktısı:
 
-- `Dokuz rol domain testi başarılı: 22/22 sözleşme`
-- `Doğrulama başarılı: 17 zorunlu dosya bulundu; production güvenlik taraması temiz.`
+- `Dokuz rol domain testi başarılı: 25/25 sözleşme`
+- `PASS institutional integration contract — 32 systems / 32 mappings / 32 scenarios / 32 audit events`
+- `Doğrulama başarılı: 23 zorunlu dosya bulundu; production güvenlik taraması temiz.`
 
-## 22/22 kabul kapsamı
+## 25/25 kabul kapsamı
 
 ### Rol ve erişim
 
@@ -81,6 +84,15 @@ node scripts/validate.mjs
 - Pilot yeterlilik oluşturma ve mükerrer kod engeli
 - İki uçtan uca senaryoda kalıcı durum ve `realDataSent=false` aktarım kaydı
 
+### DPÜ entegrasyon sözleşmesi
+
+- 32 DPÜ iç sisteminin her biri için tam bir eşleme, dry-run senaryosu ve sentetik audit olayı
+- Tier 1/2/3 teknik entegrasyon sınıfı ile `core`/`supporting`/`adjacent` MYYS öneminin bağımsız doğrulanması
+- Kaynak URL, doğrulama temeli, kayıt sahibi, ana-veri sınırı, çatışma politikası, adapter ve fallback alanları
+- GİB/e-Arşiv, mali MYS/MAYS, YÖKSİS/TÖMERSİS, e-Devlet ve e-posta/SMS'in beş ayrı dış pilot kapısı olarak korunması
+- `realDataEnabled=false`, `realDataSent=false`, `liveRequestMade=false`, `productionAllowed=false`
+- Giriş ekranı kazıma, kişi verisi, parola/token, gerçek API çağrısı veya production yazımı olmaması
+
 ## Tarayıcı QA durumu
 
 Önceki kabul sürümünde 9 rol × dört viewport matrisi 36/36 geçmiştir; ekran görüntüleri ve JSON raporu [GitHub Actions kanıt paketinde](https://github.com/gurselveysel/kampusgo/actions/runs/32268491557/artifacts/9371422369) bulunur.
@@ -92,6 +104,7 @@ Bu raporda ödeme ve TYÇ/AYÇ matrisleri eklendiği için önceki 36/36 sonucu 
 - İç eğitici matris kaydı ve `localStorage` geri yükleme
 - Kurum dışı eğitici düzenleme; koordinatör ve Komisyon salt-okunur görünümü
 - Dokuz rolün ayrı overview başlığı, görev ve navigasyonu
+- Entegrasyon Merkezi'nde 32 iç sistem, bağımsız Tier/MYYS önemi filtreleri, ana-veri sınırı ve beş dış kapı
 - 1440, 1024, 768 ve 390 px'te yatay taşma, kırık görsel, modal, toast, odak ve mobil menü
 - Public alias üzerinde Vercel giriş duvarı olmadan erişim
 
@@ -103,17 +116,22 @@ Canlı Supabase migration sürümleri:
 
 - `20260819234334` — [çerçeve, matris, rol ve finans şeması](../supabase/migrations/20260820010000_framework_matrix_finance_role_seed.sql)
 - `20260819234424` — [çeviri yabancı anahtarı performans indeksi](../supabase/migrations/20260820011000_framework_matrix_performance_indexes.sql)
+- `20260820003749` — [DPÜ kurumsal entegrasyon kataloğu](../supabase/migrations/20260820012000_dpu_institutional_integration_catalog.sql)
+- `20260820003856` — [DPÜ entegrasyon yabancı anahtar performans indeksleri](../supabase/migrations/20260820013000_dpu_institutional_integration_performance_indexes.sql)
+- `20260820005626` — [DPÜ kaynak-provenans sertleştirmesi](../supabase/migrations/20260820014000_dpu_institutional_source_provenance.sql)
 
 Doğrulanan güvenlik ve veri sözleşmeleri:
 
-- 14 tabloda RLS + FORCE RLS
+- 18 tabloda RLS + FORCE RLS
 - `anon` ve `authenticated` için yalnız `SELECT`
-- 10 `security_invoker`/`security_barrier` katalog görünümü
+- 14 `security_invoker`/`security_barrier` katalog görünümü
 - Çerçeve → tanımlayıcı/çeviri → matris ve taslak satırı yabancı anahtarları
 - Ödeme talebi → ödeme olayı zinciri
 - `real_payment=false`, `has_financial_identifiers=false`, `real_data_sent=false`
 - `automated_ingestion_enabled=false`, `ingestion_status='manual_snapshot_only'`
 - Sınırlı kamu üst verisi ile sentetik pilot verinin ayrı politikalarla okunması
+- DPÜ iç sistem → eşleme → senaryo → sentetik audit yabancı anahtar zinciri
+- Bütün canlı-etki sayaçlarının sıfır olması: gerçek veri etkin/gönderilmiş, canlı istek yapılmış ve production izinli kayıt yok
 
 Canlı sayımlar:
 
@@ -124,8 +142,9 @@ Canlı sayımlar:
 | Veri kaynağı / doğrulanmış KDPÜ üst verisi / Türkçe çeviri | 2 / 6 / 8 |
 | Matris taslağı / taslak satırı | 2 / 6 |
 | Ödeme talebi / ödeme olayı | 1 / 2 |
+| DPÜ iç sistem / eşleme / dry-run senaryosu / sentetik audit | 32 / 32 / 32 / 32 |
 
-Security advisor: **0 bulgu**. Performance advisor'ın bildirdiği indekslenmemiş çeviri yabancı anahtarı `20260819234424` takip migration'ıyla kapatıldı. Kalan kayıtlar yalnız yeni/boş pilot şemada beklenen unused-index INFO girdileri ve Auth connection strategy INFO girdisidir. Sonuç: **PASS**.
+Security advisor: **0 bulgu**. Performance advisor'ın bildirdiği indekslenmemiş çeviri ve entegrasyon yabancı anahtarları `20260819234424` ile `20260820003856` takip migration'larıyla kapatıldı. Kalan kayıtlar yalnız yeni/boş pilot şemada beklenen unused-index INFO girdileri ve `auth_db_connections_absolute` INFO girdisidir. Sonuç: **PASS**.
 
 ## Ana demo senaryoları
 
@@ -139,6 +158,8 @@ Security advisor: **0 bulgu**. Performance advisor'ın bildirdiği indekslenmemi
 - Gerçek QR, dijital imza, e-posta/SMS, ödeme, banka/kart verisi, dosya aktarımı veya dış entegrasyon yoktur.
 - Matris, seviye ve mali parametreler otomatik karar veya kesin mevzuat kuralı değildir.
 - Portal verisinin tamamı kopyalanmaz; doğrulanmamış yeniden kullanım lisansı ve bulk API/export sınırı nedeniyle yalnız sınırlı üst veri tutulur.
+- DPÜ entegrasyon kataloğu kaynak izli bir aday tasarımdır; API/SSO/servis sözleşmesi, canlı bağlantı veya veri yazma yetkisi iddia etmez.
+- Tam kimlik doğrulamalı sayfa kazıması, kişi verisi alımı ve gerçek kurumsal otomasyon çağrısı yapılmamıştır.
 - Bu revizyonun Vercel Preview smoke ve GitHub SHA'sı henüz kesinleşmemiştir; canlı Supabase doğrulaması tamamlanmıştır.
 - Production deployment, production branch yayını ve canlı kurumsal bağlantı kesin kapsam dışıdır.
 

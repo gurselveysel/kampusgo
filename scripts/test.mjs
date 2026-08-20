@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { initialState, pageMeta, roleNavigation, roles } from "../src/data.js";
+import { consultationOnlyIntegrationIds, externalPilotIntegrationGates, initialState, integrationMasterDataOwnership, pageMeta, roleNavigation, roles } from "../src/data.js";
 import {
   actorNameForRole,
   canRecordAssessmentDecision,
@@ -13,6 +13,8 @@ import {
   ownsApplication,
   recordAssessmentDecision,
   reviewPaymentRequest,
+  runIntegrationBulkDryRun,
+  runIntegrationDryRun,
   runScenarioStep,
   scenarioDefinitions,
   startPaymentRequest,
@@ -31,6 +33,12 @@ import {
   qualificationMatrixExamples,
   qualificationMatrixTemplates
 } from "../src/reference-data.js";
+import {
+  dpuInstitutionalSystems,
+  pilotIntegrationAuditEvents,
+  pilotIntegrationMappings,
+  pilotIntegrationScenarios
+} from "../src/institutional-integration-reference.js";
 
 const results = [];
 
@@ -120,6 +128,89 @@ test("TYÇ / AYÇ matris rotası yalnız beş yetkili rol navigasyonunda", () =>
   }
 });
 
+test("DPÜ entegrasyon UI kataloğu canonical sistem sözleşmesiyle birebir hizalı", () => {
+  const canonicalCount = dpuInstitutionalSystems.length;
+  const canonicalById = new Map(dpuInstitutionalSystems.map((item) => [item.id, item]));
+  assert.ok(canonicalCount > 0, "kurumsal sistem kataloğu boş olamaz");
+  assert.equal(pilotIntegrationMappings.length, canonicalCount);
+  assert.equal(pilotIntegrationScenarios.length, canonicalCount);
+  assert.equal(pilotIntegrationAuditEvents.length, canonicalCount);
+  assert.deepEqual(
+    initialState.integrations.map((item) => item.id).sort(),
+    dpuInstitutionalSystems.map((item) => item.id).sort()
+  );
+  assert.equal(initialState.integrations.length, canonicalCount);
+  for (const item of initialState.integrations) {
+    const canonical = canonicalById.get(item.id);
+    assert.ok(canonical, `${item.id}: canonical sistem kaydı bulunamadı`);
+    for (const key of ["category", "systemClass", "owner", "sourceStatus", "purposeProposal", "dataDirection", "approvalGate", "errorScenario", "retryPolicy", "auditPolicy"]) {
+      assert.ok(String(item[key]).trim(), `${item.id}: ${key} eksik`);
+    }
+    assert.match(item.sourceUrl, /^https:\/\//, `${item.id}: kamu kaynak URL'si eksik`);
+    assert.equal(item.sourceUrl, canonical.sourceUrl, `${item.id}: UI canonical sourceUrl kullanmalı`);
+    assert.ok([1, 2, 3].includes(item.stage), `${item.id}: tier/katman hatalı`);
+    assert.equal(item.integrationTier, `tier${item.stage}`);
+    assert.ok(["core", "supporting", "adjacent"].includes(item.myysRelevance));
+    assert.equal(item.samplePayload.mode, "dry-run");
+    assert.equal(item.samplePayload.realData, false);
+    assert.equal(item.realDataEnabled, false);
+    assert.ok(item.operatorRoles.includes("it") && item.operatorRoles.includes("admin"));
+  }
+  const ebys = initialState.integrations.find((item) => item.id === "dpu-ebys");
+  assert.deepEqual([ebys?.integrationTier, ebys?.myysRelevance], ["tier3", "core"], "Tier ile MYYS önemi bağımsız modellenmiyor");
+});
+
+test("kullanıcının verdiği yedi DPÜ kaynağı ve geniş otomasyon envanteri canonical katalogda", () => {
+  const urls = new Set(dpuInstitutionalSystems.map((item) => item.publicUrl));
+  for (const url of [
+    "https://dpusem.dpu.edu.tr/", "https://oys.dpu.edu.tr/almsp", "https://obs.dpu.edu.tr/oibs/bologna/index.aspx",
+    "https://obs.dpu.edu.tr/", "https://dilmer.dpu.edu.tr/", "https://tomer.dpu.edu.tr/",
+    "https://ydyo.dpu.edu.tr/tr/index/duyuru/21623/01-temmuz-2025-ydys-1-asama-sinav-sonuclari-2024-2025"
+  ]) assert.ok(urls.has(url), `${url}: katalogda yok`);
+  for (const id of [
+    "dpu-bkys", "dpu-kodsis", "dpu-ebys", "dpu-ebap", "dpu-ekbys", "dpu-vetis", "dpu-ime", "dpu-extra-course", "dpu-mobile", "dpu-form", "dpu-software-request",
+    "dpu-doner-sermaye", "dpu-library-catalog", "dpu-ulmer", "dpu-labsis", "dpu-erandevu", "dpu-web-cms", "dpu-kamer", "dpu-puantaj"
+  ]) {
+    assert.ok(initialState.integrations.some((item) => item.id === id), `${id}: geniş envanterde yok`);
+  }
+  assert.ok(consultationOnlyIntegrationIds.every((id) => initialState.integrations.some((item) => item.id === id)));
+  assert.equal(integrationMasterDataOwnership.length, dpuInstitutionalSystems.filter((item) => item.masterDataDomains.length).length);
+  assert.deepEqual(integrationMasterDataOwnership.slice(0, 7).map((item) => item.systemId), [
+    "dpu-central-identity", "dpu-obs", "dpu-bologna", "dpu-oys", "dpu-bkys", "dpu-ebys", "dpu-doner-sermaye"
+  ]);
+  assert.ok(integrationMasterDataOwnership.every((item) => !item.domain.includes("_")), "ana-veri alanlarından Türkçeleştirilmemiş canonical anahtar sızdı");
+  assert.ok(integrationMasterDataOwnership.some((item) => item.systemId === "dpu-bkys"), "BKYS canonical ana-veri sahipliği görünümünde yok");
+  assert.ok(externalPilotIntegrationGates.some((item) => item.name === "Mali MYS / MAYS"));
+  assert.ok(externalPilotIntegrationGates.some((item) => item.name === "YÖKSİS / TÖMERSİS" && item.boundary.includes("canlı entegrasyon")));
+});
+
+test("entegrasyon dry-run rol kapısı, hata-retry ve audit zinciri gerçek veri göndermiyor", () => {
+  const studentState = cloneState(initialState);
+  assert.throws(() => runIntegrationDryRun(studentState, "dpu-ebys", "studentAffairs", actorNameForRole("studentAffairs")), /dry-run/);
+  const first = runIntegrationDryRun(studentState, "dpu-obs", "studentAffairs", actorNameForRole("studentAffairs"));
+  assert.equal(first.job.status, "simulation_failed");
+  assert.equal(first.job.retryAvailable, true);
+  assert.equal(first.job.realDataSent, false);
+  const second = runIntegrationDryRun(studentState, "dpu-obs", "studentAffairs", actorNameForRole("studentAffairs"));
+  assert.equal(second.job.status, "simulation_succeeded");
+  assert.equal(second.job.retryAvailable, false);
+  assert.ok(studentState.audit.some((item) => item.entityId === "INT-dpu-obs" && item.reason.includes("realDataSent=false")));
+
+  const coordinatorState = cloneState(initialState);
+  assert.doesNotThrow(() => runIntegrationDryRun(coordinatorState, "dpu-oys", "coordinator", actorNameForRole("coordinator")));
+  const financeState = cloneState(initialState);
+  assert.doesNotThrow(() => runIntegrationDryRun(financeState, "dpu-extra-course", "finance", actorNameForRole("finance")));
+  const bulkState = cloneState(initialState);
+  const jobs = runIntegrationBulkDryRun(bulkState, "it", actorNameForRole("it"));
+  assert.equal(jobs.length, bulkState.integrations.filter((item) => item.consultationOnly === false).length);
+  assert.ok(jobs.every((job) => job.realDataSent === false && job.status === "simulation_succeeded"));
+  const consultationId = consultationOnlyIntegrationIds.find((id) => bulkState.integrations.some((item) => item.id === id));
+  assert.ok(consultationId, "istişare-only canonical kayıt bulunamadı");
+  assert.throws(() => runIntegrationDryRun(bulkState, consultationId, "it", actorNameForRole("it")), /dry-run/);
+  assert.equal(bulkState.integrationJobs.some((job) => job.targetId === consultationId), false, "istişare-only kayda aktarım dry-run logu yazıldı");
+  assert.throws(() => runIntegrationBulkDryRun(cloneState(initialState), "coordinator", actorNameForRole("coordinator")), /yalnız Bilgi İşlem/);
+});
+
 test("öğrenen ödeme demosu mali ön onay ve mutabakatla pilot eğitime dönüşüyor", () => {
   const state = cloneState(initialState);
   state.finance.paymentRequests = [];
@@ -165,6 +256,7 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
     "canRecordAssessmentDecision", "recordAssessmentDecision"
   ]) assert.match(appSource, new RegExp(`\\b${symbol}\\b`), `${symbol} arayüzde kullanılmıyor`);
   assert.match(appSource, /window\.location\.hash === nextHash\) render\(\)/, "aynı hash rol değişimi render koruması yok");
+  assert.match(appSource, /hasCanonicalIntegrationCatalog\(saved\.integrations\)/, "eski veya eksik entegrasyon kataloğunu reddeden kalıcılık koruması yok");
   assert.match(appSource, /notificationButton\.hidden = !notificationAllowed/, "bildirim CTA rol kapısı yok");
   assert.match(appSource, /state\.roleId === "learner"[^\n]+data-nav="catalog"/, "katalog CTA öğrenen kapısı yok");
   assert.match(appSource, /actorRole:\s*state\.roleId/, "başvuru oluştururken etkin rol domain katmanına aktarılmıyor");
@@ -177,6 +269,18 @@ test("arayüz domain yetki sınırlarını ve aynı-hash anlık render koruması
   assert.match(appSource, /if \(!PROPOSAL_ROLES\.has\(state\.roleId\)\) \{ deny\("TYÇ \/ AYÇ matris taslağını yalnız iç veya kurum dışı eğitici kaydedebilir\./, "matris kayıt mutasyonunda rol kapısı yok");
   assert.match(appSource, /Salt-okunur inceleme/, "koordinatör\/komisyon salt-okunur matris görünümü yok");
   assert.match(appSource, /state\.qualificationDrafts \|\|= \[\]/, "matris taslak veri katmanı yok");
+  assert.match(appSource, /Ana veri sahipliği ve karar kaynağı/, "entegrasyon ana veri sahipliği tablosu yok");
+  assert.match(appSource, /id="integration-search"/, "entegrasyon katalog araması yok");
+  assert.match(appSource, /id="integration-category"/, "entegrasyon kategori filtresi yok");
+  assert.match(appSource, /id="integration-tier"/, "entegrasyon Tier filtresi yok");
+  assert.match(appSource, /Tier, erişim ve işlem sınıfıdır; sistemin hazır, bağlı veya onaylanmış olduğunu göstermez/, "Tier hazırlık uyarısı yok");
+  assert.match(appSource, /MYYS: \$\{relevanceLabels\[item\.myysRelevance\]/, "MYYS core\/supporting\/adjacent etiketi yok");
+  assert.match(appSource, /Tier \$\{item\.stage\}/, "entegrasyon tier\/katman işareti yok");
+  assert.match(appSource, /item\.consultationOnly \? "Referans ayrıntısı" : "Dry-run ayrıntısı"/, "istişare kayıtları için aktarım dry-run CTA'sı kapatılmıyor");
+  assert.match(appSource, /Aktarıma yönelik dry-run kapalı/, "istişare-only modal güvenlik açıklaması yok");
+  assert.match(appSource, /BKYS içindeki Memnuniyet Yönetim Sistemi \(kalite MYS\) ile mali MYS\/MAYS ayrı iş alanlarıdır/, "kalite MYS ile mali MYS\/MAYS ayrımı yok");
+  assert.match(appSource, /runIntegrationDryRun\(state, id, state\.roleId/, "dry-run domain iş akışı arayüzde kullanılmıyor");
+  assert.match(appSource, /Kamu, mali ve bildirim taslakları/, "haricî GİB\/mali MYS\/YÖKSİS kapıları ayrı gösterilmiyor");
   assert.match(appSource, /\["ArrowLeft", "ArrowRight", "Home", "End"\]/, "Komisyon sekmelerinin klavye yön tuşu desteği yok");
   assert.match(htmlSource, /id="notification-button"[^>]+data-nav="notifications"/, "bildirim düğmesi sabit seçicisi yok");
   assert.match(htmlSource, /data-action="toggle-nav"[^>]+aria-controls="sidebar"/, "mobil menü denetim ilişkisi tanımlı değil");
