@@ -146,15 +146,15 @@ npm test
 - DPÜ entegrasyon veri sözleşmesi: **32/32/32/32 başarılı**
 - Zorunlu dosya / production güvenlik doğrulaması: **30/30 başarılı**
 - Canlı Supabase migration, RLS/grant ve advisor doğrulaması: **PASS**
-- Önceki yayın 9 rol × 4 viewport tarayıcı regresyonu: **PASS** ([GitHub Actions run #40](https://github.com/gurselveysel/kampusgo/actions/runs/32323555716)); akıllı eşleme genişletmesinin güncel CI koşusu yeni Preview üzerinde çalıştırılacaktır
-- Yeni akıllı eşleme exact Preview'ı: <https://kdpu-myys-mockup-3arzpv5l1-info-64116029s-projects.vercel.app/pilot.html> — `dpl_4UyfvQeXT3xB9T8MX8HoiWvDMgNk`, READY `target: null`; public alias ancak güncel tarayıcı kabulünden sonra taşınacaktır
+- Güncel akıllı eşleme yayını 9 rol × 4 viewport tarayıcı regresyonu: **PASS** — 36 rol/viewport bileşimi, 0 hata ([GitHub Actions run #46](https://github.com/gurselveysel/kampusgo/actions/runs/32342418329), kanıt paketi `9396848395`)
+- Akıllı eşleme exact Preview'ı: <https://kdpu-myys-mockup-1fnbhb7yb-info-64116029s-projects.vercel.app/pilot.html> — `dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219`, READY `target: null`; <https://kampusgo.uzemgo.com/pilot.html> anonim erişimde aynı sürüm 11 Preview'ı göstermektedir
 
 ## Vercel Preview
 
 - Public Preview adresi: <https://kampusgo.uzemgo.com/pilot.html>
-- Exact READY Preview: <https://kdpu-myys-mockup-rkqlwxtnd-info-64116029s-projects.vercel.app/pilot.html>
+- Exact READY Preview: <https://kdpu-myys-mockup-1fnbhb7yb-info-64116029s-projects.vercel.app/pilot.html>
 - Kök rota: `/` → `/pilot.html`
-- Deployment `dpl_4WMU5dATnnE4PXaKLDUuYSr3AhX5`: **READY Preview**, `target: null`; public alias, HTML, JS, CSS, logolar ve WebP asset smoke kontrolü **PASS**
+- Deployment `dpl_ANq7iWMZpgf6ybVnF35VSPHGZ219`: **READY Preview**, `target: null`; HTML, JS, CSS, logolar ve WebP asset smoke kontrolü **PASS**
 
 `vercel.json`, kamera, mikrofon, konum ve ödeme tarayıcı yeteneklerini kapatan güvenlik başlıklarını içerir. Production terfisi yapılmamalıdır.
 
