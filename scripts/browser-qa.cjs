@@ -760,7 +760,13 @@ async function verifySmartAlignmentResponsive(page, viewport, errors) {
   await setHash(page, "frameworks");
   check(await page.locator("[data-smart-review]").count() >= 1, "coordinator: akıllı eşleme salt-okunur kayıt kütüğü yok", errors);
   check(await page.locator('[data-action="apply-smart-suggestion"], [data-action="apply-smart-override"]').count() === 0, "coordinator: öneri mutasyon CTA'sı görünür", errors);
-  const historicalReviewText = await page.locator("[data-smart-review]").first().innerText();
+  const historicalReview = page.locator(`[data-smart-review]:has([data-smart-snapshot-hash="${historicalSnapshot.integrityHash}"])`);
+  check(await historicalReview.count() === 1, "smart/review: tarihsel snapshot hash'iyle bağlı salt-okunur kayıt bulunamadı", errors);
+  const historicalDetails = historicalReview.locator("details").first();
+  if (await historicalDetails.count() && !await historicalDetails.evaluate((node) => node.open)) {
+    await historicalDetails.locator("summary").first().click();
+  }
+  const historicalReviewText = await historicalReview.count() ? await historicalReview.innerText() : "";
   check(historicalReviewText.includes("Tarihsel snapshot lisans türü") && historicalReviewText.includes("historical_snapshot_method_v1"), "smart/review: tarihsel TYYÇ tür/yöntem stored snapshot yerine güncel motordan render edildi", errors);
   check(historicalReviewText.includes("Tarihsel snapshot eksik kanıt uyarısı") && historicalReviewText.includes("Düşük güven"), "smart/review: tarihsel kanıt uyarısı/güven düzeyi stored snapshot'tan render edilmedi", errors);
 
@@ -1097,7 +1103,7 @@ async function verifyDirectiveGovernanceActions(page, errors) {
   await setHash(page, "governance");
   await page.locator('[data-action="directive-ek1-validate"]').click();
   check((await page.locator("#modal").innerText()).includes("11 alan tam") && !(await page.locator("#modal").innerText()).includes("12345678901"), "governance/EK1: kamu görünümü veya TCKN sızıntı sınırı hatalı", errors);
-  await page.locator('#modal [data-action="close-modal"]').click();
+  await page.locator('#modal [data-action="close-modal"]').first().click();
 
   await page.selectOption("#role-select", "finance");
   await setHash(page, "governance");
