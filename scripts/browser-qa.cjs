@@ -78,7 +78,10 @@ async function setHash(page, route) {
 async function waitForRole(page, role) {
   await page.waitForFunction(({ id, label, name }) => {
     const select = document.querySelector("#role-select");
-    const persona = document.querySelector("#persona-card")?.innerText || "";
+    // On tablet/mobile the persona card lives in the closed navigation drawer.
+    // textContent verifies the rendered role contract without mistaking an
+    // intentionally hidden drawer for stale role state.
+    const persona = document.querySelector("#persona-card")?.textContent || "";
     const heading = document.querySelector("#main-content h1")?.textContent || "";
     return select?.value === id && persona.includes(label) && persona.includes(name) && heading.includes(`${label} genel bakışı`);
   }, role, { timeout: 3000 });
@@ -310,13 +313,18 @@ async function verifyPaymentDemoFlow(page, errors) {
   await page.selectOption("#role-select", "learner");
   await setHash(page, "catalog");
   await page.locator('[data-action="open-program"][data-id="program-green-skills"]').click();
+  await page.waitForSelector('[data-action="apply-program"][data-id="program-green-skills"]', { state: "visible" });
   await page.locator('[data-action="apply-program"][data-id="program-green-skills"]').click();
+  await page.waitForSelector("#payment-request-form", { state: "visible" });
   check((await page.locator("#payment-request-form").count()) === 1, "learner: ücretli program ödeme demo formuna yönlenmedi", errors);
   await page.selectOption("#payment-channel", "Havale/EFT simülasyonu");
   await page.check('#payment-request-form input[name="confirm"]');
   await page.locator('#payment-request-form button[type="submit"]').click();
+  await page.waitForSelector('[data-action="handoff-finance"]', { state: "visible" });
   check((await page.locator('[data-action="handoff-finance"]').count()) === 1, "learner: mali işlere gönderim sonrası Finans rolü devir CTA'sı yok", errors);
   await page.locator('[data-action="handoff-finance"]').click();
+  await page.waitForFunction(() => document.querySelector("#role-select")?.value === "finance"
+    && document.querySelector("#main-content h1")?.textContent?.includes("Finans / Döner Sermaye genel bakışı"));
   check(await page.locator("#role-select").inputValue() === "finance", "ödeme demo devir eylemi Finans rolünü açmadı", errors);
 
   const requestRow = page.locator('tr:has-text("Yeşil Dönüşüm İçin Temel Yetkinlikler")').filter({ has: page.locator('[data-action="payment-review"][data-status="approved"]') }).first();
