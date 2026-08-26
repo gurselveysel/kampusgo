@@ -104,6 +104,7 @@ app.add_middleware(
         "Accept",
         "Content-Type",
         "X-Visual-Lab-Key",
+        "X-Visual-Lab-Rights-Confirmed",
     ],
 )
 
@@ -115,7 +116,8 @@ async def pilot_security_boundary(request: Request, call_next):
     ``/api/health`` remains public for container health checks. Every other API
     endpoint requires a server-held key unless explicitly relaxed for local
     development. The raw-code render route is disabled independently and by
-    default, even when the general API key is valid.
+    default, even when the general API key is valid. Starting a paper also
+    requires an explicit source-rights attestation from the trusted gateway.
     """
 
     path = request.url.path
@@ -159,6 +161,20 @@ async def pilot_security_boundary(request: Request, call_next):
                 headers={"WWW-Authenticate": "VisualLabKey"},
             )
 
+    if path == "/api/process" and request.method == "POST":
+        rights_confirmed = request.headers.get(
+            "x-visual-lab-rights-confirmed", ""
+        ).strip().lower()
+        if rights_confirmed != "true":
+            return JSONResponse(
+                status_code=428,
+                content={
+                    "detail": (
+                        "Source-rights confirmation is required before processing."
+                    )
+                },
+            )
+
     response = await call_next(request)
     response.headers["Cache-Control"] = "no-store"
     response.headers["X-Content-Type-Options"] = "nosniff"
@@ -178,6 +194,7 @@ async def pilot_metadata():
         "mode": "controlled_pilot",
         "environment": ENVIRONMENT,
         "rawRenderEnabled": RAW_RENDER_ENABLED,
+        "sourceRightsConfirmationRequired": True,
         "authenticationRequired": not (
             ALLOW_UNAUTHENTICATED and ENVIRONMENT != "production"
         ),
