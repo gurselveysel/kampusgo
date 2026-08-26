@@ -14,6 +14,7 @@ Bu dizin, KampüsGO Görsel Akademi arayüzünün gerçek içerik analiz ve anim
 - Next.js tarafında sağlık, pilot metadata, iş başlatma, durum, sonuç ve korunan video geçitleri oluşturuldu.
 - Pilot erişimi ayrı bir anahtar ve sekiz saatlik HttpOnly/SameSite=Strict oturum çereziyle sınırlandı.
 - Görsel Akademi çalışma alanı gerçek job polling ve sonuç görüntüleme akışına hazırlandı.
+- İnceleme sonrası kurulabilecek, otomatik deploy'u kapalı Render Blueprint'i eklendi.
 - Production kararı hâlâ **NO-GO** durumundadır.
 
 ## Kaynak taban
@@ -89,6 +90,16 @@ docker compose -f docker-compose.pilot.yml up -d
 
 API yalnızca `127.0.0.1:8001` üzerinden yerel makineye bağlanır. Next.js uygulaması bu servise `VISUAL_LAB_API_URL` ve sunucuda tutulan `VISUAL_LAB_API_KEY` ile erişir.
 
+## Render kontrollü pilot
+
+Kök dizindeki `render.yaml`, Docker web servisini Frankfurt bölgesinde, tek örnek ve otomatik deploy kapalı olarak tanımlar. Blueprint kurulumu ücretli kaynak seçer; onaydan önce güncel ücretler kontrol edilmelidir.
+
+Ayrıntılı yönerge: [`RENDER-DEPLOYMENT.md`](RENDER-DEPLOYMENT.md)
+
+[Deploy controlled pilot to Render](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fgurselveysel%2Fkampusgo%2Ftree%2Ffeature%2Farxivisual-upstream-integration)
+
+Bu bağlantı yalnız Render inceleme/onay ekranını açar. Kullanıcı onayı ve gerekli secret değerleri verilmeden servis oluşturulmaz.
+
 ## Uyarlama yöntemi
 
 `upstream/arxivisual` değişmeden saklanır. KampüsGO'ya özgü değişiklikler `overlays/`, API adaptörleri ve ayrı konfigürasyon dosyaları üzerinden geliştirilir. Böylece:
@@ -100,4 +111,4 @@ API yalnızca `127.0.0.1:8001` üzerinden yerel makineye bağlanır. Next.js uyg
 
 ## Production durumu
 
-**NO-GO.** Bu entegrasyon dalı geliştirme ve kontrollü preview içindir. Kurum/kullanıcı kimliği, kalıcı kota, denetim izi, içerik lisans kapısı, kalıcı nesne depolama, dayanıklı kuyruk, secret manager ve maliyet koruması tamamlanmadan production dağıtımı yapılmaz.
+**NO-GO.** Bu entegrasyon dalı geliştirme ve kontrollü preview içindir. Kurum/kullanıcı kimliği, kalıcı kota, denetim izi, içerik lisans kapısı, production nesne depolama, dayanıklı kuyruk, secret manager ve maliyet koruması tamamlanmadan production dağıtımı yapılmaz.
