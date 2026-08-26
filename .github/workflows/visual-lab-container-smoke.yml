@@ -1,6 +1,26 @@
 name: Visual Lab Container Smoke
 
 on:
+  push:
+    branches:
+      - feature/arxivisual-upstream-integration
+    paths:
+      - ".github/workflows/visual-lab-container-smoke.yml"
+      - "scripts/visual-lab/container-smoke.sh"
+      - "services/visual-lab/Dockerfile.pilot"
+      - "services/visual-lab/.dockerignore"
+      - "services/visual-lab/overlays/backend/**"
+      - "services/visual-lab/upstream/arxivisual/backend/pyproject.toml"
+      - "services/visual-lab/upstream/arxivisual/backend/uv.lock"
+  pull_request:
+    paths:
+      - ".github/workflows/visual-lab-container-smoke.yml"
+      - "scripts/visual-lab/container-smoke.sh"
+      - "services/visual-lab/Dockerfile.pilot"
+      - "services/visual-lab/.dockerignore"
+      - "services/visual-lab/overlays/backend/**"
+      - "services/visual-lab/upstream/arxivisual/backend/pyproject.toml"
+      - "services/visual-lab/upstream/arxivisual/backend/uv.lock"
   workflow_dispatch:
 
 permissions:
