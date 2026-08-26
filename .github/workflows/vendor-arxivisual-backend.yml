@@ -1,11 +1,12 @@
 name: Vendor arXivisual backend snapshot
 
 on:
-  push:
+  pull_request:
     branches:
-      - feature/teys-medical-simulation-engine
+      - main
     paths:
       - .github/workflows/vendor-arxivisual-backend.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,10 +17,11 @@ concurrency:
 
 jobs:
   vendor:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'feature/teys-medical-simulation-engine'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout KampüsGO branch
+      - name: Checkout KampüsGO feature branch
         uses: actions/checkout@v4
         with:
           ref: feature/teys-medical-simulation-engine
