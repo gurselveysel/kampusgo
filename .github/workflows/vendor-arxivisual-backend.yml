@@ -11,6 +11,7 @@ on:
       - main
     paths:
       - .github/workflows/vendor-arxivisual-backend.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -71,3 +72,5 @@ jobs:
           fi
           git commit -m "vendor: import approved arXivisual backend snapshot"
           git push origin HEAD:feature/teys-medical-simulation-engine
+
+# Default-branch registration complete; this revision intentionally triggers the first import.
