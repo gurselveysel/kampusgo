@@ -14,6 +14,7 @@ on:
       - ".env.example"
       - ".gitignore"
       - ".vercelignore"
+      - "render.yaml"
       - "tsconfig.json"
       - "package.json"
       - "package-lock.json"
@@ -28,6 +29,7 @@ on:
       - ".env.example"
       - ".gitignore"
       - ".vercelignore"
+      - "render.yaml"
       - "tsconfig.json"
       - "package.json"
       - "package-lock.json"
@@ -43,9 +45,10 @@ concurrency:
 jobs:
   integration-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 22
+    timeout-minutes: 24
     env:
       NEXT_TELEMETRY_DISABLED: "1"
+      RENDER_CLI_VERSION: v2.24.0
 
     steps:
       - name: Checkout branch
@@ -100,6 +103,21 @@ jobs:
           cp services/visual-lab/.env.example services/visual-lab/.env
           trap 'rm -f services/visual-lab/.env' EXIT
           docker compose -f services/visual-lab/docker-compose.pilot.yml config --quiet
+
+      - name: Install pinned Render CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${RENDER_CLI_VERSION#v}"
+          curl -sSfL \
+            "https://github.com/render-oss/cli/releases/download/${RENDER_CLI_VERSION}/cli_${version}_linux_amd64.zip" \
+            -o /tmp/render-cli.zip
+          unzip -q /tmp/render-cli.zip -d /tmp/render-cli
+          sudo install -m 0755 "/tmp/render-cli/cli_${version}" /usr/local/bin/render
+          render --version
+
+      - name: Validate Render Blueprint
+        run: render blueprints validate render.yaml -o text
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
