@@ -1,0 +1,13 @@
+{
+  "name": "arXivisual",
+  "repository": "https://github.com/rajshah6/arXivisual.git",
+  "repositoryWeb": "https://github.com/rajshah6/arXivisual",
+  "ref": "bbdbc8768948ed201b2825d2618dea3e8f1f7ea1",
+  "tree": "4f483551de136cb99f2f2871e8a6f7b946a0c405",
+  "importedPath": "services/visual-lab/upstream/arxivisual",
+  "importMode": "pinned-working-tree-snapshot",
+  "nestedGitDirectoryRetained": false,
+  "authorizedUseRecord": "The product owner confirmed that open-source use permission is available for this integration.",
+  "recordedAt": "2026-08-26",
+  "productionAllowed": false
+}

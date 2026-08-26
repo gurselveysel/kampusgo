@@ -1,0 +1,75 @@
+name: Sync arXivisual Upstream Snapshot
+
+on:
+  push:
+    branches:
+      - feature/arxivisual-upstream-integration
+    paths:
+      - ".github/workflows/sync-arxivisual-upstream.yml"
+      - "scripts/visual-lab/sync-upstream.sh"
+      - "services/visual-lab/UPSTREAM.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: arxivisual-source-sync-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout integration branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - name: Import pinned upstream working tree
+        run: bash scripts/visual-lab/sync-upstream.sh
+
+      - name: Validate imported snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="services/visual-lab/upstream/arxivisual"
+          test -f "$target/README.md"
+          test -f "$target/backend/main.py"
+          test -f "$target/frontend/package.json"
+          test -s "services/visual-lab/UPSTREAM_FILES.sha256"
+
+          file_count="$(find "$target" -type f | wc -l | tr -d ' ')"
+          if (( file_count < 100 )); then
+            echo "Unexpectedly small upstream snapshot: $file_count files" >&2
+            exit 1
+          fi
+
+          oversized="$(find "$target" -type f -size +99M -print -quit)"
+          if [[ -n "$oversized" ]]; then
+            echo "A source file exceeds 100 MB: $oversized" >&2
+            exit 1
+          fi
+
+      - name: Commit source snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -f services/visual-lab/upstream/arxivisual
+          git add services/visual-lab/UPSTREAM_FILES.sha256
+
+          if git diff --cached --quiet; then
+            echo "Pinned upstream snapshot is already current."
+            exit 0
+          fi
+
+          upstream_ref="$(jq -r '.ref' services/visual-lab/UPSTREAM.json)"
+          git commit -m "chore(vendor): import arXivisual ${upstream_ref}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

@@ -1,0 +1,134 @@
+name: Visual Lab Integration QA
+
+on:
+  push:
+    branches:
+      - feature/arxivisual-upstream-integration
+    paths:
+      - ".github/workflows/vendor-arxivisual-upstream.yml"
+      - ".github/workflows/visual-lab-container-smoke.yml"
+      - "scripts/visual-lab/**"
+      - "services/visual-lab/**"
+      - "src/server/visual-lab.ts"
+      - "app/api/visual-lab/**"
+      - "app/gorsel-akademi/**"
+      - ".env.example"
+      - ".gitignore"
+      - ".vercelignore"
+      - "render.yaml"
+      - "tsconfig.json"
+      - "package.json"
+      - "package-lock.json"
+  pull_request:
+    paths:
+      - ".github/workflows/vendor-arxivisual-upstream.yml"
+      - ".github/workflows/visual-lab-container-smoke.yml"
+      - "scripts/visual-lab/**"
+      - "services/visual-lab/**"
+      - "src/server/visual-lab.ts"
+      - "app/api/visual-lab/**"
+      - "app/gorsel-akademi/**"
+      - ".env.example"
+      - ".gitignore"
+      - ".vercelignore"
+      - "render.yaml"
+      - "tsconfig.json"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visual-lab-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      RENDER_CLI_VERSION: v2.24.0
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+
+      - name: Verify pinned upstream source integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="services/visual-lab/upstream/arxivisual"
+          test -d "$target"
+          test ! -d "$target/.git"
+          test -f "$target/README.md"
+          test -f "$target/backend/main.py"
+          test -f "$target/frontend/package.json"
+          test -s "services/visual-lab/UPSTREAM_FILES.sha256"
+
+          file_count="$(find "$target" -type f | wc -l | tr -d ' ')"
+          if (( file_count < 100 )); then
+            echo "Unexpectedly small upstream snapshot: $file_count files" >&2
+            exit 1
+          fi
+
+          oversized="$(find "$target" -type f -size +99M -print -quit)"
+          if [[ -n "$oversized" ]]; then
+            echo "A source file exceeds 100 MB: $oversized" >&2
+            exit 1
+          fi
+
+          (
+            cd "$target"
+            sha256sum --check ../../UPSTREAM_FILES.sha256
+          )
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Compile Python sources
+        run: |
+          python -m compileall -q services/visual-lab/upstream/arxivisual/backend
+          python -m compileall -q services/visual-lab/overlays/backend
+
+      - name: Enforce Visual Lab gateway security contract
+        run: node scripts/visual-lab/gateway-contract.mjs
+
+      - name: Validate Docker Compose model
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp services/visual-lab/.env.example services/visual-lab/.env
+          trap 'rm -f services/visual-lab/.env' EXIT
+          docker compose -f services/visual-lab/docker-compose.pilot.yml config --quiet
+
+      - name: Install pinned Render CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${RENDER_CLI_VERSION#v}"
+          curl -sSfL \
+            "https://github.com/render-oss/cli/releases/download/${RENDER_CLI_VERSION}/cli_${version}_linux_amd64.zip" \
+            -o /tmp/render-cli.zip
+          unzip -q /tmp/render-cli.zip -d /tmp/render-cli
+          sudo install -m 0755 "/tmp/render-cli/cli_${version}" /usr/local/bin/render
+          render --version
+
+      - name: Validate Render Blueprint
+        run: render blueprints validate render.yaml -o text
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Build KampüsGO web application
+        run: npm run build

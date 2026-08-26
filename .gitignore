@@ -8,3 +8,13 @@ dist
 npm-debug.log*
 test-results
 playwright-report
+
+# Visual Lab local pilot secrets and generated runtime output.
+services/visual-lab/.env
+services/visual-lab/runtime/
+services/visual-lab/.cache/
+services/visual-lab/upstream/arxivisual/backend/.env
+services/visual-lab/upstream/arxivisual/backend/media/
+services/visual-lab/upstream/arxivisual/backend/*.db
+services/visual-lab/upstream/arxivisual/backend/*.db-shm
+services/visual-lab/upstream/arxivisual/backend/*.db-wal
