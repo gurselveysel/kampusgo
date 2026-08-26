@@ -1,0 +1,10 @@
+__pycache__/
+.pytest_cache/
+.venv/
+media/
+*.db
+*.db-*
+*.mp4
+*.wav
+vendor/arxivisual-backend/media/
+vendor/arxivisual-backend/demo-videos/

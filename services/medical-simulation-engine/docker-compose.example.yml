@@ -1,0 +1,24 @@
+services:
+  medical-simulation-engine:
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - medical-simulation-videos:/data/videos
+    read_only: true
+    tmpfs:
+      - /tmp/teys-render:rw,nosuid,nodev,noexec,size=1g
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 4g
+    cpus: 2.0
+    restart: unless-stopped
+
+volumes:
+  medical-simulation-videos:
