@@ -1,0 +1,5 @@
+# The Python/Manim engine is deployed as a separate container service.
+# It must not be bundled into the KampüsGO Next.js/Vercel deployment.
+services/visual-lab/upstream/
+services/visual-lab/runtime/
+services/visual-lab/.cache/
