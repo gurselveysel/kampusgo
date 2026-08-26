@@ -20,6 +20,10 @@ const css = read("app/medikal-simulasyon/medical-simulation.module.css");
 const panel = read("app/medikal-simulasyon/ArxivisualScenePanel.tsx");
 const sceneLibrary = read("app/medikal-simulasyon/scene-library.ts");
 const studio = read("app/medikal-simulasyon/ai-studio/page.tsx");
+const sourceArchitecture = read("app/medikal-simulasyon/kaynak-mimarisi/page.tsx");
+const sourceRegistry = JSON.parse(
+  read("services/medical-simulation-engine/open-source-sources.json"),
+);
 const vercel = read("vercel.json");
 const serverGateway = read("src/server/medical-simulation.ts");
 const accessRoute = read("app/api/medical-simulation/access/route.ts");
@@ -53,6 +57,7 @@ assert.match(page, /taskRunner/);
 assert.match(page, /disabled=\{!canEvaluate \|\| Boolean\(debrief\)\}/);
 assert.match(page, /completedRequiredCount/);
 assert.match(page, /production/i);
+assert.match(page, /\/medikal-simulasyon\/kaynak-mimarisi/);
 
 assert.match(panel, /ARXIVISUAL DOĞRULAMA \+ GERÇEK MANIM RENDER/);
 assert.match(panel, /\/medikal-simulasyon\/ai-studio/);
@@ -85,8 +90,9 @@ for (let moduleId = 1; moduleId <= 8; moduleId += 1) {
   assert.match(data, new RegExp(`id: ${moduleId},`), `Module ${moduleId} is missing.`);
 }
 
-assert.match(data, /ucepCore: 70/);
-assert.match(data, /institutionalAutonomy: 30/);
+assert.match(data, /ucepCoverage: 100/);
+assert.match(data, /ucepApproximateShare: 72\.5/);
+assert.match(data, /institutionalApproximateShare: 27\.5/);
 assert.match(data, /Sanal Hasta/);
 assert.match(data, /Olguya Dayalı Öğrenme/);
 assert.match(data, /Klinik Akıl Yürütme/);
@@ -95,6 +101,10 @@ assert.match(data, /Tedavi ve Müdahale/);
 assert.match(data, /Acil Durum Simülasyonları/);
 assert.match(data, /Ekip Yönetimi & Klinik Liderlik/);
 assert.match(data, /Entegre Klinik Simülasyon/);
+
+assert.match(sourceArchitecture, /Her kaynak için ayrı rol, ayrı lisans kapısı/);
+assert.equal(sourceRegistry.sources.length, 40);
+assert.equal(new Set(sourceRegistry.sources.map((source) => source.repository)).size, 40);
 
 assert.match(css, /@keyframes breathing/);
 assert.match(css, /@keyframes ecgSweep/);
