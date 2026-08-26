@@ -1,23 +1,79 @@
-name: Görsel Akademi Demo QA
+name: KampüsGO Feature QA
 
 on:
   pull_request:
     paths:
       - "app/gorsel-akademi/**"
+      - "app/medikal-simulasyon/**"
+      - "services/medical-simulation-engine/**"
       - "app/layout.tsx"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/gorsel-akademi-demo-qa.yml"
+      - ".github/workflows/vendor-arxivisual-backend.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: gorsel-akademi-demo-${{ github.ref }}
+  group: kampusgo-feature-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  vendor-arxivisual-backend:
+    if: github.event_name == 'pull_request' && github.head_ref == 'feature/teys-medical-simulation-engine'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout TEYS feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/teys-medical-simulation-engine
+          fetch-depth: 0
+
+      - name: Clone approved arXivisual upstream
+        run: |
+          rm -rf /tmp/arxivisual
+          git clone --depth 1 https://github.com/rajshah6/arXivisual.git /tmp/arxivisual
+
+      - name: Vendor backend snapshot
+        run: |
+          target="services/medical-simulation-engine/vendor/arxivisual-backend"
+          rm -rf "$target"
+          mkdir -p "$target"
+          rsync -a /tmp/arxivisual/backend/ "$target"/ \
+            --exclude 'arxiviz.db*' \
+            --exclude 'media/' \
+            --exclude 'demo-videos/' \
+            --exclude '__pycache__/' \
+            --exclude '.pytest_cache/' \
+            --exclude '.venv/'
+          git -C /tmp/arxivisual rev-parse HEAD > services/medical-simulation-engine/UPSTREAM_COMMIT
+          cat > services/medical-simulation-engine/UPSTREAM_SOURCE.md <<'DOC'
+          # Upstream source record
+
+          - Source repository: `rajshah6/arXivisual`
+          - Imported component: `backend/`
+          - Import mode: source snapshot copied without runtime databases, caches, generated media or demo videos
+          - Purpose: KampüsGO / TEYS medical simulation rendering and AI pipeline adaptation
+          - Authorization basis: project owner confirmed open-source reuse permission in the project conversation on 26 August 2026
+
+          The exact upstream commit is recorded in `UPSTREAM_COMMIT`. Original headers and attribution inside imported files are retained.
+          DOC
+
+      - name: Commit vendored snapshot when changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add services/medical-simulation-engine
+          if git diff --cached --quiet; then
+            echo "Vendor snapshot already current."
+            exit 0
+          fi
+          git commit -m "vendor: import approved arXivisual backend snapshot"
+          git push origin HEAD:feature/teys-medical-simulation-engine
+
   next-build:
     runs-on: ubuntu-latest
     timeout-minutes: 12
