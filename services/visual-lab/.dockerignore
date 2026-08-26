@@ -1,0 +1,26 @@
+# Keep the pilot build context intentionally narrow.
+*
+
+!Dockerfile.pilot
+!upstream/
+!upstream/arxivisual/
+!upstream/arxivisual/backend/
+!upstream/arxivisual/backend/**
+!overlays/
+!overlays/backend/
+!overlays/backend/**
+
+# Runtime and generated artifacts are never copied into the image.
+upstream/arxivisual/backend/.env
+upstream/arxivisual/backend/media/
+upstream/arxivisual/backend/**/*.db
+upstream/arxivisual/backend/**/*.db-shm
+upstream/arxivisual/backend/**/*.db-wal
+upstream/arxivisual/backend/**/__pycache__/
+upstream/arxivisual/backend/**/*.pyc
+upstream/arxivisual/backend/**/*.mp4
+upstream/arxivisual/backend/**/*.wav
+upstream/arxivisual/backend/**/*.mp3
+upstream/arxivisual/backend/.pytest_cache/
+upstream/arxivisual/backend/.mypy_cache/
+upstream/arxivisual/backend/.ruff_cache/
