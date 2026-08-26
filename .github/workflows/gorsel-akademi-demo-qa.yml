@@ -1,6 +1,16 @@
 name: KampüsGO Feature QA
 
 on:
+  push:
+    branches:
+      - feature/teys-medical-simulation-live-pilot
+    paths:
+      - "app/medikal-simulasyon/**"
+      - "services/medical-simulation-engine/**"
+      - "scripts/medical-simulation-contract.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/gorsel-akademi-demo-qa.yml"
   pull_request:
     paths:
       - "app/gorsel-akademi/**"
