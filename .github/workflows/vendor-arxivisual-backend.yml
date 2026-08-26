@@ -68,3 +68,5 @@ jobs:
           fi
           git commit -m "vendor: import approved arXivisual backend snapshot"
           git push origin HEAD:feature/teys-medical-simulation-engine
+
+# This feature-level workflow remains available for manual recovery; the registered default-branch QA workflow performs the automatic import.
