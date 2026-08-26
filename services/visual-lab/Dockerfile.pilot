@@ -1,0 +1,73 @@
+# KampüsGO Visual Lab controlled-pilot image.
+# Build context must be services/visual-lab.
+
+FROM python:3.13-slim AS base
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    ffmpeg \
+    libcairo2-dev \
+    libpango1.0-dev \
+    pkg-config \
+    sox \
+    texlive-latex-base \
+    texlive-fonts-recommended \
+    texlive-latex-extra \
+    texlive-fonts-extra \
+    cm-super \
+    dvipng \
+    dvisvgm \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM base AS dependencies
+
+WORKDIR /build
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY upstream/arxivisual/backend/pyproject.toml upstream/arxivisual/backend/uv.lock ./
+
+RUN uv venv /opt/visual-lab-venv && \
+    uv sync \
+      --python /opt/visual-lab-venv/bin/python \
+      --no-dev \
+      --frozen \
+      --no-install-project
+
+FROM base AS runtime
+
+ARG APP_UID=10001
+ARG APP_GID=10001
+
+RUN groupadd --gid ${APP_GID} visual-lab && \
+    useradd --uid ${APP_UID} --gid ${APP_GID} --create-home visual-lab
+
+WORKDIR /app
+
+COPY --from=dependencies /opt/visual-lab-venv /opt/visual-lab-venv
+COPY --chown=visual-lab:visual-lab upstream/arxivisual/backend/ /app/
+
+# Apply KampüsGO-owned overlays after the exact upstream snapshot is copied.
+COPY --chown=visual-lab:visual-lab overlays/backend/main.py /app/main.py
+COPY --chown=visual-lab:visual-lab overlays/backend/db/connection.py /app/db/connection.py
+
+RUN rm -f /app/arxiviz.db /app/arxiviz.db-shm /app/arxiviz.db-wal && \
+    mkdir -p /data /app/media/videos /home/visual-lab/.cache && \
+    chown -R visual-lab:visual-lab /data /app/media /home/visual-lab/.cache
+
+ENV PATH="/opt/visual-lab-venv/bin:$PATH" \
+    PYTHONPATH="/app" \
+    PYTHONUNBUFFERED="1" \
+    ENVIRONMENT="development" \
+    STORAGE_MODE="local" \
+    RENDER_MODE="local" \
+    DATABASE_URL="sqlite+aiosqlite:////data/visual-lab.db" \
+    API_HOST="0.0.0.0" \
+    API_PORT="8000"
+
+USER visual-lab
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=45s --retries=3 \
+    CMD python -c "import httpx; response=httpx.get('http://127.0.0.1:8000/api/health', timeout=5); response.raise_for_status()"
+
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
