@@ -771,6 +771,32 @@
   animation: patientDecisionPulse 720ms ease-out;
 }
 
+.sourceArchitectureLink {
+  width: fit-content;
+  margin-top: 22px;
+  padding: 11px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(13, 141, 140, 0.2);
+  border-radius: 12px;
+  color: var(--teal) !important;
+  background: rgba(255, 255, 255, 0.68);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.025em;
+  box-shadow: 0 10px 30px rgba(11, 27, 47, 0.06);
+}
+
+.sourceArchitectureLink span {
+  font-size: 15px;
+}
+
+.sourceArchitectureLink:focus-visible {
+  outline: 3px solid rgba(37, 200, 198, 0.4);
+  outline-offset: 4px;
+}
+
 .patientScene::before {
   content: "";
   width: 145px;

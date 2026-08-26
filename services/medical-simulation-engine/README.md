@@ -100,10 +100,11 @@ Ayrıntılı kılavuz: [`END-TO-END-RUNBOOK.md`](END-TO-END-RUNBOOK.md)
 
 ## Program kompozisyonu
 
-- `%70`: UÇEP referanslı çekirdek alan
-- `%30`: kurumsal özerklik ve yerel program tasarımı
+- UÇEP kapsamı: programa `%100` yansıtılır
+- Toplam program içindeki yaklaşık UÇEP payı: `%70–75`
+- Kurumsal program çıktıları, yerel olgular ve seçmeli derinleşme: `%25–30`
 
-Bu oran ürün tasarım sınırıdır; resmî UÇEP eşlemesi veya akreditasyon beyanı değildir. Kaynak ve uzman onay gereklilikleri `CLINICAL-SOURCE-REGISTER.md` içinde tutulur.
+Bu oran tek tek senaryolar için resmî UÇEP eşlemesi veya akreditasyon beyanı değildir. Kaynak ve uzman onay gereklilikleri `CLINICAL-SOURCE-REGISTER.md` içinde tutulur. GitHub kaynaklarının kullanım ve lisans kapıları `OPEN-SOURCE-INTEGRATION-MANIFEST.md` ile `open-source-sources.json` içinde izlenir.
 
 ## Production durumu
 

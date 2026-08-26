@@ -10,7 +10,7 @@ Bu kayıt, kontrollü pilot senaryonun klinik ve eğitimsel dayanaklarını izle
 - Pilot kullanım amacı: temel hekimlik uygulamaları, klinik durumlar, profesyonellik, iletişim, hasta güvenliği ve bütünleşik eğitim mimarisi için referans çerçeve
 - Durum: `reference_only_pending_formal_mapping`
 
-Arayüzde gösterilen `%70 UÇEP referanslı çekirdek / %30 kurumsal özerklik` oranı, ürün tasarım sınırıdır. UÇEP'in resmî bir oran şartı veya akreditasyon sonucu olarak sunulmaz. Her program çıktısı, klinik durum, temel hekimlik uygulaması ve değerlendirme kanıtı ayrı eşleme tablosunda akademik kurul tarafından doğrulanmalıdır.
+UÇEP 2020'ye göre UÇEP kapsamının tamamı programa yansıtılmalı; UÇEP içeriği toplam programın yaklaşık `%70–75`'ini, kurumsal içerik ise `%25–30`'unu oluşturabilmelidir. Bu oran tek tek senaryolar için resmî uyum veya akreditasyon sonucu değildir. Her program çıktısı, klinik durum, temel hekimlik uygulaması ve değerlendirme kanıtı ayrı eşleme tablosunda akademik kurul tarafından doğrulanmalıdır.
 
 ## 2. Akut Koroner Sendrom
 

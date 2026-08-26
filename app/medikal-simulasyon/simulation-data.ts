@@ -1291,10 +1291,11 @@ export const medicalSimulationModules: SimulationModule[] = [
 ];
 
 export const curriculumComposition = {
-  ucepCore: 70,
-  institutionalAutonomy: 30,
+  ucepCoverage: 100,
+  ucepApproximateShare: 72.5,
+  institutionalApproximateShare: 27.5,
   note:
-    "Pilot program mimarisi: %70 UÇEP referanslı çekirdek yeterlilik alanı + %30 kurumun program çıktıları, yerel olguları ve seçmeli derinleşme alanları. Resmî UÇEP eşlemesi değildir; akademik kurul doğrulaması gerekir.",
+    "UÇEP kapsamının tamamı programa yansıtılır; toplam programın yaklaşık %70–75'i UÇEP, %25–30'u kurumun program çıktıları, yerel olguları ve seçmeli derinleşme alanları olabilir. Bu pilotun resmî UÇEP eşlemesi henüz doğrulanmamıştır; akademik kurul onayı gerekir.",
 };
 
 export const competencyLoop = [

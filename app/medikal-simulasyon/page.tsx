@@ -558,18 +558,21 @@ export default function MedicalSimulationPage() {
             ön koşullu seviyeyi, dinamik vital yanıtları ve ayrıntılı debriefing ile tek bir
             yeterlilik yolunda birleştirir.
           </p>
+          <a className={styles.sourceArchitectureLink} href="/medikal-simulasyon/kaynak-mimarisi">
+            40 GitHub kaynağının kullanım ve lisans haritasını incele <span>→</span>
+          </a>
         </div>
         <div className={styles.curriculumCard}>
           <div className={styles.curriculumHeader}>
             <span>PROGRAM MİMARİSİ</span>
             <strong>Yatay + dikey entegrasyon</strong>
           </div>
-          <div className={styles.compositionBar} aria-label="Yüzde 70 UÇEP çekirdek, yüzde 30 kurumsal özerklik">
-            <span style={{ width: `${curriculumComposition.ucepCore}%` }}>
-              %70 UÇEP çekirdek
+          <div className={styles.compositionBar} aria-label="UÇEP kapsamı yüzde 100; toplam programın yaklaşık yüzde 70 ila 75'i UÇEP ve yüzde 25 ila 30'u kurumsal içerik">
+            <span style={{ width: `${curriculumComposition.ucepApproximateShare}%` }}>
+              %70–75 UÇEP
             </span>
-            <span style={{ width: `${curriculumComposition.institutionalAutonomy}%` }}>
-              %30 özerklik
+            <span style={{ width: `${curriculumComposition.institutionalApproximateShare}%` }}>
+              %25–30 kurum
             </span>
           </div>
           <p>{curriculumComposition.note}</p>
