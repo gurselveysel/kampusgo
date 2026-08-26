@@ -18,6 +18,7 @@ const page = read("app/medikal-simulasyon/page.tsx");
 const data = read("app/medikal-simulasyon/simulation-data.ts");
 const css = read("app/medikal-simulasyon/medical-simulation.module.css");
 const panel = read("app/medikal-simulasyon/ArxivisualScenePanel.tsx");
+const sceneLibrary = read("app/medikal-simulasyon/scene-library.ts");
 const studio = read("app/medikal-simulasyon/ai-studio/page.tsx");
 const vercel = read("vercel.json");
 const serverGateway = read("src/server/medical-simulation.ts");
@@ -36,6 +37,9 @@ const schema = JSON.parse(
 );
 const proofManifest = JSON.parse(read("assets/medical-simulation/manifest.json"));
 const smokePreset = JSON.parse(read("services/medical-simulation-engine/presets/vf-rosc.json"));
+const moduleLibraryPreset = JSON.parse(
+  read("services/medical-simulation-engine/presets/module-library.json"),
+);
 
 assert.ok(exists("app/medikal-simulasyon/layout.tsx"));
 assert.match(page, /localStorage/);
@@ -45,11 +49,17 @@ assert.match(page, /PatientFigure/);
 assert.match(page, /VitalMonitor/);
 assert.match(page, /TeamPanel/);
 assert.match(page, /ArxivisualScenePanel/);
+assert.match(page, /taskRunner/);
+assert.match(page, /completedRequiredCount/);
 assert.match(page, /production/i);
 
-assert.match(panel, /ARXIVISUAL · GERÇEK AI \+ MANIM HATTI/);
+assert.match(panel, /ARXIVISUAL DOĞRULAMA \+ GERÇEK MANIM RENDER/);
 assert.match(panel, /\/medikal-simulasyon\/ai-studio/);
-assert.match(panel, /med_seed_vf_rosc\.mp4/);
+assert.match(panel, /medicalSceneLibrary/);
+assert.match(panel, /autoPlay/);
+assert.match(sceneLibrary, /module-01-virtual-patient\.mp4/);
+assert.match(sceneLibrary, /module-08-integrated\.mp4/);
+assert.equal((sceneLibrary.match(/moduleId: [1-8],/g) ?? []).length, 8);
 assert.match(studio, /OLAY SÖZLEŞMESİ → ARXIVISUAL AI → MANIM → VIDEO → DEBRIEF/);
 assert.match(studio, /expert_approval_reference: ""/);
 assert.match(studio, /useState\(false\)/);
@@ -122,6 +132,11 @@ assert.equal(proofManifest.expert_approval, "DOĞRULANMADI");
 assert.equal(proofManifest.production_allowed, false);
 assert.match(smokePreset.expert_approval_reference, /^DOĞRULANMADI-/);
 assert.equal(smokePreset.request_ai_generation, false);
+assert.equal(moduleLibraryPreset.length, 8);
+assert.deepEqual(moduleLibraryPreset.map((entry) => entry.request.module_id), [1, 2, 3, 4, 5, 6, 7, 8]);
+assert.ok(moduleLibraryPreset.every((entry) => entry.request.request_ai_generation === false));
+assert.ok(moduleLibraryPreset.every((entry) => entry.request.synthetic_patient_confirmed === true));
+assert.ok(moduleLibraryPreset.every((entry) => entry.request.expert_approval_reference.startsWith("DOĞRULANMADI-")));
 
 for (const requiredPath of [
   "services/medical-simulation-engine/Dockerfile",

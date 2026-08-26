@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { medicalSceneForModule, medicalSceneLibrary } from "../scene-library";
+import libraryStyles from "./library.module.css";
 import styles from "./studio.module.css";
 
 type SessionState = "checking" | "disabled" | "locked" | "authenticated";
@@ -168,6 +170,15 @@ export default function MedicalAiStudioPage() {
     ["05", "Video + hash + debrief", result ? "tamamlandı" : "bekliyor"],
   ], [job, requestAi, result]);
 
+  const libraryScene = medicalSceneForModule(moduleId);
+  const libraryStoryboard = [
+    { order: 1, description: `${libraryScene.title} için sentetik başlangıç durumu`, duration_seconds: 3 },
+    { order: 2, description: libraryScene.focus, duration_seconds: 3 },
+    { order: 3, description: "Karar sonrası vital ve durum geçişi", duration_seconds: 3 },
+    { order: 4, description: "Kritik sinyal ve yeniden değerlendirme", duration_seconds: 2 },
+    { order: 5, description: "Debriefing bağlantısı", duration_seconds: 2 },
+  ];
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -179,7 +190,7 @@ export default function MedicalAiStudioPage() {
         <div><span className={styles.kicker}>OLAY SÖZLEŞMESİ → ARXIVISUAL AI → MANIM → VIDEO → DEBRIEF</span><h1>Klinik kararın sonucunu gerçek Manim sahnesine dönüştür.</h1><p>TEYS, klinik kural üretmez. Onay referansı ve kaynakları girilmiş sentetik durum geçişini arXivisual’ın AI kod üretimi, doğrulama kapıları ve izole render motorundan geçirir.</p></div>
         <div className={styles.engineBadge}><i /><span>Motor</span><strong>{job?.engine_mode || "bağlantı bekleniyor"}</strong></div>
       </section>
-      {session === "disabled" ? <section className={styles.notice}><strong>Motor geçidi henüz etkin değil.</strong><p>Container dağıtımı, backend URL’si ve birbirinden farklı iki server-side secret tanımlandığında bu ekran gerçek üretim işlerini başlatır. Aşağıdaki tohum video, arXivisual’ın gerçek Manim render yoluyla üretilmiştir.</p></section> : null}
+      {session === "disabled" ? <section className={styles.notice}><strong>Canlı üretim motoru kapalı; sekiz hazır Manim sahnesi kullanılabilir.</strong><p>Container dağıtımı, backend URL’si ve birbirinden farklı iki server-side secret tanımlandığında bu ekran yeni üretim işlerini başlatır. Aşağıdaki sekiz modül sahnesi arXivisual doğrulama ve gerçek Manim render zinciriyle önceden üretilmiştir.</p></section> : null}
       {session === "locked" ? <section className={styles.lockPanel}><div><span>YETKİ KAPISI</span><h2>Pilot çalışma alanını aç</h2><p>Servis anahtarı tarayıcıya verilmez. Pilot anahtarı doğrulanınca sekiz saatlik HttpOnly oturum açılır.</p></div><form onSubmit={signIn}><label htmlFor="pilot-token">Pilot erişim anahtarı</label><input id="pilot-token" type="password" value={token} onChange={(e) => setToken(e.target.value)} minLength={32} required /><button>Oturumu aç</button></form></section> : null}
       {session === "authenticated" ? <section className={styles.workspace}>
         <form className={styles.form} onSubmit={createJob}>
@@ -194,13 +205,7 @@ export default function MedicalAiStudioPage() {
         </form>
         <div className={styles.pipeline}><div className={styles.sectionTitle}><span>02 · PIPELINE</span><h2>Canlı üretim zinciri</h2></div><div className={styles.progress}><span style={{ width: `${job?.progress ?? 0}%` }} /></div><div className={styles.progressMeta}><strong>{job ? statusLabel(job.status) : "İş bekleniyor"}</strong><b>{job?.progress ?? 0}%</b></div><div className={styles.steps}>{steps.map(([number, label, state]) => <article key={number} data-state={state}><b>{number}</b><div><strong>{label}</strong><small>{state}</small></div></article>)}</div>{message ? <div className={styles.error}>{message}</div> : null}</div>
       </section> : null}
-      <section className={styles.output}><div className={styles.outputHead}><div><span>03 · ÇIKTI</span><h2>arXivisual klinik sahne</h2></div>{result ? <div className={styles.hash}><small>SHA-256</small><code>{result.sha256.slice(0, 20)}…</code></div> : null}</div><div className={styles.videoShell}><video controls preload="metadata" src={result?.video_url || "/medical-simulation/manim/med_seed_vf_rosc.mp4"}>Tarayıcınız video oynatmayı desteklemiyor.</video><div className={styles.videoMeta}><span>{result ? "Canlı iş sonucu" : "arXivisual tohum render"}</span><strong>{result?.engine_mode || "arxivisual-template · Manim"}</strong></div></div><div className={styles.storyboard}>{(result?.storyboard || [
-        { order: 1, description: "Sentetik hasta ve VF karar noktası", duration_seconds: 5 },
-        { order: 2, description: "Güvenli defibrilasyon eylemi", duration_seconds: 6 },
-        { order: 3, description: "VF → ROSC vital geçişi", duration_seconds: 8 },
-        { order: 4, description: "Kritik sinyal ve yeniden değerlendirme", duration_seconds: 6 },
-        { order: 5, description: "Yansıtıcı debriefing sorusu", duration_seconds: 5 },
-      ]).map((beat) => <article key={beat.order}><b>{String(beat.order).padStart(2, "0")}</b><div><strong>{beat.description}</strong><small>{beat.duration_seconds} sn</small></div></article>)}</div></section>
+      <section className={styles.output}><div className={styles.outputHead}><div><span>03 · ÇIKTI</span><h2>Sekiz sahneli arXivisual kitaplığı</h2></div>{result ? <div className={styles.hash}><small>SHA-256</small><code>{result.sha256.slice(0, 20)}…</code></div> : <div className={styles.hash}><small>HAZIR SAHNE</small><code>{String(moduleId).padStart(2, "0")}/08</code></div>}</div><div className={libraryStyles.libraryTabs} aria-label="Hazır Manim sahneleri">{medicalSceneLibrary.map((scene) => <button type="button" key={scene.moduleId} aria-pressed={moduleId === scene.moduleId} onClick={() => { setModuleId(scene.moduleId); setResult(null); }}><b>{scene.code}</b><span>{scene.title}</span></button>)}</div><div className={styles.videoShell}><video key={result?.video_url || libraryScene.video} controls autoPlay muted playsInline preload="metadata" src={result?.video_url || libraryScene.video}>Tarayıcınız video oynatmayı desteklemiyor.</video><div className={styles.videoMeta}><span>{result ? "Canlı iş sonucu" : `${libraryScene.code} · ${libraryScene.title}`}</span><strong>{result?.engine_mode || "arxivisual-template · Manim"}</strong></div></div><div className={styles.storyboard}>{(result?.storyboard || libraryStoryboard).map((beat) => <article key={beat.order}><b>{String(beat.order).padStart(2, "0")}</b><div><strong>{beat.description}</strong><small>{beat.duration_seconds} sn</small></div></article>)}</div></section>
       <footer className={styles.footer}><span>TEYS / MAMS · Gürsel Online Eğitim ve Bilgi Teknolojileri A.Ş.</span><strong>Production: NO-GO</strong></footer>
     </main>
   );

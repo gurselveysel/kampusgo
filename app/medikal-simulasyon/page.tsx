@@ -341,6 +341,17 @@ export default function MedicalSimulationPage() {
     return Array.from(map.entries());
   }, [phase, selectedActionIds, selectedModule]);
 
+  const requiredActions = useMemo(
+    () => selectedModule.actions.filter((action) => action.required),
+    [selectedModule],
+  );
+  const completedRequiredCount = requiredActions.filter((action) =>
+    selectedActionIds.includes(action.id),
+  ).length;
+  const nextRequiredAction = requiredActions.find(
+    (action) => !selectedActionIds.includes(action.id) && visibleAction(action, selectedActionIds, phase),
+  );
+
   const runningScore = useMemo(() => {
     const actionScore = selectedModule.actions
       .filter((action) => selectedActionIds.includes(action.id))
@@ -674,8 +685,16 @@ export default function MedicalSimulationPage() {
               </div>
               <i>Sentetik</i>
             </div>
-            <PatientFigure vitals={vitals} phase={phase} statement={selectedModule.patientStatement} />
-            <VitalMonitor vitals={vitals} />
+            <PatientFigure
+              key={`${selectedModuleId}-${selectedActionIds[selectedActionIds.length - 1] ?? "initial"}`}
+              vitals={vitals}
+              phase={phase}
+              statement={selectedModule.patientStatement}
+            />
+            <VitalMonitor
+              key={`${selectedModuleId}-${selectedActionIds[selectedActionIds.length - 1] ?? "initial"}-monitor`}
+              vitals={vitals}
+            />
             {selectedModuleId === 7 ? <TeamPanel selectedActionIds={selectedActionIds} /> : null}
           </div>
 
@@ -692,7 +711,50 @@ export default function MedicalSimulationPage() {
               <article><small>Kazanılan beceri</small><strong>{selectedActionIds.length}</strong></article>
             </div>
 
-            <ArxivisualScenePanel context={arxivisualScene} />
+            <ArxivisualScenePanel context={arxivisualScene} module={selectedModule} />
+
+            <section className={styles.taskRunner} aria-labelledby="task-runner-title">
+              <div className={styles.taskRunnerHeader}>
+                <div>
+                  <span>ÇALIŞAN GÖREV AKIŞI</span>
+                  <strong id="task-runner-title">
+                    {nextRequiredAction ? `Sıradaki: ${nextRequiredAction.shortLabel}` : "Zorunlu görevler tamamlandı"}
+                  </strong>
+                </div>
+                <b>{completedRequiredCount}/{requiredActions.length}</b>
+              </div>
+              <div className={styles.taskProgress}>
+                <i style={{ width: `${(completedRequiredCount / requiredActions.length) * 100}%` }} />
+              </div>
+              <div className={styles.taskList}>
+                {requiredActions.map((action) => {
+                  const completed = selectedActionIds.includes(action.id);
+                  const available = visibleAction(action, selectedActionIds, phase);
+                  const unmet = action.requires?.some((required) => !selectedActionIds.includes(required)) ?? false;
+                  const next = nextRequiredAction?.id === action.id;
+                  return (
+                    <button
+                      type="button"
+                      key={action.id}
+                      className={`${completed ? styles.taskCompleted : ""} ${next ? styles.taskNext : ""}`}
+                      disabled={completed || !available || unmet || Boolean(debrief)}
+                      onClick={() => performAction(action)}
+                    >
+                      <i>{completed ? "✓" : next ? "→" : "·"}</i>
+                      <span>
+                        <strong>{action.shortLabel}</strong>
+                        <small>{completed ? "Tamamlandı" : available && !unmet ? `${action.timeCost} dk · Uygula` : "Önceki faz bekleniyor"}</small>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p aria-live="polite">
+                {selectedActionIds.length
+                  ? `${selectedActionIds.length} karar işlendi. Hasta, monitör ve Manim sahnesi son karara göre güncellendi.`
+                  : "Bir göreve dokun; karar sonucu hasta, vital monitör ve Manim panelinde birlikte görünür."}
+              </p>
+            </section>
 
             <div className={styles.actionGroups}>
               {actionGroups.map(([group, actions]) => (

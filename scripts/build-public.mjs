@@ -41,4 +41,9 @@ for (const [source, destination] of files) {
   }
 }
 
+const sceneLibrarySource = "assets/medical-simulation/scene-library";
+if (existsSync(sceneLibrarySource)) {
+  cpSync(sceneLibrarySource, `${output}/medical-simulation/manim`, { recursive: true });
+}
+
 console.log("Next.js public/ pilot paketi hazırlandı.");
