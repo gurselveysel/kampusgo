@@ -1,0 +1,82 @@
+# KampüsGO Visual Lab controlled-pilot Blueprint.
+# Importing this file creates billable Render resources; review the selected
+# instance and disk before confirming. Automatic deploys and previews are off.
+
+previews:
+  generation: off
+
+services:
+  - type: web
+    name: kampusgo-visual-lab-pilot
+    runtime: docker
+    repo: https://github.com/gurselveysel/kampusgo
+    branch: feature/arxivisual-upstream-integration
+    region: frankfurt
+    plan: standard
+    autoDeployTrigger: off
+    previews:
+      generation: manual
+      plan: standard
+      numInstances: 1
+    dockerfilePath: ./services/visual-lab/Dockerfile.pilot
+    dockerContext: ./services/visual-lab
+    healthCheckPath: /api/health
+    maxShutdownDelaySeconds: 300
+    numInstances: 1
+    disk:
+      name: visual-lab-data
+      mountPath: /data
+      sizeGB: 10
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: VISUAL_LAB_API_KEY
+        sync: false
+      - key: VISUAL_LAB_ALLOW_UNAUTHENTICATED
+        value: "false"
+      - key: VISUAL_LAB_RAW_RENDER_ENABLED
+        value: "false"
+      - key: VISUAL_LAB_DOCS_ENABLED
+        value: "false"
+      - key: VISUAL_LAB_MAX_REQUEST_BYTES
+        value: "1048576"
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://kampusgo.uzemgo.com
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:////data/visual-lab.db
+      - key: STORAGE_MODE
+        value: local
+      - key: MEDIA_DIR
+        value: /data/media/videos
+      - key: VOICEOVER_CACHE_DIR
+        value: /data/cache/voiceovers
+      - key: RENDER_MODE
+        value: local
+      - key: USE_TEMPORAL
+        value: "0"
+      - key: PIPELINE_CONCURRENCY
+        value: "1"
+      - key: RENDER_CONCURRENCY
+        value: "1"
+      - key: AZURE_OPENAI_ENDPOINT
+        sync: false
+      - key: AZURE_OPENAI_API_KEY
+        sync: false
+      - key: AZURE_OPENAI_DEPLOYMENT
+        sync: false
+      - key: AZURE_OPENAI_REASONING_EFFORT
+        value: low
+      - key: VOICEOVER_TTS_SERVICE
+        value: gtts
+      - key: VOICEOVER_VOICE_NAME
+        value: nova
+      - key: LANGFUSE_PUBLIC_KEY
+        sync: false
+      - key: LANGFUSE_SECRET_KEY
+        sync: false
+      - key: LANGFUSE_HOST
+        value: https://cloud.langfuse.com
+      - key: LANGFUSE_TRACING_ENVIRONMENT
+        value: pilot
