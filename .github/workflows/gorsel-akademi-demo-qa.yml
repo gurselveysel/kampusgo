@@ -3,28 +3,40 @@ name: KampüsGO Feature QA
 on:
   push:
     branches:
-      - feature/teys-medical-simulation-live-pilot
+      - "feature/teys-medical-simulation-*"
     paths:
+      - "app/api/medical-simulation/**"
       - "app/medikal-simulasyon/**"
+      - "assets/medical-simulation/**"
       - "services/medical-simulation-engine/**"
+      - "src/server/medical-simulation.ts"
+      - "scripts/build-public.mjs"
       - "scripts/medical-simulation-contract.mjs"
+      - "scripts/materialize-medical-simulation-runtime.py"
+      - "scripts/.medical-runtime-bundle/**"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/gorsel-akademi-demo-qa.yml"
-      - "src/server/medical-simulation.ts"
+      - ".vercelignore"
       - "render.yaml"
   pull_request:
     paths:
+      - "app/api/medical-simulation/**"
       - "app/gorsel-akademi/**"
       - "app/medikal-simulasyon/**"
+      - "assets/medical-simulation/**"
       - "services/medical-simulation-engine/**"
+      - "src/server/medical-simulation.ts"
+      - "scripts/build-public.mjs"
       - "scripts/medical-simulation-contract.mjs"
+      - "scripts/materialize-medical-simulation-runtime.py"
+      - "scripts/.medical-runtime-bundle/**"
       - "app/layout.tsx"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/gorsel-akademi-demo-qa.yml"
       - ".github/workflows/vendor-arxivisual-backend.yml"
-      - "src/server/medical-simulation.ts"
+      - ".vercelignore"
       - "render.yaml"
   workflow_dispatch:
 
