@@ -15,7 +15,11 @@ WORKDIR /build
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 COPY vendor/arxivisual-backend/pyproject.toml vendor/arxivisual-backend/uv.lock ./
 ENV UV_PROJECT_ENVIRONMENT=/opt/teys-medical-venv
-RUN uv sync \
+# The approved upstream pyproject contains runtime dependencies that were not
+# represented in the imported lock snapshot (notably aiosqlite). Re-resolve the
+# dependency graph inside the isolated build, then install from that exact lock.
+RUN uv lock && \
+    uv sync \
       --python /usr/local/bin/python \
       --no-dev \
       --frozen \
