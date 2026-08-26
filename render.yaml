@@ -14,10 +14,6 @@ services:
     region: frankfurt
     plan: standard
     autoDeployTrigger: off
-    previews:
-      generation: manual
-      plan: standard
-      numInstances: 1
     dockerfilePath: ./services/visual-lab/Dockerfile.pilot
     dockerContext: ./services/visual-lab
     healthCheckPath: /api/health
@@ -26,7 +22,7 @@ services:
     disk:
       name: visual-lab-data
       mountPath: /data
-      sizeGB: 10
+      sizeGB: 1
     envVars:
       - key: ENVIRONMENT
         value: production
@@ -72,11 +68,3 @@ services:
         value: gtts
       - key: VOICEOVER_VOICE_NAME
         value: nova
-      - key: LANGFUSE_PUBLIC_KEY
-        sync: false
-      - key: LANGFUSE_SECRET_KEY
-        sync: false
-      - key: LANGFUSE_HOST
-        value: https://cloud.langfuse.com
-      - key: LANGFUSE_TRACING_ENVIRONMENT
-        value: pilot
