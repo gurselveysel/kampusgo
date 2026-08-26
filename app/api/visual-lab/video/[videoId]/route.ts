@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import {
+  allowedVisualLabMediaUrl,
   hasPilotAccess,
   normalizeVideoId,
   VisualLabConfigurationError,
@@ -14,6 +15,23 @@ type RouteContext = {
   params: Promise<{ videoId: string }>;
 };
 
+async function fetchAllowedCloudMedia(url: URL, headers: Headers): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30_000);
+
+  try {
+    // This second request intentionally contains no Visual Lab service key.
+    return await fetch(url, {
+      cache: "no-store",
+      headers,
+      redirect: "error",
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function GET(request: NextRequest, context: RouteContext) {
   if (!hasPilotAccess(request)) {
     return NextResponse.json({ detail: "Pilot access is required." }, { status: 401 });
@@ -26,17 +44,28 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 
   try {
-    const headers = new Headers({
+    const mediaHeaders = new Headers({
       accept: "video/mp4,application/octet-stream;q=0.9,*/*;q=0.8",
     });
     const range = request.headers.get("range");
-    if (range) headers.set("range", range);
+    if (range) mediaHeaders.set("range", range);
 
-    const upstream = await visualLabFetchResponse(
+    let upstream = await visualLabFetchResponse(
       `/api/video/${encodeURIComponent(videoId)}`,
-      { headers, redirect: "follow" },
+      { headers: mediaHeaders, redirect: "manual" },
       30_000,
     );
+
+    if (upstream.status >= 300 && upstream.status < 400) {
+      const cloudUrl = allowedVisualLabMediaUrl(upstream.headers.get("location"));
+      if (!cloudUrl) {
+        return NextResponse.json(
+          { detail: "Cloud media host is not allow-listed." },
+          { status: 502 },
+        );
+      }
+      upstream = await fetchAllowedCloudMedia(cloudUrl, mediaHeaders);
+    }
 
     if (!upstream.ok) {
       return NextResponse.json(
