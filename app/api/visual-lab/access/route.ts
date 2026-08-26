@@ -6,7 +6,7 @@ import {
   validatePilotAccessToken,
   visualLabAccessCookieName,
   visualLabGatewayEnabled,
-} from "@/src/server/visual-lab";
+} from "../../../../src/server/visual-lab";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
