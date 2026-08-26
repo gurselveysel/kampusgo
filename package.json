@@ -10,22 +10,27 @@
     "start": "next start",
     "build": "node scripts/build-public.mjs && next build",
     "build:static": "node scripts/build-static.mjs",
-    "test": "node scripts/medical-open-source-contract.mjs && node scripts/clinical-simulation-engine.test.mjs && node scripts/reference-data-contract.mjs && node scripts/institutional-integration-contract.mjs && node scripts/qualification-suggestion-contract.mjs && node scripts/smart-alignment-contract.mjs && node scripts/directive-pilot-contract.mjs && node scripts/directive-access-hardening-contract.mjs && node scripts/supabase-anonymous-read-contract.mjs && node scripts/test.mjs && node scripts/validate.mjs",
-    "test:medical-v2": "node scripts/clinical-simulation-engine.test.mjs && node scripts/medical-simulation-contract.mjs",
-    "test:browser": "node scripts/browser-qa.cjs"
+    "test": "node scripts/medical-open-source-contract.mjs && node scripts/medical-v2-xstate-acceptance.test.mjs && node scripts/medical-v2-ui-contract.test.mjs && node scripts/clinical-simulation-engine.test.mjs && node scripts/reference-data-contract.mjs && node scripts/institutional-integration-contract.mjs && node scripts/qualification-suggestion-contract.mjs && node scripts/smart-alignment-contract.mjs && node scripts/directive-pilot-contract.mjs && node scripts/directive-access-hardening-contract.mjs && node scripts/supabase-anonymous-read-contract.mjs && node scripts/test.mjs && node scripts/validate.mjs",
+    "test:medical-v2": "node scripts/clinical-simulation-engine.test.mjs && node scripts/medical-simulation-contract.mjs && node scripts/medical-v2-xstate-acceptance.test.mjs && node scripts/medical-v2-ui-contract.test.mjs",
+    "test:browser": "node scripts/browser-qa.cjs",
+    "test:medical-v2:browser": "node scripts/medical-v2-browser-qa.cjs"
   },
   "engines": {
     "node": ">=22"
   },
   "dependencies": {
+    "@react-three/fiber": "9.7.0",
     "next": "16.3.1",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "three": "0.185.1",
+    "xstate": "5.32.6"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
+    "@types/three": "0.185.4",
     "typescript": "^5.9.0"
   }
 }
