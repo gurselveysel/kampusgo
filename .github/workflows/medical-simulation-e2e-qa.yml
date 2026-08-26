@@ -1,0 +1,66 @@
+name: TEYS Medical Simulation E2E QA
+
+on:
+  push:
+    branches:
+      - feature/teys-medical-simulation-live-pilot
+    paths:
+      - "app/api/medical-simulation/**"
+      - "app/medikal-simulasyon/**"
+      - "src/server/medical-simulation.ts"
+      - "services/medical-simulation-engine/**"
+      - ".env.example"
+      - ".github/workflows/medical-simulation-e2e-qa.yml"
+  pull_request:
+    paths:
+      - "app/api/medical-simulation/**"
+      - "app/medikal-simulasyon/**"
+      - "src/server/medical-simulation.ts"
+      - "services/medical-simulation-engine/**"
+      - ".env.example"
+      - ".github/workflows/medical-simulation-e2e-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: teys-medical-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Compile TEYS runtime
+        run: python -m compileall -q services/medical-simulation-engine/runtime
+      - name: Validate controlled-pilot defaults
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '^MEDICAL_SIMULATION_GATEWAY_ENABLED=false$' .env.example
+          grep -q '^MEDICAL_AI_MODE=auto$' services/medical-simulation-engine/.env.example
+          grep -q 'rawCodeEndpoint.*False' services/medical-simulation-engine/runtime/medical_engine/app.py
+          grep -q 'FORBIDDEN_IMPORT_ROOTS' services/medical-simulation-engine/runtime/medical_engine/pipeline.py
+          grep -q 'rights_confirmed' services/medical-simulation-engine/presets/vf-rosc.json
+          grep -q 'synthetic_patient_confirmed' services/medical-simulation-engine/presets/vf-rosc.json
+      - name: Validate Compose model
+        shell: bash
+        run: |
+          cp services/medical-simulation-engine/.env.example services/medical-simulation-engine/.env
+          trap 'rm -f services/medical-simulation-engine/.env' EXIT
+          docker compose -f services/medical-simulation-engine/docker-compose.yml config --quiet
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/medical-simulation-contract.mjs
+      - run: npm run build
