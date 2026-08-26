@@ -6,6 +6,8 @@ on:
       - "app/gorsel-akademi/**"
       - "app/medikal-simulasyon/**"
       - "services/medical-simulation-engine/**"
+      - "scripts/materialize-medical-simulation-runtime.py"
+      - "scripts/.medical-runtime-bundle/**"
       - "app/layout.tsx"
       - "package.json"
       - "package-lock.json"
@@ -21,23 +23,59 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  materialize-medical-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout current feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Materialize staged TEYS runtime bundle
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
+        run: |
+          if [ -f scripts/materialize-medical-simulation-runtime.py ]; then
+            python3 scripts/materialize-medical-simulation-runtime.py
+          else
+            echo "Medical runtime is already materialized."
+          fi
+
+      - name: Commit materialized runtime when changed
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No runtime materialization changes to commit."
+            exit 0
+          fi
+          git commit -m "feat: materialize TEYS AI and Manim runtime"
+          git push origin "HEAD:${HEAD_BRANCH}"
+
   vendor-arxivisual-backend:
-    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
+    needs: materialize-medical-runtime
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout TEYS feature branch
+      - name: Checkout current feature branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Clone approved arXivisual upstream
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
         run: |
           rm -rf /tmp/arxivisual
           git clone --depth 1 https://github.com/rajshah6/arXivisual.git /tmp/arxivisual
 
-      - name: Vendor backend snapshot
+      - name: Refresh approved backend snapshot
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
         run: |
           target="services/medical-simulation-engine/vendor/arxivisual-backend"
           rm -rf "$target"
@@ -62,7 +100,8 @@ jobs:
           The exact upstream commit is recorded in `UPSTREAM_COMMIT`. Original headers and attribution inside imported files are retained.
           DOC
 
-      - name: Commit vendored snapshot when changed
+      - name: Commit refreshed snapshot when changed
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
         env:
           HEAD_BRANCH: ${{ github.head_ref }}
         run: |
@@ -73,17 +112,65 @@ jobs:
             echo "Vendor snapshot already current."
             exit 0
           fi
-          git commit -m "vendor: import approved arXivisual backend snapshot"
+          git commit -m "vendor: refresh approved arXivisual backend snapshot"
           git push origin "HEAD:${HEAD_BRANCH}"
 
-  next-build:
+  medical-engine-tests:
+    needs: vendor-arxivisual-backend
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout current TEYS branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: services/medical-simulation-engine/pyproject.toml
+      - name: Install preview/test dependencies
+        working-directory: services/medical-simulation-engine
+        run: python -m pip install -e ".[test]"
+      - name: Run medical engine contract tests
+        working-directory: services/medical-simulation-engine
+        run: pytest
+
+  next-build:
+    needs: vendor-arxivisual-backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run build
+
+  medical-engine-container:
+    needs:
+      - medical-engine-tests
+      - next-build
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout current TEYS branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: docker/setup-buildx-action@v3
+      - name: Build isolated Manim/AI service image
+        uses: docker/build-push-action@v6
+        with:
+          context: services/medical-simulation-engine
+          push: false
+          tags: teys-medical-simulation-engine:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
