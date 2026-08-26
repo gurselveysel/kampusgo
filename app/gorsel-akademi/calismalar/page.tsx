@@ -110,6 +110,7 @@ export default function VisualLabWorkbenchPage() {
   const [session, setSession] = useState<SessionState>("checking");
   const [accessToken, setAccessToken] = useState("");
   const [arxivId, setArxivId] = useState("1706.03762");
+  const [rightsConfirmed, setRightsConfirmed] = useState(false);
   const [processState, setProcessState] = useState<ProcessState>("idle");
   const [job, setJob] = useState<JobStatus | null>(null);
   const [paper, setPaper] = useState<PaperResult | null>(null);
@@ -201,6 +202,7 @@ export default function VisualLabWorkbenchPage() {
     setSession("locked");
     setJob(null);
     setPaper(null);
+    setRightsConfirmed(false);
     setProcessState("idle");
     setMessage(null);
   }
@@ -208,6 +210,15 @@ export default function VisualLabWorkbenchPage() {
   async function startProcessing(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage(null);
+
+    if (!rightsConfirmed) {
+      setProcessState("error");
+      setMessage(
+        "Kaynağı işleme ve türev görsel anlatım üretme hakkının bulunduğunu onaylamalısınız.",
+      );
+      return;
+    }
+
     setPaper(null);
     setJob(null);
     setProcessState("submitting");
@@ -216,7 +227,7 @@ export default function VisualLabWorkbenchPage() {
       const response = await fetch("/api/visual-lab/process", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ arxiv_id: arxivId }),
+        body: JSON.stringify({ arxiv_id: arxivId, rights_confirmed: true }),
       });
       const created = await readJson<{
         job_id: string;
@@ -356,14 +367,30 @@ export default function VisualLabWorkbenchPage() {
                   maxLength={160}
                   placeholder="1706.03762"
                 />
+                <label className={styles.rightsCheck} htmlFor="source-rights-confirmed">
+                  <input
+                    id="source-rights-confirmed"
+                    type="checkbox"
+                    checked={rightsConfirmed}
+                    onChange={(event) => setRightsConfirmed(event.target.checked)}
+                    required
+                  />
+                  <span>
+                    Bu kaynağı işleme ve türev görsel anlatım üretme hakkımın bulunduğunu onaylıyorum.
+                  </span>
+                </label>
                 <button
                   type="submit"
-                  disabled={["submitting", "polling", "loading-paper"].includes(processState)}
+                  disabled={
+                    !rightsConfirmed ||
+                    ["submitting", "polling", "loading-paper"].includes(processState)
+                  }
                 >
                   {processState === "submitting" ? "İş oluşturuluyor…" : "Görsel anlatıyı üret"}
                 </button>
               </form>
               <div className={styles.boundaries}>
+                <span>✓ Kaynak kullanım hakkı açıkça onaylanır</span>
                 <span>✓ Ham Python kabul edilmez</span>
                 <span>✓ Servis anahtarı tarayıcıya verilmez</span>
                 <span>✓ Aynı makale için mükerrer iş engeli</span>
