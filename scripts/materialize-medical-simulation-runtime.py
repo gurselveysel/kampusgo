@@ -2,7 +2,7 @@
 """Materialize the staged TEYS medical simulation runtime bundle.
 
 The bundle is split into text chunks so it can be staged through the GitHub
-contents API.  This script validates every archive member before extraction,
+contents API. This script validates every archive member before extraction,
 then removes the one-time staging payload and itself.
 """
 
