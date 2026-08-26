@@ -1,0 +1,40 @@
+services:
+  visual-lab-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.pilot
+    env_file:
+      - .env
+    environment:
+      PORT: "8000"
+    ports:
+      - "127.0.0.1:8001:8000"
+    volumes:
+      - visual_lab_data:/data
+      - visual_lab_media:/app/media
+      - visual_lab_cache:/home/visual-lab/.cache
+    tmpfs:
+      - /tmp:rw,nosuid,size=1073741824
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 4g
+    cpus: 2.0
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import httpx; r=httpx.get('http://127.0.0.1:8000/api/health', timeout=5); r.raise_for_status()"
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 3
+
+volumes:
+  visual_lab_data:
+  visual_lab_media:
+  visual_lab_cache:
