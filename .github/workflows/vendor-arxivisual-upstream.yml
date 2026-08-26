@@ -111,11 +111,20 @@ jobs:
         run: |
           set -euo pipefail
           version="${RENDER_CLI_VERSION#v}"
+          archive="/tmp/render-cli.zip"
+          destination="/tmp/render-cli"
+
           curl -sSfL \
             "https://github.com/render-oss/cli/releases/download/${RENDER_CLI_VERSION}/cli_${version}_linux_amd64.zip" \
-            -o /tmp/render-cli.zip
-          unzip -q /tmp/render-cli.zip -d /tmp/render-cli
-          sudo install -m 0755 "/tmp/render-cli/cli_${version}" /usr/local/bin/render
+            -o "$archive"
+          mkdir -p "$destination"
+          unzip -q "$archive" -d "$destination"
+
+          binary="$(find "$destination" -maxdepth 2 -type f \
+            \( -name render -o -name "cli_${version}" -o -name 'cli_*' \) \
+            -print -quit)"
+          test -n "$binary"
+          sudo install -m 0755 "$binary" /usr/local/bin/render
           render --version
 
       - name: Validate Render Blueprint
