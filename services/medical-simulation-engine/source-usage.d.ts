@@ -15,7 +15,9 @@ export type BaseSourceRecord = {
 export type SourceUsageRecord = BaseSourceRecord & {
   usageRole: SourceUsageRole;
   technology: string;
-  codeImported: false;
+  codeImported: boolean;
+  packageName: string | null;
+  packageVersion: string | null;
   assetLicense: string;
   licenseEvidenceFile: string;
   securityRisk: string;

@@ -87,6 +87,7 @@
 .cardTop > span { color: rgba(11,27,47,.38); font-size: 12px; font-weight: 950; }
 .cardTop i { padding: 5px 8px; border-radius: 999px; font-size: 8px; font-style: normal; font-weight: 950; letter-spacing: .035em; }
 .candidate { color: #096649; background: rgba(23,135,100,.1); }
+.direct-dependency { color: #075f68; background: rgba(37,200,198,.16); }
 .isolated-service { color: #17617b; background: rgba(37,147,188,.11); }
 .reference { color: #6b5526; background: rgba(183,119,24,.12); }
 .blocked { color: #992d39; background: rgba(180,55,67,.1); }

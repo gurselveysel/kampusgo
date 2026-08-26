@@ -15,7 +15,14 @@ const benchmarkCapabilities = new Set([
   "physiology",
 ]);
 
+const directDependencies = new Map([
+  ["mrdoob/three.js", { packageName: "three", packageVersion: "0.185.1" }],
+  ["pmndrs/react-three-fiber", { packageName: "@react-three/fiber", packageVersion: "9.7.0" }],
+  ["statelyai/xstate", { packageName: "xstate", packageVersion: "5.32.6" }],
+]);
+
 export function usageRoleFor(source) {
+  if (source.adoption === "direct-dependency" && directDependencies.has(source.repository)) return "direct-dependency";
   if (source.adoption === "blocked") return "license-blocked-reference";
   if (source.adoption === "retired-reference") return "historical-reference";
   if (source.adoption === "isolated-service") return "isolated-adapter";
@@ -26,6 +33,8 @@ export function usageRoleFor(source) {
 
 export function buildSourceUsageRecord(source) {
   const usageRole = usageRoleFor(source);
+  const direct = usageRole === "direct-dependency";
+  const directPackage = directDependencies.get(source.repository) ?? null;
   const blocked = usageRole === "license-blocked-reference";
   const historical = usageRole === "historical-reference";
   const isolated = usageRole === "isolated-adapter";
@@ -33,22 +42,28 @@ export function buildSourceUsageRecord(source) {
     ...source,
     usageRole,
     technology: source.capability,
-    codeImported: false,
+    codeImported: direct,
+    packageName: directPackage?.packageName ?? null,
+    packageVersion: directPackage?.packageVersion ?? null,
     assetLicense: "Kod dışı veri, model ağırlığı veya 3B varlık aktarılmadı.",
-    licenseEvidenceFile: source.licenseClass === "missing"
+    licenseEvidenceFile: direct
+      ? `package-lock.json · ${source.repository}@${source.commit}`
+      : source.licenseClass === "missing"
       ? "DOĞRULANMADI"
       : "GitHub lisans kaydı doğrulandı; dosya yolu ürün kütüğünde ayrıca saklanmalıdır.",
-    securityRisk: isolated ? "yüksek - süreç/ağ sınırı gerekir" : blocked ? "yüksek - kod kullanımı kapalı" : "orta - bağımlılık ve veri yüzeyi ayrı incelenir",
-    maintenanceRisk: historical ? "yüksek - arşiv/eski/WIP" : isolated ? "orta-yüksek - ayrı çalışma zamanı" : "orta - upstream değişikliği izlenir",
-    integrationStatus: blocked
-      ? "blocked"
+    securityRisk: direct ? "orta - sabit paket sürümü, tarama ve istemci performans bütçesi izlenir" : isolated ? "yüksek - süreç/ağ sınırı gerekir" : blocked ? "yüksek - kod kullanımı kapalı" : "orta - bağımlılık ve veri yüzeyi ayrı incelenir",
+    maintenanceRisk: direct ? "orta - package-lock ve kabul testleriyle sabitlenir" : historical ? "yüksek - arşiv/eski/WIP" : isolated ? "orta-yüksek - ayrı çalışma zamanı" : "orta - upstream değişikliği izlenir",
+    integrationStatus: direct
+      ? "RUNTIME_INTEGRATED"
+      : blocked
+      ? "LICENSE_BLOCKED"
       : historical
-        ? "historical-only"
+        ? "ARCHIVED_OR_DUPLICATE"
         : isolated
-          ? "adapter-boundary-defined"
+          ? "ISOLATED_ADAPTER"
           : usageRole === "benchmark"
-            ? "benchmark-applied"
-            : "reference-applied",
+            ? "TEST_OR_BENCHMARK"
+            : "ARCHITECTURE_REFERENCE",
     testEvidence: `medical-open-source-contract · ${source.repository}@${source.commit}`,
   };
 }

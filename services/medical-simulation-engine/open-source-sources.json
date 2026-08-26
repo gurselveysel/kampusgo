@@ -406,8 +406,8 @@
       "license": "MIT",
       "licenseClass": "permissive",
       "capability": "web-3d",
-      "adoption": "candidate",
-      "use": "Tarayıcı tabanlı 3B hasta, oda ve tıbbi cihaz sahnesinin temel render motoru adayı.",
+      "adoption": "direct-dependency",
+      "use": "V2 tarayıcı sahnesindeki sentetik 3B hasta, oda ve monitörün doğrudan render motoru.",
       "note": "Model ve doku varlıklarının lisansları ayrıca izlenir."
     },
     {
@@ -419,8 +419,8 @@
       "license": "MIT",
       "licenseClass": "permissive",
       "capability": "web-3d",
-      "adoption": "candidate",
-      "use": "Three.js sahnesini React 19 bileşenleri, durum ve erişilebilir arayüzle bağlama katmanı adayı.",
+      "adoption": "direct-dependency",
+      "use": "V2 Three.js sahnesini React 19, fizyoloji durumu ve erişilebilir muayene kontrolleriyle bağlayan doğrudan katman.",
       "note": "Ağır sahne kodu yalnız ihtiyaç olduğunda dinamik yüklenir."
     },
     {
@@ -445,8 +445,8 @@
       "license": "MIT",
       "licenseClass": "permissive",
       "capability": "orchestration",
-      "adoption": "candidate",
-      "use": "Klinik faz, koşul, paralel görev, zaman olayı ve güvenli geçişlerin açık durum makinesi sözleşmesi için çekirdek aday.",
+      "adoption": "direct-dependency",
+      "use": "V2 klinik fazları, paralel ekip/lifecycle durumu ve güvenli geçişleri çalıştıran doğrudan durum makinesi çekirdeği.",
       "note": "Klinik doğrular makineden değil, onaylı senaryo sözleşmesinden gelir."
     },
     {

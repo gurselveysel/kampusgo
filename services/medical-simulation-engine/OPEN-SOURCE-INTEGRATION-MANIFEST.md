@@ -6,8 +6,9 @@ Makinece okunabilir kayıt: [`open-source-sources.json`](open-source-sources.jso
 
 ## Kullanım sınıfları
 
-Çalışan ürün kütüğü her kaynağı ayrıca altı izinli rolden tam birine dönüştürür: `direct-dependency`, `isolated-adapter`, `benchmark`, `architecture-reference`, `license-blocked-reference` veya `historical-reference`. Bu dönüşüm ve zorunlu risk/kanıt alanları `source-usage.js` içinde merkezi olarak uygulanır ve `medical-open-source-contract.mjs` tarafından 40/40 doğrulanır.
+Çalışan ürün kütüğü her kaynağı ayrıca altı izinli rolden tam birine dönüştürür: `RUNTIME_INTEGRATED`, `ISOLATED_ADAPTER`, `TEST_OR_BENCHMARK`, `ARCHITECTURE_REFERENCE`, `LICENSE_BLOCKED` veya `ARCHIVED_OR_DUPLICATE`. Bu dönüşüm ve zorunlu risk/kanıt alanları `source-usage.js` içinde merkezi olarak uygulanır ve `medical-open-source-contract.mjs` tarafından 40/40 doğrulanır.
 
+- `direct-dependency`: Sürümü `package.json` ve `package-lock.json` içinde sabitlenmiş, çalışma zamanı kodunda doğrudan kullanılan bağımlılık.
 - `candidate`: Lisansı doğrulanmış ve mevcut web/servis mimarisiyle teknik olarak değerlendirilebilecek doğrudan bağımlılık veya adaptör adayı.
 - `isolated-service`: C++, Java veya ayrı çalışma zamanı gerektiren; ana Next.js paketine gömülmeden servis/çevrimdışı hat olarak ele alınacak kaynak.
 - `reference`: Kod alınmadan ürün, mimari veya araştırma kıyası olarak kullanılan kaynak.
@@ -36,15 +37,15 @@ Makinece okunabilir kayıt: [`open-source-sources.json`](open-source-sources.jso
 
 ## Mevcut uygulama durumu
 
-40 deponun tamamı kaynak kütüğüne, tekil kullanım rolüne ve kullanıcıya açık mimari haritaya bağlıdır. Harici depo kodu ürün paketine aktarılmamıştır.
+40 deponun tamamı kaynak kütüğüne ve tekil kullanım rolüne bağlıdır. Bunlardan yalnızca `mrdoob/three.js@0.185.1`, `pmndrs/react-three-fiber@9.7.0` ve `statelyai/xstate@5.32.6` V2 dikey diliminde sabitlenmiş doğrudan çalışma zamanı bağımlılığıdır. Kalan 37 depo için kaynak/benchmark/izole adaptör/lisans engeli/tarihsel referans ayrımı korunur; referans olmak entegrasyon değildir.
 
-İlk çalışan dikey dilimde XState eşdeğeri açık bir olay/durum makinesi, deterministik latent fizyoloji, çalışan klinik araçlar, geçersiz geçiş kapıları, olay hash'i, replay, eğitim/OSCE farkı, UÇEP-TYÇ kanıt ayrımı ve eğitici analitiği uygulanmıştır. XState ve Explain Engine bu dilimde kaynak/benchmark rolündedir; bağımlılık olarak kurulduğu iddia edilmez.
+İlk çalışan dikey dilimde gerçek XState paralel durum makinesi, deterministik latent fizyoloji, çalışan klinik araçlar, Three.js/React Three Fiber hasta sahnesi, geçersiz geçiş kapıları, olay hash'i, replay, eğitim/değerlendirme/OSCE farkı, UÇEP-TYÇ kanıt ayrımı ve eğitici analitiği uygulanmıştır. Explain Engine bu dilimde benchmark rolündedir; bağımlılık olarak kurulduğu iddia edilmez.
 
 Sonraki ayrı entegrasyon paketleri:
 
 1. xyflow senaryo yazarlığı ve senaryo snapshot sürümlemesi,
 2. Explain Engine Web Worker adaptörü,
-3. Three.js + React Three Fiber dinamik hasta sahnesi,
+3. Three.js + React Three Fiber sahne erişilebilirliği ve varlık hattının genişletilmesi,
 4. Cornerstone3D sentetik görüntüleme,
 5. Synthea, BioGears ve OpenICE için izole servis adaptörleri,
 6. PatientHub, AI Hospital, AgentClinic ve VeriSim tabanlı değerlendirme koşumları.

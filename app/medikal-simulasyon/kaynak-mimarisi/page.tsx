@@ -3,7 +3,7 @@ import registryData from "../../../services/medical-simulation-engine/open-sourc
 import { buildSourceUsageRecord, type SourceUsageRecord, type SourceUsageRole } from "../../../services/medical-simulation-engine/source-usage.js";
 import styles from "./source-architecture.module.css";
 
-type Adoption = "candidate" | "isolated-service" | "reference" | "blocked" | "retired-reference";
+type Adoption = "direct-dependency" | "candidate" | "isolated-service" | "reference" | "blocked" | "retired-reference";
 
 type SourceRecord = {
   order: number;
@@ -153,7 +153,7 @@ export default function SourceArchitecturePage() {
                       <div><dt>Lisans</dt><dd>{source.license}</dd></div>
                       <div><dt>Kaynak izi</dt><dd><code>{source.branch}@{source.commit}</code></dd></div>
                       <div><dt>Kullanım rolü</dt><dd>{usageRoleLabels[source.usageRole]}</dd></div>
-                      <div><dt>Kod / varlık aktarımı</dt><dd>Hayır · {source.assetLicense}</dd></div>
+                      <div><dt>Kod / varlık aktarımı</dt><dd>{source.codeImported ? `Evet · ${source.packageName}@${source.packageVersion}` : "Hayır"} · {source.assetLicense}</dd></div>
                       <div><dt>Entegrasyon</dt><dd>{source.integrationStatus}</dd></div>
                       <div><dt>Test kanıtı</dt><dd><code>{source.testEvidence}</code></dd></div>
                       <div><dt>Lisans dosyası</dt><dd>{source.licenseEvidenceFile}</dd></div>
@@ -173,13 +173,13 @@ export default function SourceArchitecturePage() {
         <span>İLK ÇALIŞAN DİKEY DİLİM</span>
         <h2>Olay/durum motoru → fizyoloji → çalışan araçlar → replay → debriefing</h2>
         <ol>
-          <li><b>XState eşdeğeri açık makine:</b> klinik faz, ön koşul, geçersiz geçiş, olay hash'i ve deterministik replay çalışıyor.</li>
+          <li><b>Gerçek XState makinesi:</b> sabitlenmiş XState 5.32.6 ile klinik faz, paralel ekip/lifecycle durumu, geçersiz geçiş, olay hash'i ve deterministik replay çalışıyor.</li>
           <li><b>Deterministik fizyoloji:</b> vital değerler iskemi, perfüzyon, oksijen rezervi ve elektriksel instabiliteden türetiliyor.</li>
           <li><b>Explain Engine / BioGears:</b> kod aktarılmadı; web benchmark ve izole adaptör sınırı olarak kayıtlı.</li>
-          <li><b>Three.js / görüntüleme:</b> ağır bağımlılık ve sentetik varlık lisansı doğrulanana kadar mimari referans rolünde.</li>
+          <li><b>Three.js / React Three Fiber:</b> sabitlenmiş doğrudan bağımlılıklar dinamik yüklenen sentetik 3B hasta sahnesinde çalışıyor; harici model/doku varlığı alınmadı.</li>
           <li><b>Synthea / OpenICE:</b> gerçek veri veya canlı cihaz bağlanmadan ayrı süreç sınırında tutuluyor.</li>
         </ol>
-        <p>Production durumu: <strong>NO-GO</strong> · Harici kod aktarımı yapılmadı; her gerçek bağımlılık ayrı lisans, SBOM, güvenlik ve performans kapısından geçmelidir.</p>
+        <p>Production durumu: <strong>NO-GO</strong> · Yalnız three.js, React Three Fiber ve XState doğrudan çalışma zamanı bağımlılığıdır; diğer 37 kayıt için referans, benchmark, izole adaptör veya lisans engeli ayrımı geçerlidir.</p>
       </section>
     </main>
   );
