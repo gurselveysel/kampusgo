@@ -10,7 +10,8 @@
     "start": "next start",
     "build": "node scripts/build-public.mjs && next build",
     "build:static": "node scripts/build-static.mjs",
-    "test": "node scripts/medical-open-source-contract.mjs && node scripts/reference-data-contract.mjs && node scripts/institutional-integration-contract.mjs && node scripts/qualification-suggestion-contract.mjs && node scripts/smart-alignment-contract.mjs && node scripts/directive-pilot-contract.mjs && node scripts/directive-access-hardening-contract.mjs && node scripts/supabase-anonymous-read-contract.mjs && node scripts/test.mjs && node scripts/validate.mjs",
+    "test": "node scripts/medical-open-source-contract.mjs && node scripts/clinical-simulation-engine.test.mjs && node scripts/reference-data-contract.mjs && node scripts/institutional-integration-contract.mjs && node scripts/qualification-suggestion-contract.mjs && node scripts/smart-alignment-contract.mjs && node scripts/directive-pilot-contract.mjs && node scripts/directive-access-hardening-contract.mjs && node scripts/supabase-anonymous-read-contract.mjs && node scripts/test.mjs && node scripts/validate.mjs",
+    "test:medical-v2": "node scripts/clinical-simulation-engine.test.mjs && node scripts/medical-simulation-contract.mjs",
     "test:browser": "node scripts/browser-qa.cjs"
   },
   "engines": {

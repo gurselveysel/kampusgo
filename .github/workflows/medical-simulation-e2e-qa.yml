@@ -62,5 +62,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: node scripts/clinical-simulation-engine.test.mjs
       - run: node scripts/medical-simulation-contract.mjs
       - run: npm run build
