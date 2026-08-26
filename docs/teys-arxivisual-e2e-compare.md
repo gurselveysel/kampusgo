@@ -1,0 +1,1 @@
+The live pilot materialization completed without the server gateway, arXivisual clinical runtime, AI Studio, container assets or end-to-end render workflows. This integration branch adds those missing components.
