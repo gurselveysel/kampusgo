@@ -1,179 +1,104 @@
-# TEYS / MAMS Medical Simulation Engine
+# TEYS / MAMS Medical Simulation Engine — arXivisual Entegrasyonu
 
-Bu servis, `app/medikal-simulasyon` arayüzünü onaylı `arXivisual` Manim/AI kod tabanına bağlayan kontrollü üretim ve render katmanıdır.
+Bu servis, `app/medikal-simulasyon` içindeki ön koşullu klinik simülasyon ile gerçek Manim sahne üretimini uçtan uca bağlar.
 
-> **Eğitim simülasyonu sınırı:** Gerçek hasta bakımı, klinik karar desteği, tanı veya tedavi önerisi üretmez. Yalnız sentetik ya da geri döndürülemez biçimde anonimleştirilmiş ve uzman onaylı senaryo geçişleri kabul edilir.
-
-## Uygulanan mimari
+## Çalışan ürün zinciri
 
 ```text
-TEYS / MAMS Next.js arayüzü
-        │
-        ├── /api/medikal-simulasyon/engine  (sunucu tarafı proxy)
-        │
-        ▼
-FastAPI Clinical Scene API
-        ├── yapılandırılmış sentetik senaryo sözleşmesi
-        ├── PHI / gerçek kişi verisi reddi
-        ├── kaynak + uzman onay kapısı
-        ├── %70 UÇEP referanslı çekirdek / %30 kurumsal özerklik etiketi
-        │
-        ▼
-Vendored arXivisual engine
-        ├── VisualizationPlanner
-        ├── ManimGenerator
-        ├── CodeValidator
-        ├── SpatialValidator
-        ├── VoiceoverScriptValidator
-        ├── RenderTester (isteğe bağlı)
-        └── process_visualization
-        │
-        ▼
-İzole Manim container / nesne depolama
+Uzman onaylı sentetik olay sözleşmesi
+          ↓
+TEYS hak / kaynak / sentetik hasta kapısı
+          ↓
+ArXivisual VisualizationPlan
+          ↓
+ArXivisual ManimGenerator (Azure veya Dedalus)
+          ↓
+CodeValidator → SpatialValidator → RenderTester
+          ↓
+AST güvenlik denetimi
+          ↓
+ArXivisual local Manim renderer
+          ↓
+MP4 + SHA-256 + storyboard + validation raporu
+          ↓
+KampüsGO server-side gateway
+          ↓
+/medikal-simulasyon/ai-studio
 ```
 
-Ham Python veya Manim kodu kabul eden genel bir API **yoktur**. Kod yalnız servis içinde, yapılandırılmış klinik istekten üretilir; allow-list ve doğrulama kapılarından geçmeden render katmanına ulaşamaz.
+AI provider yapılandırılmamışsa sistem klinik kural üretmeyen deterministik TEYS sahnesine düşer; ancak kod doğrulama, mekânsal doğrulama, import testi ve Manim render yine vendored arXivisual backend üzerinden yürütülür.
 
-## Sekiz zorunlu eğitim düzeyi
+## Kaynak taban
 
-1. Sanal Hasta
-2. Olguya Dayalı Öğrenme
-3. Klinik Akıl Yürütme
-4. Tanı ve Tetkik
-5. Tedavi ve Müdahale
-6. Acil Durum Simülasyonları
-7. Ekip Yönetimi & Klinik Liderlik
-8. Entegre Klinik Simülasyon
+- Upstream: `rajshah6/arXivisual`
+- İçe aktarılan bileşen: `backend/`
+- Yerel yol: `vendor/arxivisual-backend`
+- Exact commit: `UPSTREAM_COMMIT`
+- Kaynak/izin kaydı: `UPSTREAM_SOURCE.md`
 
-Tarayıcı pilotu; ön koşul, yeterlilik, canlı vital değişimi, karar zaman çizelgesi, maliyet, ekip yönetimi ve ayrıntılı debriefing döngüsünü uygular.
+Runtime veritabanları, cache ve oluşturulmuş medya kaynak snapshot'ına alınmaz.
 
-## Servis modları
+## Medikal güvenlik overlay'i
 
-| Mod | Davranış |
-| --- | --- |
-| `preview` | Model anahtarı veya Manim gerektirmeyen deterministik storyboard ve güvenli Manim kodu üretir. CI ve Vercel Preview için varsayılandır. |
-| `ai` | Vendored `VisualizationPlanner` ve `ManimGenerator` ile gerçek LLM üretimi yapar; doğrulanmış kod döndürür, video render etmez. |
-| `render` | AI üretimine ek olarak, iki ayrı render kapısı açık olduğunda izole Manim worker üzerinde MP4 üretir. |
+ArXivisual tek başına klinik kural kaynağı olarak kullanılmaz. TEYS runtime şu zorunlu kapıları ekler:
 
-`render` için hem `MEDICAL_ENGINE_MODE=render` hem `MEDICAL_ENGINE_ALLOW_RENDER=1` gerekir. Manim binary veya LLM sağlayıcısı yoksa servis fail-closed biçimde daha düşük moda iner; render isteğini sessizce taklit etmez.
+- `rights_confirmed=true`,
+- `synthetic_patient_confirmed=true`,
+- en az bir kaynak referansı,
+- uzman onay referansı,
+- onaylanmış `patient_state_before → patient_state_after` geçişi,
+- tanı/doz/kontrendikasyon/fizyoloji icat etmeme,
+- genel kullanıcıya ham Python veya render uç noktası açmama,
+- üretilen kodda ağ, dosya, subprocess ve dinamik kod çağrılarını AST düzeyinde reddetme,
+- tek eşzamanlı iş ve saatlik kota,
+- her sonuçta storyboard, validator çıktısı ve SHA-256 bütünlük özeti.
 
 ## API
 
-- `GET /health` — servis, upstream, LLM, Manim ve render kapısı durumu
-- `GET /v1/capabilities` — desteklenen modüller, görsel türleri ve güvenlik sınırı
-- `POST /v1/scene-plans` — deterministik, anlık klinik storyboard
-- `POST /v1/scene-jobs` — gerçek AI/Manim üretim işi
-- `GET /v1/scene-jobs/{job_id}` — iş ilerlemesi, doğrulama ve video URL'si
-- `GET /v1/examples/stemi-vf` — sentetik sözleşme örneği
+| Yöntem | Uç nokta | Erişim |
+|---|---|---|
+| GET | `/api/medical/health` | Sağlık kontrolü |
+| GET | `/api/medical/catalog` | `X-TEYS-Engine-Key` |
+| POST | `/api/medical/jobs` | `X-TEYS-Engine-Key` |
+| GET | `/api/medical/jobs/{job_id}` | `X-TEYS-Engine-Key` |
+| GET | `/api/medical/jobs/{job_id}/result` | `X-TEYS-Engine-Key` |
+| GET | `/api/medical/media/{asset_id}` | `X-TEYS-Engine-Key` |
 
-Production ortamında `/docs` ve `/redoc` kapalıdır. `MEDICAL_ENGINE_API_TOKEN` zorunludur.
+Ham Manim kodu kabul eden bir API yoktur.
 
-## Klinik istek kapıları
+## AI modları
 
-Her üretim isteği şu bilgileri taşır:
+- `MEDICAL_AI_MODE=auto`: Azure/Dedalus varsa arXivisual AI üretimi; yoksa deterministik fallback.
+- `MEDICAL_AI_MODE=azure`: Azure zorunlu; hata olursa iş başarısız.
+- `MEDICAL_AI_MODE=dedalus`: Dedalus zorunlu; hata olursa iş başarısız.
+- `MEDICAL_AI_MODE=template`: AI çağrısı olmadan arXivisual validator + renderer.
 
-- `scenario_id` ve sürüm,
-- 1–8 arası modül,
-- öğrenme çıktısı,
-- `SYN-...` ile başlayan sentetik hasta kimliği,
-- önceki ve sonraki vital/klinik durum,
-- öğrencinin eylemi ve gerekçesi,
-- görsel odak,
-- güvenlik kısıtları,
-- onaylı kaynak kayıtları,
-- uzman onay referansı,
-- UÇEP eşleme kodları,
-- yatay ve dikey entegrasyon etiketleri.
+Gerçek AI üretimi için `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY` ve `AZURE_OPENAI_DEPLOYMENT` tanımlanır.
 
-E-posta, telefon, T.C. kimlik numarası, açık hasta adı veya dosya/protokol numarası benzeri olası gerçek kişi verileri LLM çağrısından önce reddedilir.
-
-## Üretilen kod güvenlik kapıları
-
-1. Python AST / Manim yapı doğrulaması
-2. Ekran sınırı, çakışma ve yerleşim analizi
-3. Türkçe klinik anlatım ve kavram uyumu
-4. İthalat allow-list'i
-5. `open`, `exec`, `eval`, ağ, süreç ve dosya sistemi erişimi reddi
-6. İsteğe bağlı import-time Manim testi
-7. Başarısız üretimde sınırlı geri bildirimli yeniden deneme
-8. Tüm kapılar geçmeden render yasağı
-
-Container örneği root olmayan kullanıcı, salt okunur dosya sistemi, PID/CPU/RAM limiti, `no-new-privileges` ve geçici render alanı ile tanımlanmıştır.
-
-## Yerel çalışma
-
-### Hafif preview modu
-
-```bash
-cd services/medical-simulation-engine
-python -m venv .venv
-. .venv/bin/activate
-pip install ".[test]"
-cp .env.example .env
-uvicorn runtime.main:app --reload --port 8000
-```
-
-### Tam AI + Manim container
+## Yerel çalıştırma
 
 ```bash
 cd services/medical-simulation-engine
 cp .env.example .env
-# Azure/Dedalus anahtarlarını ve güçlü MEDICAL_ENGINE_API_TOKEN değerini girin.
-docker compose -f docker-compose.example.yml up --build
+docker compose build
+docker compose up -d
+curl --fail http://127.0.0.1:8002/api/medical/health
 ```
 
-Önce `MEDICAL_ENGINE_MODE=ai` ile kod üretimi doğrulanmalı; bağımsız güvenlik/klinik QA tamamlandıktan sonra render kapısı açılmalıdır.
+Ayrıntılı kılavuz: [`END-TO-END-RUNBOOK.md`](END-TO-END-RUNBOOK.md)
 
-## Next.js bağlantısı
+## Kullanıcı deneyimi
 
-Vercel/Next.js sunucu ortamına yalnız şu iki gizli değişken eklenir:
-
-```text
-MEDICAL_SIMULATION_ENGINE_URL=https://<container-host>
-MEDICAL_SIMULATION_ENGINE_TOKEN=<service-token>
-```
-
-Tarayıcı token'ı görmez. `/api/medikal-simulasyon/engine` proxy'si sağlık, örnek, iş oluşturma ve iş sorgulama isteklerini sunucu tarafından iletir.
-
-Motor konsolu:
-
-```text
-/medikal-simulasyon/motor
-```
-
-## Upstream kaydı
-
-Onaylı kaynak anlık görüntüsü:
-
-```text
-services/medical-simulation-engine/vendor/arxivisual-backend
-```
-
-- Kesin commit: `UPSTREAM_COMMIT`
-- Kaynak/provenance: `UPSTREAM_SOURCE.md`
-- Klinik overlay: `prompts/clinical-simulation-scene-generator.md`
-
-Runtime veritabanları, cache, oluşturulmuş medya ve demo videoları vendor kopyasına alınmaz.
+- `/medikal-simulasyon`: sekiz zorunlu modül, dinamik sanal hasta ve debriefing.
+- `/medikal-simulasyon/ai-studio`: klinik olaydan gerçek arXivisual/Manim video üretimi.
 
 ## Program kompozisyonu
 
-Pilot portföy kuralı:
+- `%70`: UÇEP referanslı çekirdek alan
+- `%30`: kurumsal özerklik ve yerel program tasarımı
 
-- `%70`: UÇEP referanslı çekirdek yeterlilik alanı
-- `%30`: kurumun program çıktıları, yerel olguları, seçmeli derinleşme ve özerk tasarım alanı
+Bu oran ürün tasarım sınırıdır; resmî UÇEP eşlemesi veya akreditasyon beyanı değildir. Kaynak ve uzman onay gereklilikleri `CLINICAL-SOURCE-REGISTER.md` içinde tutulur.
 
-Bu oran ve yazılım etiketleri tek başına resmî UÇEP eşlemesi ya da akreditasyon beyanı değildir. Her senaryo sürümü akademik kurul tarafından kaynak, öğrenme çıktısı, ölçme planı ve yatay/dikey entegrasyon matrisiyle doğrulanmalıdır.
+## Production durumu
 
-## Kalıcılık ve production kapısı
-
-Mevcut iş kayıt deposu kontrollü pilot için bellek içidir. Container yeniden başlatıldığında işler korunmaz. Production öncesinde:
-
-- Postgres/Temporal tabanlı dayanıklı iş kuyruğu,
-- kurum/rol/RLS sınırları,
-- değişmez denetim izi,
-- kaynak ve uzman onay sürümleme,
-- video saklama ve silme politikası,
-- bağımsız sızma testi,
-- tıp eğitimi ve klinik içerik QA
-
-zorunludur. Bu koşullar tamamlanmadan production kararı `NO-GO` olarak kalır.
+**NO-GO.** Gerçek hasta verisi, canlı hastane sistemi, biyometri veya bağımsız klinik karar desteği kullanılmaz. Kurumsal kimlik/RLS, denetim izi, akademik kurul onayı, maliyet kotası ve bağımsız güvenlik/tıp eğitimi QA tamamlanmadan production'a alınmaz.

@@ -1,16 +1,16 @@
 services:
-  medical-simulation-engine:
+  teys-medical-engine:
     build:
       context: .
+      dockerfile: Dockerfile
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8002:8000"
     volumes:
-      - medical-simulation-videos:/data/videos
-    read_only: true
+      - teys_medical_data:/data
     tmpfs:
-      - /tmp/teys-render:rw,nosuid,nodev,noexec,size=1g
+      - /tmp:rw,nosuid,size=1073741824
     cap_drop:
       - ALL
     security_opt:
@@ -21,4 +21,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  medical-simulation-videos:
+  teys_medical_data:
