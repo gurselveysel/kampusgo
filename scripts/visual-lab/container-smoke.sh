@@ -46,6 +46,10 @@ docker run --detach \
   --env USE_TEMPORAL=0 \
   --env PIPELINE_CONCURRENCY=1 \
   --env RENDER_CONCURRENCY=1 \
+  --env RATE_LIMIT_PROCESS_PER_IP=3 \
+  --env RATE_LIMIT_PROCESS_GLOBAL=3 \
+  --env RATE_LIMIT_PROCESS_WINDOW_SECONDS=3600 \
+  --env PROCESS_DEDUPE_TTL_SECONDS=7200 \
   "$IMAGE_NAME" >/dev/null
 
 for attempt in $(seq 1 90); do
@@ -89,9 +93,21 @@ assert isinstance(health, dict), health
 assert pilot['service'] == 'kampusgo-visual-lab', pilot
 assert pilot['mode'] == 'controlled_pilot', pilot
 assert pilot['rawRenderEnabled'] is False, pilot
+assert pilot['sourceRightsConfirmationRequired'] is True, pilot
 assert pilot['authenticationRequired'] is True, pilot
 assert pilot['productionAllowed'] is False, pilot
 PY
+
+rights_status="$(curl --silent --output /tmp/visual-lab-rights.json --write-out '%{http_code}' \
+  --header "X-Visual-Lab-Key: $API_KEY" \
+  --header 'Content-Type: application/json' \
+  --data '{"arxiv_id":"1706.03762"}' \
+  "$BASE_URL/api/process")"
+[[ "$rights_status" == "428" ]] || {
+  echo "Expected process without rights confirmation to return 428; received $rights_status." >&2
+  cat /tmp/visual-lab-rights.json >&2 || true
+  exit 1
+}
 
 raw_render_status="$(curl --silent --output /tmp/visual-lab-render.json --write-out '%{http_code}' \
   --header "X-Visual-Lab-Key: $API_KEY" \
