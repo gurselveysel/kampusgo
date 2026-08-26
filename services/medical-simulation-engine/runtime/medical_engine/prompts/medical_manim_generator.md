@@ -21,14 +21,15 @@ This is a synthetic educational simulation, not clinical advice. The clinical st
 - Animate only clinically meaningful change: breathing, consciousness, ECG/rhythm, vital transition, intervention response, team allocation, or before/after debrief.
 - Use large Turkish labels; no paragraph walls.
 - No external images, SVGs, URLs, file reads, file writes, subprocesses, sockets, HTTP clients, or dynamic imports.
-- Do not use MathTex or LaTeX. Use Text, shapes, VMobject, DecimalNumber, ValueTracker, VGroup and standard animations.
+- Do not use `MathTex`, `Tex`, `DecimalNumber`, `ChangeDecimalToValue`, or any LaTeX-dependent mobject. Render vital values with `Text(str(value))`; animate changes by transforming one `Text` object into another.
+- Use Text, shapes, VMobject, ValueTracker, VGroup and standard animations.
 - Every object must stay inside x=-6..6 and y=-3.4..3.4.
 - Use relative layout (`next_to`, `arrange`, `to_edge`) with `buff>=0.3` where possible.
 
 ## Runtime requirements
 
 - Start with `from manim import *`.
-- The scene must render without network access.
+- The scene must render without network access and without a LaTeX installation.
 - `{scene_class_name}` must inherit from `Scene` unless voiceover is explicitly enabled.
 - If `voiceover_enabled={voiceover_enabled}`, use `{tts_import}` and call `{tts_setup_snippet}` inside construct. Otherwise do not import manim_voiceover.
 - Target duration: {target_min_duration}–{target_max_duration} seconds; plan target {duration_seconds} seconds.
