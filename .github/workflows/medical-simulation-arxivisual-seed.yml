@@ -115,7 +115,8 @@ jobs:
           Path('public/medical-simulation/manim/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
           PY
           test -s public/medical-simulation/manim/med_seed_vf_rosc.mp4
-          ffprobe -v error -show_entries format=duration,size -of json public/medical-simulation/manim/med_seed_vf_rosc.mp4
+          docker cp public/medical-simulation/manim/med_seed_vf_rosc.mp4 "$CONTAINER:/tmp/med_seed_vf_rosc.mp4"
+          docker exec "$CONTAINER" ffprobe -v error -show_entries format=duration,size -of json /tmp/med_seed_vf_rosc.mp4
       - name: Upload rendered proof
         uses: actions/upload-artifact@v4
         with:
