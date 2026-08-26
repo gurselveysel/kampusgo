@@ -6,6 +6,7 @@ on:
       - feature/arxivisual-upstream-integration
     paths:
       - ".github/workflows/vendor-arxivisual-upstream.yml"
+      - ".github/workflows/visual-lab-container-smoke.yml"
       - "scripts/visual-lab/**"
       - "services/visual-lab/**"
       - "src/server/visual-lab.ts"
@@ -21,6 +22,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/vendor-arxivisual-upstream.yml"
+      - ".github/workflows/visual-lab-container-smoke.yml"
       - "scripts/visual-lab/**"
       - "services/visual-lab/**"
       - "src/server/visual-lab.ts"
