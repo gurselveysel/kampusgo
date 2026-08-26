@@ -41,8 +41,9 @@ jobs:
           load: true
           push: false
           tags: ${{ env.IMAGE }}
-          cache-from: type=gha,scope=teys-medical-engine
-          cache-to: type=gha,mode=max,scope=teys-medical-engine
+          # Deliberately avoid the GitHub Actions remote cache here. A transient
+          # cache-export 404 must never make an otherwise valid medical engine
+          # image fail before the real API/render smoke test begins.
       - name: Start controlled engine
         shell: bash
         run: |
