@@ -6,6 +6,8 @@ Makinece okunabilir kayıt: [`open-source-sources.json`](open-source-sources.jso
 
 ## Kullanım sınıfları
 
+Çalışan ürün kütüğü her kaynağı ayrıca altı izinli rolden tam birine dönüştürür: `direct-dependency`, `isolated-adapter`, `benchmark`, `architecture-reference`, `license-blocked-reference` veya `historical-reference`. Bu dönüşüm ve zorunlu risk/kanıt alanları `source-usage.js` içinde merkezi olarak uygulanır ve `medical-open-source-contract.mjs` tarafından 40/40 doğrulanır.
+
 - `candidate`: Lisansı doğrulanmış ve mevcut web/servis mimarisiyle teknik olarak değerlendirilebilecek doğrudan bağımlılık veya adaptör adayı.
 - `isolated-service`: C++, Java veya ayrı çalışma zamanı gerektiren; ana Next.js paketine gömülmeden servis/çevrimdışı hat olarak ele alınacak kaynak.
 - `reference`: Kod alınmadan ürün, mimari veya araştırma kıyası olarak kullanılan kaynak.
@@ -34,10 +36,14 @@ Makinece okunabilir kayıt: [`open-source-sources.json`](open-source-sources.jso
 
 ## Mevcut uygulama durumu
 
-Bu değişiklik 40 deponun tamamını kaynak kütüğüne ve kullanıcıya açık mimari haritaya bağlar. Harici depo kodu henüz ürün paketine aktarılmamıştır. İlk gerçek entegrasyon dikey dilimi, ayrıca doğrulama yapılarak şu sırayla ele alınmalıdır:
+40 deponun tamamı kaynak kütüğüne, tekil kullanım rolüne ve kullanıcıya açık mimari haritaya bağlıdır. Harici depo kodu ürün paketine aktarılmamıştır.
 
-1. XState olay sözleşmesi ve xyflow senaryo yazarlığı,
-2. Explain Engine fizyoloji adaptörü,
+İlk çalışan dikey dilimde XState eşdeğeri açık bir olay/durum makinesi, deterministik latent fizyoloji, çalışan klinik araçlar, geçersiz geçiş kapıları, olay hash'i, replay, eğitim/OSCE farkı, UÇEP-TYÇ kanıt ayrımı ve eğitici analitiği uygulanmıştır. XState ve Explain Engine bu dilimde kaynak/benchmark rolündedir; bağımlılık olarak kurulduğu iddia edilmez.
+
+Sonraki ayrı entegrasyon paketleri:
+
+1. xyflow senaryo yazarlığı ve senaryo snapshot sürümlemesi,
+2. Explain Engine Web Worker adaptörü,
 3. Three.js + React Three Fiber dinamik hasta sahnesi,
 4. Cornerstone3D sentetik görüntüleme,
 5. Synthea, BioGears ve OpenICE için izole servis adaptörleri,
