@@ -138,18 +138,23 @@ class {class_name}(Scene):
             points.append(ecg_baseline.get_center() + RIGHT * x + UP * y)
         trace.set_points_as_corners(points)
 
-        hr = DecimalNumber({before.heart_rate}, num_decimal_places=0, font_size=38, color=GREEN)
-        spo2 = DecimalNumber({before.spo2}, num_decimal_places=0, font_size=38, color=CYAN)
-        sys = DecimalNumber({before.systolic_bp}, num_decimal_places=0, font_size=32, color=WHITE)
-        dia = DecimalNumber({before.diastolic_bp}, num_decimal_places=0, font_size=32, color=WHITE)
-        rr = DecimalNumber({before.respiratory_rate}, num_decimal_places=0, font_size=38, color=AMBER)
+        # Text is used intentionally instead of DecimalNumber. DecimalNumber
+        # creates Tex glyphs and therefore introduces an unnecessary LaTeX
+        # runtime dependency for simple clinical monitor values.
+        hr = Text({_py(str(before.heart_rate))}, font_size=38, color=GREEN, weight=BOLD)
+        spo2 = Text({_py(str(before.spo2))}, font_size=38, color=CYAN, weight=BOLD)
+        sys = Text({_py(str(before.systolic_bp))}, font_size=32, color=WHITE, weight=BOLD)
+        slash = Text("/", font_size=26, color=MUTED)
+        dia = Text({_py(str(before.diastolic_bp))}, font_size=32, color=WHITE, weight=BOLD)
+        rr = Text({_py(str(before.respiratory_rate))}, font_size=38, color=AMBER, weight=BOLD)
+        bp_value = VGroup(sys, slash, dia).arrange(RIGHT, buff=0.08)
         labels = VGroup(
             Text("HR /dk", font_size=14, color=MUTED),
             Text("SpO₂ %", font_size=14, color=MUTED),
             Text("TA mmHg", font_size=14, color=MUTED),
             Text("SS /dk", font_size=14, color=MUTED),
         ).arrange(RIGHT, buff=0.95)
-        values = VGroup(hr, spo2, VGroup(sys, Text("/", font_size=26, color=MUTED), dia).arrange(RIGHT, buff=0.08), rr).arrange(RIGHT, buff=0.65)
+        values = VGroup(hr, spo2, bp_value, rr).arrange(RIGHT, buff=0.65)
         values.next_to(monitor_panel.get_bottom(), UP, buff=0.55)
         labels.next_to(values, UP, buff=0.16)
 
@@ -165,13 +170,20 @@ class {class_name}(Scene):
 
         consequence = Text({_py(after_signs)}, font_size=18, color=GREEN if {after.systolic_bp} >= {before.systolic_bp} and {after.spo2} >= {before.spo2} else RED)
         consequence.move_to(before_label.get_center())
+        hr_after = Text({_py(str(after.heart_rate))}, font_size=38, color=GREEN, weight=BOLD).move_to(hr.get_center())
+        spo2_after = Text({_py(str(after.spo2))}, font_size=38, color=CYAN, weight=BOLD).move_to(spo2.get_center())
+        bp_after = VGroup(
+            Text({_py(str(after.systolic_bp))}, font_size=32, color=WHITE, weight=BOLD),
+            Text("/", font_size=26, color=MUTED),
+            Text({_py(str(after.diastolic_bp))}, font_size=32, color=WHITE, weight=BOLD),
+        ).arrange(RIGHT, buff=0.08).move_to(bp_value.get_center())
+        rr_after = Text({_py(str(after.respiratory_rate))}, font_size=38, color=AMBER, weight=BOLD).move_to(rr.get_center())
         self.play(
             Transform(before_label, consequence),
-            ChangeDecimalToValue(hr, {after.heart_rate}),
-            ChangeDecimalToValue(spo2, {after.spo2}),
-            ChangeDecimalToValue(sys, {after.systolic_bp}),
-            ChangeDecimalToValue(dia, {after.diastolic_bp}),
-            ChangeDecimalToValue(rr, {after.respiratory_rate}),
+            Transform(hr, hr_after),
+            Transform(spo2, spo2_after),
+            Transform(bp_value, bp_after),
+            Transform(rr, rr_after),
             torso.animate.scale(0.96),
             run_time=2.0,
         )
