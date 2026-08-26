@@ -1,0 +1,134 @@
+name: Visual Lab Container Smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visual-lab-container-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      DOCKER_BUILDKIT: "1"
+
+    steps:
+      - name: Checkout requested ref
+        uses: actions/checkout@v4
+
+      - name: Restore Docker build cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: visual-lab-docker-${{ runner.os }}-${{ hashFiles('services/visual-lab/Dockerfile.pilot', 'services/visual-lab/upstream/arxivisual/backend/uv.lock', 'services/visual-lab/upstream/arxivisual/backend/pyproject.toml') }}
+          restore-keys: |
+            visual-lab-docker-${{ runner.os }}-
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build cached pilot image
+        uses: docker/build-push-action@v6
+        with:
+          context: services/visual-lab
+          file: services/visual-lab/Dockerfile.pilot
+          load: true
+          push: false
+          tags: kampusgo-visual-lab:smoke
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      - name: Rotate Docker build cache
+        shell: bash
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Run security smoke test against the built image
+        shell: bash
+        env:
+          VISUAL_LAB_SMOKE_IMAGE: kampusgo-visual-lab:smoke
+        run: |
+          # Skip the script's build step because Buildx already loaded the image.
+          image="$VISUAL_LAB_SMOKE_IMAGE"
+          container="kampusgo-visual-lab-smoke"
+          key="visual-lab-smoke-key-0123456789abcdef"
+          base="http://127.0.0.1:18001"
+
+          cleanup() {
+            docker logs "$container" > /tmp/visual-lab-smoke.log 2>&1 || true
+            docker rm -f "$container" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          docker run --detach \
+            --name "$container" \
+            --publish 127.0.0.1:18001:8000 \
+            --cap-drop ALL \
+            --security-opt no-new-privileges:true \
+            --pids-limit 256 \
+            --memory 4g \
+            --cpus 2 \
+            --tmpfs /tmp:rw,nosuid,size=1073741824 \
+            --env ENVIRONMENT=production \
+            --env VISUAL_LAB_API_KEY="$key" \
+            --env VISUAL_LAB_ALLOW_UNAUTHENTICATED=false \
+            --env VISUAL_LAB_RAW_RENDER_ENABLED=false \
+            --env VISUAL_LAB_DOCS_ENABLED=false \
+            --env DATABASE_URL=sqlite+aiosqlite:////tmp/visual-lab-smoke.db \
+            --env STORAGE_MODE=local \
+            --env MEDIA_DIR=/tmp/visual-lab-media \
+            --env VOICEOVER_CACHE_DIR=/tmp/visual-lab-voiceovers \
+            --env RENDER_MODE=local \
+            --env USE_TEMPORAL=0 \
+            --env PIPELINE_CONCURRENCY=1 \
+            --env RENDER_CONCURRENCY=1 \
+            "$image" >/dev/null
+
+          for attempt in $(seq 1 90); do
+            if curl --silent --fail "$base/api/health" >/tmp/visual-lab-health.json; then
+              break
+            fi
+            if ! docker inspect --format '{{.State.Running}}' "$container" 2>/dev/null | grep -q '^true$'; then
+              docker logs "$container" >&2 || true
+              exit 1
+            fi
+            if [[ "$attempt" == "90" ]]; then
+              docker logs "$container" >&2 || true
+              exit 1
+            fi
+            sleep 2
+          done
+
+          test "$(curl --silent --output /tmp/no-key.json --write-out '%{http_code}' "$base/api/papers")" = "401"
+          curl --silent --fail --header "X-Visual-Lab-Key: $key" "$base/api/pilot" >/tmp/pilot.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          pilot = json.loads(Path('/tmp/pilot.json').read_text())
+          assert pilot['mode'] == 'controlled_pilot', pilot
+          assert pilot['rawRenderEnabled'] is False, pilot
+          assert pilot['authenticationRequired'] is True, pilot
+          assert pilot['productionAllowed'] is False, pilot
+          PY
+
+          test "$(curl --silent --output /tmp/raw-render.json --write-out '%{http_code}' \
+            --header "X-Visual-Lab-Key: $key" \
+            --header 'Content-Type: application/json' \
+            --data '{"code":"print(1)"}' \
+            "$base/api/render")" = "404"
+          test "$(docker exec "$container" id -u)" != "0"
+
+      - name: Upload smoke logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-lab-container-smoke-logs
+          path: /tmp/visual-lab-smoke.log
+          if-no-files-found: ignore
