@@ -19,6 +19,7 @@ const pilotRoute = read("app/api/visual-lab/pilot/route.ts");
 const processRoute = read("app/api/visual-lab/process/route.ts");
 const paperRoute = read("app/api/visual-lab/paper/[arxivId]/route.ts");
 const videoRoute = read("app/api/visual-lab/video/[videoId]/route.ts");
+const workbench = read("app/gorsel-akademi/calismalar/page.tsx");
 
 assert.match(rootEnv, /^VISUAL_LAB_GATEWAY_ENABLED=false$/m);
 assert.match(rootEnv, /^VISUAL_LAB_PILOT_ACCESS_TOKEN=.+$/m);
@@ -28,6 +29,8 @@ assert.doesNotMatch(rootEnv, /^NEXT_PUBLIC_VISUAL_LAB_/m);
 assert.match(backendEnv, /^VISUAL_LAB_RAW_RENDER_ENABLED=false$/m);
 assert.match(backendEnv, /^VISUAL_LAB_ALLOW_UNAUTHENTICATED=false$/m);
 assert.match(backendOverlay, /path == "\/api\/render" and not RAW_RENDER_ENABLED/);
+assert.match(backendOverlay, /x-visual-lab-rights-confirmed/);
+assert.match(backendOverlay, /sourceRightsConfirmationRequired": True/);
 assert.match(backendOverlay, /productionAllowed": False/);
 
 assert.match(helper, /visualLabGatewayEnabled/);
@@ -45,7 +48,13 @@ assert.match(healthRoute, /if \(!visualLabGatewayEnabled\(\)\)/);
 assert.match(pilotRoute, /if \(!visualLabGatewayEnabled\(\)\)/);
 assert.match(processRoute, /hasPilotAccess\(request\)/);
 assert.match(processRoute, /requestHasSameOrigin\(request\)/);
+assert.match(processRoute, /rights_confirmed/);
+assert.match(processRoute, /x-visual-lab-rights-confirmed/);
 assert.doesNotMatch(processRoute, /\/api\/render/);
+
+assert.match(workbench, /type="checkbox"/);
+assert.match(workbench, /rights_confirmed: true/);
+assert.match(workbench, /türev görsel anlatım üretme hakkımın bulunduğunu onaylıyorum/);
 
 assert.match(paperRoute, /protectVideoUrls/);
 assert.match(paperRoute, /\/api\/visual-lab\/video\//);
