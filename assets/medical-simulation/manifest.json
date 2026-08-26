@@ -1,0 +1,74 @@
+{
+  "engine": "arXivisual + TEYS clinical safety runtime",
+  "engine_mode": "arxivisual-template",
+  "scenario_id": "scn_stemi_vf_rosc",
+  "scenario_version": "1.0.0",
+  "module_id": 6,
+  "video": "/medical-simulation/manim/med_seed_vf_rosc.mp4",
+  "sha256": "ef46a00f3b316ed44a88299fea83867f8571a1927eb35dcdbb4a3d0863d48a33",
+  "scene_class_name": "TEYSMedicalScene6",
+  "requested_duration_seconds": 32,
+  "storyboard": [
+    {
+      "order": 1,
+      "duration_seconds": 5,
+      "description": "Sentetik hasta durumu ve karar noktası",
+      "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+    },
+    {
+      "order": 2,
+      "duration_seconds": 6,
+      "description": "Öğrenci eylemi: CPR kesintisini en aza indirerek güvenli defibrilasyon uygula",
+      "narration": "Onaylanmış sentetik olay sözleşmesinde erken defibrilasyon sonrasında organize ritim ve dolaşım geri dönüşü tanımlanmıştır."
+    },
+    {
+      "order": 3,
+      "duration_seconds": 8,
+      "description": "Vital geçiş: HR 0→92, SpO₂ 72→96, TA 0/0→106/68",
+      "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+    },
+    {
+      "order": 4,
+      "duration_seconds": 6,
+      "description": "Kritik sinyal: VF ritminden organize ritme geçiş, nabız kontrolü ve post-ROSC yeniden değerlendirme",
+      "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+    },
+    {
+      "order": 5,
+      "duration_seconds": 5,
+      "description": "Debrief sorusu: Şok öncesi ve sonrası hangi ekip davranışı kompresyon kesintisini en çok etkiledi?",
+      "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+    }
+  ],
+  "validation": {
+    "code_validator": {
+      "is_valid": true,
+      "issues_found": [],
+      "issues_fixed": [],
+      "needs_regeneration": false,
+      "code_length": 7155,
+      "code_sha256": "d4edc22f1134948fd2e4c7b05c94af36f0c4d086ca57b53ca2486c69e4ab8a2e",
+      "result_type": "ValidatorOutput"
+    },
+    "spatial_validator": {
+      "has_spatial_issues": false,
+      "out_of_bounds": [],
+      "potential_overlaps": [],
+      "spacing_issues": [],
+      "suggestions": [],
+      "needs_regeneration": false,
+      "result_type": "SpatialValidatorOutput"
+    },
+    "render_tester": {
+      "success": true,
+      "error_type": null,
+      "error_message": null,
+      "line_number": null,
+      "fix_suggestion": null,
+      "result_type": "RenderTestOutput"
+    }
+  },
+  "verified_on": "2026-08-26",
+  "expert_approval": "DOĞRULANMADI",
+  "production_allowed": false
+}

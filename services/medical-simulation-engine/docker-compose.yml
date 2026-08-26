@@ -1,0 +1,24 @@
+services:
+  teys-medical-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8002:8000"
+    volumes:
+      - teys_medical_data:/data
+    tmpfs:
+      - /tmp:rw,nosuid,size=1073741824
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 4g
+    cpus: 2.0
+    restart: unless-stopped
+
+volumes:
+  teys_medical_data:

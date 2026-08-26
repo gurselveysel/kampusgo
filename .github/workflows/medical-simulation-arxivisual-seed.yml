@@ -1,0 +1,131 @@
+name: TEYS arXivisual Seed Render
+
+on:
+  push:
+    branches:
+      - feature/teys-medical-simulation-live-pilot
+    paths:
+      - "services/medical-simulation-engine/Dockerfile"
+      - "services/medical-simulation-engine/runtime/**"
+      - "services/medical-simulation-engine/presets/vf-rosc.json"
+      - ".github/workflows/medical-simulation-arxivisual-seed.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: teys-arxivisual-seed-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render-seed:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      IMAGE: teys-medical-engine:seed
+      CONTAINER: teys-medical-engine-seed
+      ENGINE_KEY: teys-seed-engine-key-0123456789abcdef
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: docker/setup-buildx-action@v3
+      - name: Build arXivisual medical engine
+        uses: docker/build-push-action@v6
+        with:
+          context: services/medical-simulation-engine
+          file: services/medical-simulation-engine/Dockerfile
+          load: true
+          push: false
+          tags: ${{ env.IMAGE }}
+          # Deliberately avoid the GitHub Actions remote cache here. A transient
+          # cache-export 404 must never make an otherwise valid medical engine
+          # image fail before the real API/render smoke test begins.
+      - name: Start controlled engine
+        shell: bash
+        run: |
+          docker run -d --name "$CONTAINER" \
+            -p 127.0.0.1:18002:8000 \
+            --cap-drop ALL \
+            --security-opt no-new-privileges:true \
+            --pids-limit 256 \
+            --memory 4g \
+            --cpus 2 \
+            --tmpfs /tmp:rw,nosuid,size=1073741824 \
+            -e TEYS_ENGINE_API_KEY="$ENGINE_KEY" \
+            -e MEDICAL_AI_MODE=template \
+            -e MEDICAL_VOICEOVER_ENABLED=false \
+            -e TEYS_ENGINE_JOB_LIMIT_PER_HOUR=3 \
+            -e TEYS_ENGINE_MAX_CONCURRENT_JOBS=1 \
+            "$IMAGE"
+          for attempt in $(seq 1 100); do
+            if curl -sf http://127.0.0.1:18002/api/medical/health >/tmp/health.json; then break; fi
+            if ! docker inspect -f '{{.State.Running}}' "$CONTAINER" | grep -q true; then docker logs "$CONTAINER"; exit 1; fi
+            if [[ "$attempt" == 100 ]]; then docker logs "$CONTAINER"; exit 1; fi
+            sleep 2
+          done
+      - name: Submit and poll VF to ROSC scene
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker exec "$CONTAINER" python -m medical_engine.safety_contract
+          response="$(curl -sf -X POST \
+            -H "X-TEYS-Engine-Key: $ENGINE_KEY" \
+            -H 'Content-Type: application/json' \
+            --data @services/medical-simulation-engine/presets/vf-rosc.json \
+            http://127.0.0.1:18002/api/medical/jobs)"
+          echo "$response" >/tmp/job-create.json
+          job_id="$(python -c 'import json; print(json.load(open("/tmp/job-create.json"))["job_id"])')"
+          for attempt in $(seq 1 150); do
+            curl -sf -H "X-TEYS-Engine-Key: $ENGINE_KEY" \
+              "http://127.0.0.1:18002/api/medical/jobs/$job_id" >/tmp/job.json
+            status="$(python -c 'import json; print(json.load(open("/tmp/job.json"))["status"])')"
+            if [[ "$status" == "completed" ]]; then break; fi
+            if [[ "$status" == "failed" ]]; then cat /tmp/job.json; docker logs "$CONTAINER"; exit 1; fi
+            if [[ "$attempt" == 150 ]]; then cat /tmp/job.json; docker logs "$CONTAINER"; exit 1; fi
+            sleep 3
+          done
+          curl -sf -H "X-TEYS-Engine-Key: $ENGINE_KEY" \
+            "http://127.0.0.1:18002/api/medical/jobs/$job_id/result" >/tmp/result.json
+          media_url="$(python -c 'import json; print(json.load(open("/tmp/result.json"))["video_url"])')"
+          mkdir -p public/medical-simulation/manim
+          curl -sf -H "X-TEYS-Engine-Key: $ENGINE_KEY" \
+            "http://127.0.0.1:18002$media_url" \
+            -o public/medical-simulation/manim/med_seed_vf_rosc.mp4
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result=json.load(open('/tmp/result.json'))
+          manifest={
+            'engine':'arXivisual + TEYS clinical safety overlay',
+            'engine_mode':result['engine_mode'],
+            'scenario_id':result['scenario_id'],
+            'scenario_version':result['scenario_version'],
+            'module_id':result['module_id'],
+            'video':'/medical-simulation/manim/med_seed_vf_rosc.mp4',
+            'sha256':result['sha256'],
+            'scene_class_name':result['scene_class_name'],
+            'storyboard':result['storyboard'],
+            'generated_at':result['generated_at'],
+            'production_allowed':False,
+          }
+          Path('public/medical-simulation/manim/manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2))
+          PY
+          test -s public/medical-simulation/manim/med_seed_vf_rosc.mp4
+          ffprobe -v error -show_entries format=duration,size -of json public/medical-simulation/manim/med_seed_vf_rosc.mp4
+      - name: Upload rendered proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: teys-arxivisual-vf-rosc-proof
+          path: public/medical-simulation/manim/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Logs on failure
+        if: failure()
+        run: docker logs "$CONTAINER" || true
+      - name: Cleanup
+        if: always()
+        run: docker rm -f "$CONTAINER" || true

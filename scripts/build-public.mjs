@@ -26,7 +26,8 @@ const files = [
   ["assets/illustrations/commission-review.webp", "assets/illustrations/commission-review.webp"],
   ["assets/illustrations/digital-wallet.webp", "assets/illustrations/digital-wallet.webp"],
   ["assets/illustrations/integration-gates.webp", "assets/illustrations/integration-gates.webp"],
-  ["assets/medical-simulation/arxivisual-stemi-preview.mp4", "assets/medical-simulation/arxivisual-stemi-preview.mp4"],
+  ["assets/medical-simulation/arxivisual-stemi-preview.mp4", "medical-simulation/manim/med_seed_vf_rosc.mp4"],
+  ["assets/medical-simulation/manifest.json", "medical-simulation/manim/manifest.json"],
 ];
 
 for (const [source, destination] of files) {

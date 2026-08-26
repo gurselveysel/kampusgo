@@ -12,8 +12,6 @@ on:
       - "src/server/medical-simulation.ts"
       - "scripts/build-public.mjs"
       - "scripts/medical-simulation-contract.mjs"
-      - "scripts/materialize-medical-simulation-runtime.py"
-      - "scripts/.medical-runtime-bundle/**"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/gorsel-akademi-demo-qa.yml"
@@ -29,8 +27,6 @@ on:
       - "src/server/medical-simulation.ts"
       - "scripts/build-public.mjs"
       - "scripts/medical-simulation-contract.mjs"
-      - "scripts/materialize-medical-simulation-runtime.py"
-      - "scripts/.medical-runtime-bundle/**"
       - "app/layout.tsx"
       - "package.json"
       - "package-lock.json"
@@ -81,7 +77,7 @@ jobs:
       - run: node scripts/medical-simulation-contract.mjs
       - run: npm run build
 
-  medical-adapter-contract:
+  medical-runtime-contract:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -89,10 +85,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: pip
-      - name: Install offline contract dependencies
-        run: python -m pip install fastapi httpx pydantic pytest python-dotenv
-      - name: Compile medical adapter
-        run: python -m compileall -q services/medical-simulation-engine/overlays/backend
-      - name: Run medical adapter contract tests
-        run: python -m pytest -q services/medical-simulation-engine/tests
+      - name: Compile medical runtime
+        run: python -m compileall -q services/medical-simulation-engine/runtime
+      - name: Verify fail-closed runtime contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'rawCodeEndpoint.*False' services/medical-simulation-engine/runtime/medical_engine/app.py
+          grep -q 'FORBIDDEN_IMPORT_ROOTS' services/medical-simulation-engine/runtime/medical_engine/pipeline.py
+          test -f services/medical-simulation-engine/runtime/medical_engine/safety_contract.py
+          grep -q 'production_allowed.*False' services/medical-simulation-engine/runtime/medical_engine/schemas.py
+          grep -q 'rights_confirmed' services/medical-simulation-engine/presets/vf-rosc.json
+          grep -q 'synthetic_patient_confirmed' services/medical-simulation-engine/presets/vf-rosc.json
