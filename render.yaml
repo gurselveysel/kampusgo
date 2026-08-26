@@ -56,6 +56,14 @@ services:
         value: "1"
       - key: RENDER_CONCURRENCY
         value: "1"
+      - key: RATE_LIMIT_PROCESS_PER_IP
+        value: "3"
+      - key: RATE_LIMIT_PROCESS_GLOBAL
+        value: "3"
+      - key: RATE_LIMIT_PROCESS_WINDOW_SECONDS
+        value: "3600"
+      - key: PROCESS_DEDUPE_TTL_SECONDS
+        value: "7200"
       - key: AZURE_OPENAI_ENDPOINT
         sync: false
       - key: AZURE_OPENAI_API_KEY
