@@ -1,0 +1,68 @@
+name: Vendor arXivisual backend snapshot
+
+on:
+  push:
+    branches:
+      - feature/teys-medical-simulation-engine
+    paths:
+      - .github/workflows/vendor-arxivisual-backend.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vendor-arxivisual-backend
+  cancel-in-progress: false
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout KampüsGO branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/teys-medical-simulation-engine
+          fetch-depth: 0
+
+      - name: Clone approved upstream source
+        run: |
+          rm -rf /tmp/arxivisual
+          git clone --depth 1 https://github.com/rajshah6/arXivisual.git /tmp/arxivisual
+
+      - name: Copy backend without runtime artefacts
+        run: |
+          target="services/medical-simulation-engine/vendor/arxivisual-backend"
+          rm -rf "$target"
+          mkdir -p "$target"
+          rsync -a /tmp/arxivisual/backend/ "$target"/ \
+            --exclude 'arxiviz.db*' \
+            --exclude 'media/' \
+            --exclude 'demo-videos/' \
+            --exclude '__pycache__/' \
+            --exclude '.pytest_cache/' \
+            --exclude '.venv/'
+          git -C /tmp/arxivisual rev-parse HEAD > services/medical-simulation-engine/UPSTREAM_COMMIT
+          cat > services/medical-simulation-engine/UPSTREAM_SOURCE.md <<'DOC'
+          # Upstream source record
+
+          - Source repository: `rajshah6/arXivisual`
+          - Imported component: `backend/`
+          - Import mode: source snapshot copied without runtime databases, caches, generated media or demo videos
+          - Purpose: KampüsGO / TEYS medical simulation rendering and AI pipeline adaptation
+          - Authorization basis: project owner confirmed open-source reuse permission in the project conversation on 26 August 2026
+
+          The exact upstream commit is recorded in `UPSTREAM_COMMIT`. Original headers and attribution inside imported files are retained.
+          DOC
+
+      - name: Commit vendored snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add services/medical-simulation-engine
+          if git diff --cached --quiet; then
+            echo "No vendor changes to commit."
+            exit 0
+          fi
+          git commit -m "vendor: import approved arXivisual backend snapshot"
+          git push origin HEAD:feature/teys-medical-simulation-engine
