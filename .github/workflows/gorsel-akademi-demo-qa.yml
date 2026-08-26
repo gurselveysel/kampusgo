@@ -3,7 +3,8 @@ name: Görsel Akademi Demo QA
 on:
   pull_request:
     paths:
-      - "app/gorsel-akademi/**"
+      - "app/gorsel-akademi/page.tsx"
+      - "app/gorsel-akademi/gorsel-akademi.module.css"
       - "app/layout.tsx"
       - "package.json"
       - "package-lock.json"
