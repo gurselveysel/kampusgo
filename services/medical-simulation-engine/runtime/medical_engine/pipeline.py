@@ -24,6 +24,7 @@ FORBIDDEN_IMPORT_ROOTS = {
     "pathlib", "shutil", "tempfile", "ctypes", "importlib",
 }
 FORBIDDEN_CALLS = {"open", "exec", "eval", "compile", "__import__", "input"}
+FORBIDDEN_MANIM_CALLS = {"MathTex", "Tex", "DecimalNumber", "ChangeDecimalToValue"}
 
 
 def provider_available() -> bool:
@@ -42,6 +43,13 @@ def selected_engine_mode(request: MedicalSceneRequest) -> str:
 
 
 def _safe_code(code: str) -> None:
+    """Reject unsafe or non-portable generated code before any module import.
+
+    RenderTester imports the generated module, so this AST gate must run first.
+    The clinical pilot also rejects LaTeX-backed Manim mobjects; simple monitor
+    values must remain renderable in the minimal container through Pango Text.
+    """
+
     tree = ast.parse(code)
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -54,9 +62,17 @@ def _safe_code(code: str) -> None:
             if root in FORBIDDEN_IMPORT_ROOTS:
                 raise ValueError(f"Forbidden import in generated scene: {root}")
         elif isinstance(node, ast.Call):
-            if isinstance(node.func, ast.Name) and node.func.id in FORBIDDEN_CALLS:
-                raise ValueError(f"Forbidden call in generated scene: {node.func.id}")
-            if isinstance(node.func, ast.Attribute) and node.func.attr in {"system", "popen", "run", "connect", "urlopen"}:
+            if isinstance(node.func, ast.Name):
+                if node.func.id in FORBIDDEN_CALLS:
+                    raise ValueError(f"Forbidden call in generated scene: {node.func.id}")
+                if node.func.id in FORBIDDEN_MANIM_CALLS:
+                    raise ValueError(
+                        f"LaTeX-dependent Manim call is not allowed: {node.func.id}. "
+                        "Use Text and Transform instead."
+                    )
+            if isinstance(node.func, ast.Attribute) and node.func.attr in {
+                "system", "popen", "run", "connect", "urlopen",
+            }:
                 raise ValueError(f"Forbidden method in generated scene: {node.func.attr}")
 
 
@@ -117,12 +133,18 @@ async def _ai_code(request: MedicalSceneRequest) -> tuple[str, str, dict[str, An
     feedback: list[str] = []
     if validation.needs_regeneration or not validation.is_valid:
         feedback.extend(validation.issues_found)
+    try:
+        _safe_code(code)
+    except ValueError as exc:
+        feedback.append(str(exc))
     spatial_result = spatial.validate(code)
     if spatial_result.needs_regeneration:
         feedback.append(spatial_result.get_feedback_message())
-    test_result = await render_tester.test_render(code, code_result.scene_class_name)
-    if not test_result.success:
-        feedback.append(test_result.get_feedback_message())
+
+    if not feedback:
+        test_result = await render_tester.test_render(code, code_result.scene_class_name)
+        if not test_result.success:
+            feedback.append(test_result.get_feedback_message())
 
     if feedback:
         regenerated = await generator.run_with_feedback(
@@ -139,15 +161,15 @@ async def _ai_code(request: MedicalSceneRequest) -> tuple[str, str, dict[str, An
         code = validation.code
         code_result = regenerated
         spatial_result = spatial.validate(code)
-        test_result = await render_tester.test_render(code, regenerated.scene_class_name)
 
     if validation.needs_regeneration or not validation.is_valid:
         raise RuntimeError("arXivisual CodeValidator rejected the generated clinical scene.")
     if spatial_result.needs_regeneration:
         raise RuntimeError("arXivisual SpatialValidator rejected the generated clinical scene.")
+    _safe_code(code)
+    test_result = await render_tester.test_render(code, code_result.scene_class_name)
     if not test_result.success:
         raise RuntimeError(test_result.get_feedback_message())
-    _safe_code(code)
     return code, code_result.scene_class_name, {
         "code_validator": validation.model_dump(),
         "spatial_validator": spatial_result.model_dump(),
@@ -174,21 +196,24 @@ async def generate_and_render(request: MedicalSceneRequest, job_id: str) -> Rend
         code, scene_class = deterministic_scene_code(request)
         validator = CodeValidator().validate(code)
         spatial = SpatialValidator().validate(validator.code)
-        render_test = await RenderTester(timeout_seconds=45).test_render(validator.code, scene_class)
         if not validator.is_valid or validator.needs_regeneration:
             raise RuntimeError("Deterministic medical scene failed CodeValidator.")
         if spatial.needs_regeneration:
             raise RuntimeError("Deterministic medical scene failed SpatialValidator.")
+        _safe_code(validator.code)
+        render_test = await RenderTester(timeout_seconds=45).test_render(validator.code, scene_class)
         if not render_test.success:
             raise RuntimeError(render_test.get_feedback_message())
         code = validator.code
-        _safe_code(code)
         validation = {
             "code_validator": validator.model_dump(),
             "spatial_validator": spatial.model_dump(),
             "render_tester": render_test.model_dump(),
         }
 
+    # AI auto-mode may fall back to the deterministic template after the AI
+    # attempt. Apply the same safety gate before the render subprocess.
+    _safe_code(code)
     video_bytes = await render_manim_local(
         code=code,
         scene_name=scene_class,
