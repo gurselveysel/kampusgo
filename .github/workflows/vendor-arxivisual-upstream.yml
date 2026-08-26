@@ -1,4 +1,4 @@
-name: Import arXivisual Upstream Snapshot
+name: Import and Validate arXivisual Upstream
 
 on:
   push:
@@ -6,8 +6,16 @@ on:
       - feature/arxivisual-upstream-integration
     paths:
       - ".github/workflows/vendor-arxivisual-upstream.yml"
-      - "scripts/visual-lab/sync-upstream.sh"
-      - "services/visual-lab/UPSTREAM.json"
+      - "scripts/visual-lab/**"
+      - "services/visual-lab/**"
+      - "app/api/visual-lab/**"
+      - "app/gorsel-akademi/**"
+      - ".env.example"
+      - ".gitignore"
+      - ".vercelignore"
+      - "tsconfig.json"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 permissions:
@@ -73,3 +81,66 @@ jobs:
           upstream_ref="$(jq -r '.ref' services/visual-lab/UPSTREAM.json)"
           git commit -m "chore(vendor): import arXivisual ${upstream_ref}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+  integration-qa:
+    needs: vendor-upstream
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout validated branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Verify pinned source integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="services/visual-lab/upstream/arxivisual"
+          test -d "$target"
+          test ! -d "$target/.git"
+          test -s "services/visual-lab/UPSTREAM_FILES.sha256"
+          (
+            cd "$target"
+            sha256sum --check ../../UPSTREAM_FILES.sha256
+          )
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Compile Python sources
+        run: |
+          python -m compileall -q services/visual-lab/upstream/arxivisual/backend
+          python -m compileall -q services/visual-lab/overlays/backend
+
+      - name: Enforce pilot security defaults
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '^VISUAL_LAB_RAW_RENDER_ENABLED=false$' services/visual-lab/.env.example
+          grep -q 'path == "/api/render"' services/visual-lab/overlays/backend/main.py
+          grep -q 'productionAllowed.*False' services/visual-lab/overlays/backend/main.py
+          grep -q 'X-Visual-Lab-Key' services/visual-lab/PILOT-RUNBOOK.md
+
+      - name: Validate Docker Compose model
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp services/visual-lab/.env.example services/visual-lab/.env
+          docker compose -f services/visual-lab/docker-compose.pilot.yml config --quiet
+          rm services/visual-lab/.env
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Build KampüsGO web application
+        run: npm run build
