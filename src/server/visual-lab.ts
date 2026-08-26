@@ -118,6 +118,12 @@ export function normalizeJobId(input: unknown): string | null {
   return /^job_[0-9a-f]{12}$/.test(value) ? value : null;
 }
 
+export function normalizeVideoId(input: unknown): string | null {
+  if (typeof input !== "string") return null;
+  const value = input.trim();
+  return /^viz_[a-zA-Z0-9_]{1,120}$/.test(value) ? value : null;
+}
+
 async function parseResponseBody(response: Response): Promise<unknown> {
   const contentType = response.headers.get("content-type") ?? "";
   if (contentType.includes("application/json")) {
@@ -127,11 +133,11 @@ async function parseResponseBody(response: Response): Promise<unknown> {
   return text ? { message: text.slice(0, 2_000) } : {};
 }
 
-export async function visualLabRequest(
+export async function visualLabFetchResponse(
   path: string,
   init: RequestInit = {},
   timeoutMs = DEFAULT_TIMEOUT_MS,
-): Promise<{ status: number; body: unknown }> {
+): Promise<Response> {
   if (!visualLabGatewayEnabled()) {
     throw new VisualLabConfigurationError("Visual Lab gateway is disabled.");
   }
@@ -146,28 +152,36 @@ export async function visualLabRequest(
 
   try {
     const headers = new Headers(init.headers);
-    headers.set("accept", "application/json");
+    if (!headers.has("accept")) headers.set("accept", "application/json");
     headers.set("x-visual-lab-key", apiKey);
     if (init.body !== undefined && !headers.has("content-type")) {
       headers.set("content-type", "application/json");
     }
 
-    const response = await fetch(`${baseUrl}${path}`, {
+    return await fetch(`${baseUrl}${path}`, {
       ...init,
       cache: "no-store",
       headers,
       signal: controller.signal,
     });
-    const body = await parseResponseBody(response);
-
-    if (!response.ok) {
-      throw new VisualLabUpstreamError(response.status, body);
-    }
-
-    return { status: response.status, body };
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export async function visualLabRequest(
+  path: string,
+  init: RequestInit = {},
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+): Promise<{ status: number; body: unknown }> {
+  const response = await visualLabFetchResponse(path, init, timeoutMs);
+  const body = await parseResponseBody(response);
+
+  if (!response.ok) {
+    throw new VisualLabUpstreamError(response.status, body);
+  }
+
+  return { status: response.status, body };
 }
 
 export function mapUpstreamStatus(status: number): number {
