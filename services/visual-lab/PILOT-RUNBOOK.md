@@ -25,6 +25,19 @@ cp .env.example .env
 
 `VISUAL_LAB_RAW_RENDER_ENABLED=false` değeri pilot boyunca korunmalıdır. Servis anahtarı en az 32 rastgele karakterden oluşmalı ve başka bir sistem parolasıyla aynı olmamalıdır.
 
+Varsayılan maliyet sigortası bir saat içinde en fazla üç yeni iş kabul eder:
+
+```dotenv
+RATE_LIMIT_PROCESS_PER_IP=3
+RATE_LIMIT_PROCESS_GLOBAL=3
+RATE_LIMIT_PROCESS_WINDOW_SECONDS=3600
+PROCESS_DEDUPE_TTL_SECONDS=7200
+PIPELINE_CONCURRENCY=1
+RENDER_CONCURRENCY=1
+```
+
+Bu değerler pilot sırasında yükseltilmemelidir. Aynı makalenin iki saat içinde mükerrer başlatılması ayrıca engellenir.
+
 ## 3. Container'ı oluştur ve başlat
 
 ```bash
@@ -52,8 +65,21 @@ Beklenen kritik alanlar:
 
 - `mode: controlled_pilot`
 - `rawRenderEnabled: false`
+- `sourceRightsConfirmationRequired: true`
 - `authenticationRequired: true`
 - `productionAllowed: false`
+
+Kaynak kullanım hakkı onayı olmadan iş başlatılamadığını doğrula:
+
+```bash
+curl -i \
+  -H "X-Visual-Lab-Key: $VISUAL_LAB_API_KEY" \
+  -H "Content-Type: application/json" \
+  --data '{"arxiv_id":"1706.03762"}' \
+  http://127.0.0.1:8001/api/process
+```
+
+Beklenen yanıt `428 Precondition Required` olmalıdır. Gerçek iş yalnız güvenilir KampüsGO geçidinin `X-Visual-Lab-Rights-Confirmed: true` başlığıyla başlatılır.
 
 Ham render uç noktasının kapalı olduğunu ayrıca doğrula:
 
@@ -76,6 +102,7 @@ VISUAL_LAB_GATEWAY_ENABLED=false
 VISUAL_LAB_API_URL=http://127.0.0.1:8001
 VISUAL_LAB_API_KEY=backend-ile-ayni-uzun-rastgele-deger
 VISUAL_LAB_PILOT_ACCESS_TOKEN=backend-servis-anahtarindan-farkli-en-az-32-karakter
+VISUAL_LAB_MEDIA_ALLOWED_HOSTS=
 ```
 
 Kurulum tamamlanana kadar `VISUAL_LAB_GATEWAY_ENABLED=false` kalmalıdır. Aşağıdaki kontroller başarıyla tamamlandıktan sonra yalnız kontrollü pilot ortamında `true` yapılır.
@@ -97,11 +124,13 @@ Aşağıdakilerin tamamı doğrulanmadan geçidi etkinleştirme:
 
 1. Backend sağlık durumu erişilebilir.
 2. `/api/pilot` servis anahtarıyla doğrulanıyor.
-3. `/api/render` 404 döndürüyor.
-4. Container non-root kullanıcıyla çalışıyor.
-5. CPU, RAM ve PID sınırları uygulanıyor.
-6. Yalnız kullanım hakkı doğrulanmış örnek makale seçildi.
-7. Azure OpenAI maliyet ve kota sınırları tanımlandı.
+3. Kaynak kullanım hakkı onayı olmayan `/api/process` isteği 428 döndürüyor.
+4. `/api/render` 404 döndürüyor.
+5. Container non-root kullanıcıyla çalışıyor.
+6. CPU, RAM ve PID sınırları uygulanıyor.
+7. Saatlik üç iş maliyet sigortası etkin.
+8. Yalnız kullanım hakkı doğrulanmış örnek makale seçildi.
+9. Azure OpenAI harcama ve kota sınırları tanımlandı.
 
 Sonra:
 
@@ -120,6 +149,7 @@ Next.js sunucusunu yeniden başlat.
 Çalışma ekranı:
 
 - modern arXiv kimliği veya bağlantısı kabul eder,
+- kaynağı işleme ve türev görsel anlatım üretme hakkı için zorunlu onay ister,
 - işi yalnız server-side geçit üzerinden başlatır,
 - dört saniyede bir iş durumunu sorgular,
 - tamamlanan makaleyi ve bölüm özetlerini getirir,
@@ -141,14 +171,26 @@ Uzak preview için backend ayrı bir container platformunda HTTPS ile yayınlanm
 - kalıcı PostgreSQL ve nesne depolama,
 - render worker izolasyonu.
 
-## 9. Log ve durum inceleme
+## 9. Otomatik testler
+
+Hızlı entegrasyon kontrolleri `Visual Lab Integration QA` workflow'unda yürütülür. Gerçek image build ve güvenlik smoke testi `Visual Lab Container Smoke` workflow'undadır.
+
+Yerelde aynı container testini çalıştırmak için:
+
+```bash
+bash scripts/visual-lab/container-smoke.sh
+```
+
+Test; health, yetkisiz 401, kaynak hakkı 428, raw render 404 ve non-root çalışma kontrollerini uygular. LLM işi başlatmaz.
+
+## 10. Log ve durum inceleme
 
 ```bash
 docker compose -f docker-compose.pilot.yml ps
 docker compose -f docker-compose.pilot.yml logs --tail=200 visual-lab-api
 ```
 
-## 10. Durdurma
+## 11. Durdurma
 
 ```bash
 docker compose -f docker-compose.pilot.yml down
@@ -160,11 +202,12 @@ Veri ve üretilen videoları da silmek için yalnızca bilinçli olarak:
 docker compose -f docker-compose.pilot.yml down -v
 ```
 
-## 11. Pilot sınırları
+## 12. Pilot sınırları
 
 - Production yayını yapılmaz.
 - Ham Python/Manim render uç noktası açılmaz.
 - Gerçek öğrenci verisi kullanılmaz.
 - Yalnız kullanım hakkı doğrulanmış içerikler işlenir.
 - Eğitici onayı olmadan içerik yayımlanmaz.
+- Saatlik iş, eşzamanlı üretim ve render limitleri yükseltilmez.
 - Kurum ve kullanıcı bazlı kimlik, kota ve denetim izi tamamlanmadan internetten genel kullanıma açılmaz.
