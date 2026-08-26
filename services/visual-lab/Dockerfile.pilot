@@ -25,12 +25,17 @@ WORKDIR /build
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 COPY upstream/arxivisual/backend/pyproject.toml upstream/arxivisual/backend/uv.lock ./
 
-RUN uv venv /opt/visual-lab-venv && \
-    uv sync \
-      --python /opt/visual-lab-venv/bin/python \
+# Force uv to install into the environment that is copied to the runtime stage.
+# Without UV_PROJECT_ENVIRONMENT, `uv sync` may create /build/.venv instead.
+ENV UV_PROJECT_ENVIRONMENT=/opt/visual-lab-venv
+
+RUN uv sync \
+      --python /usr/local/bin/python \
       --no-dev \
       --frozen \
-      --no-install-project
+      --no-install-project && \
+    test -x /opt/visual-lab-venv/bin/python && \
+    test -x /opt/visual-lab-venv/bin/uvicorn
 
 FROM base AS runtime
 
