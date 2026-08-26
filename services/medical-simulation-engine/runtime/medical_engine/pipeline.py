@@ -3,9 +3,11 @@ from __future__ import annotations
 import ast
 import hashlib
 import os
-from datetime import UTC, datetime
+from dataclasses import asdict, is_dataclass
+from datetime import UTC, date, datetime
+from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from agents.code_validator import CodeValidator
 from agents.manim_generator import ManimGenerator
@@ -74,6 +76,94 @@ def _safe_code(code: str) -> None:
                 "system", "popen", "run", "connect", "urlopen",
             }:
                 raise ValueError(f"Forbidden method in generated scene: {node.func.attr}")
+
+
+def _json_safe(value: Any, seen: set[int] | None = None) -> Any:
+    """Convert validation outputs from different arXivisual revisions to JSON.
+
+    The upstream project has used Pydantic v1/v2 models, dataclasses and plain
+    result objects over time. The medical engine pins the source revision but
+    still treats result serialization as an adapter boundary so a validator
+    class rename or model implementation does not invalidate an otherwise
+    successful Manim render.
+    """
+
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, Enum):
+        return _json_safe(value.value, seen)
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, bytes):
+        return {
+            "byte_length": len(value),
+            "sha256": hashlib.sha256(value).hexdigest(),
+        }
+
+    object_id = id(value)
+    active = seen if seen is not None else set()
+    if object_id in active:
+        return "<recursive-reference>"
+    active.add(object_id)
+
+    try:
+        model_dump = getattr(value, "model_dump", None)
+        if callable(model_dump):
+            try:
+                return _json_safe(model_dump(mode="json"), active)
+            except TypeError:
+                return _json_safe(model_dump(), active)
+
+        legacy_dict = getattr(value, "dict", None)
+        if callable(legacy_dict):
+            return _json_safe(legacy_dict(), active)
+
+        if is_dataclass(value) and not isinstance(value, type):
+            return _json_safe(asdict(value), active)
+
+        named_tuple = getattr(value, "_asdict", None)
+        if callable(named_tuple):
+            return _json_safe(named_tuple(), active)
+
+        if isinstance(value, Mapping):
+            return {
+                str(key): _json_safe(item, active)
+                for key, item in value.items()
+            }
+        if isinstance(value, (list, tuple, set, frozenset)):
+            return [_json_safe(item, active) for item in value]
+
+        attributes = getattr(value, "__dict__", None)
+        if isinstance(attributes, dict):
+            return {
+                str(key): _json_safe(item, active)
+                for key, item in attributes.items()
+                if not str(key).startswith("_") and not callable(item)
+            }
+
+        return str(value)
+    finally:
+        active.discard(object_id)
+
+
+def _validation_payload(value: Any) -> dict[str, Any]:
+    """Return a compact, JSON-safe validation record without source leakage."""
+
+    payload = _json_safe(value)
+    if not isinstance(payload, dict):
+        payload = {
+            "result_type": type(value).__name__,
+            "value": payload,
+        }
+
+    code = payload.pop("code", None)
+    if isinstance(code, str):
+        payload["code_length"] = len(code)
+        payload["code_sha256"] = hashlib.sha256(code.encode("utf-8")).hexdigest()
+    payload.setdefault("result_type", type(value).__name__)
+    return payload
 
 
 def _plan(request: MedicalSceneRequest) -> VisualizationPlan:
@@ -171,9 +261,9 @@ async def _ai_code(request: MedicalSceneRequest) -> tuple[str, str, dict[str, An
     if not test_result.success:
         raise RuntimeError(test_result.get_feedback_message())
     return code, code_result.scene_class_name, {
-        "code_validator": validation.model_dump(),
-        "spatial_validator": spatial_result.model_dump(),
-        "render_tester": test_result.model_dump(),
+        "code_validator": _validation_payload(validation),
+        "spatial_validator": _validation_payload(spatial_result),
+        "render_tester": _validation_payload(test_result),
     }
 
 
@@ -206,9 +296,9 @@ async def generate_and_render(request: MedicalSceneRequest, job_id: str) -> Rend
             raise RuntimeError(render_test.get_feedback_message())
         code = validator.code
         validation = {
-            "code_validator": validator.model_dump(),
-            "spatial_validator": spatial.model_dump(),
-            "render_tester": render_test.model_dump(),
+            "code_validator": _validation_payload(validator),
+            "spatial_validator": _validation_payload(spatial),
+            "render_tester": _validation_payload(render_test),
         }
 
     # AI auto-mode may fall back to the deterministic template after the AI
