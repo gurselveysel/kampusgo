@@ -2,6 +2,12 @@
 
 Bu servis, `app/medikal-simulasyon` içindeki ön koşullu klinik simülasyon ile gerçek Manim sahne üretimini uçtan uca bağlar.
 
+## Temel eğitim döngüsü
+
+**Gözlemle → Düşün → Karar ver → Uygula → Sonucu gör → Değerlendir → Yeniden dene**
+
+Öğrenci yalnızca içerik tüketmez. Klinik veriyi toplar, gerekçeli karar verir, kararının sentetik hastaya ve ekibe etkisini güvenli simülasyon ortamında görür, ayrıntılı debriefing alır ve yeterlilik eşiğini karşılayana kadar senaryoyu yeniden dener. Bir modülün başarı ve yeterlilik kapıları tamamlanmadan sonraki klinik seviye açılmaz.
+
 ## Çalışan ürün zinciri
 
 ```text
