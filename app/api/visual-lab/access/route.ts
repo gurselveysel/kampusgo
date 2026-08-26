@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import {
   createPilotAccessCookieValue,
+  hasPilotAccess,
   requestHasSameOrigin,
   validatePilotAccessToken,
   visualLabAccessCookieName,
@@ -12,6 +13,20 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const COOKIE_MAX_AGE_SECONDS = 8 * 60 * 60;
+
+export async function GET(request: NextRequest) {
+  const enabled = visualLabGatewayEnabled();
+  return NextResponse.json(
+    {
+      status: !enabled ? "disabled" : hasPilotAccess(request) ? "authenticated" : "locked",
+      productionAllowed: false,
+    },
+    {
+      status: enabled ? 200 : 503,
+      headers: { "cache-control": "no-store" },
+    },
+  );
+}
 
 export async function POST(request: NextRequest) {
   if (!visualLabGatewayEnabled()) {
