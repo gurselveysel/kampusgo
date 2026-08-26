@@ -19,6 +19,7 @@ const data = read("app/medikal-simulasyon/simulation-data.ts");
 const css = read("app/medikal-simulasyon/medical-simulation.module.css");
 const panel = read("app/medikal-simulasyon/ArxivisualScenePanel.tsx");
 const studio = read("app/medikal-simulasyon/ai-studio/page.tsx");
+const vercel = read("vercel.json");
 const serverGateway = read("src/server/medical-simulation.ts");
 const accessRoute = read("app/api/medical-simulation/access/route.ts");
 const jobsRoute = read("app/api/medical-simulation/jobs/route.ts");
@@ -55,6 +56,11 @@ assert.match(studio, /useState\(false\)/);
 assert.match(studio, /rights_confirmed/);
 assert.match(studio, /synthetic_patient_confirmed/);
 assert.match(studio, /\/api\/medical-simulation\/jobs/);
+assert.match(
+  vercel,
+  /script-src 'self' 'unsafe-inline'/,
+  "Next.js hydration bootstrap must be permitted by the production CSP.",
+);
 assert.match(serverGateway, /timingSafeEqual/);
 assert.match(serverGateway, /MEDICAL_SIMULATION_GATEWAY_ENABLED/);
 assert.match(serverGateway, /x-teys-engine-key/);
