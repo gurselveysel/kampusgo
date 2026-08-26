@@ -1,0 +1,35 @@
+label:has(> input[type="checkbox"]) {
+  min-height: 74px;
+  margin-top: 4px;
+  padding: 13px 14px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: flex-start;
+  gap: 11px;
+  border: 1px solid rgba(181, 138, 67, 0.25);
+  border-radius: 12px;
+  color: #5d6879;
+  background: rgba(255, 249, 230, 0.64);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 720;
+  letter-spacing: 0;
+  line-height: 1.55;
+}
+
+label:has(> input[type="checkbox"]) > input[type="checkbox"] {
+  width: 18px !important;
+  min-width: 18px;
+  height: 18px !important;
+  min-height: 18px !important;
+  margin: 1px 0 0;
+  padding: 0 !important;
+  border-radius: 4px !important;
+  accent-color: #b52b32;
+  box-shadow: none !important;
+}
+
+label:has(> input[type="checkbox"]:focus-visible) {
+  border-color: rgba(181, 43, 50, 0.54);
+  box-shadow: 0 0 0 4px rgba(181, 43, 50, 0.09);
+}
