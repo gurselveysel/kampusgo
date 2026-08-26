@@ -6,6 +6,11 @@ on:
       - feature/teys-medical-simulation-engine
     paths:
       - .github/workflows/vendor-arxivisual-backend.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/vendor-arxivisual-backend.yml
 
 permissions:
   contents: write
@@ -19,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout KampüsGO branch
+      - name: Checkout KampüsGO feature branch
         uses: actions/checkout@v4
         with:
           ref: feature/teys-medical-simulation-engine
@@ -66,5 +71,3 @@ jobs:
           fi
           git commit -m "vendor: import approved arXivisual backend snapshot"
           git push origin HEAD:feature/teys-medical-simulation-engine
-
-# Triggered intentionally after branch creation so the first push vendors the approved snapshot.
