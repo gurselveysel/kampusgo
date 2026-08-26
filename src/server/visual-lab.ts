@@ -124,6 +124,37 @@ export function normalizeVideoId(input: unknown): string | null {
   return /^viz_[a-zA-Z0-9_]{1,120}$/.test(value) ? value : null;
 }
 
+export function allowedVisualLabMediaUrl(input: string | null): URL | null {
+  if (!input) return null;
+
+  let url: URL;
+  try {
+    url = new URL(input);
+  } catch {
+    return null;
+  }
+
+  if (url.protocol !== "https:" || url.username || url.password) return null;
+
+  const allowedHosts = (process.env.VISUAL_LAB_MEDIA_ALLOWED_HOSTS ?? "")
+    .split(",")
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (allowedHosts.length === 0) return null;
+
+  const hostname = url.hostname.toLowerCase();
+  const allowed = allowedHosts.some((pattern) => {
+    if (pattern.startsWith("*.")) {
+      const suffix = pattern.slice(1);
+      return hostname.endsWith(suffix) && hostname.length > suffix.length;
+    }
+    return hostname === pattern;
+  });
+
+  return allowed ? url : null;
+}
+
 async function parseResponseBody(response: Response): Promise<unknown> {
   const contentType = response.headers.get("content-type") ?? "";
   if (contentType.includes("application/json")) {
