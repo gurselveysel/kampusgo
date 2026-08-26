@@ -20,6 +20,7 @@ const videoRoute = read("app/api/visual-lab/video/[videoId]/route.ts");
 
 assert.match(rootEnv, /^VISUAL_LAB_GATEWAY_ENABLED=false$/m);
 assert.match(rootEnv, /^VISUAL_LAB_PILOT_ACCESS_TOKEN=.+$/m);
+assert.match(rootEnv, /^VISUAL_LAB_MEDIA_ALLOWED_HOSTS=$/m);
 assert.doesNotMatch(rootEnv, /^NEXT_PUBLIC_VISUAL_LAB_/m);
 
 assert.match(backendEnv, /^VISUAL_LAB_RAW_RENDER_ENABLED=false$/m);
@@ -32,6 +33,8 @@ assert.match(helper, /timingSafeEqual/);
 assert.match(helper, /createHmac\("sha256"/);
 assert.match(helper, /modern IDs only/);
 assert.match(helper, /x-visual-lab-key/);
+assert.match(helper, /allowedVisualLabMediaUrl/);
+assert.match(helper, /url\.protocol !== "https:"/);
 
 assert.match(accessRoute, /httpOnly: true/);
 assert.match(accessRoute, /sameSite: "strict"/);
@@ -43,6 +46,8 @@ assert.doesNotMatch(processRoute, /\/api\/render/);
 assert.match(paperRoute, /protectVideoUrls/);
 assert.match(paperRoute, /\/api\/visual-lab\/video\//);
 assert.match(videoRoute, /hasPilotAccess\(request\)/);
+assert.match(videoRoute, /redirect: "manual"/);
+assert.match(videoRoute, /contains no Visual Lab service key/);
 assert.match(videoRoute, /x-content-type-options/);
 
 console.log("Visual Lab gateway contract passed.");
