@@ -50,6 +50,7 @@ assert.match(page, /VitalMonitor/);
 assert.match(page, /TeamPanel/);
 assert.match(page, /ArxivisualScenePanel/);
 assert.match(page, /taskRunner/);
+assert.match(page, /disabled=\{!canEvaluate \|\| Boolean\(debrief\)\}/);
 assert.match(page, /completedRequiredCount/);
 assert.match(page, /production/i);
 

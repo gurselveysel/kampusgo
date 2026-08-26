@@ -351,6 +351,9 @@ export default function MedicalSimulationPage() {
   const nextRequiredAction = requiredActions.find(
     (action) => !selectedActionIds.includes(action.id) && visibleAction(action, selectedActionIds, phase),
   );
+  const canEvaluate =
+    completedRequiredCount === requiredActions.length &&
+    (!selectedModule.requiresRationale || rationale.trim().length >= 40);
 
   const runningScore = useMemo(() => {
     const actionScore = selectedModule.actions
@@ -436,7 +439,7 @@ export default function MedicalSimulationPage() {
   }
 
   function evaluateScenario() {
-    if (selectedActionIds.length === 0) return;
+    if (!canEvaluate) return;
 
     const selectedActions = selectedModule.actions.filter((action) =>
       selectedActionIds.includes(action.id),
@@ -812,10 +815,14 @@ export default function MedicalSimulationPage() {
             <button
               className={styles.evaluateButton}
               type="button"
-              disabled={selectedActionIds.length === 0 || Boolean(debrief)}
+              disabled={!canEvaluate || Boolean(debrief)}
               onClick={evaluateScenario}
             >
-              Simülasyonu bitir ve debriefing'i aç
+              {completedRequiredCount < requiredActions.length
+                ? `Önce zorunlu görevleri tamamla (${completedRequiredCount}/${requiredActions.length})`
+                : selectedModule.requiresRationale && rationale.trim().length < 40
+                  ? "Önce klinik gerekçeyi tamamla"
+                  : "Simülasyonu bitir ve debriefing'i aç"}
             </button>
           </div>
 
