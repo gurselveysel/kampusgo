@@ -6,11 +6,14 @@ Bu dizin, KampüsGO Görsel Akademi arayüzünün gerçek içerik analiz ve anim
 
 - ArXivisual kaynak çalışma ağacı sabit bir commit üzerinden içe aktarıldı.
 - Dosya bütünlük manifesti üretildi: `UPSTREAM_FILES.sha256`.
+- Upstream atıf ve provenance kaydı `THIRD_PARTY_NOTICES.md` içine alındı.
 - KampüsGO güvenlik overlay'i eklendi.
 - Ham Python/Manim render uç noktası varsayılan olarak kapatıldı.
-- Korunan API uç noktaları için sunucu taraflı servis anahtarı zorunlu hâle getirildi.
+- Korunan backend API uç noktaları için sunucu taraflı servis anahtarı zorunlu hâle getirildi.
 - Yerel pilot için kaynak ve işlem sınırları bulunan Docker Compose tanımı eklendi.
-- Next.js tarafına sağlık ve kimliği doğrulanmış pilot metadata geçitleri eklendi.
+- Next.js tarafında sağlık, pilot metadata, iş başlatma, durum, sonuç ve korunan video geçitleri oluşturuldu.
+- Pilot erişimi ayrı bir anahtar ve sekiz saatlik HttpOnly/SameSite=Strict oturum çereziyle sınırlandı.
+- Görsel Akademi çalışma alanı gerçek job polling ve sonuç görüntüleme akışına hazırlandı.
 - Production kararı hâlâ **NO-GO** durumundadır.
 
 ## Kaynak taban
@@ -23,13 +26,13 @@ Bu dizin, KampüsGO Görsel Akademi arayüzünün gerçek içerik analiz ve anim
 - İçe aktarım yolu: `services/visual-lab/upstream/arxivisual`
 - İçe aktarım biçimi: çalışma ağacı kaynak görüntüsü; iç içe `.git` dizini tutulmaz
 
-`UPSTREAM.json` makine tarafından okunabilen kaynak kaydını içerir. `scripts/visual-lab/sync-upstream.sh` aynı commit'i tekrar üretilebilir biçimde içe aktarır.
+`UPSTREAM.json` makine tarafından okunabilen kaynak kaydını içerir. `scripts/visual-lab/sync-upstream.sh` aynı commit'i tekrar üretilebilir biçimde içe aktarır. Kaynak senkronizasyonu ile rutin entegrasyon QA birbirinden ayrı GitHub Actions işlerinde yürütülür.
 
 ## Mimari sınır
 
 KampüsGO'nun mevcut Next.js uygulaması yalnızca kullanıcı arayüzü ve güvenli API geçidi olarak kalır. Ağır işlemler ayrı servislerde çalıştırılır:
 
-1. **KampüsGO Web:** Vercel üzerinde Next.js arayüzü.
+1. **KampüsGO Web:** Vercel üzerinde Next.js arayüzü ve server-side gateway.
 2. **Visual Lab API:** FastAPI tabanlı iş kabulü, durum ve sonuç API'si.
 3. **Render Worker:** Manim, FFmpeg, LaTeX, Cairo ve Pango içeren izole container.
 4. **İş kuyruğu:** Dayanıklı yürütme ve yeniden deneme katmanı.
@@ -49,6 +52,27 @@ KampüsGO'nun mevcut Next.js uygulaması yalnızca kullanıcı arayüzü ve güv
 - pilot durumunu açıkça gösteren `/api/pilot` metadata uç noktası.
 
 `overlays/backend/db/connection.py`, SQLite ve PostgreSQL adreslerini açıkça destekler; PostgreSQL pool parametrelerinin SQLite'a yanlışlıkla uygulanmasını engeller.
+
+## KampüsGO server gateway
+
+`src/server/visual-lab.ts` ve `app/api/visual-lab/**` aşağıdaki sınırları uygular:
+
+- tüm iş ve medya uç noktalarında pilot oturumu,
+- backend servis anahtarının yalnız server-side kullanılması,
+- modern arXiv kimliği, job kimliği ve video kimliği doğrulaması,
+- same-origin kontrolü,
+- kontrollü timeout ve hata eşleme,
+- bulut medya yönlendirmelerinde servis anahtarının ikinci hosta gönderilmemesi,
+- yalnız `VISUAL_LAB_MEDIA_ALLOWED_HOSTS` içinde tanımlı HTTPS medya hostlarının kabul edilmesi,
+- video URL'lerinin korunan KampüsGO gateway adreslerine dönüştürülmesi.
+
+Geçit `.env.example` içinde `VISUAL_LAB_GATEWAY_ENABLED=false` olarak gelir. Backend ve secret doğrulaması tamamlanmadan etkinleştirilmez.
+
+## Kullanıcı ekranları
+
+- `/gorsel-akademi`: Motor bağlı değilken de çalışan etkileşimli ürün prototipi.
+- `/gorsel-akademi/motor`: Backend erişilebilirliği ve güvenlik sınırlarını gösteren teknik durum ekranı.
+- `/gorsel-akademi/calismalar`: Pilot anahtarıyla açılan iş başlatma, dört saniyelik polling, sonuç, bölüm özeti ve video görüntüleme çalışma alanı.
 
 ## Yerel pilot
 
@@ -76,4 +100,4 @@ API yalnızca `127.0.0.1:8001` üzerinden yerel makineye bağlanır. Next.js uyg
 
 ## Production durumu
 
-**NO-GO.** Bu entegrasyon dalı geliştirme ve kontrollü preview içindir. Kurum/kullanıcı kimliği, kota, denetim izi, içerik lisans kapısı, kalıcı nesne depolama, dayanıklı kuyruk ve maliyet koruması tamamlanmadan production dağıtımı yapılmaz.
+**NO-GO.** Bu entegrasyon dalı geliştirme ve kontrollü preview içindir. Kurum/kullanıcı kimliği, kalıcı kota, denetim izi, içerik lisans kapısı, kalıcı nesne depolama, dayanıklı kuyruk, secret manager ve maliyet koruması tamamlanmadan production dağıtımı yapılmaz.
