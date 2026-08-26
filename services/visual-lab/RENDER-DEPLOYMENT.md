@@ -21,8 +21,11 @@ Blueprint şu güvenlik kararlarıyla gelir:
 - 1 GB kalıcı `/data` diski,
 - raw render kapalı,
 - API anahtarı zorunlu,
+- kaynak kullanım hakkı onayı zorunlu,
 - docs/OpenAPI kapalı,
-- tek eşzamanlı pipeline ve render sınırı.
+- tek eşzamanlı pipeline ve render sınırı,
+- saatlik en fazla üç yeni iş,
+- iki saatlik mükerrer makale engeli.
 
 ## 2. Render'ın isteyeceği gizli değerler
 
@@ -79,6 +82,7 @@ Beklenen kritik alanlar:
 
 - `mode: controlled_pilot`
 - `rawRenderEnabled: false`
+- `sourceRightsConfirmationRequired: true`
 - `authenticationRequired: true`
 - `productionAllowed: false`
 
@@ -89,6 +93,18 @@ curl -i "$VISUAL_LAB_RENDER_URL/api/papers"
 ```
 
 Beklenen yanıt: `401 Unauthorized`.
+
+Kaynak hakkı onayı olmadan üretimin başlamadığını doğrulayın:
+
+```bash
+curl -i \
+  -H "X-Visual-Lab-Key: $VISUAL_LAB_API_KEY" \
+  -H "Content-Type: application/json" \
+  --data '{"arxiv_id":"1706.03762"}' \
+  "$VISUAL_LAB_RENDER_URL/api/process"
+```
+
+Beklenen yanıt: `428 Precondition Required`. Bu istek LLM veya render işi başlatmaz.
 
 Ham kod render uç noktasının kapalı olduğunu doğrulayın:
 
@@ -127,9 +143,11 @@ KampüsGO preview ortamında:
 3. Servis anahtarı durumunun `Güvenli geçit doğrulandı` olduğunu doğrulayın.
 4. `/gorsel-akademi/calismalar` sayfasını açın.
 5. Ayrı pilot erişim anahtarını girin.
-6. Kullanım hakkı doğrulanmış tek bir modern arXiv kimliğiyle iş başlatın.
-7. İşin kuyruk, analiz, üretim ve render aşamalarını izleyin.
-8. Bölüm özetleri ile korunan video akışını kontrol edin.
+6. Kullanım hakkı doğrulanmış tek bir modern arXiv kimliği girin.
+7. Zorunlu kaynak kullanım hakkı kutusunu yalnız gerçekten yetkiliyseniz işaretleyin.
+8. İşin kuyruk, analiz, üretim ve render aşamalarını izleyin.
+9. Bölüm özetleri ile korunan video akışını kontrol edin.
+10. Aynı saat içinde üçten fazla yeni iş kabul edilmediğini doğrulayın.
 
 ## 6. Kontrollü pilot sınırı
 
@@ -140,6 +158,7 @@ Render servisi kurulmuş olsa bile aşağıdaki kararlar değişmez:
 - gerçek öğrenci verisi işlenmez,
 - otomatik akademik yayın yapılmaz,
 - aynı anda yalnız bir üretim işi çalıştırılır,
+- saatlik üç iş limiti yükseltilmez,
 - yalnız kullanım hakkı doğrulanmış kaynaklar kullanılır,
 - Azure harcama kotası olmadan pilot başlatılmaz.
 
