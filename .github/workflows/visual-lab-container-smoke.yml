@@ -74,7 +74,6 @@ jobs:
         env:
           VISUAL_LAB_SMOKE_IMAGE: kampusgo-visual-lab:smoke
         run: |
-          # Skip the script's build step because Buildx already loaded the image.
           image="$VISUAL_LAB_SMOKE_IMAGE"
           container="kampusgo-visual-lab-smoke"
           key="visual-lab-smoke-key-0123456789abcdef"
@@ -108,6 +107,10 @@ jobs:
             --env USE_TEMPORAL=0 \
             --env PIPELINE_CONCURRENCY=1 \
             --env RENDER_CONCURRENCY=1 \
+            --env RATE_LIMIT_PROCESS_PER_IP=3 \
+            --env RATE_LIMIT_PROCESS_GLOBAL=3 \
+            --env RATE_LIMIT_PROCESS_WINDOW_SECONDS=3600 \
+            --env PROCESS_DEDUPE_TTL_SECONDS=7200 \
             "$image" >/dev/null
 
           for attempt in $(seq 1 90); do
@@ -134,9 +137,16 @@ jobs:
           pilot = json.loads(Path('/tmp/pilot.json').read_text())
           assert pilot['mode'] == 'controlled_pilot', pilot
           assert pilot['rawRenderEnabled'] is False, pilot
+          assert pilot['sourceRightsConfirmationRequired'] is True, pilot
           assert pilot['authenticationRequired'] is True, pilot
           assert pilot['productionAllowed'] is False, pilot
           PY
+
+          test "$(curl --silent --output /tmp/no-rights.json --write-out '%{http_code}' \
+            --header "X-Visual-Lab-Key: $key" \
+            --header 'Content-Type: application/json' \
+            --data '{"arxiv_id":"1706.03762"}' \
+            "$base/api/process")" = "428"
 
           test "$(curl --silent --output /tmp/raw-render.json --write-out '%{http_code}' \
             --header "X-Visual-Lab-Key: $key" \
