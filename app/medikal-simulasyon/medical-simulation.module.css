@@ -2876,3 +2876,47 @@
     transition-duration: 1ms !important;
   }
 }
+.experienceSwitcher {
+  position: fixed;
+  z-index: 100;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  gap: 7px;
+  padding: 7px;
+  border: 1px solid rgba(210, 224, 227, 0.95);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 15px 45px rgba(6, 25, 39, 0.2);
+  backdrop-filter: blur(14px);
+}
+
+.experienceSwitcher button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #415460;
+  background: #edf3f3;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.experienceSwitcher .experienceActive {
+  color: white;
+  background: #0a777d;
+}
+
+@media (max-width: 520px) {
+  .experienceSwitcher {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .experienceSwitcher button {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 7px;
+  }
+}

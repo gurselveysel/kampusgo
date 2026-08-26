@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import ArxivisualScenePanel, {
   type ArxivisualSceneContext,
 } from "./ArxivisualScenePanel";
+import ClinicalSimulationExperience from "./ClinicalSimulationExperience";
 import styles from "./medical-simulation.module.css";
 import {
   competencyLoop,
@@ -285,7 +286,7 @@ function TeamPanel({ selectedActionIds }: { selectedActionIds: string[] }) {
   );
 }
 
-export default function MedicalSimulationPage() {
+function LegacyMedicalSimulationPage() {
   const [progress, setProgress] = useState<ProgressState>(emptyProgress);
   const [selectedModuleId, setSelectedModuleId] = useState<ModuleId>(1);
   const [selectedActionIds, setSelectedActionIds] = useState<string[]>([]);
@@ -961,5 +962,33 @@ export default function MedicalSimulationPage() {
         <b>Production: NO-GO · Gerçek hasta verisi kullanılmaz</b>
       </footer>
     </main>
+  );
+}
+
+export default function MedicalSimulationPage() {
+  const [experience, setExperience] = useState<"clinical" | "library">("clinical");
+
+  return (
+    <>
+      <nav className={styles.experienceSwitcher} aria-label="Medikal simülasyon deneyimi">
+        <button
+          type="button"
+          aria-pressed={experience === "clinical"}
+          className={experience === "clinical" ? styles.experienceActive : ""}
+          onClick={() => setExperience("clinical")}
+        >
+          Uçtan uca klinik vaka
+        </button>
+        <button
+          type="button"
+          aria-pressed={experience === "library"}
+          className={experience === "library" ? styles.experienceActive : ""}
+          onClick={() => setExperience("library")}
+        >
+          8 modüllü sahne kitaplığı
+        </button>
+      </nav>
+      {experience === "clinical" ? <ClinicalSimulationExperience /> : <LegacyMedicalSimulationPage />}
+    </>
   );
 }
