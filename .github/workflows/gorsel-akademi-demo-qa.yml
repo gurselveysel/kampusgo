@@ -22,14 +22,14 @@ concurrency:
 
 jobs:
   vendor-arxivisual-backend:
-    if: github.event_name == 'pull_request' && github.head_ref == 'feature/teys-medical-simulation-engine'
+    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout TEYS feature branch
         uses: actions/checkout@v4
         with:
-          ref: feature/teys-medical-simulation-engine
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: Clone approved arXivisual upstream
@@ -63,6 +63,8 @@ jobs:
           DOC
 
       - name: Commit vendored snapshot when changed
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -72,7 +74,7 @@ jobs:
             exit 0
           fi
           git commit -m "vendor: import approved arXivisual backend snapshot"
-          git push origin HEAD:feature/teys-medical-simulation-engine
+          git push origin "HEAD:${HEAD_BRANCH}"
 
   next-build:
     runs-on: ubuntu-latest
