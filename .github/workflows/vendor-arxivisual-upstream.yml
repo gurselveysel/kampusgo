@@ -1,4 +1,4 @@
-name: Import and Validate arXivisual Upstream
+name: Visual Lab Integration QA
 
 on:
   push:
@@ -8,6 +8,21 @@ on:
       - ".github/workflows/vendor-arxivisual-upstream.yml"
       - "scripts/visual-lab/**"
       - "services/visual-lab/**"
+      - "src/server/visual-lab.ts"
+      - "app/api/visual-lab/**"
+      - "app/gorsel-akademi/**"
+      - ".env.example"
+      - ".gitignore"
+      - ".vercelignore"
+      - "tsconfig.json"
+      - "package.json"
+      - "package-lock.json"
+  pull_request:
+    paths:
+      - ".github/workflows/vendor-arxivisual-upstream.yml"
+      - "scripts/visual-lab/**"
+      - "services/visual-lab/**"
+      - "src/server/visual-lab.ts"
       - "app/api/visual-lab/**"
       - "app/gorsel-akademi/**"
       - ".env.example"
@@ -19,33 +34,30 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: arxivisual-upstream-${{ github.ref }}
-  cancel-in-progress: false
+  group: visual-lab-integration-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  vendor-upstream:
-    if: github.actor != 'github-actions[bot]'
+  integration-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 22
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
 
     steps:
-      - name: Checkout integration branch
+      - name: Checkout branch
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.ref_name }}
 
-      - name: Import pinned upstream working tree
-        run: bash scripts/visual-lab/sync-upstream.sh
-
-      - name: Validate imported snapshot
+      - name: Verify pinned upstream source integrity
         shell: bash
         run: |
           set -euo pipefail
           target="services/visual-lab/upstream/arxivisual"
+          test -d "$target"
+          test ! -d "$target/.git"
           test -f "$target/README.md"
           test -f "$target/backend/main.py"
           test -f "$target/frontend/package.json"
@@ -59,48 +71,10 @@ jobs:
 
           oversized="$(find "$target" -type f -size +99M -print -quit)"
           if [[ -n "$oversized" ]]; then
-            echo "A source file exceeds the normal GitHub file limit: $oversized" >&2
+            echo "A source file exceeds 100 MB: $oversized" >&2
             exit 1
           fi
 
-      - name: Commit source snapshot to the integration branch
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add -f services/visual-lab/upstream/arxivisual
-          git add services/visual-lab/UPSTREAM_FILES.sha256
-
-          if git diff --cached --quiet; then
-            echo "Pinned upstream snapshot is already current."
-            exit 0
-          fi
-
-          upstream_ref="$(jq -r '.ref' services/visual-lab/UPSTREAM.json)"
-          git commit -m "chore(vendor): import arXivisual ${upstream_ref}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-
-  integration-qa:
-    needs: vendor-upstream
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    steps:
-      - name: Checkout validated branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref_name }}
-
-      - name: Verify pinned source integrity
-        shell: bash
-        run: |
-          set -euo pipefail
-          target="services/visual-lab/upstream/arxivisual"
-          test -d "$target"
-          test ! -d "$target/.git"
-          test -s "services/visual-lab/UPSTREAM_FILES.sha256"
           (
             cd "$target"
             sha256sum --check ../../UPSTREAM_FILES.sha256
@@ -116,22 +90,16 @@ jobs:
           python -m compileall -q services/visual-lab/upstream/arxivisual/backend
           python -m compileall -q services/visual-lab/overlays/backend
 
-      - name: Enforce pilot security defaults
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q '^VISUAL_LAB_RAW_RENDER_ENABLED=false$' services/visual-lab/.env.example
-          grep -q 'path == "/api/render"' services/visual-lab/overlays/backend/main.py
-          grep -q 'productionAllowed.*False' services/visual-lab/overlays/backend/main.py
-          grep -q 'X-Visual-Lab-Key' services/visual-lab/PILOT-RUNBOOK.md
+      - name: Enforce Visual Lab gateway security contract
+        run: node scripts/visual-lab/gateway-contract.mjs
 
       - name: Validate Docker Compose model
         shell: bash
         run: |
           set -euo pipefail
           cp services/visual-lab/.env.example services/visual-lab/.env
+          trap 'rm -f services/visual-lab/.env' EXIT
           docker compose -f services/visual-lab/docker-compose.pilot.yml config --quiet
-          rm services/visual-lab/.env
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
