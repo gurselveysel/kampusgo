@@ -69,4 +69,4 @@ jobs:
           git commit -m "vendor: import approved arXivisual backend snapshot"
           git push origin HEAD:feature/teys-medical-simulation-engine
 
-# Pull request synchronization trigger: default-branch workflow registration verified.
+# This feature-level workflow remains available for manual recovery; the registered default-branch QA workflow performs the automatic import.
