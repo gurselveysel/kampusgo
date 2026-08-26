@@ -26,6 +26,7 @@ const files = [
   ["assets/illustrations/commission-review.webp", "assets/illustrations/commission-review.webp"],
   ["assets/illustrations/digital-wallet.webp", "assets/illustrations/digital-wallet.webp"],
   ["assets/illustrations/integration-gates.webp", "assets/illustrations/integration-gates.webp"],
+  ["assets/medical-simulation/arxivisual-stemi-preview.mp4", "assets/medical-simulation/arxivisual-stemi-preview.mp4"],
 ];
 
 for (const [source, destination] of files) {

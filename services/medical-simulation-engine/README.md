@@ -32,7 +32,7 @@ Bu oran resmî UÇEP eşlemesi veya akreditasyon beyanı değildir. Nihai eşlem
 
 ## Mevcut çalışan katman
 
-`app/medikal-simulasyon` şu anda tarayıcı içinde çalışan deterministik bir kontrollü pilot sunar:
+`app/medikal-simulasyon` tarayıcı içinde çalışan deterministik kontrollü pilotu korur:
 
 - sekiz ön koşullu modül,
 - sentetik STEMI → VF arrest senaryosu,
@@ -47,7 +47,9 @@ Bu oran resmî UÇEP eşlemesi veya akreditasyon beyanı değildir. Nihai eşlem
 - ayrıntılı debriefing,
 - yerel pilot ilerleme kaydı.
 
-Gerçek hasta verisi, klinik karar desteği, canlı hastane entegrasyonu veya biyometrik veri kullanılmaz.
+Bu katmana ek olarak seçilen son klinik karar, güvenli Next.js sunucu geçidi üzerinden gerçek arXivisual AI → doğrulama → Manim render işine dönüştürülebilir. Arayüz; pilot erişimi, uzman onay referansı, iş ilerlemesi ve korunan MP4 oynatmayı tek akışta sunar. Backend servis anahtarı tarayıcıya verilmez.
+
+Gerçek hasta verisi, klinik karar desteği, canlı hastane entegrasyonu veya biyometrik veri kullanılmaz. Haricî AI sağlayıcısı ve container servisi etkin değilse deterministik simülasyon çalışmaya devam eder; gerçek sahne üretimi bu durumda `DOĞRULANMADI` olarak kalır.
 
 ## Upstream animasyon tabanı
 
@@ -57,7 +59,7 @@ GitHub Actions, `feature/teys-medical-simulation*` dallarında açılan pull req
 
 Kaynak commit'i `UPSTREAM_COMMIT`, kullanım ve provenance kaydı `UPSTREAM_SOURCE.md` dosyasında tutulur. Runtime veritabanları, cache, oluşturulmuş medya ve demo videoları içe aktarılmaz.
 
-Upstream motorun hedef kullanımı:
+Upstream motorun etkin kullanım alanları:
 
 - klinik kavram animasyonları,
 - prosedür açıklama sahneleri,
@@ -65,9 +67,9 @@ Upstream motorun hedef kullanımı:
 - senaryo öncesi mikro anlatımlar,
 - debriefing sırasında uzman yaklaşımı animasyonları.
 
-Upstream ham Python/Manim render uç noktası genel kullanıcıya açılmamalıdır. Üretilen kod yalnız izole worker/container içinde, süre–CPU–RAM–disk sınırlarıyla çalıştırılmalıdır.
+Medikal adaptör doğrudan upstream `ManimGenerator`, `CodeValidator` ve `process_visualization` katmanlarını kullanır. AI çıktısı ayrıca AST tabanlı izin listesiyle incelenir; dosya, ağ, süreç, reflection ve sınırsız döngü yolları reddedilir. Ham Python/Manim render uç noktası medikal API yüzeyinde hiç kayıtlı değildir. Kod yalnız izole worker/container içinde, süre–CPU–RAM–disk sınırlarıyla çalıştırılır.
 
-## Hedef servis mimarisi
+## Uygulanan servis mimarisi
 
 ```text
 TEYS / MAMS Next.js arayüzü
@@ -102,12 +104,12 @@ TEYS / MAMS Next.js arayüzü
 - Eğitici onayı olmadan senaryo öğrenciye yayımlanmaz.
 - Production kararı şimdilik `NO-GO` durumundadır.
 
-## Sonraki teknik adımlar
+## Kalan production ön koşulları
 
-1. Scenario event sözleşmesini veritabanına taşımak.
-2. Kurum, program, kurul, öğrenci ve eğitici rol sınırlarını eklemek.
-3. Supabase/PostgreSQL kalıcılığı ve RLS politikalarını kurmak.
-4. Upstream Manim motoruna klinik sahne prompt/validator overlay'i eklemek.
-5. Ayrı container render worker'ı ve iş kuyruğu kurmak.
-6. UÇEP referans veri sürümleme ve akademik onay akışı eklemek.
+1. Kurum, program, kurul, öğrenci ve eğitici rol sınırlarını gerçek kimlik sistemiyle eklemek.
+2. Scenario event ve uzman onay kayıtlarını PostgreSQL/RLS tabanlı değişmez denetim izine taşımak.
+3. UÇEP referans veri sürümleme ve akademik kurul onay akışını tamamlamak.
+4. Render container'ını güncel fiyat kullanıcı tarafından onaylandıktan sonra ayrı HTTPS pilot ortamına almak.
+5. Azure OpenAI veya Dedalus secret'larını secret manager'da tanımlayıp maliyet bütçesi/alarmları eklemek.
+6. Sentetik ve uzman onaylı tek örnekle gerçek AI + Manim uçtan uca pilot kanıtını üretmek.
 7. Gerçek cihaz/monitör veya hastane entegrasyonuna geçmeden bağımsız güvenlik ve tıp eğitimi QA yürütmek.

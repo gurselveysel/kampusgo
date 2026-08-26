@@ -1,0 +1,79 @@
+# TEYS controlled-pilot image. Build context: services/medical-simulation-engine
+
+FROM python:3.13-slim AS base
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    ffmpeg \
+    libcairo2-dev \
+    libpango1.0-dev \
+    pkg-config \
+    sox \
+    texlive-latex-base \
+    texlive-fonts-recommended \
+    texlive-latex-extra \
+    cm-super \
+    dvipng \
+    dvisvgm \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM base AS dependencies
+
+WORKDIR /build
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY vendor/arxivisual-backend/pyproject.toml vendor/arxivisual-backend/uv.lock ./
+
+ENV UV_PROJECT_ENVIRONMENT=/opt/medical-simulation-venv
+
+RUN uv sync \
+      --python /usr/local/bin/python \
+      --no-dev \
+      --frozen \
+      --no-install-project && \
+    test -x /opt/medical-simulation-venv/bin/python && \
+    test -x /opt/medical-simulation-venv/bin/manim && \
+    test -x /opt/medical-simulation-venv/bin/uvicorn
+
+FROM base AS runtime
+
+ARG APP_UID=10001
+ARG APP_GID=10001
+
+RUN groupadd --gid ${APP_GID} medical-simulation && \
+    useradd --uid ${APP_UID} --gid ${APP_GID} --create-home medical-simulation
+
+WORKDIR /app
+
+COPY --from=dependencies /opt/medical-simulation-venv /opt/medical-simulation-venv
+COPY --chown=medical-simulation:medical-simulation vendor/arxivisual-backend/ /app/
+COPY --chown=medical-simulation:medical-simulation overlays/backend/main.py /app/main.py
+COPY --chown=medical-simulation:medical-simulation overlays/backend/medical_simulation/ /app/medical_simulation/
+COPY --chown=medical-simulation:medical-simulation prompts/clinical-simulation-scene-generator.md /app/prompts/clinical_simulation_scene_generator.md
+COPY --chown=medical-simulation:medical-simulation contracts/scenario-event.schema.json /app/contracts/scenario-event.schema.json
+COPY --chown=medical-simulation:medical-simulation UPSTREAM_COMMIT UPSTREAM_SOURCE.md /app/
+
+RUN rm -f /app/arxiviz.db /app/arxiviz.db-shm /app/arxiviz.db-wal && \
+    mkdir -p /data/jobs /data/media/videos /data/cache/voiceovers /home/medical-simulation/.cache && \
+    chown -R medical-simulation:medical-simulation /data /home/medical-simulation/.cache
+
+ENV PATH="/opt/medical-simulation-venv/bin:$PATH" \
+    PYTHONPATH="/app" \
+    PYTHONUNBUFFERED="1" \
+    ENVIRONMENT="development" \
+    STORAGE_MODE="local" \
+    RENDER_MODE="local" \
+    MEDICAL_SIMULATION_JOB_DIR="/data/jobs" \
+    MEDICAL_SIMULATION_PROMPT_PATH="/app/prompts/clinical_simulation_scene_generator.md" \
+    MEDIA_DIR="/data/media/videos" \
+    VOICEOVER_CACHE_DIR="/data/cache/voiceovers" \
+    API_HOST="0.0.0.0" \
+    API_PORT="8000"
+
+USER medical-simulation
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD python -c "import httpx; response=httpx.get('http://127.0.0.1:8000/api/medical/health', timeout=8); response.raise_for_status()"
+
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]

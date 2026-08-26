@@ -1,0 +1,4 @@
+services/medical-simulation-engine/vendor/
+services/medical-simulation-engine/tests/
+services/medical-simulation-engine/overlays/
+scripts/.medical-runtime-bundle/

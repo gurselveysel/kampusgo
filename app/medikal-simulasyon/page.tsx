@@ -2,6 +2,9 @@
 
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
+import ArxivisualScenePanel, {
+  type ArxivisualSceneContext,
+} from "./ArxivisualScenePanel";
 import styles from "./medical-simulation.module.css";
 import {
   competencyLoop,
@@ -295,6 +298,7 @@ export default function MedicalSimulationPage() {
   const [rationale, setRationale] = useState("");
   const [debrief, setDebrief] = useState<DebriefState | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [arxivisualScene, setArxivisualScene] = useState<ArxivisualSceneContext | null>(null);
 
   const selectedModule = medicalSimulationModules.find(
     (module) => module.id === selectedModuleId,
@@ -357,6 +361,7 @@ export default function MedicalSimulationPage() {
     setReveals([]);
     setRationale("");
     setDebrief(null);
+    setArxivisualScene(null);
   }
 
   function selectModule(module: SimulationModule) {
@@ -396,6 +401,14 @@ export default function MedicalSimulationPage() {
     setPhase(nextPhase);
     setElapsedMinutes(nextMinute);
     setFinancialCost((current) => current + (action.financialCost ?? 0));
+    setArxivisualScene({
+      module: selectedModule,
+      action,
+      beforeVitals: vitals,
+      afterVitals: nextVitals,
+      beforePhase: phase,
+      afterPhase: nextPhase,
+    });
     setTimeline((current) => [
       ...current,
       {
@@ -678,6 +691,8 @@ export default function MedicalSimulationPage() {
               <article><small>Tetkik maliyeti</small><strong>{formatCurrency(financialCost)}</strong></article>
               <article><small>Kazanılan beceri</small><strong>{selectedActionIds.length}</strong></article>
             </div>
+
+            <ArxivisualScenePanel context={arxivisualScene} />
 
             <div className={styles.actionGroups}>
               {actionGroups.map(([group, actions]) => (

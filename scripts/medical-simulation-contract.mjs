@@ -16,6 +16,11 @@ function exists(relativePath) {
 const page = read("app/medikal-simulasyon/page.tsx");
 const data = read("app/medikal-simulasyon/simulation-data.ts");
 const css = read("app/medikal-simulasyon/medical-simulation.module.css");
+const arxivisualPanel = read("app/medikal-simulasyon/ArxivisualScenePanel.tsx");
+const serverGateway = read("src/server/medical-simulation.ts");
+const accessRoute = read("app/api/medical-simulation/access/route.ts");
+const sceneRoute = read("app/api/medical-simulation/scenes/route.ts");
+const videoRoute = read("app/api/medical-simulation/video/[videoId]/route.ts");
 const engineReadme = read("services/medical-simulation-engine/README.md");
 const prompt = read(
   "services/medical-simulation-engine/prompts/clinical-simulation-scene-generator.md",
@@ -31,7 +36,19 @@ assert.match(page, /Simülasyonu bitir ve debriefing'i aç/);
 assert.match(page, /PatientFigure/);
 assert.match(page, /VitalMonitor/);
 assert.match(page, /TeamPanel/);
+assert.match(page, /ArxivisualScenePanel/);
 assert.match(page, /production/i);
+
+assert.match(arxivisualPanel, /ARXIVISUAL · GERÇEK AI \+ MANIM HATTI/);
+assert.match(arxivisualPanel, /expert_approval_reference/);
+assert.match(arxivisualPanel, /voiceover_enabled: false/);
+assert.match(serverGateway, /timingSafeEqual/);
+assert.match(serverGateway, /MEDICAL_SIMULATION_GATEWAY_ENABLED/);
+assert.match(serverGateway, /x-medical-simulation-key/);
+assert.match(accessRoute, /httpOnly: true/);
+assert.match(accessRoute, /sameSite: "strict"/);
+assert.match(sceneRoute, /x-expert-approval-confirmed/);
+assert.match(videoRoute, /MEDICAL_SIMULATION_MEDIA_ALLOWED_HOSTS|allowedMedicalMediaUrl/);
 
 for (let moduleId = 1; moduleId <= 8; moduleId += 1) {
   assert.match(data, new RegExp(`id: ${moduleId},`), `Module ${moduleId} is missing.`);
@@ -66,5 +83,32 @@ assert.equal(schema.$defs.patientState.additionalProperties, false);
 assert.deepEqual(schema.properties.module_id.minimum, 1);
 assert.deepEqual(schema.properties.module_id.maximum, 8);
 assert.ok(schema.required.includes("expert_approval_reference"));
+
+for (const requiredPath of [
+  "services/medical-simulation-engine/Dockerfile.pilot",
+  "services/medical-simulation-engine/docker-compose.pilot.yml",
+  "services/medical-simulation-engine/overlays/backend/main.py",
+  "services/medical-simulation-engine/overlays/backend/medical_simulation/pipeline.py",
+  "services/medical-simulation-engine/overlays/backend/medical_simulation/safety.py",
+  "services/medical-simulation-engine/PILOT-RUNBOOK.md",
+  "render.yaml",
+]) {
+  assert.ok(exists(requiredPath), `${requiredPath} is missing.`);
+}
+
+const engineMain = read("services/medical-simulation-engine/overlays/backend/main.py");
+const enginePipeline = read(
+  "services/medical-simulation-engine/overlays/backend/medical_simulation/pipeline.py",
+);
+const engineSafety = read(
+  "services/medical-simulation-engine/overlays/backend/medical_simulation/safety.py",
+);
+assert.match(engineMain, /rawRenderEnabled": False/);
+assert.match(engineMain, /MEDICAL_SIMULATION_API_KEY/);
+assert.match(enginePipeline, /class MedicalManimGenerator\(ManimGenerator\)/);
+assert.match(enginePipeline, /CodeValidator/);
+assert.match(enginePipeline, /process_visualization/);
+assert.match(engineSafety, /ast\.parse/);
+assert.match(engineSafety, /BLOCKED_NAMES/);
 
 console.log("TEYS medical simulation contract passed.");

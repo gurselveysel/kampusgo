@@ -1,0 +1,12 @@
+**/.git
+**/.DS_Store
+**/__pycache__
+**/.pytest_cache
+**/.venv
+**/*.pyc
+**/*.pyo
+vendor/arxivisual-backend/arxiviz.db*
+vendor/arxivisual-backend/media
+vendor/arxivisual-backend/demo-videos
+vendor/arxivisual-backend/few-shot
+vendor/arxivisual-backend/zed_AIAYN

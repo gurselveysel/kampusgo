@@ -11,6 +11,8 @@ on:
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/gorsel-akademi-demo-qa.yml"
+      - "src/server/medical-simulation.ts"
+      - "render.yaml"
   pull_request:
     paths:
       - "app/gorsel-akademi/**"
@@ -22,70 +24,37 @@ on:
       - "package-lock.json"
       - ".github/workflows/gorsel-akademi-demo-qa.yml"
       - ".github/workflows/vendor-arxivisual-backend.yml"
+      - "src/server/medical-simulation.ts"
+      - "render.yaml"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: kampusgo-feature-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  vendor-arxivisual-backend:
-    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'feature/teys-medical-simulation')
+  vendor-arxivisual-integrity:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
-      - name: Checkout TEYS feature branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
-
-      - name: Clone approved arXivisual upstream
+      - uses: actions/checkout@v4
+      - name: Verify pinned arXivisual snapshot boundary
+        shell: bash
         run: |
-          rm -rf /tmp/arxivisual
-          git clone --depth 1 https://github.com/rajshah6/arXivisual.git /tmp/arxivisual
-
-      - name: Vendor backend snapshot
-        run: |
-          target="services/medical-simulation-engine/vendor/arxivisual-backend"
-          rm -rf "$target"
-          mkdir -p "$target"
-          rsync -a /tmp/arxivisual/backend/ "$target"/ \
-            --exclude 'arxiviz.db*' \
-            --exclude 'media/' \
-            --exclude 'demo-videos/' \
-            --exclude '__pycache__/' \
-            --exclude '.pytest_cache/' \
-            --exclude '.venv/'
-          git -C /tmp/arxivisual rev-parse HEAD > services/medical-simulation-engine/UPSTREAM_COMMIT
-          cat > services/medical-simulation-engine/UPSTREAM_SOURCE.md <<'DOC'
-          # Upstream source record
-
-          - Source repository: `rajshah6/arXivisual`
-          - Imported component: `backend/`
-          - Import mode: source snapshot copied without runtime databases, caches, generated media or demo videos
-          - Purpose: KampüsGO / TEYS medical simulation rendering and AI pipeline adaptation
-          - Authorization basis: project owner confirmed open-source reuse permission in the project conversation on 26 August 2026
-
-          The exact upstream commit is recorded in `UPSTREAM_COMMIT`. Original headers and attribution inside imported files are retained.
-          DOC
-
-      - name: Commit vendored snapshot when changed
-        env:
-          HEAD_BRANCH: ${{ github.head_ref }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add services/medical-simulation-engine
-          if git diff --cached --quiet; then
-            echo "Vendor snapshot already current."
-            exit 0
-          fi
-          git commit -m "vendor: import approved arXivisual backend snapshot"
-          git push origin "HEAD:${HEAD_BRANCH}"
+          engine="services/medical-simulation-engine"
+          commit="$(tr -d '\r\n' < "$engine/UPSTREAM_COMMIT")"
+          [[ "$commit" =~ ^[0-9a-f]{40}$ ]]
+          test -f "$engine/UPSTREAM_SOURCE.md"
+          test -f "$engine/vendor/arxivisual-backend/pyproject.toml"
+          test -f "$engine/vendor/arxivisual-backend/agents/manim_generator.py"
+          test -f "$engine/vendor/arxivisual-backend/rendering/local_runner.py"
+          test ! -e "$engine/vendor/arxivisual-backend/.env"
+          test -z "$(find "$engine/vendor/arxivisual-backend" -type f \
+            \( -name 'arxiviz.db*' -o -name '*.pem' -o -name '*.key' \) -print -quit)"
+          echo "Pinned arXivisual source: $commit"
 
   next-build:
     runs-on: ubuntu-latest
@@ -99,3 +68,19 @@ jobs:
       - run: npm ci
       - run: node scripts/medical-simulation-contract.mjs
       - run: npm run build
+
+  medical-adapter-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install offline contract dependencies
+        run: python -m pip install fastapi httpx pydantic pytest python-dotenv
+      - name: Compile medical adapter
+        run: python -m compileall -q services/medical-simulation-engine/overlays/backend
+      - name: Run medical adapter contract tests
+        run: python -m pytest -q services/medical-simulation-engine/tests
