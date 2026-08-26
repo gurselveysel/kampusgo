@@ -29,10 +29,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ detail: "Invalid JSON body." }, { status: 400 });
   }
 
+  const bodyRecord = typeof body === "object" && body !== null ? body : null;
   const rawArxivId =
-    typeof body === "object" && body !== null && "arxiv_id" in body
-      ? (body as { arxiv_id?: unknown }).arxiv_id
+    bodyRecord && "arxiv_id" in bodyRecord
+      ? (bodyRecord as { arxiv_id?: unknown }).arxiv_id
       : undefined;
+  const rightsConfirmed =
+    bodyRecord && "rights_confirmed" in bodyRecord
+      ? (bodyRecord as { rights_confirmed?: unknown }).rights_confirmed === true
+      : false;
   const arxivId = normalizeArxivId(rawArxivId);
 
   if (!arxivId) {
@@ -45,11 +50,24 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (!rightsConfirmed) {
+    return NextResponse.json(
+      {
+        detail:
+          "Kaynağı işleme ve türev görsel anlatım üretme hakkının bulunduğunu onaylamalısınız.",
+      },
+      { status: 428 },
+    );
+  }
+
   try {
     const upstream = await visualLabRequest(
       "/api/process",
       {
         method: "POST",
+        headers: {
+          "x-visual-lab-rights-confirmed": "true",
+        },
         body: JSON.stringify({ arxiv_id: arxivId }),
       },
       20_000,
