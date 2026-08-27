@@ -63,6 +63,30 @@ function PatientModel({ state, onRegionSelect }: { state: ClinicalState; onRegio
   );
 }
 
+function ClinicalEquipment({ state }: { state: ClinicalState }) {
+  const oxygenActive = state.flags.titratedOxygen;
+  const resuscitationActive = state.phase === "vf" || state.flags.shockDelivered;
+  return (
+    <>
+      <group position={[-1.55, 0.05, 0.35]} visible={state.flags.monitorIv}>
+        <mesh position={[0, 0.1, 0]}><cylinderGeometry args={[0.025, 0.025, 2.5, 12]} /><meshStandardMaterial color="#b9c9cc" metalness={0.8} roughness={0.25} /></mesh>
+        <mesh position={[0, 1.26, 0]}><boxGeometry args={[0.42, 0.52, 0.08]} /><meshPhysicalMaterial color="#9be8dc" transparent opacity={0.58} transmission={0.28} /></mesh>
+        <mesh position={[0, -1.14, 0]}><cylinderGeometry args={[0.35, 0.35, 0.06, 20]} /><meshStandardMaterial color="#344d58" metalness={0.6} /></mesh>
+      </group>
+      <group position={[1.52, -0.5, 0.45]} visible={oxygenActive}>
+        <mesh><cylinderGeometry args={[0.2, 0.24, 1.1, 24]} /><meshStandardMaterial color="#e8f1f1" roughness={0.38} /></mesh>
+        <mesh position={[0, 0.62, 0]}><cylinderGeometry args={[0.08, 0.08, 0.18, 16]} /><meshStandardMaterial color="#4fd8c9" emissive="#1d7c78" emissiveIntensity={0.6} /></mesh>
+      </group>
+      <group position={[1.7, -0.72, -0.45]} visible={resuscitationActive}>
+        <mesh position={[0, 0.35, 0]}><boxGeometry args={[0.9, 0.72, 0.5]} /><meshStandardMaterial color="#152c38" roughness={0.55} /></mesh>
+        <mesh position={[0, 0.44, 0.26]}><planeGeometry args={[0.62, 0.34]} /><meshStandardMaterial color={state.phase === "vf" ? "#ff4168" : "#55e1dc"} emissive={state.phase === "vf" ? "#8d1733" : "#176d70"} emissiveIntensity={1.2} /></mesh>
+        <mesh position={[-0.32, 0.88, 0]} rotation={[0, 0, -0.15]}><boxGeometry args={[0.22, 0.42, 0.16]} /><meshStandardMaterial color="#dce8e9" /></mesh>
+        <mesh position={[0.32, 0.88, 0]} rotation={[0, 0, 0.15]}><boxGeometry args={[0.22, 0.42, 0.16]} /><meshStandardMaterial color="#dce8e9" /></mesh>
+      </group>
+    </>
+  );
+}
+
 function ClinicalRoom({ state, onRegionSelect }: { state: ClinicalState; onRegionSelect: (region: Region) => void }) {
   const roomColor = useMemo(() => state.phase === "vf" ? "#270d19" : "#071824", [state.phase]);
   return (
@@ -76,6 +100,12 @@ function ClinicalRoom({ state, onRegionSelect }: { state: ClinicalState; onRegio
         <boxGeometry args={[3.5, 0.25, 2.3]} />
         <meshStandardMaterial color="#c8d8dc" roughness={0.9} />
       </mesh>
+      <mesh position={[0, 0.78, -0.42]} scale={[1.1, 0.45, 0.24]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#dbe9e9" roughness={0.95} />
+      </mesh>
+      <mesh position={[-1.63, -0.42, 0]}><boxGeometry args={[0.07, 1.25, 2.22]} /><meshStandardMaterial color="#7e969d" metalness={0.72} roughness={0.3} /></mesh>
+      <mesh position={[1.63, -0.42, 0]}><boxGeometry args={[0.07, 1.25, 2.22]} /><meshStandardMaterial color="#7e969d" metalness={0.72} roughness={0.3} /></mesh>
       <mesh position={[0, -1.28, 0]}>
         <boxGeometry args={[3.9, 0.2, 2.7]} />
         <meshStandardMaterial color="#263b48" roughness={0.75} />
@@ -84,6 +114,7 @@ function ClinicalRoom({ state, onRegionSelect }: { state: ClinicalState; onRegio
         <boxGeometry args={[1.2, 1.7, 0.25]} />
         <meshStandardMaterial color="#102c3c" emissive="#08202c" emissiveIntensity={0.8} />
       </mesh>
+      <ClinicalEquipment state={state} />
       <PatientModel state={state} onRegionSelect={onRegionSelect} />
     </>
   );

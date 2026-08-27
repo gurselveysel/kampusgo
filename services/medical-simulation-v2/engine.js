@@ -1,10 +1,17 @@
 import { DeterministicPhysiologyEngine, PHYSIOLOGY_ENGINE_VERSION } from "./physiology-engine.js";
 import { phaseFromMachine, replayMachine, teamStateFromMachine } from "./state-machine.js";
+import { DIFFICULTY_PROFILES, ENCOUNTER_CATALOG, SCENARIO_ID, SCENARIO_VERSION, getDifficulty, getEncounter } from "./scenario-catalog.js";
 
-export const ENGINE_VERSION = "teys-stemi-event-engine/3.0.0";
-export const SCENARIO_ID = "scn_stemi_vf_rosc";
-export const SCENARIO_VERSION = "2.0.0";
+export const ENGINE_VERSION = "teys-stemi-event-engine/4.0.0";
+export { DIFFICULTY_PROFILES, ENCOUNTER_CATALOG, SCENARIO_ID, SCENARIO_VERSION };
 export const SIMULATION_MODES = ["training", "assessment", "osce"];
+export const DIFFERENTIAL_OPTIONS = [
+  { id: "stemi", label: "Akut koroner sendrom / STEMI" },
+  { id: "aortic_dissection", label: "Aort diseksiyonu" },
+  { id: "pulmonary_embolism", label: "Pulmoner emboli" },
+  { id: "pericarditis", label: "Akut perikardit" },
+  { id: "non_cardiac", label: "Kardiyak dışı göğüs ağrısı" },
+];
 
 export const TOOL_CATALOG = {
   interview: [
@@ -51,6 +58,7 @@ export const TOOL_CATALOG = {
     { id: "closed_loop", label: "Kapalı döngü iletişimi başlat", timeCostSeconds: 30, evidenceId: "ucep-emergency-organization" },
     { id: "cardiology_consult", label: "Kardiyoloji konsültasyonu iste", timeCostSeconds: 60, evidenceId: "ucep-referral" },
   ],
+  reasoning: [],
 };
 
 const UCEP_EVIDENCE_BASE = {
@@ -70,6 +78,7 @@ const UCEP_EVIDENCE_BASE = {
   "ucep-bls": { task: "Temel yaşam desteği", practiceLevel: 4, source: "UÇEP 2020, Tablo 2.4, s. 126", status: "DOĞRULANMADI" },
   "ucep-referral": { task: "Uygun sevk ve klinik devir", practiceLevel: 4, source: "UÇEP 2020, Tablo 2.4, s. 125", status: "DOĞRULANMADI" },
   "ucep-emergency-organization": { task: "Acil yardım organizasyonu ve ekip çalışması", practiceLevel: 3, source: "UÇEP 2020, Tablo 2.4, s. 126", status: "DOĞRULANMADI" },
+  "ucep-clinical-reasoning": { task: "Problem temsili, ayırıcı tanı ve yeniden değerlendirme planı oluşturma", practiceLevel: null, source: "UÇEP resmî görev ve düzey eşlemesi bekleniyor", status: "DOĞRULANMADI" },
 };
 
 export const UCEP_EVIDENCE = Object.fromEntries(Object.entries(UCEP_EVIDENCE_BASE).map(([id, evidence]) => [id, {
@@ -90,29 +99,6 @@ export const TYC_EVIDENCE = {
   competence: "Belirsizlik altında güvenli ekip sorumluluğu bağlamı",
   proposedLevel: null,
   officialPlacementStatus: "DOĞRULANMADI",
-};
-
-const interviewFacts = {
-  onset: "Ağrı yaklaşık 35 dakika önce merdiven çıkarken başladı; göğsümün ortasında baskı gibi ve sol koluma yayılıyor.",
-  associated: "Soğuk terleme ve bulantı başladı. Nefesim de daralıyor.",
-  medications: "Dün gece erektil disfonksiyon için tadalafil aldım. Tansiyon ilacımı bazen unutuyorum.",
-  allergies: "Bilinen ilaç alerjim yok.",
-  risk: "Günde bir paket sigara içiyorum. Tansiyonum yüksek; babam 52 yaşında kalp krizi geçirmişti.",
-};
-
-const examFindings = {
-  "general-inspection": "Endişeli, soluk ve terli; konuşabiliyor ancak belirgin sıkıntılı.",
-  "cardiac-auscultation": "Taşikardi ve düzenli ritim; yeni belirgin üfürüm yok. Periferik perfüzyon hafif azalmış.",
-  "lung-auscultation": "Her iki akciğer alanında solunum sesleri eşit; belirgin ral yok.",
-  "peripheral-perfusion": "Radial nabızlar simetrik fakat zayıf; kapiller dolum yaklaşık 3 saniye.",
-};
-
-const testResults = {
-  ecg: "V2–V5 derivasyonlarında belirgin ST yükselmesi; akut anterior STEMI ile uyumlu sentetik eğitim bulgusu.",
-  troponin: "Sentetik yüksek duyarlılıklı troponin referans üst sınırının üzerinde; seri ölçüm bağlamı gerekir.",
-  basic_labs: "Hemoglobin, trombosit ve kreatinin sentetik aralıkta; potasyum 4,1 mmol/L.",
-  chest_xray: "Sentetik görüntüde belirgin pulmoner ödem, pnömotoraks veya mediastinal genişleme yok.",
-  pocus: "Sol ventrikül ön duvar hareketinde bölgesel azalma; belirgin perikardiyal efüzyon yok.",
 };
 
 const intentDefinitions = {
@@ -186,6 +172,10 @@ function actionFor(tool, actionId) {
   return TOOL_CATALOG[tool]?.find((item) => item.id === actionId) ?? null;
 }
 
+function encounterForState(state) {
+  return getEncounter(state.encounterId);
+}
+
 function addUnique(items, value) {
   if (!items.includes(value)) items.push(value);
 }
@@ -210,10 +200,11 @@ function syncPhysiology(state, physics) {
 }
 
 function releaseOrders(state) {
+  const encounter = encounterForState(state);
   for (const order of state.orders) {
     if (order.status === "pending" && order.readyAtSeconds <= state.elapsedSeconds) {
       order.status = "ready";
-      order.result = testResults[order.id];
+      order.result = encounter.testResults[order.id];
       addUnique(state.knowledge, `test:${order.id}`);
       if (order.id === "ecg" && !state.flags.ecgReady) {
         state.flags.ecgReady = true;
@@ -240,16 +231,23 @@ function scoreTemplate() {
   return { informationGathering: 0, clinicalReasoning: 0, treatment: 0, patientSafety: 100, teamwork: 0, timeManagement: 100 };
 }
 
-export function createInitialState({ mode = "training", seed = 20260827 } = {}) {
+export function createInitialState({ mode = "training", seed = 20260827, encounterId = "enc_classic_stemi", difficulty = "standard" } = {}) {
   if (!SIMULATION_MODES.includes(mode)) throw new Error(`Desteklenmeyen simülasyon modu: ${mode}`);
+  const encounter = getEncounter(encounterId);
+  const difficultyProfile = getDifficulty(difficulty);
   const physics = new DeterministicPhysiologyEngine();
-  const physiology = physics.initialize({ id: "synthetic-stemi-001" }, { id: SCENARIO_ID }, seed);
+  const physiology = physics.initialize(encounter.patient, { id: SCENARIO_ID, physiology: encounter.physiology, difficulty: difficultyProfile }, seed);
   const machineEvents = [];
   const machine = replayMachine(machineEvents);
   const state = {
     version: ENGINE_VERSION,
     scenarioId: SCENARIO_ID,
     scenarioVersion: SCENARIO_VERSION,
+    encounterId: encounter.id,
+    encounterTitle: encounter.title,
+    environment: encounter.environment,
+    difficulty: difficultyProfile.id,
+    objectives: clone(encounter.objectives),
     seed,
     mode,
     status: "active",
@@ -259,7 +257,7 @@ export function createInitialState({ mode = "training", seed = 20260827 } = {}) 
     machineEvents,
     elapsedSeconds: 0,
     financialCost: 0,
-    patient: { id: "synthetic-stemi-001", synthetic: true, age: 58, sex: "Erkek", chiefComplaint: "Göğsümde çok güçlü bir baskı var." },
+    patient: clone(encounter.patient),
     physiology,
     vitals: clone(physiology.vitals),
     knowledge: [],
@@ -269,13 +267,15 @@ export function createInitialState({ mode = "training", seed = 20260827 } = {}) 
     medications: [],
     interventions: [],
     teamActions: [],
+    reasoning: [],
     safetyEvents: [],
     visualizations: [],
     score: scoreTemplate(),
-    osce: { stationDurationSeconds: 900, remainingSeconds: 900, checklistVisible: false },
+    osce: { stationDurationSeconds: difficultyProfile.osceSeconds, remainingSeconds: difficultyProfile.osceSeconds, checklistVisible: false },
     flags: {
       ecgReady: false,
       pde5Disclosed: false,
+      medicationHistoryComplete: false,
       aspirinGiven: false,
       heparinGiven: false,
       monitorIv: false,
@@ -291,7 +291,7 @@ export function createInitialState({ mode = "training", seed = 20260827 } = {}) 
       cardiologyConsulted: false,
       handoffComplete: false,
     },
-    lastMessage: "Sentetik hasta resüsitasyon alanına alındı.",
+    lastMessage: `Sentetik hasta ${encounter.environment.toLocaleLowerCase("tr-TR")} alanına alındı: “${encounter.patient.chiefComplaint}”`,
     lastMechanism: "Koroner akım kısıtlı; latent iskemi ve elektriksel instabilite zamanla birlikte evriliyor.",
     validation: { physiology: "DOĞRULANMADI", ucep: "DOĞRULANMADI", tyc: "DOĞRULANMADI" },
     stateHash: "",
@@ -363,6 +363,7 @@ function patientStateSummary(state) {
 
 function applyInterview(state, event, physics) {
   if (state.phase === "vf") return rejected(state, "Hasta arrestte; sözel yanıt yok.");
+  const encounter = encounterForState(state);
   const selected = event.topic ? { intents: [event.topic], responseKind: state.phase === "rosc" ? "recovering" : "matched", confidence: 1 } : parsePatientQuestion(event.question, state.phase);
   const intent = selected.intents[0] ?? "clarification";
   const action = actionFor("interview", intent) ?? { label: "Serbest soru", timeCostSeconds: 60, evidenceId: "ucep-history" };
@@ -371,10 +372,13 @@ function applyInterview(state, event, physics) {
     ? "Neredeyim? Göğsüm hâlâ ağrıyor ama daha az."
     : intent === "clarification"
       ? "Soruyu tam anlayamadım; göğsümdeki baskıyla ilgili biraz daha açık sorabilir misiniz?"
-      : interviewFacts[intent];
+      : encounter.interviewFacts[intent];
   state.interview.push({ question: event.question ?? action.label, response, intents: selected.intents, confidence: selected.confidence, repeated });
   if (intent !== "clarification") addUnique(state.knowledge, `history:${intent}`);
-  if (intent === "medications") state.flags.pde5Disclosed = true;
+  if (intent === "medications") {
+    state.flags.medicationHistoryComplete = true;
+    state.flags.pde5Disclosed = encounter.safety.pde5Exposure;
+  }
   state.score.informationGathering = clamp(state.score.informationGathering + (repeated ? 0 : intent === "clarification" ? 2 : 12));
   if (repeated) state.score.timeManagement = clamp(state.score.timeManagement - 3);
   const explanation = advanceTime(state, physics, action.timeCostSeconds);
@@ -392,13 +396,14 @@ function applyExam(state, event, physics) {
   const availability = getActionAvailability(state, "exam", event.actionId);
   if (!availability.available) return rejected(state, availability.reason);
   const action = actionFor("exam", event.actionId);
+  const finding = encounterForState(state).examFindings[action.id];
   const repeated = state.examinations.some((item) => item.id === action.id);
-  state.examinations.push({ id: action.id, region: action.region, technique: action.technique, finding: examFindings[action.id], repeated });
+  state.examinations.push({ id: action.id, region: action.region, technique: action.technique, finding, repeated });
   addUnique(state.knowledge, `exam:${action.id}`);
   state.score.informationGathering = clamp(state.score.informationGathering + (repeated ? 0 : 10));
   if (repeated) state.score.timeManagement = clamp(state.score.timeManagement - 4);
   const explanation = advanceTime(state, physics, action.timeCostSeconds);
-  return accepted(state, { message: examFindings[action.id], mechanism: repeated ? "Tekrarlanan muayene ek bulgu üretmedi; zaman ilerledi." : explanation.summary, expectedEffect: `${action.region} · ${action.technique}`, actualEffect: examFindings[action.id], rubricEffect: { informationGathering: repeated ? 0 : 10, timeManagement: repeated ? -4 : 0 }, evidenceId: action.evidenceId });
+  return accepted(state, { message: finding, mechanism: repeated ? "Tekrarlanan muayene ek bulgu üretmedi; zaman ilerledi." : explanation.summary, expectedEffect: `${action.region} · ${action.technique}`, actualEffect: finding, rubricEffect: { informationGathering: repeated ? 0 : 10, timeManagement: repeated ? -4 : 0 }, evidenceId: action.evidenceId });
 }
 
 function applyTest(state, event, physics) {
@@ -417,7 +422,7 @@ function applyMedication(state, event, physics) {
   const availability = getActionAvailability(state, "medication", event.actionId);
   if (!availability.available) return rejected(state, availability.reason);
   const action = actionFor("medication", event.actionId);
-  const contraindicated = action.id === "nitroglycerin" && state.flags.pde5Disclosed;
+  const contraindicated = action.id === "nitroglycerin" && state.flags.medicationHistoryComplete && state.flags.pde5Disclosed;
   state.medications.push({ id: action.id, atSeconds: state.elapsedSeconds, protocolDose: action.protocolDose, route: action.route, contraindicated });
   let message = `${action.label}; doz ve yol alanları DOĞRULANMADI protokol kartıyla kaydedildi.`;
   let safetyAlert = null;
@@ -437,7 +442,7 @@ function applyMedication(state, event, physics) {
     safety = -45;
     safetyAlert = "KRİTİK: PDE5 inhibitörü öyküsüyle nitrat güvenlik olayı.";
     message = "Sentetik hastanın perfüzyonu bozuldu; kritik güvenlik olayı kaydedildi.";
-  } else if (action.id === "nitroglycerin") {
+  } else if (action.id === "nitroglycerin" && !state.flags.medicationHistoryComplete) {
     state.safetyEvents.push({ severity: "major", code: "HISTORY_MISSING", message: "PDE5 öyküsü açılmadan nitrat kararı verildi." });
     state.score.patientSafety = clamp(state.score.patientSafety - 20);
     safety = -20;
@@ -536,6 +541,48 @@ function applyTeam(state, event, physics) {
   return accepted(state, { message: `${action.label}: görev sahibi, geri okuma ve zaman damgası kaydedildi.`, mechanism: explanation.summary, expectedEffect: "Ekip koordinasyonu", actualEffect: action.label, rubricEffect: { teamwork: 14 }, evidenceId: action.evidenceId });
 }
 
+function applyReasoning(state, event, physics) {
+  if (state.status === "completed") return rejected(state, "Oturum tamamlandı; yeni klinik gerekçe eklenemez.");
+  if (state.phase === "vf") return rejected(state, "VF arrest sırasında yazılı akıl yürütme yerine resüsitasyon eylemi gerekir.");
+  const problemRepresentation = String(event.problemRepresentation ?? "").trim();
+  const reassessmentPlan = String(event.reassessmentPlan ?? "").trim();
+  const allowed = new Set(DIFFERENTIAL_OPTIONS.map((item) => item.id));
+  const differentials = [...new Set(Array.isArray(event.differentials) ? event.differentials.filter((item) => allowed.has(item)) : [])];
+  const workingDiagnosis = allowed.has(event.workingDiagnosis) ? event.workingDiagnosis : null;
+  if (problemRepresentation.length < 12) return rejected(state, "Problem temsili en az 12 karakter olmalıdır.");
+  if (differentials.length < 2) return rejected(state, "En az iki ayırıcı tanı seçilmelidir.");
+  if (!workingDiagnosis) return rejected(state, "Geçerli bir çalışma tanısı seçilmelidir.");
+  if (reassessmentPlan.length < 8) return rejected(state, "Yeniden değerlendirme planı en az 8 karakter olmalıdır.");
+
+  const encounter = encounterForState(state);
+  const expectedIncluded = differentials.includes(encounter.expectedDiagnosis);
+  const workingDiagnosisAligned = workingDiagnosis === encounter.expectedDiagnosis;
+  const reasoningPoints = (expectedIncluded ? 8 : 2) + (workingDiagnosisAligned ? 8 : 0) + (differentials.length >= 3 ? 4 : 0);
+  const revision = {
+    id: `reasoning_${String(state.reasoning.length + 1).padStart(2, "0")}`,
+    atSeconds: state.elapsedSeconds,
+    problemRepresentation,
+    differentials,
+    workingDiagnosis,
+    reassessmentPlan,
+    evidenceAvailable: state.knowledge.length,
+    expectedDiagnosisIncluded: expectedIncluded,
+    workingDiagnosisAligned,
+  };
+  state.reasoning.push(revision);
+  addUnique(state.knowledge, `reasoning:${revision.id}`);
+  state.score.clinicalReasoning = clamp(state.score.clinicalReasoning + reasoningPoints);
+  const explanation = advanceTime(state, physics, 90);
+  return accepted(state, {
+    message: `Klinik gerekçe ${state.reasoning.length}. revizyon olarak kaydedildi; hasta durumu yeniden hesaplandı.`,
+    mechanism: explanation.summary,
+    expectedEffect: "Problem temsili ve ayırıcı tanının zaman içinde güncellenmesi",
+    actualEffect: `${differentials.length} ayırıcı tanı · çalışma tanısı ${workingDiagnosis}`,
+    rubricEffect: { clinicalReasoning: reasoningPoints },
+    evidenceId: "ucep-clinical-reasoning",
+  });
+}
+
 function applyAdvance(state, event, physics) {
   const seconds = Math.round(Number(event.seconds));
   if (!Number.isFinite(seconds) || seconds <= 0 || seconds > 900) return rejected(state, "Zaman adımı 1–900 saniye arasında olmalıdır.");
@@ -576,13 +623,14 @@ function execute(state, event) {
   if (event.type === "ADMINISTER_MEDICATION") return applyMedication(state, event, physics);
   if (event.type === "PERFORM_INTERVENTION") return applyIntervention(state, event, physics);
   if (event.type === "TEAM_ACTION") return applyTeam(state, event, physics);
+  if (event.type === "DOCUMENT_REASONING") return applyReasoning(state, event, physics);
   if (event.type === "ADVANCE_TIME") return applyAdvance(state, event, physics);
   if (["REQUEST_VISUALIZATION", "VISUALIZATION_RESULT"].includes(event.type)) return applyVisualization(state, event);
   return rejected(state, `Tanımsız olay: ${event.type}`);
 }
 
 function toolForEvent(type) {
-  return { ASK_PATIENT: "interview", PERFORM_EXAM: "exam", ORDER_TEST: "test", ADMINISTER_MEDICATION: "medication", PERFORM_INTERVENTION: "intervention", TEAM_ACTION: "team", ADVANCE_TIME: "time", REQUEST_VISUALIZATION: "visualization", VISUALIZATION_RESULT: "visualization" }[type] ?? "unknown";
+  return { ASK_PATIENT: "interview", PERFORM_EXAM: "exam", ORDER_TEST: "test", ADMINISTER_MEDICATION: "medication", PERFORM_INTERVENTION: "intervention", TEAM_ACTION: "team", DOCUMENT_REASONING: "reasoning", ADVANCE_TIME: "time", REQUEST_VISUALIZATION: "visualization", VISUALIZATION_RESULT: "visualization" }[type] ?? "unknown";
 }
 
 export function dispatchEvent(session, event) {
@@ -597,13 +645,16 @@ export function dispatchEvent(session, event) {
   }
   const nextHash = result.accepted ? result.state.stateHash : previousHash;
   const recordIndex = session.records.length + 1;
+  const encounterKey = String(result.state.encounterId).replace(/^enc_/, "").replace(/[^a-z0-9]+/g, "_");
   const record = {
-    id: `evt_stemi_${String(recordIndex).padStart(4, "0")}`,
+    id: `evt_${encounterKey}_${String(recordIndex).padStart(4, "0")}`,
     index: recordIndex,
     engineVersion: ENGINE_VERSION,
     physiologyEngineVersion: PHYSIOLOGY_ENGINE_VERSION,
-    scenarioId: SCENARIO_ID,
-    scenarioVersion: SCENARIO_VERSION,
+    scenarioId: result.state.scenarioId,
+    scenarioVersion: result.state.scenarioVersion,
+    encounterId: result.state.encounterId,
+    difficulty: result.state.difficulty,
     seed: result.state.seed,
     event: clone(event),
     accepted: result.accepted,
@@ -652,6 +703,7 @@ export function buildDebrief(session) {
     ["EKG sonucu", state.flags.ecgReady],
     ["Monitör ve damar yolu", state.flags.monitorIv],
     ["STEMI yolu", state.flags.cathActivated],
+    ["Klinik gerekçe revizyonu", state.reasoning.length >= 1],
     ["Ekip rolleri", state.flags.rolesAssigned],
     ["ROSC veya reperfüzyon", state.phase === "rosc" || state.phase === "handoff" || state.flags.transferredToCath],
     ["SBAR devir", state.flags.handoffComplete],
@@ -659,12 +711,21 @@ export function buildDebrief(session) {
   const criticalSafety = state.safetyEvents.filter((event) => event.severity === "critical");
   return {
     completed: state.status === "completed",
-    competencyMet: state.status === "completed" && criticalSafety.length === 0 && required.filter(([, passed]) => passed).length >= 7,
+    competencyMet: state.status === "completed" && criticalSafety.length === 0 && required.every(([, passed]) => passed),
     checklist: required.map(([label, passed]) => ({ label, passed })),
     dimensions: clone(state.score),
     criticalSafety,
     criticalDelays: session.records.filter((record) => record.actualEffect === "VF arrest").map((record) => `VF ${Math.round(record.simulationSecond / 60)}. dakikada gelişti.`),
     unnecessaryActions: session.records.filter((record) => record.rubricEffect?.timeManagement < -3).map((record) => record.actualEffect),
+    reasoningTrajectory: clone(state.reasoning),
+    vitalTrend: session.records.filter((record) => record.accepted).map((record) => ({
+      eventId: record.id,
+      second: record.simulationSecond,
+      heartRate: record.patientStateAfter.heart_rate,
+      systolic: record.patientStateAfter.systolic_bp,
+      spo2: record.patientStateAfter.spo2,
+      rhythm: record.patientStateAfter.rhythm,
+    })),
     finalHash: session.stateHash,
     replayableEvents: session.records.length,
     note: "Sentetik eğitim prototipi; klinik motor, UÇEP eşlemesi ve yeterlilik kararı uzman onayı olmadan DOĞRULANMADI.",
@@ -682,17 +743,20 @@ export function buildVisualizationRequest(record, state) {
         : record.tool === "interview" ? "history"
           : record.tool === "exam" ? "examination"
             : record.tool === "team" ? "team_management"
+              : record.tool === "reasoning" ? "clinical_reasoning"
               : "reassessment";
   const timeCostSeconds = record.event.type === "ADVANCE_TIME"
     ? record.event.seconds
+    : record.event.type === "DOCUMENT_REASONING" ? 90
     : action?.timeCostSeconds ?? 0;
   const criticalSignal = record.safetyAlert
     ?? (record.patientStateAfter.rhythm === "vf"
       ? "Sentetik monitörde şoklanabilir VF ritmi ve dolaşım kaybı."
       : "Belirgin kritik alarm yok; olay öncesi ve sonrası sentetik fizyolojik değişim izlenir.");
   return {
-    scenario_id: SCENARIO_ID,
-    scenario_version: SCENARIO_VERSION,
+    scenario_id: state.scenarioId,
+    scenario_version: state.scenarioVersion,
+    encounter_id: state.encounterId,
     module_id: 6,
     learning_objective: `Öğrenci kararının sentetik hasta durumunda oluşturduğu değişimi ve güvenlik gerekçesini olay öncesi ve sonrası kanıtla açıklamak: ${record.expectedEffect}.`,
     patient_state_before: clone(record.patientStateBefore),

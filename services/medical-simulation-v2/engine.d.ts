@@ -1,5 +1,6 @@
 export type SimulationMode = "training" | "assessment" | "osce";
-export type ToolName = "interview" | "exam" | "test" | "medication" | "intervention" | "team";
+export type DifficultyId = "guided" | "standard" | "advanced";
+export type ToolName = "interview" | "exam" | "test" | "medication" | "intervention" | "team" | "reasoning";
 
 export type ClinicalEvent =
   | { type: "ASK_PATIENT"; question?: string; topic?: string }
@@ -8,6 +9,7 @@ export type ClinicalEvent =
   | { type: "ADMINISTER_MEDICATION"; actionId: string }
   | { type: "PERFORM_INTERVENTION"; actionId: string }
   | { type: "TEAM_ACTION"; actionId: string }
+  | { type: "DOCUMENT_REASONING"; problemRepresentation: string; differentials: string[]; workingDiagnosis: string; reassessmentPlan: string }
   | { type: "ADVANCE_TIME"; seconds: number }
   | { type: "REQUEST_VISUALIZATION"; recordId: string }
   | { type: "VISUALIZATION_RESULT"; visualizationId: string; status: "ready" | "blocked" | "failed"; videoUrl?: string | null; reason?: string | null };
@@ -40,6 +42,11 @@ export interface ClinicalState {
   version: string;
   scenarioId: string;
   scenarioVersion: string;
+  encounterId: string;
+  encounterTitle: string;
+  environment: string;
+  difficulty: DifficultyId;
+  objectives: string[];
   seed: number;
   mode: SimulationMode;
   status: "active" | "critical" | "completed";
@@ -64,6 +71,17 @@ export interface ClinicalState {
   medications: Array<{ id: string; atSeconds: number; protocolDose: string; route: string; contraindicated: boolean }>;
   interventions: string[];
   teamActions: string[];
+  reasoning: Array<{
+    id: string;
+    atSeconds: number;
+    problemRepresentation: string;
+    differentials: string[];
+    workingDiagnosis: string;
+    reassessmentPlan: string;
+    evidenceAvailable: number;
+    expectedDiagnosisIncluded: boolean;
+    workingDiagnosisAligned: boolean;
+  }>;
   safetyEvents: Array<{ severity: string; code: string; message: string }>;
   visualizations: Array<{ id: string; recordId: string; status: string; videoUrl: string | null; reason: string | null }>;
   score: Record<string, number>;
@@ -106,6 +124,18 @@ export const ENGINE_VERSION: string;
 export const SCENARIO_ID: string;
 export const SCENARIO_VERSION: string;
 export const SIMULATION_MODES: SimulationMode[];
+export const DIFFERENTIAL_OPTIONS: Array<{ id: string; label: string }>;
+export const ENCOUNTER_CATALOG: Array<{
+  id: string;
+  title: string;
+  briefing: string;
+  environment: string;
+  tags: string[];
+  patient: ClinicalState["patient"];
+  runtimeStatus: "RUNTIME_READY";
+  expertApprovalStatus: "DOĞRULANMADI";
+}>;
+export const DIFFICULTY_PROFILES: Record<DifficultyId, { id: DifficultyId; label: string; description: string; progressionRate: number; deteriorationAtSeconds: number; osceSeconds: number }>;
 export const TOOL_CATALOG: Record<ToolName, ToolAction[]>;
 export const UCEP_EVIDENCE: Record<string, {
   task: string;
@@ -124,8 +154,8 @@ export const UCEP_EVIDENCE: Record<string, {
 export const TYC_EVIDENCE: { knowledge: string; skill: string; competence: string; proposedLevel: null; officialPlacementStatus: string };
 
 export function parsePatientQuestion(question: string, phase?: string): { intents: string[]; responseKind: string; confidence: number };
-export function createInitialState(options?: { mode?: SimulationMode; seed?: number }): ClinicalState;
-export function createSession(options?: { mode?: SimulationMode; seed?: number }): ClinicalSession;
+export function createInitialState(options?: { mode?: SimulationMode; seed?: number; encounterId?: string; difficulty?: DifficultyId }): ClinicalState;
+export function createSession(options?: { mode?: SimulationMode; seed?: number; encounterId?: string; difficulty?: DifficultyId }): ClinicalSession;
 export function dispatchEvent(session: ClinicalSession, event: ClinicalEvent): ClinicalSession;
 export function getActionAvailability(state: ClinicalState, tool: ToolName, actionId: string): { available: boolean; reason: string };
 export function getAvailableActions(state: ClinicalState, tool: ToolName): Array<ToolAction & { available: boolean; reason: string }>;
@@ -139,6 +169,8 @@ export function buildDebrief(session: ClinicalSession): {
   criticalSafety: Array<{ severity: string; code: string; message: string }>;
   criticalDelays: string[];
   unnecessaryActions: string[];
+  reasoningTrajectory: ClinicalState["reasoning"];
+  vitalTrend: Array<{ eventId: string; second: number; heartRate: number; systolic: number; spo2: number; rhythm: string }>;
   finalHash: string;
   replayableEvents: number;
   note: string;

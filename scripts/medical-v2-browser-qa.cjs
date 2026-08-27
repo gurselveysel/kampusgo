@@ -50,7 +50,7 @@ function check(condition, message) {
 }
 
 async function state(page) {
-  return page.evaluate(() => JSON.parse(localStorage.getItem("teys-stemi-v3-session")));
+  return page.evaluate(() => JSON.parse(localStorage.getItem("teys-stemi-v4-session")));
 }
 
 async function clickButton(page, label) {
@@ -78,6 +78,29 @@ async function verifyModeDifferences(page) {
   check((await page.locator("body").innerText()).includes("Fizyolojik mekanizma:"), "Eğitim modu mekanizma panelini göstermedi");
 }
 
+async function verifyScenarioLibrary(page) {
+  await clickButton(page, "Olgu kütüphanesi");
+  await page.getByRole("heading", { name: "Aynı klinik çekirdekte üç farklı başlangıç" }).waitFor();
+  check(await page.locator("article").filter({ hasText: "RUNTIME_READY" }).count() >= 3, "üç çalışan olgu kartı görünmedi");
+  await clickButton(page, /İleri/);
+  let snapshot = await state(page);
+  check(snapshot.state.difficulty === "advanced" && snapshot.state.physiology.configuration.progressionRate > 1, "ileri zorluk fizyolojiye uygulanmadı");
+
+  await clickButton(page, "Olgu kütüphanesi");
+  await clickButton(page, /Standart/);
+  await clickButton(page, "Olgu kütüphanesi");
+  const atypical = page.locator("article").filter({ hasText: "Atipik başlangıç" });
+  await atypical.getByRole("button", { name: "Bu olguyu başlat" }).click();
+  snapshot = await state(page);
+  check(snapshot.state.encounterId === "enc_atypical_diabetes" && snapshot.state.patient.age === 67, "atipik olgu hasta durumuna yüklenmedi");
+
+  await clickButton(page, "Olgu kütüphanesi");
+  const classic = page.locator("article").filter({ hasText: "Klasik başlangıç" });
+  await classic.getByRole("button", { name: "Bu olguyu başlat" }).click();
+  snapshot = await state(page);
+  check(snapshot.state.encounterId === "enc_classic_stemi" && snapshot.state.difficulty === "standard", "klasik standart olgu geri yüklenmedi");
+}
+
 async function verifyGoldenFlow(page) {
   await page.getByLabel("Hastaya kendi sorunuzu sorun").fill("Bulantınız, terlemeniz veya nefes darlığınız var mı?");
   await clickButton(page, "Sor");
@@ -86,6 +109,16 @@ async function verifyGoldenFlow(page) {
   await clickButton(page, "Kararı Manim ile açıkla");
   await page.getByText("BLOCKED_EXTERNAL_ACCESS", { exact: true }).waitFor({ state: "visible", timeout: 10_000 });
   check((await state(page)).state.visualizations.at(-1).status === "blocked", "Manim erişim engeli olay durumuna yazılmadı");
+
+  await page.getByRole("tab", { name: /Klinik gerekçe/ }).click();
+  await page.getByLabel("Problem temsili").fill("Baskı tarzı göğüs ağrısı ve otonom bulguları olan yüksek riskli sentetik hasta.");
+  await page.getByRole("checkbox", { name: "Akut koroner sendrom / STEMI", exact: true }).check();
+  await page.getByRole("checkbox", { name: "Aort diseksiyonu", exact: true }).check();
+  await page.getByRole("checkbox", { name: "Pulmoner emboli", exact: true }).check();
+  await page.getByLabel("Çalışma tanısı").selectOption("stemi");
+  await page.getByLabel("Yeniden değerlendirme planı").fill("EKG, ritim ve perfüzyonu sonuçla birlikte yeniden değerlendir.");
+  await clickButton(page, /Gerekçeyi değişmez olay olarak kaydet/);
+  check((await state(page)).state.reasoning.length === 1, "klinik gerekçe revizyonu olay günlüğüne yazılmadı");
 
   await page.getByRole("tab", { name: /Muayene/ }).click();
   await clickButton(page, /Kalp odaklarını dinle/);
@@ -178,9 +211,10 @@ async function verifyAccessibilityAndMobile(page) {
       }
     });
     await page.goto(route, { waitUntil: "networkidle" });
-    await page.evaluate(() => localStorage.removeItem("teys-stemi-v3-session"));
+    await page.evaluate(() => localStorage.removeItem("teys-stemi-v4-session"));
     await page.reload({ waitUntil: "networkidle" });
     await page.getByRole("heading", { name: "Hasta görüşmesi" }).waitFor();
+    await verifyScenarioLibrary(page);
     await verifyModeDifferences(page);
     const golden = await verifyGoldenFlow(page);
     const desktopScreenshot = path.join(os.tmpdir(), "teys-medical-v2-desktop.png");

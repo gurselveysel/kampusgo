@@ -3,24 +3,43 @@ import {
   buildDebrief,
   buildVisualizationRequest,
   createSession,
+  DIFFICULTY_PROFILES,
   dispatchEvent,
+  ENCOUNTER_CATALOG,
   getAvailableActions,
   parsePatientQuestion,
   replaySession,
   restoreSession,
   UCEP_EVIDENCE,
 } from "../services/medical-simulation-v2/engine.js";
+import { validateScenarioCatalog } from "../services/medical-simulation-v2/scenario-catalog.js";
 import { DeterministicPhysiologyEngine } from "../services/medical-simulation-v2/physiology-engine.js";
 import { clinicalMachine } from "../services/medical-simulation-v2/state-machine.js";
 
-function run(events, mode = "training", seed = 20260827) {
-  let session = createSession({ mode, seed });
+function run(events, mode = "training", seed = 20260827, encounterId = "enc_classic_stemi", difficulty = "standard") {
+  let session = createSession({ mode, seed, encounterId, difficulty });
   for (const event of events) session = dispatchEvent(session, event);
   return session;
 }
 
 assert.equal(clinicalMachine.id, "teys-stemi-v2", "XState makinesi gerçek çalışma zamanı sözleşmesi olmalı");
 assert.ok(Object.values(UCEP_EVIDENCE).every((item) => item.ucepVersion && item.learningOutcome && item.assessmentMethod && item.observableEvidence && item.expertApprovalStatus === "DOĞRULANMADI" && item.expertApprovalDate === null), "Her UÇEP görevi tam izlenebilirlik ve açık onay durumu taşımalı");
+assert.deepEqual(validateScenarioCatalog(), { valid: true, errors: [], encounters: 3, difficulties: 3 }, "olgu kataloğu çalışma zamanı sözleşmesini geçmeli");
+assert.equal(new Set(ENCOUNTER_CATALOG.map((item) => item.patient.id)).size, ENCOUNTER_CATALOG.length, "her olgu farklı sentetik hasta kimliği taşımalı");
+assert.deepEqual(Object.keys(DIFFICULTY_PROFILES), ["guided", "standard", "advanced"], "üç zorluk profili yayınlanmalı");
+
+for (const encounter of ENCOUNTER_CATALOG) {
+  const encounterRun = run([{ type: "ASK_PATIENT", topic: "onset" }], "training", 71, encounter.id);
+  assert.equal(encounterRun.state.encounterId, encounter.id, `${encounter.id} seçimi state'e taşınmalı`);
+  assert.equal(encounterRun.state.interview[0].response, encounter.interviewFacts.onset, `${encounter.id} kendi öyküsünü açmalı`);
+  assert.equal(replaySession(encounterRun.initial, encounterRun.records).matches, true, `${encounter.id} deterministik replay üretmeli`);
+}
+
+const guided = createSession({ mode: "osce", difficulty: "guided" });
+const advanced = createSession({ mode: "osce", difficulty: "advanced" });
+assert.equal(guided.state.osce.stationDurationSeconds, 1200, "rehberli OSCE süresi uygulanmalı");
+assert.equal(advanced.state.osce.stationDurationSeconds, 720, "ileri OSCE süresi uygulanmalı");
+assert.ok(advanced.state.physiology.configuration.progressionRate > guided.state.physiology.configuration.progressionRate, "zorluk fizyoloji hızını gerçekten değiştirmeli");
 
 const physiology = new DeterministicPhysiologyEngine();
 const initialPhysiology = physiology.initialize({ id: "synthetic-stemi-001" }, { id: "stemi-vf-rosc" }, 42);
@@ -46,6 +65,20 @@ const contraindication = run([
 assert.equal(contraindication.state.safetyEvents.at(-1)?.code, "PDE5_NITRATE", "kontrendike nitrat kritik güvenlik olayı üretmeli");
 assert.ok(contraindication.state.vitals.systolic < 90, "kontrendikasyon fizyoloji köprüsünden basıncı düşürmeli");
 
+const noPde5 = run([
+  { type: "ASK_PATIENT", topic: "medications" },
+  { type: "ADMINISTER_MEDICATION", actionId: "nitroglycerin" },
+], "training", 72, "enc_atypical_diabetes");
+assert.equal(noPde5.state.safetyEvents.length, 0, "PDE5 maruziyeti olmayan olguda tamamlanmış ilaç öyküsü yanlış alarm üretmemeli");
+
+const reasoning = run([
+  { type: "DOCUMENT_REASONING", problemRepresentation: "Zaman kritik göğüs rahatsızlığı ve otonom bulguları olan yüksek riskli sentetik hasta.", differentials: ["stemi", "aortic_dissection", "pulmonary_embolism"], workingDiagnosis: "stemi", reassessmentPlan: "EKG ve vital değişimini iki dakika içinde yeniden değerlendir." },
+  { type: "DOCUMENT_REASONING", problemRepresentation: "EKG sonucu beklenirken perfüzyon riski süren zaman kritik göğüs ağrısı olgusu.", differentials: ["stemi", "aortic_dissection"], workingDiagnosis: "stemi", reassessmentPlan: "Sonuç geldiğinde ritim, tansiyon ve transfer önceliğini yeniden değerlendir." },
+]);
+assert.equal(reasoning.state.reasoning.length, 2, "klinik gerekçe revizyonları üzerine yazılmadan saklanmalı");
+assert.notEqual(reasoning.state.reasoning[0].problemRepresentation, reasoning.state.reasoning[1].problemRepresentation, "gerekçe geçmişi değişmez kalmalı");
+assert.ok(reasoning.state.score.clinicalReasoning > 0 && reasoning.state.elapsedSeconds === 180, "gerekçe kararı puan ve klinik zaman üretmeli");
+
 const diagnostics = run([{ type: "ORDER_TEST", actionId: "ecg" }]);
 assert.equal(diagnostics.state.orders[0].status, "pending", "tetkik hemen sonuçlanmamalı");
 assert.ok(diagnostics.state.financialCost > 0, "tetkik maliyet üretmeli");
@@ -60,6 +93,7 @@ const goldenEvents = [
   { type: "PERFORM_EXAM", actionId: "cardiac-auscultation" },
   { type: "PERFORM_EXAM", actionId: "lung-auscultation" },
   { type: "ORDER_TEST", actionId: "ecg" },
+  { type: "DOCUMENT_REASONING", problemRepresentation: "Baskı tarzı göğüs ağrısı ve otonom bulguları olan yüksek riskli sentetik hasta.", differentials: ["stemi", "aortic_dissection", "pulmonary_embolism"], workingDiagnosis: "stemi", reassessmentPlan: "EKG, ritim ve perfüzyonu sonuçla birlikte yeniden değerlendir." },
   { type: "PERFORM_INTERVENTION", actionId: "monitor_iv" },
   { type: "TEAM_ACTION", actionId: "assign_roles" },
   { type: "ADVANCE_TIME", seconds: 120 },

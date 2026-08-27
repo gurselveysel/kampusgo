@@ -3,6 +3,9 @@
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  DIFFERENTIAL_OPTIONS,
+  DIFFICULTY_PROFILES,
+  ENCOUNTER_CATALOG,
   SIMULATION_MODES,
   TOOL_CATALOG,
   TYC_EVIDENCE,
@@ -17,6 +20,7 @@ import {
   type AuditRecord,
   type ClinicalEvent,
   type ClinicalSession,
+  type DifficultyId,
   type SimulationMode,
   type ToolName,
 } from "../../../services/medical-simulation-v2/engine.js";
@@ -27,8 +31,8 @@ const PatientRoom3D = dynamic(() => import("./PatientRoom3D"), {
   loading: () => <div className={styles.sceneLoading}>3B sentetik hasta sahnesi hazırlanıyor…</div>,
 });
 
-const STORAGE_KEY = "teys-stemi-v3-session";
-const OBSERVER_NOTE_KEY = "teys-stemi-v3-observer-note";
+const STORAGE_KEY = "teys-stemi-v4-session";
+const OBSERVER_NOTE_KEY = "teys-stemi-v4-observer-note";
 const toolLabels: Record<ToolName, string> = {
   interview: "Hasta görüşmesi",
   exam: "Muayene",
@@ -36,7 +40,10 @@ const toolLabels: Record<ToolName, string> = {
   medication: "İlaçlar",
   intervention: "Müdahaleler",
   team: "Ekip",
+  reasoning: "Klinik gerekçe",
 };
+
+const EMPTY_REASONING = { problemRepresentation: "", differentials: [] as string[], workingDiagnosis: "", reassessmentPlan: "" };
 
 const modeCopy: Record<SimulationMode, { title: string; description: string }> = {
   training: { title: "Eğitim", description: "Anlık klinik geri bildirim ve mekanizma açıklaması açıktır." },
@@ -66,8 +73,31 @@ function eventLabel(record: AuditRecord) {
   }
   if (event.type === "ASK_PATIENT") return event.question || event.topic || "Hasta görüşmesi";
   if (event.type === "ADVANCE_TIME") return `${Math.round(event.seconds / 60)} dakika ilerle`;
+  if (event.type === "DOCUMENT_REASONING") return "Klinik gerekçeyi revize et";
   if (event.type === "REQUEST_VISUALIZATION") return "Manim işi oluştur";
   return "Manim iş sonucu";
+}
+
+function VitalTrend({ data }: { data: ReturnType<typeof buildDebrief>["vitalTrend"] }) {
+  const width = 520;
+  const height = 176;
+  const points = (key: "heartRate" | "systolic" | "spo2", max: number) => data.map((item, index) => {
+    const x = data.length <= 1 ? 16 : 16 + (index / (data.length - 1)) * (width - 32);
+    const y = height - 18 - (Math.max(0, Math.min(max, item[key])) / max) * (height - 36);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  if (data.length === 0) return <p className={styles.emptyState}>İlk karar sonrası vital eğilim burada çizilecek.</p>;
+  return (
+    <div className={styles.trendWrap}>
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Nabız, sistolik kan basıncı ve oksijen satürasyonu olay eğilimi">
+        {[0, 1, 2, 3].map((line) => <line key={line} x1="16" x2={width - 16} y1={18 + line * 45} y2={18 + line * 45} />)}
+        <polyline points={points("heartRate", 180)} data-series="hr" />
+        <polyline points={points("systolic", 200)} data-series="bp" />
+        <polyline points={points("spo2", 100)} data-series="spo2" />
+      </svg>
+      <div className={styles.trendLegend}><span data-series="hr">HR</span><span data-series="bp">Sistolik TA</span><span data-series="spo2">SpO₂</span><b>{data.length} karar anı</b></div>
+    </div>
+  );
 }
 
 function responseDetail(body: unknown, fallback: string) {
@@ -84,6 +114,8 @@ export default function MedicalSimulationV2() {
   const [renderState, setRenderState] = useState<"idle" | "submitting" | "rendering" | "ready" | "blocked" | "failed">("idle");
   const [renderMessage, setRenderMessage] = useState("Karar seçildiğinde olay kaydı arXivisual/Manim iş hattına gönderilebilir.");
   const [observerNote, setObserverNote] = useState("");
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const [reasoningDraft, setReasoningDraft] = useState(EMPTY_REASONING);
   const hydrated = useRef(false);
   const [storageReady, setStorageReady] = useState(false);
 
@@ -123,6 +155,7 @@ export default function MedicalSimulationV2() {
   const currentEvidence = renderRecord?.evidenceId ? UCEP_EVIDENCE[renderRecord.evidenceId] : null;
   const showMechanism = liveState.mode === "training" || liveState.status === "completed";
   const showScores = liveState.mode === "training" || liveState.status === "completed";
+  const currentEncounter = ENCOUNTER_CATALOG.find((encounter) => encounter.id === liveState.encounterId) ?? ENCOUNTER_CATALOG[0];
 
   function apply(event: ClinicalEvent) {
     setReplayIndex(null);
@@ -131,10 +164,41 @@ export default function MedicalSimulationV2() {
 
   function startMode(mode: SimulationMode) {
     if (mode === liveState.mode && session.records.length === 0) return;
-    setSession(createSession({ mode, seed: liveState.seed }));
+    setSession(createSession({ mode, seed: liveState.seed, encounterId: liveState.encounterId, difficulty: liveState.difficulty }));
     setReplayIndex(null);
     setRenderState("idle");
     setRenderMessage(`${modeCopy[mode].title} modu için yeni sentetik oturum başlatıldı.`);
+  }
+
+  function startEncounter(encounterId: string, difficulty: DifficultyId = liveState.difficulty) {
+    setSession(createSession({ mode: liveState.mode, seed: liveState.seed, encounterId, difficulty }));
+    setReasoningDraft(EMPTY_REASONING);
+    setReplayIndex(null);
+    setRenderState("idle");
+    setRenderMessage("Yeni sentetik olgu için karar kaydı başlatılmaya hazır.");
+    setLibraryOpen(false);
+  }
+
+  function submitReasoning() {
+    apply({ type: "DOCUMENT_REASONING", ...reasoningDraft });
+    setReasoningDraft(EMPTY_REASONING);
+  }
+
+  function downloadEvidenceBundle() {
+    const bundle = {
+      schemaVersion: "teys-mams-evidence-bundle/1.0.0",
+      exportedAt: new Date().toISOString(),
+      syntheticPatientConfirmed: liveState.patient.synthetic,
+      validation: liveState.validation,
+      debrief,
+      session,
+    };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${liveState.encounterId}-${session.stateHash}.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 
   function submitQuestion() {
@@ -221,11 +285,42 @@ export default function MedicalSimulationV2() {
       </header>
 
       <section className={styles.caseStrip} aria-label="Olgu özeti">
-        <div><small>OLGU</small><strong>58 yaş · Erkek · Göğüs ağrısı</strong></div>
+        <div><small>OLGU</small><strong>{state.patient.age} yaş · {state.patient.sex} · {state.encounterTitle}</strong><span>{currentEncounter.briefing}</span></div>
         <div><small>KLİNİK FAZ</small><strong>{phaseLabels[state.phase]}</strong></div>
-        <div><small>MOD</small><strong>{modeCopy[liveState.mode].title}</strong><span>{modeCopy[liveState.mode].description}</span></div>
-        {replayIndex !== null ? <button type="button" onClick={() => setReplayIndex(null)}>Canlı duruma dön</button> : null}
+        <div><small>MOD · ZORLUK</small><strong>{modeCopy[liveState.mode].title} · {DIFFICULTY_PROFILES[liveState.difficulty].label}</strong><span>{modeCopy[liveState.mode].description}</span></div>
+        <div className={styles.caseActions}>
+          <button type="button" onClick={() => setLibraryOpen((value) => !value)} aria-expanded={libraryOpen}>Olgu kütüphanesi</button>
+          {replayIndex !== null ? <button type="button" onClick={() => setReplayIndex(null)}>Canlı duruma dön</button> : null}
+        </div>
       </section>
+
+      {libraryOpen ? (
+        <section className={styles.libraryPanel} aria-labelledby="case-library-title">
+          <div className={styles.libraryHead}>
+            <div><span>ÇALIŞAN OLGU KATALOĞU</span><h2 id="case-library-title">Aynı klinik çekirdekte üç farklı başlangıç</h2><p>Hasta öyküsü, muayene, güvenlik tuzağı, rezerv ve bozulma zamanı seçime göre değişir.</p></div>
+            <button type="button" onClick={() => setLibraryOpen(false)} aria-label="Olgu kütüphanesini kapat">Kapat</button>
+          </div>
+          <div className={styles.difficultyPicker} aria-label="Zorluk profili">
+            {Object.values(DIFFICULTY_PROFILES).map((profile) => (
+              <button type="button" key={profile.id} aria-pressed={liveState.difficulty === profile.id} onClick={() => startEncounter(liveState.encounterId, profile.id)}>
+                <strong>{profile.label}</strong><span>{profile.description}</span>
+              </button>
+            ))}
+          </div>
+          <div className={styles.caseCatalog}>
+            {ENCOUNTER_CATALOG.map((encounter) => (
+              <article key={encounter.id} data-active={encounter.id === liveState.encounterId}>
+                <div><span>{encounter.environment}</span><b>{encounter.runtimeStatus}</b></div>
+                <h3>{encounter.title}</h3>
+                <p>{encounter.briefing}</p>
+                <ul>{encounter.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
+                <small>Uzman onayı: {encounter.expertApprovalStatus}</small>
+                <button type="button" onClick={() => startEncounter(encounter.id)}>{encounter.id === liveState.encounterId ? "Olguyu yeniden başlat" : "Bu olguyu başlat"}</button>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className={styles.clinicalWorkspace}>
         <div className={styles.sceneColumn}>
@@ -274,9 +369,9 @@ export default function MedicalSimulationV2() {
 
         <aside className={styles.toolDock} aria-label="Klinik araçlar">
           <div className={styles.toolTabs} role="tablist" aria-label="Araç grupları">
-            {(Object.keys(toolLabels) as ToolName[]).map((tool) => (
+            {(Object.keys(toolLabels) as ToolName[]).map((tool, index) => (
               <button type="button" role="tab" aria-selected={activeTool === tool} key={tool} onClick={() => setActiveTool(tool)}>
-                <span>{tool === "interview" ? "01" : tool === "exam" ? "02" : tool === "test" ? "03" : tool === "medication" ? "04" : tool === "intervention" ? "05" : "06"}</span>
+                <span>{String(index + 1).padStart(2, "0")}</span>
                 {toolLabels[tool]}
               </button>
             ))}
@@ -285,7 +380,7 @@ export default function MedicalSimulationV2() {
           <div className={styles.toolPanel} role="tabpanel">
             <div className={styles.toolPanelHead}>
               <div><small>AKTİF ARAÇ</small><h2>{toolLabels[activeTool]}</h2></div>
-              <span>{actions.filter((item) => item.available).length}/{actions.length} açık</span>
+              <span>{activeTool === "reasoning" ? `${liveState.reasoning.length} revizyon` : `${actions.filter((item) => item.available).length}/${actions.length} açık`}</span>
             </div>
 
             {activeTool === "interview" ? (
@@ -300,7 +395,21 @@ export default function MedicalSimulationV2() {
               <div className={styles.regionNotice}><span>SEÇİLİ BÖLGE</span><strong>{examRegion === "head" ? "Baş / genel durum" : examRegion === "chest" ? "Göğüs" : "Periferik dolaşım"}</strong><small>3B hasta üzerindeki bölgeleri de seçebilirsiniz.</small></div>
             ) : null}
 
-            <div className={styles.actionList}>
+            {activeTool === "reasoning" ? (
+              <form className={styles.reasoningForm} onSubmit={(event) => { event.preventDefault(); submitReasoning(); }}>
+                <label htmlFor="problem-representation"><span>Problem temsili</span><textarea id="problem-representation" value={reasoningDraft.problemRepresentation} onChange={(event) => setReasoningDraft((current) => ({ ...current, problemRepresentation: event.target.value }))} placeholder="Yaş, zaman seyri, kritik bulgular ve riskleri tek cümlede sentezleyin…" /></label>
+                <fieldset>
+                  <legend>Ayırıcı tanılar · en az iki</legend>
+                  {DIFFERENTIAL_OPTIONS.map((option) => <label key={option.id}><input type="checkbox" checked={reasoningDraft.differentials.includes(option.id)} onChange={(event) => setReasoningDraft((current) => ({ ...current, differentials: event.target.checked ? [...current.differentials, option.id] : current.differentials.filter((id) => id !== option.id) }))} />{option.label}</label>)}
+                </fieldset>
+                <label htmlFor="working-diagnosis"><span>Çalışma tanısı</span><select id="working-diagnosis" value={reasoningDraft.workingDiagnosis} onChange={(event) => setReasoningDraft((current) => ({ ...current, workingDiagnosis: event.target.value }))}><option value="">Seçin</option>{DIFFERENTIAL_OPTIONS.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}</select></label>
+                <label htmlFor="reassessment-plan"><span>Yeniden değerlendirme planı</span><textarea id="reassessment-plan" value={reasoningDraft.reassessmentPlan} onChange={(event) => setReasoningDraft((current) => ({ ...current, reassessmentPlan: event.target.value }))} placeholder="Hangi bulguyu, ne zaman ve hangi eşikte yeniden değerlendireceksiniz?" /></label>
+                <button type="submit" disabled={replayIndex !== null || liveState.status === "completed"}>Gerekçeyi değişmez olay olarak kaydet · 01:30</button>
+                <small>Her kayıt yeni revizyondur; eski gerekçe silinmez. UÇEP eşlemesi uzman onayı olmadan DOĞRULANMADI kalır.</small>
+              </form>
+            ) : null}
+
+            {activeTool !== "reasoning" ? <div className={styles.actionList}>
               {actions
                 .filter((action) => activeTool !== "exam" || action.region === examRegion)
                 .map((action) => (
@@ -324,7 +433,7 @@ export default function MedicalSimulationV2() {
                     {!action.available ? <em>{action.reason}</em> : null}
                   </button>
                 ))}
-            </div>
+            </div> : null}
             <div className={styles.observationTray} aria-live="polite">
               <span>ARAÇ ÇIKTISI</span>
               {activeTool === "interview" ? liveState.interview.slice(-2).map((item, index) => <p key={`${item.question}-${index}`}><b>{item.question}</b>{item.response}</p>) : null}
@@ -333,7 +442,8 @@ export default function MedicalSimulationV2() {
               {activeTool === "medication" ? liveState.medications.slice(-3).map((item) => <p key={item.id} data-alert={item.contraindicated}><b>{TOOL_CATALOG.medication.find((action) => action.id === item.id)?.label} · {item.route}</b>{item.contraindicated ? "Kontrendikasyon güvenlik olayı kaydedildi." : `Protokol dozu: ${item.protocolDose}`}</p>) : null}
               {activeTool === "intervention" ? liveState.interventions.slice(-4).map((id) => <p key={id}><b>TAMAMLANDI</b>{TOOL_CATALOG.intervention.find((action) => action.id === id)?.label}</p>) : null}
               {activeTool === "team" ? liveState.teamActions.slice(-4).map((id) => <p key={id}><b>KAYITLI EKİP OLAYI</b>{TOOL_CATALOG.team.find((action) => action.id === id)?.label}</p>) : null}
-              {activeTool === "interview" && liveState.interview.length === 0 || activeTool === "exam" && liveState.examinations.filter((item) => item.region === examRegion).length === 0 || activeTool === "test" && liveState.orders.length === 0 || activeTool === "medication" && liveState.medications.length === 0 || activeTool === "intervention" && liveState.interventions.length === 0 || activeTool === "team" && liveState.teamActions.length === 0 ? <small>Bu araçla henüz çıktı üretilmedi.</small> : null}
+              {activeTool === "reasoning" ? liveState.reasoning.slice(-2).map((item) => <p key={item.id}><b>{item.id} · {formatClock(item.atSeconds)}</b>{item.problemRepresentation}<br />Çalışma tanısı: {DIFFERENTIAL_OPTIONS.find((option) => option.id === item.workingDiagnosis)?.label}</p>) : null}
+              {(activeTool === "interview" && liveState.interview.length === 0 || activeTool === "exam" && liveState.examinations.filter((item) => item.region === examRegion).length === 0 || activeTool === "test" && liveState.orders.length === 0 || activeTool === "medication" && liveState.medications.length === 0 || activeTool === "intervention" && liveState.interventions.length === 0 || activeTool === "team" && liveState.teamActions.length === 0 || activeTool === "reasoning" && liveState.reasoning.length === 0) ? <small>Bu araçla henüz çıktı üretilmedi.</small> : null}
             </div>
             <div className={styles.timeControls}>
               <span>Klinik zamanı ilerlet</span>
@@ -359,6 +469,12 @@ export default function MedicalSimulationV2() {
               ))}
             </ol>
           ) : <p className={styles.emptyState}>İlk klinik karar verildiğinde değişmez olay kaydı burada başlayacak.</p>}
+        </section>
+
+        <section className={styles.trendPanel} aria-labelledby="trend-title">
+          <div className={styles.sectionHead}><div><span>DİNAMİK HASTA YANITI</span><h2 id="trend-title">Karar bazlı vital eğilim</h2></div><b>{state.vitals.rhythm.toUpperCase()}</b></div>
+          <VitalTrend data={debrief.vitalTrend} />
+          <p className={styles.disclosure}>Nabız, sistolik tansiyon ve SpO₂ doğrudan puan deltasıyla değil; olaylar arasında ilerleyen sentetik latent fizyolojiden türetilir.</p>
         </section>
 
         <section className={styles.manimPanel} aria-labelledby="manim-title">
@@ -413,7 +529,10 @@ export default function MedicalSimulationV2() {
             <div className={styles.auditSummary}>
               <p><b>Kritik güvenlik olayı:</b> {debrief.criticalSafety.length}</p>
               <p><b>Replay edilebilir olay:</b> {debrief.replayableEvents}</p>
+              <p><b>Klinik gerekçe revizyonu:</b> {debrief.reasoningTrajectory.length}</p>
+              {debrief.reasoningTrajectory.at(-1) ? <p><b>Son çalışma tanısı:</b> {DIFFERENTIAL_OPTIONS.find((option) => option.id === debrief.reasoningTrajectory.at(-1)?.workingDiagnosis)?.label ?? "—"}</p> : null}
               <p><b>Son durum hash:</b> {debrief.finalHash}</p>
+              <button className={styles.exportButton} type="button" onClick={downloadEvidenceBundle}>Oturum kanıt paketini indir</button>
               <small>{debrief.note}</small>
               <label className={styles.observerNote} htmlFor="educator-observation">
                 <span>Eğitici gözlem notu</span>

@@ -1,4 +1,4 @@
-const ENGINE_VERSION = "teys-deterministic-physiology/3.0.0";
+const ENGINE_VERSION = "teys-deterministic-physiology/4.0.0";
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -58,6 +58,8 @@ export class DeterministicPhysiologyEngine {
   };
 
   initialize(patient, scenario, seed) {
+    const profile = scenario.physiology ?? {};
+    const difficulty = scenario.difficulty ?? {};
     this.#snapshot = {
       engineVersion: ENGINE_VERSION,
       validationStatus: "DOĞRULANMADI",
@@ -66,13 +68,17 @@ export class DeterministicPhysiologyEngine {
       seed,
       elapsedSeconds: 0,
       phase: "assessment",
+      configuration: {
+        progressionRate: Number(difficulty.progressionRate ?? 1),
+        deteriorationAtSeconds: Math.max(120, Number(difficulty.deteriorationAtSeconds ?? 600) + Number(profile.deteriorationOffsetSeconds ?? 0)),
+      },
       latent: {
-        coronaryOcclusion: 0.94,
-        ischemiaBurden: 0.61,
-        electricalInstability: 0.24,
-        perfusion: 0.83,
-        oxygenReserve: 0.84,
-        catecholamine: 0.46,
+        coronaryOcclusion: Number(profile.coronaryOcclusion ?? 0.94),
+        ischemiaBurden: Number(profile.ischemiaBurden ?? 0.61),
+        electricalInstability: Number(profile.electricalInstability ?? 0.24),
+        perfusion: Number(profile.perfusion ?? 0.83),
+        oxygenReserve: Number(profile.oxygenReserve ?? 0.84),
+        catecholamine: Number(profile.catecholamine ?? 0.46),
         vasodilationInjury: 0,
         reperfused: false,
         rhythm: "sinus",
@@ -180,6 +186,7 @@ export class DeterministicPhysiologyEngine {
       const minutes = step / 60;
       const latent = this.#snapshot.latent;
       const treatment = this.#snapshot.treatment;
+      const progressionRate = this.#snapshot.configuration.progressionRate;
       this.#snapshot.elapsedSeconds += step;
 
       if (latent.rhythm === "vf" || this.#snapshot.phase === "vf") {
@@ -199,15 +206,15 @@ export class DeterministicPhysiologyEngine {
 
       const occlusionLoad = latent.reperfused ? 0.06 : latent.coronaryOcclusion;
       const plateletFactor = treatment.aspirin ? 0.72 : 1;
-      latent.ischemiaBurden = clamp(latent.ischemiaBurden + minutes * 0.014 * occlusionLoad * plateletFactor);
+      latent.ischemiaBurden = clamp(latent.ischemiaBurden + minutes * 0.014 * occlusionLoad * plateletFactor * progressionRate);
       latent.electricalInstability = clamp(
-        latent.electricalInstability + minutes * (0.011 + Math.max(0, latent.ischemiaBurden - 0.58) * 0.045),
+        latent.electricalInstability + minutes * (0.011 + Math.max(0, latent.ischemiaBurden - 0.58) * 0.045) * progressionRate,
       );
-      latent.oxygenReserve = clamp(latent.oxygenReserve - minutes * (treatment.titratedOxygen ? 0.001 : 0.006));
-      latent.catecholamine = clamp(latent.catecholamine + minutes * 0.006 - (latent.reperfused ? minutes * 0.02 : 0));
+      latent.oxygenReserve = clamp(latent.oxygenReserve - minutes * (treatment.titratedOxygen ? 0.001 : 0.006) * progressionRate);
+      latent.catecholamine = clamp(latent.catecholamine + minutes * 0.006 * progressionRate - (latent.reperfused ? minutes * 0.02 : 0));
       latent.vasodilationInjury = clamp(latent.vasodilationInjury - minutes * 0.022);
       latent.perfusion = clamp(
-        latent.perfusion - minutes * (0.0022 + latent.ischemiaBurden * 0.0028) - latent.vasodilationInjury * minutes * 0.014 + (latent.reperfused ? minutes * 0.018 : 0),
+        latent.perfusion - minutes * (0.0022 + latent.ischemiaBurden * 0.0028) * progressionRate - latent.vasodilationInjury * minutes * 0.014 + (latent.reperfused ? minutes * 0.018 : 0),
         0.25,
         1,
       );
@@ -215,7 +222,7 @@ export class DeterministicPhysiologyEngine {
       const vfThreshold = 0.36 + seededUnit(this.#snapshot.seed, Math.floor(this.#snapshot.elapsedSeconds / 30)) * 0.045;
       if (
         !latent.reperfused
-        && this.#snapshot.elapsedSeconds >= 600
+        && this.#snapshot.elapsedSeconds >= this.#snapshot.configuration.deteriorationAtSeconds
         && latent.electricalInstability >= vfThreshold
         && ["stemi", "treatment"].includes(this.#snapshot.phase)
       ) {
