@@ -143,6 +143,7 @@ async function verifyGoldenFlow(page) {
   await clickButton(page, "Sor");
   await clickButton(page, /İlaçları ve son kullanım zamanını sor/);
 
+  await clickButton(page, "Karar açıklaması");
   await clickButton(page, "Kararın etkisini görselleştir");
   await page.locator('[data-render-state="blocked"]').waitFor({ state: "visible", timeout: 10_000 });
   check((await state(page)).state.visualizations.at(-1).status === "blocked", "görselleştirme erişim engeli olay durumuna yazılmadı");
@@ -209,6 +210,7 @@ async function verifyGoldenFlow(page) {
   check(restored.stateHash === hashBeforeReload && restored.state.status === "completed", "Yenileme sonrası final hash/oturum geri yüklenmedi");
   check(await page.getByLabel("Eğitici gözlem notu").inputValue() === "Kapalı döngü iletişim doğru zamanda başlatıldı.", "Eğitici gözlem notu yenileme sonrası korunmadı");
 
+  await clickButton(page, "Kararlar");
   await page.locator("ol button").first().click();
   await page.getByRole("button", { name: "Canlı duruma dön" }).waitFor({ state: "visible" });
   await clickButton(page, "Canlı duruma dön");
@@ -290,6 +292,23 @@ async function verifyAccessibilityAndMobile(page) {
     await page.evaluate(() => localStorage.removeItem("teys-stemi-bedside-v5-session"));
     await page.reload({ waitUntil: "networkidle" });
     await page.getByRole("heading", { name: "Hasta görüşmesi" }).waitFor();
+    check(await page.locator('[class*="reviewHub"]').count() === 0, "Karar öncesi boş inceleme alanı gösteriliyor");
+    check(await page.locator('[class*="debriefPanel"]').count() === 0, "Tamamlanmamış oturumda eğitici puanları gösteriliyor");
+    const initialDesktopScreenshot = path.join(os.tmpdir(), "teys-medical-v2-initial-desktop.png");
+    const initialMobileScreenshot = path.join(os.tmpdir(), "teys-medical-v2-initial-mobile-390.png");
+    await page.screenshot({ path: initialDesktopScreenshot, fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.reload({ waitUntil: "networkidle" });
+    await page.getByRole("heading", { name: "Hasta görüşmesi" }).waitFor();
+    const initialOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    check(initialOverflow <= 1, `Karar öncesi 390px görünüm yatay taşıyor: ${initialOverflow}px`);
+    await page.screenshot({ path: initialMobileScreenshot, fullPage: true });
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.reload({ waitUntil: "networkidle" });
+    await page.getByRole("heading", { name: "Hasta görüşmesi" }).waitFor();
+    await clickButton(page, "Olguyu başlat");
+    check((await page.locator("body").innerText()).includes("KLİNİK SÜRE"), "Olgu başlatma eylemi oturum durumunu değiştirmedi");
+    check(await page.getByRole("button", { name: "Olguyu başlat" }).count() === 0, "Olgu başlatma eylemi tamamlandıktan sonra başlangıç düğmesi açık kaldı");
     await verifyCurriculumAndLanguage(page);
     await verifyScenarioLibrary(page);
     await verifyModeDifferences(page);
@@ -307,6 +326,8 @@ async function verifyAccessibilityAndMobile(page) {
     console.log(`medical-v2-browser-qa: PASS · ${golden.events} olay · ${golden.hash}`);
     console.log(`desktop=${desktopScreenshot}`);
     console.log(`mobile=${mobileScreenshot}`);
+    console.log(`initialDesktop=${initialDesktopScreenshot}`);
+    console.log(`initialMobile=${initialMobileScreenshot}`);
   } finally {
     if (browser) await browser.close();
     if (server) server.kill("SIGTERM");

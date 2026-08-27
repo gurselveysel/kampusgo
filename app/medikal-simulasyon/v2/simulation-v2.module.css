@@ -62,6 +62,7 @@
 .caseStrip div > span { color: #8fa4ac; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .caseActions { display: flex !important; grid-auto-flow: column; gap: 7px !important; }
 .caseActions button { border: 1px solid var(--cyan); color: var(--cyan); border-radius: 8px; background: transparent; padding: 9px 12px; cursor: pointer; white-space: nowrap; }
+.caseActions .startAction { border-color: var(--green); color: #05231e; background: var(--green); font-weight: 900; box-shadow: 0 8px 24px rgba(73, 219, 168, .18); }
 
 .libraryPanel { width: min(1740px, calc(100% - clamp(28px, 5vw, 84px))); margin: 18px auto 0; padding: 18px; border: 1px solid rgba(85, 225, 220, .3); border-radius: 18px; background: rgba(7, 23, 32, .97); box-shadow: 0 24px 70px rgba(0, 0, 0, .38); }
 .libraryHead { display: flex; justify-content: space-between; gap: 20px; align-items: start; }
@@ -119,13 +120,13 @@
   margin: 0 auto;
   padding: 20px clamp(14px, 2.5vw, 42px);
   display: grid;
-  grid-template-columns: minmax(0, 1.85fr) minmax(350px, .78fr);
+  grid-template-columns: minmax(0, 1.72fr) minmax(390px, .86fr);
   gap: 18px;
 }
 
 .sceneColumn { min-width: 0; display: grid; gap: 12px; }
 .sceneFrame {
-  min-height: 710px;
+  min-height: 650px;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(97, 211, 216, .25);
@@ -135,7 +136,7 @@
 }
 .threeScene { position: absolute; inset: 0; }
 .threeScene canvas { position: relative; z-index: 0; display: block; width: 100%; height: 100%; }
-.realisticPatient { --breath-duration: 2.8s; --pulse-duration: .7s; position: absolute; z-index: 1; left: 12%; right: 12%; top: 7%; bottom: 0; pointer-events: none; transform-origin: 50% 88%; animation: patientMicroSway 7s ease-in-out infinite; }
+.realisticPatient { --breath-duration: 2.8s; --pulse-duration: .7s; position: absolute; z-index: 1; left: 6%; right: 25%; top: 8%; bottom: 0; pointer-events: none; transform-origin: 50% 88%; animation: patientMicroSway 5.5s ease-in-out infinite; }
 .realisticPatient img { object-fit: contain; object-position: center bottom; opacity: 0; filter: drop-shadow(0 24px 30px rgba(0, 0, 0, .34)); transition: opacity .35s ease, filter .35s ease; }
 .realisticPatient[data-ready="true"] .patientBase, .realisticPatient[data-ready="true"] .patientChestLayer, .realisticPatient[data-ready="true"] .patientHeadLayer, .realisticPatient[data-ready="true"] .patientPainHandLayer { opacity: 1; }
 .patientChestLayer { z-index: 1; clip-path: inset(28% 23% 17% 23%); transform-origin: 50% 51%; animation: patientChestRespiration var(--breath-duration) cubic-bezier(.45, 0, .55, 1) infinite; }
@@ -175,7 +176,7 @@
 .cprOverlay { position: absolute; z-index: 4; left: 44%; top: 42%; width: 12%; height: 18%; animation: handsCompression .34s cubic-bezier(.4, 0, .6, 1) infinite; }
 .cprOverlay i { position: absolute; left: 12%; top: 28%; width: 78%; height: 34%; border-radius: 48%; background: linear-gradient(130deg, #e5b18f, #b97657); box-shadow: 0 7px 12px rgba(0, 0, 0, .38); transform: rotate(8deg); }
 .cprOverlay i:last-child { top: 10%; transform: rotate(-8deg); background: linear-gradient(130deg, #efc09d, #c88765); }
-.sceneLoading { min-height: 710px; display: grid; place-items: center; color: #a7c8ce; }
+.sceneLoading { min-height: 650px; display: grid; place-items: center; color: #a7c8ce; }
 .sceneStatus { position: absolute; left: 218px; top: 20px; z-index: 5; display: grid; gap: 3px; padding: 8px 11px; border-left: 2px solid var(--green); background: rgba(4, 17, 26, .7); backdrop-filter: blur(9px); }
 .sceneStatus span { color: var(--green); font-size: 8px; font-weight: 900; letter-spacing: .16em; }
 .sceneStatus strong { color: #d9ecee; font-size: 10px; }
@@ -235,11 +236,11 @@
 .vitalGrid article[data-alert="true"] { box-shadow: inset 2px 0 0 var(--red); }
 .vitalGrid article[data-alert="true"] strong { color: var(--red); }
 
-.patientSpeech { position: absolute; z-index: 6; left: 50%; bottom: 168px; transform: translateX(-61%); width: min(560px, calc(100% - 390px)); padding: 14px 18px; border-radius: 13px; border: 1px solid rgba(115, 219, 216, .24); background: rgba(4, 17, 25, .86); backdrop-filter: blur(14px); }
+.patientSpeech { position: absolute; z-index: 6; left: 18px; bottom: 154px; width: min(620px, calc(100% - 390px)); padding: 14px 18px; border-radius: 13px; border: 1px solid rgba(115, 219, 216, .24); background: rgba(4, 17, 25, .9); backdrop-filter: blur(14px); }
 .patientSpeech span { color: var(--cyan); font-size: 9px; font-weight: 900; letter-spacing: .16em; }
 .patientSpeech p { margin: 6px 0 0; color: #e7f5f4; line-height: 1.45; }
 
-.bedsideCommands { position: absolute; left: 18px; right: 350px; bottom: 18px; z-index: 3; padding: 11px; border: 1px solid rgba(85, 225, 220, .27); border-radius: 14px; background: rgba(3, 15, 22, .91); box-shadow: 0 18px 50px rgba(0, 0, 0, .36); backdrop-filter: blur(16px); }
+.bedsideCommands { position: absolute; left: 18px; right: 350px; bottom: 18px; z-index: 7; padding: 11px; border: 1px solid rgba(85, 225, 220, .27); border-radius: 14px; background: rgba(3, 15, 22, .94); box-shadow: 0 18px 50px rgba(0, 0, 0, .36); backdrop-filter: blur(16px); }
 .bedsideCommands > div:first-child { margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; color: #78969e; font-size: 8px; }
 .bedsideCommands > div:first-child span { color: var(--cyan); font-weight: 900; letter-spacing: .14em; }
 .bedsideActionGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
@@ -263,9 +264,9 @@
 .feedbackCard strong { display: block; margin-top: 7px; line-height: 1.42; }
 .feedbackCard p { margin: 0; color: #a9c0c5; font-size: 12px; line-height: 1.55; }
 
-.toolDock { min-width: 0; display: grid; grid-template-columns: 96px 1fr; min-height: 736px; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--panel); }
+.toolDock { min-width: 0; align-self: start; display: grid; grid-template-columns: 104px 1fr; min-height: 650px; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--panel); }
 .toolTabs { padding: 9px; display: flex; flex-direction: column; gap: 6px; border-right: 1px solid var(--line); background: #071720; }
-.toolTabs button { min-height: 82px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: #718d95; padding: 9px 6px; display: grid; place-items: center; align-content: center; gap: 5px; font-size: 10px; line-height: 1.15; cursor: pointer; }
+.toolTabs button { min-height: 72px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: #8da5ac; padding: 9px 6px; display: grid; place-items: center; align-content: center; gap: 5px; font-size: 11px; line-height: 1.2; cursor: pointer; }
 .toolTabs button span { font-size: 8px; color: #536c74; }
 .toolTabs button[aria-selected="true"] { color: #fff; background: rgba(68, 200, 200, .12); border-color: rgba(85, 225, 220, .35); }
 .toolTabs button[aria-selected="true"] span { color: var(--cyan); }
@@ -307,7 +308,7 @@
 .diagnosticViewer[data-state="pending"] { background: rgba(247, 232, 225, .96); }
 .diagnosticProgress { height: 6px; overflow: hidden; border-radius: 99px; background: rgba(98, 57, 61, .16); }
 .diagnosticProgress i { display: block; height: 100%; background: #d95a67; transition: width .25s ease; }
-.actionList { flex: 1; padding: 12px 0; display: grid; align-content: start; gap: 8px; max-height: 390px; overflow: auto; }
+.actionList { flex: 1; padding: 12px 0; display: grid; align-content: start; gap: 8px; }
 .actionList > button { position: relative; min-height: 75px; padding: 12px 10px 11px 55px; border: 1px solid var(--line); border-radius: 10px; background: rgba(5, 18, 27, .7); text-align: left; cursor: pointer; }
 .actionList > button:not(:disabled):hover { border-color: var(--cyan); background: rgba(33, 115, 121, .14); transform: translateY(-1px); }
 .actionList > button:disabled { opacity: .5; cursor: not-allowed; }
@@ -315,7 +316,7 @@
 .actionList strong { display: block; padding-right: 2px; font-size: 11px; line-height: 1.35; }
 .actionList small { display: block; margin-top: 5px; color: #729098; font-size: 8px; }
 .actionList em { display: block; margin-top: 5px; color: #e7b870; font-size: 8px; font-style: normal; }
-.observationTray { max-height: 172px; overflow: auto; margin: 1px 0 10px; padding: 10px; border: 1px solid var(--line); border-radius: 9px; background: rgba(3, 14, 21, .68); }
+.observationTray { margin: 1px 0 10px; padding: 10px; border: 1px solid var(--line); border-radius: 9px; background: rgba(3, 14, 21, .68); }
 .observationTray > span { display: block; margin-bottom: 6px; color: var(--cyan); font-size: 8px; font-weight: 900; letter-spacing: .13em; }
 .observationTray p { margin: 0 0 6px; padding: 7px; display: grid; gap: 3px; border-radius: 6px; background: rgba(22, 49, 58, .42); color: #9db4b9; font-size: 8px; line-height: 1.45; }
 .observationTray p:last-of-type { margin-bottom: 0; }
@@ -327,8 +328,15 @@
 .timeControls span { margin-right: auto; color: #77949b; font-size: 9px; }
 .timeControls button { border: 1px solid var(--line); border-radius: 7px; background: #0b2330; padding: 7px 8px; font-size: 9px; cursor: pointer; }
 
-.lowerGrid { width: min(1740px, calc(100% - clamp(28px, 5vw, 84px))); margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.reviewHub { width: min(1740px, calc(100% - clamp(28px, 5vw, 84px))); margin: 0 auto; border: 1px solid var(--line); border-radius: 16px; background: rgba(7, 24, 34, .72); overflow: hidden; }
+.reviewTabs { padding: 8px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; border-bottom: 1px solid var(--line); }
+.reviewTabs button { min-width: 0; padding: 11px 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: #87a1a8; cursor: pointer; }
+.reviewTabs button:hover { color: #fff; background: rgba(85, 225, 220, .06); }
+.reviewTabs button[aria-pressed="true"] { border-color: rgba(85, 225, 220, .34); color: #fff; background: rgba(85, 225, 220, .12); }
+.reviewTabs button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 800; }
+.reviewTabs button b { min-width: 28px; padding: 4px 7px; border-radius: 99px; color: var(--cyan); background: rgba(85, 225, 220, .09); font-size: 8px; text-align: center; }
 .timelinePanel, .trendPanel, .manimPanel, .evidencePanel, .debriefPanel { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); overflow: hidden; }
+.reviewHub > .timelinePanel, .reviewHub > .trendPanel, .reviewHub > .manimPanel, .reviewHub > .evidencePanel { border: 0; border-radius: 0; background: transparent; }
 .sectionHead { min-height: 70px; padding: 15px 17px; display: flex; justify-content: space-between; gap: 15px; align-items: center; border-bottom: 1px solid var(--line); }
 .sectionHead > b { color: #78949b; font-size: 9px; font-weight: 800; letter-spacing: .06em; overflow-wrap: anywhere; }
 .timeline { list-style: none; padding: 8px 12px 14px; margin: 0; max-height: 385px; overflow: auto; }
@@ -343,7 +351,7 @@
 .timeline small { color: #7f9ba2; font-size: 8px; line-height: 1.4; }
 .timeline button > b { color: var(--green); font-size: 7px; }
 .timeline li[data-accepted="false"] button > b { color: var(--red); }
-.emptyState { min-height: 210px; display: grid; place-items: center; margin: 0; padding: 24px; color: #6f8c94; text-align: center; font-size: 12px; }
+.emptyState { min-height: 120px; display: grid; place-items: center; margin: 0; padding: 24px; color: #6f8c94; text-align: center; font-size: 12px; }
 
 .trendWrap { padding: 13px 16px 5px; }
 .trendWrap svg { width: 100%; height: 190px; display: block; border-radius: 10px; background: linear-gradient(180deg, rgba(4, 15, 22, .82), rgba(8, 28, 37, .76)); }
@@ -362,7 +370,7 @@
 .manimPanel { padding-bottom: 16px; }
 .pipeline { margin: 15px 17px; display: flex; align-items: center; justify-content: center; color: #7d9ba2; font-size: 8px; text-transform: uppercase; letter-spacing: .12em; }
 .pipeline i { width: 28px; height: 1px; margin: 0 6px; background: linear-gradient(90deg, #35545c, var(--cyan)); }
-.manimPanel video, .renderFallback { width: calc(100% - 34px); min-height: 206px; margin: 0 17px 13px; border: 1px solid var(--line); border-radius: 11px; background: #030b10; }
+.manimPanel video, .renderFallback { width: calc(100% - 34px); min-height: 150px; margin: 0 17px 13px; border: 1px solid var(--line); border-radius: 11px; background: #030b10; }
 .manimPanel video { display: block; object-fit: contain; }
 .renderFallback { padding: 28px; display: grid; place-items: center; align-content: center; gap: 9px; text-align: center; }
 .renderFallback strong { color: var(--cyan); font-size: 11px; letter-spacing: .1em; }
@@ -410,10 +418,10 @@
 .footer b { color: var(--amber); }
 
 @keyframes monitorSweep { from { translate: -10% 0; } to { translate: -1% 0; } }
-@keyframes patientMicroSway { 0%, 100% { translate: 0 0; rotate: -.12deg; } 50% { translate: 1px -1px; rotate: .12deg; } }
-@keyframes patientChestRespiration { 0%, 100% { transform: scale(1); } 45% { transform: translateY(-3px) scale(1.018, 1.038); } 62% { transform: translateY(-2px) scale(1.013, 1.025); } }
+@keyframes patientMicroSway { 0%, 100% { translate: 0 0; rotate: -.2deg; } 48% { translate: 2px -3px; rotate: .22deg; } 68% { translate: 1px -1px; rotate: .08deg; } }
+@keyframes patientChestRespiration { 0%, 100% { transform: scale(1); filter: brightness(1); } 45% { transform: translateY(-6px) scale(1.035, 1.075); filter: brightness(1.035); } 62% { transform: translateY(-3px) scale(1.022, 1.045); filter: brightness(1.018); } }
 @keyframes patientHeadMicro { 0%, 100% { transform: translate(0, 0) rotate(-.18deg); } 45% { transform: translate(1px, -2px) rotate(.2deg); } 62% { transform: translate(0, -1px) rotate(.08deg); } }
-@keyframes patientPainGuard { 0%, 100% { transform: translate(0, 0) rotate(0); } 45% { transform: translate(-2px, -3px) rotate(-.35deg); } 70% { transform: translate(-1px, -1px) rotate(-.12deg); } }
+@keyframes patientPainGuard { 0%, 100% { transform: translate(0, 0) rotate(0); } 45% { transform: translate(-5px, -7px) rotate(-.7deg); } 70% { transform: translate(-2px, -3px) rotate(-.24deg); } }
 @keyframes patientBlink { 0%, 92%, 100% { scale: 1 0; } 94%, 97% { scale: 1 1; } }
 @keyframes sweatDrop { 0%, 22% { translate: 0 -3px; opacity: 0; } 36% { opacity: .9; } 78% { opacity: .65; } 100% { translate: 0 16px; opacity: 0; } }
 @keyframes patientPulse { 0% { box-shadow: 0 0 0 0 rgba(84, 221, 213, .46); } 75%, 100% { box-shadow: 0 0 0 8px rgba(84, 221, 213, 0); } }
@@ -427,7 +435,7 @@
   .clinicalWorkspace { grid-template-columns: 1fr; }
   .toolDock { min-height: 560px; }
   .actionList { grid-template-columns: 1fr 1fr; max-height: 380px; }
-  .lowerGrid { grid-template-columns: 1fr 1fr; }
+  .reviewTabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .debriefGrid { grid-template-columns: 1fr 1fr; }
   .auditSummary { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
 }
@@ -439,7 +447,8 @@
   .modePicker button { flex: 1; white-space: nowrap; }
   .caseStrip { grid-template-columns: 1fr 1fr; }
   .caseStrip div:nth-child(3) { grid-column: 1 / -1; }
-  .caseActions { grid-column: 1 / -1; justify-content: flex-start; }
+  .caseActions { grid-column: 1 / -1; justify-content: flex-start; flex-wrap: wrap; }
+  .caseActions button { flex: 1 1 135px; }
   .caseCatalog { grid-template-columns: 1fr; }
   .difficultyPicker { grid-template-columns: 1fr; }
   .curriculumSelectors, .curriculumSummary { grid-template-columns: 1fr; }
@@ -513,7 +522,7 @@
   .toolTabs { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
   .toolTabs button { min-width: 86px; min-height: 58px; }
   .actionList { grid-template-columns: 1fr; }
-  .lowerGrid { grid-template-columns: 1fr; }
+  .reviewTabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .debriefGrid, .scoreGrid { grid-template-columns: 1fr; }
   .checklist { grid-template-columns: 1fr; }
   .footer { grid-template-columns: 1fr; text-align: left; }
@@ -530,7 +539,7 @@
   .threeScene { height: 330px; }
   .sceneFrame { grid-template-rows: 330px auto auto auto; }
   .sceneLoading { min-height: 330px; border-radius: 13px; }
-  .lowerGrid, .debriefPanel, .curriculumPanel { width: calc(100% - 24px); }
+  .reviewHub, .debriefPanel, .curriculumPanel { width: calc(100% - 24px); }
   .periodPicker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .toolPanel { padding: 13px; }
   .timeline button { grid-template-columns: 40px 1fr; }

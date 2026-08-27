@@ -206,7 +206,9 @@ function responseDetail(body: unknown, fallback: string) {
 
 export default function MedicalSimulationV2() {
   const [session, setSession] = useState<ClinicalSession>(() => createSession({ mode: "training" }));
+  const [encounterStarted, setEncounterStarted] = useState(false);
   const [activeTool, setActiveTool] = useState<ToolName>("interview");
+  const [reviewView, setReviewView] = useState<"history" | "trend" | "explanation" | "program">("history");
   const [question, setQuestion] = useState("");
   const [examRegion, setExamRegion] = useState<"head" | "chest" | "arm">("chest");
   const [replayIndex, setReplayIndex] = useState<number | null>(null);
@@ -219,12 +221,17 @@ export default function MedicalSimulationV2() {
   const [institutionModelId, setInstitutionModelId] = useState<InstitutionModelId>("national-core");
   const [reasoningDraft, setReasoningDraft] = useState(EMPTY_REASONING);
   const hydrated = useRef(false);
+  const toolDockRef = useRef<HTMLElement>(null);
   const [storageReady, setStorageReady] = useState(false);
 
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored) setSession(restoreSession(stored));
+      if (stored) {
+        const restored = restoreSession(stored);
+        setSession(restored);
+        setEncounterStarted(restored.records.length > 0);
+      }
       setObserverNote(window.localStorage.getItem(OBSERVER_NOTE_KEY) ?? "");
       const curriculumStored = window.localStorage.getItem(CURRICULUM_KEY);
       if (curriculumStored) {
@@ -270,12 +277,13 @@ export default function MedicalSimulationV2() {
   const visualization = [...session.state.visualizations].reverse()[0];
   const currentEvidence = renderRecord?.evidenceId ? UCEP_EVIDENCE[renderRecord.evidenceId] : null;
   const showMechanism = liveState.mode === "training" || liveState.status === "completed";
-  const showScores = liveState.mode === "training" || liveState.status === "completed";
+  const hasClinicalActivity = session.records.some((record) => record.accepted && record.tool !== "visualization");
   const currentEncounter = ENCOUNTER_CATALOG.find((encounter) => encounter.id === liveState.encounterId) ?? ENCOUNTER_CATALOG[0];
   const curriculumPeriod = getCurriculumPeriod(curriculumPeriodId);
   const institutionModel = getInstitutionModel(institutionModelId);
 
   function apply(event: ClinicalEvent) {
+    setEncounterStarted(true);
     setReplayIndex(null);
     setSession((current) => dispatchEvent(current, event));
   }
@@ -283,7 +291,9 @@ export default function MedicalSimulationV2() {
   function startMode(mode: SimulationMode) {
     setSession(createSession({ mode, seed: liveState.seed, encounterId: liveState.encounterId, difficulty: liveState.difficulty }));
     setReplayIndex(null);
+    setEncounterStarted(false);
     setRenderState("idle");
+    setReviewView("history");
     setRenderMessage(`${modeCopy[mode].title} modu için yeni sentetik oturum başlatıldı.`);
   }
 
@@ -291,9 +301,17 @@ export default function MedicalSimulationV2() {
     setSession(createSession({ mode: liveState.mode, seed: liveState.seed, encounterId, difficulty }));
     setReasoningDraft(EMPTY_REASONING);
     setReplayIndex(null);
+    setEncounterStarted(false);
     setRenderState("idle");
+    setReviewView("history");
     setRenderMessage("Yeni sentetik olgu için karar kaydı başlatılmaya hazır.");
     setLibraryOpen(false);
+  }
+
+  function beginEncounter() {
+    setEncounterStarted(true);
+    setActiveTool("interview");
+    window.requestAnimationFrame(() => toolDockRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }));
   }
 
   function submitReasoning() {
@@ -380,7 +398,7 @@ export default function MedicalSimulationV2() {
       <header className={styles.topbar}>
         <a href="/medikal-simulasyon" className={styles.brand} aria-label="TEYS MAMS ana simülasyon sayfası">
           <span>TEYS / MAMS</span>
-          <strong>Kanıt kapılı klinik simülasyon</strong>
+          <strong>Klinik beceri simülasyonu</strong>
         </a>
         <div className={styles.modePicker} aria-label="Simülasyon modu">
           {SIMULATION_MODES.map((mode) => (
@@ -390,7 +408,7 @@ export default function MedicalSimulationV2() {
           ))}
         </div>
         <div className={styles.runMeta}>
-          <span>{liveState.status === "completed" ? "OTURUM TAMAMLANDI" : "SENTETİK HASTA · CANLI"}</span>
+          <span>{liveState.status === "completed" ? "OTURUM TAMAMLANDI" : encounterStarted ? "KLİNİK SÜRE" : "OLGU HAZIR"}</span>
           <b>{formatClock(liveState.mode === "osce" ? liveState.osce.remainingSeconds : liveState.elapsedSeconds)}</b>
         </div>
       </header>
@@ -398,8 +416,9 @@ export default function MedicalSimulationV2() {
       <section className={styles.caseStrip} aria-label="Olgu özeti">
         <div><small>OLGU</small><strong>{state.patient.age} yaş · {state.patient.sex} · {state.encounterTitle}</strong><span>{currentEncounter.briefing}</span></div>
         <div><small>KLİNİK FAZ</small><strong>{phaseLabels[state.phase]}</strong></div>
-        <div><small>PROGRAM · MOD</small><strong>{curriculumPeriod.label} · {institutionModel.label}</strong><span>{modeCopy[liveState.mode].title} · {DIFFICULTY_PROFILES[liveState.difficulty].label}</span></div>
+        <div><small>EĞİTİM PROGRAMI</small><strong>{curriculumPeriod.label} · {institutionModel.label}</strong><span>{modeCopy[liveState.mode].title} · {DIFFICULTY_PROFILES[liveState.difficulty].label}</span></div>
         <div className={styles.caseActions}>
+          {!encounterStarted ? <button className={styles.startAction} type="button" data-action-contract="Oturumu başlatır ve hasta görüşmesi aracını açar" onClick={beginEncounter}>Olguyu başlat</button> : null}
           <button type="button" data-action-contract="Olgu kütüphanesini açar veya kapatır" onClick={() => setLibraryOpen((value) => !value)} aria-expanded={libraryOpen}>Olgu kütüphanesi</button>
           <button type="button" data-action-contract="Altı yıllık program gezginini açar veya kapatır" onClick={() => setCurriculumOpen((value) => !value)} aria-expanded={curriculumOpen}>Müfredat</button>
           {replayIndex !== null ? <button type="button" data-action-contract="Geçmiş incelemesini kapatıp canlı hasta durumuna döner" onClick={() => setReplayIndex(null)}>Canlı duruma dön</button> : null}
@@ -499,16 +518,16 @@ export default function MedicalSimulationV2() {
             ))}
           </div>
 
-          <section className={styles.feedbackCard} data-safety={Boolean(session.records.at(-1)?.safetyAlert)} aria-live="polite">
+          {hasClinicalActivity ? <section className={styles.feedbackCard} data-safety={Boolean(session.records.at(-1)?.safetyAlert)} aria-live="polite">
             <div>
               <span>{session.records.at(-1)?.accepted === false ? "GEÇİŞ REDDEDİLDİ" : "SON KLİNİK SONUÇ"}</span>
               <strong>{learnerText(liveState.lastMessage)}</strong>
             </div>
             {showMechanism ? <p><b>Fizyolojik mekanizma:</b> {learnerText(liveState.lastMechanism)}</p> : <p>Gerekçe ve mekanizma, {liveState.mode === "osce" ? "istasyon" : "değerlendirme"} tamamlandığında açılır.</p>}
-          </section>
+          </section> : null}
         </div>
 
-        <aside className={styles.toolDock} aria-label="Klinik araçlar">
+        <aside ref={toolDockRef} className={styles.toolDock} aria-label="Klinik araçlar">
           <div className={styles.toolTabs} role="tablist" aria-label="Araç grupları">
             {(Object.keys(toolLabels) as ToolName[]).map((tool, index) => (
               <button type="button" role="tab" data-action-contract={`${toolLabels[tool]} çalışma alanını açar`} disabled={activeTool === tool} aria-selected={activeTool === tool} key={tool} onClick={() => setActiveTool(tool)}>
@@ -590,8 +609,15 @@ export default function MedicalSimulationV2() {
         </aside>
       </section>
 
-      <section className={styles.lowerGrid}>
-        <section className={styles.timelinePanel} aria-labelledby="timeline-title">
+      {hasClinicalActivity ? <section className={styles.reviewHub} aria-label="Oturum inceleme alanı">
+        <nav className={styles.reviewTabs} aria-label="Oturum inceleme bölümleri">
+          <button type="button" data-action-contract="Karar geçmişini gösterir" aria-pressed={reviewView === "history"} onClick={() => setReviewView("history")}><span>Kararlar</span><b>{session.records.length}</b></button>
+          <button type="button" data-action-contract="Vital bulgu eğilimini gösterir" aria-pressed={reviewView === "trend"} onClick={() => setReviewView("trend")}><span>Hasta yanıtı</span><b>{debrief.vitalTrend.length}</b></button>
+          <button type="button" data-action-contract="Seçili kararın görsel açıklamasını gösterir" aria-pressed={reviewView === "explanation"} onClick={() => setReviewView("explanation")}><span>Karar açıklaması</span><b>{visualization?.videoUrl ? "Hazır" : "Aç"}</b></button>
+          <button type="button" data-action-contract="Seçili kararın eğitim programı ilişkisini gösterir" aria-pressed={reviewView === "program"} onClick={() => setReviewView("program")}><span>Program ilişkisi</span><b>{currentEvidence ? "1" : "—"}</b></button>
+        </nav>
+
+        {reviewView === "history" ? <section className={styles.timelinePanel} aria-labelledby="timeline-title">
           <div className={styles.sectionHead}><div><span>KARAR GEÇMİŞİ</span><h2 id="timeline-title">Kararları yeniden inceleyin</h2></div><b>{session.records.length} kayıt</b></div>
           {session.records.length ? (
             <ol className={styles.timeline}>
@@ -606,15 +632,15 @@ export default function MedicalSimulationV2() {
               ))}
             </ol>
           ) : <p className={styles.emptyState}>İlk klinik karar verildiğinde karar geçmişi burada başlayacak.</p>}
-        </section>
+        </section> : null}
 
-        <section className={styles.trendPanel} aria-labelledby="trend-title">
+        {reviewView === "trend" ? <section className={styles.trendPanel} aria-labelledby="trend-title">
           <div className={styles.sectionHead}><div><span>DİNAMİK HASTA YANITI</span><h2 id="trend-title">Karar bazlı vital eğilim</h2></div><b>{state.vitals.rhythm.toUpperCase()}</b></div>
           <VitalTrend data={debrief.vitalTrend} />
           <p className={styles.disclosure}>Nabız, sistolik tansiyon ve SpO₂; hastalığın seyri, geçen süre ve uyguladığınız klinik eylemler birlikte değerlendirilerek değişir.</p>
-        </section>
+        </section> : null}
 
-        <section className={styles.manimPanel} aria-labelledby="manim-title">
+        {reviewView === "explanation" ? <section className={styles.manimPanel} aria-labelledby="manim-title">
           <div className={styles.sectionHead}><div><span>KARAR AÇIKLAMASI</span><h2 id="manim-title">Kararın hasta üzerindeki etkisini izleyin</h2></div><b data-render-state={renderState}>{renderStateLabels[renderState]}</b></div>
           <div className={styles.pipeline} aria-label="Görselleştirme adımları"><span>Karar</span><i /><span>Hasta yanıtı</span><i /><span>Açıklama</span><i /><span>İzle</span></div>
           {visualization?.videoUrl ? (
@@ -628,9 +654,9 @@ export default function MedicalSimulationV2() {
           )}
           <button className={styles.renderButton} type="button" data-action-contract="Seçili klinik karar için açıklayıcı görsel ister ve sonucu bu alanda gösterir" disabled={!renderRecord || renderState === "submitting" || renderState === "rendering"} onClick={requestVisualization}>Kararın etkisini görselleştir</button>
           <p className={styles.disclosure}>Görsel açıklama, daha önce hesaplanan hasta yanıtını anlatır; hasta durumunu değiştirmez. Hizmet kullanılamazsa simülasyon devam eder.</p>
-        </section>
+        </section> : null}
 
-        <section className={styles.evidencePanel} aria-labelledby="evidence-title">
+        {reviewView === "program" ? <section className={styles.evidencePanel} aria-labelledby="evidence-title">
           <div className={styles.sectionHead}><div><span>KAYNAK VE ONAY</span><h2 id="evidence-title">UÇEP ve TYÇ ile ilişki</h2></div><b>UZMAN ONAYI BEKLİYOR</b></div>
           <article>
             <span>UÇEP GÖREV EŞLEMESİ</span>
@@ -652,13 +678,12 @@ export default function MedicalSimulationV2() {
             <p>{TYC_EVIDENCE.skill} · {TYC_EVIDENCE.competence}</p>
             <small>UÇEP uygulama düzeyinden ayrı tutulur. Resmî program yerleştirmesi: {TYC_EVIDENCE.officialPlacementStatus}</small>
           </article>
-        </section>
-      </section>
+        </section> : null}
+      </section> : null}
 
-      <section className={styles.debriefPanel} aria-labelledby="debrief-title">
+      {liveState.status === "completed" ? <section className={styles.debriefPanel} aria-labelledby="debrief-title">
         <div className={styles.sectionHead}><div><span>EĞİTİCİ DEĞERLENDİRMESİ</span><h2 id="debrief-title">Oturum değerlendirmesi ve yeterlilik görünümü</h2></div><b>{debrief.competencyMet ? "YETERLİLİK KARŞILANDI" : "HENÜZ KARŞILANMADI"}</b></div>
-        {showScores ? (
-          <div className={styles.debriefGrid}>
+        <div className={styles.debriefGrid}>
             <div className={styles.scoreGrid}>
               {Object.entries(debrief.dimensions).map(([key, value]) => <article key={key}><span>{scoreLabels[key] ?? key}</span><strong>{value}</strong><i style={{ width: `${value}%` }} /></article>)}
             </div>
@@ -676,9 +701,8 @@ export default function MedicalSimulationV2() {
                 <small>Bu not hasta durumunu değiştirmez; yalnız bu cihazdaki eğitici gözlem alanında saklanır.</small>
               </label>
             </div>
-          </div>
-        ) : <div className={styles.lockedDebrief}>Puanlar, kontrol listesi ve ayrıntılı debriefing oturum tamamlandığında açılır. Olay günlüğü değerlendirme bütünlüğü için kaydedilmeye devam eder.</div>}
-      </section>
+        </div>
+      </section> : null}
 
       <footer className={styles.footer}>
         <span>TEYS/MAMS · sentetik hasta · pilot değerlendirme sürümü</span>
