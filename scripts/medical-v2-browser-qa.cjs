@@ -111,6 +111,13 @@ async function verifyGoldenFlow(page) {
     return image instanceof HTMLImageElement && image.complete && image.naturalWidth >= 640;
   });
   check((await patientSprite.getAttribute("src")).includes("synthetic-stemi-patient-v1.webp"), "Başlangıçta gerçekçi göğüs ağrılı hasta görseli yüklenmedi");
+  const chestMotion = page.getByTestId("patient-chest-motion");
+  const chestAnimation = await chestMotion.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { name: style.animationName, duration: style.animationDuration, playState: style.animationPlayState };
+  });
+  check(chestAnimation.name.includes("patientChestRespiration") && chestAnimation.duration !== "0s" && chestAnimation.playState === "running", "Hasta solunumu canlı animasyon olarak çalışmıyor");
+  check((await page.getByLabel(/Canlı hasta hareketi/).innerText()).includes("SS 21/dk"), "Solunum hareketi vital motoruna bağlanmadı");
   await page.getByLabel("Hastaya kendi sorunuzu sorun").fill("Bulantınız, terlemeniz veya nefes darlığınız var mı?");
   await clickButton(page, "Sor");
   await clickButton(page, /İlaçları ve son kullanım zamanını sor/);
@@ -157,6 +164,7 @@ async function verifyGoldenFlow(page) {
   snapshot = await state(page);
   check(snapshot.state.phase === "vf" && snapshot.state.vitals.rhythm === "vf" && snapshot.state.vitals.heartRate === 0, "Zamana bağlı VF oluşmadı");
   await page.waitForFunction(() => document.querySelector('img[alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"]')?.getAttribute("src")?.includes("synthetic-stemi-patient-vf-v1.webp"));
+  check(await page.locator('[data-apnea="true"]').count() === 1, "VF sırasında spontan solunum animasyonu durmadı");
 
   await clickButton(page, /Arrest ekibini aktive et/);
   await clickButton(page, /Yüksek kaliteli CPR başlat/);
@@ -166,6 +174,7 @@ async function verifyGoldenFlow(page) {
   snapshot = await state(page);
   check(snapshot.state.phase === "rosc" && snapshot.state.vitals.rhythm === "rosc", "CPR/defibrilasyon yolu ROSC üretmedi");
   await page.waitForFunction(() => document.querySelector('img[alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"]')?.getAttribute("src")?.includes("synthetic-stemi-patient-v1.webp"));
+  check(await page.locator('[data-apnea="false"]').count() === 1, "ROSC sonrasında spontan solunum animasyonu geri dönmedi");
 
   await clickButton(page, /ROSC sonrası ABCDE değerlendirmesi/);
   await clickButton(page, /SBAR ile sorumluluğu devret/);

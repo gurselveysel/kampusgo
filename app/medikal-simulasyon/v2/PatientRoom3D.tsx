@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import Image from "next/image";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { Group, Mesh } from "three";
 import type { ClinicalState } from "../../../services/medical-simulation-v2/engine.js";
 import styles from "./simulation-v2.module.css";
@@ -146,6 +146,13 @@ export default function PatientRoom3D({ state, selectedRegion, onRegionSelect }:
     : "/medical-simulation/v2/synthetic-stemi-patient-v1.webp";
   const [spriteReady, setSpriteReady] = useState(false);
   const cprActive = Boolean(state.flags.cprActive);
+  const respiratoryRate = state.phase === "vf" ? 0 : Math.max(0, state.vitals.respiratoryRate);
+  const heartRate = Math.max(0, state.vitals.heartRate);
+  const distressed = ["assessment", "stemi", "treatment"].includes(state.phase);
+  const patientMotionStyle = {
+    "--breath-duration": `${respiratoryRate > 0 ? Math.max(1.55, Math.min(5, 60 / respiratoryRate)) : 3}s`,
+    "--pulse-duration": `${heartRate > 0 ? Math.max(.42, Math.min(1.4, 60 / heartRate)) : 1}s`,
+  } as CSSProperties;
 
   useEffect(() => setSpriteReady(false), [patientSprite]);
 
@@ -153,15 +160,29 @@ export default function PatientRoom3D({ state, selectedRegion, onRegionSelect }:
     <Canvas camera={{ position: [0, 1.15, 5.35], fov: 39 }} dpr={[1, 1.6]} gl={{ antialias: true, alpha: false }}>
       <Suspense fallback={null}><ClinicalRoom state={state} selectedRegion={selectedRegion} onRegionSelect={onRegionSelect} showProceduralPatient={!spriteReady} /></Suspense>
     </Canvas>
-    <div className={styles.realisticPatient} data-phase={state.phase} data-cpr={cprActive} data-ready={spriteReady}>
+    <div
+      className={styles.realisticPatient}
+      data-phase={state.phase}
+      data-cpr={cprActive}
+      data-distressed={distressed}
+      data-apnea={respiratoryRate === 0}
+      data-ready={spriteReady}
+      style={patientMotionStyle}
+    >
       <Image
         key={patientSprite}
         src={patientSprite}
         alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"
+        className={styles.patientBase}
         fill
         sizes="(max-width: 760px) 100vw, 68vw"
         onLoad={() => setSpriteReady(true)}
       />
+      <Image aria-hidden="true" alt="" src={patientSprite} className={styles.patientChestLayer} fill sizes="(max-width: 760px) 100vw, 68vw" data-testid="patient-chest-motion" />
+      <Image aria-hidden="true" alt="" src={patientSprite} className={styles.patientHeadLayer} fill sizes="(max-width: 760px) 100vw, 68vw" />
+      {distressed ? <Image aria-hidden="true" alt="" src={patientSprite} className={styles.patientPainHandLayer} fill sizes="(max-width: 760px) 100vw, 68vw" /> : null}
+      <div className={styles.patientBlink} aria-hidden="true"><i /><i /></div>
+      {distressed ? <div className={styles.diaphoresis} aria-hidden="true"><i /><i /><i /></div> : null}
     </div>
     <div className={styles.patientEquipmentOverlay} aria-hidden="true">
       {state.flags.monitorIv ? <div className={styles.electrodeSet}><i /><i /><i /><i /><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M38 45 C28 60 24 77 13 94 M47 49 C43 68 45 79 37 98 M56 49 C63 66 66 79 67 98 M64 45 C76 61 82 77 88 94" /></svg></div> : null}
@@ -170,6 +191,10 @@ export default function PatientRoom3D({ state, selectedRegion, onRegionSelect }:
       {cprActive ? <div className={styles.cprOverlay}><i /><i /></div> : null}
     </div>
     <div className={styles.sceneStatus} data-critical={state.phase === "vf"}><span>{state.phase === "vf" ? "KOD MAVİ" : state.phase === "rosc" ? "ROSC" : "CANLI HASTA"}</span><strong>{state.phase === "vf" ? "Yanıtsız · VF" : state.phase === "rosc" ? "Organize ritim" : "Uyanık · göğüs ağrılı"}</strong></div>
+    <div className={styles.patientMotionReadout} data-active={respiratoryRate > 0} aria-label={`Canlı hasta hareketi: solunum ${respiratoryRate}, nabız ${heartRate}`}>
+      <span><i /> CANLI HAREKET</span>
+      <strong>{respiratoryRate > 0 ? `SS ${respiratoryRate}/dk · N ${heartRate}/dk` : cprActive ? "CPR · MEKANİK KOMPRESYON" : "APNE · SPONTAN HAREKET YOK"}</strong>
+    </div>
     <div className={styles.sceneHotspots} aria-label="Hasta üzerinde muayene bölgesi seçimi">
       <button type="button" data-selected={selectedRegion === "head"} data-testid="exam-hotspot-head" onClick={() => onRegionSelect("head")}><span>01</span>Baş / genel durum</button>
       <button type="button" data-selected={selectedRegion === "chest"} data-testid="exam-hotspot-chest" onClick={() => onRegionSelect("chest")}><span>02</span>Göğüs</button>
