@@ -50,7 +50,7 @@ function check(condition, message) {
 }
 
 async function state(page) {
-  return page.evaluate(() => JSON.parse(localStorage.getItem("teys-stemi-v4-session")));
+  return page.evaluate(() => JSON.parse(localStorage.getItem("teys-stemi-bedside-v5-session")));
 }
 
 async function clickButton(page, label) {
@@ -247,7 +247,7 @@ async function verifyAccessibilityAndMobile(page) {
       }
     });
     await page.goto(route, { waitUntil: "networkidle" });
-    await page.evaluate(() => localStorage.removeItem("teys-stemi-v4-session"));
+    await page.evaluate(() => localStorage.removeItem("teys-stemi-bedside-v5-session"));
     await page.reload({ waitUntil: "networkidle" });
     await page.getByRole("heading", { name: "Hasta görüşmesi" }).waitFor();
     await verifyScenarioLibrary(page);

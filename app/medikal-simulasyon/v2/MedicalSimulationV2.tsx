@@ -33,8 +33,8 @@ const PatientRoom3D = dynamic(() => import("./PatientRoom3D"), {
   loading: () => <div className={styles.sceneLoading}>3B sentetik hasta sahnesi hazırlanıyor…</div>,
 });
 
-const STORAGE_KEY = "teys-stemi-v4-session";
-const OBSERVER_NOTE_KEY = "teys-stemi-v4-observer-note";
+const STORAGE_KEY = "teys-stemi-bedside-v5-session";
+const OBSERVER_NOTE_KEY = "teys-stemi-bedside-v5-observer-note";
 const toolLabels: Record<ToolName, string> = {
   interview: "Hasta görüşmesi",
   exam: "Muayene",
