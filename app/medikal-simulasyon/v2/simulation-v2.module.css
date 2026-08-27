@@ -320,10 +320,54 @@
   .caseActions { grid-column: 1 / -1; justify-content: flex-start; }
   .caseCatalog { grid-template-columns: 1fr; }
   .difficultyPicker { grid-template-columns: 1fr; }
-  .sceneFrame, .sceneLoading { min-height: 560px; }
-  .monitor { top: 115px; left: 14px; right: 14px; width: auto; }
+  .sceneFrame {
+    min-height: 0;
+    padding: 0 14px 14px;
+    display: grid;
+    grid-template-rows: 340px auto auto;
+    gap: 12px;
+  }
+  .threeScene {
+    position: relative;
+    inset: auto;
+    height: 340px;
+    margin: 0 -14px;
+    border-bottom: 1px solid rgba(97, 211, 216, .18);
+  }
+  .sceneLoading { min-height: 340px; }
+  .monitor {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+  }
+  .ecg { height: 42px; margin-top: 4px; }
+  .vitalGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+  .vitalGrid article { min-width: 0; padding: 6px; }
+  .vitalGrid strong { font-size: 18px; }
+  .patientSpeech {
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+  }
   .sceneHotspots { left: 14px; top: 14px; grid-template-columns: repeat(3, 1fr); right: 14px; }
-  .sceneHotspots button { width: auto; font-size: 0; justify-content: center; }
+  .sceneHotspots button {
+    width: auto;
+    min-width: 0;
+    min-height: 48px;
+    padding: 6px 5px;
+    flex-direction: column;
+    gap: 2px;
+    justify-content: center;
+    color: #d8eaec;
+    font-size: 8px;
+    line-height: 1.25;
+    text-align: center;
+  }
   .sceneHotspots button span { font-size: 9px; }
   .phaseRail { overflow-x: auto; grid-template-columns: repeat(6, minmax(105px, 1fr)); }
   .feedbackCard { grid-template-columns: 1fr; }
@@ -344,9 +388,10 @@
   .caseStrip { grid-template-columns: 1fr; }
   .caseStrip div:nth-child(3) { grid-column: auto; }
   .clinicalWorkspace { padding: 12px; }
-  .sceneFrame, .sceneLoading { min-height: 610px; border-radius: 13px; }
-  .monitor { top: 105px; }
-  .patientSpeech { bottom: 14px; }
+  .sceneFrame { border-radius: 13px; }
+  .threeScene { height: 330px; }
+  .sceneFrame { grid-template-rows: 330px auto auto; }
+  .sceneLoading { min-height: 330px; border-radius: 13px; }
   .lowerGrid, .debriefPanel { width: calc(100% - 24px); }
   .toolPanel { padding: 13px; }
   .timeline button { grid-template-columns: 40px 1fr; }

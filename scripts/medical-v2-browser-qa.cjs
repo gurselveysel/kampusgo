@@ -188,6 +188,32 @@ async function verifyAccessibilityAndMobile(page) {
   check(["A", "BUTTON", "INPUT"].includes(focus.tag) && focus.outline !== "none" && focus.width !== "0px", `Klavye odağı görünür değil: ${JSON.stringify(focus)}`);
   const animationDuration = await page.locator('[class*="ecg"] i').first().evaluate((element) => getComputedStyle(element).animationDuration);
   check(Number.parseFloat(animationDuration) <= 0.001, `Azaltılmış hareket uygulanmadı: ${animationDuration}`);
+  const sceneLayout = await page.evaluate(() => {
+    const canvasRegion = document.querySelector('[class*="threeScene"]');
+    const monitor = document.querySelector('[aria-label="Hasta monitörü"]');
+    const speech = document.querySelector('[class*="patientSpeech"]');
+    const hotspotButtons = [...document.querySelectorAll('[aria-label="Hasta üzerinde muayene bölgesi seçimi"] button')];
+    if (!canvasRegion || !monitor || !speech) return null;
+    const canvasRect = canvasRegion.getBoundingClientRect();
+    const monitorRect = monitor.getBoundingClientRect();
+    const speechRect = speech.getBoundingClientRect();
+    return {
+      canvasBottom: canvasRect.bottom,
+      monitorTop: monitorRect.top,
+      monitorBottom: monitorRect.bottom,
+      speechTop: speechRect.top,
+      hotspotLabels: hotspotButtons.map((button) => button.textContent?.trim()),
+      hotspotFontSizes: hotspotButtons.map((button) => Number.parseFloat(getComputedStyle(button).fontSize)),
+    };
+  });
+  check(sceneLayout, "Mobil klinik sahne yerleşimi ölçülemedi");
+  check(sceneLayout.monitorTop >= sceneLayout.canvasBottom + 8, `Monitör 3B hasta alanını kapatıyor: ${JSON.stringify(sceneLayout)}`);
+  check(sceneLayout.speechTop >= sceneLayout.monitorBottom + 8, `Hasta konuşması monitörle çakışıyor: ${JSON.stringify(sceneLayout)}`);
+  check(
+    ["Baş / genel durum", "Göğüs", "Periferik dolaşım"].every((label) => sceneLayout.hotspotLabels.some((text) => text?.includes(label))),
+    `Mobil muayene bölgesi etiketleri eksik: ${sceneLayout.hotspotLabels.join(" | ")}`,
+  );
+  check(sceneLayout.hotspotFontSizes.every((size) => size >= 8), `Mobil muayene etiketleri okunamaz: ${sceneLayout.hotspotFontSizes.join(",")}`);
   const screenshot = path.join(os.tmpdir(), "teys-medical-v2-mobile-390.png");
   await page.screenshot({ path: screenshot, fullPage: true });
   return screenshot;
