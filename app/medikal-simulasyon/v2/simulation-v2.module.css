@@ -86,6 +86,34 @@
 .caseCatalog small { display: block; color: var(--amber); font-size: 8px; }
 .caseCatalog article > button { width: 100%; margin-top: 12px; padding: 9px; border: 0; border-radius: 8px; color: #052126; background: var(--cyan); font-weight: 900; cursor: pointer; }
 
+.curriculumPanel { width: min(1740px, calc(100% - clamp(28px, 5vw, 84px))); margin: 18px auto 0; padding: 18px; border: 1px solid rgba(85, 225, 220, .3); border-radius: 18px; background: rgba(7, 23, 32, .97); box-shadow: 0 24px 70px rgba(0, 0, 0, .38); }
+.curriculumSelectors { margin-top: 16px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+.curriculumSelectors fieldset { min-width: 0; margin: 0; padding: 13px; border: 1px solid var(--line); border-radius: 12px; }
+.curriculumSelectors legend { padding: 0 6px; color: var(--cyan); font-size: 9px; font-weight: 900; letter-spacing: .12em; }
+.periodPicker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.modelPicker { display: grid; grid-template-columns: 1fr; gap: 7px; }
+.periodPicker button, .modelPicker button { min-width: 0; padding: 10px; display: grid; gap: 4px; border: 1px solid var(--line); border-radius: 9px; background: #081a24; text-align: left; cursor: pointer; }
+.periodPicker button[aria-pressed="true"], .modelPicker button[aria-pressed="true"] { border-color: var(--cyan); background: rgba(85, 225, 220, .1); box-shadow: inset 0 0 0 1px rgba(85, 225, 220, .12); }
+.periodPicker strong, .modelPicker strong { font-size: 10px; }
+.periodPicker span, .modelPicker span { color: #78949b; font-size: 8px; line-height: 1.35; }
+.curriculumSummary { margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.curriculumSummary article { padding: 14px; border: 1px solid var(--line); border-radius: 11px; background: rgba(4, 16, 24, .72); }
+.curriculumSummary article > span, .sourceRegistry > div span { color: var(--green); font-size: 8px; font-weight: 900; letter-spacing: .13em; }
+.curriculumSummary h3 { margin: 8px 0 5px; font-size: 13px; }
+.curriculumSummary p { margin: 0; color: #8fa8ae; font-size: 9px; line-height: 1.5; }
+.curriculumSummary ul { display: flex; flex-wrap: wrap; gap: 5px; padding: 0; margin: 10px 0 0; list-style: none; }
+.curriculumSummary li { padding: 4px 6px; border-radius: 99px; background: rgba(85, 225, 220, .09); color: #a4c7ca; font-size: 7px; }
+.curriculumSummary small { display: block; margin-top: 9px; color: var(--amber); font-size: 8px; line-height: 1.45; }
+.sourceRegistry { margin-top: 16px; padding: 14px; border: 1px solid var(--line); border-radius: 11px; }
+.sourceRegistry > div { display: flex; justify-content: space-between; gap: 16px; }
+.sourceRegistry > div b { color: #78949b; font-size: 8px; }
+.sourceRegistry ul { margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; list-style: none; }
+.sourceRegistry li { padding: 9px; display: grid; gap: 4px; border-radius: 8px; background: #081a24; }
+.sourceRegistry a { color: var(--cyan); font-size: 9px; font-weight: 800; text-underline-offset: 3px; }
+.sourceRegistry li span { color: #8ba4aa; font-size: 8px; line-height: 1.4; }
+.sourceRegistry li small { color: var(--amber); font-size: 7px; }
+.applyCurriculum { width: 100%; margin-top: 14px; padding: 11px; border: 0; border-radius: 9px; color: #052226; background: var(--cyan); font-weight: 900; cursor: pointer; }
+
 .clinicalWorkspace {
   width: min(1740px, 100%);
   margin: 0 auto;
@@ -414,6 +442,8 @@
   .caseActions { grid-column: 1 / -1; justify-content: flex-start; }
   .caseCatalog { grid-template-columns: 1fr; }
   .difficultyPicker { grid-template-columns: 1fr; }
+  .curriculumSelectors, .curriculumSummary { grid-template-columns: 1fr; }
+  .sourceRegistry ul { grid-template-columns: 1fr; }
   .sceneFrame {
     min-height: 0;
     padding: 0 14px 14px;
@@ -500,7 +530,8 @@
   .threeScene { height: 330px; }
   .sceneFrame { grid-template-rows: 330px auto auto auto; }
   .sceneLoading { min-height: 330px; border-radius: 13px; }
-  .lowerGrid, .debriefPanel { width: calc(100% - 24px); }
+  .lowerGrid, .debriefPanel, .curriculumPanel { width: calc(100% - 24px); }
+  .periodPicker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .toolPanel { padding: 13px; }
   .timeline button { grid-template-columns: 40px 1fr; }
   .timeline button > b { grid-column: 2; }

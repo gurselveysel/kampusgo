@@ -12,6 +12,7 @@ export type ExamRegion = "head" | "chest" | "arm";
 type ModelProps = {
   state: ClinicalState;
   selectedRegion: ExamRegion;
+  examModeActive?: boolean;
   onRegionSelect: (region: ExamRegion) => void;
 };
 
@@ -140,7 +141,7 @@ function ClinicalRoom({ state, selectedRegion, onRegionSelect, showProceduralPat
   </>;
 }
 
-export default function PatientRoom3D({ state, selectedRegion, onRegionSelect }: ModelProps) {
+export default function PatientRoom3D({ state, selectedRegion, examModeActive = false, onRegionSelect }: ModelProps) {
   const patientSprite = state.phase === "vf"
     ? "/medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp"
     : "/medical-simulation/v2/synthetic-stemi-patient-v1.webp";
@@ -196,9 +197,9 @@ export default function PatientRoom3D({ state, selectedRegion, onRegionSelect }:
       <strong>{respiratoryRate > 0 ? `SS ${respiratoryRate}/dk · N ${heartRate}/dk` : cprActive ? "CPR · MEKANİK KOMPRESYON" : "APNE · SPONTAN HAREKET YOK"}</strong>
     </div>
     <div className={styles.sceneHotspots} aria-label="Hasta üzerinde muayene bölgesi seçimi">
-      <button type="button" data-selected={selectedRegion === "head"} data-testid="exam-hotspot-head" onClick={() => onRegionSelect("head")}><span>01</span>Baş / genel durum</button>
-      <button type="button" data-selected={selectedRegion === "chest"} data-testid="exam-hotspot-chest" onClick={() => onRegionSelect("chest")}><span>02</span>Göğüs</button>
-      <button type="button" data-selected={selectedRegion === "arm"} data-testid="exam-hotspot-arm" onClick={() => onRegionSelect("arm")}><span>03</span>Periferik dolaşım</button>
+      <button type="button" data-action-contract="Baş ve genel durum muayene araçlarını açar" disabled={examModeActive && selectedRegion === "head"} data-selected={selectedRegion === "head"} data-testid="exam-hotspot-head" onClick={() => onRegionSelect("head")}><span>01</span>Baş / genel durum</button>
+      <button type="button" data-action-contract="Göğüs muayene araçlarını açar" disabled={examModeActive && selectedRegion === "chest"} data-selected={selectedRegion === "chest"} data-testid="exam-hotspot-chest" onClick={() => onRegionSelect("chest")}><span>02</span>Göğüs</button>
+      <button type="button" data-action-contract="Periferik dolaşım muayene araçlarını açar" disabled={examModeActive && selectedRegion === "arm"} data-selected={selectedRegion === "arm"} data-testid="exam-hotspot-arm" onClick={() => onRegionSelect("arm")}><span>03</span>Periferik dolaşım</button>
     </div>
     <p className={styles.sceneAlternative}>Erişilebilir sahne özeti: {state.phase === "vf" ? "Hasta yanıtsız; monitörde VF ve resüsitasyon ekipmanı hazır." : state.phase === "rosc" ? "Organize ritim ve spontan solunum geri döndü." : "Hasta uyanık, terli ve göğüs ağrılı; solunumu ve uygulanan ekipmanlar görünür."}</p>
   </div>;

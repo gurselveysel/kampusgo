@@ -81,7 +81,7 @@ async function verifyModeDifferences(page) {
 async function verifyScenarioLibrary(page) {
   await clickButton(page, "Olgu kütüphanesi");
   await page.getByRole("heading", { name: "Aynı klinik çekirdekte üç farklı başlangıç" }).waitFor();
-  check(await page.locator("article").filter({ hasText: "RUNTIME_READY" }).count() >= 3, "üç çalışan olgu kartı görünmedi");
+  check(await page.locator("article").filter({ hasText: "KULLANIMA HAZIR" }).count() >= 3, "üç çalışan olgu kartı görünmedi");
   await clickButton(page, /İleri/);
   let snapshot = await state(page);
   check(snapshot.state.difficulty === "advanced" && snapshot.state.physiology.configuration.progressionRate > 1, "ileri zorluk fizyolojiye uygulanmadı");
@@ -99,6 +99,27 @@ async function verifyScenarioLibrary(page) {
   await classic.getByRole("button", { name: "Bu olguyu başlat" }).click();
   snapshot = await state(page);
   check(snapshot.state.encounterId === "enc_classic_stemi" && snapshot.state.difficulty === "standard", "klasik standart olgu geri yüklenmedi");
+}
+
+async function verifyCurriculumAndLanguage(page) {
+  const enabledButtons = page.locator("main button:enabled");
+  const missingButtons = page.locator("main button:enabled:not([data-action-contract])");
+  const missingCount = await missingButtons.count();
+  const missingLabels = missingCount ? await missingButtons.allTextContents() : [];
+  check(missingCount === 0, `${missingCount} etkin düğmede gözlenebilir eylem sözleşmesi eksik: ${missingLabels.join(" | ")}`);
+  check(await enabledButtons.count() > 10, "etkin düğme sözleşmeleri taranamadı");
+
+  await clickButton(page, "Müfredat");
+  await page.getByRole("heading", { name: "Olgunun eğitim programındaki yerini seçin" }).waitFor();
+  check(await page.getByRole("link", { name: /Mezuniyet Öncesi Tıp Eğitimi.*2020/ }).count() === 1, "resmî UÇEP kaynağı program gezgininde görünmüyor");
+  check(await page.getByRole("link", { name: /Türkiye Yeterlilikler Çerçevesi/ }).count() === 1, "resmî TYÇ kaynağı program gezgininde görünmüyor");
+  await clickButton(page, /Dönem 5/);
+  await clickButton(page, /Hibrit model/);
+  await clickButton(page, "Bu program bağlamını uygula");
+  const stripText = await page.getByLabel("Olgu özeti").innerText();
+  check(stripText.includes("Dönem 5") && stripText.includes("Hibrit model"), "seçilen dönem ve kurum modeli olguya uygulanmadı");
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("teys-mams-v2-curriculum-context")));
+  check(stored.periodId === "d5" && stored.modelId === "hybrid", "program bağlamı yenileme için saklanmadı");
 }
 
 async function verifyGoldenFlow(page) {
@@ -122,9 +143,9 @@ async function verifyGoldenFlow(page) {
   await clickButton(page, "Sor");
   await clickButton(page, /İlaçları ve son kullanım zamanını sor/);
 
-  await clickButton(page, "Kararı Manim ile açıkla");
-  await page.getByText("BLOCKED_EXTERNAL_ACCESS", { exact: true }).waitFor({ state: "visible", timeout: 10_000 });
-  check((await state(page)).state.visualizations.at(-1).status === "blocked", "Manim erişim engeli olay durumuna yazılmadı");
+  await clickButton(page, "Kararın etkisini görselleştir");
+  await page.locator('[data-render-state="blocked"]').waitFor({ state: "visible", timeout: 10_000 });
+  check((await state(page)).state.visualizations.at(-1).status === "blocked", "görselleştirme erişim engeli olay durumuna yazılmadı");
 
   await page.getByRole("tab", { name: /Klinik gerekçe/ }).click();
   await page.getByLabel("Problem temsili").fill("Baskı tarzı göğüs ağrısı ve otonom bulguları olan yüksek riskli sentetik hasta.");
@@ -133,7 +154,7 @@ async function verifyGoldenFlow(page) {
   await page.getByRole("checkbox", { name: "Pulmoner emboli", exact: true }).check();
   await page.getByLabel("Çalışma tanısı").selectOption("stemi");
   await page.getByLabel("Yeniden değerlendirme planı").fill("EKG, ritim ve perfüzyonu sonuçla birlikte yeniden değerlendir.");
-  await clickButton(page, /Gerekçeyi değişmez olay olarak kaydet/);
+  await clickButton(page, /Klinik gerekçeyi kaydet/);
   check((await state(page)).state.reasoning.length === 1, "klinik gerekçe revizyonu olay günlüğüne yazılmadı");
 
   await page.getByRole("tab", { name: /Muayene/ }).click();
@@ -269,9 +290,14 @@ async function verifyAccessibilityAndMobile(page) {
     await page.evaluate(() => localStorage.removeItem("teys-stemi-bedside-v5-session"));
     await page.reload({ waitUntil: "networkidle" });
     await page.getByRole("heading", { name: "Hasta görüşmesi" }).waitFor();
+    await verifyCurriculumAndLanguage(page);
     await verifyScenarioLibrary(page);
     await verifyModeDifferences(page);
     const golden = await verifyGoldenFlow(page);
+    const publicText = await page.locator("body").innerText();
+    const forbiddenTechnicalTerms = ["BLOCKED_EXTERNAL_ACCESS", "RENDER_FAILED", "Manim", "arXivisual", "XState", "React Three", "state hash", "job_id", "RUNTIME_READY"];
+    const exposedTerms = forbiddenTechnicalTerms.filter((term) => publicText.toLocaleLowerCase("tr-TR").includes(term.toLocaleLowerCase("tr-TR")));
+    check(exposedTerms.length === 0, `öğrenci ekranında yazılım dili görünüyor: ${exposedTerms.join(", ")}`);
     const desktopScreenshot = path.join(os.tmpdir(), "teys-medical-v2-desktop.png");
     await page.screenshot({ path: desktopScreenshot, fullPage: true });
     const mobileScreenshot = await verifyAccessibilityAndMobile(page);

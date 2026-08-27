@@ -26,7 +26,9 @@ assert.match(experience, /Eğitici gözlem notu/, "OSCE/eğitici gözlem alanı 
 assert.match(experience, /Olgu kütüphanesi/, "çalışan olgu kataloğu görünmeli");
 assert.match(experience, /DOCUMENT_REASONING/, "klinik gerekçe ayrı olay türü olarak çalışmalı");
 assert.match(experience, /Karar bazlı vital eğilim/, "durum motorundan türeyen vital eğilim görünmeli");
-assert.match(experience, /Oturum kanıt paketini indir/, "eğitici için taşınabilir olay ve debriefing paketi sunulmalı");
+assert.match(experience, /Oturum değerlendirme raporunu indir/, "eğitici için okunabilir oturum değerlendirme raporu sunulmalı");
+assert.match(experience, /CurriculumNavigator/, "altı yıllık program gezgini çalışma alanına bağlı olmalı");
+assert.match(experience, /learnerText/, "iç hata ayrıntıları öğrenci diline çevrilmeli");
 assert.match(scene, /ClinicalEquipment/, "3B sahne müdahaleye göre ekipman göstermeli");
 assert.match(scene, /cprHands/, "3B hasta CPR sırasında görünür göğüs kompresyonu göstermeli");
 assert.match(scene, /selectedRegion/, "seçilen muayene bölgesi hasta üzerinde görünür olmalı");
