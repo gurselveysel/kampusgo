@@ -104,6 +104,13 @@ async function verifyScenarioLibrary(page) {
 async function verifyGoldenFlow(page) {
   check(await page.getByLabel("Yatak başı hızlı klinik eylemleri").isVisible(), "Yatak başı hızlı eylem şeridi görünmüyor");
   check(await page.locator('[data-testid^="bedside-action-"]').count() === 4, "Klinik faz için dört bağlamsal yatak başı eylemi sunulmadı");
+  const patientSprite = page.getByAltText("Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta");
+  await patientSprite.waitFor({ state: "visible" });
+  await page.waitForFunction(() => {
+    const image = document.querySelector('img[alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"]');
+    return image instanceof HTMLImageElement && image.complete && image.naturalWidth >= 640;
+  });
+  check((await patientSprite.getAttribute("src")).includes("synthetic-stemi-patient-v1"), "Başlangıçta gerçekçi göğüs ağrılı hasta görseli yüklenmedi");
   await page.getByLabel("Hastaya kendi sorunuzu sorun").fill("Bulantınız, terlemeniz veya nefes darlığınız var mı?");
   await clickButton(page, "Sor");
   await clickButton(page, /İlaçları ve son kullanım zamanını sor/);
@@ -149,13 +156,16 @@ async function verifyGoldenFlow(page) {
   await clickButton(page, "+5 dk");
   snapshot = await state(page);
   check(snapshot.state.phase === "vf" && snapshot.state.vitals.rhythm === "vf" && snapshot.state.vitals.heartRate === 0, "Zamana bağlı VF oluşmadı");
+  await page.waitForFunction(() => document.querySelector('img[alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"]')?.getAttribute("src")?.includes("synthetic-stemi-patient-vf-v1"));
 
   await clickButton(page, /Arrest ekibini aktive et/);
   await clickButton(page, /Yüksek kaliteli CPR başlat/);
+  check(await page.locator('[class*="cprOverlay"]').isVisible(), "CPR sırasında hasta üzerinde kompresyon katmanı açılmadı");
   await clickButton(page, /Güvenli defibrilasyon uygula/);
   await clickButton(page, /Şok sonrası CPR'a hemen dön/);
   snapshot = await state(page);
   check(snapshot.state.phase === "rosc" && snapshot.state.vitals.rhythm === "rosc", "CPR/defibrilasyon yolu ROSC üretmedi");
+  await page.waitForFunction(() => document.querySelector('img[alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"]')?.getAttribute("src")?.includes("synthetic-stemi-patient-v1"));
 
   await clickButton(page, /ROSC sonrası ABCDE değerlendirmesi/);
   await clickButton(page, /SBAR ile sorumluluğu devret/);

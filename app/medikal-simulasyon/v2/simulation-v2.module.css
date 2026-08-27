@@ -106,14 +106,40 @@
   box-shadow: 0 24px 80px rgba(0, 0, 0, .35), inset 0 0 60px rgba(28, 141, 153, .08);
 }
 .threeScene { position: absolute; inset: 0; }
-.threeScene canvas { display: block; width: 100%; height: 100%; }
+.threeScene canvas { position: relative; z-index: 0; display: block; width: 100%; height: 100%; }
+.realisticPatient { position: absolute; z-index: 1; left: 12%; right: 12%; top: 7%; bottom: 0; pointer-events: none; transform-origin: 50% 88%; animation: patientBreath 2.8s ease-in-out infinite; }
+.realisticPatient img { object-fit: contain; object-position: center bottom; opacity: 0; filter: drop-shadow(0 24px 30px rgba(0, 0, 0, .34)); transition: opacity .35s ease, filter .35s ease; }
+.realisticPatient[data-ready="true"] img { opacity: 1; }
+.realisticPatient[data-phase="vf"] { animation: patientVf .28s ease-in-out infinite; }
+.realisticPatient[data-phase="vf"] img { filter: saturate(.72) hue-rotate(8deg) brightness(.88) drop-shadow(0 24px 30px rgba(0, 0, 0, .42)); }
+.realisticPatient[data-phase="rosc"] img, .realisticPatient[data-phase="handoff"] img { filter: saturate(.9) brightness(.98) drop-shadow(0 24px 30px rgba(0, 0, 0, .34)); }
+.realisticPatient[data-cpr="true"] { animation: patientCompression .34s cubic-bezier(.4, 0, .6, 1) infinite; }
+.patientEquipmentOverlay { position: absolute; z-index: 2; inset: 0; pointer-events: none; }
+.electrodeSet { position: absolute; left: 36%; top: 35%; width: 28%; height: 43%; }
+.electrodeSet i { position: absolute; width: 18px; aspect-ratio: 1; border: 4px solid #e7eeee; border-radius: 50%; background: #d66c61; box-shadow: 0 2px 8px rgba(0, 0, 0, .42); }
+.electrodeSet i:nth-child(1) { left: 22%; top: 16%; background: #f0cf65; }
+.electrodeSet i:nth-child(2) { right: 22%; top: 16%; background: #79d8bd; }
+.electrodeSet i:nth-child(3) { left: 30%; top: 44%; background: #e77572; }
+.electrodeSet i:nth-child(4) { right: 30%; top: 44%; background: #dbe5e7; }
+.electrodeSet svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.electrodeSet path { fill: none; stroke: rgba(194, 226, 229, .82); stroke-width: 1.1; vector-effect: non-scaling-stroke; }
+.oxygenMask { position: absolute; z-index: 2; left: 45.5%; top: 22%; width: 9%; aspect-ratio: 1.4; border: 2px solid rgba(212, 251, 247, .85); border-radius: 44% 44% 54% 54%; background: rgba(97, 222, 210, .25); box-shadow: inset 0 0 18px rgba(158, 245, 237, .22); }
+.oxygenMask i { position: absolute; left: 50%; bottom: -65%; width: 2px; height: 68%; background: rgba(210, 245, 243, .74); transform: rotate(8deg); transform-origin: top; }
+.oxygenMask span { position: absolute; left: -70%; right: -70%; top: 34%; height: 1px; border-top: 1px solid rgba(219, 250, 248, .85); }
+.defibPads { position: absolute; z-index: 3; left: 39%; top: 40%; width: 22%; height: 25%; }
+.defibPads i { position: absolute; width: 48px; height: 62px; border: 4px solid #edf4f4; border-radius: 9px; background: repeating-linear-gradient(-45deg, #e7d56f 0 5px, #202e36 5px 10px); box-shadow: 0 5px 14px rgba(0, 0, 0, .38); }
+.defibPads i:first-child { left: 0; transform: rotate(-12deg); }
+.defibPads i:last-child { right: 0; top: 26%; transform: rotate(12deg); }
+.cprOverlay { position: absolute; z-index: 4; left: 44%; top: 42%; width: 12%; height: 18%; animation: handsCompression .34s cubic-bezier(.4, 0, .6, 1) infinite; }
+.cprOverlay i { position: absolute; left: 12%; top: 28%; width: 78%; height: 34%; border-radius: 48%; background: linear-gradient(130deg, #e5b18f, #b97657); box-shadow: 0 7px 12px rgba(0, 0, 0, .38); transform: rotate(8deg); }
+.cprOverlay i:last-child { top: 10%; transform: rotate(-8deg); background: linear-gradient(130deg, #efc09d, #c88765); }
 .sceneLoading { min-height: 710px; display: grid; place-items: center; color: #a7c8ce; }
-.sceneStatus { position: absolute; left: 218px; top: 20px; z-index: 2; display: grid; gap: 3px; padding: 8px 11px; border-left: 2px solid var(--green); background: rgba(4, 17, 26, .7); backdrop-filter: blur(9px); }
+.sceneStatus { position: absolute; left: 218px; top: 20px; z-index: 5; display: grid; gap: 3px; padding: 8px 11px; border-left: 2px solid var(--green); background: rgba(4, 17, 26, .7); backdrop-filter: blur(9px); }
 .sceneStatus span { color: var(--green); font-size: 8px; font-weight: 900; letter-spacing: .16em; }
 .sceneStatus strong { color: #d9ecee; font-size: 10px; }
 .sceneStatus[data-critical="true"] { border-color: var(--red); }
 .sceneStatus[data-critical="true"] span { color: var(--red); }
-.sceneHotspots { position: absolute; left: 18px; top: 18px; display: grid; gap: 7px; }
+.sceneHotspots { position: absolute; z-index: 5; left: 18px; top: 18px; display: grid; gap: 7px; }
 .sceneHotspots button {
   width: 180px;
   border: 1px solid rgba(111, 198, 205, .28);
@@ -161,7 +187,7 @@
 .vitalGrid article[data-alert="true"] { box-shadow: inset 2px 0 0 var(--red); }
 .vitalGrid article[data-alert="true"] strong { color: var(--red); }
 
-.patientSpeech { position: absolute; left: 50%; bottom: 168px; transform: translateX(-61%); width: min(560px, calc(100% - 390px)); padding: 14px 18px; border-radius: 13px; border: 1px solid rgba(115, 219, 216, .24); background: rgba(4, 17, 25, .86); backdrop-filter: blur(14px); }
+.patientSpeech { position: absolute; z-index: 6; left: 50%; bottom: 168px; transform: translateX(-61%); width: min(560px, calc(100% - 390px)); padding: 14px 18px; border-radius: 13px; border: 1px solid rgba(115, 219, 216, .24); background: rgba(4, 17, 25, .86); backdrop-filter: blur(14px); }
 .patientSpeech span { color: var(--cyan); font-size: 9px; font-weight: 900; letter-spacing: .16em; }
 .patientSpeech p { margin: 6px 0 0; color: #e7f5f4; line-height: 1.45; }
 
@@ -336,6 +362,10 @@
 .footer b { color: var(--amber); }
 
 @keyframes monitorSweep { from { translate: -10% 0; } to { translate: -1% 0; } }
+@keyframes patientBreath { 0%, 100% { scale: 1 1; } 50% { scale: 1.005 1.012; } }
+@keyframes patientVf { 0%, 100% { translate: 0 0; } 50% { translate: 1px 0; } }
+@keyframes patientCompression { 0%, 100% { scale: 1 1; } 48% { scale: 1.012 .965; } }
+@keyframes handsCompression { 0%, 100% { translate: 0 0; } 48% { translate: 0 12px; } }
 
 @media (max-width: 1180px) {
   .topbar { grid-template-columns: 1fr auto; }
@@ -372,6 +402,13 @@
     margin: 0 -14px;
     border-bottom: 1px solid rgba(97, 211, 216, .18);
   }
+  .realisticPatient { left: 2%; right: 2%; top: 13%; }
+  .electrodeSet { left: 33%; top: 39%; width: 34%; height: 40%; }
+  .electrodeSet i { width: 13px; border-width: 3px; }
+  .oxygenMask { left: 44%; top: 27%; width: 12%; }
+  .defibPads { left: 35%; top: 44%; width: 30%; }
+  .defibPads i { width: 34px; height: 46px; border-width: 3px; }
+  .cprOverlay { left: 42%; top: 45%; width: 16%; }
   .sceneLoading { min-height: 390px; }
   .monitor {
     position: relative;

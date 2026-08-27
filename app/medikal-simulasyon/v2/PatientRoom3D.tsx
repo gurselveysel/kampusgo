@@ -1,7 +1,8 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Suspense, useMemo, useRef } from "react";
+import Image from "next/image";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { Group, Mesh } from "three";
 import type { ClinicalState } from "../../../services/medical-simulation-v2/engine.js";
 import styles from "./simulation-v2.module.css";
@@ -120,7 +121,7 @@ function ClinicalEquipment({ state }: { state: ClinicalState }) {
   </>;
 }
 
-function ClinicalRoom({ state, selectedRegion, onRegionSelect }: ModelProps) {
+function ClinicalRoom({ state, selectedRegion, onRegionSelect, showProceduralPatient }: ModelProps & { showProceduralPatient: boolean }) {
   const roomColor = useMemo(() => state.phase === "vf" ? "#210b17" : "#061722", [state.phase]);
   return <>
     <color attach="background" args={[roomColor]} />
@@ -135,15 +136,39 @@ function ClinicalRoom({ state, selectedRegion, onRegionSelect }: ModelProps) {
     <mesh position={[0, -1.38, 0]}><boxGeometry args={[4, 0.2, 2.8]} /><meshStandardMaterial color="#263b48" roughness={0.75} /></mesh>
     <mesh position={[-2.7, 0.25, -0.9]}><boxGeometry args={[1.22, 1.78, 0.25]} /><meshStandardMaterial color="#102c3c" emissive="#08202c" emissiveIntensity={0.8} /></mesh>
     <ClinicalEquipment state={state} />
-    <PatientModel state={state} selectedRegion={selectedRegion} onRegionSelect={onRegionSelect} />
+    <group visible={showProceduralPatient}><PatientModel state={state} selectedRegion={selectedRegion} onRegionSelect={onRegionSelect} /></group>
   </>;
 }
 
 export default function PatientRoom3D({ state, selectedRegion, onRegionSelect }: ModelProps) {
+  const patientSprite = state.phase === "vf"
+    ? "/medical-simulation/v2/synthetic-stemi-patient-vf-v1.png"
+    : "/medical-simulation/v2/synthetic-stemi-patient-v1.png";
+  const [spriteReady, setSpriteReady] = useState(false);
+  const cprActive = Boolean(state.flags.cprActive);
+
+  useEffect(() => setSpriteReady(false), [patientSprite]);
+
   return <div className={styles.threeScene} data-phase={state.phase} data-selected-region={selectedRegion}>
     <Canvas camera={{ position: [0, 1.15, 5.35], fov: 39 }} dpr={[1, 1.6]} gl={{ antialias: true, alpha: false }}>
-      <Suspense fallback={null}><ClinicalRoom state={state} selectedRegion={selectedRegion} onRegionSelect={onRegionSelect} /></Suspense>
+      <Suspense fallback={null}><ClinicalRoom state={state} selectedRegion={selectedRegion} onRegionSelect={onRegionSelect} showProceduralPatient={!spriteReady} /></Suspense>
     </Canvas>
+    <div className={styles.realisticPatient} data-phase={state.phase} data-cpr={cprActive} data-ready={spriteReady}>
+      <Image
+        key={patientSprite}
+        src={patientSprite}
+        alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"
+        fill
+        sizes="(max-width: 760px) 100vw, 68vw"
+        onLoad={() => setSpriteReady(true)}
+      />
+    </div>
+    <div className={styles.patientEquipmentOverlay} aria-hidden="true">
+      {state.flags.monitorIv ? <div className={styles.electrodeSet}><i /><i /><i /><i /><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M38 45 C28 60 24 77 13 94 M47 49 C43 68 45 79 37 98 M56 49 C63 66 66 79 67 98 M64 45 C76 61 82 77 88 94" /></svg></div> : null}
+      {state.flags.titratedOxygen ? <div className={styles.oxygenMask}><i /><span /></div> : null}
+      {state.phase === "vf" || state.flags.shockDelivered ? <div className={styles.defibPads}><i /><i /></div> : null}
+      {cprActive ? <div className={styles.cprOverlay}><i /><i /></div> : null}
+    </div>
     <div className={styles.sceneStatus} data-critical={state.phase === "vf"}><span>{state.phase === "vf" ? "KOD MAVİ" : state.phase === "rosc" ? "ROSC" : "CANLI HASTA"}</span><strong>{state.phase === "vf" ? "Yanıtsız · VF" : state.phase === "rosc" ? "Organize ritim" : "Uyanık · göğüs ağrılı"}</strong></div>
     <div className={styles.sceneHotspots} aria-label="Hasta üzerinde muayene bölgesi seçimi">
       <button type="button" data-selected={selectedRegion === "head"} data-testid="exam-hotspot-head" onClick={() => onRegionSelect("head")}><span>01</span>Baş / genel durum</button>
