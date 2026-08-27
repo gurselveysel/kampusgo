@@ -66,5 +66,7 @@ jobs:
       - run: npm run build
       - name: Install matching Playwright package
         run: npm install --no-save --package-lock=false playwright@1.58.0
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
       - name: Run V2 desktop, 390px, mode and golden-path browser QA
         run: npm run test:medical-v2:browser

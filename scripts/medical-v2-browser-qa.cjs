@@ -162,20 +162,21 @@ async function verifyAccessibilityAndMobile(page) {
 
 (async () => {
   const server = await ensureServer();
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  const browserErrors = [];
-  const expectedGatewayBlocks = [];
-  page.on("pageerror", (error) => browserErrors.push(`pageerror: ${error.message}`));
-  page.on("console", (message) => {
-    if (message.type() === "error") browserErrors.push(`console: ${message.text()}`);
-  });
-  page.on("response", (response) => {
-    if (response.url().includes("/api/medical-simulation/jobs") && [401, 403, 503].includes(response.status())) {
-      expectedGatewayBlocks.push(response.status());
-    }
-  });
+  let browser;
   try {
+    browser = await chromium.launch({ headless: true });
+    const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+    const browserErrors = [];
+    const expectedGatewayBlocks = [];
+    page.on("pageerror", (error) => browserErrors.push(`pageerror: ${error.message}`));
+    page.on("console", (message) => {
+      if (message.type() === "error") browserErrors.push(`console: ${message.text()}`);
+    });
+    page.on("response", (response) => {
+      if (response.url().includes("/api/medical-simulation/jobs") && [401, 403, 503].includes(response.status())) {
+        expectedGatewayBlocks.push(response.status());
+      }
+    });
     await page.goto(route, { waitUntil: "networkidle" });
     await page.evaluate(() => localStorage.removeItem("teys-stemi-v3-session"));
     await page.reload({ waitUntil: "networkidle" });
@@ -192,7 +193,7 @@ async function verifyAccessibilityAndMobile(page) {
     console.log(`desktop=${desktopScreenshot}`);
     console.log(`mobile=${mobileScreenshot}`);
   } finally {
-    await browser.close();
+    if (browser) await browser.close();
     if (server) server.kill("SIGTERM");
   }
 })().catch((error) => {
