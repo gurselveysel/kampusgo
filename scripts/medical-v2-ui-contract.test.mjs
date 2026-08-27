@@ -30,7 +30,7 @@ assert.match(experience, /Oturum kanıt paketini indir/, "eğitici için taşın
 assert.match(scene, /ClinicalEquipment/, "3B sahne müdahaleye göre ekipman göstermeli");
 assert.match(scene, /cprHands/, "3B hasta CPR sırasında görünür göğüs kompresyonu göstermeli");
 assert.match(scene, /selectedRegion/, "seçilen muayene bölgesi hasta üzerinde görünür olmalı");
-assert.match(scene, /synthetic-stemi-patient-vf-v1\.png/, "VF fazı aynı sentetik hastanın yanıtsız görsel durumuna geçmeli");
+assert.match(scene, /synthetic-stemi-patient-vf-v1\.webp/, "VF fazı aynı sentetik hastanın yanıtsız görsel durumuna geçmeli");
 assert.match(scene, /data-phase=\{state\.phase\}/, "ROSC ve diğer fazlar hasta görünümünü klinik durum filtresiyle güncellemeli");
 assert.match(scene, /patientEquipmentOverlay/, "elektrot, oksijen, defibrilasyon ve CPR katmanları motor bayraklarına bağlı olmalı");
 assert.match(monitor, /waveformPaths/, "yatak başı monitörü ritme özel gerçek SVG trase çizmelidir");

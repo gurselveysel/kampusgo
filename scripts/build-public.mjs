@@ -28,8 +28,8 @@ const files = [
   ["assets/illustrations/integration-gates.webp", "assets/illustrations/integration-gates.webp"],
   ["assets/medical-simulation/arxivisual-stemi-preview.mp4", "medical-simulation/manim/med_seed_vf_rosc.mp4"],
   ["assets/medical-simulation/manifest.json", "medical-simulation/manim/manifest.json"],
-  ["assets/medical-simulation/v2/synthetic-stemi-patient-v1.png", "medical-simulation/v2/synthetic-stemi-patient-v1.png"],
-  ["assets/medical-simulation/v2/synthetic-stemi-patient-vf-v1.png", "medical-simulation/v2/synthetic-stemi-patient-vf-v1.png"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp"],
 ];
 
 for (const [source, destination] of files) {

@@ -142,8 +142,8 @@ function ClinicalRoom({ state, selectedRegion, onRegionSelect, showProceduralPat
 
 export default function PatientRoom3D({ state, selectedRegion, onRegionSelect }: ModelProps) {
   const patientSprite = state.phase === "vf"
-    ? "/medical-simulation/v2/synthetic-stemi-patient-vf-v1.png"
-    : "/medical-simulation/v2/synthetic-stemi-patient-v1.png";
+    ? "/medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp"
+    : "/medical-simulation/v2/synthetic-stemi-patient-v1.webp";
   const [spriteReady, setSpriteReady] = useState(false);
   const cprActive = Boolean(state.flags.cprActive);
 
