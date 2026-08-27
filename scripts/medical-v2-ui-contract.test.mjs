@@ -5,6 +5,8 @@ const read = (path) => fs.readFileSync(new URL(`../${path}`, import.meta.url), "
 const page = read("app/medikal-simulasyon/v2/page.tsx");
 const experience = read("app/medikal-simulasyon/v2/MedicalSimulationV2.tsx");
 const scene = read("app/medikal-simulasyon/v2/PatientRoom3D.tsx");
+const monitor = read("app/medikal-simulasyon/v2/BedsideMonitor.tsx");
+const diagnosticViewer = read("app/medikal-simulasyon/v2/ClinicalDiagnosticViewer.tsx");
 const css = read("app/medikal-simulasyon/v2/simulation-v2.module.css");
 
 assert.match(page, /MedicalSimulationV2/, "V2 rotası ayrı çalışma alanını yüklemeli");
@@ -26,6 +28,14 @@ assert.match(experience, /DOCUMENT_REASONING/, "klinik gerekçe ayrı olay tür�
 assert.match(experience, /Karar bazlı vital eğilim/, "durum motorundan türeyen vital eğilim görünmeli");
 assert.match(experience, /Oturum kanıt paketini indir/, "eğitici için taşınabilir olay ve debriefing paketi sunulmalı");
 assert.match(scene, /ClinicalEquipment/, "3B sahne müdahaleye göre ekipman göstermeli");
+assert.match(scene, /cprHands/, "3B hasta CPR sırasında görünür göğüs kompresyonu göstermeli");
+assert.match(scene, /selectedRegion/, "seçilen muayene bölgesi hasta üzerinde görünür olmalı");
+assert.match(monitor, /waveformPaths/, "yatak başı monitörü ritme özel gerçek SVG trase çizmelidir");
+assert.match(monitor, /data-critical/, "monitör kritik vital durumunu görünür kılmalı");
+assert.match(diagnosticViewer, /readyAtSeconds/, "tanısal görüntüleyici tetkik gecikmesini işlemeli");
+assert.match(diagnosticViewer, /ST YÜKSELMESİ/, "hazır EKG, klinik bulguyu trase üzerinde göstermeli");
+assert.match(experience, /Yatak başı hızlı klinik eylemleri/, "öğrenci klinik faza uygun eylemleri sahneden uygulayabilmeli");
+assert.match(experience, /eventForAction/, "sahne ve araç paneli aynı olay motoruna bağlı olmalı");
 assert.match(css, /@media \(max-width:\s*600px\)/, "390 px mobil düzen tanımlı olmalı");
 assert.match(css, /prefers-reduced-motion/, "azaltılmış hareket desteği olmalı");
 assert.match(css, /:focus-visible/, "klavye odağı görünür olmalı");

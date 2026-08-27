@@ -24,6 +24,8 @@ import {
   type SimulationMode,
   type ToolName,
 } from "../../../services/medical-simulation-v2/engine.js";
+import BedsideMonitor from "./BedsideMonitor";
+import ClinicalDiagnosticViewer from "./ClinicalDiagnosticViewer";
 import styles from "./simulation-v2.module.css";
 
 const PatientRoom3D = dynamic(() => import("./PatientRoom3D"), {
@@ -59,6 +61,54 @@ const phaseLabels: Record<string, string> = {
   rosc: "ROSC sonrası bakım",
   handoff: "Klinik devir tamamlandı",
 };
+
+const bedsideActionPlan: Record<string, Array<{ tool: Exclude<ToolName, "reasoning" | "exam" | "interview">; id: string }>> = {
+  assessment: [
+    { tool: "intervention", id: "monitor_iv" },
+    { tool: "test", id: "ecg" },
+    { tool: "medication", id: "aspirin" },
+    { tool: "intervention", id: "titrated_oxygen" },
+  ],
+  stemi: [
+    { tool: "medication", id: "aspirin" },
+    { tool: "medication", id: "heparin" },
+    { tool: "intervention", id: "activate_cath" },
+    { tool: "team", id: "cardiology_consult" },
+  ],
+  treatment: [
+    { tool: "intervention", id: "activate_cath" },
+    { tool: "intervention", id: "transfer_cath" },
+    { tool: "team", id: "cardiology_consult" },
+    { tool: "team", id: "assign_roles" },
+  ],
+  vf: [
+    { tool: "intervention", id: "call_code" },
+    { tool: "intervention", id: "start_cpr" },
+    { tool: "intervention", id: "defibrillate" },
+    { tool: "intervention", id: "resume_cpr" },
+  ],
+  rosc: [
+    { tool: "intervention", id: "post_rosc" },
+    { tool: "team", id: "assign_roles" },
+    { tool: "team", id: "closed_loop" },
+    { tool: "intervention", id: "handoff_sbar" },
+  ],
+  handoff: [
+    { tool: "intervention", id: "post_rosc" },
+    { tool: "team", id: "closed_loop" },
+    { tool: "intervention", id: "handoff_sbar" },
+  ],
+};
+
+function eventForAction(tool: ToolName, actionId: string): ClinicalEvent {
+  if (tool === "interview") return { type: "ASK_PATIENT", topic: actionId };
+  if (tool === "exam") return { type: "PERFORM_EXAM", actionId };
+  if (tool === "test") return { type: "ORDER_TEST", actionId };
+  if (tool === "medication") return { type: "ADMINISTER_MEDICATION", actionId };
+  if (tool === "intervention") return { type: "PERFORM_INTERVENTION", actionId };
+  if (tool === "team") return { type: "TEAM_ACTION", actionId };
+  throw new Error("Klinik gerekçe, yapılandırılmış form üzerinden kaydedilmelidir.");
+}
 
 function formatClock(seconds: number) {
   const safe = Math.max(0, Math.round(seconds));
@@ -148,6 +198,10 @@ export default function MedicalSimulationV2() {
   const liveState = session.state;
   const debrief = useMemo(() => buildDebrief(session), [session]);
   const actions = useMemo(() => getAvailableActions(liveState, activeTool), [activeTool, liveState]);
+  const bedsideActions = useMemo(() => (bedsideActionPlan[liveState.phase] ?? []).flatMap(({ tool, id }) => {
+    const action = getAvailableActions(liveState, tool).find((candidate) => candidate.id === id);
+    return action ? [{ ...action, tool }] : [];
+  }), [liveState]);
   const latestRecord = [...session.records].reverse().find((record) => record.accepted && record.tool !== "visualization") ?? null;
   const replayRecord = replayIndex === null ? null : session.records[replayIndex];
   const renderRecord = replayRecord?.accepted && replayRecord.tool !== "visualization" ? replayRecord : latestRecord;
@@ -327,27 +381,40 @@ export default function MedicalSimulationV2() {
           <div className={styles.sceneFrame}>
             <PatientRoom3D
               state={state}
+              selectedRegion={examRegion}
               onRegionSelect={(region) => {
                 setExamRegion(region);
                 setActiveTool("exam");
               }}
             />
-            <aside className={styles.monitor} aria-label="Hasta monitörü" aria-live="polite">
-              <div className={styles.monitorHead}><span>TEYS MONITOR</span><b>{state.vitals.rhythm.toUpperCase()}</b></div>
-              <div className={styles.ecg} data-rhythm={state.vitals.rhythm}><i /><i /><i /><i /><i /></div>
-              <div className={styles.vitalGrid}>
-                <article><small>HR</small><strong>{state.vitals.heartRate}</strong><span>/dk</span></article>
-                <article><small>SpO₂</small><strong>{state.vitals.spo2}</strong><span>%</span></article>
-                <article><small>TA</small><strong>{state.vitals.systolic}/{state.vitals.diastolic}</strong><span>mmHg</span></article>
-                <article><small>SS</small><strong>{state.vitals.respiratoryRate}</strong><span>/dk</span></article>
-                <article><small>ISI</small><strong>{state.vitals.temperature.toFixed(1)}</strong><span>°C</span></article>
-                <article><small>EtCO₂</small><strong>{state.vitals.etco2 ?? "—"}</strong><span>mmHg</span></article>
-              </div>
-            </aside>
+            <BedsideMonitor state={state} />
             <div className={styles.patientSpeech}>
               <span>HASTA</span>
               <p>{state.lastMessage}</p>
             </div>
+            <section className={styles.bedsideCommands} aria-label="Yatak başı hızlı klinik eylemleri">
+              <div><span>ŞİMDİ YAPILABİLECEKLER</span><b>{phaseLabels[liveState.phase]}</b></div>
+              <div className={styles.bedsideActionGrid}>
+                {bedsideActions.map((action) => (
+                  <button
+                    type="button"
+                    key={`${action.tool}-${action.id}`}
+                    data-testid={`bedside-action-${action.id}`}
+                    data-tool={action.tool}
+                    disabled={!action.available || replayIndex !== null}
+                    title={action.reason || action.label}
+                    onClick={() => {
+                      setActiveTool(action.tool);
+                      apply(eventForAction(action.tool, action.id));
+                    }}
+                  >
+                    <span>{action.available ? "UYGULA" : "KİLİTLİ"}</span>
+                    <strong>{action.label}</strong>
+                    <small>{action.available ? formatClock(action.timeCostSeconds) : action.reason}</small>
+                  </button>
+                ))}
+              </div>
+            </section>
           </div>
 
           <div className={styles.phaseRail} aria-label="Klinik durum makinesi">
@@ -395,6 +462,8 @@ export default function MedicalSimulationV2() {
               <div className={styles.regionNotice}><span>SEÇİLİ BÖLGE</span><strong>{examRegion === "head" ? "Baş / genel durum" : examRegion === "chest" ? "Göğüs" : "Periferik dolaşım"}</strong><small>3B hasta üzerindeki bölgeleri de seçebilirsiniz.</small></div>
             ) : null}
 
+            {activeTool === "test" ? <ClinicalDiagnosticViewer state={liveState} /> : null}
+
             {activeTool === "reasoning" ? (
               <form className={styles.reasoningForm} onSubmit={(event) => { event.preventDefault(); submitReasoning(); }}>
                 <label htmlFor="problem-representation"><span>Problem temsili</span><textarea id="problem-representation" value={reasoningDraft.problemRepresentation} onChange={(event) => setReasoningDraft((current) => ({ ...current, problemRepresentation: event.target.value }))} placeholder="Yaş, zaman seyri, kritik bulgular ve riskleri tek cümlede sentezleyin…" /></label>
@@ -418,14 +487,7 @@ export default function MedicalSimulationV2() {
                     key={action.id}
                     disabled={!action.available || replayIndex !== null}
                     title={action.reason || action.label}
-                    onClick={() => apply(
-                      activeTool === "interview" ? { type: "ASK_PATIENT", topic: action.id }
-                        : activeTool === "exam" ? { type: "PERFORM_EXAM", actionId: action.id }
-                          : activeTool === "test" ? { type: "ORDER_TEST", actionId: action.id }
-                            : activeTool === "medication" ? { type: "ADMINISTER_MEDICATION", actionId: action.id }
-                              : activeTool === "intervention" ? { type: "PERFORM_INTERVENTION", actionId: action.id }
-                                : { type: "TEAM_ACTION", actionId: action.id }
-                    )}
+                    onClick={() => apply(eventForAction(activeTool, action.id))}
                   >
                     <span className={styles.actionState}>{action.available ? "UYGULA" : "KİLİTLİ"}</span>
                     <strong>{action.label}</strong>

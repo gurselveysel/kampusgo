@@ -102,6 +102,8 @@ async function verifyScenarioLibrary(page) {
 }
 
 async function verifyGoldenFlow(page) {
+  check(await page.getByLabel("Yatak başı hızlı klinik eylemleri").isVisible(), "Yatak başı hızlı eylem şeridi görünmüyor");
+  check(await page.locator('[data-testid^="bedside-action-"]').count() === 4, "Klinik faz için dört bağlamsal yatak başı eylemi sunulmadı");
   await page.getByLabel("Hastaya kendi sorunuzu sorun").fill("Bulantınız, terlemeniz veya nefes darlığınız var mı?");
   await clickButton(page, "Sor");
   await clickButton(page, /İlaçları ve son kullanım zamanını sor/);
@@ -132,6 +134,7 @@ async function verifyGoldenFlow(page) {
   snapshot = await state(page);
   check(snapshot.state.orders[0].status === "ready" && snapshot.state.phase === "stemi", "EKG sonucu XState STEMI fazını açmadı");
   check((await page.locator("body").innerText()).includes("V2–V5 derivasyonlarında belirgin ST yükselmesi"), "Hazır EKG bulgusu araç çıktısında görünmedi");
+  check(await page.getByLabel("Hazır 12 derivasyonlu EKG sonucu").isVisible(), "EKG tanısal çalışma alanı hazır traseyi göstermedi");
 
   await page.getByRole("tab", { name: /İlaçlar/ }).click();
   await clickButton(page, /Aspirin protokol kartını uygula/);
@@ -186,22 +189,27 @@ async function verifyAccessibilityAndMobile(page) {
     return { tag: element?.tagName, outline: style?.outlineStyle, width: style?.outlineWidth };
   });
   check(["A", "BUTTON", "INPUT"].includes(focus.tag) && focus.outline !== "none" && focus.width !== "0px", `Klavye odağı görünür değil: ${JSON.stringify(focus)}`);
-  const animationDuration = await page.locator('[class*="ecg"] i').first().evaluate((element) => getComputedStyle(element).animationDuration);
+  const animationDuration = await page.locator('[class*="ecg"] svg').first().evaluate((element) => getComputedStyle(element).animationDuration);
   check(Number.parseFloat(animationDuration) <= 0.001, `Azaltılmış hareket uygulanmadı: ${animationDuration}`);
   const sceneLayout = await page.evaluate(() => {
     const canvasRegion = document.querySelector('[class*="threeScene"]');
     const monitor = document.querySelector('[aria-label="Hasta monitörü"]');
     const speech = document.querySelector('[class*="patientSpeech"]');
+    const commands = document.querySelector('[aria-label="Yatak başı hızlı klinik eylemleri"]');
     const hotspotButtons = [...document.querySelectorAll('[aria-label="Hasta üzerinde muayene bölgesi seçimi"] button')];
-    if (!canvasRegion || !monitor || !speech) return null;
+    if (!canvasRegion || !monitor || !speech || !commands) return null;
     const canvasRect = canvasRegion.getBoundingClientRect();
     const monitorRect = monitor.getBoundingClientRect();
     const speechRect = speech.getBoundingClientRect();
+    const commandsRect = commands.getBoundingClientRect();
     return {
       canvasBottom: canvasRect.bottom,
       monitorTop: monitorRect.top,
       monitorBottom: monitorRect.bottom,
       speechTop: speechRect.top,
+      speechBottom: speechRect.bottom,
+      commandsTop: commandsRect.top,
+      commandButtons: commands.querySelectorAll("button").length,
       hotspotLabels: hotspotButtons.map((button) => button.textContent?.trim()),
       hotspotFontSizes: hotspotButtons.map((button) => Number.parseFloat(getComputedStyle(button).fontSize)),
     };
@@ -209,6 +217,8 @@ async function verifyAccessibilityAndMobile(page) {
   check(sceneLayout, "Mobil klinik sahne yerleşimi ölçülemedi");
   check(sceneLayout.monitorTop >= sceneLayout.canvasBottom + 8, `Monitör 3B hasta alanını kapatıyor: ${JSON.stringify(sceneLayout)}`);
   check(sceneLayout.speechTop >= sceneLayout.monitorBottom + 8, `Hasta konuşması monitörle çakışıyor: ${JSON.stringify(sceneLayout)}`);
+  check(sceneLayout.commandsTop >= sceneLayout.speechBottom + 8, `Yatak başı eylemleri hasta konuşmasıyla çakışıyor: ${JSON.stringify(sceneLayout)}`);
+  check(sceneLayout.commandButtons >= 3, `Mobil yatak başı eylemleri eksik: ${JSON.stringify(sceneLayout)}`);
   check(
     ["Baş / genel durum", "Göğüs", "Periferik dolaşım"].every((label) => sceneLayout.hotspotLabels.some((text) => text?.includes(label))),
     `Mobil muayene bölgesi etiketleri eksik: ${sceneLayout.hotspotLabels.join(" | ")}`,
