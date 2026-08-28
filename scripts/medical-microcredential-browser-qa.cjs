@@ -139,6 +139,17 @@ async function performAssessment(page) {
     });
     check(await page.getByLabel("Hasta monitörü").isVisible(), "Canlı hasta monitörü görünmedi");
 
+    await page.setViewportSize({ width: 390, height: 844 });
+    const identityBox = await page.getByTestId("mc-patient-identity").boundingBox();
+    const sceneBox = await page.getByTestId("mc-patient-scene").boundingBox();
+    const monitorBox = await page.getByTestId("mc-patient-monitor").boundingBox();
+    check(Boolean(identityBox && sceneBox && monitorBox), "Mobil hasta sahnesi ölçülemedi");
+    check(identityBox.y + identityBox.height <= sceneBox.y + 1, "Mobil hasta bilgisi muayene seçeneklerinin üzerine biniyor");
+    check(monitorBox.y - (sceneBox.y + sceneBox.height) <= 12, "Mobil hasta görseli ile monitör arasında gereksiz boşluk oluşuyor");
+    check(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1), "Mobil öğrenme görünümü yatay taşma üretiyor");
+    if (process.env.MEDICAL_MICRO_QA_SCREENSHOT) await page.screenshot({ path: process.env.MEDICAL_MICRO_QA_SCREENSHOT, fullPage: true });
+    await page.setViewportSize({ width: 1440, height: 1000 });
+
     await performPractice(page);
     check((await page.locator("body").innerText()).includes("5/5 tamamlandı"), "Öğrenme kapıları gerçek eylemlerle tamamlanmadı");
     await click(page, "Öğrenmeyi tamamla ve değerlendirmeyi başlat");

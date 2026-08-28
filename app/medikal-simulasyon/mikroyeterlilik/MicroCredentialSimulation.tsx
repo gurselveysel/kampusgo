@@ -275,10 +275,10 @@ export default function MicroCredentialSimulation() {
 
       <section className={styles.simulationGrid}>
         <div className={styles.patientColumn}>
-          <div className={styles.patientFrame}>
-            <div className={styles.patientBadge}><span>SENTETİK HASTA</span><strong>{state.patient.age} yaş · {state.patient.sex}</strong><small>{state.patient.chiefComplaint}</small></div>
-            <PatientRoom3D state={state} selectedRegion={examRegion} examModeActive={activeTool === "exam"} onRegionSelect={(region) => { setExamRegion(region); setActiveTool("exam"); }} />
-            <div className={styles.monitorFrame}><BedsideMonitor state={state} /></div>
+          <div className={styles.patientFrame} data-testid="mc-patient-frame">
+            <div className={styles.patientBadge} data-testid="mc-patient-identity"><span>SENTETİK HASTA</span><strong>{state.patient.age} yaş · {state.patient.sex}</strong><small>{state.patient.chiefComplaint}</small></div>
+            <div className={styles.patientScene} data-testid="mc-patient-scene"><PatientRoom3D state={state} selectedRegion={examRegion} examModeActive={activeTool === "exam"} onRegionSelect={(region) => { setExamRegion(region); setActiveTool("exam"); }} /></div>
+            <div className={styles.monitorFrame} data-testid="mc-patient-monitor"><BedsideMonitor state={state} /></div>
           </div>
           <section className={styles.feedback} data-alert={Boolean(session.records.at(-1)?.safetyAlert)} aria-live="polite">
             <span>SON HASTA YANITI</span>
