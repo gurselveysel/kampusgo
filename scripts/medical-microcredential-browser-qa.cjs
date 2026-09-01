@@ -126,6 +126,9 @@ async function performAssessment(page) {
     check(await page.getByRole("heading", { name: "Akut Göğüs Ağrısında Güvenli İlk Yaklaşım" }).isVisible(), "Mikro-yeterlilik program başlığı görünmedi");
     check((await page.locator("body").innerText()).includes("11 ZORUNLU ALAN"), "Standart mikro-yeterlilik alanları görünmedi");
     check((await page.locator("body").innerText()).includes("Resmî belge düzenlemez"), "Pilot belgelendirme sınırı görünmedi");
+    const theme = await page.locator("main").evaluate((element) => ({ colorScheme: getComputedStyle(element).colorScheme, background: getComputedStyle(element).backgroundColor }));
+    check(theme.colorScheme === "light", `Açık tema etkin değil: ${JSON.stringify(theme)}`);
+    check(!theme.background.includes("7, 19, 24"), `Koyu kabuk arka planı kaldı: ${theme.background}`);
     await page.getByLabel("Öğrenenin adı ve soyadı").fill("Pilot Öğrenen");
     await page.getByRole("checkbox", { name: /Ön koşulu karşıladığımı/ }).check();
     await page.getByRole("checkbox", { name: /sentetik eğitim pilotu/ }).check();
