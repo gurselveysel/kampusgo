@@ -39,9 +39,9 @@ function canonicalSystemRow(item) {
 }
 
 function tableColumns(tableName) {
-  const match = sql.match(new RegExp(`create table if not exists public\\.${tableName} \\(\\n([\\s\\S]*?)\\n\\);`));
+  const match = sql.match(new RegExp(`create table if not exists public\\.${tableName} \\(\\r?\\n([\\s\\S]*?)\\r?\\n\\);`));
   assert.ok(match, `${tableName} DDL bulunamadı`);
-  return match[1].split("\n")
+  return match[1].split(/\r?\n/)
     .map((line) => line.trim().match(/^([a-z][a-z0-9_]*)\s/))
     .filter(Boolean)
     .map((matchItem) => matchItem[1])

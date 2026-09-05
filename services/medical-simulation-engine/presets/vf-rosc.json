@@ -1,0 +1,56 @@
+{
+  "scenario_id": "scn_stemi_vf_rosc",
+  "scenario_version": "1.0.0",
+  "module_id": 6,
+  "learning_objective": "Şoklanabilir ritmi tanımak, yüksek kaliteli CPR başlatmak ve erken defibrilasyonun klinik sonucunu yeniden değerlendirmek.",
+  "patient_state_before": {
+    "phase": "vf",
+    "consciousness": "unresponsive",
+    "pain_score": 0,
+    "heart_rate": 0,
+    "systolic_bp": 0,
+    "diastolic_bp": 0,
+    "spo2": 72,
+    "respiratory_rate": 0,
+    "temperature_c": 36.7,
+    "rhythm": "vf",
+    "visible_signs": ["Yanıtsız", "Normal solunum yok", "VF monitör ritmi"],
+    "active_interventions": ["CPR"]
+  },
+  "learner_action": {
+    "action_id": "safe-defibrillation",
+    "label": "CPR kesintisini en aza indirerek güvenli defibrilasyon uygula",
+    "category": "resuscitation",
+    "learner_justification": "Şoklanabilir ritim ve kardiyak arrest bulguları mevcut.",
+    "time_cost_seconds": 90
+  },
+  "patient_state_after": {
+    "phase": "rosc",
+    "consciousness": "verbal",
+    "pain_score": 0,
+    "heart_rate": 92,
+    "systolic_bp": 106,
+    "diastolic_bp": 68,
+    "spo2": 96,
+    "respiratory_rate": 18,
+    "temperature_c": 36.7,
+    "rhythm": "rosc",
+    "visible_signs": ["Organize ritim", "Palpe edilebilir nabız", "Spontan solunum"],
+    "active_interventions": ["Post-ROSC izlem", "Oksijenasyon", "12 derivasyon EKG"]
+  },
+  "clinical_rationale": "Onaylanmış sentetik olay sözleşmesinde erken defibrilasyon sonrasında organize ritim ve dolaşım geri dönüşü tanımlanmıştır.",
+  "critical_signal": "VF ritminden organize ritme geçiş, nabız kontrolü ve post-ROSC yeniden değerlendirme",
+  "debrief_question": "Şok öncesi ve sonrası hangi ekip davranışı kompresyon kesintisini en çok etkiledi?",
+  "visual_focus": "monitor_transition",
+  "voiceover_language": "tr",
+  "duration_seconds": 32,
+  "safety_constraints": ["Yalnız sentetik hasta", "İlaç veya enerji dozu üretme", "Yerel protokol yerine geçme"],
+  "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-SMOKE-001",
+  "source_references": [
+    {"source_id": "ERC Adult Advanced Life Support", "source_version": "2025", "locator": "educational reference"},
+    {"source_id": "TEYS scenario contract", "source_version": "1.0.0", "locator": "scn_stemi_vf_rosc"}
+  ],
+  "rights_confirmed": true,
+  "synthetic_patient_confirmed": true,
+  "request_ai_generation": false
+}
