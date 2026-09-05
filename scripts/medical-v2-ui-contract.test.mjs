@@ -35,7 +35,7 @@ assert.match(scene, /selectedRegion/, "seçilen muayene bölgesi hasta üzerinde
 assert.match(scene, /synthetic-stemi-patient-vf-v1\.webp/, "VF fazı aynı sentetik hastanın yanıtsız görsel durumuna geçmeli");
 assert.match(scene, /data-phase=\{state\.phase\}/, "ROSC ve diğer fazlar hasta görünümünü klinik durum filtresiyle güncellemeli");
 assert.match(scene, /patientEquipmentOverlay/, "elektrot, oksijen, defibrilasyon ve CPR katmanları motor bayraklarına bağlı olmalı");
-assert.match(scene, /patientChestLayer/, "hasta solunumu tek kare fotoğraf yerine bölgesel göğüs hareketi üretmeli");
+assert.match(scene, /patient-body-motion/, "hasta solunumu üst üste görsel katmanı üretmeden tek hasta gövdesini hareket ettirmeli");
 assert.match(scene, /--breath-duration/, "solunum animasyon süresi canlı solunum sayısından türetilmeli");
 assert.match(scene, /patientMotionReadout/, "canlı hasta hareketi vital motoruna bağlı görünür telemetri taşımalı");
 assert.match(monitor, /waveformPaths/, "yatak başı monitörü ritme özel gerçek SVG trase çizmelidir");

@@ -132,12 +132,13 @@ async function verifyGoldenFlow(page) {
     return image instanceof HTMLImageElement && image.complete && image.naturalWidth >= 640;
   });
   check((await patientSprite.getAttribute("src")).includes("synthetic-stemi-patient-v1.webp"), "Başlangıçta gerçekçi göğüs ağrılı hasta görseli yüklenmedi");
-  const chestMotion = page.getByTestId("patient-chest-motion");
-  const chestAnimation = await chestMotion.evaluate((element) => {
+  const bodyMotion = page.getByTestId("patient-body-motion");
+  check(await bodyMotion.locator("img").count() === 1, "Hasta animasyonunda yinelenen görsel katmanları var");
+  const bodyAnimation = await bodyMotion.evaluate((element) => {
     const style = getComputedStyle(element);
     return { name: style.animationName, duration: style.animationDuration, playState: style.animationPlayState };
   });
-  check(chestAnimation.name.includes("patientChestRespiration") && chestAnimation.duration !== "0s" && chestAnimation.playState === "running", "Hasta solunumu canlı animasyon olarak çalışmıyor");
+  check(bodyAnimation.name.includes("patientBodyRespiration") && bodyAnimation.duration !== "0s" && bodyAnimation.playState === "running", "Hasta solunumu tek katmanlı canlı animasyon olarak çalışmıyor");
   check((await page.getByLabel(/Canlı hasta hareketi/).innerText()).includes("SS 21/dk"), "Solunum hareketi vital motoruna bağlanmadı");
   await page.getByLabel("Hastaya kendi sorunuzu sorun").fill("Bulantınız, terlemeniz veya nefes darlığınız var mı?");
   await clickButton(page, "Sor");

@@ -151,10 +151,11 @@ async function performAssessment(page) {
     check(await page.getByLabel("Hasta monitörü").getAttribute("data-theme") === "light", "Hasta monitörü açık tema varyantında değil");
     const chestHotspotColors = await page.getByTestId("exam-hotspot-chest").evaluate((element) => ({ color: getComputedStyle(element).color, background: getComputedStyle(element).backgroundColor }));
     check(chestHotspotColors.color !== chestHotspotColors.background, `Muayene seçeneği okunamıyor: ${JSON.stringify(chestHotspotColors)}`);
-    const chestMotion = page.getByTestId("patient-chest-motion");
-    const motionBefore = await chestMotion.evaluate((element) => getComputedStyle(element).transform);
+    const patientMotion = page.getByTestId("patient-body-motion");
+    check(await patientMotion.locator("img").count() === 1, "Hasta animasyonunda üst üste binen görsel katmanları var");
+    const motionBefore = await patientMotion.evaluate((element) => getComputedStyle(element).transform);
     await page.waitForTimeout(650);
-    const motionAfter = await chestMotion.evaluate((element) => getComputedStyle(element).transform);
+    const motionAfter = await patientMotion.evaluate((element) => getComputedStyle(element).transform);
     check(motionBefore !== motionAfter, `Hasta solunum hareketi çalışmıyor: ${motionBefore}`);
     check(identityBox.y + identityBox.height <= sceneBox.y + 1, "Mobil hasta bilgisi muayene seçeneklerinin üzerine biniyor");
     check(monitorBox.y - (sceneBox.y + sceneBox.height) <= 12, "Mobil hasta görseli ile monitör arasında gereksiz boşluk oluşuyor");

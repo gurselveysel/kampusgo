@@ -165,6 +165,7 @@ export default function PatientRoom3D({ state, selectedRegion, examModeActive = 
     </Canvas>
     <div
       className={styles.realisticPatient}
+      data-testid="patient-body-motion"
       data-phase={state.phase}
       data-cpr={cprActive}
       data-distressed={distressed}
@@ -181,9 +182,6 @@ export default function PatientRoom3D({ state, selectedRegion, examModeActive = 
         sizes="(max-width: 760px) 100vw, 68vw"
         onLoad={() => setSpriteReady(true)}
       />
-      <Image aria-hidden="true" alt="" src={patientSprite} className={styles.patientChestLayer} fill sizes="(max-width: 760px) 100vw, 68vw" data-testid="patient-chest-motion" />
-      <Image aria-hidden="true" alt="" src={patientSprite} className={styles.patientHeadLayer} fill sizes="(max-width: 760px) 100vw, 68vw" />
-      {distressed ? <Image aria-hidden="true" alt="" src={patientSprite} className={styles.patientPainHandLayer} fill sizes="(max-width: 760px) 100vw, 68vw" /> : null}
       <div className={styles.patientBlink} aria-hidden="true"><i /><i /></div>
       {distressed ? <div className={styles.diaphoresis} aria-hidden="true"><i /><i /><i /></div> : null}
     </div>
