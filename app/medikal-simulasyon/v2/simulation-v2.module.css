@@ -207,6 +207,29 @@
 .sceneHotspots button span { color: var(--cyan); font-size: 10px; font-weight: 900; }
 .sceneAlternative { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
+.threeScene[data-theme="light"] .sceneStatus,
+.threeScene[data-theme="light"] .patientMotionReadout {
+  border-color: rgba(25, 119, 95, .28);
+  background: rgba(255, 255, 255, .9);
+  box-shadow: 0 8px 24px rgba(31, 76, 67, .12);
+}
+.threeScene[data-theme="light"] .sceneStatus strong,
+.threeScene[data-theme="light"] .patientMotionReadout strong { color: #173337; }
+.threeScene[data-theme="light"] .sceneHotspots button {
+  border-color: rgba(25, 119, 95, .26);
+  color: #294a48;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 7px 20px rgba(31, 76, 67, .08);
+}
+.threeScene[data-theme="light"] .sceneHotspots button:hover { color: #173337; border-color: #19775f; }
+.threeScene[data-theme="light"] .sceneHotspots button[data-selected="true"] {
+  border-color: #19775f;
+  color: #fff;
+  background: #19775f;
+  box-shadow: inset 3px 0 0 #8be5c2, 0 8px 22px rgba(25, 119, 95, .18);
+}
+.threeScene[data-theme="light"] .sceneHotspots button[data-selected="true"] span { color: #dff7ee; }
+
 .monitor {
   position: absolute;
   right: 18px;
@@ -235,6 +258,25 @@
 .vitalGrid span { color: #6f8b93; font-size: 8px; }
 .vitalGrid article[data-alert="true"] { box-shadow: inset 2px 0 0 var(--red); }
 .vitalGrid article[data-alert="true"] strong { color: var(--red); }
+
+.monitor[data-theme="light"] {
+  border-color: rgba(25, 119, 95, .26);
+  background: rgba(249, 253, 251, .97);
+  box-shadow: 0 12px 34px rgba(31, 76, 67, .13);
+}
+.monitor[data-theme="light"] .monitorHead { color: #5e7774; }
+.monitor[data-theme="light"] .monitorHead b,
+.monitor[data-theme="light"] .vitalGrid strong { color: #14745a; }
+.monitor[data-theme="light"] .ecg {
+  background: repeating-linear-gradient(0deg, transparent 0 17px, rgba(25, 119, 95, .08) 18px), repeating-linear-gradient(90deg, transparent 0 17px, rgba(25, 119, 95, .08) 18px);
+}
+.monitor[data-theme="light"] .ecg path { stroke: #14745a; filter: drop-shadow(0 0 3px rgba(20, 116, 90, .36)); }
+.monitor[data-theme="light"] .ecg line { stroke: rgba(20, 116, 90, .28); }
+.monitor[data-theme="light"] .vitalGrid article { background: #eaf4f0; }
+.monitor[data-theme="light"] .vitalGrid small { color: #52716c; }
+.monitor[data-theme="light"] .vitalGrid span { color: #617b77; }
+.monitor[data-theme="light"][data-critical="true"] .monitorHead b,
+.monitor[data-theme="light"] .ecg[data-rhythm="vf"] + .vitalGrid strong { color: var(--red); }
 
 .patientSpeech { position: absolute; z-index: 6; left: 18px; bottom: 154px; width: min(620px, calc(100% - 390px)); padding: 14px 18px; border-radius: 13px; border: 1px solid rgba(115, 219, 216, .24); background: rgba(4, 17, 25, .9); backdrop-filter: blur(14px); }
 .patientSpeech span { color: var(--cyan); font-size: 9px; font-weight: 900; letter-spacing: .16em; }

@@ -12,10 +12,10 @@ function VitalCard({ label, value, unit, alert = false }: { label: string; value
   return <article data-alert={alert}><small>{label}</small><strong>{value}</strong><span>{unit}</span></article>;
 }
 
-export default function BedsideMonitor({ state }: { state: ClinicalState }) {
+export default function BedsideMonitor({ state, theme = "dark" }: { state: ClinicalState; theme?: "dark" | "light" }) {
   const { vitals } = state;
   const critical = vitals.rhythm === "vf" || vitals.systolic < 80 || vitals.spo2 < 90;
-  return <aside className={styles.monitor} data-critical={critical} aria-label="Hasta monitörü" aria-live="polite">
+  return <aside className={styles.monitor} data-critical={critical} data-theme={theme} aria-label="Hasta monitörü" aria-live="polite">
     <div className={styles.monitorHead}><span>TEYS MONITOR · CANLI</span><b>{vitals.rhythm.toUpperCase()}</b></div>
     <div className={styles.ecg} data-rhythm={vitals.rhythm}>
       <svg viewBox="0 0 420 88" preserveAspectRatio="none" role="img" aria-label={`${vitals.rhythm.toUpperCase()} ritim dalgası`}>

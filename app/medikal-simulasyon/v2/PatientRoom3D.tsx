@@ -13,6 +13,7 @@ type ModelProps = {
   state: ClinicalState;
   selectedRegion: ExamRegion;
   examModeActive?: boolean;
+  theme?: "dark" | "light";
   onRegionSelect: (region: ExamRegion) => void;
 };
 
@@ -122,26 +123,27 @@ function ClinicalEquipment({ state }: { state: ClinicalState }) {
   </>;
 }
 
-function ClinicalRoom({ state, selectedRegion, onRegionSelect, showProceduralPatient }: ModelProps & { showProceduralPatient: boolean }) {
-  const roomColor = useMemo(() => state.phase === "vf" ? "#210b17" : "#061722", [state.phase]);
+function ClinicalRoom({ state, selectedRegion, onRegionSelect, showProceduralPatient, theme = "dark" }: ModelProps & { showProceduralPatient: boolean }) {
+  const lightTheme = theme === "light";
+  const roomColor = useMemo(() => state.phase === "vf" ? "#210b17" : lightTheme ? "#edf5f2" : "#061722", [lightTheme, state.phase]);
   return <>
     <color attach="background" args={[roomColor]} />
     <fog attach="fog" args={[roomColor, 6, 14]} />
-    <ambientLight intensity={0.82} />
-    <directionalLight position={[3, 5, 4]} intensity={2.6} color="#d8fbff" />
-    <pointLight position={[-3, 2, 2]} intensity={state.phase === "vf" ? 3.1 : 1.5} color={state.phase === "vf" ? "#ff355f" : "#39d8cf"} />
-    <mesh position={[0, -1.14, 0]}><boxGeometry args={[3.6, 0.25, 2.4]} /><meshStandardMaterial color="#c8d8dc" roughness={0.9} /></mesh>
+    <ambientLight intensity={lightTheme ? 1.18 : 0.82} />
+    <directionalLight position={[3, 5, 4]} intensity={lightTheme ? 2.1 : 2.6} color="#d8fbff" />
+    <pointLight position={[-3, 2, 2]} intensity={state.phase === "vf" ? 3.1 : lightTheme ? 0.9 : 1.5} color={state.phase === "vf" ? "#ff355f" : lightTheme ? "#7dd6c6" : "#39d8cf"} />
+    <mesh position={[0, -1.14, 0]}><boxGeometry args={[3.6, 0.25, 2.4]} /><meshStandardMaterial color={lightTheme ? "#dfeae7" : "#c8d8dc"} roughness={0.9} /></mesh>
     <mesh position={[0, 0.86, -0.46]} scale={[1.12, 0.48, 0.24]}><boxGeometry args={[1, 1, 1]} /><meshStandardMaterial color="#dbe9e9" roughness={0.95} /></mesh>
-    <mesh position={[-1.68, -0.46, 0]}><boxGeometry args={[0.07, 1.34, 2.28]} /><meshStandardMaterial color="#7e969d" metalness={0.72} roughness={0.3} /></mesh>
-    <mesh position={[1.68, -0.46, 0]}><boxGeometry args={[0.07, 1.34, 2.28]} /><meshStandardMaterial color="#7e969d" metalness={0.72} roughness={0.3} /></mesh>
-    <mesh position={[0, -1.38, 0]}><boxGeometry args={[4, 0.2, 2.8]} /><meshStandardMaterial color="#263b48" roughness={0.75} /></mesh>
-    <mesh position={[-2.7, 0.25, -0.9]}><boxGeometry args={[1.22, 1.78, 0.25]} /><meshStandardMaterial color="#102c3c" emissive="#08202c" emissiveIntensity={0.8} /></mesh>
+    <mesh position={[-1.68, -0.46, 0]}><boxGeometry args={[0.07, 1.34, 2.28]} /><meshStandardMaterial color={lightTheme ? "#a9bdb8" : "#7e969d"} metalness={0.72} roughness={0.3} /></mesh>
+    <mesh position={[1.68, -0.46, 0]}><boxGeometry args={[0.07, 1.34, 2.28]} /><meshStandardMaterial color={lightTheme ? "#a9bdb8" : "#7e969d"} metalness={0.72} roughness={0.3} /></mesh>
+    <mesh position={[0, -1.38, 0]}><boxGeometry args={[4, 0.2, 2.8]} /><meshStandardMaterial color={lightTheme ? "#c7d7d2" : "#263b48"} roughness={0.75} /></mesh>
+    <mesh position={[-2.7, 0.25, -0.9]}><boxGeometry args={[1.22, 1.78, 0.25]} /><meshStandardMaterial color={lightTheme ? "#d9e8e4" : "#102c3c"} emissive={lightTheme ? "#c5dad4" : "#08202c"} emissiveIntensity={lightTheme ? 0.35 : 0.8} /></mesh>
     <ClinicalEquipment state={state} />
     <group visible={showProceduralPatient}><PatientModel state={state} selectedRegion={selectedRegion} onRegionSelect={onRegionSelect} /></group>
   </>;
 }
 
-export default function PatientRoom3D({ state, selectedRegion, examModeActive = false, onRegionSelect }: ModelProps) {
+export default function PatientRoom3D({ state, selectedRegion, examModeActive = false, theme = "dark", onRegionSelect }: ModelProps) {
   const patientSprite = state.phase === "vf"
     ? "/medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp"
     : "/medical-simulation/v2/synthetic-stemi-patient-v1.webp";
@@ -157,9 +159,9 @@ export default function PatientRoom3D({ state, selectedRegion, examModeActive = 
 
   useEffect(() => setSpriteReady(false), [patientSprite]);
 
-  return <div className={styles.threeScene} data-phase={state.phase} data-selected-region={selectedRegion}>
+  return <div className={styles.threeScene} data-phase={state.phase} data-selected-region={selectedRegion} data-theme={theme}>
     <Canvas camera={{ position: [0, 1.15, 5.35], fov: 39 }} dpr={[1, 1.6]} gl={{ antialias: true, alpha: false }}>
-      <Suspense fallback={null}><ClinicalRoom state={state} selectedRegion={selectedRegion} onRegionSelect={onRegionSelect} showProceduralPatient={!spriteReady} /></Suspense>
+      <Suspense fallback={null}><ClinicalRoom state={state} selectedRegion={selectedRegion} theme={theme} onRegionSelect={onRegionSelect} showProceduralPatient={!spriteReady} /></Suspense>
     </Canvas>
     <div
       className={styles.realisticPatient}
