@@ -30,6 +30,10 @@ const files = [
   ["assets/medical-simulation/manifest.json", "medical-simulation/manim/manifest.json"],
   ["assets/medical-simulation/v2/synthetic-stemi-patient-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-v1.webp"],
   ["assets/medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-atypical-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-atypical-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-atypical-vf-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-atypical-vf-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-delayed-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-delayed-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-delayed-vf-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-delayed-vf-v1.webp"],
 ];
 
 for (const [source, destination] of files) {

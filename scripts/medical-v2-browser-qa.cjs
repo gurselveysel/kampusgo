@@ -59,6 +59,65 @@ async function clickButton(page, label) {
   await button.click();
 }
 
+async function animationState(locator) {
+  return locator.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { name: style.animationName, duration: style.animationDuration, playState: style.animationPlayState, transform: style.transform, scale: style.scale, translate: style.translate };
+  });
+}
+
+async function checkMotion(locator, expectedAnimation, message, delay = 320) {
+  const before = await animationState(locator);
+  await sleep(delay);
+  const after = await animationState(locator);
+  check(before.name.includes(expectedAnimation) && before.duration !== "0s" && before.playState === "running", `${message}: ${JSON.stringify(before)}`);
+  const beforeMotion = `${before.transform}|${before.scale}|${before.translate}`;
+  const afterMotion = `${after.transform}|${after.scale}|${after.translate}`;
+  check(beforeMotion !== afterMotion, `${message}: hareket örnekleri değişmedi (${beforeMotion})`);
+}
+
+async function captureScenePair(page, name) {
+  const scene = page.locator('[class*="sceneFrame"]').first();
+  const desktopPath = path.join(os.tmpdir(), `teys-v2-scene-${name}-desktop.png`);
+  const mobilePath = path.join(os.tmpdir(), `teys-v2-scene-${name}-mobile.png`);
+  await scene.scrollIntoViewIfNeeded();
+  await scene.screenshot({ path: desktopPath });
+  const storedSession = await page.evaluate(() => localStorage.getItem("teys-stemi-bedside-v5-session"));
+  const browser = page.context().browser();
+  check(browser, "Mobil sahne denetimi için tarayıcı bulunamadı");
+  const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  try {
+    await mobilePage.addInitScript((sessionValue) => {
+      if (sessionValue) localStorage.setItem("teys-stemi-bedside-v5-session", sessionValue);
+    }, storedSession);
+    await mobilePage.goto(route, { waitUntil: "networkidle" });
+    await mobilePage.waitForFunction(() => {
+      const image = document.querySelector('[data-testid="patient-body-motion"] img');
+      return image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0 && getComputedStyle(image).opacity === "1";
+    });
+    const mobileScene = mobilePage.locator('[class*="sceneFrame"]').first();
+    const mobileGeometry = await mobilePage.evaluate(() => {
+      const stage = document.querySelector('[class*="threeScene"]')?.getBoundingClientRect();
+      const patient = document.querySelector('[data-testid="patient-body-motion"]')?.getBoundingClientRect();
+      const buttons = [...document.querySelectorAll('[aria-label="Hasta üzerinde muayene bölgesi seçimi"] button')].map((button) => button.getBoundingClientRect());
+      if (!stage || !patient || buttons.length !== 3) return null;
+      const visiblePatientWidth = Math.max(0, Math.min(stage.right, patient.right) - Math.max(stage.left, patient.left));
+      return {
+        overflow: document.documentElement.scrollWidth - window.innerWidth,
+        patientWidthRatio: visiblePatientWidth / patient.width,
+        buttonsInside: buttons.every((button) => button.left >= stage.left && button.right <= stage.right),
+      };
+    });
+    check(mobileGeometry && mobileGeometry.overflow <= 1, `${name} sahnesi 390px görünümde yatay taşıyor: ${JSON.stringify(mobileGeometry)}`);
+    check(mobileGeometry.patientWidthRatio >= .95, `${name} sahnesinde hasta mobil çerçeveden kırpılıyor: ${JSON.stringify(mobileGeometry)}`);
+    check(mobileGeometry.buttonsInside, `${name} sahnesinde muayene düğmeleri mobil çerçeveden taşıyor: ${JSON.stringify(mobileGeometry)}`);
+    await mobileScene.screenshot({ path: mobilePath });
+  } finally {
+    await mobilePage.close();
+  }
+  return { desktopPath, mobilePath };
+}
+
 async function verifyModeDifferences(page) {
   await clickButton(page, "Değerlendirme");
   await clickButton(page, /Ağrının başlangıcını/);
@@ -93,12 +152,35 @@ async function verifyScenarioLibrary(page) {
   await atypical.getByRole("button", { name: "Bu olguyu başlat" }).click();
   snapshot = await state(page);
   check(snapshot.state.encounterId === "enc_atypical_diabetes" && snapshot.state.patient.age === 67, "atipik olgu hasta durumuna yüklenmedi");
+  await page.waitForFunction(() => {
+    const image = document.querySelector('[data-testid="patient-body-motion"] img');
+    return image instanceof HTMLImageElement && image.src.includes("synthetic-stemi-patient-atypical-v1.webp") && image.complete && image.naturalWidth > 0 && getComputedStyle(image).opacity === "1";
+  });
+  check((await page.locator('[data-testid="patient-body-motion"]').getAttribute("data-encounter")) === "enc_atypical_diabetes", "67 yaş kadın olgunun kendine özgü hasta sahnesi açılmadı");
+  await captureScenePair(page, "atypical-assessment");
+
+  await clickButton(page, "Olgu kütüphanesi");
+  const delayed = page.locator("article").filter({ hasText: "Gecikmiş başvuru" });
+  await delayed.getByRole("button", { name: "Bu olguyu başlat" }).click();
+  snapshot = await state(page);
+  check(snapshot.state.encounterId === "enc_delayed_transfer" && snapshot.state.patient.age === 72, "gecikmiş başvuru olgusu hasta durumuna yüklenmedi");
+  await page.waitForFunction(() => {
+    const image = document.querySelector('[data-testid="patient-body-motion"] img');
+    return image instanceof HTMLImageElement && image.src.includes("synthetic-stemi-patient-delayed-v1.webp") && image.complete && image.naturalWidth > 0 && getComputedStyle(image).opacity === "1";
+  });
+  check((await page.locator('[data-testid="patient-body-motion"]').getAttribute("data-encounter")) === "enc_delayed_transfer", "72 yaş erkek olgunun kendine özgü hasta sahnesi açılmadı");
+  await captureScenePair(page, "delayed-assessment");
 
   await clickButton(page, "Olgu kütüphanesi");
   const classic = page.locator("article").filter({ hasText: "Klasik başlangıç" });
   await classic.getByRole("button", { name: "Bu olguyu başlat" }).click();
   snapshot = await state(page);
   check(snapshot.state.encounterId === "enc_classic_stemi" && snapshot.state.difficulty === "standard", "klasik standart olgu geri yüklenmedi");
+  await page.waitForFunction(() => {
+    const image = document.querySelector('[data-testid="patient-body-motion"] img');
+    return image instanceof HTMLImageElement && image.src.includes("synthetic-stemi-patient-v1.webp") && image.complete && image.naturalWidth > 0 && getComputedStyle(image).opacity === "1";
+  });
+  await captureScenePair(page, "classic-assessment");
 }
 
 async function verifyCurriculumAndLanguage(page) {
@@ -134,12 +216,24 @@ async function verifyGoldenFlow(page) {
   check((await patientSprite.getAttribute("src")).includes("synthetic-stemi-patient-v1.webp"), "Başlangıçta gerçekçi göğüs ağrılı hasta görseli yüklenmedi");
   const bodyMotion = page.getByTestId("patient-body-motion");
   check(await bodyMotion.locator("img").count() === 1, "Hasta animasyonunda yinelenen görsel katmanları var");
-  const bodyAnimation = await bodyMotion.evaluate((element) => {
-    const style = getComputedStyle(element);
-    return { name: style.animationName, duration: style.animationDuration, playState: style.animationPlayState };
-  });
-  check(bodyAnimation.name.includes("patientBodyRespiration") && bodyAnimation.duration !== "0s" && bodyAnimation.playState === "running", "Hasta solunumu tek katmanlı canlı animasyon olarak çalışmıyor");
+  await checkMotion(bodyMotion, "patientBodyRespiration", "Hasta solunumu tek katmanlı canlı animasyon olarak çalışmıyor");
   check((await page.getByLabel(/Canlı hasta hareketi/).innerText()).includes("SS 21/dk"), "Solunum hareketi vital motoruna bağlanmadı");
+  await clickButton(page, /Monitörizasyon ve damar yolu/);
+  await clickButton(page, /Ölçüme göre titre oksijen/);
+  check(await page.getByTestId("patient-electrodes").isVisible(), "Monitörizasyon sonrası elektrotlar hasta üzerinde görünmedi");
+  check(await page.getByTestId("patient-oxygen-mask").isVisible(), "Titre oksijen sonrası maske hasta üzerinde görünmedi");
+  const equipmentBounds = await page.evaluate(() => {
+    const patient = document.querySelector('[data-testid="patient-body-motion"]')?.getBoundingClientRect();
+    const equipment = [
+      document.querySelector('[data-testid="patient-electrodes"]')?.getBoundingClientRect(),
+      document.querySelector('[data-testid="patient-oxygen-mask"]')?.getBoundingClientRect(),
+    ];
+    if (!patient || equipment.some((rect) => !rect)) return null;
+    return { patient: { left: patient.left, top: patient.top, right: patient.right, bottom: patient.bottom }, equipment: equipment.map((rect) => ({ left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom })) };
+  });
+  check(equipmentBounds && equipmentBounds.equipment.every((rect) => rect.left >= equipmentBounds.patient.left && rect.top >= equipmentBounds.patient.top && rect.right <= equipmentBounds.patient.right && rect.bottom <= equipmentBounds.patient.bottom), `Hasta ekipmanı hareketli hasta katmanına hizalanmadı: ${JSON.stringify(equipmentBounds)}`);
+  await captureScenePair(page, "assessment-equipment");
+  await page.getByRole("tab", { name: /Hasta görüşmesi/ }).click();
   await page.getByLabel("Hastaya kendi sorunuzu sorun").fill("Bulantınız, terlemeniz veya nefes darlığınız var mı?");
   await clickButton(page, "Sor");
   await clickButton(page, /İlaçları ve son kullanım zamanını sor/);
@@ -181,28 +275,40 @@ async function verifyGoldenFlow(page) {
   await clickButton(page, /Kapalı döngü iletişimi başlat/);
 
   await page.getByRole("tab", { name: /Müdahaleler/ }).click();
-  await clickButton(page, /Monitörizasyon ve damar yolu/);
   await clickButton(page, /STEMI yolunu aktive et/);
   await clickButton(page, "+5 dk");
   snapshot = await state(page);
   check(snapshot.state.phase === "vf" && snapshot.state.vitals.rhythm === "vf" && snapshot.state.vitals.heartRate === 0, "Zamana bağlı VF oluşmadı");
   await page.waitForFunction(() => document.querySelector('img[alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"]')?.getAttribute("src")?.includes("synthetic-stemi-patient-vf-v1.webp"));
   check(await page.locator('[data-apnea="true"]').count() === 1, "VF sırasında spontan solunum animasyonu durmadı");
+  const vfAnimation = await animationState(bodyMotion);
+  check(vfAnimation.name === "none", `VF sırasında hareketsiz hasta yerine klinik olarak yanlış beden hareketi var: ${JSON.stringify(vfAnimation)}`);
+  check(await page.getByTestId("patient-defib-pads").isVisible(), "VF fazında defibrilasyon pedleri görünmedi");
+  await captureScenePair(page, "vf-apnea");
 
   await clickButton(page, /Arrest ekibini aktive et/);
   await clickButton(page, /Yüksek kaliteli CPR başlat/);
-  check(await page.locator('[class*="cprOverlay"]').isVisible(), "CPR sırasında hasta üzerinde kompresyon katmanı açılmadı");
+  check(await page.getByTestId("patient-cpr-hands").isVisible(), "CPR sırasında hasta üzerinde kompresyon katmanı açılmadı");
+  await checkMotion(bodyMotion, "patientCompression", "CPR sırasında beden kompresyon hareketi çalışmıyor", 120);
+  await checkMotion(page.getByTestId("patient-cpr-hands"), "handsCompression", "CPR el hareketi çalışmıyor", 120);
+  await captureScenePair(page, "vf-cpr");
   await clickButton(page, /Güvenli defibrilasyon uygula/);
+  check(await page.getByTestId("defibrillation-flash").count() === 1, "Defibrilasyon kararı sahnede görsel boşalma geri bildirimi üretmedi");
   await clickButton(page, /Şok sonrası CPR'a hemen dön/);
   snapshot = await state(page);
   check(snapshot.state.phase === "rosc" && snapshot.state.vitals.rhythm === "rosc", "CPR/defibrilasyon yolu ROSC üretmedi");
   await page.waitForFunction(() => document.querySelector('img[alt="Eylemlere göre klinik durumu değişen fotogerçekçi sentetik hasta"]')?.getAttribute("src")?.includes("synthetic-stemi-patient-v1.webp"));
   check(await page.locator('[data-apnea="false"]').count() === 1, "ROSC sonrasında spontan solunum animasyonu geri dönmedi");
+  await checkMotion(bodyMotion, "patientBodyRespiration", "ROSC sonrasında fizyolojik solunum geri dönmedi");
+  check(await bodyMotion.locator('[class*="diaphoresis"]').count() === 0, "ROSC sonrasında akut ağrı terleme katmanı açık kaldı");
+  await captureScenePair(page, "rosc");
 
   await clickButton(page, /ROSC sonrası ABCDE değerlendirmesi/);
   await clickButton(page, /SBAR ile sorumluluğu devret/);
   snapshot = await state(page);
   check(snapshot.state.status === "completed" && snapshot.state.phase === "handoff", "SBAR sonrası oturum tamamlanmadı");
+  check((await page.locator('[class*="sceneStatus"]').innerText()).includes("DEVİR TAMAMLANDI"), "Devir sahnesi hâlâ akut göğüs ağrısı durumu gösteriyor");
+  await captureScenePair(page, "handoff");
   const hashBeforeReload = snapshot.stateHash;
   await page.getByLabel("Eğitici gözlem notu").fill("Kapalı döngü iletişim doğru zamanda başlatıldı.");
 
