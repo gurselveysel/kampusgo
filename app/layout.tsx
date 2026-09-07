@@ -1,22 +1,29 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { headers } from "next/headers";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "KDPÜ Mikro Yeterlilik Yönetim Sistemi",
-  description: "Kontrollü pilot karar destek mock-up uygulaması",
+  title: {
+    default: "KampüsGO • Mikro Yeterlilik Yönetim Sistemi",
+    template: "%s • KampüsGO",
+  },
+  description: "Üniversite üyeliği ve rolü doğrulanan hesaplar için kontrollü KampüsGO MYYS pilotu.",
   robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#10233F",
+  themeColor: "#0B1F33",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+  // Nonce tabanlı CSP için bütün App Router sayfalarını istek bağlamında render et.
+  await headers();
   return (
     <html lang="tr">
-      <body style={{ margin: 0 }}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

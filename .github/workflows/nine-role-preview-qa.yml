@@ -2,11 +2,20 @@ name: Nine-role Preview QA
 
 on:
   workflow_dispatch:
+    inputs:
+      qa_base_url:
+        description: "Test edilecek kesin pilot.html URL'si (boşsa korunan DPÜ Preview)"
+        required: false
+        type: string
   push:
     branches: [main]
     paths:
       - ".github/workflows/nine-role-preview-qa.yml"
       - "scripts/browser-qa.cjs"
+      - "scripts/accounted-browser-qa.cjs"
+      - "app/**"
+      - "lib/**"
+      - "proxy.ts"
       - "src/**"
       - "index.html"
       - "styles.css"
@@ -27,7 +36,7 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.58.0-noble
     timeout-minutes: 20
     env:
-      QA_BASE_URL: https://kdpu-myys-mockup-roliiwx2o-info-64116029s-projects.vercel.app/
+      QA_BASE_URL: ${{ inputs.qa_base_url || 'https://kdpu-myys-mockup-roliiwx2o-info-64116029s-projects.vercel.app/' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -1,0 +1,11 @@
+begin;
+drop index if exists public.pilot_integration_org_idx;
+drop index if exists public.pilot_integration_actor_org_idx;
+drop index if exists public.pilot_finance_actor_org_idx;
+drop index if exists public.pilot_receipts_actor_org_idx;
+drop index if exists public.pilot_admin_checks_org_idx;
+drop index if exists public.pilot_admin_checks_actor_org_idx;
+drop index if exists public.pilot_credentials_holder_org_idx;
+drop index if exists public.pilot_cases_catalog_org_idx;
+drop index if exists public.pilot_case_actions_actor_org_idx;
+commit;

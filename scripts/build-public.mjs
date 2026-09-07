@@ -22,6 +22,7 @@ const files = [
   ["src/workflow.js", "src/workflow.js"],
   ["assets/brand/go-icon-web.png", "assets/brand/go-icon-web.png"],
   ["assets/brand/kdpu-logo-web.png", "assets/brand/kdpu-logo-web.png"],
+  ["assets/brand/gazi/gazi-universitesi-logo.png", "assets/brand/gazi/gazi-universitesi-logo.png"],
   ["assets/illustrations/myys-hero.webp", "assets/illustrations/myys-hero.webp"],
   ["assets/illustrations/commission-review.webp", "assets/illustrations/commission-review.webp"],
   ["assets/illustrations/digital-wallet.webp", "assets/illustrations/digital-wallet.webp"],
