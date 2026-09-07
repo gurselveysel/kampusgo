@@ -3,6 +3,7 @@
 .env.local
 node_modules
 .next
+.generated
 public
 dist
 npm-debug.log*

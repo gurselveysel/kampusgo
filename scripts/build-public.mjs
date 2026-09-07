@@ -7,6 +7,15 @@ const output = "public";
 rmSync(output, { recursive: true, force: true });
 mkdirSync(output, { recursive: true });
 
+const exactSha = (value) => /^[a-f0-9]{40}$/i.test(value ?? "") ? value.toLowerCase() : "";
+const generated = ".generated";
+mkdirSync(generated, { recursive: true });
+writeFileSync(`${generated}/build-info.json`, `${JSON.stringify({
+  commitSha: exactSha(process.env.VERCEL_GIT_COMMIT_SHA) || exactSha(process.env.KAMPUSGO_SOURCE_COMMIT),
+  sourceTreeSha: exactSha(process.env.KAMPUSGO_SOURCE_TREE),
+  attestationMode: process.env.VERCEL_GIT_COMMIT_SHA ? "vercel-git" : process.env.KAMPUSGO_SOURCE_COMMIT ? "direct-files" : "local",
+}, null, 2)}\n`);
+
 const files = [
   ["index.html", "pilot.html"],
   ["qa-responsive.html", "qa-responsive.html"],

@@ -31,6 +31,7 @@ const broker = read("lib/pilot/broker.ts");
 const workspace = read("app/u/[kurum]/WorkspaceCommon.tsx");
 const rolePanel = read("app/u/[kurum]/RoleActionPanel.tsx");
 const buildPublic = read("scripts/build-public.mjs");
+const buildInfoRoute = read("app/api/build-info/route.ts");
 const proxy = read("proxy.ts");
 
 assert.match(migration, /create table public\.organization_memberships/);
@@ -82,6 +83,8 @@ assert.match(seed, /SENTETİK/);
 assert.match(seed, /#113971/);
 assert.match(seed, /#BBE3FA/);
 assert.match(buildPublic, /assets\/brand\/gazi\/gazi-universitesi-logo\.png/);
+assert.match(buildPublic, /KAMPUSGO_SOURCE_COMMIT/);
+assert.match(buildInfoRoute, /sourceTreeSha/);
 
 assert.match(proxy, /nonce-/);
 assert.match(proxy, /strict-dynamic/);

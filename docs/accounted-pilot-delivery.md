@@ -120,7 +120,7 @@ Eklenen kontroller:
 - Eğitici → koordinatör → komisyon farklı hesap zinciri; öğrenci başvurusu, Öğrenci İşleri, Finans, Bilgi İşlem ve Sistem Yöneticisi rol işlemleri.
 - Gerçek Edge akışında tek tip hatalı giriş, Gazi kayıt oluşturma, kurum/rol reddi, logout sonrası eski oturumun reddi, çoklu/pasif/kurumsuz bağlam ve veritabanı destekli hız sınırı.
 - Preview browser QA: giriş 1440/1024/768/390; iki kurum × dokuz rol × dört genişlik; doğrudan URL reddi; Gazi öğrenci işlemi; cookie özellikleri; çıkış/geri; iki sekme; pasif/kurumsuz; DPÜ legacy localStorage değişmezliği; metadata, kırık görsel, konsol ve yatay taşma.
-- `api/build-info` ile test URL'sinin Vercel proje kimliği, Preview ortamı ve tam commit SHA eşleşmesi.
+- `api/build-info` ile test URL'sinin Vercel proje kimliği, Preview ortamı, tam commit SHA ve GitHub'daki kaynak ağacı SHA eşleşmesi. Git bağlantılı dağıtımda Vercel sistem değişkeni; doğrudan dosya Preview'ında build-time kaynak attestation'ı kullanılır.
 
 Yeni `.github/workflows/accounted-pilot-preview-qa.yml` yalnız elle ve kesin `.vercel.app` URL + tam commit ile çalışır. Hesap matrisi tek şifreli GitHub Actions secret'ından geçici `0600` dosyasına alınır; kanıt paketine veya loga eklenmez. Eski `nine-role-preview-qa.yml` main davranışını korur ve elle kesin hedef verilmesini destekler.
 
