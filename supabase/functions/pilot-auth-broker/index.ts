@@ -2,7 +2,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "@supabase/supabase-js";
 
-const VERSION = "accounted-pilot-2";
+const VERSION = "accounted-pilot-3";
 const SESSION_SECONDS = 8 * 60 * 60;
 const MAX_BODY_BYTES = 16_384;
 const encoder = new TextEncoder();
@@ -183,15 +183,31 @@ async function resolveSession(req: Request) {
 }
 
 async function protectedOperation(req: Request, body: Record<string, unknown>) {
+  // Revocation must remain possible when Auth identity/refresh services fail.
+  // Possession of the opaque value can revoke only its own server session.
+  if (body.op === "logout") {
+    const opaqueToken = req.headers.get("x-pilot-session") ?? "";
+    if (!/^[A-Za-z0-9_-]{43}$/.test(opaqueToken)) return json({ ok: false, code: "SESSION_INVALID" }, 401);
+    const tokenHash = await sha256(opaqueToken);
+    const { data: rows, error: lookupError } = await service.rpc("pilot_broker_get_session", { p_token_hash: tokenHash });
+    if (lookupError) throw new Error("SERVICE_UNAVAILABLE");
+    const stored = Array.isArray(rows) ? rows[0] : null;
+    if (!stored) return json({ ok: false, code: "SESSION_INVALID" }, 401);
+    const { error: revokeError } = await service.rpc("pilot_broker_revoke_session", { p_token_hash: tokenHash });
+    if (revokeError) throw new Error("SERVICE_UNAVAILABLE");
+    // The application session is now unusable. Also revoke the corresponding
+    // Auth refresh session; access JWTs are never exposed to the browser.
+    try {
+      const { error } = await service.auth.admin.signOut(stored.access_token, "local");
+      if (error) console.warn("pilot-auth-broker auth cleanup pending", { version: VERSION });
+    } catch {
+      console.warn("pilot-auth-broker auth cleanup pending", { version: VERSION });
+    }
+    return json({ ok: true });
+  }
   const session = await resolveSession(req);
   if (!session) return json({ ok: false, code: "SESSION_INVALID" }, 401);
   const operation = body.op;
-
-  if (operation === "logout") {
-    await session.userClient.auth.signOut({ scope: "local" });
-    await service.rpc("pilot_broker_revoke_session", { p_token_hash: session.tokenHash });
-    return json({ ok: true });
-  }
 
   if (operation === "context") {
     const { data, error } = await session.userClient.rpc("pilot_my_context");

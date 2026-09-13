@@ -42,6 +42,7 @@ drop table if exists private.pilot_login_attempts;
 drop table if exists private.pilot_login_identities;
 drop table if exists public.organization_memberships;
 
-revoke usage on schema private from authenticated;
+-- Preserve pre-existing private-schema USAGE grants used by legacy DPÜ policies.
+-- New objects/functions above are removed explicitly; schema grants are shared.
 
 commit;

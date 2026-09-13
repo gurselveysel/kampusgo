@@ -23,7 +23,7 @@ export function proxy(request: NextRequest) {
   requestHeaders.set("content-security-policy", csp);
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("content-security-policy", csp);
-  if (request.nextUrl.pathname === "/giris" || request.nextUrl.pathname === "/kurum-sec" || request.nextUrl.pathname.startsWith("/u/")) {
+  if (["/giris", "/kurum-sec", "/oturum-durumu"].includes(request.nextUrl.pathname) || request.nextUrl.pathname.startsWith("/u/")) {
     response.headers.set("cache-control", "private, no-store, max-age=0");
     response.headers.set("vary", "cookie");
   }

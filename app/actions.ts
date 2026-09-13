@@ -58,7 +58,8 @@ export async function loginAction(_previous: LoginState, formData: FormData): Pr
 
 export async function logoutAction() {
   try { await assertSameOrigin(); } catch { redirect("/giris?durum=guvenlik"); }
-  await revokePilotSession();
+  const result = await revokePilotSession();
+  if (!result.ok) redirect("/oturum-durumu?durum=cikis");
   redirect("/giris?durum=cikis");
 }
 

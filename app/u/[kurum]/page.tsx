@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getPilotContext, getPilotWorkspace } from "../../../lib/pilot/broker";
 import { DpuWorkspace, GaziWorkspace } from "./WorkspaceCommon";
 import styles from "./workspace.module.css";
+import SessionBoundary from "../../components/SessionBoundary";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -28,7 +29,7 @@ export default async function WorkspacePage({ params, searchParams }: Props) {
   const [{ kurum }, query] = await Promise.all([params, searchParams]);
   if (kurum !== "dpu" && kurum !== "gazi") redirect("/kurum-sec?durum=yetkisiz");
   const contextResult = await getPilotContext();
-  if (!contextResult.ok) redirect("/giris?durum=oturum");
+  if (!contextResult.ok) redirect(contextResult.code === "SESSION_INVALID" ? "/giris?durum=oturum" : "/oturum-durumu");
   const context = contextResult.context;
   if (context.accessState !== "active") redirect("/kurum-sec");
   const membership = context.memberships.find((item) => item.routeSlug === kurum);
@@ -39,7 +40,8 @@ export default async function WorkspacePage({ params, searchParams }: Props) {
   const workspaceResult = await getPilotWorkspace(kurum, roleKey);
   if (!workspaceResult.ok) {
     if (workspaceResult.code === "SESSION_INVALID") redirect("/giris?durum=oturum");
-    redirect("/kurum-sec?durum=yetkisiz");
+    if (workspaceResult.code === "ACCESS_DENIED") redirect("/kurum-sec?durum=yetkisiz");
+    redirect("/oturum-durumu");
   }
 
   const message = query.durum === "basarili"
@@ -49,5 +51,5 @@ export default async function WorkspacePage({ params, searchParams }: Props) {
       : null;
 
   const props = { membership, displayName: context.displayName, roleKey, workspace: workspaceResult.workspace, message };
-  return kurum === "gazi" ? <GaziWorkspace {...props} /> : <DpuWorkspace {...props} />;
+  return <SessionBoundary userId={context.userId}>{kurum === "gazi" ? <GaziWorkspace {...props} /> : <DpuWorkspace {...props} />}</SessionBoundary>;
 }

@@ -86,10 +86,15 @@ export async function runPilotCommand(
   return requestBroker({ op: "command", routeSlug, roleKey, command, payload, idempotencyKey }, token);
 }
 
-export async function revokePilotSession() {
+export async function revokePilotSession(): Promise<BrokerResult<{ revoked: true }>> {
   const token = await getPilotSessionToken();
-  if (token) await requestBroker({ op: "logout" }, token);
+  if (token) {
+    const result = await requestBroker({ op: "logout" }, token);
+    // A network failure is not proof of revocation. Keep the cookie for a retry.
+    if (!result.ok && result.code !== "SESSION_INVALID") return result;
+  }
   await clearPilotSession();
+  return { ok: true, revoked: true };
 }
 
 export function loginDestination(context: PilotContext) {

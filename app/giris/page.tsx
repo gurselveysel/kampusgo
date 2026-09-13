@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getPilotContext, loginDestination } from "../../lib/pilot/broker";
 import LoginForm from "./LoginForm";
 import styles from "./giris.module.css";
+import { LoggedOutSignal } from "../components/SessionBoundary";
 
 export const metadata: Metadata = {
   title: "Giriş",
@@ -44,7 +45,7 @@ export default async function LoginPage({ searchParams }: Props) {
           <p className={styles.step}>KampüsGO / Güvenli giriş</p>
           <h2 id="login-title">Çalışma alanınıza girin</h2>
           <p className={styles.help}>Pilot hesabınızla giriş yapın. Burada üniversitenizin mevcut kurumsal parolası istenmez.</p>
-          {durum === "cikis" ? <p className={styles.notice} role="status">Oturumunuz güvenli biçimde kapatıldı.</p> : null}
+          {durum === "cikis" ? <><LoggedOutSignal /><p className={styles.notice} role="status">Oturumunuz güvenli biçimde kapatıldı.</p></> : null}
           {durum === "oturum" ? <p className={styles.notice} role="status">Oturumunuz sona erdi. Yeniden giriş yapın.</p> : null}
           {durum === "guvenlik" ? <p className={styles.notice} role="alert">İstek kaynağı doğrulanamadı. Sayfayı yenileyip tekrar deneyin.</p> : null}
           <LoginForm />

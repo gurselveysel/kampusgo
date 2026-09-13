@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { logoutAction } from "../actions";
 import { getPilotContext } from "../../lib/pilot/broker";
 import styles from "./secim.module.css";
+import SessionBoundary from "../components/SessionBoundary";
 
 export const metadata: Metadata = { title: "Kurum ve rol seçimi" };
 export const dynamic = "force-dynamic";
@@ -14,13 +15,13 @@ type Props = { searchParams: Promise<{ durum?: string }> };
 
 export default async function InstitutionChoicePage({ searchParams }: Props) {
   const result = await getPilotContext();
-  if (!result.ok) redirect("/giris?durum=oturum");
+  if (!result.ok) redirect(result.code === "SESSION_INVALID" ? "/giris?durum=oturum" : "/oturum-durumu");
   const context = result.context;
   const { durum } = await searchParams;
   const hasAccess = context.accessState === "active" && context.memberships.length > 0;
 
   return (
-    <main className={styles.page}>
+    <SessionBoundary userId={context.userId}><main className={styles.page}>
       <header className={styles.topbar}>
         <Link href="/kurum-sec" className={styles.wordmark}>Kampüs<span>GO</span></Link>
         <form action={logoutAction}><button type="submit" className={styles.logout}>Çıkış yap</button></form>
@@ -59,6 +60,6 @@ export default async function InstitutionChoicePage({ searchParams }: Props) {
           </div>
         ) : null}
       </section>
-    </main>
+    </main></SessionBoundary>
   );
 }
