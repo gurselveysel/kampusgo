@@ -1,0 +1,98 @@
+name: TEYS arXivisual Module Library
+
+on:
+  push:
+    branches:
+      - feature/teys-medical-simulation-live-pilot
+    paths:
+      - "services/medical-simulation-engine/Dockerfile"
+      - "services/medical-simulation-engine/runtime/**"
+      - "services/medical-simulation-engine/presets/vf-rosc.json"
+      - "services/medical-simulation-engine/presets/module-library.json"
+      - "scripts/medical-simulation/render-module-library.py"
+      - ".github/workflows/medical-simulation-arxivisual-seed.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: teys-arxivisual-seed-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render-seed:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      IMAGE: teys-medical-engine:seed
+      CONTAINER: teys-medical-engine-seed
+      ENGINE_KEY: teys-seed-engine-key-0123456789abcdef
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: docker/setup-buildx-action@v3
+      - name: Build arXivisual medical engine
+        uses: docker/build-push-action@v6
+        with:
+          context: services/medical-simulation-engine
+          file: services/medical-simulation-engine/Dockerfile
+          load: true
+          push: false
+          tags: ${{ env.IMAGE }}
+          # Deliberately avoid the GitHub Actions remote cache here. A transient
+          # cache-export 404 must never make an otherwise valid medical engine
+          # image fail before the real API/render smoke test begins.
+      - name: Start controlled engine
+        shell: bash
+        run: |
+          docker run -d --name "$CONTAINER" \
+            -p 127.0.0.1:18002:8000 \
+            --cap-drop ALL \
+            --security-opt no-new-privileges:true \
+            --pids-limit 256 \
+            --memory 4g \
+            --cpus 2 \
+            --tmpfs /tmp:rw,nosuid,size=1073741824 \
+            -e TEYS_ENGINE_API_KEY="$ENGINE_KEY" \
+            -e MEDICAL_AI_MODE=template \
+            -e MEDICAL_VOICEOVER_ENABLED=false \
+            -e TEYS_ENGINE_JOB_LIMIT_PER_HOUR=12 \
+            -e TEYS_ENGINE_MAX_CONCURRENT_JOBS=1 \
+            "$IMAGE"
+          for attempt in $(seq 1 100); do
+            if curl -sf http://127.0.0.1:18002/api/medical/health >/tmp/health.json; then break; fi
+            if ! docker inspect -f '{{.State.Running}}' "$CONTAINER" | grep -q true; then docker logs "$CONTAINER"; exit 1; fi
+            if [[ "$attempt" == 100 ]]; then docker logs "$CONTAINER"; exit 1; fi
+            sleep 2
+          done
+      - name: Render and verify eight module scenes
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker exec "$CONTAINER" python -m medical_engine.safety_contract
+          python scripts/medical-simulation/render-module-library.py \
+            --engine-key "$ENGINE_KEY" \
+            --output-dir module-library-output
+          test "$(find module-library-output -maxdepth 1 -name '*.mp4' | wc -l)" -eq 8
+          for video in module-library-output/*.mp4; do
+            docker exec -i "$CONTAINER" sh -c \
+              'cat > /tmp/module-scene.mp4 && ffprobe -v error -show_entries format=duration,size -of json /tmp/module-scene.mp4' \
+              < "$video"
+          done
+      - name: Upload rendered module library
+        uses: actions/upload-artifact@v4
+        with:
+          name: teys-arxivisual-module-library
+          path: module-library-output/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Logs on failure
+        if: failure()
+        run: docker logs "$CONTAINER" || true
+      - name: Cleanup
+        if: always()
+        run: docker rm -f "$CONTAINER" || true

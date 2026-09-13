@@ -8,3 +8,8 @@ dist
 npm-debug.log*
 test-results
 playwright-report
+services/**/.env
+services/medical-simulation-engine/.test-jobs
+services/medical-simulation-engine/.test-media
+__pycache__/
+*.pyc

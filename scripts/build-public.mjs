@@ -26,6 +26,14 @@ const files = [
   ["assets/illustrations/commission-review.webp", "assets/illustrations/commission-review.webp"],
   ["assets/illustrations/digital-wallet.webp", "assets/illustrations/digital-wallet.webp"],
   ["assets/illustrations/integration-gates.webp", "assets/illustrations/integration-gates.webp"],
+  ["assets/medical-simulation/arxivisual-stemi-preview.mp4", "medical-simulation/manim/med_seed_vf_rosc.mp4"],
+  ["assets/medical-simulation/manifest.json", "medical-simulation/manim/manifest.json"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-vf-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-atypical-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-atypical-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-atypical-vf-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-atypical-vf-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-delayed-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-delayed-v1.webp"],
+  ["assets/medical-simulation/v2/synthetic-stemi-patient-delayed-vf-v1.webp", "medical-simulation/v2/synthetic-stemi-patient-delayed-vf-v1.webp"],
 ];
 
 for (const [source, destination] of files) {
@@ -37,6 +45,11 @@ for (const [source, destination] of files) {
   } else {
     cpSync(source, target);
   }
+}
+
+const sceneLibrarySource = "assets/medical-simulation/scene-library";
+if (existsSync(sceneLibrarySource)) {
+  cpSync(sceneLibrarySource, `${output}/medical-simulation/manim`, { recursive: true });
 }
 
 console.log("Next.js public/ pilot paketi hazırlandı.");

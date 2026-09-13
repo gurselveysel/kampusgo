@@ -1,0 +1,270 @@
+[
+  {
+    "output_name": "module-01-virtual-patient.mp4",
+    "request": {
+      "scenario_id": "scn_module_01_assessment",
+      "scenario_version": "1.0.0",
+      "module_id": 1,
+      "learning_objective": "İlk bakı, vital değerlendirme ve güvenli hasta iletişimini sentetik bir ilk karşılaşmada görünür kılmak.",
+      "patient_state_before": {
+        "phase": "assessment", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "sinus",
+        "visible_signs": ["Soluk görünüm", "Terleme", "Takipne"], "active_interventions": []
+      },
+      "learner_action": {
+        "action_id": "vital-monitor", "label": "Vital bulguları ölç ve monitörizasyonu başlat",
+        "category": "assessment", "learner_justification": "Sentetik olguda başlangıç şiddetini ve sonraki yanıtı görünür kılmak.",
+        "time_cost_seconds": 120
+      },
+      "patient_state_after": {
+        "phase": "assessment", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "sinus",
+        "visible_signs": ["Hipotansiyon görünür", "Hipoksemi görünür", "Sürekli monitörizasyon"],
+        "active_interventions": ["Vital izlem", "Ritim monitörü"]
+      },
+      "clinical_rationale": "Bu sahne yeni klinik kural üretmez; onay bekleyen sentetik olay sözleşmesindeki gözlem ve monitörizasyon sonucunu gösterir.",
+      "critical_signal": "Hipotansiyon ve hipoksemi görünür hâle geldi; yeniden değerlendirme gerekiyor",
+      "debrief_question": "İlk karşılaşmada hangi görünür bulgu önceliğinizi en fazla etkiledi?",
+      "visual_focus": "patient_response", "voiceover_language": "tr", "duration_seconds": 24,
+      "safety_constraints": ["Yalnız sentetik hasta", "Yeni tanı veya doz üretme", "Klinik karar desteği olarak kullanma"],
+      "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-LIBRARY-01",
+      "source_references": [{"source_id": "TEYS synthetic scenario library", "source_version": "1.0.0", "locator": "module-01"}],
+      "rights_confirmed": true, "synthetic_patient_confirmed": true, "request_ai_generation": false
+    }
+  },
+  {
+    "output_name": "module-02-case-learning.mp4",
+    "request": {
+      "scenario_id": "scn_module_02_case_reveal",
+      "scenario_version": "1.0.0", "module_id": 2,
+      "learning_objective": "Olgu verisinin aşamalı açılımını ve yeni EKG bilgisinin sentetik karar bağlamına etkisini göstermek.",
+      "patient_state_before": {
+        "phase": "revealing", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "sinus",
+        "visible_signs": ["Göğüs ağrısı", "Terleme", "Soğuk perifer"], "active_interventions": ["Vital izlem"]
+      },
+      "learner_action": {
+        "action_id": "reveal-ecg", "label": "12 derivasyonlu EKG bilgisini aç",
+        "category": "diagnostic_test", "learner_justification": "Aşamalı olgu açılımında zaman kritik veriyi görünür kılmak.",
+        "time_cost_seconds": 180
+      },
+      "patient_state_after": {
+        "phase": "revealing", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "stemi",
+        "visible_signs": ["EKG verisi açıldı", "ST değişikliği görünür", "Risk önceliği güncellendi"],
+        "active_interventions": ["Vital izlem", "12 derivasyonlu EKG"]
+      },
+      "clinical_rationale": "Bu görselleştirme yalnız sentetik olay sözleşmesinde önceden tanımlanmış veri açılımını ve ritim etiketini gösterir.",
+      "critical_signal": "Yeni EKG verisi olgunun zaman kritik önceliğini değiştirdi",
+      "debrief_question": "Yeni veri açıldığında önceki varsayımınız nasıl değişti?",
+      "visual_focus": "monitor_transition", "voiceover_language": "tr", "duration_seconds": 24,
+      "safety_constraints": ["Yalnız sentetik hasta", "Yeni tanı üretme", "Olgu dışı veri ekleme"],
+      "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-LIBRARY-02",
+      "source_references": [{"source_id": "TEYS synthetic scenario library", "source_version": "1.0.0", "locator": "module-02"}],
+      "rights_confirmed": true, "synthetic_patient_confirmed": true, "request_ai_generation": false
+    }
+  },
+  {
+    "output_name": "module-03-clinical-reasoning.mp4",
+    "request": {
+      "scenario_id": "scn_module_03_reasoning", "scenario_version": "1.0.0", "module_id": 3,
+      "learning_objective": "Problem temsili, ayırt edici bulgu ve risk önceliği arasındaki düşünme izini sentetik olguda göstermek.",
+      "patient_state_before": {
+        "phase": "reasoning", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "stemi",
+        "visible_signs": ["Devam eden ağrı", "Hipotansiyon", "ST değişikliği"], "active_interventions": ["Monitörizasyon"]
+      },
+      "learner_action": {
+        "action_id": "problem-representation", "label": "Tek cümlelik problem temsili oluştur ve kırmızı bayrakları işaretle",
+        "category": "reasoning", "learner_justification": "Dağınık sentetik veriyi öncelikli ve yeniden değerlendirilebilir bir probleme dönüştürmek.",
+        "time_cost_seconds": 120
+      },
+      "patient_state_after": {
+        "phase": "reasoning", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "stemi",
+        "visible_signs": ["Problem temsili hazır", "Kırmızı bayraklar işaretli", "Öncelik görünür"],
+        "active_interventions": ["Monitörizasyon", "Düşünme izi kaydı"]
+      },
+      "clinical_rationale": "Sahne tanısal sonuç üretmez; yalnız önceden tanımlanmış sentetik bulguların yapılandırılmış düşünme izine dönüşümünü gösterir.",
+      "critical_signal": "Hemodinamik bozulma ayrı ve zaman kritik bir problem olarak görünür kaldı",
+      "debrief_question": "Problem temsilinizde hangi bulguyu neden yüksek ağırlıklı tuttunuz?",
+      "visual_focus": "clinical_reasoning", "voiceover_language": "tr", "duration_seconds": 24,
+      "safety_constraints": ["Yalnız sentetik hasta", "Tanısal kesinlik üretme", "Ayırıcı tanıyı kapatma"],
+      "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-LIBRARY-03",
+      "source_references": [{"source_id": "TEYS synthetic scenario library", "source_version": "1.0.0", "locator": "module-03"}],
+      "rights_confirmed": true, "synthetic_patient_confirmed": true, "request_ai_generation": false
+    }
+  },
+  {
+    "output_name": "module-04-diagnostics.mp4",
+    "request": {
+      "scenario_id": "scn_module_04_diagnostics", "scenario_version": "1.0.0", "module_id": 4,
+      "learning_objective": "Tetkik seçiminin zaman, bilgi değeri ve sentetik hasta akışı üzerindeki etkisini görselleştirmek.",
+      "patient_state_before": {
+        "phase": "diagnostics", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "stemi",
+        "visible_signs": ["Devam eden ağrı", "Monitörde ST değişikliği", "Zayıf perfüzyon"], "active_interventions": ["Monitörizasyon"]
+      },
+      "learner_action": {
+        "action_id": "test-ecg", "label": "12 derivasyonlu EKG'yi hemen çek ve zaman çizelgesine ekle",
+        "category": "diagnostic_test", "learner_justification": "Sentetik olguda yüksek bilgi değerli veriyi gecikmeden karar akışına eklemek.",
+        "time_cost_seconds": 180
+      },
+      "patient_state_after": {
+        "phase": "diagnostics", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "stemi",
+        "visible_signs": ["EKG zaman damgalı", "Kritik veri görünür", "Karar yolu açık"],
+        "active_interventions": ["Monitörizasyon", "12 derivasyonlu EKG"]
+      },
+      "clinical_rationale": "Bu sahne yalnız sentetik test seçiminin zaman çizelgesini ve önceden tanımlı veri görünürlüğünü değiştirir.",
+      "critical_signal": "Yüksek değerli test karar yolunu açtı; gereksiz gecikme izlenmelidir",
+      "debrief_question": "Seçtiğiniz testin karar değerini ve zaman maliyetini nasıl dengelediniz?",
+      "visual_focus": "procedure", "voiceover_language": "tr", "duration_seconds": 24,
+      "safety_constraints": ["Yalnız sentetik hasta", "Yeni test sonucu üretme", "Gerçek klinik istem oluşturma"],
+      "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-LIBRARY-04",
+      "source_references": [{"source_id": "TEYS synthetic scenario library", "source_version": "1.0.0", "locator": "module-04"}],
+      "rights_confirmed": true, "synthetic_patient_confirmed": true, "request_ai_generation": false
+    }
+  },
+  {
+    "output_name": "module-05-treatment.mp4",
+    "request": {
+      "scenario_id": "scn_module_05_treatment", "scenario_version": "1.0.0", "module_id": 5,
+      "learning_objective": "Önceden tanımlı sentetik müdahale sonrası vital yanıtı ve yeniden değerlendirme gereksinimini göstermek.",
+      "patient_state_before": {
+        "phase": "treatment", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 89,
+        "respiratory_rate": 24, "temperature_c": 36.7, "rhythm": "stemi",
+        "visible_signs": ["Hipoksemi", "Takipne", "Devam eden ağrı"], "active_interventions": ["Monitörizasyon"]
+      },
+      "learner_action": {
+        "action_id": "treat-oxygen", "label": "Sentetik hipoksemi için kontrollü oksijen başlat ve yeniden değerlendir",
+        "category": "medication", "learner_justification": "Sözleşmede tanımlı oksijenasyon yanıtını görünür kılmak ve sonucu yeniden değerlendirmek.",
+        "time_cost_seconds": 120
+      },
+      "patient_state_after": {
+        "phase": "treatment", "consciousness": "alert", "pain_score": 9,
+        "heart_rate": 108, "systolic_bp": 94, "diastolic_bp": 62, "spo2": 95,
+        "respiratory_rate": 21, "temperature_c": 36.7, "rhythm": "stemi",
+        "visible_signs": ["SpO₂ yükseldi", "Solunum sayısı azaldı", "Yakın izlem sürüyor"],
+        "active_interventions": ["Monitörizasyon", "Kontrollü oksijen", "Yeniden değerlendirme"]
+      },
+      "clinical_rationale": "Vital geçiş yalnız onay bekleyen sentetik olay sözleşmesinden gelir; sahne doz veya tedavi önerisi üretmez.",
+      "critical_signal": "Oksijenasyon yanıtı görünür ancak dolaşım riski ve ağrı yeniden değerlendirilmelidir",
+      "debrief_question": "Müdahale sonrası hangi sonucu ne zaman yeniden değerlendirdiniz?",
+      "visual_focus": "patient_response", "voiceover_language": "tr", "duration_seconds": 24,
+      "safety_constraints": ["Yalnız sentetik hasta", "Doz üretme", "Tedavi önerisi olarak sunma"],
+      "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-LIBRARY-05",
+      "source_references": [{"source_id": "TEYS synthetic scenario library", "source_version": "1.0.0", "locator": "module-05"}],
+      "rights_confirmed": true, "synthetic_patient_confirmed": true, "request_ai_generation": false
+    }
+  },
+  {
+    "output_name": "module-06-emergency.mp4",
+    "request": {
+      "scenario_id": "scn_module_06_vf_rosc", "scenario_version": "1.0.0", "module_id": 6,
+      "learning_objective": "Şoklanabilir sentetik ritimde CPR, güvenli defibrilasyon ve ROSC sonrası yeniden değerlendirme akışını göstermek.",
+      "patient_state_before": {
+        "phase": "vf", "consciousness": "unresponsive", "pain_score": 0,
+        "heart_rate": 0, "systolic_bp": 0, "diastolic_bp": 0, "spo2": 72,
+        "respiratory_rate": 0, "temperature_c": 36.7, "rhythm": "vf",
+        "visible_signs": ["Yanıtsız", "Normal solunum yok", "VF monitör ritmi"], "active_interventions": ["CPR"]
+      },
+      "learner_action": {
+        "action_id": "safe-defibrillation", "label": "CPR kesintisini en aza indirerek güvenli defibrilasyon uygula",
+        "category": "resuscitation", "learner_justification": "Önceden tanımlı sentetik VF olayında resüsitasyon akışını sürdürmek.",
+        "time_cost_seconds": 90
+      },
+      "patient_state_after": {
+        "phase": "rosc", "consciousness": "verbal", "pain_score": 0,
+        "heart_rate": 92, "systolic_bp": 106, "diastolic_bp": 68, "spo2": 96,
+        "respiratory_rate": 18, "temperature_c": 36.7, "rhythm": "rosc",
+        "visible_signs": ["Organize ritim", "Palpe edilebilir nabız", "Spontan solunum"],
+        "active_interventions": ["Post-ROSC izlem", "Oksijenasyon", "12 derivasyonlu EKG"]
+      },
+      "clinical_rationale": "VF'den ROSC'a geçiş yalnız sentetik olay sözleşmesinde önceden tanımlanmıştır; sahne klinik kural üretmez.",
+      "critical_signal": "VF ritminden organize ritme geçiş ve post-ROSC yeniden değerlendirme",
+      "debrief_question": "Şok öncesi ve sonrası hangi ekip davranışı kesintiyi en çok etkiledi?",
+      "visual_focus": "monitor_transition", "voiceover_language": "tr", "duration_seconds": 24,
+      "safety_constraints": ["Yalnız sentetik hasta", "Enerji veya ilaç dozu üretme", "Yerel protokol yerine geçme"],
+      "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-LIBRARY-06",
+      "source_references": [{"source_id": "TEYS synthetic scenario library", "source_version": "1.0.0", "locator": "module-06"}],
+      "rights_confirmed": true, "synthetic_patient_confirmed": true, "request_ai_generation": false
+    }
+  },
+  {
+    "output_name": "module-07-team-leadership.mp4",
+    "request": {
+      "scenario_id": "scn_module_07_team", "scenario_version": "1.0.0", "module_id": 7,
+      "learning_objective": "Rol dağılımı, kapalı döngü iletişim ve ekip durumunun sentetik kriz sahnesindeki etkisini göstermek.",
+      "patient_state_before": {
+        "phase": "team", "consciousness": "unresponsive", "pain_score": 0,
+        "heart_rate": 0, "systolic_bp": 0, "diastolic_bp": 0, "spo2": 76,
+        "respiratory_rate": 0, "temperature_c": 36.7, "rhythm": "vf",
+        "visible_signs": ["Ekip bekliyor", "Roller belirsiz", "VF monitör ritmi"], "active_interventions": ["CPR"]
+      },
+      "learner_action": {
+        "action_id": "team-closed-loop", "label": "Kritik görevleri isimle ata ve kapalı döngü iletişimi uygula",
+        "category": "team_management", "learner_justification": "Sentetik ekip akışında rol ve komut durumunu görünür ve izlenebilir kılmak.",
+        "time_cost_seconds": 60
+      },
+      "patient_state_after": {
+        "phase": "team", "consciousness": "unresponsive", "pain_score": 0,
+        "heart_rate": 0, "systolic_bp": 0, "diastolic_bp": 0, "spo2": 76,
+        "respiratory_rate": 0, "temperature_c": 36.7, "rhythm": "vf",
+        "visible_signs": ["Lider görünür", "Görevler atanmış", "Komutlar geri okunmuş"],
+        "active_interventions": ["CPR", "Defibrilatör hazırlığı", "Kapalı döngü iletişim"]
+      },
+      "clinical_rationale": "Sahne yalnız sentetik ekip sözleşmesindeki rol ve iletişim durumunu görselleştirir; klinik eylem üretmez.",
+      "critical_signal": "Kritik görevlerin sahibi ve tamamlanma durumu ekip tarafından görünür biçimde doğrulandı",
+      "debrief_question": "Hangi komutun geri okunması ekip koordinasyonunu en fazla değiştirdi?",
+      "visual_focus": "team_management", "voiceover_language": "tr", "duration_seconds": 24,
+      "safety_constraints": ["Yalnız sentetik ekip", "Yeni klinik komut üretme", "Gerçek çağrı veya bildirim gönderme"],
+      "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-LIBRARY-07",
+      "source_references": [{"source_id": "TEYS synthetic scenario library", "source_version": "1.0.0", "locator": "module-07"}],
+      "rights_confirmed": true, "synthetic_patient_confirmed": true, "request_ai_generation": false
+    }
+  },
+  {
+    "output_name": "module-08-integrated.mp4",
+    "request": {
+      "scenario_id": "scn_module_08_integrated", "scenario_version": "1.0.0", "module_id": 8,
+      "learning_objective": "İlk değerlendirmeden dinamik kötüleşme, resüsitasyon ve güvenli devir teslime uzanan sentetik bütünleşik akışı göstermek.",
+      "patient_state_before": {
+        "phase": "vf", "consciousness": "unresponsive", "pain_score": 0,
+        "heart_rate": 0, "systolic_bp": 0, "diastolic_bp": 0, "spo2": 72,
+        "respiratory_rate": 0, "temperature_c": 36.7, "rhythm": "vf",
+        "visible_signs": ["Dinamik kötüleşme", "Yanıtsızlık", "VF monitör ritmi"],
+        "active_interventions": ["Kod çağrısı", "CPR", "Ekip görev dağılımı"]
+      },
+      "learner_action": {
+        "action_id": "integrated-defib", "label": "Kapalı döngü komutla erken defibrilasyon uygula ve ROSC sonrası devri başlat",
+        "category": "resuscitation", "learner_justification": "Önceden tanımlı bütünleşik sentetik olayın faz geçişini ve ekip akışını tamamlamak.",
+        "time_cost_seconds": 120
+      },
+      "patient_state_after": {
+        "phase": "integrated", "consciousness": "verbal", "pain_score": 0,
+        "heart_rate": 92, "systolic_bp": 106, "diastolic_bp": 68, "spo2": 96,
+        "respiratory_rate": 18, "temperature_c": 36.7, "rhythm": "rosc",
+        "visible_signs": ["Organize ritim", "ROSC sonrası ABCDE", "Yapılandırılmış devir"],
+        "active_interventions": ["Post-ROSC izlem", "12 derivasyonlu EKG", "SBAR devir teslimi"]
+      },
+      "clinical_rationale": "Bütünleşik faz geçişi yalnız sentetik olay sözleşmesinde tanımlıdır; sahne gerçek hasta kararı veya yeni kural üretmez.",
+      "critical_signal": "Dolaşım geri döndü; yeniden değerlendirme ve yapılandırılmış bakım devri yeni fazı başlattı",
+      "debrief_question": "Bütünleşik akışta hangi yeniden değerlendirme sonraki görevi değiştirdi?",
+      "visual_focus": "debrief", "voiceover_language": "tr", "duration_seconds": 24,
+      "safety_constraints": ["Yalnız sentetik hasta", "Yeni doz veya klinik kural üretme", "Gerçek devir işlemi yapma"],
+      "expert_approval_reference": "DOĞRULANMADI-SYNTHETIC-LIBRARY-08",
+      "source_references": [{"source_id": "TEYS synthetic scenario library", "source_version": "1.0.0", "locator": "module-08"}],
+      "rights_confirmed": true, "synthetic_patient_confirmed": true, "request_ai_generation": false
+    }
+  }
+]

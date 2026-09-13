@@ -1,0 +1,578 @@
+{
+  "engine": "arXivisual + TEYS clinical safety runtime",
+  "engine_mode": "arxivisual-template",
+  "generated_at": "2026-08-26T19:54:11.487877+00:00",
+  "scene_count": 8,
+  "expert_approval": "DOĞRULANMADI",
+  "production_allowed": false,
+  "scenes": [
+    {
+      "module_id": 1,
+      "scenario_id": "scn_module_01_assessment",
+      "video": "/medical-simulation/manim/module-01-virtual-patient.mp4",
+      "bytes": 338177,
+      "sha256": "f3a5a4302a6dad3eed1ba79f0ca847f5a5ef04883b6351ae45e80f8714961093",
+      "scene_class_name": "TEYSMedicalScene1",
+      "engine_mode": "arxivisual-template",
+      "storyboard": [
+        {
+          "order": 1,
+          "duration_seconds": 5,
+          "description": "Sentetik hasta durumu ve karar noktası",
+          "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+        },
+        {
+          "order": 2,
+          "duration_seconds": 6,
+          "description": "Öğrenci eylemi: Vital bulguları ölç ve monitörizasyonu başlat",
+          "narration": "Bu sahne yeni klinik kural üretmez; onay bekleyen sentetik olay sözleşmesindeki gözlem ve monitörizasyon sonucunu gösterir."
+        },
+        {
+          "order": 3,
+          "duration_seconds": 8,
+          "description": "Vital geçiş: HR 108→108, SpO₂ 89→89, TA 94/62→94/62",
+          "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+        },
+        {
+          "order": 4,
+          "duration_seconds": 6,
+          "description": "Kritik sinyal: Hipotansiyon ve hipoksemi görünür hâle geldi; yeniden değerlendirme gerekiyor",
+          "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+        },
+        {
+          "order": 5,
+          "duration_seconds": 5,
+          "description": "Debrief sorusu: İlk karşılaşmada hangi görünür bulgu önceliğinizi en fazla etkiledi?",
+          "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+        }
+      ],
+      "validation": {
+        "code_validator": {
+          "is_valid": true,
+          "issues_found": [],
+          "issues_fixed": [],
+          "needs_regeneration": false,
+          "code_length": 7102,
+          "code_sha256": "211f1f4c0975a1265571a991f46e1dfd7283dae98e682e736bf2dd3ceca752e1",
+          "result_type": "ValidatorOutput"
+        },
+        "spatial_validator": {
+          "has_spatial_issues": false,
+          "out_of_bounds": [],
+          "potential_overlaps": [],
+          "spacing_issues": [],
+          "suggestions": [],
+          "needs_regeneration": false,
+          "result_type": "SpatialValidatorOutput"
+        },
+        "render_tester": {
+          "success": true,
+          "error_type": null,
+          "error_message": null,
+          "line_number": null,
+          "fix_suggestion": null,
+          "result_type": "RenderTestOutput"
+        }
+      },
+      "expert_approval": "DOĞRULANMADI-SYNTHETIC-LIBRARY-01",
+      "production_allowed": false
+    },
+    {
+      "module_id": 2,
+      "scenario_id": "scn_module_02_case_reveal",
+      "video": "/medical-simulation/manim/module-02-case-learning.mp4",
+      "bytes": 350592,
+      "sha256": "8bd172f15a06aebf8b01dbbbd0569d7f7476a4199999e29354ad13d970e752b2",
+      "scene_class_name": "TEYSMedicalScene2",
+      "engine_mode": "arxivisual-template",
+      "storyboard": [
+        {
+          "order": 1,
+          "duration_seconds": 5,
+          "description": "Sentetik hasta durumu ve karar noktası",
+          "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+        },
+        {
+          "order": 2,
+          "duration_seconds": 6,
+          "description": "Öğrenci eylemi: 12 derivasyonlu EKG bilgisini aç",
+          "narration": "Bu görselleştirme yalnız sentetik olay sözleşmesinde önceden tanımlanmış veri açılımını ve ritim etiketini gösterir."
+        },
+        {
+          "order": 3,
+          "duration_seconds": 8,
+          "description": "Vital geçiş: HR 108→108, SpO₂ 89→89, TA 94/62→94/62",
+          "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+        },
+        {
+          "order": 4,
+          "duration_seconds": 6,
+          "description": "Kritik sinyal: Yeni EKG verisi olgunun zaman kritik önceliğini değiştirdi",
+          "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+        },
+        {
+          "order": 5,
+          "duration_seconds": 5,
+          "description": "Debrief sorusu: Yeni veri açıldığında önceki varsayımınız nasıl değişti?",
+          "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+        }
+      ],
+      "validation": {
+        "code_validator": {
+          "is_valid": true,
+          "issues_found": [],
+          "issues_fixed": [],
+          "needs_regeneration": false,
+          "code_length": 7077,
+          "code_sha256": "3ee916ff8b82bf062a247eca8672a6df761051c18b4156f923de2ab48855f6b1",
+          "result_type": "ValidatorOutput"
+        },
+        "spatial_validator": {
+          "has_spatial_issues": false,
+          "out_of_bounds": [],
+          "potential_overlaps": [],
+          "spacing_issues": [],
+          "suggestions": [],
+          "needs_regeneration": false,
+          "result_type": "SpatialValidatorOutput"
+        },
+        "render_tester": {
+          "success": true,
+          "error_type": null,
+          "error_message": null,
+          "line_number": null,
+          "fix_suggestion": null,
+          "result_type": "RenderTestOutput"
+        }
+      },
+      "expert_approval": "DOĞRULANMADI-SYNTHETIC-LIBRARY-02",
+      "production_allowed": false
+    },
+    {
+      "module_id": 3,
+      "scenario_id": "scn_module_03_reasoning",
+      "video": "/medical-simulation/manim/module-03-clinical-reasoning.mp4",
+      "bytes": 355098,
+      "sha256": "e16d29e60a2291d33cc2ffb98f46f54b73706e98e2d332b18adbb1d0c848ff98",
+      "scene_class_name": "TEYSMedicalScene3",
+      "engine_mode": "arxivisual-template",
+      "storyboard": [
+        {
+          "order": 1,
+          "duration_seconds": 5,
+          "description": "Sentetik hasta durumu ve karar noktası",
+          "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+        },
+        {
+          "order": 2,
+          "duration_seconds": 6,
+          "description": "Öğrenci eylemi: Tek cümlelik problem temsili oluştur ve kırmızı bayrakları işaretle",
+          "narration": "Sahne tanısal sonuç üretmez; yalnız önceden tanımlanmış sentetik bulguların yapılandırılmış düşünme izine dönüşümünü gösterir."
+        },
+        {
+          "order": 3,
+          "duration_seconds": 8,
+          "description": "Vital geçiş: HR 108→108, SpO₂ 89→89, TA 94/62→94/62",
+          "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+        },
+        {
+          "order": 4,
+          "duration_seconds": 6,
+          "description": "Kritik sinyal: Hemodinamik bozulma ayrı ve zaman kritik bir problem olarak görünür kaldı",
+          "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+        },
+        {
+          "order": 5,
+          "duration_seconds": 5,
+          "description": "Debrief sorusu: Problem temsilinizde hangi bulguyu neden yüksek ağırlıklı tuttunuz?",
+          "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+        }
+      ],
+      "validation": {
+        "code_validator": {
+          "is_valid": true,
+          "issues_found": [],
+          "issues_fixed": [],
+          "needs_regeneration": false,
+          "code_length": 7138,
+          "code_sha256": "e1467acd483983be91a6c4f078d5f95d05aad441efeed4a4b072b5fb2e660142",
+          "result_type": "ValidatorOutput"
+        },
+        "spatial_validator": {
+          "has_spatial_issues": false,
+          "out_of_bounds": [],
+          "potential_overlaps": [],
+          "spacing_issues": [],
+          "suggestions": [],
+          "needs_regeneration": false,
+          "result_type": "SpatialValidatorOutput"
+        },
+        "render_tester": {
+          "success": true,
+          "error_type": null,
+          "error_message": null,
+          "line_number": null,
+          "fix_suggestion": null,
+          "result_type": "RenderTestOutput"
+        }
+      },
+      "expert_approval": "DOĞRULANMADI-SYNTHETIC-LIBRARY-03",
+      "production_allowed": false
+    },
+    {
+      "module_id": 4,
+      "scenario_id": "scn_module_04_diagnostics",
+      "video": "/medical-simulation/manim/module-04-diagnostics.mp4",
+      "bytes": 345772,
+      "sha256": "144859950cda7b567db8f692d18621fe087748ede2238bf8a3333aeecb2eb494",
+      "scene_class_name": "TEYSMedicalScene4",
+      "engine_mode": "arxivisual-template",
+      "storyboard": [
+        {
+          "order": 1,
+          "duration_seconds": 5,
+          "description": "Sentetik hasta durumu ve karar noktası",
+          "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+        },
+        {
+          "order": 2,
+          "duration_seconds": 6,
+          "description": "Öğrenci eylemi: 12 derivasyonlu EKG'yi hemen çek ve zaman çizelgesine ekle",
+          "narration": "Bu sahne yalnız sentetik test seçiminin zaman çizelgesini ve önceden tanımlı veri görünürlüğünü değiştirir."
+        },
+        {
+          "order": 3,
+          "duration_seconds": 8,
+          "description": "Vital geçiş: HR 108→108, SpO₂ 89→89, TA 94/62→94/62",
+          "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+        },
+        {
+          "order": 4,
+          "duration_seconds": 6,
+          "description": "Kritik sinyal: Yüksek değerli test karar yolunu açtı; gereksiz gecikme izlenmelidir",
+          "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+        },
+        {
+          "order": 5,
+          "duration_seconds": 5,
+          "description": "Debrief sorusu: Seçtiğiniz testin karar değerini ve zaman maliyetini nasıl dengelediniz?",
+          "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+        }
+      ],
+      "validation": {
+        "code_validator": {
+          "is_valid": true,
+          "issues_found": [],
+          "issues_fixed": [],
+          "needs_regeneration": false,
+          "code_length": 7133,
+          "code_sha256": "9b3d776f3852acefb0c5f95ff93fd15fddb6cd51cf42619565127e9d25fa5f92",
+          "result_type": "ValidatorOutput"
+        },
+        "spatial_validator": {
+          "has_spatial_issues": false,
+          "out_of_bounds": [],
+          "potential_overlaps": [],
+          "spacing_issues": [],
+          "suggestions": [],
+          "needs_regeneration": false,
+          "result_type": "SpatialValidatorOutput"
+        },
+        "render_tester": {
+          "success": true,
+          "error_type": null,
+          "error_message": null,
+          "line_number": null,
+          "fix_suggestion": null,
+          "result_type": "RenderTestOutput"
+        }
+      },
+      "expert_approval": "DOĞRULANMADI-SYNTHETIC-LIBRARY-04",
+      "production_allowed": false
+    },
+    {
+      "module_id": 5,
+      "scenario_id": "scn_module_05_treatment",
+      "video": "/medical-simulation/manim/module-05-treatment.mp4",
+      "bytes": 361025,
+      "sha256": "42c7fc5af54af284ae745e9cfc6f3f20ed6ec4f32e1bc745de4d5debd1aefe80",
+      "scene_class_name": "TEYSMedicalScene5",
+      "engine_mode": "arxivisual-template",
+      "storyboard": [
+        {
+          "order": 1,
+          "duration_seconds": 5,
+          "description": "Sentetik hasta durumu ve karar noktası",
+          "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+        },
+        {
+          "order": 2,
+          "duration_seconds": 6,
+          "description": "Öğrenci eylemi: Sentetik hipoksemi için kontrollü oksijen başlat ve yeniden değerlendir",
+          "narration": "Vital geçiş yalnız onay bekleyen sentetik olay sözleşmesinden gelir; sahne doz veya tedavi önerisi üretmez."
+        },
+        {
+          "order": 3,
+          "duration_seconds": 8,
+          "description": "Vital geçiş: HR 108→108, SpO₂ 89→95, TA 94/62→94/62",
+          "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+        },
+        {
+          "order": 4,
+          "duration_seconds": 6,
+          "description": "Kritik sinyal: Oksijenasyon yanıtı görünür ancak dolaşım riski ve ağrı yeniden değerlendirilmelidir",
+          "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+        },
+        {
+          "order": 5,
+          "duration_seconds": 5,
+          "description": "Debrief sorusu: Müdahale sonrası hangi sonucu ne zaman yeniden değerlendirdiniz?",
+          "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+        }
+      ],
+      "validation": {
+        "code_validator": {
+          "is_valid": true,
+          "issues_found": [],
+          "issues_fixed": [],
+          "needs_regeneration": false,
+          "code_length": 7137,
+          "code_sha256": "174c5ecf1e924100d370f42b1da14594645009354e4926664609fd023a1fefe9",
+          "result_type": "ValidatorOutput"
+        },
+        "spatial_validator": {
+          "has_spatial_issues": false,
+          "out_of_bounds": [],
+          "potential_overlaps": [],
+          "spacing_issues": [],
+          "suggestions": [],
+          "needs_regeneration": false,
+          "result_type": "SpatialValidatorOutput"
+        },
+        "render_tester": {
+          "success": true,
+          "error_type": null,
+          "error_message": null,
+          "line_number": null,
+          "fix_suggestion": null,
+          "result_type": "RenderTestOutput"
+        }
+      },
+      "expert_approval": "DOĞRULANMADI-SYNTHETIC-LIBRARY-05",
+      "production_allowed": false
+    },
+    {
+      "module_id": 6,
+      "scenario_id": "scn_module_06_vf_rosc",
+      "video": "/medical-simulation/manim/module-06-emergency.mp4",
+      "bytes": 368690,
+      "sha256": "efc24effc327a281bae1507f53856a527112a335842dac969c4cbaefdc519ea9",
+      "scene_class_name": "TEYSMedicalScene6",
+      "engine_mode": "arxivisual-template",
+      "storyboard": [
+        {
+          "order": 1,
+          "duration_seconds": 5,
+          "description": "Sentetik hasta durumu ve karar noktası",
+          "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+        },
+        {
+          "order": 2,
+          "duration_seconds": 6,
+          "description": "Öğrenci eylemi: CPR kesintisini en aza indirerek güvenli defibrilasyon uygula",
+          "narration": "VF'den ROSC'a geçiş yalnız sentetik olay sözleşmesinde önceden tanımlanmıştır; sahne klinik kural üretmez."
+        },
+        {
+          "order": 3,
+          "duration_seconds": 8,
+          "description": "Vital geçiş: HR 0→92, SpO₂ 72→96, TA 0/0→106/68",
+          "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+        },
+        {
+          "order": 4,
+          "duration_seconds": 6,
+          "description": "Kritik sinyal: VF ritminden organize ritme geçiş ve post-ROSC yeniden değerlendirme",
+          "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+        },
+        {
+          "order": 5,
+          "duration_seconds": 5,
+          "description": "Debrief sorusu: Şok öncesi ve sonrası hangi ekip davranışı kesintiyi en çok etkiledi?",
+          "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+        }
+      ],
+      "validation": {
+        "code_validator": {
+          "is_valid": true,
+          "issues_found": [],
+          "issues_fixed": [],
+          "needs_regeneration": false,
+          "code_length": 7127,
+          "code_sha256": "ac41a7aca9f48b4d9a003ac2d4a7c18fd0d361f8a792e0faa863382d19b7314e",
+          "result_type": "ValidatorOutput"
+        },
+        "spatial_validator": {
+          "has_spatial_issues": false,
+          "out_of_bounds": [],
+          "potential_overlaps": [],
+          "spacing_issues": [],
+          "suggestions": [],
+          "needs_regeneration": false,
+          "result_type": "SpatialValidatorOutput"
+        },
+        "render_tester": {
+          "success": true,
+          "error_type": null,
+          "error_message": null,
+          "line_number": null,
+          "fix_suggestion": null,
+          "result_type": "RenderTestOutput"
+        }
+      },
+      "expert_approval": "DOĞRULANMADI-SYNTHETIC-LIBRARY-06",
+      "production_allowed": false
+    },
+    {
+      "module_id": 7,
+      "scenario_id": "scn_module_07_team",
+      "video": "/medical-simulation/manim/module-07-team-leadership.mp4",
+      "bytes": 362309,
+      "sha256": "bf73eaa2a67cf729c90f3402d1e5828979c4bb4a954de67e23ba1eebd7f32181",
+      "scene_class_name": "TEYSMedicalScene7",
+      "engine_mode": "arxivisual-template",
+      "storyboard": [
+        {
+          "order": 1,
+          "duration_seconds": 5,
+          "description": "Sentetik hasta durumu ve karar noktası",
+          "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+        },
+        {
+          "order": 2,
+          "duration_seconds": 6,
+          "description": "Öğrenci eylemi: Kritik görevleri isimle ata ve kapalı döngü iletişimi uygula",
+          "narration": "Sahne yalnız sentetik ekip sözleşmesindeki rol ve iletişim durumunu görselleştirir; klinik eylem üretmez."
+        },
+        {
+          "order": 3,
+          "duration_seconds": 8,
+          "description": "Vital geçiş: HR 0→0, SpO₂ 76→76, TA 0/0→0/0",
+          "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+        },
+        {
+          "order": 4,
+          "duration_seconds": 6,
+          "description": "Kritik sinyal: Kritik görevlerin sahibi ve tamamlanma durumu ekip tarafından görünür biçimde doğrulandı",
+          "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+        },
+        {
+          "order": 5,
+          "duration_seconds": 5,
+          "description": "Debrief sorusu: Hangi komutun geri okunması ekip koordinasyonunu en fazla değiştirdi?",
+          "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+        }
+      ],
+      "validation": {
+        "code_validator": {
+          "is_valid": true,
+          "issues_found": [],
+          "issues_fixed": [],
+          "needs_regeneration": false,
+          "code_length": 7146,
+          "code_sha256": "af50d8edeb88162e074ab259a258feda9fb8b7f8ccc5feba3a4c7cb2a6e51447",
+          "result_type": "ValidatorOutput"
+        },
+        "spatial_validator": {
+          "has_spatial_issues": false,
+          "out_of_bounds": [],
+          "potential_overlaps": [],
+          "spacing_issues": [],
+          "suggestions": [],
+          "needs_regeneration": false,
+          "result_type": "SpatialValidatorOutput"
+        },
+        "render_tester": {
+          "success": true,
+          "error_type": null,
+          "error_message": null,
+          "line_number": null,
+          "fix_suggestion": null,
+          "result_type": "RenderTestOutput"
+        }
+      },
+      "expert_approval": "DOĞRULANMADI-SYNTHETIC-LIBRARY-07",
+      "production_allowed": false
+    },
+    {
+      "module_id": 8,
+      "scenario_id": "scn_module_08_integrated",
+      "video": "/medical-simulation/manim/module-08-integrated.mp4",
+      "bytes": 379749,
+      "sha256": "f5f5121f867a4a21327bcdde376a88f1add9b3aa24145690be6960c15cc6599c",
+      "scene_class_name": "TEYSMedicalScene8",
+      "engine_mode": "arxivisual-template",
+      "storyboard": [
+        {
+          "order": 1,
+          "duration_seconds": 5,
+          "description": "Sentetik hasta durumu ve karar noktası",
+          "narration": "Öğrenci, klinik durumun başlangıç bulgularını gözlemler."
+        },
+        {
+          "order": 2,
+          "duration_seconds": 6,
+          "description": "Öğrenci eylemi: Kapalı döngü komutla erken defibrilasyon uygula ve ROSC sonrası devri başlat",
+          "narration": "Bütünleşik faz geçişi yalnız sentetik olay sözleşmesinde tanımlıdır; sahne gerçek hasta kararı veya yeni kural üretmez."
+        },
+        {
+          "order": 3,
+          "duration_seconds": 8,
+          "description": "Vital geçiş: HR 0→92, SpO₂ 72→96, TA 0/0→106/68",
+          "narration": "Onaylanmış olay sözleşmesindeki fizyolojik sonuç görünür hâle gelir."
+        },
+        {
+          "order": 4,
+          "duration_seconds": 6,
+          "description": "Kritik sinyal: Dolaşım geri döndü; yeniden değerlendirme ve yapılandırılmış bakım devri yeni fazı başlattı",
+          "narration": "Kritik veri, öğrencinin yeniden değerlendirmesi için vurgulanır."
+        },
+        {
+          "order": 5,
+          "duration_seconds": 5,
+          "description": "Debrief sorusu: Bütünleşik akışta hangi yeniden değerlendirme sonraki görevi değiştirdi?",
+          "narration": "Sahne, yansıtıcı debriefing sorusuyla kapanır."
+        }
+      ],
+      "validation": {
+        "code_validator": {
+          "is_valid": true,
+          "issues_found": [],
+          "issues_fixed": [],
+          "needs_regeneration": false,
+          "code_length": 7160,
+          "code_sha256": "f8cf395940908c9b96e27957cbafa3d91b54dae04ff6538da81984b4ebf1ec47",
+          "result_type": "ValidatorOutput"
+        },
+        "spatial_validator": {
+          "has_spatial_issues": false,
+          "out_of_bounds": [],
+          "potential_overlaps": [],
+          "spacing_issues": [],
+          "suggestions": [],
+          "needs_regeneration": false,
+          "result_type": "SpatialValidatorOutput"
+        },
+        "render_tester": {
+          "success": true,
+          "error_type": null,
+          "error_message": null,
+          "line_number": null,
+          "fix_suggestion": null,
+          "result_type": "RenderTestOutput"
+        }
+      },
+      "expert_approval": "DOĞRULANMADI-SYNTHETIC-LIBRARY-08",
+      "production_allowed": false
+    }
+  ]
+}
