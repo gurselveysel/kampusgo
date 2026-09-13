@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { pathToFileURL } = require("node:url");
 const { spawn } = require("node:child_process");
 const playwrightModule = process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES
   ? path.join(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES, "playwright")
@@ -1121,8 +1122,8 @@ async function verifyDirectiveGovernanceActions(page, errors) {
 
 (async () => {
   fs.mkdirSync("test-results", { recursive: true });
-  const { initialState, roles, roleNavigation } = await import(path.join(process.cwd(), "src/data.js"));
-  const { scenarioDefinitions } = await import(path.join(process.cwd(), "src/workflow.js"));
+  const { initialState, roles, roleNavigation } = await import(pathToFileURL(path.join(process.cwd(), "src/data.js")).href);
+  const { scenarioDefinitions } = await import(pathToFileURL(path.join(process.cwd(), "src/workflow.js")).href);
   let server = null;
   let browser = null;
   const results = [];
