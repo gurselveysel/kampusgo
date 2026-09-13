@@ -4,6 +4,18 @@ Kütahya Dumlupınar Üniversitesi için hazırlanan MYYS; gerçek HTML/CSS/Java
 
 > **KONTROLLÜ PİLOT — Bu ortam gerçek kurumsal sistemlere bağlı değildir ve gerçek veri göndermez.**
 
+## Hesaplı çok-kurum Preview'ı
+
+7 Eylül 2026 tarihli feature çalışması, mevcut açık DPÜ v15 demosunu değiştirmeden ortak KampüsGO girişini ve üyelik/rol denetimli çalışma alanlarını ekler:
+
+- `/giris`: kullanıcı adı + parola ile ortak pilot girişi
+- `/kurum-sec`: yalnız birden fazla aktif üyeliği/rolü bulunan hesaplar için seçim
+- `/u/dpu`: hesaplı DPÜ çalışma alanı
+- `/u/gazi`: Gazi Üniversitesi'ne özgü hesaplı çalışma alanı
+- `/pilot.html`: eski açık DPÜ v15 demosu; kaynak dosya hash'leri sözleşme testiyle sabit tutulur
+
+Yeni yollar Supabase Auth, sunucu aracılı iptal edilebilir opaque oturum, aktif kurum üyeliği, atanmış rol ve işlem kapsamını birlikte doğrular. Yeni hesaplı kayıtlar RLS + FORCE RLS korumalı Supabase tablolarındadır; eski `kdpu-myys-pilot-v4` tarayıcı kaydına dokunulmaz ve o kayıtlar yeni hesaplara sahiplenilmez. Ayrıntılar için [hesaplı pilot teslim ve güvenlik notu](docs/accounted-pilot-delivery.md) belgesine bakın.
+
 ## Güncel pilot kapsamı
 
 - Dokuz rol için gerçekten değişen rol özeti, navigasyon, görünür veri ve işlem yetkileri
@@ -108,7 +120,8 @@ DPÜ otomasyon araştırması da kamuya açık resmî sayfaların kaynak iziyle 
 Uygulama iki katman kullanır:
 
 1. Supabase, RLS + FORCE RLS ile resmî referansları ve sentetik pilot başlangıç görünümünü sunacak şekilde modellenmiştir. Anonim istemci yalnız iki kamu kaynak tablosunun iki `security_invoker` görünümünü okur; korumalı görünümleri çağırmaz ve hiçbir tabloya yazamaz. Kimliği doğrulanmış kapsamlı okumalar JWT rol/birim/karar kapsamına bağlıdır.
-2. Preview'daki kullanıcı işlemleri sürümlü `localStorage` çalışma alanında kalır. Başvuru, ödeme, matris ve karar durumları bu izole pilot katmanda gerçekten güncellenir; dış servise gönderilmez.
+2. Açık DPÜ v15 demosundaki işlemler sürümlü `kdpu-myys-pilot-v4` `localStorage` çalışma alanında kalır. Bu açık demo verileri hesaplı pilotun yetki veya sahiplik kaynağı değildir.
+3. Yeni `/u/dpu` ve `/u/gazi` yollarındaki paylaşılan başvuru, karar ve dry-run işlemleri kullanıcı JWT'siyle RLS kapsamından okunur; yazmalar dar komut RPC'sinde aktif üyelik + rol + karar kapsamı denetimiyle Supabase'e kaydedilir.
 
 Migration dosyaları:
 
@@ -141,7 +154,7 @@ npm install
 npm run dev
 ```
 
-Ardından `http://localhost:3000` adresini açın. Next.js App Router kök rotası `/pilot.html` rotasına yönlendirir. Bağımlılıksız statik geliştirme sunucusu `npm run dev:static` ile `http://localhost:4173` üzerinde açılabilir.
+Ardından `http://localhost:3000` adresini açın. Next.js App Router kök rotası `/giris` rotasına yönlendirir; korunan açık demo `/pilot.html` yolundadır. Bağımlılıksız statik geliştirme sunucusu yalnız eski açık demo için `npm run dev:static` ile `http://localhost:4173` üzerinde açılabilir.
 
 ```bash
 npm run build

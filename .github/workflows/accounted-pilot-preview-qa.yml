@@ -1,0 +1,72 @@
+name: Accounted pilot Preview QA
+
+on:
+  workflow_dispatch:
+    inputs:
+      qa_base_url:
+        description: "Ayrı Vercel Preview kök URL'si (https://...vercel.app)"
+        required: true
+        type: string
+      expected_commit:
+        description: "Preview ile eşleşmesi gereken tam commit SHA"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: accounted-pilot-preview-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview-qa:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.0-noble
+    timeout-minutes: 30
+    env:
+      QA_BASE_URL: ${{ inputs.qa_base_url }}
+      PILOT_QA_CREDENTIALS_JSON: ${{ secrets.PILOT_QA_CREDENTIALS_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install matching Playwright package
+        run: npm install --no-save --package-lock=false playwright@1.58.0
+      - name: Validate exact Preview target and commit
+        shell: bash
+        run: |
+          case "$QA_BASE_URL" in
+            https://*.vercel.app) ;;
+            *) echo "qa_base_url ayrı bir vercel.app Preview olmalı" >&2; exit 1 ;;
+          esac
+          curl --fail --silent --show-error "$QA_BASE_URL/api/build-info" > "$RUNNER_TEMP/build-info.json"
+          jq -e --arg commit "${{ inputs.expected_commit }}" --arg project "prj_yTNVgAcAkINcD485xB3LYEPZ6PsW" \
+            '.commitSha == $commit and .projectId == $project and .environment == "preview"' \
+            "$RUNNER_TEMP/build-info.json" >/dev/null
+      - name: Run preserved DPÜ v15 browser matrix against this Preview
+        env:
+          QA_BASE_URL: ${{ inputs.qa_base_url }}/pilot.html
+        run: npm run test:browser
+      - name: Prepare private pilot account matrix
+        shell: bash
+        run: |
+          test -n "$PILOT_QA_CREDENTIALS_JSON" || { echo "PILOT_QA_CREDENTIALS_JSON secret gerekli" >&2; exit 1; }
+          umask 077
+          printf '%s' "$PILOT_QA_CREDENTIALS_JSON" > "$RUNNER_TEMP/pilot-credentials.json"
+          jq -e '.ok == true and (.credentials | length) >= 21' "$RUNNER_TEMP/pilot-credentials.json" >/dev/null
+      - name: Run account, institution and tab-isolation browser QA
+        env:
+          PILOT_CREDENTIALS_FILE: ${{ runner.temp }}/pilot-credentials.json
+        run: npm run test:browser:accounted
+      - name: Upload credential-free QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accounted-pilot-preview-qa-${{ inputs.expected_commit }}
+          path: test-results/
+          if-no-files-found: warn

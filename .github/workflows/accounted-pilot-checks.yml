@@ -1,0 +1,38 @@
+name: Accounted pilot source checks
+
+on:
+  push:
+    branches: [feature/multi-university-entry-gazi]
+  pull_request:
+    paths:
+      - app/**
+      - lib/pilot/**
+      - supabase/**
+      - scripts/**
+      - proxy.ts
+      - next.config.*
+      - package*.json
+      - .github/workflows/accounted-pilot-*.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: accounted-pilot-source-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
