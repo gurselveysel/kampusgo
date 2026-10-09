@@ -45,7 +45,7 @@ export function roi(input) {
 export function procurement({amount,vat,metro,type,date}) {
   finite(amount,0,100000000,'KDV hariç toplam');finite(vat,0,100,'KDV oranı');
   if(!['public','foundation'].includes(type))throw Error('Kurum türü geçersiz.');
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date)))throw Error('Geçerli bir tarih girin.');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date))||new Date(date).toISOString().slice(0,10)!==date)throw Error('Geçerli bir tarih girin.');
   const valid=date>='2026-02-01'&&date<='2027-01-31',limit=metro?1021827:340391;
   return {gross:round(amount*(1+vat/100)),limit,difference:round(limit-amount),valid,comparable:valid&&type==='public',within:valid&&type==='public'&&amount<=limit};
 }
@@ -97,6 +97,14 @@ export async function inspectBytes(bytes,name) {
   let result={status:'unverified',label:'İhraççı teyidi gerekli; dosya özgünlüğü belirlenmedi',trusted:false};
   if(/\.json$/i.test(name)){try{result=await checkEnvelope(JSON.parse(new TextDecoder().decode(bytes)));}catch{result={status:'invalid-format',label:'JSON okunamadı',trusted:false};}}
   return {name,size:bytes.byteLength,hash,...result};
+}
+export function setExpiry(s,{code,date,reason}) {
+  if(s.role!=='studentAffairs')throw Error('Öğrenci İşleri demo rolünü seçin.');
+  const c=s.credentials.find(c=>c.code===code);if(!c||c.status==='revoked')throw Error('Geçerli bir örnek sicil kaydı seçin.');
+  if(date&&(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date))||new Date(date).toISOString().slice(0,10)!==date||date<c.issued))throw Error('Bitiş tarihi düzenleme tarihinden önce olamaz.');
+  if(!reason||reason.trim().length<12)throw Error('En az 12 karakterlik süre dayanağı yazın.');
+  c.expiryHistory??=[];c.expiryHistory.push({before:c.expires,after:date||null,reason:reason.trim(),at:new Date().toISOString()});c.expires=date||null;
+  return c;
 }
 export const personas={
   rector:{title:'Rektörlük ve Kalite',benefit:'Kurumsal kanıtı görünür kılın.',pitch:'ÜniGO; dış öğrenme başvurularını, gerekçeli kararları ve kazanımları ortak bir kurumsal hafızada toplar. Kalite çalışmalarında kanıta erişimi kolaylaştırır; etkiyi ölçülebilir göstergelerle izlemenizi sağlar.',question:'Hangi kalite göstergesi için bugün kanıt toplamakta zorlanıyorsunuz?',route:'executive',cta:'Kanıt ve yetenek panelini göster'},
