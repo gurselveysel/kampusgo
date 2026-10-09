@@ -1,10 +1,10 @@
 # Gazi Üniversitesi için ÜniGO MYYS
 
-Separate, dependency-free Gazi pilot, built alongside the existing Dumlupınar application. Does not alter Dumlupınar source, state, database or deployment.
+Separate static Gazi pilot, built alongside the existing Dumlupınar application. Does not alter Dumlupınar source, state, database or deployment.
 
 ## Run
 
-Serve this directory over HTTP. No build or package installation is necessary. `node --test model.test.mjs workspaces.test.mjs` runs the workflow and workspace invariants. `pilot.html` rewrites to `index.html` on Vercel.
+Serve this directory over HTTP. The legacy screens are buildless. The five incremental React screens are compiled from `enhancements/` with `npm ci --prefix enhancements` then `npm run build --prefix enhancements`; the checked-in `enhanced.js` and `enhanced.css` serve without runtime CDN dependencies. `node --test model.test.mjs workspaces.test.mjs` runs the workflow and workspace invariants. `pilot.html` rewrites to `index.html` on Vercel.
 
 ## Scope
 
@@ -12,7 +12,7 @@ Serve this directory over HTTP. No build or package installation is necessary. `
 
 Working pilot flows: validated application, transparent workload and outcome matching, commission routing, distinct simulated member votes, conflict and quorum checks, reasoned majority decision, duplicate-protected OBS rehearsal, sample credential issuance and revocation, local registry lookup, programme proposals, learning plans, improvement tasks, independent appeal records, CSV/JSON exports and policy versioning.
 
-No production authentication, university SSO, API, blockchain, electronic seal, real certificate, official academic decision, real OBS write, payment or outbound notification is implemented. These boundaries are visible in the interface. Role switching is demonstrative, not a security boundary. Audit and verification are local pilot functions, not tamper-proof infrastructure. No secrets are requested or shipped.
+No production authentication, university SSO, API, blockchain, institutional electronic seal, real certificate, official academic decision, real OBS write, payment or outbound notification is implemented. A real browser-local ECDSA signature demonstration is available; it is not an institutional signature or an Open Badges compliance claim. These boundaries are visible in the interface. Role switching is demonstrative, not a security boundary. Audit and verification are local pilot functions, not tamper-proof infrastructure. No secrets are requested or shipped.
 
 ## Sources and authority gaps (checked 2026-10-10, Türkiye)
 
@@ -35,3 +35,20 @@ The Turkish ÜniGO image and go favicon are copied byte-for-byte from the existi
 ## Role workspaces — 2026-10-10
 
 Changing the demo role now opens its relevant home page, filters navigation, refreshes role-specific metrics, task links and notifications, closes stale dialogs and clears transient searches. The selection survives refresh without deleting pilot records. Student views show only the synthetic learner's own applications and wallet. Stale or unavailable routes return to the selected role's home. These client-side presentation and operation gates are not production authorization.
+
+## Incremental governance modules — 2026-10-10
+
+The existing 17 screens, nine role homes, origin-scoped pilot data, workflow guards and approved assets are retained. Five React/Tailwind/Lucide routes are added: `governance`, `ai-requests`, `proctoring`, `cryptographic` and `sync`. The original overview remains the coordinator home, with a visible entry to the new modules. They share the existing hash router and state persistence.
+
+- AI example decisions require a human action. Sending the eligible sample creates a real local commission-stage record in the existing application model; duplicate and ineligible sends are blocked. Rejection requires a reason.
+- Four synthetic video placeholders, a pausable event generator, filters and review markers demonstrate local-processing architecture without camera, microphone or biometric access.
+- Credentials come from the existing registry and learner scope. ECDSA P-256 signing and public-key verification run in Web Crypto. The private key is non-exportable and is never persisted. Exported JSON includes the signed sample, signature and public key. LinkedIn/e-Devlet controls open truthful transfer previews; they do not transmit data.
+- The example integration queue has role gates, retry counts and duplicate protection. Connection badges and counters are visibly marked as a simulated environment.
+- The requested 8%/10% and 42%/50% values are clearly example policy parameters. No legal conformity claim is inferred from them.
+- First-party Turkish interface copy uses learning-outcome terminology. Old local strings are translated in memory without resetting records. Original ÜniGO PNG SHA256 remains c6b041e9686bc275d14c934fa54dee8794c0655ff418635ab0a4ebf13dcdf137.
+
+Run the complete current checks: `node --test model.test.mjs workspaces.test.mjs enhancements/governance.test.mjs`.
+
+### Source and authority boundaries
+
+Reviewed 1EdTech primary sources: https://www.1edtech.org/standards/open-badges ; https://standards.1edtech.org/open-badges/specifications/standards/v3p0 ; https://www.1edtech.org/specifications . The local export deliberately does not claim Open Badges certification. KVKK source: https://www.kvkk.gov.tr/Icerik/2030/rehberler?page=2 . Local processing alone is not treated as legal compliance. Gazi senate policy, current applicable YÖK limits, institutional signing authority and YÖKSİS/e-Devlet API authorization remain unverified, so no live integrations or institutional decisions are represented.

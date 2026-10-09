@@ -9,6 +9,7 @@
   <title>Gazi Üniversitesi · MYYS</title>
   <link rel="icon" href="assets/go-icon.svg">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="enhanced.css">
 </head>
 <body>
   <a class="skip" href="#main">İçeriğe geç</a>
@@ -23,12 +24,12 @@
     <header class="topbar">
       <button class="icon-btn menu-toggle" id="menu-toggle" aria-label="Menüyü aç" aria-expanded="false" aria-controls="sidebar">☰</button>
       <a class="mobile-brand" href="#/overview"><img src="assets/gazi-logo.svg" width="30" height="30" alt="Gazi Üniversitesi logosu"><strong>Gazi MYYS</strong></a>
-      <div class="breadcrumb">Çalışma alanı <span>/</span> <strong id="breadcrumb">Genel bakış</strong></div>
-      <div class="top-actions"><a class="notification" href="#/notifications" aria-label="Bildirimler"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 6-2 6-2 9h16c0-3-2-3-2-9M10 21h4"/></svg><i id="notification-count">2</i></a><div class="role-box"><label for="role">Demo rolü</label><select id="role"></select></div><span class="avatar" id="avatar">GK</span></div>
+      <div class="topbar-title"><strong>Gazi Üniversitesi - UniGO MYYS Yönetişim Paneli</strong><span class="tenant-badge">gazi.unigoturkiye.com</span><div class="breadcrumb">Çalışma alanı <span>/</span><strong id="breadcrumb">Genel bakış</strong></div></div>
+      <div class="top-actions"><a class="notification" href="#/notifications" aria-label="Bildirimler"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 6-2 6-2 9h16c0-3-2-3-2-9M10 21h4"/></svg><i id="notification-count">2</i></a><div class="role-box"><label for="role">Demo rolü</label><select id="role"></select></div><details class="profile-dropdown"><summary aria-label="Kullanıcı profili"><span class="avatar" id="avatar">GK</span><span class="profile-text"><strong>Prof. Dr. Ahmet Yılmaz</strong><small id="profile-unit">Kalite Komisyonu</small></span><span aria-hidden="true">⌄</span></summary><div class="profile-menu"><strong>Prof. Dr. Ahmet Yılmaz</strong><p>Gazi Üniversitesi · Örnek kullanıcı profili<br>Demo rolü, gerçek oturum yetkisi oluşturmaz.</p><a href="#/notifications">Bildirimler ve görevler</a></div></details></div>
     </header>
     <div class="pilot-strip"><span><i></i><strong>ETKİLEŞİMLİ PİLOT</strong><span class="pilot-detail"> Örnek veriler · İşlemler bu tarayıcıda saklanır · Kurum sistemlerine bağlı değildir.</span></span><button data-action="scope">Kapsamı gör <span aria-hidden="true">↗</span></button></div>
     <main id="main" tabindex="-1"></main>
-    <footer>Gazi Üniversitesi için hazırlanmış tanıtım ve değerlendirme ortamı. Resmî üniversite hizmeti veya akademik karar değildir.<span>ÜniGO MYYS · v1.0</span></footer>
+    <footer>Gazi Üniversitesi için hazırlanmış tanıtım ve değerlendirme ortamı. Resmî üniversite hizmeti veya akademik karar değildir.<span>ÜniGO MYYS · v1.1</span></footer>
   </div>
   <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
   <div id="toast" class="toast" role="status" hidden></div>

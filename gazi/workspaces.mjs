@@ -7,7 +7,7 @@ export const workspaces = {
   },
   learner: {
     name:'Öğrenen / Öğrenci', initials:'DÖ', home:'wallet',
-    title:'Öğrenme alanım', description:'Deniz Örnek · Başvurularınızı, kazanımlarınızı ve öğrenme planınızı takip edin.',
+    title:'Öğrenme alanım', description:'Deniz Örnek · Başvurularınızı, öğrenme çıktılarınızı ve öğrenme planınızı takip edin.',
     pages:['overview','applications','catalog','credentials','wallet','pathways','appeals','notifications']
   },
   instructor: {
@@ -22,7 +22,7 @@ export const workspaces = {
   },
   studentAffairs: {
     name:'Öğrenci İşleri', initials:'Öİ', home:'obs',
-    title:'Öğrenci İşleri çalışma alanı', description:'Onaylı kazanımları, belge sicilini ve OBS aktarım kuyruğunu yönetin.',
+    title:'Öğrenci İşleri çalışma alanı', description:'Onaylı öğrenme çıktıları, belge sicilini ve OBS aktarım kuyruğunu yönetin.',
     pages:['overview','applications','matching','commission','credentials','obs','notifications','audit']
   },
   quality: {
@@ -46,6 +46,9 @@ export const workspaces = {
     pages:['overview','integrations','notifications','audit','settings']
   }
 };
+
+const extensions={coordinator:['governance','ai-requests','proctoring','cryptographic','sync'],learner:['cryptographic'],instructor:['proctoring'],commission:['governance','ai-requests','proctoring','cryptographic'],studentAffairs:['governance','cryptographic','sync'],quality:['governance','ai-requests','proctoring','cryptographic','sync'],it:['governance','proctoring','sync'],finance:['governance'],admin:['governance','proctoring','cryptographic','sync']};
+for(const [role,pages] of Object.entries(extensions))workspaces[role].pages.push(...pages);
 
 export const workspaceFor = role => workspaces[role] || workspaces.coordinator;
 export const canView = (role, page) => workspaceFor(role).pages.includes(page);
