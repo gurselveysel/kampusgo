@@ -26,4 +26,8 @@ UI architecture separates workload, outcomes, evidence, decision, certification 
 
 ## Deployment
 
-Vercel project: `gazi-unigo-myys`, team `team_QH2k9edmHSXuybZK3Ay9RVAo`. Working publication: https://gazi-unigo-myys.vercel.app/ . Target hostname: `gazi.unigoturkiye.com`. DNS is externally hosted at IHS; the CNAME `gazi -> c385e8cd360f1bb2.vercel-dns-017.com` was saved on 2026-10-10 (Türkiye). DNS propagation and custom-host HTTPS were still pending at handoff. See VERIFICATION.md for observed results. Deploy only this `gazi` directory, excluding tests and documentation if using the file API. CSP limits execution and connections to same origin.
+Vercel project: `gazi-unigo-myys`, team `team_QH2k9edmHSXuybZK3Ay9RVAo`. Working publication: https://gazi-unigo-myys.vercel.app/ . Target hostname: `gazi.unigoturkiye.com`. DNS is externally hosted at IHS; the CNAME `gazi -> c385e8cd360f1bb2.vercel-dns-017.com` was saved on 2026-10-10 (Türkiye). DNS propagation completed and custom-host HTTPS was verified on 2026-10-10 (Türkiye). See VERIFICATION.md for observed results. Deploy only this `gazi` directory, excluding tests and documentation if using the file API. CSP limits execution and connections to same origin.
+
+## Original brand assets — 2026-10-10
+
+The Turkish ÜniGO image and go favicon are copied byte-for-byte from the existing corporate site: https://unigoturkiye.com/unigo-logo-tr.png and https://unigoturkiye.com/favicon-go-v1.svg . The sidebar now uses an image instead of a text recreation; desktop and mobile drawer share that same original asset.
