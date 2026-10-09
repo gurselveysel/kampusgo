@@ -1,3 +1,5 @@
+if(new URLSearchParams(location.search).has('embedded'))document.body.classList.add('embedded-workspace');
+import {mountEnhanced,unmountEnhanced} from './enhanced.js';
 import {createWorkspace,workspacePages} from './workspace.js';
 import {extend} from './governance.mjs';
 import {VERSION,roles,allowed,stages,seed,log,evaluateMatch,createApplication,saveMatch,sendCommission,recordVote,finalize,transfer,issue,verify,csv} from './model.mjs';
@@ -10,6 +12,8 @@ const paths={home:'M3 11 12 3l9 8v10h-6v-7H9v7H3Z',grid:'M3 3h7v7H3ZM14 3h7v7h-7
 const icon=(n)=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[n]||paths.grid}"/></svg>`;
 const pages=[['overview','Genel bakış','grid','ÇALIŞMA ALANI'],['applications','Başvuru merkezi','file'],['catalog','Program kataloğu','book'],['matching','AKTS ve kredi eşleştirme','arrows','AKADEMİK YÖNETİŞİM'],['outcomes','Öğrenme çıktıları','layers'],['commission','Komisyon kararları','users'],['appeals','İtiraz ve revizyon','message'],['credentials','Rozet ve sertifikalar','badge','BELGELENDİRME VE ENTEGRASYON'],['wallet','Dijital yeterlilik cüzdanı','wallet'],['obs','OBS ve transkript','network'],['integrations','Entegrasyon merkezi','settings'],['pathways','Öğrenme yolları','layers','KALİTE VE OPERASYON'],['quality','Kalite ve etki analizi','chart'],['finance','Finans ve mutabakat','briefcase'],['notifications','Bildirimler ve görevler','bell'],['audit','Denetim izi','clock'],['settings','Kurumsal kurallar','shield']];
 pages.splice(1,0,...workspacePages);
+const enhancedPages=['references','governance','ai-requests','proctoring','cryptographic','sync'];
+pages.push(['references','Yeterlilik ve kanıt merkezi','book','KAYNAKLI AKADEMİK YÖNETİŞİM'],['governance','Yönetişim özeti','grid','GELİŞMİŞ MODÜLLER'],['ai-requests','YZ ön inceleme','file'],['proctoring','Sınav gözetimi','shield'],['cryptographic','Kriptografik belgeler','badge'],['sync','Senkronizasyon kuyruğu','network']);
 const pageTitle=id=>id==='overview'?'Çalışma alanım':state.role==='learner'&&id==='applications'?'Başvurularım':state.role==='instructor'&&id==='catalog'?'Program tasarımı':pages.find(p=>p[0]===id)?.[1]||'Çalışma alanım';
 const title=()=>pageTitle(route());
 function route(){return location.hash.replace(/^#\/?/,'').split('/')[0]||workspaceFor(state.role).home;}
@@ -56,7 +60,7 @@ function roleOverview(){
  const notices=roleNotifications(state);
  return heading(w.title,w.description,link(pageTitle(w.home)+' →',w.home,'primary'))+`<div class="stats">${workspaceMetrics(state,visibleApplications(),visibleCredentials(),systems.length).map(([n,t])=>`<div class="stat"><div class="stat-label">${esc(t)}</div><div class="stat-value">${esc(n)}</div><div class="stat-note">Seçili rolün örnek verileri</div></div>`).join('')}</div><div class="section-heading"><h2>Görevlerime hızlı erişim</h2></div><div class="module-grid">${entries.map(id=>`<a class="module-card" href="#/${id}"><span class="module-icon blue">${icon(pages.find(p=>p[0]===id)?.[2])}</span><h3>${esc(pageTitle(id))}</h3><p>${esc(w.name)} görev alanı</p><span class="module-bottom">Çalışma ekranını aç ${icon('arrow')}</span></a>`).join('')}</div><section class="panel"><div class="panel-head"><h2>Rolüme ait gündem</h2>${link('Bildirimler →','notifications','link')}</div><div class="panel-body">${notices.slice(0,4).map(n=>`<div class="todo"><span class="todo-icon">${icon('bell')}</span><div><strong>${esc(n.title)}</strong><p>${esc(n.body)}</p></div></div>`).join('')||'<p class="body-copy">Bu rol için bekleyen gündem bulunmuyor.</p>'}</div></section>`;
 }
-function render(){extend(state);
+function render(){unmountEnhanced();extend(state);
  const requested=route(),p=resolveRoute(state.role,requested),w=workspaceFor(state.role);
  if(p!==requested)history.replaceState(null,'','#/'+p);
  let group='',shownGroup='';
@@ -64,7 +68,8 @@ function render(){extend(state);
  $('#role').innerHTML=Object.entries(roles).map(([v,t])=>`<option value="${v}" ${v===state.role?'selected':''}>${t}</option>`).join('');
  $('#avatar').textContent=w.initials;$('#workspace-name').textContent=w.name;$('#workspace-symbol').textContent=w.initials;
  $('#breadcrumb').textContent=title();$('#main').dataset.role=state.role;$('#main').dataset.page=p;
- $('#main').innerHTML=(storageIssue?'<div class="inline-info warn">Tarayıcı depolamasına erişilemedi. Bu oturumdaki işlemler kalıcı olmayabilir.</div>':'')+`<div class="workspace-banner"><span class="workspace-role">${icon('users')} ${esc(w.name)}</span><p>${esc(w.description)}</p></div>`+(renderers[p]||overview)();
+ $('#main').innerHTML=(storageIssue?'<div class="inline-info warn">Tarayıcı depolamasına erişilemedi. Bu oturumdaki işlemler kalıcı olmayabilir.</div>':'')+`<div class="workspace-banner"><span class="workspace-role">${icon('users')} ${esc(w.name)}</span><p>${esc(w.description)}</p></div>`+(enhancedPages.includes(p)?'<div id="enhanced-root"></div>':(renderers[p]||overview)());
+ if(enhancedPages.includes(p))mountEnhanced($('#enhanced-root'),p,{state,save,navigate:nav,notify:toast,canView:id=>canView(state.role,id),record:(action,id)=>log(state,action,id,'Yerel örnek işlem')});
  $('#notification-count').textContent=roleNotifications(state).filter(n=>!n.read).length;document.title=`${title()} · ${w.name} · Gazi Üniversitesi MYYS`;
  $('#sidebar').classList.remove('open');$('#veil').hidden=true;$('#menu-toggle').setAttribute('aria-expanded','false');
 }

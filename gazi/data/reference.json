@@ -1,0 +1,515 @@
+{
+  "version": "2026.10.10.1",
+  "scope": "TYÇ 1–8 ve AYÇ 1–8 seviyelerinin tamamı; TYYÇ 5–8 uygulama özetleri ve 6 yeterlilik türü; Gazi için 1 programın 13 kaynaklı çıktı özeti. Ulusal yeterlilik sicilinin tamamı değildir.",
+  "sources": [
+    {
+      "id": "tyc",
+      "title": "MYK • TYÇ seviye tanımlayıcıları",
+      "url": "https://www.myk.gov.tr/images/articles/TYC/Tyc_bilgi_merkezi/Seviye_Tanimlay%C4%B1cilari/TYC_Seviye_Tanimlayicilari2.pdf",
+      "status": "Önceki kaynaklı kayıt; yeniden erişim bekleniyor",
+      "checkedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf",
+      "title": "Avrupa Komisyonu • AYÇ sekiz seviye",
+      "url": "https://europass.europa.eu/en/description-eight-eqf-levels",
+      "status": "Resmî sayfa incelendi",
+      "checkedAt": "2026-10-09"
+    },
+    {
+      "id": "tyyc",
+      "title": "YÖK • Yükseköğretim yeterlilik türleri",
+      "url": "https://uluslararasi.yok.gov.tr/Sayfalar/avrupa-yuksekogretim-alani-ile-uyum-projesi/yeterlikler-cercevesi/yuksekogretim-yeterlilik-turleri.aspx",
+      "status": "Kaynaklı sicil; yeniden erişim bekleniyor",
+      "checkedAt": "2026-08-19"
+    },
+    {
+      "id": "gazi-pc",
+      "title": "Gazi Üniversitesi • Teknoloji Fakültesi Bilgisayar Mühendisliği program çıktıları",
+      "url": "https://tf-bm.gazi.edu.tr/view/page/297685/egitim-amaclari-ve-program-ciktilari",
+      "status": "Resmî sayfa incelendi • Sayfa güncellemesi: 08.12.2025",
+      "checkedAt": "2026-10-09"
+    },
+    {
+      "id": "gazi-akts",
+      "title": "Gazi Üniversitesi • 2025 Kurum İç Değerlendirme Raporu",
+      "url": "https://webupload.gazi.edu.tr/upload/450/2026/4/21/ff91bf7e-4eb3-473e-be2a-dbaf9c410112-gukk-kIdr_2025.pdf",
+      "status": "Resmî rapor incelendi • İş yükü: 25 saat / AKTS",
+      "checkedAt": "2026-10-09"
+    },
+    {
+      "id": "gazi-fbe",
+      "title": "Gazi Üniversitesi • AKTS açıklaması",
+      "url": "https://fbe.gazi.edu.tr/view/page/24377/akts",
+      "status": "Resmî sayfa incelendi • Genel aralık: 25–30 saat",
+      "checkedAt": "2026-10-09"
+    },
+    {
+      "id": "tyc-record",
+      "title": "TYÇ sicili • Gazi Mühendislik Fakültesi Bilgisayar Mühendisliği",
+      "url": "https://portal.tyc.gov.tr/yeterlilik/bilgisayar-muhendisligi-muhendislik-fakultesi-30-ingilizce-lisans-diplomasi-TR0030217259.html",
+      "status": "Arama dizini üst verisi; canlı kayıt teyidi bekleniyor",
+      "checkedAt": "2026-10-09"
+    }
+  ],
+  "frameworks": [
+    {
+      "id": "tyc",
+      "code": "TYÇ",
+      "title": "Türkiye Yeterlilikler Çerçevesi",
+      "sourceId": "tyc",
+      "dimensions": [
+        "Bilgi",
+        "Beceri",
+        "Yetkinlik"
+      ]
+    },
+    {
+      "id": "eqf",
+      "code": "AYÇ",
+      "title": "Avrupa Yeterlilikler Çerçevesi",
+      "sourceId": "eqf",
+      "dimensions": [
+        "Bilgi",
+        "Beceri",
+        "Sorumluluk ve özerklik"
+      ]
+    },
+    {
+      "id": "tyyc",
+      "code": "TYYÇ",
+      "title": "Türkiye Yükseköğretim Yeterlilikleri Çerçevesi",
+      "sourceId": "tyyc",
+      "dimensions": [
+        "Bilgi",
+        "Beceri",
+        "Yetkinlik"
+      ]
+    }
+  ],
+  "levels": [
+    {
+      "id": "tyc-1",
+      "frameworkId": "tyc",
+      "level": 1,
+      "knowledge": "Kendisi ve çevresine ilişkin genel bilgiye sahip olma",
+      "skills": "Basit görevleri yerine getirmek için gerekli temel beceriye sahip olma",
+      "competence": "Basit görevleri rehberlik ve gözetim altında gerçekleştirme",
+      "sourceId": "tyc",
+      "basis": "Kaynaklı seviye tanımlayıcısı",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyc-2",
+      "frameworkId": "tyc",
+      "level": 2,
+      "knowledge": "Bir iş veya öğrenme alanına ait başlangıç düzeyinde olgusal bilgiye sahip olma",
+      "skills": "Görevleri yerine getirmek ve olası basit sorunları çözmek için gerekli bilgiyi kullanma temel becerisine sahip olma",
+      "competence": "Basit görevleri gözetim altında sınırlı özerklik ile gerçekleştirme\n\nHayat boyu öğrenme yaklaşımı kapsamında öğrenme ihtiyaçlarının farkında olma",
+      "sourceId": "tyc",
+      "basis": "Kaynaklı seviye tanımlayıcısı",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyc-3",
+      "frameworkId": "tyc",
+      "level": 3,
+      "knowledge": "Bir iş veya öğrenme alanına ait başlangıç düzeyinde kuramsal, orta düzeyde olgusal bilgiye sahip olma",
+      "skills": "Görevleri yerine getirmek ve problem çözmek için, gerekli veri, yöntem ve araç-gereçleri seçip kullanma becerisine sahip olma",
+      "competence": "Görevleri yerine getirmede sorumluluk alma\n\nDeğişen şartları dikkate alarak görevi tamamlama\n\nHayat boyu öğrenme yaklaşımı kapsamında öğrenme ihtiyaçlarını rehberlik eşliğinde belirleme ve karşılama",
+      "sourceId": "tyc",
+      "basis": "Kaynaklı seviye tanımlayıcısı",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyc-4",
+      "frameworkId": "tyc",
+      "level": 4,
+      "knowledge": "Bir iş veya öğrenme alanına ait orta düzeyde kuramsal ve işlemsel, orta düzeyin üzerinde olgusal bilgiye sahip olma",
+      "skills": "Bir iş veya öğrenme alanına özgü iş ve işlemleri yerine getirmek ve sorunlara çözüm üretmek amacıyla bilişsel ve uygulamalı becerilere sahip olma",
+      "competence": "Öngörülebilir, ancak değişime açık ortamlarda, görevleri tamamlamak için tam sorumluluk alma\n\nBaşkalarının yürüttüğü sıradan görevlerin gözetimini yapma, bu görevlerin değerlendirilmesinde ve iyileştirilmesinde sınırlı sorumluluk alma\n\nHayat boyu öğrenme yaklaşımı kapsamında öğrenme ihtiyaçlarını karşılama ve rehberlik eşliğinde ileriye yönelik öğrenme hedeflerini belirleme\n\nBir iş veya öğrenme alanındaki bilgi, beceri, tutum ve davranışlar ile etik meseleler ve toplumsal sorunların ilişkisi konusunda farkındalığa sahip olma",
+      "sourceId": "tyc",
+      "basis": "Kaynaklı seviye tanımlayıcısı",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyc-5",
+      "frameworkId": "tyc",
+      "level": 5,
+      "knowledge": "Bir iş veya öğrenme alanının sınırlarının farkında olarak, bu alana özgü, kapsamlı, kuramsal ve olgusal bilgilere sahip olma",
+      "skills": "Sınırları belirlenmiş soyut ve somut sorunlara yaratıcı çözümler geliştirmede gerekli, kapsamlı, bilişsel ve uygulamalı becerilere sahip olma",
+      "competence": "Öngörülemeyen değişikliklerin olduğu ortamlarda yönetim ve gözetim görevi yapma\n\nKendisinin ve başkalarının başarım düzeyini değerlendirme ve geliştirme\n\nProjelerin yönetimi dâhil iş veya öğrenme ortamlarında işleme dair etkileşimde bulunma\n\nBir iş veya öğrenme alanına yönelik hayat boyu öğrenme yaklaşımının kapsamına ve bu kapsamın örgün ve yaygın eğitim ile serbest öğrenme yollarıyla ilişkisi konusunda genel farkındalığa sahip olma\n\nBir iş veya öğrenme alanındaki bilgi, beceri, tutum ve davranışlar ile toplumsal ve etik meseleler ve sorumluluklar ilişkisinin farkında olma",
+      "sourceId": "tyc",
+      "basis": "Kaynaklı seviye tanımlayıcısı",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyc-6",
+      "frameworkId": "tyc",
+      "level": 6,
+      "knowledge": "Bir iş veya öğrenme alanında sorgulayıcı bakış açısını kapsayacak şekilde ileri düzeyde kuramsal, metodolojik ve olgusal bilgiye sahip olma",
+      "skills": "Uzmanlık gerektiren bir iş veya öğrenme alanında, karmaşık ve öngörülemeyen sorunları çözmek için gerekli, uzmanlık ve yenilik niteliği gösteren ileri düzeyde becerilere sahip olma",
+      "competence": "Öngörülemeyen iş veya öğrenme ortamlarında sorumluluk alarak karar verme ve bu ortamlarda karmaşık teknik veya meslekî faaliyet veya projeleri yönetme\n\nKişilerin ve grupların meslekî gelişiminin yönetiminde sorumluluk alma\n\nBir iş veya öğrenme alanına yönelik hayat boyu öğrenme yaklaşımının kavramları, politikaları, araçlarının uygulaması ve bunların örgün ve yaygın eğitim ile serbest öğrenme yollarıyla ilişkisi konusunda deneyim sahibi olma\n\nBir iş veya öğrenme değerlendirmesinde bulunurken toplumsal ve etik değerlerin farkında olma",
+      "sourceId": "tyc",
+      "basis": "Kaynaklı seviye tanımlayıcısı",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyc-7",
+      "frameworkId": "tyc",
+      "level": 7,
+      "knowledge": "Bir iş veya öğrenme alanında, özgün fikirlerin ve/veya araştırmanın temelini oluşturan ve bir kısmı en ileri düzeydeki ihtisas bilgisine sahip olma\n\nAlanındaki ve alanının ilişkili olduğu değişik alanların arayüzündeki bilgi meselelerinde sorgulayıcı yaklaşıma sahip olma",
+      "skills": "Bir iş veya öğrenme alanında yeni bilgi ve yöntemleri geliştirmek ve farklı alanlardan bilgiyi bütünleştirmek için yürütülen araştırma ve/veya yenilik faaliyetlerinde sorun çözmede ileri düzeyde beceriye sahip olma\n\nİleri araştırma işlemlerinin kavranılması, tasarlanması, uygulanması ve uyarlanmasını yapma becerisine ekip üyesi veya kısmen özerk olarak sahip olma",
+      "competence": "Öngörülemeyen, karmaşık ve yeni stratejik yaklaşımlar gerektiren iş veya öğrenme ortamlarını yönetme ve dönüştürme\n\nKarmaşık bir ortamda değişimi yönetme tecrübesine sahip olma\n\nMeslekî bilgi ve uygulamaya katkı yapmak ve/veya takımların stratejik başarım düzeyini değerlendirmek için sorumluluk alma\n\nBir iş veya öğrenme alanına ve alanlar arasındaki arayüz bilgisine yönelik hayat boyu öğrenme yaklaşımının kavram, politika, araçlar ve uygulaması ve bunların örgün ve yaygın eğitim ile serbest öğrenme yollarıyla ilişkisi konusunda liderlik yapma\n\nBir iş veya öğrenme alanında, toplumsal ve etik meseleleri ve sorumlulukları dikkate alarak bilgiyi bütünleştirme ve yargıda bulunma",
+      "sourceId": "tyc",
+      "basis": "Kaynaklı seviye tanımlayıcısı",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyc-8",
+      "frameworkId": "tyc",
+      "level": 8,
+      "knowledge": "Bir iş veya öğrenme alanındaki kuram, uygulama, yöntem ve tekniklerin en ileri düzeydeki sistematik bilgisine ve sorgulayıcı analiz yapacak kapasiteye sahip olma\n\nBir iş veya öğrenme alanıyla ilişkili olarak farklı iş veya öğrenme alanlarında en ileri düzeydeki arayüz bilgisine sahip olma",
+      "skills": "Bir iş veya öğrenme alanındaki en ileri düzeydeki araştırma ve/veya yenilikte kritik sorunları çözmek, mevcut bilgiyi veya meslekî uygulamayı genişletmek ve yeniden tanımlamak için sentez ve değerlendirmeyi de kapsayan en ileri düzeydeki bilgi, yöntem ve teknikleri kullanmayı gerektiren uzmanlaşmış becerilere sahip olma\n\nİleri araştırma süreçlerinin kavranılması, tasarlanması, uygulanması ve uyarlanmasını yapma becerisine özerk olarak sahip olma\n\nAlanında ortaya çıkan, farklı alanlardaki yöntem ve yaklaşımların kullanımını da gerektiren yeni ve karmaşık sorunları çözme becerisine sahip olma",
+      "competence": "Güçlü bir yetkinlik, yenilik, özerklik, bilimsel ve meslekî tutarlılığa sahip olma ve araştırma dâhil iş veya öğrenme ortamlarındaki en ileri seviyedeki yeni fikirlerin ve süreçlerin geliştirilmesinde yetkin olduğunu gösterme\n\nBir iş veya öğrenme alanındaki mevcut bilgi veya meslekî uygulamanın yeniden tanımlanmasına veya genişletilmesine imkân veren yeni ve özgün yaklaşımların geliştirilmesinde liderlik yapma\n\nBir iş veya öğrenme alanına ve alanlar arasındaki arayüz bilgisine yönelik hayat boyu öğrenme yaklaşımının öngörülmeyen, karmaşık ve yenilik gerektiren ortamlarda geliştirilmesine, örgün ve yaygın eğitim ile serbest öğrenme yollarıyla desteklenmesine ilişkin konularda özgün politika ve uygulamalar geliştirme\n\nBir iş veya öğrenme alanında, toplumsal ve etik meseleleri ve sorumlulukları dikkate alarak yeni bilgi üretme",
+      "sourceId": "tyc",
+      "basis": "Kaynaklı seviye tanımlayıcısı",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf-1",
+      "frameworkId": "eqf",
+      "level": 1,
+      "knowledge": "Temel genel bilgiler",
+      "skills": "Basit görevleri yerine getirmek için gerekli temel beceriler",
+      "competence": "Yapılandırılmış bir çalışma veya öğrenim bağlamında, doğrudan gözetim altında çalışabilme",
+      "sourceId": "eqf",
+      "basis": "Türkçe gösterim; özgün metin kaynakta",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf-2",
+      "frameworkId": "eqf",
+      "level": 2,
+      "knowledge": "Bir çalışma veya öğrenim alanına ilişkin temel olgusal bilgi",
+      "skills": "Basit kurallar ve araçlardan yararlanarak rutin sorunları çözmek ve bir görevi yerine getirmek amacıyla konuya ilişkin bilgileri kullanmak için gerekli temel bilişsel ve pratik beceriler",
+      "competence": "Çalışırken veya öğrenirken gözetim altında ve belli düzeyde bağımsız çalışabilme",
+      "sourceId": "eqf",
+      "basis": "Türkçe gösterim; özgün metin kaynakta",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf-3",
+      "frameworkId": "eqf",
+      "level": 3,
+      "knowledge": "Bir çalışma veya öğrenim alanındaki olgular, ilkeler, süreçler ve genel kavramlara ilişkin bilgi",
+      "skills": "Temel yöntemler, araçlar, materyaller ve bilgiler arasından seçim yaparak ve bunları uygulayarak görevleri başarıyla tamamlamak ve sorunları çözebilmek için gerekli bilişsel ve pratik beceriler",
+      "competence": "Çalışırken veya öğrenirken görevleri tamamlamak için sorumluluk alma; sorunları çözerken kendi davranışlarını duruma göre uyarlama",
+      "sourceId": "eqf",
+      "basis": "Türkçe gösterim; özgün metin kaynakta",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf-4",
+      "frameworkId": "eqf",
+      "level": 4,
+      "knowledge": "Bir çalışma veya öğrenim alanındaki geniş bağlamlara ilişkin olgusal ve kavramsal bilgi",
+      "skills": "Bir çalışma veya öğrenim alanındaki belirli sorunlara çözüm üretebilmek için gerekli bilişsel ve pratik beceriler",
+      "competence": "Öngörülebilir olsa da değişiklik gösterebilecek çalışma veya öğrenim bağlamlarında yönergeler dahilinde öz yönetim uygulama; çalışma veya öğrenim etkinliklerinin değerlendirilmesi ve geliştirilmesi konusunda sınırlı düzeyde sorumluluk alarak başkalarının rutin işlerinin gözetimini yapabilme",
+      "sourceId": "eqf",
+      "basis": "Türkçe gösterim; özgün metin kaynakta",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf-5",
+      "frameworkId": "eqf",
+      "level": 5,
+      "knowledge": "Bir çalışma veya öğrenim alanında kapsamlı, o alana mahsus, olgusal ve kavramsal bilgiye ve bu bilginin sınırlarına ilişkin farkındalığa sahip olma",
+      "skills": "Soyut sorunlara yaratıcı çözümler geliştirmek için gereken kapsamlı bilişsel ve pratik beceriler",
+      "competence": "Öngörülemeyen değişikliklerin olabileceği çalışma ve öğrenim etkinliklerinin olduğu bağlamlarda yönetim ve gözetim uygulama; kendinin ve başkalarının performansını değerlendirme ve geliştirme",
+      "sourceId": "eqf",
+      "basis": "Türkçe gösterim; özgün metin kaynakta",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf-6",
+      "frameworkId": "eqf",
+      "level": 6,
+      "knowledge": "Bir çalışma veya öğrenim alanındaki kuram ve ilkelere eleştirel düzeyde hakim olmayı kapsayan ileri düzeyde bilgi",
+      "skills": "Uzmanlık odaklı bir çalışma veya öğrenim alanında karşılaşılan karmaşık ve öngörülemeyen sorunları çözebilmek için gerekli ustalığın ve inovasyonun sergilenmesini içeren ileri düzeyde beceriler",
+      "competence": "Öngörülemeyen çalışma veya öğrenim bağlamlarındaki karar verme süreçlerinde sorumluluk alarak karmaşık teknik ve mesleki uzmanlık gerektiren etkinlikleri ve projeleri yönetme; bireylerin ve grupların mesleki gelişimlerinin yönetilmesinde sorumluluk alma",
+      "sourceId": "eqf",
+      "basis": "Türkçe gösterim; özgün metin kaynakta",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf-7",
+      "frameworkId": "eqf",
+      "level": 7,
+      "knowledge": "Belli bir çalışma veya öğrenim alanında önde gelen bilgiler de dahil olmak üzere, özgün düşünme ve/veya araştırma becerilerinin temelini oluşturan yüksek düzeyde uzmanlık bilgisi. Belli bir alandaki bilgiye veya farklı alanlar arasındaki etkileşime ilişkin konular hakkında eleştirel farkındalık",
+      "skills": "Araştırma ve/veya inovasyonda yeni bilgi ve usuller geliştirmek ve farklı alanlardan gelen bilgileri bütünleştirmek için gerekli uzmanlaşmış problem çözme becerileri",
+      "competence": "Karmaşık, öngörülemeyen ve yeni stratejik yaklaşımlar gerektiren çalışma veya öğrenim bağlamlarını yönetme ve dönüştürme; mesleki bilgi ve uygulamaya katkı sağlanmasında ve/veya ekiplerin stratejik performansının değerlendirilmesinde sorumluluk alma",
+      "sourceId": "eqf",
+      "basis": "Türkçe gösterim; özgün metin kaynakta",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "eqf-8",
+      "frameworkId": "eqf",
+      "level": 8,
+      "knowledge": "Belli bir çalışma veya öğrenim alanına veya farklı alanların etkileşimine ilişkin en ileri düzey bilgi",
+      "skills": "Araştırma ve/veya inovasyona ilişkin kritik sorunları çözmek için ve mevcut bilgi veya mesleki uygulamayı genişletmek ve yeniden tanımlamak için gerekli sentezleme ve değerlendirme gibi ileri düzeyde ve uzmanlık gerektiren beceri ve teknikler",
+      "competence": "Araştırma içeren çalışma veya öğrenim bağlamlarının ön planında kayda değer yetki, inovasyon, otonomi, akademik ve mesleki bütünlüğün yanı sıra yeni fikir ve süreçlerin geliştirilmesi konusunda sürekli kararlılık gösterme",
+      "sourceId": "eqf",
+      "basis": "Türkçe gösterim; özgün metin kaynakta",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyyc-5",
+      "frameworkId": "tyyc",
+      "level": 5,
+      "knowledge": "Önlisans bağlamında bir alanın temel kuramsal ve olgusal bilgi tabanını, uygulama araçlarını ve bilginin sınırlarını ilişkilendirebilme",
+      "skills": "Sınırları belirli yükseköğretim problemlerinde uygun veri, yöntem ve araçları seçerek bilişsel ve uygulamalı çözüm geliştirebilme",
+      "competence": "Tanımlı bir çalışma veya öğrenme bağlamında bağımsız görev yürütebilme; sorumluluk alma, öğrenmeyi sürdürme, iletişim kurma ve etik sonuçları gözetme",
+      "sourceId": "tyyc",
+      "basis": "Resmî türlere dayalı uygulama özeti",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyyc-6",
+      "frameworkId": "tyyc",
+      "level": 6,
+      "knowledge": "Lisans bağlamında ileri kuramsal, olgusal ve metodolojik bilgiyi eleştirel bakışla ilişkilendirebilme",
+      "skills": "Uzmanlık gerektiren karmaşık ve öngörülemeyen problemlerde yöntem seçme, uygulama, analiz, tasarım ve doğrulama becerisi gösterebilme",
+      "competence": "Bağımsız çalışma ve karar sorumluluğu üstlenebilme; karmaşık proje/etkinlikleri yönetme, meslekî gelişimi, iletişimi, toplumsal ve etik sonuçları gözetme",
+      "sourceId": "tyyc",
+      "basis": "Resmî türlere dayalı uygulama özeti",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyyc-7",
+      "frameworkId": "tyyc",
+      "level": 7,
+      "knowledge": "Yüksek lisans bağlamında uzmanlık bilgisini, alanlar arası ilişkileri ve araştırma veya meslekî uygulamanın güncel sınırlarını eleştirel biçimde bütünleştirebilme",
+      "skills": "Yeni bilgi, yöntem veya uygulama geliştirmek üzere ileri problem çözme, araştırma/yenilik, sentez ve çok alanlı bütünleştirme becerisi gösterebilme",
+      "competence": "Karmaşık ve öngörülemeyen bağlamları yönetme ve dönüştürme; stratejik sorumluluk, bağımsız yargı, ekip gelişimi, etik ve toplumsal etkiyi gözetme",
+      "sourceId": "tyyc",
+      "basis": "Resmî türlere dayalı uygulama özeti",
+      "verifiedAt": "2026-08-19"
+    },
+    {
+      "id": "tyyc-8",
+      "frameworkId": "tyyc",
+      "level": 8,
+      "knowledge": "Doktora bağlamında alanın ve alanlar arası arayüzlerin en ileri sistematik bilgisini özgün ve sorgulayıcı araştırma yaklaşımıyla geliştirebilme",
+      "skills": "Araştırma ve yenilikte kritik problemleri çözmek, bilgiyi veya uygulamayı genişletmek ve yeniden tanımlamak için en ileri sentez, değerlendirme ve doğrulama becerilerini kullanabilme",
+      "competence": "Özgün bilgi ve süreç geliştirmede yüksek özerklik, bilimsel/meslekî bütünlük ve liderlik gösterebilme; araştırma, etik ve toplumsal sorumlulukla sürdürülebilir katkı üretebilme",
+      "sourceId": "tyyc",
+      "basis": "Resmî türlere dayalı uygulama özeti",
+      "verifiedAt": "2026-08-19"
+    }
+  ],
+  "types": [
+    {
+      "id": "tyyc-type-associate-general",
+      "title": "Önlisans Diploması (Genel)",
+      "level": 5,
+      "frameworkId": "tyyc",
+      "sourceId": "tyyc"
+    },
+    {
+      "id": "tyyc-type-associate-vocational",
+      "title": "Önlisans Diploması (Mesleki)",
+      "level": 5,
+      "frameworkId": "tyyc",
+      "sourceId": "tyyc"
+    },
+    {
+      "id": "tyyc-type-bachelor",
+      "title": "Lisans Diploması",
+      "level": 6,
+      "frameworkId": "tyyc",
+      "sourceId": "tyyc"
+    },
+    {
+      "id": "tyyc-type-master-thesis",
+      "title": "Yüksek Lisans Diploması (Tezli)",
+      "level": 7,
+      "frameworkId": "tyyc",
+      "sourceId": "tyyc"
+    },
+    {
+      "id": "tyyc-type-master-nonthesis",
+      "title": "Yüksek Lisans Diploması (Tezsiz)",
+      "level": 7,
+      "frameworkId": "tyyc",
+      "sourceId": "tyyc"
+    },
+    {
+      "id": "tyyc-type-doctorate",
+      "title": "Doktora Diploması",
+      "level": 8,
+      "frameworkId": "tyyc",
+      "sourceId": "tyyc"
+    }
+  ],
+  "programs": [
+    {
+      "id": "gazi-tf-bm",
+      "title": "Bilgisayar Mühendisliği",
+      "unit": "Teknoloji Fakültesi",
+      "sourceId": "gazi-pc",
+      "outcomeCount": 13,
+      "scope": "Resmî bölüm sayfasındaki 13 program çıktısı",
+      "level": 6,
+      "levelBasis": "Lisans bağlamı; mikro yeterliliğe otomatik seviye vermez"
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "gazi-tf-bm-pc-1",
+      "code": "PÇ-1",
+      "programId": "gazi-tf-bm",
+      "text": "Mühendislik, matematik ve fen bilgisini kullanarak bilgisayar mühendisliği problemlerini tanımlar.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-2",
+      "code": "PÇ-2",
+      "programId": "gazi-tf-bm",
+      "text": "Probleme uygun analiz, modelleme ve tasarım yöntemlerini uygular.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-3",
+      "code": "PÇ-3",
+      "programId": "gazi-tf-bm",
+      "text": "Gereksinimleri karşılayan sistem, süreç veya ürün tasarlar.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-4",
+      "code": "PÇ-4",
+      "programId": "gazi-tf-bm",
+      "text": "Çözümleri güvenlik, ekonomi, çevre ve sürdürülebilirlik kısıtlarıyla değerlendirir.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-5",
+      "code": "PÇ-5",
+      "programId": "gazi-tf-bm",
+      "text": "Deney ve benzetim tasarlar; verileri analiz edip yorumlar.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-6",
+      "code": "PÇ-6",
+      "programId": "gazi-tf-bm",
+      "text": "Güncel mühendislik ve bilişim araçlarını kullanır.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-7",
+      "code": "PÇ-7",
+      "programId": "gazi-tf-bm",
+      "text": "Bireysel ve disiplinler arası ekip çalışmalarında sorumluluk alır.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-8",
+      "code": "PÇ-8",
+      "programId": "gazi-tf-bm",
+      "text": "Türkçe ve yabancı dilde mesleki iletişim kurar.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-9",
+      "code": "PÇ-9",
+      "programId": "gazi-tf-bm",
+      "text": "Proje planlar ve yönetir; girişimcilik ve yenilikçiliği değerlendirir.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-10",
+      "code": "PÇ-10",
+      "programId": "gazi-tf-bm",
+      "text": "Yaşam boyu öğrenmeyle bilgisini günceller.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-11",
+      "code": "PÇ-11",
+      "programId": "gazi-tf-bm",
+      "text": "Mesleki ve etik sorumluluk taşır.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-12",
+      "code": "PÇ-12",
+      "programId": "gazi-tf-bm",
+      "text": "Özgüven, kararlılık ve sabır geliştirir.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    },
+    {
+      "id": "gazi-tf-bm-pc-13",
+      "code": "PÇ-13",
+      "programId": "gazi-tf-bm",
+      "text": "Sosyal, ekonomik ve çevresel etkilerin sorumluluğunu gözetir.",
+      "sourceId": "gazi-pc",
+      "basis": "Resmî program çıktısının kısa özeti; özgün metin kaynakta"
+    }
+  ],
+  "qualifications": [
+    {
+      "id": "TR0030217259",
+      "title": "Bilgisayar Mühendisliği (%30 İngilizce) Lisans Diploması",
+      "unit": "Mühendislik Fakültesi",
+      "institution": "Gazi Üniversitesi",
+      "tycLevel": 6,
+      "eqfLevel": 6,
+      "sourceId": "tyc-record",
+      "status": "20.12.2024 yerleştirme bilgisi arama dizininde; güncel sicil teyidi bekleniyor",
+      "note": "Teknoloji Fakültesindeki programdan ayrı kayıttır; çıktı eşleştirmesi yapılmadı."
+    }
+  ],
+  "policy": {
+    "hoursPerEcts": 25,
+    "sourceId": "gazi-akts",
+    "minCoverage": 70,
+    "thresholdBasis": "Pilot değerlendirme eşiği; kurum onayı bekleniyor"
+  },
+  "coverage": [
+    {
+      "name": "TYÇ seviyeleri",
+      "loaded": 8,
+      "total": 8
+    },
+    {
+      "name": "AYÇ seviyeleri",
+      "loaded": 8,
+      "total": 8
+    },
+    {
+      "name": "TYYÇ düzey özetleri",
+      "loaded": 4,
+      "total": 4
+    },
+    {
+      "name": "Gazi program çıktıları",
+      "loaded": 13,
+      "total": 13
+    }
+  ]
+}

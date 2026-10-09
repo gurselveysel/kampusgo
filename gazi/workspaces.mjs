@@ -57,6 +57,8 @@ workspaces.it.pages.push('executive','delivery','evidence','demo');
 workspaces.finance.pages.push('business','demo');
 workspaces.admin.pages.push('executive','sales','business','recognition','evidence','delivery','demo');
 
+for(const role of ['coordinator','admin','sales','rector','quality','it','studentAffairs','commission'])workspaces[role].pages.push('governance','ai-requests','proctoring','cryptographic','sync');
+for(const r of ['coordinator','instructor','commission','studentAffairs','quality','it','admin','rector','sales'])workspaces[r].pages.push('references');
 export const workspaceFor = role => workspaces[role] || workspaces.coordinator;
 export const canView = (role, page) => workspaceFor(role).pages.includes(page);
 export const resolveRoute = (role, requested) => canView(role, requested) ? requested : workspaceFor(role).home;

@@ -1,0 +1,1 @@
+module.exports={content:['./src/**/*.{jsx,js}'],prefix:'ug-',corePlugins:{preflight:false},theme:{extend:{colors:{navy:'#103a5c',ink:'#19384f',muted:'#63798a',line:'#dce5ec'},boxShadow:{panel:'0 3px 16px rgba(15,44,67,.035)'}}},plugins:[]};
