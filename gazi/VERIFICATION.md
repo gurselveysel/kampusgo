@@ -15,3 +15,12 @@
 - Replaced the text recreation with the exact corporate-site Turkish ÜniGO PNG (SHA256 c6b041e9686bc275d14c934fa54dee8794c0655ff418635ab0a4ebf13dcdf137). Original image pixels, proportions and colors are preserved. Replaced the favicon with the corporate-site go SVG.
 - Production deployment dpl_EctUYV7dZgzKBGHATD8sznpRtmPh is READY. Vercel now reports misconfigured=false and the expected CNAME. https://gazi.unigoturkiye.com/ opens the application over HTTPS; the earlier DNS/HTTPS pending status is resolved.
 - Browser verified the logo loaded at natural dimensions 1983 × 793 and display width 132 px, both on desktop and in the opened 390 px mobile drawer. Visual review passed.
+
+## Role-switch fix — 2026-10-10
+
+- All eight automated tests pass: six existing workflow invariants plus role-route fallback and scoped notification/read-state tests.
+- Preview dpl_6WxvgydwU9DKhQWtd2DH6yi9QsMT: all nine role selectors open their configured home. Each role's working-area page has its own heading, metrics, tasks and navigation. Coordinator, learner, instructor, commission, Student Affairs, quality, IT, finance and admin expose 13, 8, 4, 9, 8, 10, 4, 4 and 5 menu items respectively.
+- Learner applications contain only the two own synthetic records. Manually opening the OBS route redirects the learner to the wallet. Reload preserves the learner role. Notification read state is scoped by role.
+- Mobile role changes verified at 390 px (commission) and 320 px (learner wallet). Document scroll/client widths are equal: 375/375 and 305/305 respectively; visual review passed.
+- Preview promotion returned HTTP 422, so the exact tested file set was published directly as production deployment dpl_7B8AEsuq3pLoirtfp65WuHBrzdhc. Original ÜniGO and Gazi assets remain unchanged.
+- Production is READY with aliases gazi.unigoturkiye.com and gazi-unigo-myys.vercel.app. On the fallback production host, browser switching to commission, learner wallet and learner working area passed. At final check the cloud browser received a 502 connection-refused error on the custom hostname (including one retry), while Vercel reported the correct CNAME, verified=true and misconfigured=false. No DNS changes were made in this revision; custom-host availability could not be reconfirmed from this browser.

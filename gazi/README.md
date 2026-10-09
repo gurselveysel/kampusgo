@@ -4,7 +4,7 @@ Separate, dependency-free Gazi pilot, built alongside the existing Dumlupınar a
 
 ## Run
 
-Serve this directory over HTTP. No build or package installation is necessary. `node --test model.test.mjs` runs the workflow invariants. `pilot.html` rewrites to `index.html` on Vercel.
+Serve this directory over HTTP. No build or package installation is necessary. `node --test model.test.mjs workspaces.test.mjs` runs the workflow and workspace invariants. `pilot.html` rewrites to `index.html` on Vercel.
 
 ## Scope
 
@@ -31,3 +31,7 @@ Vercel project: `gazi-unigo-myys`, team `team_QH2k9edmHSXuybZK3Ay9RVAo`. Working
 ## Original brand assets — 2026-10-10
 
 The Turkish ÜniGO image and go favicon are copied byte-for-byte from the existing corporate site: https://unigoturkiye.com/unigo-logo-tr.png and https://unigoturkiye.com/favicon-go-v1.svg . The sidebar now uses an image instead of a text recreation; desktop and mobile drawer share that same original asset.
+
+## Role workspaces — 2026-10-10
+
+Changing the demo role now opens its relevant home page, filters navigation, refreshes role-specific metrics, task links and notifications, closes stale dialogs and clears transient searches. The selection survives refresh without deleting pilot records. Student views show only the synthetic learner's own applications and wallet. Stale or unavailable routes return to the selected role's home. These client-side presentation and operation gates are not production authorization.
