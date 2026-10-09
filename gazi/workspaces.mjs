@@ -48,6 +48,7 @@ export const workspaces = {
 };
 
 const extensions={coordinator:['governance','ai-requests','proctoring','cryptographic','sync'],learner:['cryptographic'],instructor:['proctoring'],commission:['governance','ai-requests','proctoring','cryptographic'],studentAffairs:['governance','cryptographic','sync'],quality:['governance','ai-requests','proctoring','cryptographic','sync'],it:['governance','proctoring','sync'],finance:['governance'],admin:['governance','proctoring','cryptographic','sync']};
+for(const r of ['coordinator','instructor','commission','studentAffairs','quality','it','admin'])workspaces[r].pages.push('references');
 for(const [role,pages] of Object.entries(extensions))workspaces[role].pages.push(...pages);
 
 export const workspaceFor = role => workspaces[role] || workspaces.coordinator;

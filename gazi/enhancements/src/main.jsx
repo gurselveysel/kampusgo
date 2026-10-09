@@ -1,3 +1,4 @@
+import ReferenceWorkspace from './reference.jsx';
 import React,{useState,useEffect,useRef,Component} from 'react';
 import {createRoot} from 'react-dom/client';
 import {LayoutDashboard,FileCheck2,ShieldCheck,Award,Network,ArrowUpRight,ArrowRight,Bell,Check,CheckCircle2,AlertTriangle,XCircle,Clock,Search,SlidersHorizontal,Download,ChevronRight,ChevronDown,X,Users,UserRound,VideoOff,ScanFace,LockKeyhole,Shield,Play,Pause,RefreshCw,FileText,ExternalLink,KeyRound,Copy,Share2,Building2,Database,Server,Activity,Layers,GraduationCap,Sparkles,Info,Eye,Send,ClipboardCheck} from 'lucide-react';
@@ -22,9 +23,10 @@ function App({page,bridge}){
  const navigate=id=>bridge.canView(id)?bridge.navigate(id):bridge.notify('Bu ekran için ilgili birimin demo rolünü seçin.',true);
  const props={s,g,role,navigate,commit,notify:bridge.notify,setModal,canAccess:bridge.canView};
  return <div className="unigo-enhanced" data-enhanced-page={page}>
+  {page!=='references'&&bridge.canView('references')&&<button className="ref-entry" onClick={()=>navigate('references')}><Database size={22}/><div><strong>Yeterlilik ve kanıt merkezi</strong><small>TYÇ · AYÇ · TYYÇ · Kaynaklı matris · Rubrik · AKTS</small></div><ArrowRight size={18}/></button>}
   <div ref={phaseRef} className="ug-phase-strip" aria-label="Yönetişim aşamaları">{phases.filter(([id])=>bridge.canView(id)).map(([id,label])=>{const Icon=icons[id];return <button type="button" className={cx('ug-phase',id===page&&'ug-phase-active')} key={id} onClick={()=>navigate(id)} aria-current={page===id?'page':undefined}><Icon size={16}/><span>{label}</span></button>})}</div>
-  {page==='governance'?<Dashboard {...props}/>:page==='ai-requests'?<Requests {...props}/>:page==='proctoring'?<Proctoring {...props}/>:page==='cryptographic'?<Certification {...props}/>:<Integration {...props}/>}
-  <div className="ug-extension-foot"><LockKeyhole size={13}/><span>Kurum alanı: gazi.unigoturkiye.com</span><span>Örnek veriler · İnsan denetimi · İzlenebilir işlemler</span></div>
+  {page==='references'?<ReferenceWorkspace {...props}/>:page==='governance'?<Dashboard {...props}/>:page==='ai-requests'?<Requests {...props}/>:page==='proctoring'?<Proctoring {...props}/>:page==='cryptographic'?<Certification {...props}/>:<Integration {...props}/>}
+  <div className="ug-extension-foot"><LockKeyhole size={13}/><span>Kurum alanı: gazi.unigoturkiye.com</span><span>Kaynaklı referanslar · Pilot işlemler · İnsan denetimi</span></div>
   {modal&&<Modal title={modal.title} onClose={()=>setModal(null)} wide={modal.wide}>{modal.content}</Modal>}
  </div>
 }

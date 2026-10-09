@@ -52,3 +52,21 @@ Run the complete current checks: `node --test model.test.mjs workspaces.test.mjs
 ### Source and authority boundaries
 
 Reviewed 1EdTech primary sources: https://www.1edtech.org/standards/open-badges ; https://standards.1edtech.org/open-badges/specifications/standards/v3p0 ; https://www.1edtech.org/specifications . The local export deliberately does not claim Open Badges certification. KVKK source: https://www.kvkk.gov.tr/Icerik/2030/rehberler?page=2 . Local processing alone is not treated as legal compliance. Gazi senate policy, current applicable YÖK limits, institutional signing authority and YÖKSİS/e-Devlet API authorization remain unverified, so no live integrations or institutional decisions are represented.
+
+
+## Kaynaklı yeterlilik merkezi — 2026.10.10.1
+
+Mevcut ekranlar korunarak `#/references` çalışma alanı eklendi. Referans verisi `public.gazi_reference_records` tablosundan salt okunur API ile gelir. Aynı projedeki Dumlupınar tablo ve kayıtları değiştirilmedi. Tarayıcıya yalnız yayımlanabilir anahtar verilir; tablo RLS korumalıdır ve anonim/oturum açmış roller yalnız yayımlanmış kayıtları okuyabilir. Kurumsal işlem kayıtları hâlen mevcut yerel pilot deposundadır; demo rol seçimi gerçek yetkilendirme değildir.
+
+Kapsam: 3 çerçeve, 20 seviye (8 TYÇ, 8 AYÇ, 4 TYYÇ uygulama özeti), 6 yükseköğretim yeterlilik türü, Gazi Teknoloji Fakültesi Bilgisayar Mühendisliğine ait 13 program çıktısının kısa özeti, ayrı fakültedeki 1 sicil üst verisi, 7 kaynak ve 1 paket üst verisi: toplam 52 kayıt. Bu, ulusal yeterlilik sicilinin veya tüm Gazi programlarının tam kopyası değildir. MYK/TYYÇ kayıtları önceki kaynaklı sürümden taşındı; güncel erişim teyidi beklediği ekranda gösterilir. Kaynak sicili kayıt bazında kontrol tarihini ve dayanak adresini içerir.
+
+- Matris: başvurunun her öğrenme çıktısı → Gazi program çıktısı → çerçeve seviyesi/boyutu → katkı düzeyi → gerekçe → kanıt.
+- Rubrik: çıktı başına ölçüt, toplam %100 ağırlık, 0–4 başarım, gerekçeli puan; şablon kurum onayına sunulacak tasarımdır.
+- Kanıt: açıklamanın gerçek SHA-256 özeti; belge otantikliği iddiası üretmez.
+- AKTS: Gazi 2025 KİDR B.1.4, PDF sayfa 115, rapor sayfa 113: 25 saat / AKTS. Kullanıcı faaliyet sayısı ve saatlerini düzenler.
+- Karar: eksik kanıt, geçersiz kaynak/çıktı, ağırlık, puan, eski kaynak sürümü ve eksik insan incelemesi engellenir. %70 eşiği pilot iş kuralıdır.
+- Uygulanan paket başvuru, komisyon kararı, örnek belge, gerçek yerel kriptografik imza girdisi ve OBS provasına aynı kaynak/tasarım sürümüyle taşınır. Sevk sonrası düzenleme engellenir. Yeni tasarım veya eski eşleme ekranında değişiklik önceki paketi geçersizleştirir.
+
+Kaynak üretimi: `node gazi/scripts/build-reference.mjs`. Bu komut kaynaklı depodaki sürümden paket üretir; resmî sitelerin tamamını otomatik taradığını iddia etmez. Veritabanı şeması ve ilk yayın verisi: `gazi/database/reference-schema.sql`; uygulanan uzaktan migration adı `gazi_sourced_reference_records`. API başarısız olduğunda paketlenmiş kopya açık durum mesajıyla gösterilir. Yeni veri yayını aynı referans sürümünde atomik yapılmalı; uygulama karışık sürümleri reddeder.
+
+Doğrulama: `node --test gazi/model.test.mjs gazi/workspaces.test.mjs gazi/enhancements/governance.test.mjs gazi/enhancements/reference.test.mjs`.

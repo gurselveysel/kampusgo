@@ -36,3 +36,12 @@
 - Production dpl_FjCyBgdoXzZXfvtGcztyGG8RpqKs is READY. https://gazi.unigoturkiye.com/#/governance was opened and all five new screens verified on this custom hostname. The earlier cloud-browser 502 did not recur. The final quality profile reads “Kalite Komisyonu”. Production sample requests were not mutated during the final smoke check.
 - The exact final bundle is published; the legacy storage key remains unigo-gazi-myys-v1. Original Dumlupınar sources and deployment are untouched. Rollback reference: dpl_7B8AEsuq3pLoirtfp65WuHBrzdhc.
 - Integration and inference labels remain explicit examples. No YÖK legal conformity, institutional signature, Open Badges certification, real proctoring, YÖKSİS, e-Devlet or LinkedIn transmission is claimed. Synthetic test data only.
+
+
+## 2026-10-09 — Kaynaklı yeterlilik ve kanıt merkezi
+
+- Gerçek Supabase okuması tarayıcıda doğrulandı: 52 kayıt. RLS açık, kaynak yabancı anahtarlarında yetim kayıt yok; anonim ve authenticated rollerin yalnız SELECT hakkı var.
+- Yeni tabloda güvenlik danışmanı uyarısı yok. Projede önceden bulunan sızmış parola koruması uyarısı bu yayında değişmedi; uygulamada yeni oturum veya parola akışı eklenmedi. İlgili ayar: https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection
+- 17 model testi: kaynak bütünlüğü, rol kapıları, rubrik/eşleme, eksik kanıt, eski sürüm, belge/karar/OBS izinin aynı kalması, SHA-256 ve mevcut akışlar.
+- Önizleme tarayıcı testi: AYÇ/seviye filtresi; kaynak seçiminden matrise geçiş; gerçek SHA-256; 2 çıktı için 2 kanıt bağlantısı, %100 kapsam, 75/100 rubrik, 50 saat → 2 AKTS; gerekçeli inceleme öncesi uygulama butonu kapalı; başvuruya uygulama başarılı; mevcut başvuru penceresinde kaynak/tasarım/rubrik bilgisi göründü; komisyona sevkten sonra matris kilitlendi.
+- Orijinal Gazi/ÜniGO logoları ve rol ana sayfaları korunur. Üretim başvuru kaydı oluşturulmadı; testler ayrı önizleme kökenindeki sentetik verilerle yapıldı.
