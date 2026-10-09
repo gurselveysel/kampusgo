@@ -1,5 +1,7 @@
 // Presentation workspaces for the local demo. These are not authentication.
 export const workspaces = {
+  rector:{name:'Rektörlük / Karar verici',initials:'RK',home:'executive',title:'Karar verici çalışma alanı',description:'Kurumsal değeri, kalite kanıtlarını ve yatırım senaryolarını inceleyin.',pages:['executive','business','quality','commission','applications','delivery','demo','audit','notifications']},
+  sales:{name:'Saha ekibi',initials:'SE',home:'sales',title:'Saha çalışma alanı',description:'Görüşme metnini karar vericiye göre hazırlayın; çalışan ekranlarla demo yapın.',pages:['sales','executive','business','recognition','evidence','delivery','demo','quality','commission','matching','applications','audit','notifications']},
   coordinator: {
     name:'Koordinatörlük / GAZİSEM', initials:'GK', home:'overview',
     title:'Koordinatörlük çalışma alanı', description:'Programları, başvuruları ve akademik değerlendirme akışını yönetin.',
@@ -7,7 +9,7 @@ export const workspaces = {
   },
   learner: {
     name:'Öğrenen / Öğrenci', initials:'DÖ', home:'wallet',
-    title:'Öğrenme alanım', description:'Deniz Örnek · Başvurularınızı, kazanımlarınızı ve öğrenme planınızı takip edin.',
+    title:'Öğrenme alanım', description:'Deniz Örnek · Başvurularınızı, öğrenme çıktılarınızı ve öğrenme planınızı takip edin.',
     pages:['overview','applications','catalog','credentials','wallet','pathways','appeals','notifications']
   },
   instructor: {
@@ -22,7 +24,7 @@ export const workspaces = {
   },
   studentAffairs: {
     name:'Öğrenci İşleri', initials:'Öİ', home:'obs',
-    title:'Öğrenci İşleri çalışma alanı', description:'Onaylı kazanımları, belge sicilini ve OBS aktarım kuyruğunu yönetin.',
+    title:'Öğrenci İşleri çalışma alanı', description:'Onaylı öğrenme çıktılarını, belge sicilini ve OBS aktarım kuyruğunu yönetin.',
     pages:['overview','applications','matching','commission','credentials','obs','notifications','audit']
   },
   quality: {
@@ -46,6 +48,14 @@ export const workspaces = {
     pages:['overview','integrations','notifications','audit','settings']
   }
 };
+
+workspaces.coordinator.pages.push('executive','sales','business','recognition','evidence','delivery','demo');
+workspaces.commission.pages.push('executive','recognition','evidence','demo');
+workspaces.studentAffairs.pages.push('executive','recognition','evidence','delivery','demo');
+workspaces.quality.pages.push('executive','evidence','demo');
+workspaces.it.pages.push('executive','delivery','evidence','demo');
+workspaces.finance.pages.push('business','demo');
+workspaces.admin.pages.push('executive','sales','business','recognition','evidence','delivery','demo');
 
 export const workspaceFor = role => workspaces[role] || workspaces.coordinator;
 export const canView = (role, page) => workspaceFor(role).pages.includes(page);

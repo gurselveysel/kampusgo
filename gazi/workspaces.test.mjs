@@ -28,3 +28,15 @@ test('learner notifications only include own records; reads are role-scoped', ()
   s.role='commission'; assert.equal(roleNotifications(s).find(n=>n.id==='N1').read,false);
   assert.equal(s.applications.length,4);
 });
+
+
+test('sales and decision-maker routes retain role boundaries',()=>{
+ assert.equal(workspaceFor('rector').home,'executive');
+ assert.equal(workspaceFor('sales').home,'sales');
+ for(const role of ['sales','coordinator','admin']) assert.ok(canView(role,'sales'));
+ for(const role of ['learner','instructor']) for(const page of ['sales','executive','delivery','business']) assert.equal(canView(role,page),false);
+ assert.equal(resolveRoute('sales','settings'),'sales');
+ assert.ok(canView('it','delivery'));
+ assert.ok(canView('studentAffairs','recognition'));
+ assert.ok(canView('commission','evidence'));
+});
