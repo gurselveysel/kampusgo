@@ -17,6 +17,17 @@ const readable=(actor,r)=>r.owner===actor.id&&ownUnit(actor,r.unit)||allow(actor
 const fetchRecord=(store,actor,kind,id)=>{
  const r=store.get(actor.tenant,kind,id);requireThat(r&&readable(actor,r),'not_found','Kayıt bulunamadı veya erişilemiyor.',404);return r;
 };
+const appealRecords=(s,tenant,enrollmentId)=>s.list(tenant,'appeal').filter(r=>s.get(tenant,'decision',r.decisionId)?.enrollmentId===enrollmentId);
+const resolutionFor=(s,tenant,appealId)=>s.list(tenant,'resolution').find(r=>r.appealId===appealId);
+function independentReviewer(s,a,appeal){
+ const d=s.get(a.tenant,'decision',appeal.decisionId),assessment=d&&s.get(a.tenant,'assessment',d.assessmentId),program=d&&s.get(a.tenant,'program',d.programId);
+ return !!(d&&assessment&&program&&allow(a,'resolve',appeal.unit)&&![appeal.owner,d.createdBy,assessment.createdBy,program.createdBy].includes(a.id));
+}
+function appealChainReady(s,tenant,assessment){
+ const lineage=new Set(),seen=new Set();let current=assessment;
+ while(current&&!seen.has(current.id)){seen.add(current.id);if(current.resolutionId)lineage.add(current.resolutionId);current=current.supersedesAssessmentId?s.get(tenant,'assessment',current.supersedesAssessmentId):null;}
+ return appealRecords(s,tenant,assessment.enrollmentId).every(appeal=>{const r=resolutionFor(s,tenant,appeal.id);return r&&(r.outcome==='upheld'||r.outcome==='reassessment'&&lineage.has(r.id));});
+}
 
 function validateProgram(p){
  requireThat(text(p.title,3,200)&&text(p.code,2,60)&&text(p.unit,1,80),'program_fields','Program adı, kodu ve birimi gerekli.');
@@ -91,19 +102,30 @@ export class MyysCore {
   if(action==='assess'){
    const e=get('enrollment',p.enrollmentId),program=s.get(a.tenant,'program',e.programId);guard(a,'assess',e.unit);
    requireThat(a.id!==e.owner,'separation','Kendi çalışmanızı değerlendiremezsiniz.',403);
+   const appeals=appealRecords(s,a.tenant,e.id),resolutions=appeals.map(x=>resolutionFor(s,a.tenant,x.id));
+   requireThat(resolutions.every(Boolean),'review_pending','Açık itiraz önce bağımsız yetkili tarafından incelenmeli.',409);
+   const required=resolutions.filter(r=>r.outcome==='reassessment');let supersedes;
+   if(required.length||p.resolutionId){
+    const resolution=required.find(r=>r.id===p.resolutionId);
+    requireThat(resolution,'reassessment_required','Yeniden değerlendirme için bu öğrenen kaydına ait inceleme kararı gerekli.');
+    const decision=get('decision',resolution.decisionId);supersedes=get('assessment',decision.assessmentId);
+    requireThat(![supersedes.createdBy,decision.createdBy,resolution.createdBy,e.owner,program.createdBy].includes(a.id),'separation','Yeniden değerlendirmeyi önceki işlemlerden bağımsız bir eğitici yapmalı.',403);
+    requireThat(!s.list(a.tenant,'assessment').some(x=>x.resolutionId===resolution.id),'duplicate','Bu inceleme kararı için yeniden değerlendirme zaten kayıtlı.',409);
+   }
    requireThat(Array.isArray(p.evidenceIds)&&p.evidenceIds.length<=100&&new Set(p.evidenceIds).size===p.evidenceIds.length,'evidence','Kanıt listesi tekil olmalı.');
    const evidence=p.evidenceIds.map(eid=>get('evidence',eid));
    requireThat(evidence.length&&evidence.every(x=>x.enrollmentId===e.id&&hash(x.content)===x.sha256&&currentLmsEvidence(s,a.tenant,x))&&program.tasks.every(t=>evidence.some(x=>x.taskId===t.id)),'missing_evidence','Tüm zorunlu görevlerin doğrulanabilir kanıtı gerekli.');
    requireThat(Array.isArray(p.scores)&&p.scores.length===program.rubric.length&&new Set(p.scores.map(x=>x.criterionId)).size===p.scores.length,'scores','Bütün rubrik ölçütleri puanlanmalı.');
    const score=program.rubric.reduce((sum,r)=>{const v=p.scores.find(x=>x.criterionId===r.id);requireThat(v&&Number.isInteger(v.score)&&v.score>=0&&v.score<=4&&text(v.reason,12),'scores','Her ölçüt için 0–4 puan ve gerekçe gerekli.');return sum+r.weight*v.score/4;},0);
    requireThat(text(p.reason,20),'reason','Değerlendirme gerekçesi gerekli.');
-   return put('assessment',{id:id(),unit:e.unit,owner:e.owner,enrollmentId:e.id,programId:program.id,evidenceIds:p.evidenceIds,evidenceDigests:evidence.map(x=>({id:x.id,sha256:x.sha256})),scores:p.scores,score,passed:score>=program.threshold,reason:p.reason,rubricSnapshot:program.rubric});
+   return put('assessment',{id:id(),unit:e.unit,owner:e.owner,enrollmentId:e.id,programId:program.id,evidenceIds:p.evidenceIds,evidenceDigests:evidence.map(x=>({id:x.id,sha256:x.sha256})),scores:p.scores,score,passed:score>=program.threshold,reason:p.reason,rubricSnapshot:program.rubric,...(supersedes?{resolutionId:p.resolutionId,supersedesAssessmentId:supersedes.id}:{})});
   }
   if(action==='decide'){
    const assessment=get('assessment',p.assessmentId),program=s.get(a.tenant,'program',assessment.programId);guard(a,'decide',assessment.unit);
    requireThat(![assessment.owner,assessment.createdBy,program.createdBy].includes(a.id),'separation','Bağımsız akademik karar sahibi gerekli.',403);
    requireThat(text(p.reason,20)&&['approved','rejected'].includes(p.outcome),'decision','Gerekçe ve karar gerekli.');
    requireThat(p.outcome!=='approved'||assessment.passed,'failed','Başarısız değerlendirme onaylanamaz.');
+   requireThat(appealChainReady(s,a.tenant,assessment),'review_pending','Açık itiraz veya yeniden değerlendirme zinciri tamamlanmadan karar verilemez.',409);
    requireThat(assessment.evidenceIds.length&&assessment.evidenceDigests.every(x=>{const e=s.get(a.tenant,'evidence',x.id);return e&&hash(e.content)===x.sha256&&currentLmsEvidence(s,a.tenant,e);}),'missing_evidence','Karar kanıtı doğrulanamadı.');
    requireThat(!s.list(a.tenant,'decision').some(x=>x.assessmentId===assessment.id),'duplicate','Değerlendirme için karar zaten var.',409);
    return put('decision',{id:id(),unit:assessment.unit,owner:assessment.owner,assessmentId:assessment.id,programId:program.id,enrollmentId:assessment.enrollmentId,outcome:p.outcome,reason:p.reason,score:assessment.score,programVersion:program.version,evidenceDigests:assessment.evidenceDigests,pilot:true});
@@ -116,7 +138,7 @@ export class MyysCore {
   }
   if(action==='resolve'){
    const appeal=get('appeal',p.appealId),d=get('decision',appeal.decisionId),assessment=get('assessment',d.assessmentId);guard(a,'resolve',appeal.unit);
-   requireThat(![appeal.owner,d.createdBy,assessment.createdBy].includes(a.id),'separation','İtirazı bağımsız bir yetkili incelemeli.',403);
+   requireThat(independentReviewer(s,a,appeal),'separation','İtirazı bağımsız bir yetkili incelemeli.',403);
    requireThat(text(p.reason,20)&&['upheld','reassessment'].includes(p.outcome),'resolution','Gerekçe ve itiraz sonucu gerekli.');
    requireThat(!s.list(a.tenant,'resolution').some(x=>x.appealId===appeal.id),'duplicate','İtiraz zaten sonuçlandırıldı.',409);
    // Reassessment never manufactures a new passing grade.
@@ -166,12 +188,12 @@ export class MyysCore {
  decisionUsable(a,d){
   const s=this.store,assessment=s.get(a.tenant,'assessment',d.assessmentId);
   if(!assessment?.passed||!assessment.evidenceDigests.length||!assessment.evidenceDigests.every(x=>{const e=s.get(a.tenant,'evidence',x.id);return e&&e.enrollmentId===d.enrollmentId&&hash(e.content)===x.sha256&&currentLmsEvidence(s,a.tenant,e);}))return false;
-  return s.list(a.tenant,'appeal').filter(x=>x.decisionId===d.id).every(x=>s.list(a.tenant,'resolution').some(r=>r.appealId===x.id&&r.outcome==='upheld'));
+  return appealChainReady(s,a.tenant,assessment);
  }
  view({sessionHash,tenant}){
   return this.store.transaction(()=>{
    const a=this.store.principal(sessionHash,tenant,this.clock()),s=this.store,visible=kind=>s.list(tenant,kind).filter(r=>readable(a,r));
-   return {mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment'),decisions:visible('decision').map(d=>({...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d)})),appeals:visible('appeal'),issuances:visible('issuance').map(r=>({...r,blocked:!this.decisionUsable(a,s.get(tenant,'decision',r.decisionId))||s.list(tenant,'revocation').some(x=>x.issuanceId===r.id)})),support:supportView(s,a)};
+   return {mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment'),decisions:visible('decision').map(d=>({...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d)})),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,blocked:!this.decisionUsable(a,s.get(tenant,'decision',r.decisionId))||s.list(tenant,'revocation').some(x=>x.issuanceId===r.id)})),support:supportView(s,a)};
   });
  }
  shared({tenant,token}){

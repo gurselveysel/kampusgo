@@ -43,9 +43,13 @@
 
 ## Sıradaki bağımsız işler
 
-- B11: itiraz inceleme ve yeniden değerlendirme arayüzü.
+- B11: itiraz/sonuç arayüzü ve bağımsız yeniden değerlendirme bağlantısı kodlandı, 7 yeni test geçti. Tam rol tarayıcı kabulü ve imzalı belge değiştirme süreci sürüyor.
 - B06/B07: üretimden bağımsız depo/kimlik sözleşmesi ve güvenilir issuer/audience/MFA testleri.
 - B16/B17: kalıcı işçi karantinası ve satır mutabakatı.
 - B18/B20/B21: özel cüzdan arayüzü ve sürümlü tanıma/tekil kredi defteri.
 - B28/B29/B30: veri talebi, kaynak sayımı ve ayrı kabul kapıları.
 - B31/B33–B36: koşullu ödeme, uzman beceri eşlemesi, portfolyo ve modelden bağımsız öneri sözleşmeleri; dış servis etkinleştirilmez.
+
+## Son kontrol
+
+Paket 3 (`abf8b284`, `dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z`) canlı; destek özeti masaüstü kabulü geçti. B11 devam dilimi yerelde, 147 toplam test geçiyor; henüz yayınlanmadı. B26 kurum destek hizmeti ve B11 gerçek akademik işlem etkin değildir. Bütün 36 satırın kurum ve dış erişim alanları ayrı tutulmaktadır.

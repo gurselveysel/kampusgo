@@ -65,3 +65,22 @@ Dört yeni test: kanıt/karar/denetim/tekrar önleme kayıtlarının aynı kalma
 - Rehberin destek özeti yalnız konu/ekran/etki seçimleriyle JSON hazırlar; kimlik veya serbest mesaj toplamaz, bilet göndermez.
 - Tarayıcı: yerel `file:` protokolü bulut tarayıcı politikasıyla reddedildi; bu yol yeniden denenmedi. HTTPS adayda gerçek korumalı giriş ekranı görüldü. Güvenli giriş isteği zaman aşımıyla sonuçlandı; 10 Ekim 18:06 Türkiye saati sonrasında yeniden doğrulamada hâlâ giriş ekranı görüldü. İç arayüz kabulü ve gerçek canlı smoke henüz tamamlanmadı. Giriş veya güvenlik kapısı kaldırılmadı.
 - 36 paketin beş ayrı kabul alanı `ACCEPTANCE-MATRIX.md` ve `backlog.json` içinde; tek kurumsal erişim eylem paketi `ACCESS-ACTIONS.md` içinde.
+
+### Paket 3 — gerçek üretim yayını ve kabul (10 Ekim 2026)
+
+- Kullanıcının “Hazır üçüncü paketi test edip yayımla” talimatı uygulandı. Kaynak: `abf8b2844480ddaffc6047fba4884eb03d7add21`.
+- Üretim dağıtımı: `dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z`, READY; `gazi.unigoturkiye.com` alias doğrulandı. Oluşturulma: 18:24:01 UTC / 21:24:01 Türkiye saati.
+- Yayın öncesi 53 sunucu/güvenlik + 41 portal + 46 mevcut model, kaynak, çalışma alanı ve demo testi = 140 geçti. Önceki 126 sayımına ek 14 mevcut regresyon testi dahil edildi. Derleme/paketleme başarılı; 134 dağıtım kaynağının tüm hash ve boyutları adayla eşleşti.
+- Önizleme ile production ayrı TOTP anahtarları kullanacak şekilde belgeli. Preview kodu reddedildi; güvenlik değiştirilmedi. Önizleme iç arayüz kabulü tamamlanmış sayılmadı. Kişisel verisiz, dış sisteme yazmayan destek özeti kontrollü yayımlandı; aşağıdaki tarayıcı kabulü yayın sonrasında yapıldı.
+- Mevcut gerçek Gazi oturumunda yeni rehber bölümü açıldı. Akademik itiraz / bilgi alma seçimleri, bağımsız inceleme açıklaması ve JSON indirmesi doğru. İndirilen dosyanın izinli 10 alanı ve `gonderildi:false` değeri kontrol edildi; kimlik, oturum veya öğrenme kanıtı alanı yok.
+- Veri ve paylaşım konusu doğru sorumluyu gösterdi. Tab tuşu destek konusundan ilgili ekrana geçti; odak görünür. Masaüstünde yatay taşma ve bozuk resim yok. İlgili ekran bağlantısı akademik çalışma alanındaki kurum bağlantısı bekleniyor kapısına ulaştı. Gerçek akademik kayıt/belge oluşturulmadı.
+- Ekran kanıtı: `libfile_2c81f84d11c88191acfd1d77e75f42f8`. Dağıtıma özgü son 15 dakika error/fatal log sayımı boş; sürekli izleme veya tam mobil/ekran okuyucu kabulü değildir.
+- Geri dönüş hedefi doğrulandı: `dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL` / `b3262455a7d3d56b5ec712450554fa647f1cb21e`. Bu projede Vercel rollback ile önceki dosyalar geri alınabilir. Geri dönüş fiilen çalıştırılmadı; migration/veri değişikliği yok.
+
+## B11 sonraki dilim — itiraz ve yeniden değerlendirme (henüz yayımlanmadı)
+
+- `core.mjs`: bağımsız incelemeciye program hazırlayan da dahil edilmez. İtiraz/sonuç görünümü kurum/birim/kişi/MFA kapsamında; izinli inceleme eylemi sunucudan gelir.
+- Açık itiraz aynı öğrenen kaydına başka değerlendirme veya karar açılarak aşılamaz. Yeniden değerlendirme ilgili inceleme kararına ve önceki değerlendirmeye bağlanır; ilk değerlendirici, karar sahibi, incelemeci, öğrenen veya program hazırlayan yapamaz. Eski gerekçeler silinmez; başarısız yeni puan onaylanmaz.
+- `appeals-workspace.jsx`: ilk karar, öğrenenin gerekçesi ve bağımsız sonuç birlikte görünür. Yetki yoksa sonuç formu yok; serbest gerekçe React metni olarak kaçışlanır. Yeniden değerlendirme formu ilgili inceleme kaydını seçer.
+- Dört yeni sunucu senaryosu + gerçek bileşenin üç sunucu render testi geçti. Güncel toplam: 57 sunucu/güvenlik + 44 portal + değişmeyen 46 model/kaynak/demo = 147. Portal derlemesi ve özel paketleme başarılı.
+- Bu dilim yerel kod/test aşamasında. İzole tam rol tarayıcı kabulü, kurum itiraz usulü ve daha önce imzalanmış belgeyi değiştirme süreci açık. Gerçek IdP, kurumsal depo, LMS veya resmî belge yetkisi etkinleştirilmedi. Üretim sürümü Paket 3'tür.

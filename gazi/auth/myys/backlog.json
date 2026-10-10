@@ -16,7 +16,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "49 sunucu/güvenlik + 39 portal + 32 model/kaynak testi geçti; toplam 120.",
+      "test_status": "Üçüncü paket yayın öncesi 140 test; B11 eklemeleriyle 147 test. 66 ders ve mevcut rol/rozet regresyonları korunur.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs"
@@ -41,7 +41,7 @@
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "49 sunucu/güvenlik + 39 portal + 32 model/kaynak testi geçti; toplam 120.",
+          "evidence": "Üçüncü paket yayın öncesi 140 test; B11 eklemeleriyle 147 test. 66 ders ve mevcut rol/rozet regresyonları korunur.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
@@ -608,15 +608,19 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Açık itiraz ve yeniden değerlendirme testleri.",
+      "test_status": "4 yeni sunucu + 3 gerçek bileşen render testi geçti; toplam sunucu 57, portal 44.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/tests/myys-appeals.test.mjs",
+        "gazi/portal/src/appeals-workspace.jsx",
+        "gazi/portal/src/appeals.test.mjs",
+        "gazi/auth/myys/core.mjs"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Bağımsız itiraz, değişmez eski karar; yeniden değerlendirme ihraç kapısını kapatır.",
+      "production_status": "B11 yeni dilim yerelde kodlandı ve sınandı; henüz yayımlanmadı. Mevcut canlı Paket 3.",
+      "implementation_note": "İtiraz/sonuç arayüzü, sunucu yetki eylemleri, bağımsız yeniden değerlendirme bağlantısı, başka karar üzerinden açık itirazı aşma reddi. Eski karar ve gerekçeler korunur.",
       "independent_remaining_work": [
-        "İtiraz/çözüm arayüzünü tamamla; yeniden değerlendirme ve belge değiştirme akışı."
+        "İzole rol tarayıcı kabulü; daha önce imzalanmış belgenin değiştirilmesi/iptal zinciri; süre ve moderasyon politikasını sürümle."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun itiraz ve moderasyon usulü.",
@@ -625,20 +629,24 @@
           "status": "kısmi",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/tests/myys-appeals.test.mjs",
+            "gazi/portal/src/appeals-workspace.jsx",
+            "gazi/portal/src/appeals.test.mjs",
+            "gazi/auth/myys/core.mjs"
           ],
           "remaining": [
-            "İtiraz/çözüm arayüzünü tamamla; yeniden değerlendirme ve belge değiştirme akışı."
+            "İzole rol tarayıcı kabulü; daha önce imzalanmış belgenin değiştirilmesi/iptal zinciri; süre ve moderasyon politikasını sürümle."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "Açık itiraz ve yeniden değerlendirme testleri.",
+          "evidence": "4 yeni sunucu + 3 gerçek bileşen render testi geçti; toplam sunucu 57, portal 44.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "B11 yeni dilim yerelde kodlandı ve sınandı; henüz yayımlanmadı. Mevcut canlı Paket 3."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1362,7 +1370,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "test_status": "Paket 3 canlı masaüstü: görünür odak, Tab sırası, seçimler, indirme, 0 yatay taşma/bozuk resim. Tam mobil/ekran okuyucu ve rol kabulü açık.",
       "implementation_evidence": [
         "scripts/myys-local-acceptance.mjs"
       ],
@@ -1372,7 +1380,7 @@
         "Yerel kabul senaryoları, klavye/odak testleri ve ekran okuyucu kontrolü."
       ],
       "development_blocker": "Tarayıcı çalıştırma ortamı eksik; kod ve API testi engelli değil.",
-      "production_activation_blocker": "Yeni tam rol/mobil/ekran okuyucu kabulü açık. Yerel dosya protokolü bulut tarayıcı politikasıyla engelli; korumalı HTTPS aday kontrolü hazırlanıyor.",
+      "production_activation_blocker": "Tam rol/mobil/ekran okuyucu kabulü açık. Canlı destek özeti masaüstü kabulü geçti; izole kurumsal rol tarayıcısı hâlâ gerekli.",
       "acceptance_axes": {
         "code_completeness": {
           "status": "kısmi",
@@ -1385,7 +1393,7 @@
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "evidence": "Paket 3 canlı masaüstü: görünür odak, Tab sırası, seçimler, indirme, 0 yatay taşma/bozuk resim. Tam mobil/ekran okuyucu ve rol kabulü açık.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
@@ -1479,7 +1487,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "4 sunucu destek yetki/olay testi + 2 destek özeti testi geçti; toplam sunucu 53, portal 41, model/kaynak 32 = 126.",
+      "test_status": "Paket 3 yayın öncesi 140 test; canlıda seçenekler, kişisel verisiz JSON, klavye sırası ve bağlantı kapısı doğrulandı.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -1492,7 +1500,7 @@
         "gazi/portal/src/support-workspace.jsx",
         "gazi/portal/src/support.test.mjs"
       ],
-      "production_status": "Kullanım rehberi b3262455 / dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL ile canlı; kurum destek süreci henüz etkin değil.",
+      "production_status": "Destek hazırlık özeti abf8b284 / dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z ile canlı; kurum destek kayıtları etkin değil.",
       "implementation_note": "Sürümlemeli rehber ve kişisel verisiz destek özeti; yerel depoda kategoriye bağlı yanıt/çözüm/yeniden açma/eskalasyon, olay tarihçesi ve sürüm çakışması koruması. Kurumsal destek hizmeti kapalı.",
       "independent_remaining_work": [
         "Destek biletleri için tam rol arayüz kabulü, çalışma saati/SLA ve kurumca belirlenen eskalasyon politikası."
@@ -1520,12 +1528,12 @@
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "4 sunucu destek yetki/olay testi + 2 destek özeti testi geçti; toplam sunucu 53, portal 41, model/kaynak 32 = 126.",
+          "evidence": "Paket 3 yayın öncesi 140 test; canlıda seçenekler, kişisel verisiz JSON, klavye sırası ve bağlantı kapısı doğrulandı.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kısmi pilot",
-          "evidence": "Kullanım rehberi b3262455 / dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL ile canlı; kurum destek süreci henüz etkin değil."
+          "evidence": "Destek hazırlık özeti abf8b284 / dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z ile canlı; kurum destek kayıtları etkin değil."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2123,5 +2131,12 @@
     "url": "https://gazi.unigoturkiye.com/#/guide",
     "runtime_tests": 116,
     "local_tests_after_recovery_tool": 120
+  },
+  "last_checkpoint": {
+    "date": "2026-10-10",
+    "live_deployment": "dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z",
+    "live_source": "abf8b2844480ddaffc6047fba4884eb03d7add21",
+    "local_tests": 147,
+    "note": "Üçüncü paket canlı; B11 sonraki dilim yalnız kod/test aşamasında."
   }
 }
