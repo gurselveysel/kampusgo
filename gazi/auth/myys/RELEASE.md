@@ -54,3 +54,14 @@ Yayın öncesi canlı alias yeniden okundu ve `dpl_FFtPAoJGT2aXLAD8KBLzPWykKqsx`
 10 Ekim 2026 12:12:20 UTC provası: yedek 1,408 ms, geri dönüş 0,387 ms; 10 kişi, 10 üyelik, 6 akademik kayıt, 6 komut ve 6 denetim kaydı geri geldi; 0 oturum geri açıldı. Snapshot sonrasındaki 1 sentetik kayıt geri dönüş kapsamı dışında kaldı. Bu küçük yerel ölçüm üretim RPO/RTO taahhüdü değildir.
 
 Dört yeni test: kanıt/karar/denetim/tekrar önleme kayıtlarının aynı kalması ve oturum reddi; bozuk yedek/eksik özet reddi; var olan hedefin korunması; üretim ortamı reddi. Sunucu testleri 49/49, önceki değişmeyen portal 39/39 ve model/kaynak 32/32 ile toplam 120 test. Bu araçlar `scripts/` ve `tests/` altında, canlı gateway paketinin dışındadır. Üretim deposu, kimlik sağlayıcı, anahtar kasası, kuyruk ve sözleşmeli RPO/RTO provası hâlâ açıktır.
+
+## Paket 3 — destek akışı ve kişisel verisiz destek özeti (aday)
+
+- Kaynak commit: `abf8b2844480ddaffc6047fba4884eb03d7add21`; aynı içerikli yerel commit `998e050fd2063b54945eb77dbb5967618d79de00`. Ağaç: `51724ef61cfc605478c64c134ed72b064b0d8832`. CLI GitHub ağı ortam politikasıyla reddedildi; uzak kayıt mevcut GitHub bağlantısıyla yapıldı. Hiçbir commit silinmedi, reset/clean yapılmadı.
+- Aday dağıtım: `dpl_FXdHBQGJMxprVV5K23vr3DAajNNT`, READY, preview, alias yok. Adres: `https://gazi-unigo-myys-2wcfcaoaj-info-64116029s-projects.vercel.app`.
+- Üretime taşınmadı. Yayın öncesi referans ve geri dönüş hedefi `dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL` / `b3262455a7d3d56b5ec712450554fa647f1cb21e`. Terfi öncesi güncel canlı alias tekrar karşılaştırılmalı.
+- 53 sunucu/güvenlik + 41 portal + 32 mevcut model/kaynak = 126 test geçti; derleme ve 115 korumalı arayüz dosyasının paketlemesi geçti. Toplam dağıtım kaynağı 134 dosya; önceki yayından 4 dosya değişti/eklendi.
+- Yeni destek çekirdeği: kurum/birim/MFA/kategoriye bağlı görünürlük; yanıt, çözüm, yeniden açma, yetkili kuyruğa yönlendirme; değişmez tarihçe ve sürüm çakışması. Akademik not/kanıt/karar üzerinde işlem yapmaz. Kurumsal depo bağlı olmadığından üretimde etkin değildir.
+- Rehberin destek özeti yalnız konu/ekran/etki seçimleriyle JSON hazırlar; kimlik veya serbest mesaj toplamaz, bilet göndermez.
+- Tarayıcı: yerel `file:` protokolü bulut tarayıcı politikasıyla reddedildi; bu yol yeniden denenmedi. HTTPS adayda gerçek korumalı giriş ekranı görüldü. Güvenli giriş isteği zaman aşımıyla sonuçlandı; 10 Ekim 18:06 Türkiye saati sonrasında yeniden doğrulamada hâlâ giriş ekranı görüldü. İç arayüz kabulü ve gerçek canlı smoke henüz tamamlanmadı. Giriş veya güvenlik kapısı kaldırılmadı.
+- 36 paketin beş ayrı kabul alanı `ACCEPTANCE-MATRIX.md` ve `backlog.json` içinde; tek kurumsal erişim eylem paketi `ACCESS-ACTIONS.md` içinde.
