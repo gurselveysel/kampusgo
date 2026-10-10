@@ -9,7 +9,7 @@ const COOKIE='__Host-gazi_demo_session';
 const ROOT=process.cwd();
 const STORE='https://xpjkrwzgimdxsasqszfi.supabase.co/functions/v1/gazi-demo-gate-store';
 const sha=s=>createHash('sha256').update(s).digest('hex');
-const types={'.vtt':'text/vtt; charset=utf-8','.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.mjs':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.pdf':'application/pdf'};
+const types={'.csv':'text/csv; charset=utf-8','.vtt':'text/vtt; charset=utf-8','.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.mjs':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.pdf':'application/pdf'};
 const publicFiles=new Map([['/giris','login/index.html'],['/guvenlik/giris.css','login/giris.css'],['/guvenlik/giris.js','login/giris.js'],['/assets/gazi-logo.svg','private/assets/gazi-logo.svg'],['/assets/unigo-logo-tr.png','private/assets/unigo-logo-tr.png']]);
 let files;
 export const safeNext=s=>typeof s==='string'&&/^\/(?!\/)[a-zA-Z0-9_./-]*(?:#[a-zA-Z0-9_/-]*)?$/.test(s)&&!s.includes('..')&&!s.startsWith('/giris')&&!s.startsWith('/api/')?s:'/';
@@ -96,8 +96,9 @@ export default async function handler(req,res){
    }
   }
   let data=await readFile(resolve(ROOT,file));
-  if(file.startsWith('private/')&&file.endsWith('.html'))data=Buffer.from(data.toString().replace('</body>','<script src="/guvenlik/oturum.js" defer></script></body>'));
+  if(file.startsWith('private/')&&!file.startsWith('private/content/')&&file.endsWith('.html'))data=Buffer.from(data.toString().replace('</body>','<script src="/guvenlik/oturum.js" defer></script></body>'));
   res.setHeader('Content-Type',types[extname(file)]||'application/octet-stream');
+  if(/^private\/content\/P\d{2}-(L\d{2}-Sunum\.html|M\d{2}-Vaka\.csv)$/.test(file))res.setHeader('Content-Disposition','attachment; filename="Unigo_'+file.slice(16)+'"');
   res.statusCode=200;res.end(req.method==='HEAD'?undefined:data);
  }catch(e){console.error(JSON.stringify({component:'gazi-gateway',type:e?.name||'Error',code:typeof e?.code==='string'?e.code.slice(0,60):'',stage:/^storage:[a-z_]+:[0-9]+$/.test(e?.message||'')?e.message:'request'}));json(res,503,{error:'Erişim şu anda doğrulanamıyor. Lütfen biraz sonra yeniden deneyin.'});}
 }

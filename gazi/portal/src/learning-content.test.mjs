@@ -20,3 +20,10 @@ test('Auth allows only the required educational media hosts and keeps the sessio
  const {readFile}=await import('node:fs/promises');const gateway=await readFile(new URL('../../auth/api/gateway.mjs',import.meta.url),'utf8');
  assert.ok(gateway.includes("media-src 'self' https://media.w3.org"));assert.ok(gateway.includes("frame-src 'self' https://www.youtube-nocookie.com"));assert.ok(gateway.includes("frame-ancestors 'self'"));assert.ok(!gateway.includes("script-src 'self' 'unsafe-inline'"));
 });
+
+test('Offline slide exports contain the six pages, traceable sources and safely escaped text',async()=>{
+ const {renderSlides,renderCaseCsv}=await import('./learning-materials.mjs');
+ const l=lessonsFor('P01')[0],html=renderSlides({...l,title:'<script>bad</script>'},[sources.data]);
+ assert.ok(html.includes('&lt;script&gt;bad&lt;/script&gt;'));assert.ok(!html.includes('<script>bad</script>'));assert.equal((html.match(/<section>/g)||[]).length,7);assert.ok(html.includes(sources.data.url));assert.ok(html.includes('lang="tr"'));
+ const csv=renderCaseCsv(cases[l.moduleId]);assert.equal(csv.split('\r\n').length,5);assert.ok(csv.startsWith('\uFEFF'));
+});
