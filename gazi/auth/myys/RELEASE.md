@@ -253,3 +253,16 @@ Başvurular, kaynaklı göstergeler ve cüzdan teslim teyidi. 194 sunucu + 46 po
 ## Paket 13 adayı — B30
 
 Kontrollü grup kabulü ekranı: sürümlü plan, görev bazlı koşullar, ayrı üç inceleme, kaynak zinciri, kritik hata/bağımsız çözüm, yerel açılış ve dönem/kapanış. 204 sunucu + 46 portal + 46 regresyon = 296 otomatik test; 12 yeni tarayıcı kontrolü. Gerçek kurum grubu ve dönem gözlemi yapılmadı; bütün B30 kabulü kapanmadı. COHORT-CONTRACT.md sınırları ve backlog eksenleri güncel.
+
+### Paket 13 — doğrulanmış güvenli kaynak yayını
+
+- Uzak kaynak `61331bca1119a83ca776d0c13b39b376ee0152c1`; yerel `e77365b6952d2e717d348cf4a87b334ab2549ed7`; ortak ağaç `727909faa7ddef88ca1bdab4169c31e206fd3d4f`.
+- Dağıtım `dpl_2oSrWPd32ifowdTtirzLmaQpDxAA` READY / production. Canlı alias aynı dağıtıma bağlı; 148/148 kaynak hash eşleşti, eksik/fazla yok.
+- Gerçek canlı yeniden yüklemede kapalı kurum akademik görünümü doğrulandı; bozuk görsel veya yatay taşma yok. Giriş/logolar/ders içeriği korunuyor.
+- 296 otomatik test + 12 grup kabul tarayıcı kontrolü. Yerel grup planı/koşullar/üç ayrı inceleme/kritik hata/dönem/kapanış kodu yayımlandı. Gerçek kohort açılmadı; configuredCore Vercel'de kapalı.
+- Geri dönüş Paket 12 `dpl_9kkNdKVj1n3YSnaUXhvDK31RZuYt`; fiilen uygulanmadı.
+
+
+## Paket 14 adayı — B04
+
+Akış ve saklama ekranı: sicile bağlı ülke/rol/aşama/süre, ayrı yönetici incelemesi, silmeden önizleme ve ayrı BT ile atomik yerel temizleme. 214 sunucu + 46 portal + 46 regresyon = 306 otomatik test; 12 tarayıcı kontrolü. Coursera aşamaları ayrıdır; ülke seçimi aktarım izni değildir. Gerçek saklama kararları, üretim işçisi ve fiziksel imha kabulü açık. Başlangıç B01–B36 kimlik/bağımlılık/kabul ölçütleri değişmedi.

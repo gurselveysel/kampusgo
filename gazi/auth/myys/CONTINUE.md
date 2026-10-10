@@ -1,3 +1,13 @@
+# Güncel devam — Paket 14 kaynak adayı
+
+B04 akış/saklama arayüzü ve sınırlı yerel işçi: 306 otomatik + 12 tarayıcı kontrolü geçti. RETENTION-CONTRACT.md kaynak/sürüm/sınırları ve kabul kaydı güncel. Önce Paket 14 güvenli kaynak yayını ve canlı smoke; sonra B06/B08 üyelik/rol yaşam döngüsü, B12/B13/B19 belge zinciri ve kalan bütün bağımsız B01–B36 işleri. Tüm işler tamamlanmadı; devam izni bekleme. Son doğrulanmış canlı Paket 13 aşağıda.
+
+# Güncel devam — Paket 13 yayımlandı; B04 sürüyor
+
+Uzak `61331bca1119a83ca776d0c13b39b376ee0152c1`; yerel `e77365b6952d2e717d348cf4a87b334ab2549ed7`; ağaç `727909faa7ddef88ca1bdab4169c31e206fd3d4f`; canlı `dpl_2oSrWPd32ifowdTtirzLmaQpDxAA` READY. 148 kaynak hash ve canlı kapalı kurum/logolar/taşma smoke geçti. Geri dönüş Paket 12. 296 otomatik + 12 grup kabul tarayıcı kontrolü; B30 sadece yerel prova, gerçek kohort/kurum kabulü açık.
+
+Sıradaki B04: ülke/süre doğrulamalı veri akışı sicili ve politika kaynaklı yerel saklama işçisi. KVKK yurt dışı aktarım ve standart sözleşme sayfaları bulundu, henüz yeni metinler okunmadı. ISO ülke kodu sayfası henüz doğrulanmadı; ülke seçimini hukuki aktarım izni sayma. Mevcut B28 süresi dolmuş yerel oturum temizliğini koru; üretim silme/migration yok. Ardından B06/B08 üyelik/rol kapsamı, B12/B13/B19 belge zinciri, tüm diğer bağımsız B01–B36 işleri. Tamamlanmamış işleri bitmiş gösterme ve devam izni bekleme.
+
 # Güncel devam — Paket 13 kaynak adayı
 
 B30 kontrollü grup kabulü arayüz ve çekirdeği: 296 otomatik + 12 tarayıcı kontrolü. Güvenli kaynak yayını/canlı doğrulama bekliyor; son canlı Paket 12 aşağıda. Sonra B04 ülke/süre/saklama işçisi, B06/B08 üyelik/rol kapsamı, B12/B13/B19 belge zinciri ve kalan bütün B01–B36 bağımsız işleri. Tüm işlerin tamamlandığı söylenemez. Gerçek kohort/üretim aktivasyonu kapalıdır.

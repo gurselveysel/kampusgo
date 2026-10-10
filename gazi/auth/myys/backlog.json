@@ -202,16 +202,23 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+      "test_status": "10 yeni sunucu senaryosu ve 12 izole tarayıcı kontrolü geçti; güncel toplam 306 otomatik test.",
       "implementation_evidence": [
         "gazi/auth/myys/registry.mjs",
         "gazi/auth/tests/myys-lms.test.mjs",
-        "gazi/portal/src/academic-forms.jsx"
+        "gazi/portal/src/academic-forms.jsx",
+        "gazi/auth/myys/retention-model.mjs",
+        "gazi/auth/myys/retention.mjs",
+        "gazi/portal/src/retention-workspace.jsx",
+        "gazi/auth/tests/myys-retention.test.mjs",
+        "scripts/myys-retention-browser.cjs",
+        "gazi/auth/myys/RETENTION-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B04-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir. B28 yanıtında akademik saklama ayrımı/dayanak ve sonraki inceleme tarihi ayrı; kurum saklama süresi onaylanmadı.",
+      "production_status": "Paket 14 kaynak adayı; yerel kabul geçti, yeni yayın doğrulaması bekliyor. Kurumsal saklama/temizleme kapalı.",
+      "implementation_note": "Sicile bağlı sürümlü ülke/rol/aşama/süre ve akademik saklama ayrımı; bağımsız inceleme, silmeden önizleme, ayrı BT ile sınırlı atomik yerel oturum temizliği. Hukuki veya üretim onayı değildir.",
       "independent_remaining_work": [
-        "Veri akışı siciline süre/ülke doğrulaması ve saklama işçisi ekle."
+        "Üretim depo/işçi adaptörü, gerçek sağlayıcı ülke/rol belgeleri ve kurum saklama/aktarım kararlarının kabulü; fiziksel imha ve yedek politikası."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Veri sorumlusunun amaç, aktarım ve saklama kararı.",
@@ -221,20 +228,27 @@
           "evidence": [
             "gazi/auth/myys/registry.mjs",
             "gazi/auth/tests/myys-lms.test.mjs",
-            "gazi/portal/src/academic-forms.jsx"
+            "gazi/portal/src/academic-forms.jsx",
+            "gazi/auth/myys/retention-model.mjs",
+            "gazi/auth/myys/retention.mjs",
+            "gazi/portal/src/retention-workspace.jsx",
+            "gazi/auth/tests/myys-retention.test.mjs",
+            "scripts/myys-retention-browser.cjs",
+            "gazi/auth/myys/RETENTION-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B04-20261010.json"
           ],
           "remaining": [
-            "Veri akışı siciline süre/ülke doğrulaması ve saklama işçisi ekle."
+            "Üretim depo/işçi adaptörü, gerçek sağlayıcı ülke/rol belgeleri ve kurum saklama/aktarım kararlarının kabulü; fiziksel imha ve yedek politikası."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "evidence": "10 yeni sunucu senaryosu ve 12 izole tarayıcı kontrolü geçti; güncel toplam 306 otomatik test.",
+          "limits": "Sadece sentetik yerel oturum temizliği; kurum kararları ve üretim/fiziksel imha kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 14 kaynak adayı; yerel kabul geçti, yeni yayın doğrulaması bekliyor. Kurumsal saklama/temizleme kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1891,7 +1905,7 @@
         "gazi/auth/myys/COHORT-CONTRACT.md",
         "gazi/auth/myys/acceptance/B30-20261010.json"
       ],
-      "production_status": "Paket 13 kaynak adayı; gerçek kohort açılmadı.",
+      "production_status": "Paket 13 kaynak kodu READY yayımlandı; canlı kapalı kurum görünümü doğrulandı. Gerçek kohort açılışı ve dönem gözlemi yok.",
       "implementation_note": "Kontrollü grup planı, görev bazlı yerel koşullar, ayrı teknik/akademik/işletim incelemeleri, sıfır kritik hata, güncel kaynakla yerel açılış provası ve dönem değerlendirmesi.",
       "independent_remaining_work": [
         "Gerçek kurum kabul belgeleri/aktivasyon adaptörü ve gerçek yetkili kohort dönem gözlemi; kapıların dış kaynak doğrulanması."
@@ -1921,7 +1935,7 @@
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 13 kaynak adayı; gerçek kohort açılmadı."
+          "evidence": "Paket 13 kaynak kodu READY yayımlandı; canlı kapalı kurum görünümü doğrulandı. Gerçek kohort açılışı ve dönem gözlemi yok."
         },
         "institution_decision": {
           "status": "bekleniyor",

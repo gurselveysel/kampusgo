@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-10T22:49:59.870Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Sicile bağlı ülke/rol/süre/yöntem ayrıntısı kaydedildi; hazırlayan inceleyemedi",
+    "Ayrı inceleme olmadan BT önizleme işlemi açılmadı",
+    "Ayrı görevli gerekçeli yerel saklama incelemesi yaptı",
+    "Silme yapmayan önizleme bir süresi dolmuş aday buldu",
+    "Ayrı BT görevlisi yalnız önizlenen yerel oturumu temizledi",
+    "Tekrarlanan önizleme temizlenmiş oturumu tekrar saymadı",
+    "Yeni sürüm eski süreyi korudu ve inceleme bitene kadar işçiyi kapattı",
+    "Yeniden yüklemede sicil sürümleri ve temizlik kanıtı korundu",
+    "390 px saklama ekranında yatay taşma yok",
+    "390 px ülke seçimi ve saklama formunda yatay taşma yok",
+    "Öğrenen idari sicile erişemedi; kendi akademik kaydı korundu",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 10,
+  "automated_tests": {
+    "server": 214,
+    "portal": 46,
+    "regression": 46
+  },
+  "limits": [
+    "Süre ve ülke seçimi hukuki onay değildir.",
+    "Yalnız tek birim kapsamlı süresi dolmuş yerel oturum satırları temizlenir.",
+    "Akademik kayıt/kimlik/harici hesap/fiziksel imha ve üretim işçisi kapsam dışıdır."
+  ]
+}
