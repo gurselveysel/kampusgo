@@ -4,13 +4,22 @@ import {readFile} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {fixture} from '../gazi/auth/tests/helpers/myys-fixture.mjs';
+import {randomBytes,createHmac} from 'node:crypto';
+import {LocalLmsAdapter,LocalLmsWorker} from '../gazi/auth/myys/lms.mjs';
 import {hash} from '../gazi/auth/myys/store.mjs';
 import {myysRoute} from '../gazi/auth/myys/http.mjs';
 
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
-if(process.argv.includes('--appeals'))f.passed();else f.setup();
+const initial=process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+if(process.argv.includes('--operations')){
+ const key=randomBytes(32),contract={id:'Yerel kabul kaynağı',tenant:'gazi',unit:'engineering',programId:initial.p.id,mode:'local-acceptance',subjects:{source:'student'},key};
+ const adapter=new LocalLmsAdapter(f.s,contract);
+ for(let i=1;i<=2;i++){const raw=JSON.stringify({id:'acceptance-event-0'+i,contractId:contract.id,tenant:'gazi',programId:initial.p.id,subject:'source',revision:i,type:'grade',taskId:'T1',content:'Sentetik öğrenme ürünü: gerçek öğrenci verisi içermez.',grade:80,occurredAt:new Date().toISOString()});const event=adapter.accept(raw,createHmac('sha256',key).update(raw).digest('hex'));
+  if(i===2)new LocalLmsWorker(adapter,{beforeProcess(){throw Object.assign(Error('Sentetik kaynak hatası'),{code:'idempotency_conflict'});}}).run(event.id);
+ }
+}
 for(const [person,role] of [['independent','instructor'],['finance','finance']]){
  f.s.db.prepare('INSERT INTO persons VALUES(?,?,?,1)').run(person,'https://test-idp.invalid',person);
  f.s.db.prepare('INSERT INTO memberships VALUES(?,?,?,?,?,1)').run('gazi',person,'engineering',JSON.stringify([role]),'2099-01-01T00:00:00.000Z');

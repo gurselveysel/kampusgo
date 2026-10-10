@@ -33,3 +33,5 @@
 
 /* Academic record identifiers and learner text must wrap on narrow screens. */
 .academic-record{min-width:0;overflow-wrap:anywhere}.appeal-followup{border-left:3px solid #315576;background:#f4f7fb;padding:16px;margin:16px 0}.appeal-followup h4{font-weight:650}.tab-strip>[aria-selected="true"]{border-color:#236dd0;color:#2864b1;font-weight:650}
+
+.operations-workspace{display:grid;gap:20px;min-width:0}.operations-workspace .academic-record{overflow-wrap:anywhere}.batch-rows{padding-left:22px}.batch-choice{display:flex;gap:10px;align-items:flex-start;margin:12px 0}.batch-choice input{width:auto;flex-shrink:0}

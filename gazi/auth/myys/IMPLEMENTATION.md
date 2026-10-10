@@ -128,3 +128,11 @@ Paket 4 `2743da31b6b6e278dfc13b27e8bc79145b708731` / `dpl_3KJc8BhJLm5Agu289W2eQ5
 `identity-flow.mjs` tek kullanımlık kalıcı istek ile PKCE/state/nonce, atomik oturum ve denetim, kurum kapsamı ve çıkış işlemlerini ekler. `store.mjs` yalnız yeni yerel oturumların tenant bağını denetler. 27 yeni testle sunucu 114, toplam 206; B11 13 tarayıcı kontrolü yeniden geçti. Gerçek HTTP/IdP ve üretim depo adaptörü açık. Yayın durumu RELEASE.md ve backlog.json içinde.
 
 Paket 5 yayın sonucu: `24b41c8dba48bfa261a51613fbbc3a83a7939f13` / `dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg`, production READY. 136 kaynak dosyası SHA eşleşmesi ve sınırlı canlı smoke geçti. Kurumsal SSO etkinleştirilmedi; HTTP/IdP, kurum depo adaptörü ve dağıtık iptal açık.
+
+## Paket 6 yerel dilimi — B16/B17
+
+`LocalLmsWorker` append-only işçi geçmişi, atomik lease, süre aşımı sonrası geri kazanım, sınırlı üstel yeniden deneme ve karantina ekler. Alındı/denetim tek transaction içindedir. İki SQLite bağlantısında tek işçi ve geç sonuç reddi sınandı; dağıtık üretim testi değildir. Yalnız tanınan geçici hata kodları tekrar edilir; ham hata mesajları saklanmaz. Üyelik işleme sırasında yeniden kontrol edilir. Karantina incelemesi tekrar yetkisi vermez.
+
+`#/academic` → Aktarım ve mutabakat: bilgi işlem/kalite minimal olay durumunu görür; teknik rol özel kanıtı görmez. Öğrenci işleri aynı birimde CSV veya karar seçimiyle 1–100 satır kayıt oluşturur, her satırı işler, kısmi sonuçları yeniden açar ve UTF-8 CSV indirir. Geçerli satırın ihraç yetkisi ile sonuç/denetim atomiktir. Eksik/yinelenen kişi satırları korunur; yetki ve itiraz tekrar denetlenir. Gönderilen/kabul/işlenen/hazırlanan/imzalı/teslim ayrı sayılır.
+
+221 otomatik test, 8 yeni + 13 B11 tarayıcı kontrolü geçti. İmza, teslim, gerçek HTTP LMS alımı ve üretim adaptörü bu dilimde bağlı değildir; B16/B17 kısmi kalır.

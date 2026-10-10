@@ -938,17 +938,23 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+      "test_status": "15 yeni sunucu senaryosu, 8 yeni tarayıcı kontrolü; 129 sunucu + 46 portal + 46 regresyon = 221 test; B11 13 tarayıcı kontrolü yeniden geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
         "gazi/auth/myys/lms.mjs",
-        "gazi/auth/tests/myys-lms.test.mjs"
+        "gazi/auth/tests/myys-lms.test.mjs",
+        "gazi/auth/myys/operations.mjs",
+        "gazi/auth/myys/transfer-csv.mjs",
+        "gazi/portal/src/operations-workspace.jsx",
+        "gazi/auth/tests/myys-operations.test.mjs",
+        "scripts/myys-operations-browser.cjs",
+        "gazi/auth/myys/acceptance/B16-B17-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir.",
+      "production_status": "Paket 6 yayın adayı; henüz yayımlanmadı. Kurumsal etkinleştirme kapalı.",
+      "implementation_note": "Kalıcı yerel işçi claim/süre/yeniden deneme/karantina; yetkili inceleme ve kalıcı toplu satır mutabakatı, CSV arayüzü. Akademik karar/ihraç kendiliğinden üretilmez.",
       "independent_remaining_work": [
-        "Kalıcı işçi yeniden deneme, karantina ve mutabakat arayüzünü ekle."
+        "Gerçek LMS sözleşmesine bağlı üretim depo/işçi adaptörü ve dağıtık kuyruk kabulü; yeni HTTP alım sözleşmesi."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Üretim kuyruk/depo işletim seçimi; mevcut testler yereldir.",
@@ -959,20 +965,26 @@
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
             "gazi/auth/myys/lms.mjs",
-            "gazi/auth/tests/myys-lms.test.mjs"
+            "gazi/auth/tests/myys-lms.test.mjs",
+            "gazi/auth/myys/operations.mjs",
+            "gazi/auth/myys/transfer-csv.mjs",
+            "gazi/portal/src/operations-workspace.jsx",
+            "gazi/auth/tests/myys-operations.test.mjs",
+            "scripts/myys-operations-browser.cjs",
+            "gazi/auth/myys/acceptance/B16-B17-20261010.json"
           ],
           "remaining": [
-            "Kalıcı işçi yeniden deneme, karantina ve mutabakat arayüzünü ekle."
+            "Gerçek LMS sözleşmesine bağlı üretim depo/işçi adaptörü ve dağıtık kuyruk kabulü; yeni HTTP alım sözleşmesi."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+          "status": "kısmi · işçi/satır dilimi geçti",
+          "evidence": "15 yeni sunucu senaryosu, 8 yeni tarayıcı kontrolü; 129 sunucu + 46 portal + 46 regresyon = 221 test; B11 13 tarayıcı kontrolü yeniden geçti.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 6 yayın adayı; henüz yayımlanmadı. Kurumsal etkinleştirme kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1001,15 +1013,22 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Dört satırda tek hazırlık; iki ayrı hata; imzalı sayı sıfır.",
+      "test_status": "15 yeni sunucu senaryosu, 8 yeni tarayıcı kontrolü; 129 sunucu + 46 portal + 46 regresyon = 221 test; B11 13 tarayıcı kontrolü yeniden geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/operations.mjs",
+        "gazi/auth/myys/lms.mjs",
+        "gazi/auth/myys/transfer-csv.mjs",
+        "gazi/portal/src/operations-workspace.jsx",
+        "gazi/auth/tests/myys-operations.test.mjs",
+        "scripts/myys-operations-browser.cjs",
+        "gazi/auth/myys/acceptance/B16-B17-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Toplu ihraç hazırlığı satır sonuçları ve tekil sayım; toplu imza/teslim henüz yok.",
+      "production_status": "Paket 6 yayın adayı; henüz yayımlanmadı. Kurumsal etkinleştirme kapalı.",
+      "implementation_note": "Kalıcı yerel işçi claim/süre/yeniden deneme/karantina; yetkili inceleme ve kalıcı toplu satır mutabakatı, CSV arayüzü. Akademik karar/ihraç kendiliğinden üretilmez.",
       "independent_remaining_work": [
-        "Toplu imza/teslim, satır bazlı kalıcı mutabakat ve güvenli CSV aktarımı."
+        "Toplu imza/teslim adaptörü, satır sonuçlarının yetkili dış alıcı teyidiyle mutabakatı."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Yetkili kurum kararları ve üretim imzalayıcısı.",
@@ -1018,20 +1037,27 @@
           "status": "kısmi",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/myys/operations.mjs",
+            "gazi/auth/myys/lms.mjs",
+            "gazi/auth/myys/transfer-csv.mjs",
+            "gazi/portal/src/operations-workspace.jsx",
+            "gazi/auth/tests/myys-operations.test.mjs",
+            "scripts/myys-operations-browser.cjs",
+            "gazi/auth/myys/acceptance/B16-B17-20261010.json"
           ],
           "remaining": [
-            "Toplu imza/teslim, satır bazlı kalıcı mutabakat ve güvenli CSV aktarımı."
+            "Toplu imza/teslim adaptörü, satır sonuçlarının yetkili dış alıcı teyidiyle mutabakatı."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Dört satırda tek hazırlık; iki ayrı hata; imzalı sayı sıfır.",
+          "status": "kısmi · işçi/satır dilimi geçti",
+          "evidence": "15 yeni sunucu senaryosu, 8 yeni tarayıcı kontrolü; 129 sunucu + 46 portal + 46 regresyon = 221 test; B11 13 tarayıcı kontrolü yeniden geçti.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 6 yayın adayı; henüz yayımlanmadı. Kurumsal etkinleştirme kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2165,7 +2191,7 @@
     "date": "2026-10-10",
     "live_deployment": "dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg",
     "live_source": "24b41c8dba48bfa261a51613fbbc3a83a7939f13",
-    "local_tests": 206,
-    "note": "Paket 5 yayımlandı. 114 sunucu + 46 portal + 46 regresyon ve 13 izole B11 tarayıcı kontrolü geçti. Canlı oturum/logolar/destek/kapalı akademik görünüm doğrulandı. Gerçek SSO/kurum deposu açılmadı."
+    "local_tests": 221,
+    "note": "Paket 6 yerel aday: B16/B17 15 sunucu senaryosu, 8 yeni ve 13 regresyon tarayıcı kontrolü. İmza/teslim, gerçek LMS ve kurum deposu açık."
   }
 }

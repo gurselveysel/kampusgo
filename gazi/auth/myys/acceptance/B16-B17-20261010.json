@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-10T20:58:52.720Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Bilgi işlem karantina filtreleri ve özel kanıt ayrımı",
+    "Karantina gerekçesi kalıcı, klavye sırası doğru ve tekrar inceleme kapalı",
+    "Altı yetkisiz rolde kuyruk ve toplu hazırlık kapalı",
+    "CSV liste ve satır bazlı kısmi hata: tek hazırlık, sıfır imza/teslim",
+    "Toplu mutabakat sayfa yenilemede korunur",
+    "Türkçe UTF-8 CSV mutabakat indirildi ve içerik okundu",
+    "390 px mobilde taşma yok",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 15,
+  "automated_tests": {
+    "server": 129,
+    "portal": 46,
+    "regression": 46
+  },
+  "regression_browser_checks": 13,
+  "limits": [
+    "İzole yerel depo; gerçek LMS veya üretim işçisi değil.",
+    "Toplu hazırlık ve satır mutabakatı; imza ve teslim bağlanmadı.",
+    "Kurum etkinleştirmesi kapalı."
+  ]
+}

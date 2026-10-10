@@ -65,3 +65,7 @@ B11: 150 otomatik test ve 13 izole tarayıcı kontrolü geçti. Masaüstü 1440 
 ## Paket 5 kabul sonucu
 
 206 otomatik test ve yeniden çalıştırılan 13 B11 tarayıcı kontrolü geçti. İki ayrı SQLite bağlantısıyla eşzamanlı tekrar denendi; bu dağıtık production testi değildir. B06/B07 kod/yerel kabul kısmi; kurumsal etkinleştirme kapalı. Paket 5 yayımlandı; kimlikler, canlı sınırlar ve geri dönüş RELEASE.md içinde.
+
+## Paket 6 yerel kabul dilimi
+
+B16/B17: kalıcı işçi, karantina inceleme ve CSV satır mutabakatı 15 yeni sunucu senaryosu ve 8 tarayıcı kontrolünden geçti. Toplam 221 otomatik test; 13 B11 tarayıcı kontrolü tekrarlandı. Kod/yerel kabul kısmi; gerçek LMS, dağıtık üretim işçisi, toplu imza/teslim ve kurum kabulü açık. Yayın sonucu ayrıca RELEASE.md içine işlenir. Kabul ölçütleri değiştirilmedi.

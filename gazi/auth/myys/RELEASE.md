@@ -136,3 +136,12 @@ Kaynak dayanağı OpenID Connect Core errata set 2, inceleme 10.10.2026; kurum M
 - Dağıtıma özgü son 15 dakika error/fatal gruplu sayımı boş döndü. Bu kısa gözlem sürekli izleme veya tam canlı kabul değildir. Yeni SSO akışı canlıda çalıştırılmadı; bağlı HTTP/IdP yoktur.
 - 206 otomatik test ve 13 izole B11 tarayıcı kontrolü başarılı. Yeni kimlik akışının 27 testi sentetik provider ve yerel SQLite kapsamındadır. Gerçek IdP/dağıtık işçi/kurum kabulü değildir.
 - Geri dönüş hedefi `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV` / `2743da31b6b6e278dfc13b27e8bc79145b708731`. Geri dönüş çalıştırılmadı. Üretim migration'ı veya gerçek kişi/veri işlemi olmadığı için ters veri migration'ı yoktur.
+
+## Paket 6 — B16/B17 olay işleme ve satır mutabakatı (yayın adayı)
+
+- Başlangıç uzak commit `371cd686e9a8c6aa21e9a954bdf8aca6d2cac42f`, yerel `7bf599fe5912ba61d429f0c2ebbca3b00d32e28e`; aynı kaynak ağacı `6f96ee054e9502ec015257a57b2c2c3218e72027`. Temiz başlangıç, AGENTS.md bulunmadı. Güncel uzak dal ve canlı alias yeniden okundu.
+- Kullanıcı ekranı: Kanıt ve Akademik Karar → Aktarım ve mutabakat; olay filtreleri, karantina inceleme, toplu karar/CSV seçimi, kalıcı satır sonuçları ve güvenli CSV indirme. Yalnız yerel kabulde kullanılabilir.
+- 129 sunucu + 46 portal + 46 regresyon = 221 test; 8 yeni ve 13 B11 tarayıcı kontrolü. İki bağlantı, çökme/lease, denetim hatasında rollback, tekrar, yetki, CSV Türkçe ve 390 px mobil sınandı. Tam ekran okuyucu/kurum kabulü değil.
+- configuredCore() Vercel'de kapalı; giriş koruması ve ders materyalleri korunur. Yeni credential, üretim migration, gerçek kişi/rozet işlemi yok.
+- Geri dönüş hedefi Paket 5: `dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg` / `24b41c8dba48bfa261a51613fbbc3a83a7939f13`; geri dönüş uygulanmadı.
+- İş paketi kapanışı değildir: B16 üretim/sağlayıcı kabulü ve B17 toplu imza/teslim açık.
