@@ -1,3 +1,11 @@
+# Güncel devam — Paket 9 kaynak adayı
+
+Son güvenli yayın Paket 8: uzak `bcb89ab08e35979df903262eb2be6adb4d617c37`, yerel `4f41f862f90216b59da32a65dae8d4cf8e3f2717`, ortak ağaç `c0c0ac1a06bb331cbf7e6b0bb290b6670a9f75bd`; deploy `dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ` READY. 141 kaynak hash ve canlı kapalı akademik görünüm/kaynak merkezi doğrulandı.
+
+B20/B21 yerel kaynak dilimi: 254 otomatik test + 12 tarayıcı kontrolü. Politika sürümü ve ayrı paydalar; öğrenci talebi; insan teknik inceleme raporu; tam/kısmi/red; itiraz ve bağımsız yeni karar; atomik ters kayıtlı tekil kredi defteri. Gerçek belge/kurul/OBS bağlantısı kapalı. Paket 9 yayın sonucunu RELEASE.md'ye kaydet. Sıradaki bağımsız iş B22 OBS outbox sözleşmesi/düzeltme/tekrar mutabakatı; ardından B28/B29/B30 veri hakları, kalite ve ayrı açılış kapıları. Kalan 36 satırın bağımsız işleri bitmedi; devam izni tekrar istenmez.
+
+Aşağıdaki kayıtlar tarihsel referanstır; üstteki güncel nokta önceliklidir.
+
 # Güncel devam noktası — Paket 8 kaynak adayı
 
 Son güvenli yayın Paket 7: uzak `3388af9f1a9d9cdc7aedbd36a03ade8b4f264743`, yerel `ee63166a7cd050411fd70ab5ea2889b40e1d6ad3`, aynı ağaç `f1aaec5d01b79bd69b0eeb6094a33a18be3be25b`; dağıtım `dpl_5byPykXgobPQbncALGBs39kEQ4tk`. 139 kaynak hash eşleşmesi ve canlı smoke geçti. Geri dönüş Paket 6 `dpl_3QxBAAEiFAEoESH86QRaggCyjBj3`.

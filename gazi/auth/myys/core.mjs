@@ -5,6 +5,7 @@ import {currentLmsEvidence} from './lms.mjs';
 import {supportCommand,supportReplay,supportView} from './support.mjs';
 import {operationsCommand,operationsReplay,operationsView} from './operations.mjs';
 import {walletView} from './wallet.mjs';
+import {recognitionCommand,recognitionReplay,recognitionView} from './recognition.mjs';
 import {outcomeIds,criterionTasks,programBaseline,stableStringify} from './program-model.mjs';
 
 export const ROLES=['learner','instructor','coordinator','commission','studentAffairs','quality','it','finance','admin'];
@@ -69,6 +70,7 @@ export class MyysCore {
   });
  }
  authorizeReplay(a,action,r){
+  if(recognitionReplay(a,action,r))return;
   if(operationsReplay(a,action,r))return;
   if(action==='support-event')return supportReplay(this.store,a,r);
   const permission={program:'program',publish:'publish',enroll:'enroll',assess:'assess',decide:'decide',resolve:'resolve',issue:'issue',revoke:'revoke',policy:'policy',recognize:'recognize','registry-draft':'policy','registry-review':'policy','import-lms-evidence':'assess'}[action];
@@ -76,6 +78,7 @@ export class MyysCore {
  }
  execute(a,action,p,now){
   const s=this.store,get=(kind,id)=>fetchRecord(s,a,kind,id),put=(kind,r)=>s.put(a.tenant,kind,{...r,createdAt:now,createdBy:a.id}),id=()=>randomUUID();
+  const recognition=recognitionCommand({action,p,a,s,put,id,now});if(recognition)return recognition;
   const registry=registryCommand({action,p,a,s,put,id,guard,get:(kind,recordId)=>{const r=s.get(a.tenant,kind,recordId);requireThat(r&&allow(a,'policy',r.unit),'not_found','Sicil kaydı bulunamadı veya erişilemiyor.',404);return r;}});
   if(registry)return registry;
   const support=supportCommand({action,p,a,s,put,id});if(support)return support;
@@ -208,7 +211,7 @@ export class MyysCore {
  view({sessionHash,tenant}){
   return this.store.transaction(()=>{
    const a=this.store.principal(sessionHash,tenant,this.clock()),s=this.store,visible=kind=>s.list(tenant,kind).filter(r=>readable(a,r));
-   return {wallet:walletView(this,a),...operationsView(s,a,this.clock()),mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment').map(r=>({...r,allowedActions:allow(a,'decide',r.unit)&&![r.owner,r.createdBy,s.get(tenant,'program',r.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'decision').some(d=>d.assessmentId===r.id)&&appealChainReady(s,tenant,r)?['decide']:[]})),decisions:visible('decision').map(d=>({...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d)})),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,blocked:!this.decisionUsable(a,s.get(tenant,'decision',r.decisionId))||s.list(tenant,'revocation').some(x=>x.issuanceId===r.id)})),support:supportView(s,a)};
+   return {recognition:recognitionView(s,a),wallet:walletView(this,a),...operationsView(s,a,this.clock()),mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment').map(r=>({...r,allowedActions:allow(a,'decide',r.unit)&&![r.owner,r.createdBy,s.get(tenant,'program',r.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'decision').some(d=>d.assessmentId===r.id)&&appealChainReady(s,tenant,r)?['decide']:[]})),decisions:visible('decision').map(d=>({...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d)})),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,blocked:!this.decisionUsable(a,s.get(tenant,'decision',r.decisionId))||s.list(tenant,'revocation').some(x=>x.issuanceId===r.id)})),support:supportView(s,a)};
   });
  }
  shared({tenant,token}){

@@ -149,3 +149,12 @@ Paket 5 yayın sonucu: `24b41c8dba48bfa261a51613fbbc3a83a7939f13` / `dpl_DzCWthA
 - Değerlendirmede programSnapshot/programDigest; karar arşivinde tarihsel payload hash ve güncel kullanılabilirlik ayrı. Arşiv indirmesi aynı rol/birim kuralına tabidir. İmza veya kurum belge yetkisi iddiası yok.
 - Program sürümleri ekranında katalog arama, çoklu yazarlık, ilişki özeti, sürüm farkı; Akademik kararlar ekranında dayanak arşivi indirme. Ekran okuyucu etiketleri Türkçe.
 - 148 sunucu + 46 portal + 46 regresyon = 240 test; 8 program tarayıcı kontrolü. 390 px mobil, başka öğrenci gizliliği, arşiv içeriği ve yeniden yükleme doğrulandı.
+
+
+## Paket 9 — kaynaklı politika, tanıma ve tekil yerel kredi
+
+- B20 politika kaynağı/maddesi/sürümü/tarihi/geçerliliği, hedef diploma programı ve iki ayrı payda saklanır. Kurum kuralı önceden doldurulmaz; politika hazırlayan inceleyemez. Gazi RPL kaynağı okundu; YÖK metninin yeni erişim hatası ve taranmış transfer metni sınırlaması RECOGNITION-CONTRACT.md içinde.
+- B21 talep aynı kişinin program kaydına bağlı. Dosya özeti istemcide; dosya kuruma teslim edilmiş sayılmaz. Teknik inceleme insanın rapor kaydıdır; kredi oluşturmaz. Akademik kararı başka yetkili verir.
+- Tam/kısmi/red; kanonik kazanım + hedef ders + kaynak belge çıktısı çift sayım denetimi; yüzde sınırları tam sayı kredi alt birimiyle. Yeni politika eski başvuruyu ve mevcut kredi toplamını sıfırlamaz.
+- İtiraz krediyi bekletir. Bağımsız yeni karar, eski kredinin ters kaydı ve yeni kredi aynı transaction içinde; geçmiş silinmez. IT yalnız gereken belge alanlarını görür, kredi/karar/akademik eşleme gerekçesi görmez.
+- Tanıma ve kredi sekmesinde politikalar, başvurular/kararlar, tekil defter. 14 yeni sunucu testi, 12 tarayıcı kontrolü; toplam 254 otomatik test. Gerçek kurul/entegrasyon ve çok dersli kaynak kabulü açık.

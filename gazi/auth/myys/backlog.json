@@ -143,7 +143,7 @@
         "gazi/portal/src/program-workspace.jsx",
         "gazi/auth/myys/acceptance/B03-B09-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
+      "production_status": "Paket 8: bcb89ab08e35979df903262eb2be6adb4d617c37 / dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ READY. 141 kaynak hash eşleşmesi ve canlı smoke; kurumsal akış kapalı.",
       "implementation_note": "Çok görevli yazarlık, çoktan çoğa Öğrenme Çıktısı/görev/rubrik ilişkileri, katalog araması ve aynı kod/birim sürüm karşılaştırması. Güncel önceki sürüm bağı ve gerekçe zorunlu; eski kayıtlar taşınmaz.",
       "independent_remaining_work": [
         "Belge profil sicilini program sürümüne ve yetkili incelemeye bağla; gerçek içerik/lisans/akademik onay ayrı kalır."
@@ -173,8 +173,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 8: bcb89ab08e35979df903262eb2be6adb4d617c37 / dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ READY. 141 kaynak hash eşleşmesi ve canlı smoke; kurumsal akış kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -533,7 +533,7 @@
         "gazi/portal/src/program-workspace.jsx",
         "gazi/auth/myys/acceptance/B03-B09-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
+      "production_status": "Paket 8: bcb89ab08e35979df903262eb2be6adb4d617c37 / dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ READY. 141 kaynak hash eşleşmesi ve canlı smoke; kurumsal akış kapalı.",
       "implementation_note": "Yeni değerlendirme tüm program dayanağını ve hashini saklar; eski tek çıktı kayıtları değişmeden okunur. Yetkili karar arşivi program/rubrik/kanıt içeriğini ve tarihsel hashini yeniden üretir; güncel kullanılabilirlik ayrı alandır. Arşiv imzasızdır.",
       "independent_remaining_work": [
         "Gerçek sağlayıcı kaynak paketine görev/rubrik sürümlerini ve doğrulanabilir imza zincirini bağla; dış kaynak arşiv geri üretimini sınat."
@@ -564,8 +564,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 8: bcb89ab08e35979df903262eb2be6adb4d617c37 / dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ READY. 141 kaynak hash eşleşmesi ve canlı smoke; kurumsal akış kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1228,16 +1228,18 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+      "test_status": "162 sunucu + 46 portal + 46 regresyon = 254 otomatik test; 14 yeni tanıma senaryosu ve 12 yerel tanıma tarayıcı kontrolü.",
       "implementation_evidence": [
-        "gazi/auth/myys/registry.mjs",
-        "gazi/auth/tests/myys-lms.test.mjs",
-        "gazi/portal/src/academic-forms.jsx"
+        "gazi/auth/myys/recognition.mjs",
+        "gazi/auth/myys/RECOGNITION-CONTRACT.md",
+        "gazi/auth/tests/myys-recognition.test.mjs",
+        "gazi/portal/src/recognition-workspace.jsx",
+        "gazi/auth/myys/acceptance/B20-B21-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir.",
+      "production_status": "Paket 9 yayın adayı; tanıma yalnız izole yerel kabulde. OBS, dış doğrulama ve resmî karar etkin değil.",
+      "implementation_note": "Kaynak/madde/sürüm/tarih/kapsam ve iki ayrı payda içeren değişmez politika; bağımsız yerel inceleme; sınır hesabı ve eski başvurunun politika sürümü korunur. Gazi RPL kaynağı okundu, kurum politikası otomatik atanmadı.",
       "independent_remaining_work": [
-        "Sürümlemeli politika sicilini tanıma motoruna bağla; payda/çift sayım testleri."
+        "Çok dersli teklif ve özel istisna yollarını yetkili kaynak kararına bağla; gerçek diploma müfredatı/önceki kredi kaynağı olmadan otomatik politika açılmaz."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Senato tarafından doğrulanmış politika ve paydalar.",
@@ -1245,22 +1247,24 @@
         "code_completeness": {
           "status": "kısmi",
           "evidence": [
-            "gazi/auth/myys/registry.mjs",
-            "gazi/auth/tests/myys-lms.test.mjs",
-            "gazi/portal/src/academic-forms.jsx"
+            "gazi/auth/myys/recognition.mjs",
+            "gazi/auth/myys/RECOGNITION-CONTRACT.md",
+            "gazi/auth/tests/myys-recognition.test.mjs",
+            "gazi/portal/src/recognition-workspace.jsx",
+            "gazi/auth/myys/acceptance/B20-B21-20261010.json"
           ],
           "remaining": [
-            "Sürümlemeli politika sicilini tanıma motoruna bağla; payda/çift sayım testleri."
+            "Çok dersli teklif ve özel istisna yollarını yetkili kaynak kararına bağla; gerçek diploma müfredatı/önceki kredi kaynağı olmadan otomatik politika açılmaz."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+          "status": "kısmi · tanıma dilimi geçti",
+          "evidence": "162 sunucu + 46 portal + 46 regresyon = 254 otomatik test; 14 yeni tanıma senaryosu ve 12 yerel tanıma tarayıcı kontrolü.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 9 yayın adayı; tanıma yalnız izole yerel kabulde. OBS, dış doğrulama ve resmî karar etkin değil."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1288,32 +1292,44 @@
       "planning_estimate": "5–8 kişi-gün",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "B20 ve üretim karar modeli bekleniyor; mevcut yerel tanıma modeli korunuyor.",
+      "implementation_status": "kısmi",
+      "test_status": "162 sunucu + 46 portal + 46 regresyon = 254 otomatik test; 14 yeni tanıma senaryosu ve 12 yerel tanıma tarayıcı kontrolü.",
+      "implementation_evidence": [
+        "gazi/auth/myys/recognition.mjs",
+        "gazi/auth/myys/RECOGNITION-CONTRACT.md",
+        "gazi/auth/tests/myys-recognition.test.mjs",
+        "gazi/portal/src/recognition-workspace.jsx",
+        "gazi/auth/myys/acceptance/B20-B21-20261010.json"
+      ],
+      "production_status": "Paket 9 yayın adayı; tanıma yalnız izole yerel kabulde. OBS, dış doğrulama ve resmî karar etkin değil.",
+      "implementation_note": "Aynı öğrenci/program kaydına bağlı yerel tek ders talebi; dosya özeti, insan teknik inceleme raporu, ayrı tam/kısmi/red, bağımsız itiraz/yeni karar ve atomik ters kayıtlı tekil kredi defteri. Teknik kontrol krediyi üretmez; IT akademik kararları göremez.",
       "independent_remaining_work": [
-        "Kalıcı dış belge inceleme, tam/kısmi/red/itiraz ve tekil kredi defteri."
+        "Dış belge kriptografik doğrulama adaptörü, yetkili gerçek belge teslimi/arşivi ve çok dersli teklif; gerçek önceki ders/kazanım eşlemesi ve kurum kurul kabulü açık."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Geçerli tanıma politikası ve yetkili kurul.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/recognition.mjs",
+            "gazi/auth/myys/RECOGNITION-CONTRACT.md",
+            "gazi/auth/tests/myys-recognition.test.mjs",
+            "gazi/portal/src/recognition-workspace.jsx",
+            "gazi/auth/myys/acceptance/B20-B21-20261010.json"
+          ],
           "remaining": [
-            "Kalıcı dış belge inceleme, tam/kısmi/red/itiraz ve tekil kredi defteri."
+            "Dış belge kriptografik doğrulama adaptörü, yetkili gerçek belge teslimi/arşivi ve çok dersli teklif; gerçek önceki ders/kazanım eşlemesi ve kurum kurul kabulü açık."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "status": "kısmi · tanıma dilimi geçti",
+          "evidence": "162 sunucu + 46 portal + 46 regresyon = 254 otomatik test; 14 yeni tanıma senaryosu ve 12 yerel tanıma tarayıcı kontrolü.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 9 yayın adayı; tanıma yalnız izole yerel kabulde. OBS, dış doğrulama ve resmî karar etkin değil."
         },
         "institution_decision": {
           "status": "bekleniyor",

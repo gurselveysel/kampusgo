@@ -180,3 +180,19 @@ Kaynak dayanağı OpenID Connect Core errata set 2, inceleme 10.10.2026; kurum M
 - Geri dönüş hedefi Paket 7: `dpl_5byPykXgobPQbncALGBs39kEQ4tk` / `3388af9f1a9d9cdc7aedbd36a03ade8b4f264743`.
 
 Paket 8 yayını öncesinde B11’in 13 izole tarayıcı kontrolü tekrar geçti; önceki itiraz/yeniden değerlendirme/karar zinciri korunuyor.
+
+### Paket 8 gerçek yayın ve canlı doğrulama
+
+- Uzak kaynak `bcb89ab08e35979df903262eb2be6adb4d617c37`; yerel `4f41f862f90216b59da32a65dae8d4cf8e3f2717`; aynı ağaç `c0c0ac1a06bb331cbf7e6b0bb290b6670a9f75bd`.
+- Dağıtım `dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ` READY / production; canlı alias bu dağıtıma bağlı. 141 kaynak dosyası SHA düzeyinde eksiksiz eşleşti; yedi kaynak dosyası değişti/eklendi.
+- Gerçek açık oturum yeniden yüklendi. Akademik ekranda kurum bağlantısı kapalı, kaynak merkezinde sürüm 2026.10.10.3 ve 24 kaynak başlığı korundu. Logolar yükleniyor, masaüstü taşma yok. Yeni akademik işlemler canlıda etkinleştirilmedi.
+- 240 otomatik test, 8 program ve 13 B11 tarayıcı kontrolü geçti. B03/B09 kısmi kalır; kurum ve imzalı dış kaynak kabulü açık.
+- Geri dönüş `dpl_5byPykXgobPQbncALGBs39kEQ4tk` / `3388af9f1a9d9cdc7aedbd36a03ade8b4f264743`; uygulanmadı. Üretim migration veya gerçek akademik veri işlemi yok.
+
+
+## Paket 9 — yerel tanıma ve kredi (yayın adayı)
+
+- Panel: Kanıt ve Akademik Karar → Tanıma ve kredi. Sürümlü politika, dosya özetli talep, insan teknik incelemesi, tam/kısmi/red, itiraz ve bağımsız yeni karar; tek etkin kredi defteri.
+- 162 sunucu + 46 portal + 46 regresyon = 254 test; 14 yeni tanıma senaryosu ve 12 yerel tarayıcı kontrolü. Mobil 390 px, tekrar yükleme, başka öğrenci/IT sınırı, görevler ayrılığı, paydalar, çift sayım ve rollback testli.
+- Gerçek dış belge doğrulaması/teslimi, kurum kararı veya OBS işlemi yok. configuredCore() kapalı. Çok dersli teklif ve özel istisna kaynakları açık; B20/B21 tam kapanışı değildir.
+- Geri dönüş hedefi Paket 8 `dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ` / `bcb89ab08e35979df903262eb2be6adb4d617c37`; uygulanmadı.

@@ -6,13 +6,13 @@
 |---|---|---|---|---|---|
 | B01 · Mevcut pilot envanterini sabitle | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
 | B02 · Akademik ve SEM yetki yollarını ayır | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B03 · Program bilgi paketini onayla | kısmi | kısmi · sürüm/arşiv dilimi geçti | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B03 · Program bilgi paketini onayla | kısmi | kısmi · sürüm/arşiv dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B04 · Veri akışını ve saklamayı onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B07 · SSO ve yönetici MFA bağlantısını kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi · sürüm/arşiv dilimi geçti | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi · sürüm/arşiv dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B11 · İtiraz ve moderasyon yolunu kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B12 · Belgeyi akademik karara bağla | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
@@ -23,8 +23,8 @@
 | B17 · Toplu ihraç ve mutabakat ekle | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | engelli | başlamadı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
-| B20 · Tanıma politika setini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B21 · Dış belge ve tanıma akışını bağla | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B20 · Tanıma politika setini onayla | kısmi | kısmi · tanıma dilimi geçti | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B21 · Dış belge ve tanıma akışını bağla | kısmi | kısmi · tanıma dilimi geçti | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B22 · OBS aktarımını kontrollü kabul et | engelli | başlamadı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B24 · Erişilebilirlik açılış testini yap | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
@@ -78,3 +78,8 @@ B18 kişisel cüzdan, imzalı indirme, tek seferlik süreli bağlantı ve iptal:
 ## Paket 8 adayı
 
 B03/B09 çoklu görev/rubrik yazarlığı, arama, sürüm karşılaştırması ve karar dayanağı arşivi: 10 yeni sunucu senaryosu, 8 tarayıcı kontrolü. 240 otomatik test. İmzalı LMS arşivi ve kurum onayı açık; kabul ölçütleri değiştirilmedi. Paket 7 cüzdan kodu yayımlandı; kurumsal hizmet kapalı.
+
+
+## Paket 9 adayı
+
+B20/B21 politika sürümü, iki ayrı payda, öğrenci talebi, insan teknik incelemesi, ayrı tanıma kararı, itiraz ve tekil yerel kredi. 14 yeni sunucu senaryosu; 12 tarayıcı kontrolü; 254 otomatik test. Gerçek belge doğrulaması/teslimi, çok dersli teklif ve kurum kabulü açık. B03/B09 Paket 8 kod yayını doğrulandı.

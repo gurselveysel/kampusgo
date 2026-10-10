@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-10T21:49:44.599Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Öğrenen kendi kaydına bağlı dosya özetli tanıma talebi hazırladı",
+    "İnsan teknik incelemesi kredi üretmedi",
+    "Ayrı komisyon rolü tam tanımayı ve iki paydasını kaydetti",
+    "Öğrenen itirazı kredi satırını bekletti",
+    "Bağımsız itiraz incelemesi otomatik kredi değiştirmedi",
+    "Önceki karar sahibi yeni karar veremez",
+    "Bağımsız yeni karar kısmi tanımayı eski karara bağladı",
+    "Yeniden yüklemede tek etkin kredi ve eski karar geçmişi korundu",
+    "390 px tanıma defterinde yatay taşma yok",
+    "Başka öğrenen başvuru karar ve krediyi göremez",
+    "Sürümlü politika yeni inceleme bekleyerek kaydedildi",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 14,
+  "automated_tests": {
+    "server": 162,
+    "portal": 46,
+    "regression": 46
+  },
+  "limits": [
+    "İzole sentetik yerel kabul; kurum kararı ve OBS kaydı değildir.",
+    "İnsan teknik inceleme kaydı; otomatik dış belge kriptografik doğrulaması yok.",
+    "Dosya özeti alınır; gerçek dosya teslim/arşiv yolu açık.",
+    "Tek dersli teklif; çok ders ve özel istisna yolları açık."
+  ]
+}
