@@ -27,7 +27,37 @@
         "27 yetenek satırını rota ve test kanıtıyla tamamla; tarayıcı regresyonunu çalıştır."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "27 yetenek satırının tam rol/mobil/ekran okuyucu kabulü açık; mevcut oturumda temel canlı kontrol yapıldı."
+      "production_activation_blocker": "27 yetenek satırının tam rol/mobil/ekran okuyucu kabulü açık; mevcut oturumda temel canlı kontrol yapıldı.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "27 yetenek satırını rota ve test kanıtıyla tamamla; tarayıcı regresyonunu çalıştır."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "49 sunucu/güvenlik + 39 portal + 32 model/kaynak testi geçti; toplam 120.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kısmi pilot",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "27 yetenek satırının tam rol/mobil/ekran okuyucu kabulü açık; mevcut oturumda temel canlı kontrol yapıldı."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B02",
@@ -55,7 +85,37 @@
         "Yetki sicilinde belge ekleri, geçerlilik ve sorumluluk kapsamını doğrula."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Senato/SEM yetki belgeleri ve atanmış sorumlular."
+      "production_activation_blocker": "Senato/SEM yetki belgeleri ve atanmış sorumlular.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Yetki sicilinde belge ekleri, geçerlilik ve sorumluluk kapsamını doğrula."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Merkezi SEM yerel ihraç reddi ve resmî mod reddi.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Senato/SEM yetki belgeleri ve atanmış sorumlular."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B03",
@@ -84,7 +144,38 @@
         "Çok görevli rubrik yazarlığı, katalog arama ve sürüm karşılaştırması."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Programın gerçek akademik ve lisans kabulü."
+      "production_activation_blocker": "Programın gerçek akademik ve lisans kabulü.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/portal/src/academic-forms.jsx"
+          ],
+          "remaining": [
+            "Çok görevli rubrik yazarlığı, katalog arama ve sürüm karşılaştırması."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Eksik çıktı/görev/rubrik ve hazırlayanın yayını reddedilir.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Programın gerçek akademik ve lisans kabulü."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B04",
@@ -113,7 +204,38 @@
         "Veri akışı siciline süre/ülke doğrulaması ve saklama işçisi ekle."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Veri sorumlusunun amaç, aktarım ve saklama kararı."
+      "production_activation_blocker": "Veri sorumlusunun amaç, aktarım ve saklama kararı.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/registry.mjs",
+            "gazi/auth/tests/myys-lms.test.mjs",
+            "gazi/portal/src/academic-forms.jsx"
+          ],
+          "remaining": [
+            "Veri akışı siciline süre/ülke doğrulaması ve saklama işçisi ekle."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Veri sorumlusunun amaç, aktarım ve saklama kararı."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B05",
@@ -142,7 +264,38 @@
         "Hak sicilini materyal indirme/yeniden yayın kararına zorunlu bağla."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Sağlayıcının yazılı kullanıcı grubu ve dağıtım hakları."
+      "production_activation_blocker": "Sağlayıcının yazılı kullanıcı grubu ve dağıtım hakları.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/registry.mjs",
+            "gazi/auth/tests/myys-lms.test.mjs",
+            "gazi/portal/src/academic-forms.jsx"
+          ],
+          "remaining": [
+            "Hak sicilini materyal indirme/yeniden yayın kararına zorunlu bağla."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Sağlayıcının yazılı kullanıcı grubu ve dağıtım hakları."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B06",
@@ -170,7 +323,37 @@
         "Üretim depo arayüzü, işlemsel şema ve kişi yaşam döngüsü adaptörünü yerelde geliştir."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Mevcut üretim deposu için ayrı migration yetkisi ve gerçek kimlik eşlemesi."
+      "production_activation_blocker": "Mevcut üretim deposu için ayrı migration yetkisi ve gerçek kimlik eşlemesi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Üretim depo arayüzü, işlemsel şema ve kişi yaşam döngüsü adaptörünü yerelde geliştir."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Süreli üyelik, ayrılan kişi, kimlik ve HTTP rol sahteciliği testleri.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Mevcut üretim deposu için ayrı migration yetkisi ve gerçek kimlik eşlemesi."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Gazi BIDB kişi/üyelik kaynağı + mevcut xpjkrwzgimdxsasqszfi depo adayının uygunluk incelemesi",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B07",
@@ -198,7 +381,37 @@
         "SSO sözleşmesi, güvenilir issuer/audience doğrulaması, iptal ve MFA negatif fixture testleri."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi."
+      "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "SSO sözleşmesi, güvenilir issuer/audience doğrulaması, iptal ve MFA negatif fixture testleri."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "MFA olmayan ayrıcalıklı işlem reddi; eski TOTP regresyonu.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Gazi BIDB tarafından teyit edilecek mevcut IdP; issuer/protokol bilinmiyor",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B08",
@@ -226,7 +439,37 @@
         "Tüm okuma/yazma/dışa aktarım yollarına iki kurum ve iki birim negatif matrisi."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Gerçek görev atamaları ve kurumsal kabul."
+      "production_activation_blocker": "Gerçek görev atamaları ve kurumsal kabul.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Tüm okuma/yazma/dışa aktarım yollarına iki kurum ve iki birim negatif matrisi."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Çapraz kurum/birim/öğrenen erişimi ve aynı kişide onay reddi.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Gerçek görev atamaları ve kurumsal kabul."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B09",
@@ -257,7 +500,39 @@
         "İmzalı kaynak zincirine rubrik/görev kaynak sürümleri ve arşiv yeniden üretimi ekle."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Gerçek LMS kaynak kimliği ve rubrik sözleşmesi."
+      "production_activation_blocker": "Gerçek LMS kaynak kimliği ve rubrik sözleşmesi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/myys/lms.mjs",
+            "gazi/auth/tests/myys-lms.test.mjs"
+          ],
+          "remaining": [
+            "İmzalı kaynak zincirine rubrik/görev kaynak sürümleri ve arşiv yeniden üretimi ekle."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "Gerçek LMS kaynak kimliği ve rubrik sözleşmesi."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "GUZEM lms.gazi.edu.tr kaynak/sürüm sözleşmesi",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B10",
@@ -286,7 +561,37 @@
         "Alternatif ölçme kanıt türleri ve moderasyon gerekçelerini sürümle."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Yetkili gerçek akademik karar sahipleri."
+      "production_activation_blocker": "Yetkili gerçek akademik karar sahipleri.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Alternatif ölçme kanıt türleri ve moderasyon gerekçelerini sürümle."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Boş kanıt, null puan ve başarısız sonucun onayı reddedilir.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Yetkili gerçek akademik karar sahipleri."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B11",
@@ -314,7 +619,37 @@
         "İtiraz/çözüm arayüzünü tamamla; yeniden değerlendirme ve belge değiştirme akışı."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Kurumun itiraz ve moderasyon usulü."
+      "production_activation_blocker": "Kurumun itiraz ve moderasyon usulü.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "İtiraz/çözüm arayüzünü tamamla; yeniden değerlendirme ve belge değiştirme akışı."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Açık itiraz ve yeniden değerlendirme testleri.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Kurumun itiraz ve moderasyon usulü."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B12",
@@ -343,7 +678,37 @@
         "Belge profili sicili, eski sentetik laboratuvar sınırı ve karar durumuyla zorunlu ilişki."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Hukuki düzenleyici yetkisi; resmî ihraç bu yayınla açılmaz."
+      "production_activation_blocker": "Hukuki düzenleyici yetkisi; resmî ihraç bu yayınla açılmaz.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Belge profili sicili, eski sentetik laboratuvar sınırı ve karar durumuyla zorunlu ilişki."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Karar/kanıt imza bağı; imza sırasında yetki çekme ve tekrar kontrolü.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kısmi pilot",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Hukuki düzenleyici yetkisi; resmî ihraç bu yayınla açılmaz."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B13",
@@ -371,7 +736,37 @@
         "Anahtar sicili ve durum listesi üretim adaptörünü yerel test et."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Mevcut imza sağlayıcısı yetkili işletim/rotasyon kararı."
+      "production_activation_blocker": "Mevcut imza sağlayıcısı yetkili işletim/rotasyon kararı.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Anahtar sicili ve durum listesi üretim adaptörünü yerel test et."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Eski güvenilir anahtar kabulü, kompromize anahtar, kurcalama/iptal reddi.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kısmi pilot",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "Mevcut imza sağlayıcısı yetkili işletim/rotasyon kararı."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Mevcut rozet imzalayıcısı işletim sözleşmesi",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B14",
@@ -401,7 +796,37 @@
         "İç sözleşme doğrulayıcısını sürümlü gerçek sağlayıcı şemasına uyarlama noktası ekle."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Gerçek LMS adı/sürümü, API ve ölçme anlamlarının kurumca teyidi."
+      "production_activation_blocker": "Gerçek LMS adı/sürümü, API ve ölçme anlamlarının kurumca teyidi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/lms.mjs",
+            "gazi/auth/tests/myys-lms.test.mjs"
+          ],
+          "remaining": [
+            "İç sözleşme doğrulayıcısını sürümlü gerçek sağlayıcı şemasına uyarlama noktası ekle."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Gerçek LMS adı/sürümü, API ve ölçme anlamlarının kurumca teyidi."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "GUZEM lms.gazi.edu.tr sürümlü API ve ölçme sözleşmesi",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B15",
@@ -430,7 +855,37 @@
         "İç adaptörü sağlayıcı bağımsız kayıt/not/tamamlama senaryolarıyla genişlet."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Seçilen LMS için yetkili test ortamı ve kimlik/veri eşlemesi."
+      "production_activation_blocker": "Seçilen LMS için yetkili test ortamı ve kimlik/veri eşlemesi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/lms.mjs",
+            "gazi/auth/tests/myys-lms.test.mjs"
+          ],
+          "remaining": [
+            "İç adaptörü sağlayıcı bağımsız kayıt/not/tamamlama senaryolarıyla genişlet."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Seçilen LMS için yetkili test ortamı ve kimlik/veri eşlemesi."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "GUZEM yetkili sentetik test kohortu",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B16",
@@ -460,7 +915,39 @@
         "Kalıcı işçi yeniden deneme, karantina ve mutabakat arayüzünü ekle."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Üretim kuyruk/depo işletim seçimi; mevcut testler yereldir."
+      "production_activation_blocker": "Üretim kuyruk/depo işletim seçimi; mevcut testler yereldir.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/myys/lms.mjs",
+            "gazi/auth/tests/myys-lms.test.mjs"
+          ],
+          "remaining": [
+            "Kalıcı işçi yeniden deneme, karantina ve mutabakat arayüzünü ekle."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "Üretim kuyruk/depo işletim seçimi; mevcut testler yereldir."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Onaylanacak mevcut kalıcı depo/işçi çalışma ortamı",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B17",
@@ -489,7 +976,37 @@
         "Toplu imza/teslim, satır bazlı kalıcı mutabakat ve güvenli CSV aktarımı."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Yetkili kurum kararları ve üretim imzalayıcısı."
+      "production_activation_blocker": "Yetkili kurum kararları ve üretim imzalayıcısı.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Toplu imza/teslim, satır bazlı kalıcı mutabakat ve güvenli CSV aktarımı."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Dört satırda tek hazırlık; iki ayrı hata; imzalı sayı sıfır.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Yetkili kurum kararları ve üretim imzalayıcısı."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Mevcut imzalayıcı ve teslim kanalı",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B18",
@@ -518,7 +1035,37 @@
         "Kişisel indirme, paylaşım iptal arayüzü ve minimal kamu okuma uçları."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Üretim kimliği, saklama/paylaşım politikası."
+      "production_activation_blocker": "Üretim kimliği, saklama/paylaşım politikası.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Kişisel indirme, paylaşım iptal arayüzü ve minimal kamu okuma uçları."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Başka öğrenen göremez; paylaşım özel kanıt içermez; iptal erişimi keser.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Üretim kimliği, saklama/paylaşım politikası."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B19",
@@ -544,7 +1091,34 @@
         "Seçilen dışa aktarım profilinin bağımsız doğrulama fixture ve paketlerini hazırla."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Bağımsız cüzdan/profil seçimi ve yetkili karşılıklı çalışma testi."
+      "production_activation_blocker": "Bağımsız cüzdan/profil seçimi ve yetkili karşılıklı çalışma testi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "Seçilen dışa aktarım profilinin bağımsız doğrulama fixture ve paketlerini hazırla."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "Bağımsız cüzdan/profil seçimi ve yetkili karşılıklı çalışma testi."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Seçilecek bağımsız OB/VC doğrulayıcı veya cüzdan",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B20",
@@ -574,7 +1148,38 @@
         "Sürümlemeli politika sicilini tanıma motoruna bağla; payda/çift sayım testleri."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Senato tarafından doğrulanmış politika ve paydalar."
+      "production_activation_blocker": "Senato tarafından doğrulanmış politika ve paydalar.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/registry.mjs",
+            "gazi/auth/tests/myys-lms.test.mjs",
+            "gazi/portal/src/academic-forms.jsx"
+          ],
+          "remaining": [
+            "Sürümlemeli politika sicilini tanıma motoruna bağla; payda/çift sayım testleri."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Senato tarafından doğrulanmış politika ve paydalar."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B21",
@@ -600,7 +1205,34 @@
         "Kalıcı dış belge inceleme, tam/kısmi/red/itiraz ve tekil kredi defteri."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Geçerli tanıma politikası ve yetkili kurul."
+      "production_activation_blocker": "Geçerli tanıma politikası ve yetkili kurul.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "Kalıcı dış belge inceleme, tam/kısmi/red/itiraz ve tekil kredi defteri."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Geçerli tanıma politikası ve yetkili kurul."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B22",
@@ -625,7 +1257,34 @@
         "OBS outbox sözleşmesi, düzeltme ve yinelenen olay mutabakatı."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "OBS teknik şema/test ortamı ve aktarım izni."
+      "production_activation_blocker": "OBS teknik şema/test ortamı ve aktarım izni.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "OBS outbox sözleşmesi, düzeltme ve yinelenen olay mutabakatı."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "OBS teknik şema/test ortamı ve aktarım izni."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "obs.gazi.edu.tr sistem sahibinin test aktarım sözleşmesi",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B23",
@@ -654,7 +1313,38 @@
         "Merkezi SEM dosya kontrol listesi ve durum makinesi."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Yetkili merkez, güncel YÖKSİS usulü ve teknik erişim."
+      "production_activation_blocker": "Yetkili merkez, güncel YÖKSİS usulü ve teknik erişim.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/registry.mjs",
+            "gazi/auth/tests/myys-lms.test.mjs",
+            "gazi/portal/src/academic-forms.jsx"
+          ],
+          "remaining": [
+            "Merkezi SEM dosya kontrol listesi ve durum makinesi."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Yetkili merkez, güncel YÖKSİS usulü ve teknik erişim."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Yetkili SEM merkezi üzerinden YÖKSİS teknik sözleşmesi",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B24",
@@ -682,7 +1372,36 @@
         "Yerel kabul senaryoları, klavye/odak testleri ve ekran okuyucu kontrolü."
       ],
       "development_blocker": "Tarayıcı çalıştırma ortamı eksik; kod ve API testi engelli değil.",
-      "production_activation_blocker": "Yerel Chromium yok; indirme geçerli arşiv dönmedi; bulut tarayıcı yerel porta erişemedi. Canlı oturum ayrıca gerekli."
+      "production_activation_blocker": "Yeni tam rol/mobil/ekran okuyucu kabulü açık. Yerel dosya protokolü bulut tarayıcı politikasıyla engelli; korumalı HTTPS aday kontrolü hazırlanıyor.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "scripts/myys-local-acceptance.mjs"
+          ],
+          "remaining": [
+            "Yerel kabul senaryoları, klavye/odak testleri ve ekran okuyucu kontrolü."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kısmi pilot",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "Yeni tam rol/mobil/ekran okuyucu kabulü açık. Yerel dosya protokolü bulut tarayıcı politikasıyla engelli; korumalı HTTPS aday kontrolü hazırlanıyor."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B25",
@@ -711,7 +1430,37 @@
         "66 ders materyalini lisans/erişilebilirlik inceleme siciline eşle."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Akademik içerik ve hak sahiplerinin incelemesi."
+      "production_activation_blocker": "Akademik içerik ve hak sahiplerinin incelemesi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "66 ders materyalini lisans/erişilebilirlik inceleme siciline eşle."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "21 portal/materyal testi; kaynak dosyaları baseline ile aynı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kısmi pilot",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Akademik içerik ve hak sahiplerinin incelemesi."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B26",
@@ -730,21 +1479,64 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "4 rehber testi; birleşik 39 portal testi. Canlıda doğru/yanlış cevap, kalıcılık, filtre ve klavye odak kontrolü geçti.",
+      "test_status": "4 sunucu destek yetki/olay testi + 2 destek özeti testi geçti; toplam sunucu 53, portal 41, model/kaynak 32 = 126.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
         "gazi/portal/src/guide.jsx",
         "gazi/portal/src/guide-model.mjs",
-        "gazi/portal/src/guide.test.mjs"
+        "gazi/portal/src/guide.test.mjs",
+        "gazi/auth/myys/support.mjs",
+        "gazi/auth/tests/myys-support.test.mjs",
+        "gazi/portal/src/support-brief.jsx",
+        "gazi/portal/src/support-workspace.jsx",
+        "gazi/portal/src/support.test.mjs"
       ],
       "production_status": "Kullanım rehberi b3262455 / dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL ile canlı; kurum destek süreci henüz etkin değil.",
-      "implementation_note": "Dokuz sorumluluğa göre öneriler, altı eğitim bölümü, kontrol soruları ve kişisel rehber ilerlemesi kodlandı; destek iş akışı ve kurumsal eğitim kabulü açık.",
+      "implementation_note": "Sürümlemeli rehber ve kişisel verisiz destek özeti; yerel depoda kategoriye bağlı yanıt/çözüm/yeniden açma/eskalasyon, olay tarihçesi ve sürüm çakışması koruması. Kurumsal destek hizmeti kapalı.",
       "independent_remaining_work": [
-        "Kalıcı destek biletinde yanıt/çözüm ve yetkili eskalasyon akışı; tam rol senaryoları."
+        "Destek biletleri için tam rol arayüz kabulü, çalışma saati/SLA ve kurumca belirlenen eskalasyon politikası."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Kurumsal destek sahibi ve eğitim kabulü."
+      "production_activation_blocker": "Kurumsal destek sahibi ve eğitim kabulü.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/portal/src/guide.jsx",
+            "gazi/portal/src/guide-model.mjs",
+            "gazi/portal/src/guide.test.mjs",
+            "gazi/auth/myys/support.mjs",
+            "gazi/auth/tests/myys-support.test.mjs",
+            "gazi/portal/src/support-brief.jsx",
+            "gazi/portal/src/support-workspace.jsx",
+            "gazi/portal/src/support.test.mjs"
+          ],
+          "remaining": [
+            "Destek biletleri için tam rol arayüz kabulü, çalışma saati/SLA ve kurumca belirlenen eskalasyon politikası."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "4 sunucu destek yetki/olay testi + 2 destek özeti testi geçti; toplam sunucu 53, portal 41, model/kaynak 32 = 126.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kısmi pilot",
+          "evidence": "Kullanım rehberi b3262455 / dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL ile canlı; kurum destek süreci henüz etkin değil."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Kurumsal destek sahibi ve eğitim kabulü."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B27",
@@ -775,7 +1567,39 @@
         "Kesinti ve kuyruk tekrar oynatma senaryolarını anahtar riski/yanlış ihraç olay kılavuzuyla birleştir."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Üretim RPO/RTO hedefi, yedekleme ve ayrı geri yükleme yetkisi."
+      "production_activation_blocker": "Üretim RPO/RTO hedefi, yedekleme ve ayrı geri yükleme yetkisi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/scripts/lib/local-recovery.mjs",
+            "gazi/auth/scripts/myys-recovery-drill.mjs",
+            "gazi/auth/tests/myys-recovery.test.mjs",
+            "gazi/auth/myys/RELEASE.md"
+          ],
+          "remaining": [
+            "Kesinti ve kuyruk tekrar oynatma senaryolarını anahtar riski/yanlış ihraç olay kılavuzuyla birleştir."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "4 yedek/geri dönüş negatif ve pozitif testi geçti; sentetik snapshot ve yeni dizine geri dönüş ölçüldü.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "Yerel işletim aracı; canlı dağıtıma alınmadı, üretim verisine dokunmadı."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "Üretim RPO/RTO hedefi, yedekleme ve ayrı geri yükleme yetkisi."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Onaylı üretim yedek hedefi ve geri dönüş ortamı",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B28",
@@ -801,7 +1625,34 @@
         "Veri talebi, hesap verisi temizleme ve akademik saklama ayrımı."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Hukuki saklama kararı; geri alınamaz üretim silme yetkisi verilmedi."
+      "production_activation_blocker": "Hukuki saklama kararı; geri alınamaz üretim silme yetkisi verilmedi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "Veri talebi, hesap verisi temizleme ve akademik saklama ayrımı."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Hukuki saklama kararı; geri alınamaz üretim silme yetkisi verilmedi."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B29",
@@ -829,7 +1680,37 @@
         "Başvuru/tamamlama/destek kaynakları ve sayı mutabakat ekranları."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Gerçek kohort ve LMS kaynak verisi."
+      "production_activation_blocker": "Gerçek kohort ve LMS kaynak verisi.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/projections.mjs",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Başvuru/tamamlama/destek kaynakları ve sayı mutabakat ekranları."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Başarı paydası, boş veri, başka öğrenen izolasyonu geçti.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "operasyonel kabul açık",
+          "required": "Gerçek kohort ve LMS kaynak verisi."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "GUZEM gerçek kaynak verisi; henüz erişim yok",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B30",
@@ -862,7 +1743,34 @@
         "Teknik/akademik/operasyon kabul kapıları ve dönem değerlendirme kaydı."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Yetkili gerçek kohort ve ayrı kurum kabulleri."
+      "production_activation_blocker": "Yetkili gerçek kohort ve ayrı kurum kabulleri.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "Teknik/akademik/operasyon kabul kapıları ve dönem değerlendirme kaydı."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Yetkili gerçek kohort ve ayrı kurum kabulleri."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B31",
@@ -889,7 +1797,34 @@
         "Koşullu ödeme durum makinesi ve sağlayıcı simülatörü; kart verisi saklama yok."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Tahsilat/vergi/iade yetkisi ve PSP sözleşmesi; ücretli bağlantı yetkisi yok."
+      "production_activation_blocker": "Tahsilat/vergi/iade yetkisi ve PSP sözleşmesi; ücretli bağlantı yetkisi yok.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "Koşullu ödeme durum makinesi ve sağlayıcı simülatörü; kart verisi saklama yok."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Tahsilat/vergi/iade yetkisi ve PSP sözleşmesi; ücretli bağlantı yetkisi yok."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Kurumca yetkilendirilecek PSP; seçim/ücretli bağlantı yok",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B32",
@@ -918,7 +1853,37 @@
         "İkinci birim ve kurum için kapsamlı negatif test ve kaynak kotası."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "İkinci birimin yetkili katılım kararı."
+      "production_activation_blocker": "İkinci birimin yetkili katılım kararı.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/IMPLEMENTATION.md",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "İkinci birim ve kurum için kapsamlı negatif test ve kaynak kotası."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "Yetki birimi değişince önceki birimin dosyası reddedilir.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "İkinci birimin yetkili katılım kararı."
+        },
+        "external_access": {
+          "status": "bağımsız kod için gerekli değil",
+          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B33",
@@ -947,7 +1912,37 @@
         "Uzman eşleme incelemesi, kaynak lisansı ve hata düzeltme sicili."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Lisanslı taksonomi ve akademik uzman kabulü."
+      "production_activation_blocker": "Lisanslı taksonomi ve akademik uzman kabulü.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/projections.mjs",
+            "gazi/auth/tests/myys.test.mjs"
+          ],
+          "remaining": [
+            "Uzman eşleme incelemesi, kaynak lisansı ve hata düzeltme sicili."
+          ]
+        },
+        "local_acceptance": {
+          "status": "kısmi",
+          "evidence": "İtirazda değerlendirme göstergesi düşer; başka öğrenen ilişkisi görünmez.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Lisanslı taksonomi ve akademik uzman kabulü."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Lisansı teyit edilecek beceri taksonomisi",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B34",
@@ -973,7 +1968,34 @@
         "Amaçla sınırlı portfolyo izinleri ve nottan ayrı geri bildirim."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Öğrenen izinleri ve işveren veri işleme amacı."
+      "production_activation_blocker": "Öğrenen izinleri ve işveren veri işleme amacı.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "Amaçla sınırlı portfolyo izinleri ve nottan ayrı geri bildirim."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Öğrenen izinleri ve işveren veri işleme amacı."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Amaç ve izinleri tanımlanmış işveren pilotu",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B35",
@@ -1000,7 +2022,34 @@
         "Modelden bağımsız öneri/uzman kıyası/itiraz test sözleşmesi."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Onaylı sağlayıcı, içerik/veri hakkı ve uzman pilotu."
+      "production_activation_blocker": "Onaylı sağlayıcı, içerik/veri hakkı ve uzman pilotu.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "Modelden bağımsız öneri/uzman kıyası/itiraz test sözleşmesi."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Onaylı sağlayıcı, içerik/veri hakkı ve uzman pilotu."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "Kurumca onaylanacak model/sağlayıcı",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     },
     {
       "work_id": "B36",
@@ -1026,7 +2075,34 @@
         "Zincirsiz alternatiflerin gerekçeli değerlendirmesi; isteğe bağlı erteleme."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Somut ihtiyaç/protokol seçimi; kişisel veri zincire yazılmaz."
+      "production_activation_blocker": "Somut ihtiyaç/protokol seçimi; kişisel veri zincire yazılmaz.",
+      "acceptance_axes": {
+        "code_completeness": {
+          "status": "engelli",
+          "evidence": [],
+          "remaining": [
+            "Zincirsiz alternatiflerin gerekçeli değerlendirmesi; isteğe bağlı erteleme."
+          ]
+        },
+        "local_acceptance": {
+          "status": "başlamadı",
+          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+        },
+        "live": {
+          "status": "kurumsal etkinleştirme kapalı",
+          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+        },
+        "institution_decision": {
+          "status": "bekleniyor",
+          "required": "Somut ihtiyaç/protokol seçimi; kişisel veri zincire yazılmaz."
+        },
+        "external_access": {
+          "status": "teyit/erişim bekleniyor",
+          "target": "İhtiyaç onaylanırsa seçilecek açık cüzdan protokolü",
+          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+        }
+      }
     }
   ],
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
