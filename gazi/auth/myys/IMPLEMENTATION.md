@@ -158,3 +158,10 @@ Paket 5 yayın sonucu: `24b41c8dba48bfa261a51613fbbc3a83a7939f13` / `dpl_DzCWthA
 - Tam/kısmi/red; kanonik kazanım + hedef ders + kaynak belge çıktısı çift sayım denetimi; yüzde sınırları tam sayı kredi alt birimiyle. Yeni politika eski başvuruyu ve mevcut kredi toplamını sıfırlamaz.
 - İtiraz krediyi bekletir. Bağımsız yeni karar, eski kredinin ters kaydı ve yeni kredi aynı transaction içinde; geçmiş silinmez. IT yalnız gereken belge alanlarını görür, kredi/karar/akademik eşleme gerekçesi görmez.
 - Tanıma ve kredi sekmesinde politikalar, başvurular/kararlar, tekil defter. 14 yeni sunucu testi, 12 tarayıcı kontrolü; toplam 254 otomatik test. Gerçek kurul/entegrasyon ve çok dersli kaynak kabulü açık.
+
+
+## Paket 10 — OBS outbox ve mutabakat provası
+
+B22: değişmez karar kaynaklı olay, ayrı yerel alındı ve öğrenci işleri mutabakatı; red, içerik uyuşmazlığı ve güncel karar bekletme ayrılır. Son mutabık olaya bağlı düzeltme/iptal; eski kararın daha yeni kredi değişiklikleri atlanmaz. Teknik rol kişi/kredi görmez. Vercel'de simülatör ayrıca kapalıdır. Ağ çağrısı yoktur.
+
+Aktarım ve mutabakat ekranına OBS hazırlığı, filtre, alındı örneği, satır mutabakatı, güncel karar düzeltmesi ve CSV eklendi. 173+46+46=265 otomatik test; 11 OBS ve yeniden 8 B16/B17 tarayıcı kontrolü. Gerçek sağlayıcı şeması, yazma izni ve transkript/diploma eki kabulü açık.

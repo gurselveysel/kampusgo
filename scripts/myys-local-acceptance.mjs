@@ -1,4 +1,4 @@
-import {localRecognitionPolicy} from '../gazi/auth/tests/helpers/local-recognition.mjs';
+import {localRecognitionPolicy,localRecognitionCase} from '../gazi/auth/tests/helpers/local-recognition.mjs';
 // Disposable loopback-only UI acceptance fixture; never part of the deployed gateway.
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
@@ -14,7 +14,7 @@ import {myysRoute} from '../gazi/auth/myys/http.mjs';
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
-const initial=process.argv.includes('--wallet')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+const initial=process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--wallet')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
 if(process.argv.includes('--recognition')){const p=f.run('admin','recognition-policy',localRecognitionPolicy);f.run('publisher','recognition-policy-review',{policyId:p.id,outcome:'accepted',reason:'Sentetik politika yalnız izole yerel kabul için incelendi.'});}
 if(process.argv.includes('--operations')){
  const key=randomBytes(32),contract={id:'Yerel kabul kaynağı',tenant:'gazi',unit:'engineering',programId:initial.p.id,mode:'local-acceptance',subjects:{source:'student'},key};

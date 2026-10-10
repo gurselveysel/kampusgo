@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-10T21:57:50.344Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Yetkili kredi tek yerel aktarım olayına hazırlandı",
+    "Teknik rolde kredi ayrıntısı yok; red alındısı örneği kaydedildi",
+    "Red alındısı başarı veya mutabakat sayılmadı",
+    "Ayrı alındı ve öğrenci işleri mutabakatı bağlandı",
+    "Yeni karar önceki olaya bağlı düzeltme oluşturdu",
+    "Düzeltme alındısı ayrı mutabakatla kapandı",
+    "CSV raporu gerçek aktarım olmadığını koruyarak indirildi",
+    "Yeniden yükleme ve filtrede iki mutabık yerel olay korunur",
+    "390 px mutabakat ekranında yatay taşma yok",
+    "Başka öğrenen aktarım kayıtlarını göremez",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 11,
+  "automated_tests": {
+    "server": 173,
+    "portal": 46,
+    "regression": 46
+  },
+  "operations_regression_checks": 8,
+  "limits": [
+    "Ağ çağrısı yok; gerçek OBS bağlantısı ve alındısı değildir.",
+    "Gerçek kişi/ders anahtar eşlemesi ve transkript/diploma eki mutabakatı açık.",
+    "Dağıtık üretim işçi kabulü değildir."
+  ]
+}

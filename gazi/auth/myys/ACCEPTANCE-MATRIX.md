@@ -23,9 +23,9 @@
 | B17 · Toplu ihraç ve mutabakat ekle | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | engelli | başlamadı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
-| B20 · Tanıma politika setini onayla | kısmi | kısmi · tanıma dilimi geçti | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B21 · Dış belge ve tanıma akışını bağla | kısmi | kısmi · tanıma dilimi geçti | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B22 · OBS aktarımını kontrollü kabul et | engelli | başlamadı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B20 · Tanıma politika setini onayla | kısmi | kısmi · tanıma dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B21 · Dış belge ve tanıma akışını bağla | kısmi | kısmi · tanıma dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B22 · OBS aktarımını kontrollü kabul et | kısmi | kısmi · outbox dilimi geçti | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B24 · Erişilebilirlik açılış testini yap | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
@@ -83,3 +83,8 @@ B03/B09 çoklu görev/rubrik yazarlığı, arama, sürüm karşılaştırması v
 ## Paket 9 adayı
 
 B20/B21 politika sürümü, iki ayrı payda, öğrenci talebi, insan teknik incelemesi, ayrı tanıma kararı, itiraz ve tekil yerel kredi. 14 yeni sunucu senaryosu; 12 tarayıcı kontrolü; 254 otomatik test. Gerçek belge doğrulaması/teslimi, çok dersli teklif ve kurum kabulü açık. B03/B09 Paket 8 kod yayını doğrulandı.
+
+
+## Paket 10 adayı
+
+B22 karar kaynaklı outbox, yerel alındı, satır mutabakatı ve bağlı düzeltme/iptal; 11 yeni sunucu ve 11 yeni tarayıcı kontrolü. Toplam 265 otomatik test; B16/B17’nin 8 tarayıcı kontrolü yeniden geçti. Gerçek OBS, transkript/diploma eki ve dış test kabulü açık. Başlangıçla karşılaştırmada bütün B01–B36 kimlik/başlık/bağımlılık/kabul ölçütleri aynı.

@@ -1,3 +1,17 @@
+# Güncel devam — Paket 10 kaynak adayı
+
+Son canlı Paket 9: `b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb` / `dpl_HSfAwnVABknt9kGv61x6zn6aSzxB`; 142 kaynak hash ve canlı smoke geçti. Yerel eş içerik `a915b8c85c967d69969580c18a27ecdad1b544db`, ağaç `670a6a28d611b6eab9f9181cc522116d220c04e9`.
+
+B22 OBS outbox dilimi artık çekirdek/arayıze bağlı ve testli: 265 otomatik test, 11 OBS ve 8 B16/B17 tarayıcı kontrolü. Hazırlık/alındı/mutabakat/düzeltme/iptal/CSV yerel simülasyon. Paket 10'u güvenli yayımla ve kimlikleri RELEASE'e kaydet. Ardından B28 veri talebi ve saklama kararları, B29 kaynaklı göstergeler, B30 ayrı kurum/teknik/işletim kabul kapıları; kalan B01–B36 bağımsız işleri sürdür. Gerçek OBS/kurum bağlantısı yok, configuredCore kapalı.
+
+Aşağıdaki notlar tarihsel; en üst güncel nokta önceliklidir.
+
+# Güncel devam — Paket 9 yayımlandı, B22 sürüyor
+
+Uzak kaynak `b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb`, yerel `a915b8c85c967d69969580c18a27ecdad1b544db`, ortak ağaç `670a6a28d611b6eab9f9181cc522116d220c04e9`. Canlı `dpl_HSfAwnVABknt9kGv61x6zn6aSzxB` READY; 142 kaynak hash ve canlı smoke geçti. Geri dönüş Paket 8 `dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ`.
+
+B22 için obs.mjs ilk taslağı mevcut fakat henüz çekirdeğe/arayıze bağlanmadı ve test edilmedi. Sonraki işlem: düzeltme zincirinin en güncel kararı seçmesini sağla; daha önce mutabık aktarım varsa yeni kredi olayıyla düzeltmeyi atlamayı engelle; yerel alındı/satır mutabakatı ekranını bağla; rol/güncellik/tekrar/düzeltme testlerini ve tarayıcı kabulünü yap. configuredCore() kapalı; gerçek OBS bağlantısı yok. B28/B29/B30 ve tüm kalan bağımsız işler devam eder.
+
 # Güncel devam — Paket 9 kaynak adayı
 
 Son güvenli yayın Paket 8: uzak `bcb89ab08e35979df903262eb2be6adb4d617c37`, yerel `4f41f862f90216b59da32a65dae8d4cf8e3f2717`, ortak ağaç `c0c0ac1a06bb331cbf7e6b0bb290b6670a9f75bd`; deploy `dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ` READY. 141 kaynak hash ve canlı kapalı akademik görünüm/kaynak merkezi doğrulandı.

@@ -196,3 +196,19 @@ Paket 8 yayını öncesinde B11’in 13 izole tarayıcı kontrolü tekrar geçti
 - 162 sunucu + 46 portal + 46 regresyon = 254 test; 14 yeni tanıma senaryosu ve 12 yerel tarayıcı kontrolü. Mobil 390 px, tekrar yükleme, başka öğrenci/IT sınırı, görevler ayrılığı, paydalar, çift sayım ve rollback testli.
 - Gerçek dış belge doğrulaması/teslimi, kurum kararı veya OBS işlemi yok. configuredCore() kapalı. Çok dersli teklif ve özel istisna kaynakları açık; B20/B21 tam kapanışı değildir.
 - Geri dönüş hedefi Paket 8 `dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ` / `bcb89ab08e35979df903262eb2be6adb4d617c37`; uygulanmadı.
+
+### Paket 9 gerçek yayın ve canlı doğrulama
+
+- Uzak `b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb`; yerel `a915b8c85c967d69969580c18a27ecdad1b544db`; ortak ağaç `670a6a28d611b6eab9f9181cc522116d220c04e9`.
+- Dağıtım `dpl_HSfAwnVABknt9kGv61x6zn6aSzxB`, READY / production; canlı alias bu dağıtıma bağlı. 142 kaynak dosyası eksiksiz SHA eşleşti. Paket 8'den üç kaynak dosyası değişti/eklendi; giriş ve içerikler aynı.
+- Açık gerçek canlı oturum yeniden yüklendi; kaynak 2026.10.10.3, kapalı akademik kurum bağlantısı, yüklenen logolar ve taşmayan masaüstü doğrulandı. Tanıma/kurum kredi hizmeti açılmadı.
+- 254 otomatik test ve 12 yerel tanıma tarayıcı kontrolü. B20/B21 tam kabul değildir; gerçek belge, kurum kurulu, önceki ders kaynağı ve OBS bağlantısı açık.
+- Geri dönüş `dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ` / `bcb89ab08e35979df903262eb2be6adb4d617c37`; geri dönüş uygulanmadı. Üretim migration ve gerçek akademik işlem yok.
+
+
+## Paket 10 — OBS hazırlık ve mutabakat (yayın adayı)
+
+- Panel: Aktarım ve mutabakat → OBS aktarım hazırlığı ve mutabakat. Yetkili kredi hazırlığı, yerel alındı örnekleri, red/uyuşmazlık, bağlı düzeltme ve CSV.
+- 265 otomatik test; 11 yeni sunucu, 11 OBS tarayıcı ve yeniden 8 B16/B17 tarayıcı kontrolü. Mobil 390 px ve rol sınırları geçti.
+- Gerçek ağ çağrısı/OBS kaydı yok; bütün durumlar yerel simülasyon. configuredCore() ve Vercel alındı simülatörü kapalı. Kimlik bilgisi, migration veya gerçek akademik işlem yok.
+- Geri dönüş Paket 9: `dpl_HSfAwnVABknt9kGv61x6zn6aSzxB` / `b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb`.

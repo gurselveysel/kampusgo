@@ -1,3 +1,4 @@
+import {ObsWorkspace} from './obs-workspace.jsx';
 import React,{useState} from 'react';
 import {Card,CardHead,Button,Field,Notice,Pill} from './ui.jsx';
 import {transferCsv} from '../../auth/myys/transfer-csv.mjs';
@@ -10,7 +11,7 @@ function download(name,rows){const url=URL.createObjectURL(new Blob([transferCsv
 export function OperationsWorkspace({data,busy,command}){
  const [search,setSearch]=useState(''),[filter,setFilter]=useState('all');
  const queue=(data.queue||[]).filter(e=>(filter==='all'||e.state===filter)&&[e.contractId,e.id,status(e.state)].join(' ').toLocaleLowerCase('tr').includes(search.toLocaleLowerCase('tr')));
- return <div className="operations-workspace">
+ return <div className="operations-workspace"><ObsWorkspace data={data} busy={busy} command={command}/>
  <Notice>Kabul edilen olay henüz işlenmiş sayılmaz. İşlenmiş kaynak verisi de insan değerlendirmesi ve akademik karar yerine geçmez.</Notice>
  <Card><CardHead title="Olay kuyruğu ve karantina" sub="Yetkili olduğunuz birimlerdeki işleme durumları. Öğrenme kanıtının içeriği bu ekranda gösterilmez."/>
  <div className="academic-body form-stack"><Field label="Olay ara"><input aria-label="Olay ara" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Kaynak veya olay kimliği"/></Field>

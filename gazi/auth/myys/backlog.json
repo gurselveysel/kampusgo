@@ -1236,7 +1236,7 @@
         "gazi/portal/src/recognition-workspace.jsx",
         "gazi/auth/myys/acceptance/B20-B21-20261010.json"
       ],
-      "production_status": "Paket 9 yayın adayı; tanıma yalnız izole yerel kabulde. OBS, dış doğrulama ve resmî karar etkin değil.",
+      "production_status": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı.",
       "implementation_note": "Kaynak/madde/sürüm/tarih/kapsam ve iki ayrı payda içeren değişmez politika; bağımsız yerel inceleme; sınır hesabı ve eski başvurunun politika sürümü korunur. Gazi RPL kaynağı okundu, kurum politikası otomatik atanmadı.",
       "independent_remaining_work": [
         "Çok dersli teklif ve özel istisna yollarını yetkili kaynak kararına bağla; gerçek diploma müfredatı/önceki kredi kaynağı olmadan otomatik politika açılmaz."
@@ -1263,8 +1263,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 9 yayın adayı; tanıma yalnız izole yerel kabulde. OBS, dış doğrulama ve resmî karar etkin değil."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1301,7 +1301,7 @@
         "gazi/portal/src/recognition-workspace.jsx",
         "gazi/auth/myys/acceptance/B20-B21-20261010.json"
       ],
-      "production_status": "Paket 9 yayın adayı; tanıma yalnız izole yerel kabulde. OBS, dış doğrulama ve resmî karar etkin değil.",
+      "production_status": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı.",
       "implementation_note": "Aynı öğrenci/program kaydına bağlı yerel tek ders talebi; dosya özeti, insan teknik inceleme raporu, ayrı tam/kısmi/red, bağımsız itiraz/yeni karar ve atomik ters kayıtlı tekil kredi defteri. Teknik kontrol krediyi üretmez; IT akademik kararları göremez.",
       "independent_remaining_work": [
         "Dış belge kriptografik doğrulama adaptörü, yetkili gerçek belge teslimi/arşivi ve çok dersli teklif; gerçek önceki ders/kazanım eşlemesi ve kurum kurul kabulü açık."
@@ -1328,8 +1328,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 9 yayın adayı; tanıma yalnız izole yerel kabulde. OBS, dış doğrulama ve resmî karar etkin değil."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1356,32 +1356,44 @@
       "planning_estimate": "6–12 kişi-gün ve kurum erişimi",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "OBS teknik sözleşmesi/test ortamı yok.",
+      "implementation_status": "kısmi",
+      "test_status": "173 sunucu + 46 portal + 46 regresyon = 265 test; 11 yeni OBS senaryosu, 11 OBS ve 8 B16/B17 tarayıcı kontrolü.",
+      "implementation_evidence": [
+        "gazi/auth/myys/obs.mjs",
+        "gazi/auth/myys/OBS-CONTRACT.md",
+        "gazi/auth/tests/myys-obs.test.mjs",
+        "gazi/portal/src/obs-workspace.jsx",
+        "gazi/auth/myys/acceptance/B22-20261010.json"
+      ],
+      "production_status": "Paket 10 yayın adayı; yalnız yerel OBS simülasyonu. Gerçek bağlantı etkin değil.",
+      "implementation_note": "İnsan kararından değişmez OBS outbox hazırlığı, ayrı yerel alındı/mutabakat, red/hash uyuşmazlığı/kaynak bekletme, bağlı düzeltme/iptal, rol sınırı ve CSV. Gerçek ağ/OBS aktarımı yok.",
       "independent_remaining_work": [
-        "OBS outbox sözleşmesi, düzeltme ve yinelenen olay mutabakatı."
+        "Sağlayıcıya özgü OBS şeması/kimlik anahtarı/hata-kota adaptörü ve gerçek test transkript/diploma eki mutabakatı; dağıtık üretim outbox işletimi."
       ],
       "development_blocker": null,
       "production_activation_blocker": "OBS teknik şema/test ortamı ve aktarım izni.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/obs.mjs",
+            "gazi/auth/myys/OBS-CONTRACT.md",
+            "gazi/auth/tests/myys-obs.test.mjs",
+            "gazi/portal/src/obs-workspace.jsx",
+            "gazi/auth/myys/acceptance/B22-20261010.json"
+          ],
           "remaining": [
-            "OBS outbox sözleşmesi, düzeltme ve yinelenen olay mutabakatı."
+            "Sağlayıcıya özgü OBS şeması/kimlik anahtarı/hata-kota adaptörü ve gerçek test transkript/diploma eki mutabakatı; dağıtık üretim outbox işletimi."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
+          "status": "kısmi · outbox dilimi geçti",
+          "evidence": "173 sunucu + 46 portal + 46 regresyon = 265 test; 11 yeni OBS senaryosu, 11 OBS ve 8 B16/B17 tarayıcı kontrolü.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 10 yayın adayı; yalnız yerel OBS simülasyonu. Gerçek bağlantı etkin değil."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
