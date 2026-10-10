@@ -15,7 +15,8 @@ import {myysRoute} from '../gazi/auth/myys/http.mjs';
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
-const initial=process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+const initial=process.argv.includes('--profiles')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+if(process.argv.includes('--profiles')){const reason='Sentetik düzenleme yetki kaydı, gerçek kurum kararı değildir.';const authority=f.run('admin','registry-draft',{unit:initial.p.unit,type:'institution-authority',title:'Sentetik düzenleme yetkisi',fields:{...initial.p.responsibilities,pathway:initial.p.pathway,authorityReference:reason}});f.run('authority','registry-review',{recordId:authority.id,outcome:'accepted',reason});}
 if(process.argv.includes('--quality')){
  const p=f.run('author','program',{...initial.p,code:'P02',title:'Yerel Araştırma Yöntemleri'});f.run('publisher','publish',{programId:p.id,reason:'Sentetik başvuru ve gösterge kaynağı incelemesi.'});
  const key=randomBytes(32),c={id:'local-quality',tenant:'gazi',unit:'engineering',programId:initial.p.id,subjects:{source:'student'},mode:'local-acceptance',key},a=new LocalLmsAdapter(f.s,c),raw=JSON.stringify({id:'quality-completion-1',contractId:c.id,tenant:'gazi',programId:c.programId,subject:'source',type:'completion',revision:1,completed:true,occurredAt:new Date().toISOString()});const event=a.accept(raw,createHmac('sha256',key).update(raw).digest('hex'));new LocalLmsWorker(a).run(event.id);
@@ -39,7 +40,7 @@ for(const [person,role] of [['independent','instructor'],['finance','finance']])
  f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(hash(person),'gazi','synthetic-fixture','2026-01-01T00:00:00.000Z');
 }
 const root=fileURLToPath(new URL('../gazi/',import.meta.url));
-const roles={author:'Program hazırlayan',publisher:'Program inceleyen',student:'Öğrenen',teacher:'İlk eğitici',independent:'Bağımsız eğitici',judge:'Akademik karar',issuer:'Belge yetkilisi',reviewer:'Kalite',admin:'Sicil yöneticisi',it:'Bilgi işlem',finance:'Mali işler',other:'Başka öğrenen'};
+const roles={author:'Program hazırlayan',publisher:'Program inceleyen',student:'Öğrenen',teacher:'İlk eğitici',independent:'Bağımsız eğitici',judge:'Akademik karar',issuer:'Belge yetkilisi',reviewer:'Kalite',admin:'Sicil yöneticisi',authority:'Bağımsız sicil yöneticisi',it:'Bilgi işlem',finance:'Mali işler',other:'Başka öğrenen'};
 const json=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
 const server=createServer(async(req,res)=>{
  try{

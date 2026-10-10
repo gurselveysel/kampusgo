@@ -1,3 +1,13 @@
+# Güncel devam — Paket 16 kaynak adayı
+
+B12 belge profilleri/ihraç yetkisi ve sentetik laboratuvar sınırı: 332 otomatik + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü. Önce güvenli kaynak yayını ve canlı smoke; son doğrulanmış canlı Paket 15 aşağıda. Sonra B13 anahtar/durum sicili ve B19 bağımsız doğrulama paketi; B11 imzalı belge değiştirme zinciri ve kalan tüm B01–B36 bağımsız işleri. Tüm işler tamamlanmadı; gerçek kurum yetkisi kapalı.
+
+# Güncel devam — Paket 15 yayımlandı; B12/B13/B19 sürüyor
+
+Uzak `fdce77408937dc9459ece2cf25611e5ccfc025bb`; yerel `e30dd62b95f319072242e381ae96e494e052480e`; ağaç `ed135ad036edbb4d206b6bd160067dbac5e4d309`; canlı `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` READY. 152 kaynak hash ve canlı kapalı kurum/görseller/taşma smoke geçti. Geri dönüş Paket 14. 320 otomatik + 11 üyelik + 13 itiraz tarayıcı kontrolü.
+
+Sıradaki B12: zorunlu belge profili ve ayrı issuer yetki sicili; sürümlü, program/karar bağlı inceleme; eski sentetik rozet laboratuvar sınırı. Ardından B13 anahtar/durum ve B19 bağımsız doğrulama paketi, B11 imzalı belge değiştirme zinciri; kalan bütün bağımsız B01–B36 işleri devam eder. YÖK asıl PDF yeniden erişilemedi (10.10.2026); eski kamu özeti korunur, yeni okunmamış hüküm uygulanmaz. Open Badges 3.0 belge sürümü 1.4.5 (29.06.2026) resmî sayfasında §8.2/8.4/9.1 okundu; kaynak notları bir sonraki sözleşmede kaydedilecek.
+
 # Güncel devam — Paket 15 kaynak adayı
 
 B06/B08 üyelik yaşam döngüsü ve zorunlu kurum oturumu: 320 otomatik + 11 üyelik + 13 itiraz tarayıcı kontrolü. Önce güvenli kaynak yayını ve canlı doğrulama; son doğrulanmış canlı Paket 14 aşağıda. Sonra B12/B13/B19 belge profili/issuer yetkisi/anahtar-durum sicili/bağımsız doğrulama ve bütün kalan bağımsız B01–B36 işleri. configuredCore kapalı, gerçek kimlik/kurum yetkisi açılmadı.

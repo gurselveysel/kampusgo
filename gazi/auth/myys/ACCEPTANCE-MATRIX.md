@@ -113,3 +113,8 @@ Akış ve saklama ekranı: sicile bağlı ülke/rol/aşama/süre, ayrı yönetic
 ## Paket 15 adayı — B06/B08
 
 Kişi ve üyelik ekranı: süreli görev/geri çekme önerisi, ayrı yönetici incelemesi, sürüm özeti ve aynı kurum oturumlarının atomik iptali. Kurum bağı olmayan eski oturum reddedilir. 228 sunucu + 46 portal + 46 regresyon = 320 otomatik test; 11 yeni ve 13 B11 tarayıcı kontrolü. Akademik geçmiş ve başka kurumlar korunur. Gerçek kurum provizyonu/üretim depo/dağıtık iptal ve tam B08 birim matrisi açık; bütün paketler tamamlanmadı.
+
+
+## Paket 16 adayı — B12
+
+Belge profilleri ve ihraç hazırlığı: zorunlu program/karar/profil/ayrı yetki sicili bağı, süreli kişi ataması, ayrı komisyon incelemesi, sürüm ve durdurma. Sentetik rozet laboratuvarı açıklaması ve yetki alanı reddi eklendi. 240 sunucu + 46 portal + 46 regresyon = 332 otomatik test; 11 yeni profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü. YÖK tam metnine tekrar erişilemedi; eski kamu özeti korundu. Gerçek kurum/issuer kabulü, üretim imza/durum ve bağımsız standart doğrulaması açık.

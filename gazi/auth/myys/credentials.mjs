@@ -1,6 +1,8 @@
+import {issuanceProfile} from './credential-profile.mjs';
+import {stableStringify} from './program-model.mjs';
 import {makeCredential,LEARNERS} from '../lib/badge-model.mjs';
 import {signCredential,verifyCredential,digest} from '../lib/badge-service.mjs';
-import {requireThat} from './store.mjs';
+import {requireThat,hash} from './store.mjs';
 import {decodeProtectedHeader} from 'jose';
 
 const permitted=(actor,unit)=>actor.mfa&&actor.memberships.some(m=>m.unit===unit&&m.roles.includes('studentAffairs'));
@@ -10,7 +12,8 @@ function ready(core,context,issuanceId){
  const d=s.get(a.tenant,'decision',r.decisionId),p=s.get(a.tenant,'program',r.programId);
  requireThat(![d.owner,d.createdBy,p.createdBy].includes(a.id),'separation','Belge imzalayan görevler ayrılığını sağlamalı.',403);
  requireThat(p.mode==='pilot'&&p.pathway==='micro'&&d.outcome==='approved'&&core.decisionUsable(a,d)&&!s.list(a.tenant,'revocation').some(x=>x.issuanceId===r.id),'decision_blocked','Karar veya ihraç yetkisi artık geçerli değil.');
- return {a,r,d,p};
+ const profile=issuanceProfile(s,a,p,core.clock(),r.profileId);requireThat(r.profileId&&r.profileDigest===hash(stableStringify(profile)),'profile_changed','İhraç yetkisinin belge profili eşleşmiyor.',409);
+ return {a,r,d,p,profile};
 }
 export async function signApproved(core,context,issuanceId,material,base){
  requireThat(base==='https://local-acceptance.invalid','local_only','Yerel kabul imzası gerçek kurum adresi kullanamaz.',503);
@@ -26,7 +29,7 @@ export async function signApproved(core,context,issuanceId,material,base){
   // This isolated store has no public status-list endpoint. Do not promise one.
   delete vc.credentialStatus;
   vc['@context'].push({academicDecision:{'@id':base+'/vocab/academicDecision','@type':'@json'}});
-  vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance'};
+  vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance',profileId:r.profileId,profileVersion:r.profileVersion,authorityId:r.authorityId,profileDigest:r.profileDigest};
   return {vc,a,r,d,date};
  });
  if(prepared.existing)return prepared.existing;

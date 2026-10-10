@@ -12,6 +12,7 @@ export const TEMPLATES=[
 export const draftFor=id=>({...TEMPLATES.find(t=>t.id===id)||TEMPLATES[0],learner:LEARNERS[0].id,participation:'Karma',evidence:'Sentetik değerlendirme kaydı: örnek portfolyo ve rubrik. Gerçek sınav veya başarı kaydı değildir.'});
 export function validateDraft(d){
  const errors={};if(!d||typeof d!=='object'||Array.isArray(d))return {form:'Geçerli bir eğitim tanımı gerekli.'};
+ if(['decisionId','academicDecision','profileId','official','issuer','pilot'].some(k=>Object.hasOwn(d,k)))errors.authority='Sentetik laboratuvar kurumsal karar, profil veya düzenleme yetkisi alamaz.';
  if(!TEMPLATES.some(t=>t.id===d.id))errors.id='Geçerli bir kullanım alanı seçin.';
  if(!LEARNERS.some(l=>l.id===d.learner))errors.learner='Örnek öğrenen seçin.';
  for(const k of ['title','outcomes','level','assessment','participation','criteria','quality','evidence'])if(typeof d[k]!=='string'||d[k].trim().length<(k==='level'?1:2)||d[k].length>(k==='title'?160:1800))errors[k]='Bu alan gerekli; metin uzunluğunu kontrol edin.';

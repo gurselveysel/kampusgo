@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-10T23:13:44.897Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Profil bulunmayan başarı kararı belge hazırlama düğmesini açmadı",
+    "11 alan, yetki sicili, program sürümü ve kişi görevi aynı profile bağlandı",
+    "İncelenmemiş profil ihraç yetkisi sağlamadı",
+    "Ayrı komisyon incelemesi sonrası atanmış görevliye hazırlık açıldı",
+    "Yeni sürüm inceleme beklerken eski profille yeni belge hazırlanamadı",
+    "Yeni ihraç hazırlığı profil 2 ve aynı akademik karara bağlandı; tekrar düğmesi kapandı",
+    "Profil kullanımı gerekçeyle durduruldu; önceki belgeleri iptal etmiş gibi gösterilmedi",
+    "Yenilemede iki profil sürümü, inceleme ve durdurma korundu",
+    "390 px belge profili formunda ve sürüm geçmişinde taşma yok",
+    "Öğrenen idari profillere erişmedi; kendi hazırlığının sürümünü gördü",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 12,
+  "automated_tests": {
+    "server": 240,
+    "portal": 46,
+    "regression": 46
+  },
+  "regression_browser_checks": {
+    "appeals": 13,
+    "wallet": 8
+  },
+  "limits": [
+    "Sadece yerel kişi/karar/profil/ihraç yetkisi zinciri.",
+    "YÖK PDF güncel tam metnine tekrar erişilemedi; eski kamu özeti korundu.",
+    "Gerçek issuer yetkisi, üretim imza/durum ve bağımsız dış standart kabulü açık."
+  ]
+}

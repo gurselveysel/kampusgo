@@ -279,3 +279,16 @@ Akış ve saklama ekranı: sicile bağlı ülke/rol/aşama/süre, ayrı yönetic
 ## Paket 15 adayı — B06/B08
 
 Kişi ve üyelik ekranı: süreli görev/geri çekme önerisi, ayrı yönetici incelemesi, sürüm özeti ve aynı kurum oturumlarının atomik iptali. Kurum bağı olmayan eski oturum reddedilir. 228 sunucu + 46 portal + 46 regresyon = 320 otomatik test; 11 yeni ve 13 B11 tarayıcı kontrolü. Akademik geçmiş ve başka kurumlar korunur. Gerçek kurum provizyonu/üretim depo/dağıtık iptal ve tam B08 birim matrisi açık; bütün paketler tamamlanmadı.
+
+### Paket 15 — doğrulanmış güvenli kaynak yayını
+
+- Uzak kaynak `fdce77408937dc9459ece2cf25611e5ccfc025bb`; yerel `e30dd62b95f319072242e381ae96e494e052480e`; ortak ağaç `ed135ad036edbb4d206b6bd160067dbac5e4d309`.
+- Dağıtım `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`, READY / production; canlı alias aynı kaynağa bağlı. 152/152 kaynak hash eşleşti; eksik/fazla yok.
+- Gerçek canlı yeniden yüklemede kapalı kurum görünümü, sağlam görseller ve taşmasız yerleşim doğrulandı. Giriş koruması, logolar ve dersler korundu.
+- 320 otomatik test, 11 üyelik ve 13 itiraz tarayıcı kontrolü. Kişi/üyelik ekranı kaynak kodu yayımlandı; gerçek kişi provizyonu/kurum yetkisi/üretim oturum yönetimi açılmadı. configuredCore Vercel'de kapalı.
+- Geri dönüş Paket 14 `dpl_4WUwrpKjZt4CLZLKA2k5WgSTNNR2`; fiilen uygulanmadı.
+
+
+## Paket 16 adayı — B12
+
+Belge profilleri ve ihraç hazırlığı: zorunlu program/karar/profil/ayrı yetki sicili bağı, süreli kişi ataması, ayrı komisyon incelemesi, sürüm ve durdurma. Sentetik rozet laboratuvarı açıklaması ve yetki alanı reddi eklendi. 240 sunucu + 46 portal + 46 regresyon = 332 otomatik test; 11 yeni profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü. YÖK tam metnine tekrar erişilemedi; eski kamu özeti korundu. Gerçek kurum/issuer kabulü, üretim imza/durum ve bağımsız standart doğrulaması açık.

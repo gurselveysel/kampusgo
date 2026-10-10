@@ -354,7 +354,7 @@
         "gazi/auth/myys/MEMBERSHIP-CONTRACT.md",
         "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json"
       ],
-      "production_status": "Paket 15 kaynak adayı; üyelik ekranı ve kurum kapsamı yerelde doğrulandı. Gerçek yetki ve üretim depo/iptal kapalı.",
+      "production_status": "Paket 15 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kişi/üyelik işlemleri yalnız izole yerel kabulde; üretim kimlik ve yetki yönetimi kapalı.",
       "implementation_note": "Mevcut kişide süreli rol önerisi, bağımsız inceleme, kaynak sürümüyle yarış reddi ve aynı kurum oturumlarının atomik iptali. Kapsamsız legacy oturum reddedilir; akademik geçmiş korunur.",
       "independent_remaining_work": [
         "Kurumun kişi provizyon/rol sicili sözleşmesi ve üretim depo adaptörü; gerçek dağıtık iptal/IdP kabulü."
@@ -392,7 +392,7 @@
         },
         "live": {
           "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 15 kaynak adayı; üyelik ekranı ve kurum kapsamı yerelde doğrulandı. Gerçek yetki ve üretim depo/iptal kapalı."
+          "evidence": "Paket 15 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kişi/üyelik işlemleri yalnız izole yerel kabulde; üretim kimlik ve yetki yönetimi kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -502,7 +502,7 @@
         "gazi/auth/myys/MEMBERSHIP-CONTRACT.md",
         "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json"
       ],
-      "production_status": "Paket 15 kaynak adayı; üyelik ekranı ve kurum kapsamı yerelde doğrulandı. Gerçek yetki ve üretim depo/iptal kapalı.",
+      "production_status": "Paket 15 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kişi/üyelik işlemleri yalnız izole yerel kabulde; üretim kimlik ve yetki yönetimi kapalı.",
       "implementation_note": "Mevcut kişide süreli rol önerisi, bağımsız inceleme, kaynak sürümüyle yarış reddi ve aynı kurum oturumlarının atomik iptali. Kapsamsız legacy oturum reddedilir; akademik geçmiş korunur.",
       "independent_remaining_work": [
         "Bütün modüllerin doğru kurum içindeki çapraz birim okuma/yazma/ihracat matrisi; gerçek görev atamalarıyla kurum kabulü."
@@ -534,7 +534,7 @@
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 15 kaynak adayı; üyelik ekranı ve kurum kapsamı yerelde doğrulandı. Gerçek yetki ve üretim depo/iptal kapalı."
+          "evidence": "Paket 15 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kişi/üyelik işlemleri yalnız izole yerel kabulde; üretim kimlik ve yetki yönetimi kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -765,15 +765,22 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Karar/kanıt imza bağı; imza sırasında yetki çekme ve tekrar kontrolü.",
+      "test_status": "12 yeni sunucu, 11 profil tarayıcı, 13 itiraz ve 8 cüzdan regresyon kontrolü; 332 otomatik test geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/credential-profile-model.mjs",
+        "gazi/auth/myys/credential-profile.mjs",
+        "gazi/portal/src/credential-profile-workspace.jsx",
+        "gazi/auth/tests/myys-profile.test.mjs",
+        "scripts/myys-profile-browser.cjs",
+        "gazi/auth/myys/CREDENTIAL-PROFILE-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B12-profile-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Yeni yerel karara bağlı imza zinciri; eski sentetik pilot laboratuvarı korunur, resmî yol kapalı.",
+      "production_status": "Paket 16 kaynak adayı; profil akışı yerel kabulde. Kurumsal ihraç yetkisi kapalı.",
+      "implementation_note": "İhraçta zorunlu program/karar/profil/ayrı yetki sicili bağı; süreli atanmış belge görevlileri, bağımsız profil incelemesi, sürüm ve durdurma. Eski sentetik laboratuvar karar/kurum yetkisi alamaz.",
       "independent_remaining_work": [
-        "Belge profili sicili, eski sentetik laboratuvar sınırı ve karar durumuyla zorunlu ilişki."
+        "Gerçek kurumsal EK-1/issuer kaynak ve karar kabulü; üretim imza/depo adaptörüyle profil bağının kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Hukuki düzenleyici yetkisi; resmî ihraç bu yayınla açılmaz.",
@@ -782,20 +789,27 @@
           "status": "kısmi",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/myys/credential-profile-model.mjs",
+            "gazi/auth/myys/credential-profile.mjs",
+            "gazi/portal/src/credential-profile-workspace.jsx",
+            "gazi/auth/tests/myys-profile.test.mjs",
+            "scripts/myys-profile-browser.cjs",
+            "gazi/auth/myys/CREDENTIAL-PROFILE-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B12-profile-20261010.json"
           ],
           "remaining": [
-            "Belge profili sicili, eski sentetik laboratuvar sınırı ve karar durumuyla zorunlu ilişki."
+            "Gerçek kurumsal EK-1/issuer kaynak ve karar kabulü; üretim imza/depo adaptörüyle profil bağının kabulü."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "Karar/kanıt imza bağı; imza sırasında yetki çekme ve tekrar kontrolü.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "evidence": "12 yeni sunucu, 11 profil tarayıcı, 13 itiraz ve 8 cüzdan regresyon kontrolü; 332 otomatik test geçti.",
+          "limits": "Sentetik yerel profil/ihraç bağı; gerçek kurum yetkisi veya sertifikasyon yok."
         },
         "live": {
           "status": "kısmi pilot",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 16 kaynak adayı; profil akışı yerel kabulde. Kurumsal ihraç yetkisi kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
