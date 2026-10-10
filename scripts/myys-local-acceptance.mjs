@@ -14,7 +14,12 @@ import {myysRoute} from '../gazi/auth/myys/http.mjs';
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
-const initial=process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--wallet')||process.argv.includes('--privacy')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+const initial=process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+if(process.argv.includes('--quality')){
+ const p=f.run('author','program',{...initial.p,code:'P02',title:'Yerel Araştırma Yöntemleri'});f.run('publisher','publish',{programId:p.id,reason:'Sentetik başvuru ve gösterge kaynağı incelemesi.'});
+ const key=randomBytes(32),c={id:'local-quality',tenant:'gazi',unit:'engineering',programId:initial.p.id,subjects:{source:'student'},mode:'local-acceptance',key},a=new LocalLmsAdapter(f.s,c),raw=JSON.stringify({id:'quality-completion-1',contractId:c.id,tenant:'gazi',programId:c.programId,subject:'source',type:'completion',revision:1,completed:true,occurredAt:new Date().toISOString()});const event=a.accept(raw,createHmac('sha256',key).update(raw).digest('hex'));new LocalLmsWorker(a).run(event.id);
+ const t=f.run('student','support',{unit:'engineering',category:'technical',subject:'Sentetik kaynak kontrolü',message:'Yerel gösterge için sentetik destek kaydı.'});f.run('it','support-event',{ticketId:t.id,expectedRevision:0,type:'resolve',message:'Sentetik destek kaynağı yerel kabulde çözüldü.'});
+}
 if(process.argv.includes('--privacy')){const h=hash('privacy-expired-session');f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(h,'student','2020-01-01T00:00:00.000Z');f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(h,'gazi','local-test','2019-01-01T00:00:00.000Z');}
 if(process.argv.includes('--recognition')){const p=f.run('admin','recognition-policy',localRecognitionPolicy);f.run('publisher','recognition-policy-review',{policyId:p.id,outcome:'accepted',reason:'Sentetik politika yalnız izole yerel kabul için incelendi.'});}
 if(process.argv.includes('--operations')){

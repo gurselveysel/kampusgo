@@ -1,3 +1,11 @@
+# Güncel devam — Paket 12 kaynak adayı
+
+B29 yerel başvuru ve kaynaklı gösterge ekranları: 286 otomatik + 11 gösterge + 8 cüzdan tarayıcı kontrolü. Önce güvenli yayın ve canlı doğrulama; son canlı Paket 11 aşağıda. Sonra B30 teknik/akademik/operasyon kabul kapıları, B04 saklama sicili ve bütün kalan bağımsız B01–B36 işleri. Gerçek kohort/dış kabul/kurumsal hizmet açılmadı.
+
+# Güncel devam — Paket 11 yayımlandı; sırada B29/B30
+
+Uzak `8da2a5974e3dd74f77c552bf626b45a7cd7555f3`; yerel `910443b991c7dc0d2b796bc8913960bc21a1c23c`; ağaç `8108991b6af1b951d170ee8afb1c62d35e17fc66`; canlı `dpl_87Cjjpijbg7pNXxi6KhtWEhuS67m` READY. 144 kaynak hash ve gerçek canlı kapalı kurum/logolar/yerleşim smoke geçti. Geri dönüş Paket 10. B28 yalnız yerel dilim; bütün paket kapanmadı. B29 başvuru/tamamlama/destek kaynak ve sayı mutabakatı, sonra B30 ayrı kabul kapıları ve kalan bağımsız B01–B36 işleri.
+
 # Güncel devam — Paket 11 kaynak adayı
 
 B28 veri talebi/özet/yanıt/görüntüleme/paylaşım çekme ve süresi dolmuş yerel oturum temizliği: 276 otomatik + 11 tarayıcı kontrolü. Paket 11 güvenli kaynak yayını ve canlı doğrulaması bekliyor. Son canlı Paket 10 aşağıda. Kurumsal çekirdek kapalı, tam hesap silme/tebligat/fiziksel imha yok. Sonra B29 kaynak mutabakat göstergeleri ve B30 ayrı kabul kapıları; kalan bağımsız B01–B36 işlerini sürdür.

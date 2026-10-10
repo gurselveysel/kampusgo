@@ -1,3 +1,4 @@
+import {admissionsCommand,admissionsReplay,admissionsView} from './admissions.mjs';
 import {randomUUID} from 'node:crypto';
 import {hash,requireThat,CoreError} from './store.mjs';
 import {registryCommand} from './registry.mjs';
@@ -72,6 +73,7 @@ export class MyysCore {
   });
  }
  authorizeReplay(a,action,r){
+  if(admissionsReplay(a,action,r))return;
   if(privacyReplay(a,action,r))return;
   if(obsReplay(a,action,r))return;
   if(recognitionReplay(a,action,r))return;
@@ -82,6 +84,7 @@ export class MyysCore {
  }
  execute(a,action,p,now){
   const s=this.store,get=(kind,id)=>fetchRecord(s,a,kind,id),put=(kind,r)=>s.put(a.tenant,kind,{...r,createdAt:now,createdBy:a.id}),id=()=>randomUUID();
+  const admissions=admissionsCommand({action,p,a,s,put,id,execute:(next,input)=>this.execute(a,next,input,now),core:this});if(admissions)return admissions;
   const privacy=privacyCommand({action,p,a,s,put,id,now});if(privacy)return privacy;
   const obs=obsCommand({action,p,a,s,put,id,now});if(obs)return obs;
   const recognition=recognitionCommand({action,p,a,s,put,id,now});if(recognition)return recognition;
@@ -217,7 +220,7 @@ export class MyysCore {
  view({sessionHash,tenant}){
   return this.store.transaction(()=>{
    const a=this.store.principal(sessionHash,tenant,this.clock()),s=this.store,visible=kind=>s.list(tenant,kind).filter(r=>readable(a,r));
-   return {privacy:privacyView(s,a),obs:obsView(s,a),recognition:recognitionView(s,a),wallet:walletView(this,a),...operationsView(s,a,this.clock()),mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment').map(r=>({...r,allowedActions:allow(a,'decide',r.unit)&&![r.owner,r.createdBy,s.get(tenant,'program',r.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'decision').some(d=>d.assessmentId===r.id)&&appealChainReady(s,tenant,r)?['decide']:[]})),decisions:visible('decision').map(d=>({...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d)})),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,blocked:!this.decisionUsable(a,s.get(tenant,'decision',r.decisionId))||s.list(tenant,'revocation').some(x=>x.issuanceId===r.id)})),support:supportView(s,a)};
+   return {...admissionsView(s,a),lmsReceipts:visible('lms-receipt'),credentialReceipts:visible('credential-receipt'),privacy:privacyView(s,a),obs:obsView(s,a),recognition:recognitionView(s,a),wallet:walletView(this,a),...operationsView(s,a,this.clock()),mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment').map(r=>({...r,allowedActions:allow(a,'decide',r.unit)&&![r.owner,r.createdBy,s.get(tenant,'program',r.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'decision').some(d=>d.assessmentId===r.id)&&appealChainReady(s,tenant,r)?['decide']:[]})),decisions:visible('decision').map(d=>({...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d)})),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,signed:!!s.get(tenant,'signed',r.id),blocked:!this.decisionUsable(a,s.get(tenant,'decision',r.decisionId))||s.list(tenant,'revocation').some(x=>x.issuanceId===r.id)})),support:supportView(s,a)};
   });
  }
  shared({tenant,token}){

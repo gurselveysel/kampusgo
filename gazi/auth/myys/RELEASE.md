@@ -225,3 +225,18 @@ Paket 8 yayını öncesinde B11’in 13 izole tarayıcı kontrolü tekrar geçti
 ## Paket 11 adayı — B28
 
 Veri talepleri ekranı: kişisel özet, talep/ayrı gerekçeli yanıt/görüntüleme, cüzdan paylaşımını geri çekme, süresi dolmuş yerel oturum temizliği. 184 sunucu + 46 portal + 46 regresyon = 276 otomatik test; 11 tarayıcı kontrolü. 390 px taşma ve klavye seçimi geçti. Akademik kayıt/hesap silinmedi; resmî başvuru, tebligat ve fiziksel imha kabulü yok. B04/B28 açık koşullar PRIVACY-CONTRACT.md ve backlog.json içinde.
+
+### Paket 11 — doğrulanmış güvenli kaynak yayını
+
+- Uzak kaynak: `8da2a5974e3dd74f77c552bf626b45a7cd7555f3`.
+- Aynı içerikli yerel: `910443b991c7dc0d2b796bc8913960bc21a1c23c`; ortak ağaç: `8108991b6af1b951d170ee8afb1c62d35e17fc66`.
+- Dağıtım: `dpl_87Cjjpijbg7pNXxi6KhtWEhuS67m`; READY / production; canlı alias aynı dağıtımı gösterdi.
+- 144/144 kaynak dosyası hash eşleşmesi; eksik/fazla yok. Değişen paket dosyaları core/http/privacy ve portal.js. Giriş kapısı/logolar/ders materyalleri değişmedi.
+- Gerçek canlı oturumla yeniden yükleme: akademik bağlantı kapalı başlığı göründü; bozuk görsel ve yatay taşma yok. 276 otomatik + 11 yerel tarayıcı kontrolü.
+- B28 ekranının kaynak kodu yayımlandı; gerçek kurumsal talep/temizlik/tebligat hizmeti açılmadı. configuredCore Vercel'de kapalı. Üretim migration/erişim/silme yok.
+- Geri dönüş hedefi Paket 10: `dpl_HZAgv61QLs3rYpLa7fxXYNFEcs64`; fiilen uygulanmadı.
+
+
+## Paket 12 adayı — B29
+
+Başvurular, kaynaklı göstergeler ve cüzdan teslim teyidi. 194 sunucu + 46 portal + 46 regresyon = 286 otomatik test; 11 gösterge tarayıcı ve 8 cüzdan regresyon kontrolü. Başvuru-kabul-kayıt bağı, açık LMS tamamlama, ayrı başarı/teslim/destek paydaları, filtre ve kaynak CSV mutabakatı yerelde geçti. Gerçek kohort, LMS ve dış belge kabulü açık; bütün B29 kabulü kapanmadı.

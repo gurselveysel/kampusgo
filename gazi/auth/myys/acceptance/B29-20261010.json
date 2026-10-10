@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-10T22:19:22.889Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Öğrenen yayımlanmış program sürümüne yerel başvuru yaptı",
+    "Başvuru, tamamlama ve dış kabul ayrı kaynak/paydalarda gösterildi",
+    "Ayrı yetkili başvuruyu program kaydına atomik bağladı",
+    "Yeni program kaydı tamamlama paydasını değiştirdi; başarı paydası değerlendirmeye bağlı kaldı",
+    "Cüzdan teslim teyidi ve destek sonucu kendi kaynak kayıtlarından sayıldı",
+    "Program filtresi olmayan destek ilişkisini veya tamamlama kaynağını uydurmadı",
+    "Tüm göstergeler ve izinli kaynak kimlikleri CSV mutabakatına indirildi",
+    "Yeniden yüklemede bağlı kayıtlar ve gösterge sayıları korundu",
+    "390 px gösterge ekranında yatay taşma yok",
+    "Başka öğrenen sayılara veya kaynaklara dahil edilmedi",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 10,
+  "automated_tests": {
+    "server": 194,
+    "portal": 46,
+    "regression": 46
+  },
+  "wallet_regression_checks": 8,
+  "limits": [
+    "İzole sentetik kayıtlar; kurum toplamı değildir.",
+    "Dış belge kabulü kaynağı bağlı değil; oran hesaplanmaz.",
+    "LMS ve gerçek kohort kabulü açık."
+  ]
+}

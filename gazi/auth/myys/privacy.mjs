@@ -51,6 +51,9 @@ export function privacyView(s,a){
  return {requests,units:a.memberships.map(m=>m.unit),withdrawals:s.list(a.tenant,'privacy-withdrawal').filter(r=>r.owner===a.id&&member(a,r.unit))};
 }
 const exportFields={
+ application:['id','unit','programId','reason','createdAt'],
+ 'application-review':['id','unit','programId','applicationId','outcome','reason','enrollmentId','createdAt'],
+ 'credential-receipt':['id','unit','programId','issuanceId','kind','externalAcceptance','createdAt'],
  enrollment:['id','unit','programId','createdAt'],
  evidence:['id','unit','programId','enrollmentId','taskId','content','sha256','source','createdAt'],
  assessment:['id','unit','programId','enrollmentId','evidenceIds','scores','score','passed','reason','createdAt'],

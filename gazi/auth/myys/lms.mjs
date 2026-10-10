@@ -19,6 +19,7 @@ export class LocalLmsAdapter {
   requireThat(event&&event.contractId===c.id&&event.tenant===c.tenant&&event.programId===c.programId,'lms_scope','Olay kurum veya program kapsamı dışında.',403);
   requireThat(typeof event.id==='string'&&/^[a-zA-Z0-9_-]{8,100}$/.test(event.id)&&Number.isSafeInteger(event.revision)&&event.revision>0,'lms_event','Olay kimliği ve artan kaynak sürümü gerekli.');
   requireThat(['grade','completion','license-revoked'].includes(event.type)&&typeof event.subject==='string','lms_event','Olay türü veya kaynak kişi kimliği geçersiz.');
+  requireThat(event.type!=='completion'||event.completed===undefined||typeof event.completed==='boolean','lms_completion','Tamamlama bildirimi doğru/yanlış biçiminde olmalı.');
   const person=Object.hasOwn(c.subjects,event.subject)?c.subjects[event.subject]:null;
   requireThat(person,'lms_identity','Kaynak kişi güvenilir eşlemede yok.',403);
   requireThat(Number.isFinite(Date.parse(event.occurredAt))&&Date.parse(event.occurredAt)<=Date.parse(this.clock())+300000,'lms_time','Olay zamanı geçersiz.');
@@ -32,7 +33,7 @@ export class LocalLmsAdapter {
    if(event.type==='grade')requireThat(program.tasks.some(t=>t.id===event.taskId)&&typeof event.content==='string'&&event.content.trim().length>=20&&event.content.length<=20000&&typeof event.grade==='number'&&Number.isFinite(event.grade)&&event.grade>=0&&event.grade<=100,'lms_evidence','Görev, çalışma ve 0–100 kaynak notu gerekli.');
    const stream=c.id+':'+person+':'+(event.type==='grade'?'grade:'+event.taskId:event.type);
    requireThat(!s.list(c.tenant,'lms-event').some(e=>e.stream===stream&&e.revision===event.revision),'lms_revision_conflict','Bu kaynak sürümü başka bir olayla kayıtlı.',409);
-   const record={id:eventId,unit:c.unit,owner:person,contractId:c.id,programId:c.programId,enrollmentId:enrollment.id,stream,revision:event.revision,type:event.type,taskId:event.type==='grade'?event.taskId:null,content:event.type==='grade'?event.content:null,grade:event.type==='grade'?event.grade:null,occurredAt:event.occurredAt,receivedAt:this.clock(),digest,state:'accepted'};
+   const record={id:eventId,unit:c.unit,owner:person,contractId:c.id,programId:c.programId,enrollmentId:enrollment.id,stream,revision:event.revision,type:event.type,completed:event.type==='completion'&&typeof event.completed==='boolean'?event.completed:null,taskId:event.type==='grade'?event.taskId:null,content:event.type==='grade'?event.content:null,grade:event.type==='grade'?event.grade:null,occurredAt:event.occurredAt,receivedAt:this.clock(),digest,state:'accepted'};
    s.put(c.tenant,'lms-event',record);
    s.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(c.tenant,'adapter:'+c.id,'lms.accept',record.id,this.clock());
    return {id:eventId,status:'accepted',duplicate:false,processed:false};

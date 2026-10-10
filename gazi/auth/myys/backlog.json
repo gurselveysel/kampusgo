@@ -1746,7 +1746,7 @@
         "gazi/auth/myys/PRIVACY-CONTRACT.md",
         "gazi/auth/myys/acceptance/B28-20261010.json"
       ],
-      "production_status": "Paket 11 kaynak adayı; canlı akademik hizmet kapalı.",
+      "production_status": "Paket 11 kaynak kodu READY yayımlandı ve canlı kapalı kurum görünümü doğrulandı; veri talepleri yalnız yerel kabulde.",
       "implementation_note": "Kişiye özel özet indirme, talep, ayrı gerekçeli yanıt, yerel görüntüleme, paylaşım geri çekme ve yalnız süresi dolmuş kurum oturumu temizliği.",
       "independent_remaining_work": [
         "Tam gereksiz hesap verisi envanteri ve üretim silme/yeniden saklama adaptörü; yedeklerde imha doğrulaması.",
@@ -1777,7 +1777,7 @@
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 11 kaynak adayı; canlı akademik hizmet kapalı."
+          "evidence": "Paket 11 kaynak kodu READY yayımlandı ve canlı kapalı kurum görünümü doğrulandı; veri talepleri yalnız yerel kabulde."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1805,15 +1805,20 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Başarı paydası, boş veri, başka öğrenen izolasyonu geçti.",
+      "test_status": "10 yeni sunucu senaryosu; 11 gösterge ve 8 cüzdan tarayıcı kontrolü. Başvuru/tamamlama/başarı/teslim/destek ayrı paydalı; dış kabul kaynağı açık.",
       "implementation_evidence": [
-        "gazi/auth/myys/projections.mjs",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/myys/admissions.mjs",
+        "gazi/auth/myys/quality-report.mjs",
+        "gazi/portal/src/quality-workspace.jsx",
+        "gazi/auth/tests/myys-quality.test.mjs",
+        "scripts/myys-quality-browser.cjs",
+        "gazi/auth/myys/QUALITY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B29-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Yetkili kalıcı kayıtlardan ayrı pay/payda üreten yerel analitik; gerçek LMS ve kohort bağlanmadı.",
+      "production_status": "Paket 12 kaynak adayı; kurumsal hizmet kapalı.",
+      "implementation_note": "Aynı kalıcı kayıtlara bağlı başvuru-kabul-program kaydı, açık LMS tamamlama, kişisel teslim teyidi, kaynak kimlikli filtre/CSV mutabakatı.",
       "independent_remaining_work": [
-        "Başvuru/tamamlama/destek kaynakları ve sayı mutabakat ekranları."
+        "Yetkili dış belge kabul/teslim kaynağı adaptörü ve gerçek LMS/kohort kaynak sayıları mutabakatı."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Gerçek kohort ve LMS kaynak verisi.",
@@ -1821,21 +1826,26 @@
         "code_completeness": {
           "status": "kısmi",
           "evidence": [
-            "gazi/auth/myys/projections.mjs",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/myys/admissions.mjs",
+            "gazi/auth/myys/quality-report.mjs",
+            "gazi/portal/src/quality-workspace.jsx",
+            "gazi/auth/tests/myys-quality.test.mjs",
+            "scripts/myys-quality-browser.cjs",
+            "gazi/auth/myys/QUALITY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B29-20261010.json"
           ],
           "remaining": [
-            "Başvuru/tamamlama/destek kaynakları ve sayı mutabakat ekranları."
+            "Yetkili dış belge kabul/teslim kaynağı adaptörü ve gerçek LMS/kohort kaynak sayıları mutabakatı."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "Başarı paydası, boş veri, başka öğrenen izolasyonu geçti.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "evidence": "10 yeni sunucu senaryosu; 11 gösterge ve 8 cüzdan tarayıcı kontrolü. Başvuru/tamamlama/başarı/teslim/destek ayrı paydalı; dış kabul kaynağı açık.",
+          "limits": "İzole sentetik kaynaklar; gerçek kohort ve dış belge kabulü değildir."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 12 kaynak adayı; kurumsal hizmet kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
