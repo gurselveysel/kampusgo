@@ -1,0 +1,1 @@
+{"version":2,"builds":[{"src":"api/gateway.mjs","use":"@vercel/node@22.0.0","config":{"includeFiles":["private/**","login/**"]}}],"routes":[{"src":"/(.*)","dest":"/api/gateway.mjs"}],"regions":["fra1"]}

@@ -1,0 +1,1 @@
+{"name":"gazi-demo-access","private":true,"version":"1.0.0","type":"module","engines":{"node":"24.x"},"dependencies":{"jose":"6.2.12","otplib":"13.5.0"},"scripts":{"test":"node --test tests/*.test.mjs"},"devDependencies":{"ajv":"8.20.0","ajv-formats":"3.0.1"}}
