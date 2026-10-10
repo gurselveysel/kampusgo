@@ -85,7 +85,7 @@ Dört yeni test: kanıt/karar/denetim/tekrar önleme kayıtlarının aynı kalma
 - Dört yeni sunucu senaryosu + gerçek bileşenin üç sunucu render testi geçti. Güncel toplam: 57 sunucu/güvenlik + 44 portal + değişmeyen 46 model/kaynak/demo = 147. Portal derlemesi ve özel paketleme başarılı.
 - Bu dilim yerel kod/test aşamasında. İzole tam rol tarayıcı kabulü, kurum itiraz usulü ve daha önce imzalanmış belgeyi değiştirme süreci açık. Gerçek IdP, kurumsal depo, LMS veya resmî belge yetkisi etkinleştirilmedi. Üretim sürümü Paket 3'tür.
 
-## Paket 4 — B11 bağımsız rol tarayıcı kabulü (yayın adayı)
+## Paket 4 — B11 bağımsız rol tarayıcı kabulü (yayımlandı)
 
 - Başlangıç uzak dalı `feat/gazi-myys-governed-core-20261010`, `584d04c5f16f08ab923c6d5bd2eaa23d21dc5634`; yerel `cb6bfa6691700e3be9ec7017814d6c800da71646`; iki ağacın kimliği `67cf27318206d3c4f96531263375bc9c633c12dd`. Çalışma başlangıcında temizdi. GitHub karşılaştırması kaynaklı `d0b6c1216c2eea786a2667e94f129851e914f0e5` dalının 6 commit geride ve ortak ata olduğunu doğruladı. Kaynaklı işlerin üstüne yazılmadı.
 - Canlı başlangıç ve geri dönüş hedefi: `dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z` / `abf8b2844480ddaffc6047fba4884eb03d7add21`. Yayın öncesi alias yeniden denetlenir.
@@ -96,3 +96,23 @@ Dört yeni test: kanıt/karar/denetim/tekrar önleme kayıtlarının aynı kalma
 - `configuredCore()` Vercel ortamında kapalı. IdP, LMS, kurumsal depo, migration, gerçek kişiye rozet veya resmî belge açılmadı. B11 süre/moderasyon politikası ve önceden imzalanmış belge değiştirme yolu hâlâ açık.
 - Kaynak kontrolü 10.10.2026: [Gazi 14.05.2026/2026-84 yönergesi](https://webupload.gazi.edu.tr/upload/12/2026/6/1/82f8ee64-fb9b-4507-9346-b6eb353ca4bd-onceden-kazanilmis-yeterlilikler-yonergesi-yayimlanan.pdf), Madde 4/e ve 10 okundu. Önceki öğrenmenin tanınması kapsamındaki komisyon ve iş günü usulleri, bütün mikro programlara otomatik genellenmedi; mevcut tek incelemeci rolü kurum komisyonu kabulü olarak sunulmadı. [W3C etiket rehberi](https://www.w3.org/WAI/tutorials/forms/labels/) kontrol edildi; alanların açık adları tarayıcıda sınandı.
 - Güvenli browserAuth sonrası gerçek canlı panelde kaynak sürümü `2026.10.10.3`, 24 kaynak, 76 Gazi çıktı özeti ve 46 kalite alt ölçütü gözlendi. Bu yayın öncesi kontroldür; yayın sonrası smoke ayrıca kaydedilir.
+
+### Paket 4 gerçek yayın ve canlı kabul
+
+- Kaynak: `2743da31b6b6e278dfc13b27e8bc79145b708731`; yerel eş içerik commit: `d63291c644342c6ab2b7e6db3b8624d5663f1727`; ortak ağaç: `3d3481d448488ef276811172ead9783935148788`.
+- Dağıtım: `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV`, READY / production. Proje ve ekip yukarıdaki mevcut Gazi projesi; `gazi/auth` kökünden korumalı dosya paketi kullanıldı.
+- Alias `gazi.unigoturkiye.com` yayından önce ve sonra okundu. Başka bir yeni sahip değişikliği görülmedi; kaynak dalı beklenen eski SHA koşuluyla ilerletildi. Reset, clean veya geçmiş silme yapılmadı.
+- Dağıtımın 134 dosyasının SHA ve boyutları hazırlanan kaynak manifestiyle birebir eşleşti. Eksik/ek dosya veya hash uyuşmazlığı yoktu.
+- Güvenli girişle açık oturumda sayfa yeniden yüklendi. `#/academic` → “Kurum bağlantısı bekleniyor”; `#/guide` destek ve kullanım rehberi açıldı. Gazi/ÜniGO görselleri yüklendi; masaüstü yatay taşma bulunmadı. Giriş koruması değiştirilmedi. Gerçek akademik işlem veya B11 canlı rol kabulü yapılmadı; çekirdek kasıtlı olarak kapalı.
+- Bu dağıtıma özgü son 15 dakika error/fatal taraması boştu. Sınırlı smoke gözlemidir; sürekli izleme, tüm ekran kabulü veya kurum onayı değildir.
+- Yayın kapsamı: 150 otomatik test + 13 izole tarayıcı kontrolü. Sonraki kaynak hazırlığının testleri bu dağıtımın testi gibi sayılmaz.
+- Geri dönüş: `dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z` / `abf8b2844480ddaffc6047fba4884eb03d7add21` mevcut projede rollback hedefidir. Geri dönüş fiilen çalıştırılmadı. Migration veya gerçek akademik veri değişikliği yapılmadığı için bu pakette ters veri migration'ı yoktur.
+
+## Sonraki dilim — B06/B07 kimlik sözleşmesi (kaynak hazırlığı)
+
+`identity-contract.mjs`, `IDENTITY-CONTRACT.md`, `tests/myys-identity.test.mjs` eklendi.
+29 yeni test ve tüm 87 sunucu/güvenlik testi geçti; değişmeyen 46 portal + 46 regresyon ile kaynak toplamı 179.
+Sabit açık anahtarlarla OIDC ID Token doğrulama ve issuer/subject üzerinden mevcut kişiyi/üyeliği salt okuma çözümlemesi hazır. E-posta ve token rolü yetki vermez; ayrılma, rol değişimi, zaman sınırları ve anahtar rotasyonu testlidir.
+Bu modül hiçbir canlı giriş yoluna bağlanmadı ve bu dilimde Vercel'e dağıtılmadı.
+Kalıcı tek kullanımlık nonce tüketimi, Code/PKCE/state/callback, oturum/çıkış/iptal ve gerçek kurum depo adaptörü açık. B06/B07 tam kabul edilmedi.
+Kaynak dayanağı OpenID Connect Core errata set 2, inceleme 10.10.2026; kurum MFA politikasına dönüştürülmedi. Özel erişim veya credential oluşturulmadı.

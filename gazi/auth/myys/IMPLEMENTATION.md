@@ -116,3 +116,9 @@ Genel yayın yetkisi mevcut pilotun korumalı ekranını güncellemeyi kapsar; b
 ## Paket 4 — B11 tarayıcı kabulü
 
 İtiraz ekranı bağlı yeni değerlendirmeyi ve yeni kararı gösterir; eski gerekçeler korunur. Karar formu yalnız sunucunun `allowedActions` izniyle görünür; verilmiş karar yeniden sunulmaz. Etiketler, mobil metin sarımı ve seçili sekme görünümü iyileştirildi. `scripts/myys-appeals-browser.cjs` loopback dışına çıkmaz, yalnız geçici sentetik kişileri kullanır ve üretim paketine alınmaz. 58 sunucu + 46 portal + 46 regresyon testi geçti.
+
+## Paket 4 yayın sonucu ve B06/B07 hazırlığı
+
+Paket 4 `2743da31b6b6e278dfc13b27e8bc79145b708731` / `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV` ile production READY. Sınırlı canlı smoke ve geri dönüş hedefi `RELEASE.md` içinde.
+
+`identity-contract.mjs` sürümlü issuer/audience/açık anahtar/MFA profilini doğrular; `resolveLocalMember` yalnız izole kabul deposunda mevcut kişi ve süreli üyelikleri okur. Token/e-posta/rol iddiaları yetki oluşturmaz. Yeni 29 testle sunucu toplamı 87, kaynak toplamı 179. Ayrıntılar `IDENTITY-CONTRACT.md`; yeni SSO giriş yolu veya üretim depo adaptörü değildir. Bu hazırlık canlıya dağıtılmadı. Kalıcı nonce/callback ve oturum yaşam döngüsü açık kalır.

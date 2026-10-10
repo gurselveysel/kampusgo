@@ -32,3 +32,7 @@ Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir
 | Gerçek kohort / gerçek belge / OBS yazma | Yetkili kurum akışları | Akademik, hukuki ve operasyonel kabuller ayrıdır. Genel yayın izni bu işlemleri kapsamaz. |
 
 Bu pakette yeni abonelik, kalıcı erişim, üretim migration'ı, gerçek veri aktarımı veya resmî belge işlemi yapılmadı.
+
+## Kimlik sözleşmesinin güncel hazırlığı
+
+`IDENTITY-CONTRACT.md` ve 29 sentetik test mevcut. Kurumdan hâlâ gereken somut belge: IdP protokolü/issuer/client audience/açık anahtar kaynağı ile MFA (acr/amr), kişi anahtarı, ayrılma ve rol/birim yaşam döngüsü tanımı. Bu aşamada parola, tek kullanımlık kod, yönetici hesabı veya yeni kalıcı credential istenmiyor. Belgeler gelmeden gerçek bağlantı açılmaz; bağımsız callback/depo testleri geliştirilebilir.

@@ -14,7 +14,7 @@
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B11 · İtiraz ve moderasyon yolunu kur | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B11 · İtiraz ve moderasyon yolunu kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B12 · Belgeyi akademik karara bağla | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B13 · Anahtar ve durum güvenilirliğini doğrula | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B14 · LMS veri sözleşmesini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
@@ -44,7 +44,7 @@
 ## Sıradaki bağımsız işler
 
 - B11: itiraz/sonuç arayüzü ve bağımsız yeniden değerlendirme bağlantısı kodlandı, 7 yeni test geçti. 9 çekirdek rol için 13 tarayıcı kontrolü geçti; imzalı belge değiştirme ve sürümlü politika açık.
-- B06/B07: üretimden bağımsız depo/kimlik sözleşmesi ve güvenilir issuer/audience/MFA testleri.
+- B06/B07: güvenilir issuer/audience/MFA doğrulaması ve kişi eşleme sözleşmesi 29 yeni testle hazır. Sırada kalıcı challenge/PKCE/callback, oturum iptali ve işlemsel kurum depo adaptörü var.
 - B16/B17: kalıcı işçi karantinası ve satır mutabakatı.
 - B18/B20/B21: özel cüzdan arayüzü ve sürümlü tanıma/tekil kredi defteri.
 - B28/B29/B30: veri talebi, kaynak sayımı ve ayrı kabul kapıları.
@@ -52,8 +52,12 @@
 
 ## Son kontrol
 
-Paket 3 (`abf8b284`, `dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z`) canlı; destek özeti masaüstü kabulü geçti. B11 devam dilimi yerelde, 147 toplam test geçiyor; henüz yayınlanmadı. B26 kurum destek hizmeti ve B11 gerçek akademik işlem etkin değildir. Bütün 36 satırın kurum ve dış erişim alanları ayrı tutulmaktadır.
+Paket 4 (`2743da31b6b6e278dfc13b27e8bc79145b708731`, `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV`) READY / production. Yayın paketi 150 test ve 13 izole tarayıcı kontrolü geçti. Canlıda oturum, logolar, destek ve kapalı akademik görünüm doğrulandı. Sonraki B06/B07 hazırlığıyla kaynak test toplamı 179; bu kimlik dilimi canlıya dağıtılmadı. B26 kurumsal destek hizmeti, B11 gerçek akademik işlem ve SSO etkin değildir. Bütün 36 satırın kurum ve dış erişim alanları ayrı tutulmaktadır.
 
 ## Paket 4 kabul güncellemesi
 
 B11: 150 otomatik test ve 13 izole tarayıcı kontrolü geçti. Masaüstü 1440 px, mobil 390 px; kaynağı `acceptance/B11-20261010.json`. B11/B24 kısmi kalır; kurum, dış erişim, tam ekran okuyucu ve imzalı belge değiştirme kapıları kapanmadı. Yerel Chromium engeli giderildi. Yayın sonucu RELEASE.md içinde ayrı kaydedilir.
+
+## B06/B07 hazırlık güncellemesi
+
+`IDENTITY-CONTRACT.md` ve 29 yeni test imza, sağlayıcı, audience, nonce, MFA tazeliği ve kişi/üyelik okumasını kapsar. Yerel depo üretim adaptörü değildir; oturum yaratılmaz. Kod/yerel kabul kısmi; kurum ve dış erişim sütunları değişmez.
