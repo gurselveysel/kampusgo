@@ -126,3 +126,5 @@ Paket 4 `2743da31b6b6e278dfc13b27e8bc79145b708731` / `dpl_3KJc8BhJLm5Agu289W2eQ5
 ## B06/B07 ikinci yerel kabul dilimi
 
 `identity-flow.mjs` tek kullanımlık kalıcı istek ile PKCE/state/nonce, atomik oturum ve denetim, kurum kapsamı ve çıkış işlemlerini ekler. `store.mjs` yalnız yeni yerel oturumların tenant bağını denetler. 27 yeni testle sunucu 114, toplam 206; B11 13 tarayıcı kontrolü yeniden geçti. Gerçek HTTP/IdP ve üretim depo adaptörü açık. Yayın durumu RELEASE.md ve backlog.json içinde.
+
+Paket 5 yayın sonucu: `24b41c8dba48bfa261a51613fbbc3a83a7939f13` / `dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg`, production READY. 136 kaynak dosyası SHA eşleşmesi ve sınırlı canlı smoke geçti. Kurumsal SSO etkinleştirilmedi; HTTP/IdP, kurum depo adaptörü ve dağıtık iptal açık.

@@ -118,7 +118,7 @@ Kalıcı tek kullanımlık nonce tüketimi, Code/PKCE/state/callback, oturum/ç�
 Kaynak dayanağı OpenID Connect Core errata set 2, inceleme 10.10.2026; kurum MFA politikasına dönüştürülmedi. Özel erişim veya credential oluşturulmadı.
 
 
-## Paket 5 — yerel kimlik isteği ve oturum yaşam döngüsü (yayın adayı)
+## Paket 5 — yerel kimlik isteği ve oturum yaşam döngüsü (yayımlandı)
 
 - Başlangıç kaynak: uzak `2f58f210905fee96bfb4a38d18c423cb251f0d0e`, yerel `b19c2aa37db889afbc9b94f781f3edef51706c21`; ortak ağaç `d66d585eedbe04f12336664ba0a9870f13365373`. Temiz başlangıç ve canlı Paket 4 tekrar doğrulandı.
 - B06/B07: yerel PKCE/state/nonce bağı, tek kullanımlık kalıcı istek, eşzamanlı claim, kısa ve kurum kapsamlı oturum, iptal/çıkış, gizli değer içermeyen denetim ve işlem geri alma.
@@ -126,3 +126,13 @@ Kaynak dayanağı OpenID Connect Core errata set 2, inceleme 10.10.2026; kurum M
 - Hazırlanan dağıtım 136 dosya. Paket 4'e göre yalnız `myys/store.mjs` değişti; `myys/identity-contract.mjs` ve `myys/identity-flow.mjs` eklendi. Portal, login/gateway, rozet ve ders materyalleri aynı. Testler, devam metni, sentetik anahtarlar ve SQLite dosyaları dağıtıma alınmaz.
 - Bu paket kurumsal SSO açılışı değildir. Yeni akış Vercel ortamında ve loopback dışı dönüş adresinde reddedilir; hiçbir HTTP giriş yoluna bağlanmaz. `configuredCore()` kapalıdır. Üretim migration, kalıcı credential veya gerçek kişi belgesi yoktur.
 - Geri dönüş hedefi Paket 4: `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV` / `2743da31b6b6e278dfc13b27e8bc79145b708731`. Geri dönüş uygulanmadı. Yayın kimliği ve canlı sonuç aşağıya ayrıca kaydedilir.
+
+### Paket 5 gerçek yayın ve canlı kabul
+
+- Kaynak commit: `24b41c8dba48bfa261a51613fbbc3a83a7939f13`. Yerel aynı içerik: `f4e51c0577580872a35ff32bdf9d7a6f4e24948a`; ortak ağaç: `eaf0b9ad3cd18961891ae29444a8c6c3a6017e99`.
+- Dağıtım: `dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg`; READY / production. Alias `gazi.unigoturkiye.com` bu dağıtıma bağlı. Kaynak ve proje kimliği dağıtım yanıtıyla doğrulandı.
+- 136 kaynak dosyasının tamamı hazırlanan manifest ile SHA düzeyinde eşleşti; beklenmeyen veya eksik dosya yoktu. Önceki yayına göre yalnız üç sunucu dosyası eklendi/değişti; arayüz ve ders materyalleri aynı.
+- Yeni yayında gerçek tarayıcı oturumu yeniden yüklendi; `#/academic` → “Kurum bağlantısı bekleniyor”, `#/guide` → rehber ve “Destek için hazırlanın” görünümü doğrulandı. Gazi ve ÜniGO görselleri yüklendi; masaüstü yatay taşma yoktu. Giriş koruması veya kurumsal etkinleştirme kapısı değiştirilmedi.
+- Dağıtıma özgü son 15 dakika error/fatal gruplu sayımı boş döndü. Bu kısa gözlem sürekli izleme veya tam canlı kabul değildir. Yeni SSO akışı canlıda çalıştırılmadı; bağlı HTTP/IdP yoktur.
+- 206 otomatik test ve 13 izole B11 tarayıcı kontrolü başarılı. Yeni kimlik akışının 27 testi sentetik provider ve yerel SQLite kapsamındadır. Gerçek IdP/dağıtık işçi/kurum kabulü değildir.
+- Geri dönüş hedefi `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV` / `2743da31b6b6e278dfc13b27e8bc79145b708731`. Geri dönüş çalıştırılmadı. Üretim migration'ı veya gerçek kişi/veri işlemi olmadığı için ters veri migration'ı yoktur.

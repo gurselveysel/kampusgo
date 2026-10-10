@@ -323,7 +323,7 @@
         "gazi/auth/tests/myys-identity-flow.test.mjs",
         "gazi/auth/myys/acceptance/B06-B07-20261010.json"
       ],
-      "production_status": "Paket 5 yayın adayı: güvenlik sınırları korunmuş sunucu hazırlığı. Kurumsal SSO/akademik işlem etkinleştirilmez.",
+      "production_status": "Paket 5: 24b41c8dba48bfa261a51613fbbc3a83a7939f13 / dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg READY / production. Hazırlık modülleri dağıtıldı; kurumsal SSO ve akademik işlemler kapalı.",
       "implementation_note": "Yerel kabulde sürümlü OIDC doğrulayıcı, PKCE/state/nonce isteği, atomik tüketim/oturum/kapsam/denetim ve çıkış hazır. Gerçek HTTP/IdP veya kurum deposu değildir.",
       "independent_remaining_work": [
         "Üretim depo adaptörü/kişi yaşam döngüsü, sürümlü rol iptali ve saklama/temizleme sözleşmesi."
@@ -353,8 +353,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 5 yayın adayı: güvenlik sınırları korunmuş sunucu hazırlığı. Kurumsal SSO/akademik işlem etkinleştirilmez."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 5: 24b41c8dba48bfa261a51613fbbc3a83a7939f13 / dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg READY / production. Hazırlık modülleri dağıtıldı; kurumsal SSO ve akademik işlemler kapalı. Gerçek canlıda mevcut oturum ve kapalı akademik görünüm doğrulandı. Yeni kimlik akışı yalnız yerel kabulde sınandı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -393,7 +393,7 @@
         "gazi/auth/tests/myys-identity-flow.test.mjs",
         "gazi/auth/myys/acceptance/B06-B07-20261010.json"
       ],
-      "production_status": "Paket 5 yayın adayı: güvenlik sınırları korunmuş sunucu hazırlığı. Kurumsal SSO/akademik işlem etkinleştirilmez.",
+      "production_status": "Paket 5: 24b41c8dba48bfa261a51613fbbc3a83a7939f13 / dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg READY / production. Hazırlık modülleri dağıtıldı; kurumsal SSO ve akademik işlemler kapalı.",
       "implementation_note": "Yerel kabulde sürümlü OIDC doğrulayıcı, PKCE/state/nonce isteği, atomik tüketim/oturum/kapsam/denetim ve çıkış hazır. Gerçek HTTP/IdP veya kurum deposu değildir.",
       "independent_remaining_work": [
         "Güvenli HTTP callback/cookie/CSRF sınırı; gerçek IdP protokol eşlemesi, dağıtık iptal/back-channel logout ve üretim anahtar saklama."
@@ -423,8 +423,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 5 yayın adayı: güvenlik sınırları korunmuş sunucu hazırlığı. Kurumsal SSO/akademik işlem etkinleştirilmez."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 5: 24b41c8dba48bfa261a51613fbbc3a83a7939f13 / dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg READY / production. Hazırlık modülleri dağıtıldı; kurumsal SSO ve akademik işlemler kapalı. Gerçek canlıda mevcut oturum ve kapalı akademik görünüm doğrulandı. Yeni kimlik akışı yalnız yerel kabulde sınandı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2150,23 +2150,22 @@
     "portal_build": "Paket 4 başarılı; sonraki kimlik dilimi arayüzü değiştirmez",
     "browser_visual_acceptance": "Paket 4: gerçek yerel React/HTTP çekirdeğinde 13 kontrol; 9 çekirdek rol/12 sentetik kişi, masaüstü ve 390 px mobil. Gerçek canlı oturum/logo/destek/kapalı akademik görünüm doğrulandı. Bütün menüler/ekran okuyucu/kurum kabulü değildir.",
     "production_migration": "uygulanmadı",
-    "deployment": "Paket 4: 2743da31b6b6e278dfc13b27e8bc79145b708731 / dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV READY; kod yayımlandı, kurumsal akademik etkinleştirme kapalı."
+    "deployment": "Paket 5: 24b41c8dba48bfa261a51613fbbc3a83a7939f13 / dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg READY / production. Hazırlık modülleri dağıtıldı; kurumsal SSO ve akademik işlemler kapalı."
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
-    "commit": "2743da31b6b6e278dfc13b27e8bc79145b708731",
-    "id": "dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV",
+    "commit": "24b41c8dba48bfa261a51613fbbc3a83a7939f13",
+    "id": "dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg",
     "url": "https://gazi.unigoturkiye.com",
-    "runtime_tests": 150,
-    "local_tests_after_identity_contract": 179,
+    "runtime_tests": 206,
     "browser_checks": 13,
-    "manifest_files": 134
+    "manifest_files": 136
   },
   "last_checkpoint": {
     "date": "2026-10-10",
-    "live_deployment": "dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV",
-    "live_source": "2743da31b6b6e278dfc13b27e8bc79145b708731",
+    "live_deployment": "dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg",
+    "live_source": "24b41c8dba48bfa261a51613fbbc3a83a7939f13",
     "local_tests": 206,
-    "note": "Paket 4 canlı. Paket 5: B06/B07 yerel tek kullanımlık akış 27 yeni test; toplam 206 ve 13 B11 tarayıcı kontrolü geçti. Kurumsal etkinleştirme kapalı."
+    "note": "Paket 5 yayımlandı. 114 sunucu + 46 portal + 46 regresyon ve 13 izole B11 tarayıcı kontrolü geçti. Canlı oturum/logolar/destek/kapalı akademik görünüm doğrulandı. Gerçek SSO/kurum deposu açılmadı."
   }
 }

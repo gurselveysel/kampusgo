@@ -2,12 +2,12 @@
 
 Ben Veysel Gürsel. gazi.unigoturkiye.com üzerindeki mevcut Gazi ÜniGO MYYS geliştirmesine devam et. Sıfırdan uygulama kurma; çalışan kodu, tasarımı, logoları, dersleri ve kayıtları koru. Tek entegrasyon sahibi olarak çalış; paralel editör açma. Araştır, uygula, test et; güvenle tamamlanan yayın kapsamını mevcut projeye dağıt ve canlıda doğrula. Benden genel yayın onayını veya sürekli devam komutunu bekleme.
 
-## Başlangıçta yeniden doğrulanacak referans
+## Yeniden doğrulanacak son kod/yayın referansı
 
 - Repo: gurselveysel/kampusgo; dal: feat/gazi-myys-governed-core-20261010.
 - Çalışma dizini: /workspace/scratch/395f9281820e/gazi-consistent.
-- Uzak kaynak: 2f58f210905fee96bfb4a38d18c423cb251f0d0e; yerel aynı içerik: b19c2aa37db889afbc9b94f781f3edef51706c21; ortak ağaç: d66d585eedbe04f12336664ba0a9870f13365373.
-- Canlı kaynak: 2743da31b6b6e278dfc13b27e8bc79145b708731; dağıtım: dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV; READY / production.
+- Son yayımlanan kod: 24b41c8dba48bfa261a51613fbbc3a83a7939f13; yerel aynı içerik: f4e51c0577580872a35ff32bdf9d7a6f4e24948a; ortak ağaç: eaf0b9ad3cd18961891ae29444a8c6c3a6017e99. Sonrasında yayın/başlangıç kaydı commitleri olabilir; güncel HEAD'i yeniden bul.
+- Canlı kaynak: 24b41c8dba48bfa261a51613fbbc3a83a7939f13; dağıtım: dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg; READY / production. Geri dönüş hedefi Paket 4: dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV (fiilen uygulanmadı).
 - Vercel proje: prj_cZMPrJHrk7XrteeM7jeui2BktKwK / gazi-unigo-myys; ekip: team_QH2k9edmHSXuybZK3Ay9RVAo.
 - React: gazi/portal; korumalı dağıtım kökü: gazi/auth; akademik çekirdek: gazi/auth/myys.
 
@@ -19,7 +19,7 @@ AGENTS.md ve ilgili becerilerle birlikte backlog.json, ACCEPTANCE-MATRIX.md, ACC
 
 B11 güvenli dilimi yayımlandı: 150 otomatik test, 13 izole rol tarayıcı kontrolü. İtiraz, bağımsız inceleme, yeniden değerlendirme ve yeni karar bağları korundu. Kurum itiraz usulü ile önceden imzalanmış belge değiştirme zinciri açık.
 
-B06/B07 imzalı OIDC belirteç doğrulaması ve issuer/subject ile salt okuma kişi/üyelik çözümlemesi kaynakta hazır: 29 yeni test, toplam 179. Canlı girişe bağlanmadı. İlk bağımsız iş: yerel kabul deposunda state/nonce/PKCE bağlı tek kullanımlık giriş isteğini, eşzamanlı tekrar reddini, oturum sabitleme önlemini, üyelik iptali ve çıkışı kodla/test et. Gerçek callback/IdP varmış gibi sunma. Ardından B16/B17 olay işleme/karantina/mutabakat; B18/B20/B21 cüzdan/tanıma/kredi defteri; B28/B29/B30 veri hakları/kalite/kabul kapılarına geç.
+B06/B07 doğrulayıcı ve yerel tek kullanımlık giriş akışı kodlandı: 29 belirteç/kişi testi + 27 PKCE/state/nonce/oturum testi. İki SQLite bağlantısında tekrar reddi, üyelik iptali, süre dolması, çıkış ve atomik denetim/oturum yazımı sınandı. Güncel toplam 114 sunucu + 46 portal + 46 regresyon = 206 test; 13 B11 tarayıcı kontrolü yeniden geçti. Bu hazırlık Paket 5 içinde dağıtıldı; canlı girişe bağlanmadı, gerçek HTTP callback/IdP yok. Tamamlanan dilimi yeniden yazma. İlk bağımsız iş için B16/B17 kalıcı olay işleme, karantina, idempotency ve toplu satır mutabakatını inceleyip eksik en küçük uçtan uca dilimi uygula. B06/B07 HTTP/cookie/CSRF, gerçek IdP eşlemesi, dağıtık iptal ve üretim depo adaptörü açık kalır. Ardından B18/B20/B21 cüzdan/tanıma/kredi defteri ve B28/B29/B30 veri hakları/kalite/kabul kapılarına devam et.
 
 ## Korunacak kapsam
 
@@ -32,3 +32,7 @@ configuredCore() Vercel'de kapalı kalmalı. LocalAcceptanceStore yalnız izole 
 Giriş korumasını kaldırma; gerektiğinde yalnız desteklenen browserAuth güvenli formunu kullan. Sohbette parola/kod isteme, okuma, kaydetme veya üretme. Canlı ve preview TOTP anahtarları ayrı; kodu yanlış ortamda tekrarlama.
 
 Her yayında doğru proje/dal/kaynak/canlı farkını denetle, gerekli test ve tarayıcı kabulünü yap, gazi/auth korumalı paketlemesini kullan, canlı smoke çalıştır ve tam commit/deploy/geri dönüş/sınırlamaları RELEASE.md'ye yaz. Test edilmeyeni doğrulanmış veya 36 paketi bitmiş gösterme.
+
+## Desteklenen yerel tarayıcı kabulü
+
+Chromium 138.0.7204.0 bu ortamda çalışıyor. Yeniden indirme veya güvenlik sınırını değiştirme: `MYYS_CHROMIUM_EXECUTABLE=/tmp/gazi-chromium/chromium MYYS_CHROMIUM_PACKAGE=/tmp/gazi-browser-runtime/node_modules/@sparticuz/chromium node scripts/myys-appeals-browser.cjs`. Geçici dosyalar yoksa güncel desteklenen araçları yeniden değerlendir. Bulut tarayıcının loopback erişimini zorlamayın. Canlı oturumun başka sohbete taşındığını varsaymayın.

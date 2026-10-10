@@ -9,8 +9,8 @@
 | B03 · Program bilgi paketini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B04 · Veri akışını ve saklamayı onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
+| B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
@@ -52,7 +52,7 @@
 
 ## Son kontrol
 
-Paket 4 (`2743da31b6b6e278dfc13b27e8bc79145b708731`, `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV`) READY / production. Yayın paketi 150 test ve 13 izole tarayıcı kontrolü geçti. Canlıda oturum, logolar, destek ve kapalı akademik görünüm doğrulandı. Sonraki B06/B07 hazırlığıyla kaynak test toplamı 179; bu kimlik dilimi canlıya dağıtılmadı. B26 kurumsal destek hizmeti, B11 gerçek akademik işlem ve SSO etkin değildir. Bütün 36 satırın kurum ve dış erişim alanları ayrı tutulmaktadır.
+Paket 5 (`24b41c8dba48bfa261a51613fbbc3a83a7939f13`, `dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg`) READY / production. 206 otomatik test ve 13 izole B11 tarayıcı kontrolü geçti. Canlıda oturum, logolar, destek ve kapalı akademik görünüm doğrulandı. B06/B07 hazırlık kodu dağıtıldı; gerçek SSO, kurumsal destek ve akademik işlem etkin değildir. Bütün 36 satırın kurum ve dış erişim alanları ayrı tutulmaktadır.
 
 ## Paket 4 kabul güncellemesi
 
@@ -62,6 +62,6 @@ B11: 150 otomatik test ve 13 izole tarayıcı kontrolü geçti. Masaüstü 1440 
 
 `IDENTITY-CONTRACT.md` ve 29 yeni test imza, sağlayıcı, audience, nonce, MFA tazeliği ve kişi/üyelik okumasını kapsar. Yerel depo üretim adaptörü değildir; oturum yaratılmaz. Kod/yerel kabul kısmi; kurum ve dış erişim sütunları değişmez.
 
-## Paket 5 kabul adayı
+## Paket 5 kabul sonucu
 
-206 otomatik test ve yeniden çalıştırılan 13 B11 tarayıcı kontrolü geçti. İki ayrı SQLite bağlantısıyla eşzamanlı tekrar denendi; bu dağıtık production testi değildir. B06/B07 kod/yerel kabul kısmi; kurumsal etkinleştirme kapalı. Yayın sonucu RELEASE.md ile güncellenir.
+206 otomatik test ve yeniden çalıştırılan 13 B11 tarayıcı kontrolü geçti. İki ayrı SQLite bağlantısıyla eşzamanlı tekrar denendi; bu dağıtık production testi değildir. B06/B07 kod/yerel kabul kısmi; kurumsal etkinleştirme kapalı. Paket 5 yayımlandı; kimlikler, canlı sınırlar ve geri dönüş RELEASE.md içinde.
