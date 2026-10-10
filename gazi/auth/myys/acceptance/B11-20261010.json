@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-10T19:43:48.200Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+    "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+    "Açık itiraz belge hazırlığını kapatır",
+    "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+    "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+    "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+    "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+    "Yalnız karar bekleyen değerlendirme için karar formu",
+    "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+    "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+    "390 px mobil: taşma ve bozuk resim yok",
+    "Akademik sekmeler Home/End tuşları ve seçili durum",
+    "Yakalanmış istemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "automated_tests": {
+    "server": 58,
+    "portal": 46,
+    "existing_regression": 46,
+    "total": 150
+  },
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "screenshots": {
+    "desktop.png": "20279b35c9792acbdb7bf9e46e22847eaef89905b483f910f2d44d8a28e59f5f",
+    "mobile.png": "a2adcaa2a8a84e79dbb2ebc5103628a03ba8f6c32c302f9fadd4d849d09fe302"
+  },
+  "limits": [
+    "Gerçek kurum IdP/akademik depo/LMS kabulü değildir.",
+    "Ekran okuyucu tam kabulü ve bütün menülerin uçtan uca kabulü yapılmadı.",
+    "İmzalı belge değiştirme ve kurumca onaylı itiraz politikası açık."
+  ]
+}

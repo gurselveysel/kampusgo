@@ -76,7 +76,7 @@ AI değerlendirme ve NFT hizmeti bu değişiklikle açılmaz.
 - `npm run build --prefix gazi/portal`: arayüz derlemesi.
 
 Bu testler canlı entegrasyon, resmî akademik kabul veya WCAG uygunluğu değildir.
-Yeni ekranın canlı masaüstü kapalı görünümü kontrol edildi. Tam yerel rol akışı ve ekran okuyucu kabulü geçmedi: yerel Chromium bulunamadı, standart Playwright indirmesi geçersiz arşiv döndürdü; bulut tarayıcı yerel kabul portunda ERR_CONNECTION_REFUSED verdi. Bu sonuç başarılı görsel kabul değildir.
+Önceki turda yerel Chromium ve bulut loopback erişimi engelliydi. 10 Ekim devam turunda npm üzerinden sabit sürümlü Chromium 138.0.7204.0 yerel test için çalıştırıldı. B11 gerçek React/HTTP çekirdeğinde 9 çekirdek rol ve 12 sentetik kişiyle 13 tarayıcı kontrolünü geçti. Gerçek IdP, tam ekran okuyucu ve bütün ekranların kabulü değildir.
 
 ## Sonraki üretim kapıları — tek liste
 
@@ -112,3 +112,7 @@ resmî hizmet açılışı yerine sentetik örneklerle tamamlandı gösterilemez
 | Akademik/hukuki sorumluluk ve saklama kararları | Resmî hizmet etkinleştirme | Yazılım sicili kurum onayı yerine geçmez |
 
 Genel yayın yetkisi mevcut pilotun korumalı ekranını güncellemeyi kapsar; bu tabloda ayrı belirtilen kurum/veri yetkilerini sağlamaz.
+
+## Paket 4 — B11 tarayıcı kabulü
+
+İtiraz ekranı bağlı yeni değerlendirmeyi ve yeni kararı gösterir; eski gerekçeler korunur. Karar formu yalnız sunucunun `allowedActions` izniyle görünür; verilmiş karar yeniden sunulmaz. Etiketler, mobil metin sarımı ve seçili sekme görünümü iyileştirildi. `scripts/myys-appeals-browser.cjs` loopback dışına çıkmaz, yalnız geçici sentetik kişileri kullanır ve üretim paketine alınmaz. 58 sunucu + 46 portal + 46 regresyon testi geçti.

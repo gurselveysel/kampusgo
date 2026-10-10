@@ -30,3 +30,6 @@
 @media(prefers-reduced-motion:reduce){.guide-workspace *{scroll-behavior:auto!important}}
 
 .support-brief-body{padding:0 25px 25px}.support-brief-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:22px 0}.support-brief-next{border:1px solid #dce4ed;background:#f6f9fc;padding:18px 22px;border-radius:12px}.support-brief-next h3{font-size:16px;margin:0 0 12px}.support-brief-next ol{margin:0;padding-left:22px;font-size:14px;line-height:1.85}.support-brief-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.support-brief [role=status]{font-size:13px;color:#155e48;line-height:1.7}@media(max-width:760px){.support-brief-fields{grid-template-columns:1fr}.support-brief-body{padding:0 18px 20px}}
+
+/* Academic record identifiers and learner text must wrap on narrow screens. */
+.academic-record{min-width:0;overflow-wrap:anywhere}.appeal-followup{border-left:3px solid #315576;background:#f4f7fb;padding:16px;margin:16px 0}.appeal-followup h4{font-weight:650}.tab-strip>[aria-selected="true"]{border-color:#236dd0;color:#2864b1;font-weight:650}

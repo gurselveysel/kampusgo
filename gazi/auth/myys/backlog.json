@@ -608,19 +608,21 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "4 yeni sunucu + 3 gerçek bileşen render testi geçti; toplam sunucu 57, portal 44.",
+      "test_status": "58 sunucu + 46 portal + 46 mevcut regresyon = 150 test; 13 izole Chromium kabul kontrolü geçti (9 çekirdek rol, masaüstü, 390 px, klavye).",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
         "gazi/auth/tests/myys-appeals.test.mjs",
         "gazi/portal/src/appeals-workspace.jsx",
         "gazi/portal/src/appeals.test.mjs",
-        "gazi/auth/myys/core.mjs"
+        "gazi/auth/myys/core.mjs",
+        "scripts/myys-appeals-browser.cjs",
+        "gazi/auth/myys/acceptance/B11-20261010.json"
       ],
-      "production_status": "B11 yeni dilim yerelde kodlandı ve sınandı; henüz yayımlanmadı. Mevcut canlı Paket 3.",
-      "implementation_note": "İtiraz/sonuç arayüzü, sunucu yetki eylemleri, bağımsız yeniden değerlendirme bağlantısı, başka karar üzerinden açık itirazı aşma reddi. Eski karar ve gerekçeler korunur.",
+      "production_status": "Paket 4 yerel kabulü geçti; yayın sonucu RELEASE.md içinde ayrıca kaydedilecek.",
+      "implementation_note": "İtiraz, bağımsız inceleme, yeniden puanlama ve yeni akademik karar aynı zincirde görünür; sunucu karar eylemleri, tekrar formunun kapatılması ve mobil metin sarımı doğrulandı. Kurumsal etkinleştirme kapalı.",
       "independent_remaining_work": [
-        "İzole rol tarayıcı kabulü; daha önce imzalanmış belgenin değiştirilmesi/iptal zinciri; süre ve moderasyon politikasını sürümle."
+        "Önceden imzalanmış belgenin değiştirilmesi/iptal zinciri; süre ve moderasyon politikasını kapsamı belirtilmiş sürümle bağla."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun itiraz ve moderasyon usulü.",
@@ -633,20 +635,22 @@
             "gazi/auth/tests/myys-appeals.test.mjs",
             "gazi/portal/src/appeals-workspace.jsx",
             "gazi/portal/src/appeals.test.mjs",
-            "gazi/auth/myys/core.mjs"
+            "gazi/auth/myys/core.mjs",
+            "scripts/myys-appeals-browser.cjs",
+            "gazi/auth/myys/acceptance/B11-20261010.json"
           ],
           "remaining": [
-            "İzole rol tarayıcı kabulü; daha önce imzalanmış belgenin değiştirilmesi/iptal zinciri; süre ve moderasyon politikasını sürümle."
+            "Önceden imzalanmış belgenin değiştirilmesi/iptal zinciri; süre ve moderasyon politikasını kapsamı belirtilmiş sürümle bağla."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "4 yeni sunucu + 3 gerçek bileşen render testi geçti; toplam sunucu 57, portal 44.",
+          "evidence": "58 sunucu + 46 portal + 46 mevcut regresyon = 150 test; 13 izole Chromium kabul kontrolü geçti (9 çekirdek rol, masaüstü, 390 px, klavye).",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "B11 yeni dilim yerelde kodlandı ve sınandı; henüz yayımlanmadı. Mevcut canlı Paket 3."
+          "evidence": "Paket 4 yerel kabulü geçti; yayın sonucu RELEASE.md içinde ayrıca kaydedilecek."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1370,7 +1374,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket 3 canlı masaüstü: görünür odak, Tab sırası, seçimler, indirme, 0 yatay taşma/bozuk resim. Tam mobil/ekran okuyucu ve rol kabulü açık.",
+      "test_status": "B11 yerel Chromium: 1440 ve 390 px, etiket/Tab, Home/End, taşma ve bozuk resim kontrolü geçti; tam ekran okuyucu/tüm ekran kabulü açık.",
       "implementation_evidence": [
         "scripts/myys-local-acceptance.mjs"
       ],
@@ -1379,7 +1383,7 @@
       "independent_remaining_work": [
         "Yerel kabul senaryoları, klavye/odak testleri ve ekran okuyucu kontrolü."
       ],
-      "development_blocker": "Tarayıcı çalıştırma ortamı eksik; kod ve API testi engelli değil.",
+      "development_blocker": null,
       "production_activation_blocker": "Tam rol/mobil/ekran okuyucu kabulü açık. Canlı destek özeti masaüstü kabulü geçti; izole kurumsal rol tarayıcısı hâlâ gerekli.",
       "acceptance_axes": {
         "code_completeness": {
@@ -1393,7 +1397,7 @@
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "Paket 3 canlı masaüstü: görünür odak, Tab sırası, seçimler, indirme, 0 yatay taşma/bozuk resim. Tam mobil/ekran okuyucu ve rol kabulü açık.",
+          "evidence": "B11 yerel Chromium: 1440 ve 390 px, etiket/Tab, Home/End, taşma ve bozuk resim kontrolü geçti; tam ekran okuyucu/tüm ekran kabulü açık.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
@@ -2136,7 +2140,7 @@
     "date": "2026-10-10",
     "live_deployment": "dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z",
     "live_source": "abf8b2844480ddaffc6047fba4884eb03d7add21",
-    "local_tests": 147,
-    "note": "Üçüncü paket canlı; B11 sonraki dilim yalnız kod/test aşamasında."
+    "local_tests": 150,
+    "note": "B11 rol tarayıcı kabulü geçti; Paket 4 yayın adayı. B11 bütünü tamamlanmadı."
   }
 }

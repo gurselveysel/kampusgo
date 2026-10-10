@@ -8,9 +8,16 @@ import {hash} from '../gazi/auth/myys/store.mjs';
 import {myysRoute} from '../gazi/auth/myys/http.mjs';
 
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
-const f=fixture('gazi');f.setup();
+const f=fixture('gazi');
+// The appeal scenario starts from an existing synthetic decision, never a real learner.
+if(process.argv.includes('--appeals'))f.passed();else f.setup();
+for(const [person,role] of [['independent','instructor'],['finance','finance']]){
+ f.s.db.prepare('INSERT INTO persons VALUES(?,?,?,1)').run(person,'https://test-idp.invalid',person);
+ f.s.db.prepare('INSERT INTO memberships VALUES(?,?,?,?,?,1)').run('gazi',person,'engineering',JSON.stringify([role]),'2099-01-01T00:00:00.000Z');
+ f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(hash(person),person,'2099-01-01T00:00:00.000Z');
+}
 const root=fileURLToPath(new URL('../gazi/',import.meta.url));
-const roles={author:'Program hazırlayan',publisher:'Program inceleyen',student:'Öğrenen',teacher:'Eğitici',judge:'Akademik karar',issuer:'Belge yetkilisi',reviewer:'Kalite',admin:'Sicil yöneticisi'};
+const roles={author:'Program hazırlayan',publisher:'Program inceleyen',student:'Öğrenen',teacher:'İlk eğitici',independent:'Bağımsız eğitici',judge:'Akademik karar',issuer:'Belge yetkilisi',reviewer:'Kalite',admin:'Sicil yöneticisi',it:'Bilgi işlem',finance:'Mali işler',other:'Başka öğrenen'};
 const json=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
 const server=createServer(async(req,res)=>{
  try{

@@ -43,7 +43,7 @@
 
 ## Sıradaki bağımsız işler
 
-- B11: itiraz/sonuç arayüzü ve bağımsız yeniden değerlendirme bağlantısı kodlandı, 7 yeni test geçti. Tam rol tarayıcı kabulü ve imzalı belge değiştirme süreci sürüyor.
+- B11: itiraz/sonuç arayüzü ve bağımsız yeniden değerlendirme bağlantısı kodlandı, 7 yeni test geçti. 9 çekirdek rol için 13 tarayıcı kontrolü geçti; imzalı belge değiştirme ve sürümlü politika açık.
 - B06/B07: üretimden bağımsız depo/kimlik sözleşmesi ve güvenilir issuer/audience/MFA testleri.
 - B16/B17: kalıcı işçi karantinası ve satır mutabakatı.
 - B18/B20/B21: özel cüzdan arayüzü ve sürümlü tanıma/tekil kredi defteri.
@@ -53,3 +53,7 @@
 ## Son kontrol
 
 Paket 3 (`abf8b284`, `dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z`) canlı; destek özeti masaüstü kabulü geçti. B11 devam dilimi yerelde, 147 toplam test geçiyor; henüz yayınlanmadı. B26 kurum destek hizmeti ve B11 gerçek akademik işlem etkin değildir. Bütün 36 satırın kurum ve dış erişim alanları ayrı tutulmaktadır.
+
+## Paket 4 kabul güncellemesi
+
+B11: 150 otomatik test ve 13 izole tarayıcı kontrolü geçti. Masaüstü 1440 px, mobil 390 px; kaynağı `acceptance/B11-20261010.json`. B11/B24 kısmi kalır; kurum, dış erişim, tam ekran okuyucu ve imzalı belge değiştirme kapıları kapanmadı. Yerel Chromium engeli giderildi. Yayın sonucu RELEASE.md içinde ayrı kaydedilir.

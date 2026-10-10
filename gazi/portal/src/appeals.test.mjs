@@ -18,3 +18,15 @@ test('bağımsız inceleme formu yalnız sunucunun eylem izniyle ve gerekçe zor
 test('sonuçlanan itiraz ilk ve yeni gerekçeyi birlikte gösterir; yeniden değerlendirme başarı gibi sunulmaz',()=>{
  const d=data();d.appeals[0].resolution={outcome:'reassessment',reason:'Yeni ve bağımsız inceleme gerekçesi.'};const html=render(d);assert.match(html,/İlk gerekçeli karar korunur/);assert.match(html,/Yeni ve bağımsız inceleme gerekçesi/);assert.match(html,/Yeniden değerlendirme gerekli/);assert.match(html,/tamamlanmadan belgeye ilerlenemez/);assert.doesNotMatch(html,/<form/);
 });
+test('bağlı yeni puan ve karar eski gerekçeyle birlikte görünür; sonuç eski bekleme mesajını kullanmaz',()=>{
+ const d=data();d.appeals[0].resolution={id:'r',outcome:'reassessment',reason:'Bağımsız inceleme gerekçesi.'};
+ d.assessments.push({id:'s2',resolutionId:'r',supersedesAssessmentId:'s',score:75,passed:true,reason:'Yeni rubrik incelemesi.'});
+ let html=render(d);assert.match(html,/Yeniden değerlendirildi · Karar bekleniyor/);assert.match(html,/75\/100/);
+ d.decisions.push({id:'d2',assessmentId:'s2',outcome:'approved',reason:'Yeni akademik karar gerekçesi.',usable:true});
+ html=render(d);assert.match(html,/Yeniden değerlendirme kararı kaydedildi/);assert.match(html,/İlk gerekçeli karar korunur/);assert.match(html,/Yeni akademik karar gerekçesi/);assert.doesNotMatch(html,/tamamlanmadan belgeye ilerlenemez/);
+});
+test('ilgisiz yeniden değerlendirme aynı itirazın sonucu gibi gösterilmez',()=>{
+ const d=data();d.appeals[0].resolution={id:'r',outcome:'reassessment',reason:'İnceleme sonucu.'};
+ d.assessments.push({id:'foreign',resolutionId:'r',supersedesAssessmentId:'another',score:100,reason:'İlgisiz gizli gerekçe.'});
+ const html=render(d);assert.doesNotMatch(html,/İlgisiz gizli gerekçe/);assert.match(html,/Yeniden değerlendirme gerekli/);
+});

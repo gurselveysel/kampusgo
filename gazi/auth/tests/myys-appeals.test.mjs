@@ -59,3 +59,17 @@ test('itirazı koruma sonucu başarı üretmez; yeniden değerlendirmede başar�
  assert.throws(()=>f.run('issuer','issue',{decisionId:d.id}),e=>e.code==='decision_blocked');
  assert.throws(()=>f.run('reviewer','resolve',{appealId:second.id,outcome:'upheld',reason}),e=>e.code==='duplicate');
 }));
+
+test('karar eylemi sunucudan gelir; önceki karar, açık itiraz, MFA ve görevler ayrılığı gözetilir',()=>use(f=>{
+ const x=f.setup(),{ev,a}=f.assess(x);
+ assert.deepEqual(f.core.view(f.context('judge')).assessments[0].allowedActions,['decide']);
+ assert.deepEqual(f.core.view(f.context('student')).assessments[0].allowedActions,[]);
+ f.s.db.prepare('UPDATE memberships SET roles=? WHERE person=?').run('["instructor","commission"]','teacher');
+ assert.deepEqual(f.core.view(f.context('teacher')).assessments[0].allowedActions,[]);
+ const d=f.run('judge','decide',{assessmentId:a.id,outcome:'approved',reason});
+ assert.deepEqual(f.core.view(f.context('judge')).assessments[0].allowedActions,[]);
+ addIndependent(f);const fresh=f.run('teacher2','assess',assessInput({...x,ev}));
+ appeal(f,d);
+ assert.deepEqual(f.core.view(f.context('judge')).assessments.find(r=>r.id===fresh.id).allowedActions,[]);
+ assert.throws(()=>f.run('judge','decide',{assessmentId:fresh.id,outcome:'approved',reason}),e=>e.code==='review_pending');
+}));
