@@ -16,7 +16,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Mevcut 21 portal + 28 model/kaynak testi; eski 15 rozet/erişim testi.",
+      "test_status": "49 sunucu/güvenlik + 39 portal + 32 model/kaynak testi geçti; toplam 120.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs"
@@ -27,7 +27,7 @@
         "27 yetenek satırını rota ve test kanıtıyla tamamla; tarayıcı regresyonunu çalıştır."
       ],
       "development_blocker": null,
-      "production_activation_blocker": "Canlı yetkili oturum ve görsel kontrol."
+      "production_activation_blocker": "27 yetenek satırının tam rol/mobil/ekran okuyucu kabulü açık; mevcut oturumda temel canlı kontrol yapıldı."
     },
     {
       "work_id": "B02",
@@ -730,7 +730,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "4 rehber testi ve 21 mevcut portal testi geçti.",
+      "test_status": "4 rehber testi; birleşik 39 portal testi. Canlıda doğru/yanlış cevap, kalıcılık, filtre ve klavye odak kontrolü geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -738,7 +738,7 @@
         "gazi/portal/src/guide-model.mjs",
         "gazi/portal/src/guide.test.mjs"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
+      "production_status": "Kullanım rehberi b3262455 / dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL ile canlı; kurum destek süreci henüz etkin değil.",
       "implementation_note": "Dokuz sorumluluğa göre öneriler, altı eğitim bölümü, kontrol soruları ve kişisel rehber ilerlemesi kodlandı; destek iş akışı ve kurumsal eğitim kabulü açık.",
       "independent_remaining_work": [
         "Kalıcı destek biletinde yanıt/çözüm ve yetkili eskalasyon akışı; tam rol senaryoları."
@@ -761,13 +761,18 @@
       "planning_estimate": "3–5 kişi-gün",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Üretim deposu/SLA/RPO/RTO yok; yerel yeniden açma testi geri yükleme tatbikatı değildir.",
+      "implementation_status": "kısmi",
+      "test_status": "4 yedek/geri dönüş negatif ve pozitif testi geçti; sentetik snapshot ve yeni dizine geri dönüş ölçüldü.",
+      "implementation_evidence": [
+        "gazi/auth/scripts/lib/local-recovery.mjs",
+        "gazi/auth/scripts/myys-recovery-drill.mjs",
+        "gazi/auth/tests/myys-recovery.test.mjs",
+        "gazi/auth/myys/RELEASE.md"
+      ],
+      "production_status": "Yerel işletim aracı; canlı dağıtıma alınmadı, üretim verisine dokunmadı.",
+      "implementation_note": "Yalnız yerel sentetik depo: kanıt/karar/denetim/idempotency korunur, eski oturumlar taşınmaz, bozuk yedek ve mevcut hedef reddedilir. Üretim SLA/RPO/RTO kabulü değildir.",
       "independent_remaining_work": [
-        "Yerel yedek/geri yükleme ve olay provaları; ölçüm çıktısı."
+        "Kesinti ve kuyruk tekrar oynatma senaryolarını anahtar riski/yanlış ihraç olay kılavuzuyla birleştir."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Üretim RPO/RTO hedefi, yedekleme ve ayrı geri yükleme yetkisi."
@@ -1035,5 +1040,12 @@
     "production_migration": "uygulanmadı",
     "deployment": "İlk paket: dpl_FJBzrCUuxD93XssE2rmrNGubRDYM; 37704e15a4ef43f70b0d6f46eaa192fca43775e8"
   },
-  "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5"
+  "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
+  "latest_verified_deployment": {
+    "commit": "b3262455a7d3d56b5ec712450554fa647f1cb21e",
+    "id": "dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL",
+    "url": "https://gazi.unigoturkiye.com/#/guide",
+    "runtime_tests": 116,
+    "local_tests_after_recovery_tool": 120
+  }
 }

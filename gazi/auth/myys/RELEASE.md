@@ -36,3 +36,21 @@ Hazırlanan kapsam: dokuz sorumluluk grubu, altı bölüm, senaryo soruları, s�
 ### Son canlı sürümle birleştirme
 
 Yayın öncesi canlı alias yeniden okundu ve `dpl_FFtPAoJGT2aXLAD8KBLzPWykKqsx` / `d0b6c1216c2eea786a2667e94f129851e914f0e5` bulundu. Bu sürümün kurumsal kaynak, kalite, matris ve 11 sunum profili değişiklikleri birleştirildi. Çakışan kaynakta son canlı menü/profil/bağlam mantığı korundu; rehber eklemesi onun üzerine uygulandı. Derlenmiş dosyalar yeniden üretildi. Birleşik testler: 39 portal + 45 sunucu/güvenlik + 32 eski model/kaynak = 116 geçti. Bu paket için yeni geri alma hedefi `dpl_FFtPAoJGT2aXLAD8KBLzPWykKqsx` olacaktır.
+
+### Paket 2 gerçek yayın ve canlı kabul
+
+- Kaynak commit: `b3262455a7d3d56b5ec712450554fa647f1cb21e`.
+- Dağıtım: `dpl_GE3YCwmro6ZQEfsA8ZRRHrQtGHpL`, READY / production; `gazi.unigoturkiye.com` alias doğrulandı.
+- Son canlı kurumsal pakete göre yalnız `private/portal.js` ve `private/portal.css` değişti; 133 kaynak dağıtım dosyası.
+- Gerçek oturumda `https://gazi.unigoturkiye.com/#/guide`: yanlış yanıt ilerletmedi; doğru yanıt 1/6 oldu ve yeniden yüklemede korundu. Bilgi işlem ilgi alanı ve LMS araması doğru bölümü gösterdi. Enter ile açılan bölümün başlığına odak taşındı. Yatay taşma ve bozuk resim gözlenmedi.
+- Masaüstü görsel kaydı: `libfile_403915da9ca0819185872ddd0bf6b94e`. Mobil/ekran okuyucu tam kabulü bu kontrolün kapsamı değildir.
+- Son 15 dakikada dağıtıma ait error/fatal log sayımı boş; bu sınırlı gözlem kesintisizlik garantisi değildir.
+- Geri alma: `dpl_FFtPAoJGT2aXLAD8KBLzPWykKqsx` / `d0b6c1216c2eea786a2667e94f129851e914f0e5`; önceki kurumsal paket korunur. Migration veya gerçek belge işlemi yapılmadı.
+
+## B27 yerel geri dönüş provası — üretime açılış değildir
+
+`node gazi/auth/scripts/myys-recovery-drill.mjs` yalnız geçici sentetik depoda çalışır. Yeni ve özel dizine SQLite snapshot alır; eski oturum bağlarını taşımaz. Ayrı saklanan SHA-256 özetiyle doğrulanmış baytlar yalnız yeni bir dizine geri yüklenir. Var olan depo üzerine yazılmaz. Özet imza değildir; yedek dosyası ve ayrı özetin güvenilir saklanması gerekir.
+
+10 Ekim 2026 12:12:20 UTC provası: yedek 1,408 ms, geri dönüş 0,387 ms; 10 kişi, 10 üyelik, 6 akademik kayıt, 6 komut ve 6 denetim kaydı geri geldi; 0 oturum geri açıldı. Snapshot sonrasındaki 1 sentetik kayıt geri dönüş kapsamı dışında kaldı. Bu küçük yerel ölçüm üretim RPO/RTO taahhüdü değildir.
+
+Dört yeni test: kanıt/karar/denetim/tekrar önleme kayıtlarının aynı kalması ve oturum reddi; bozuk yedek/eksik özet reddi; var olan hedefin korunması; üretim ortamı reddi. Sunucu testleri 49/49, önceki değişmeyen portal 39/39 ve model/kaynak 32/32 ile toplam 120 test. Bu araçlar `scripts/` ve `tests/` altında, canlı gateway paketinin dışındadır. Üretim deposu, kimlik sağlayıcı, anahtar kasası, kuyruk ve sözleşmeli RPO/RTO provası hâlâ açıktır.
