@@ -4,7 +4,7 @@ import { seed } from './model.mjs';
 import { workspaceFor, resolveRoute, canView, roleNotifications, markRoleNotificationsRead } from './workspaces.mjs';
 
 test('switching role resolves stale links to the new responsibility area', () => {
-  assert.equal(resolveRoute('learner', 'obs'), 'wallet');
+  assert.equal(resolveRoute('learner', 'obs'), 'learning');
   assert.equal(resolveRoute('commission', 'settings'), 'commission');
   assert.equal(resolveRoute('finance', 'commission'), 'finance');
   assert.equal(resolveRoute('instructor', 'finance'), 'catalog');

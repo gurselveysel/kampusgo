@@ -8,9 +8,9 @@ export const workspaces = {
     pages:['overview','applications','catalog','matching','outcomes','commission','appeals','credentials','obs','integrations','quality','notifications','audit']
   },
   learner: {
-    name:'Öğrenen / Öğrenci', initials:'DÖ', home:'wallet',
+    name:'Öğrenen / Öğrenci', initials:'DÖ', home:'learning',
     title:'Öğrenme alanım', description:'Deniz Örnek · Başvurularınızı, öğrenme çıktılarınızı ve öğrenme planınızı takip edin.',
-    pages:['overview','applications','catalog','credentials','wallet','pathways','appeals','notifications']
+    pages:['learning','overview','applications','catalog','credentials','wallet','pathways','appeals','notifications']
   },
   instructor: {
     name:'Eğitici', initials:'EĞ', home:'catalog',
