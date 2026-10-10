@@ -5,6 +5,7 @@ import {currentLmsEvidence} from './lms.mjs';
 import {supportCommand,supportReplay,supportView} from './support.mjs';
 import {operationsCommand,operationsReplay,operationsView} from './operations.mjs';
 import {walletView} from './wallet.mjs';
+import {outcomeIds,criterionTasks,programBaseline,stableStringify} from './program-model.mjs';
 
 export const ROLES=['learner','instructor','coordinator','commission','studentAffairs','quality','it','finance','admin'];
 const permissions={program:['instructor','coordinator'],publish:['commission'],enroll:['coordinator','studentAffairs'],assess:['instructor'],decide:['commission'],resolve:['quality'],issue:['studentAffairs'],revoke:['studentAffairs'],read:['coordinator','instructor','commission','studentAffairs','quality'],policy:['admin'],support:['it'],recognize:['commission']};
@@ -31,6 +32,7 @@ function appealChainReady(s,tenant,assessment){
  return appealRecords(s,tenant,assessment.enrollmentId).every(appeal=>{const r=resolutionFor(s,tenant,appeal.id);return r&&(r.outcome==='upheld'||r.outcome==='reassessment'&&lineage.has(r.id));});
 }
 
+function validLinks(r,ids){const links=outcomeIds(r);return links.length>0&&links.length<=30&&new Set(links).size===links.length&&links.every(id=>ids.has(id))&&(!r.outcomeId||links.length===1&&links[0]===r.outcomeId);}
 function validateProgram(p){
  requireThat(text(p.title,3,200)&&text(p.code,2,60)&&text(p.unit,1,80),'program_fields','Program adı, kodu ve birimi gerekli.');
  requireThat(p.mode==='pilot','official_disabled','Resmî belge yolu kurumsal kabul olmadan açılamaz.');
@@ -38,9 +40,11 @@ function validateProgram(p){
  for(const key of ['programOwner','decisionAuthority','legalIssuer','technicalSigner'])requireThat(text(p.responsibilities?.[key],3,200),'responsibility','Dört ayrı sorumluluk alanını doldurun.');
  requireThat(Array.isArray(p.outcomes)&&p.outcomes.length>0&&p.outcomes.length<=30,'outcomes','Öğrenme çıktıları gerekli.');
  const ids=new Set(p.outcomes.map(o=>o.id));requireThat(ids.size===p.outcomes.length&&p.outcomes.every(o=>text(o.id,1,60)&&text(o.text,12,1000)),'outcomes','Çıktı kimlikleri tekil, açıklamaları yeterli olmalı.');
- requireThat(Array.isArray(p.tasks)&&p.tasks.length>0&&p.tasks.length<=50&&new Set(p.tasks.map(t=>t.id)).size===p.tasks.length&&p.tasks.every(t=>text(t.id,1,60)&&text(t.title,3,200)&&ids.has(t.outcomeId)),'tasks','Görevleri öğrenme çıktılarına bağlayın.');
- requireThat(Array.isArray(p.rubric)&&p.rubric.length>0&&p.rubric.length<=50&&new Set(p.rubric.map(r=>r.id)).size===p.rubric.length&&p.rubric.every(r=>text(r.id,1,60)&&ids.has(r.outcomeId)&&finite(r.weight,1,100))&&p.rubric.reduce((n,r)=>n+r.weight,0)===100,'rubric','Rubrik ağırlıkları toplamı 100 olmalı.');
- requireThat([...ids].every(id=>p.tasks.some(t=>t.outcomeId===id)&&p.rubric.some(r=>r.outcomeId===id)),'coverage','Her çıktı görev ve rubrik ile kapsanmalı.');
+ requireThat(Array.isArray(p.tasks)&&p.tasks.length>0&&p.tasks.length<=50&&new Set(p.tasks.map(t=>t.id)).size===p.tasks.length&&p.tasks.every(t=>text(t.id,1,60)&&text(t.title,3,200)&&validLinks(t,ids)),'tasks','Görevleri öğrenme çıktılarına bağlayın.');
+ requireThat(Array.isArray(p.rubric)&&p.rubric.length>0&&p.rubric.length<=50&&new Set(p.rubric.map(r=>r.id)).size===p.rubric.length&&p.rubric.every(r=>text(r.id,1,60)&&validLinks(r,ids)&&finite(r.weight,1,100))&&p.rubric.reduce((n,r)=>n+r.weight,0)===100,'rubric','Rubrik ağırlıkları toplamı 100 olmalı.');
+ requireThat([...ids].every(id=>p.tasks.some(t=>outcomeIds(t).includes(id))&&p.rubric.some(r=>outcomeIds(r).includes(id))),'coverage','Her çıktı görev ve rubrik ile kapsanmalı.');
+ const taskIds=new Set(p.tasks.map(t=>t.id));
+ requireThat(p.rubric.every(r=>{const links=criterionTasks(r,p.tasks);return links.length>0&&new Set(links).size===links.length&&links.every(id=>taskIds.has(id)&&outcomeIds(p.tasks.find(t=>t.id===id)).some(o=>outcomeIds(r).includes(o)))&&outcomeIds(r).every(o=>p.tasks.some(t=>links.includes(t.id)&&outcomeIds(t).includes(o)));})&&p.tasks.every(t=>p.rubric.some(r=>criterionTasks(r,p.tasks).includes(t.id))),'rubric_tasks','Her görev en az bir ilgili rubrik ölçütüne bağlanmalı.');
  requireThat(finite(p.threshold,1,100)&&finite(p.hours,1,750)&&finite(p.ects,0.04,30)&&p.hours===p.ects*25,'workload','İş yükü ve başarı eşiği tutarlı olmalı (pilot: 25 saat/AKTS).');
  requireThat(['5','6','7','8'].includes(p.level)&&['Yüz yüze','Uzaktan','Karma'].includes(p.participation),'program_fields','Düzey ve katılım biçimi geçersiz.');
  for(const key of ['quality','instructor','license','assessmentMethod'])requireThat(text(p[key],3,2000),'program_fields','Düzey, katılım, kalite, eğitici, lisans ve ölçme yöntemi gerekli.');
@@ -78,8 +82,10 @@ export class MyysCore {
   const operations=operationsCommand({action,p,a,s,put,id,now,execute:(next,input)=>this.execute(a,next,input,now)});if(operations)return operations;
   if(action==='program'){
    validateProgram(p);guard(a,'program',p.unit);
-   const versions=s.list(a.tenant,'program').filter(r=>r.code===p.code&&r.unit===p.unit);
-   return put('program',{id:id(),unit:p.unit,owner:a.id,code:p.code,title:p.title,mode:'pilot',pathway:p.pathway,responsibilities:p.responsibilities,outcomes:p.outcomes,tasks:p.tasks,rubric:p.rubric,threshold:p.threshold,hours:p.hours,ects:p.ects,level:p.level,participation:p.participation,quality:p.quality,instructor:p.instructor,license:p.license,assessmentMethod:p.assessmentMethod,version:versions.length+1});
+   const versions=s.list(a.tenant,'program').filter(r=>r.code===p.code&&r.unit===p.unit).sort((a,b)=>a.version-b.version),previous=versions.at(-1);
+   requireThat(!previous||p.previousProgramId===previous.id&&text(p.changeReason,20),'version_conflict','Yeni sürüm güncel önceki kayda ve değişiklik gerekçesine bağlı olmalı.',409);
+   requireThat(previous||!p.previousProgramId,'version_conflict','Önceki sürüm aynı program ve birimde bulunmalı.',409);
+   return put('program',{id:id(),unit:p.unit,owner:a.id,code:p.code,title:p.title,mode:'pilot',pathway:p.pathway,responsibilities:p.responsibilities,outcomes:p.outcomes,tasks:p.tasks,rubric:p.rubric,threshold:p.threshold,hours:p.hours,ects:p.ects,level:p.level,participation:p.participation,quality:p.quality,instructor:p.instructor,license:p.license,assessmentMethod:p.assessmentMethod,version:versions.length+1,...(previous?{previousProgramId:previous.id,changeReason:p.changeReason}:{})});
   }
   if(action==='publish'){
    const program=get('program',p.programId);guard(a,'publish',program.unit);
@@ -123,7 +129,7 @@ export class MyysCore {
    requireThat(Array.isArray(p.scores)&&p.scores.length===program.rubric.length&&new Set(p.scores.map(x=>x.criterionId)).size===p.scores.length,'scores','Bütün rubrik ölçütleri puanlanmalı.');
    const score=program.rubric.reduce((sum,r)=>{const v=p.scores.find(x=>x.criterionId===r.id);requireThat(v&&Number.isInteger(v.score)&&v.score>=0&&v.score<=4&&text(v.reason,12),'scores','Her ölçüt için 0–4 puan ve gerekçe gerekli.');return sum+r.weight*v.score/4;},0);
    requireThat(text(p.reason,20),'reason','Değerlendirme gerekçesi gerekli.');
-   return put('assessment',{id:id(),unit:e.unit,owner:e.owner,enrollmentId:e.id,programId:program.id,evidenceIds:p.evidenceIds,evidenceDigests:evidence.map(x=>({id:x.id,sha256:x.sha256})),scores:p.scores,score,passed:score>=program.threshold,reason:p.reason,rubricSnapshot:program.rubric,...(supersedes?{resolutionId:p.resolutionId,supersedesAssessmentId:supersedes.id}:{})});
+   return put('assessment',{id:id(),unit:e.unit,owner:e.owner,enrollmentId:e.id,programId:program.id,evidenceIds:p.evidenceIds,evidenceDigests:evidence.map(x=>({id:x.id,sha256:x.sha256})),scores:p.scores,score,passed:score>=program.threshold,reason:p.reason,rubricSnapshot:program.rubric,programSnapshot:programBaseline(program),programDigest:hash(stableStringify(programBaseline(program))),...(supersedes?{resolutionId:p.resolutionId,supersedesAssessmentId:supersedes.id}:{})});
   }
   if(action==='decide'){
    const assessment=get('assessment',p.assessmentId),program=s.get(a.tenant,'program',assessment.programId);guard(a,'decide',assessment.unit);
@@ -193,6 +199,7 @@ export class MyysCore {
   }
   throw new CoreError('unknown_action','İşlem desteklenmiyor.',404);
  }
+ authorizedRecord(actor,kind,id){return fetchRecord(this.store,actor,kind,id);}
  decisionUsable(a,d){
   const s=this.store,assessment=s.get(a.tenant,'assessment',d.assessmentId);
   if(!assessment?.passed||!assessment.evidenceDigests.length||!assessment.evidenceDigests.every(x=>{const e=s.get(a.tenant,'evidence',x.id);return e&&e.enrollmentId===d.enrollmentId&&hash(e.content)===x.sha256&&currentLmsEvidence(s,a.tenant,e);}))return false;

@@ -140,3 +140,12 @@ Paket 5 yayın sonucu: `24b41c8dba48bfa261a51613fbbc3a83a7939f13` / `dpl_DzCWthA
 ## B18 özel cüzdan dilimi
 
 `wallet.mjs` cüzdanı gerçek kişi/birim üyeliğine göre projekte eder; indirmede sahiplik ve güncel karar/iptal yeniden kontrol edilir. `wallet-workspace.jsx` indirme, tek sefer görünen süreli paylaşım ve iptali mevcut akademik alana bağlar. `#/shared/…` yerelde yalnız minimal özet gösterir. Token HTTP query yerine fragment ve POST gövdesindedir; kalıcı komut önbelleğine ham token yazılmaz. Production koruması değişmez; gerçek kamu hizmeti açılmadı. 9 sunucu ve 8 tarayıcı kontrolü geçti.
+
+
+## Paket 8 — program ilişkileri ve tarihsel karar dayanağı
+
+- Yeni görev ve rubriklerde çoklu outcomeIds/taskIds; eski outcomeId biçimi değiştirilmeden okunur. Tekil, dolu, aynı program kapsamlı ilişki ve toplam %100 denetlenir; çoklu ilişki puanı çoğaltmaz.
+- Güncel önceki sürüme bağlı değişiklik gerekçesi, bağımsız yayın; eski öğrenci/kanıt/karar yeni sürüme otomatik taşınmaz.
+- Değerlendirmede programSnapshot/programDigest; karar arşivinde tarihsel payload hash ve güncel kullanılabilirlik ayrı. Arşiv indirmesi aynı rol/birim kuralına tabidir. İmza veya kurum belge yetkisi iddiası yok.
+- Program sürümleri ekranında katalog arama, çoklu yazarlık, ilişki özeti, sürüm farkı; Akademik kararlar ekranında dayanak arşivi indirme. Ekran okuyucu etiketleri Türkçe.
+- 148 sunucu + 46 portal + 46 regresyon = 240 test; 8 program tarayıcı kontrolü. 390 px mobil, başka öğrenci gizliliği, arşiv içeriği ve yeniden yükleme doğrulandı.

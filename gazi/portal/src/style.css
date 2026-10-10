@@ -37,3 +37,5 @@
 .operations-workspace{display:grid;gap:20px;min-width:0}.operations-workspace .academic-record{overflow-wrap:anywhere}.batch-rows{padding-left:22px}.batch-choice{display:flex;gap:10px;align-items:flex-start;margin:12px 0}.batch-choice input{width:auto;flex-shrink:0}
 
 .shared-summary{max-width:780px;margin:48px auto;padding:24px;overflow-wrap:anywhere}
+
+.program-diff{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;padding:12px;background:var(--bg);border-radius:8px;max-width:100%}

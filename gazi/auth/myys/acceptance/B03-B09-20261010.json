@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-10T21:38:00.324Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Katalog araması program kodunu ve boş sonucu gösterir",
+    "Birden çok çıktı ve görevle yeni rubrik sürümü kaydedildi",
+    "Yeniden yüklemede iki sürüm ve karşılaştırma korunur",
+    "390 px çoklu yazarlık ve sürüm karşılaştırmasında taşma yok",
+    "Öğrenen eski kayıt sürümünü görür ve programı değiştiremez",
+    "Eski kararın program rubrik ve kanıt dayanakları indirildi",
+    "Başka öğrenenin karar arşivi gösterilmez",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 10,
+  "automated_tests": {
+    "server": 148,
+    "portal": 46,
+    "regression": 46
+  },
+  "limits": [
+    "İzole yerel kabul; kurumsal akademik onay yok.",
+    "Dayanak arşivi imzasız; gerçek LMS imzalı görev/rubrik aktarımı açık.",
+    "Tam ekran okuyucu kabulü değildir."
+  ]
+}

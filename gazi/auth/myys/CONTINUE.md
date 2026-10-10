@@ -1,3 +1,11 @@
+# Güncel devam noktası — Paket 8 kaynak adayı
+
+Son güvenli yayın Paket 7: uzak `3388af9f1a9d9cdc7aedbd36a03ade8b4f264743`, yerel `ee63166a7cd050411fd70ab5ea2889b40e1d6ad3`, aynı ağaç `f1aaec5d01b79bd69b0eeb6094a33a18be3be25b`; dağıtım `dpl_5byPykXgobPQbncALGBs39kEQ4tk`. 139 kaynak hash eşleşmesi ve canlı smoke geçti. Geri dönüş Paket 6 `dpl_3QxBAAEiFAEoESH86QRaggCyjBj3`.
+
+B03/B09 kaynak dilimi yerelde geçti: 240 otomatik test + 8 program tarayıcı kontrolü; çoklu çıktı/görev/rubrik yazarlığı, sürüm karşılaştırması, eski karar dayanağı indirme. Arşiv imzasızdır; gerçek LMS imzalı kaynak kabulü açık. Yayın doğrulandığında aşağıdaki RELEASE kaydını güncelle. Sonra B20/B21 sürümlü tanıma politikası/başvuru/tekil kredi defteri; B28/B29/B30 veri talepleri/kalite/kapılar; kalan bağımsız B01–B36 kod ve ekran işleri. B16/B17 ve B18 ilk yerel dilimlerini tekrar yazma.
+
+Aşağıdaki önceki kayıtlar tarihsel referanstır; güncel kaynak/aliası her yayında yeniden doğrula. configuredCore() kapalı kalır. B01–B36 bütünü tamamlanmadı.
+
 # ÜniGO MYYS devam talimatı — 10 Ekim 2026
 
 Ben Veysel Gürsel. gazi.unigoturkiye.com üzerindeki mevcut Gazi ÜniGO MYYS geliştirmesine devam et. Sıfırdan uygulama kurma; çalışan kodu, tasarımı, logoları, dersleri ve kayıtları koru. Tek entegrasyon sahibi olarak çalış; paralel editör açma. Araştır, uygula, test et; güvenle tamamlanan yayın kapsamını mevcut projeye dağıt ve canlıda doğrula. Benden genel yayın onayını veya sürekli devam komutunu bekleme.
@@ -41,6 +49,6 @@ Chromium 138.0.7204.0 bu ortamda çalışıyor. Yeniden indirme veya güvenlik s
 
 B16/B17 ilk uçtan uca dilim eklendi: kalıcı işçi, karantina, rol kapsamlı inceleme, satır bazlı toplu hazırlık/CSV. 221 otomatik test ve 8 yeni + 13 B11 tarayıcı kontrolü geçti. Ayrıntı: acceptance/B16-B17-20261010.json. Yayın kimlikleri RELEASE.md içinde ayrıca kaydedilir. Sonraki bağımsız iş: B18 özel cüzdan indirme/paylaşım iptal uçları; ardından sürümlü tanıma/tekil kredi ve veri hakları. B16 üretim/sağlayıcı adaptörü ve B17 imza/teslim açık.
 
-## B18 devam noktası
+## B18 tarihsel devam noktası
 
 Paket 6 e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 production READY; 138 kaynak SHA eşleşmesi ve canlı oturum/akademik kapı/rehber smoke geçti. B18 cüzdan kaynak dilimi: 230 otomatik test + 8 cüzdan tarayıcı kontrolü. Paket 7 yayımlanınca RELEASE kaydını güncelle. Sonraki bağımsız işler: B03/B09 çoktan çoğa sürümlü rubrik/görev eşlemesi, B20/B21 tanıma/tekil kredi, B28/B29/B30 veri/kalite/kabul; 36 iş henüz tamamlanmadı.

@@ -161,3 +161,22 @@ Kaynak dayanağı OpenID Connect Core errata set 2, inceleme 10.10.2026; kurum M
 - 138 sunucu + 46 portal + 46 regresyon = 230 test. 9 yeni sunucu senaryosu ve 8 yerel cüzdan tarayıcı kontrolü; 390 px görsel kontrol. Birden fazla tarayıcı bağlamının kapanış sırası test çalıştırıcısında düzeltildi; uygulama koruması değiştirilmedi.
 - Kamu özet HTTP yolu yalnız izole çekirdek enjeksiyonunda işler. Production gateway oturum kapısı korunur ve configuredCore() kapalıdır. Gerçek belge/anahtar/kimlik üretimine dokunulmadı.
 - Geri dönüş hedefi Paket 6: `dpl_3QxBAAEiFAEoESH86QRaggCyjBj3` / `e10989a9084c42f131a798d65da465f392bc8993`.
+
+### Paket 7 gerçek yayın ve canlı doğrulama
+
+- Kaynak `3388af9f1a9d9cdc7aedbd36a03ade8b4f264743`; yerel aynı içerik `ee63166a7cd050411fd70ab5ea2889b40e1d6ad3`; ortak ağaç `f1aaec5d01b79bd69b0eeb6094a33a18be3be25b`.
+- Dağıtım `dpl_5byPykXgobPQbncALGBs39kEQ4tk`, READY / production. `gazi.unigoturkiye.com` aliası bu dağıtıma bağlı; mevcut proje/ekip ve korumalı paketleme korundu.
+- 139 kaynak dosyasının SHA değerleri eksiksiz eşleşti. Paket 6'dan yalnız beş kaynak dosyası değişti/eklendi; giriş, logolar ve ders materyalleri aynı.
+- Gerçek açık oturum yeniden yüklendi: rehber ve Destek için hazırlanın alanı korundu. Akademik ekranda Kurum bağlantısı bekleniyor ve kurumsal depo/kimlik uyarısı doğrulandı. Görseller yükleniyor, masaüstü yatay taşma yok.
+- 230 otomatik test + 8 yerel cüzdan tarayıcı kontrolü. Cüzdan/anonim paylaşımın gerçek kurum kabulü yapılmadı; configuredCore() ve kamu kurumsal hizmeti kapalıdır. B18 tam kapanışı değildir.
+- Geri dönüş hedefi `dpl_3QxBAAEiFAEoESH86QRaggCyjBj3` / `e10989a9084c42f131a798d65da465f392bc8993`; geri dönüş uygulanmadı, üretim migration yok.
+
+
+## Paket 8 — program sürümü ve karar dayanağı (yayın adayı)
+
+- Kanıt ve Akademik Karar → Program sürümleri: arama, çoklu Öğrenme Çıktısı/görev/rubrik yazarlığı, önceki sürümden gerekçeli yeni sürüm, karşılaştırma. Akademik kararlar → Kararın dayanaklarını indir.
+- 240 otomatik test ve 8 yeni tarayıcı kontrolü. Eski öğrenen/karar yeni sürüme taşınmaz; arşiv hash'i itirazda bile tarihsel içeriği korur. Yerel arşiv imzasız; B09 imzalı dış kaynak kabulü hâlâ açık.
+- Korumalı 115 arayüz dosyası, configuredCore() kapalı, gerçek veri/migration/credential işlemi yok. B03/B09 kabul ölçütleri değişmedi.
+- Geri dönüş hedefi Paket 7: `dpl_5byPykXgobPQbncALGBs39kEQ4tk` / `3388af9f1a9d9cdc7aedbd36a03ade8b4f264743`.
+
+Paket 8 yayını öncesinde B11’in 13 izole tarayıcı kontrolü tekrar geçti; önceki itiraz/yeniden değerlendirme/karar zinciri korunuyor.

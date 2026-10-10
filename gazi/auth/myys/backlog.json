@@ -132,16 +132,21 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Eksik çıktı/görev/rubrik ve hazırlayanın yayını reddedilir.",
+      "test_status": "148 sunucu + 46 portal + 46 regresyon = 240 test; 10 yeni program/arşiv senaryosu, 8 program tarayıcı kontrolü. B11 regresyon sonucu ayrıca RELEASE.md içinde.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
-        "gazi/portal/src/academic-forms.jsx"
+        "gazi/portal/src/academic-forms.jsx",
+        "gazi/auth/myys/program-model.mjs",
+        "gazi/auth/myys/archive.mjs",
+        "gazi/auth/tests/myys-programs.test.mjs",
+        "gazi/portal/src/program-workspace.jsx",
+        "gazi/auth/myys/acceptance/B03-B09-20261010.json"
       ],
       "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Program/çıktı/görev/rubrik ve program kayıt formları eklendi; çok görevli tam katalog yazarlığı devam ediyor.",
+      "implementation_note": "Çok görevli yazarlık, çoktan çoğa Öğrenme Çıktısı/görev/rubrik ilişkileri, katalog araması ve aynı kod/birim sürüm karşılaştırması. Güncel önceki sürüm bağı ve gerekçe zorunlu; eski kayıtlar taşınmaz.",
       "independent_remaining_work": [
-        "Çok görevli rubrik yazarlığı, katalog arama ve sürüm karşılaştırması."
+        "Belge profil sicilini program sürümüne ve yetkili incelemeye bağla; gerçek içerik/lisans/akademik onay ayrı kalır."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Programın gerçek akademik ve lisans kabulü.",
@@ -151,15 +156,20 @@
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
-            "gazi/portal/src/academic-forms.jsx"
+            "gazi/portal/src/academic-forms.jsx",
+            "gazi/auth/myys/program-model.mjs",
+            "gazi/auth/myys/archive.mjs",
+            "gazi/auth/tests/myys-programs.test.mjs",
+            "gazi/portal/src/program-workspace.jsx",
+            "gazi/auth/myys/acceptance/B03-B09-20261010.json"
           ],
           "remaining": [
-            "Çok görevli rubrik yazarlığı, katalog arama ve sürüm karşılaştırması."
+            "Belge profil sicilini program sürümüne ve yetkili incelemeye bağla; gerçek içerik/lisans/akademik onay ayrı kalır."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Eksik çıktı/görev/rubrik ve hazırlayanın yayını reddedilir.",
+          "status": "kısmi · sürüm/arşiv dilimi geçti",
+          "evidence": "148 sunucu + 46 portal + 46 regresyon = 240 test; 10 yeni program/arşiv senaryosu, 8 program tarayıcı kontrolü. B11 regresyon sonucu ayrıca RELEASE.md içinde.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
@@ -511,17 +521,22 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+      "test_status": "148 sunucu + 46 portal + 46 regresyon = 240 test; 10 yeni program/arşiv senaryosu, 8 program tarayıcı kontrolü. B11 regresyon sonucu ayrıca RELEASE.md içinde.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
         "gazi/auth/myys/lms.mjs",
-        "gazi/auth/tests/myys-lms.test.mjs"
+        "gazi/auth/tests/myys-lms.test.mjs",
+        "gazi/auth/myys/program-model.mjs",
+        "gazi/auth/myys/archive.mjs",
+        "gazi/auth/tests/myys-programs.test.mjs",
+        "gazi/portal/src/program-workspace.jsx",
+        "gazi/auth/myys/acceptance/B03-B09-20261010.json"
       ],
       "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir.",
+      "implementation_note": "Yeni değerlendirme tüm program dayanağını ve hashini saklar; eski tek çıktı kayıtları değişmeden okunur. Yetkili karar arşivi program/rubrik/kanıt içeriğini ve tarihsel hashini yeniden üretir; güncel kullanılabilirlik ayrı alandır. Arşiv imzasızdır.",
       "independent_remaining_work": [
-        "İmzalı kaynak zincirine rubrik/görev kaynak sürümleri ve arşiv yeniden üretimi ekle."
+        "Gerçek sağlayıcı kaynak paketine görev/rubrik sürümlerini ve doğrulanabilir imza zincirini bağla; dış kaynak arşiv geri üretimini sınat."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Gerçek LMS kaynak kimliği ve rubrik sözleşmesi.",
@@ -532,15 +547,20 @@
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
             "gazi/auth/myys/lms.mjs",
-            "gazi/auth/tests/myys-lms.test.mjs"
+            "gazi/auth/tests/myys-lms.test.mjs",
+            "gazi/auth/myys/program-model.mjs",
+            "gazi/auth/myys/archive.mjs",
+            "gazi/auth/tests/myys-programs.test.mjs",
+            "gazi/portal/src/program-workspace.jsx",
+            "gazi/auth/myys/acceptance/B03-B09-20261010.json"
           ],
           "remaining": [
-            "İmzalı kaynak zincirine rubrik/görev kaynak sürümleri ve arşiv yeniden üretimi ekle."
+            "Gerçek sağlayıcı kaynak paketine görev/rubrik sürümlerini ve doğrulanabilir imza zincirini bağla; dış kaynak arşiv geri üretimini sınat."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+          "status": "kısmi · sürüm/arşiv dilimi geçti",
+          "evidence": "148 sunucu + 46 portal + 46 regresyon = 240 test; 10 yeni program/arşiv senaryosu, 8 program tarayıcı kontrolü. B11 regresyon sonucu ayrıca RELEASE.md içinde.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
@@ -1096,7 +1116,7 @@
         "scripts/myys-wallet-browser.cjs",
         "gazi/auth/myys/acceptance/B18-20261010.json"
       ],
-      "production_status": "Paket 7 yayın adayı; kod henüz dağıtılmadı, kurumsal etkinleştirme kapalı.",
+      "production_status": "Paket 7 güvenli kod yayını: 3388af9f1a9d9cdc7aedbd36a03ade8b4f264743 / dpl_5byPykXgobPQbncALGBs39kEQ4tk READY; 139 kaynak dosyası eşleşti ve canlı kapalı durum smoke geçti. Kurumsal cüzdan/paylaşım etkin değil.",
       "implementation_note": "Kişiye özel cüzdan, imzalı indirme, süreli minimal özet ve anında paylaşım iptali yerel kabulde çalışır. Paylaşım anahtarı işlem önbelleğine ve denetime yazılmaz.",
       "independent_remaining_work": [
         "Üretim deposu ve kimlik adaptörüyle kamu paylaşım hizmetinin hız/saklama/erişilebilirlik kabulü; mevcut örnek cüzdanla geçiş açıklığı."
@@ -1125,8 +1145,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 7 yayın adayı; kod henüz dağıtılmadı, kurumsal etkinleştirme kapalı."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 7 güvenli kod yayını: 3388af9f1a9d9cdc7aedbd36a03ade8b4f264743 / dpl_5byPykXgobPQbncALGBs39kEQ4tk READY; 139 kaynak dosyası eşleşti ve canlı kapalı durum smoke geçti. Kurumsal cüzdan/paylaşım etkin değil."
         },
         "institution_decision": {
           "status": "bekleniyor",

@@ -1,3 +1,4 @@
+import {outcomeIds} from './program-model.mjs';
 // Projections consume only the caller's already-authorized record set.
 // No synthetic totals, inferred attendance or automatic credit equivalence.
 export function qualityMetrics(view){
@@ -17,8 +18,8 @@ export function skillsProjection(view){
   const evidence=view.evidence.filter(e=>e.enrollmentId===enrollment.id);
   const decisions=view.decisions.filter(d=>d.enrollmentId===enrollment.id&&d.outcome==='approved'&&d.usable===true);
   return program.outcomes.map(outcome=>{
-   const tasks=program.tasks.filter(t=>t.outcomeId===outcome.id),related=evidence.filter(e=>tasks.some(t=>t.id===e.taskId));
-   const assessed=decisions.some(d=>view.assessments.some(a=>a.id===d.assessmentId&&a.passed&&a.scores.some(s=>program.rubric.some(r=>r.id===s.criterionId&&r.outcomeId===outcome.id)&&s.score*25>=program.threshold)));
+   const tasks=program.tasks.filter(t=>outcomeIds(t).includes(outcome.id)),related=evidence.filter(e=>tasks.some(t=>t.id===e.taskId));
+   const assessed=decisions.some(d=>view.assessments.some(a=>a.id===d.assessmentId&&a.passed&&a.scores.some(s=>program.rubric.some(r=>r.id===s.criterionId&&outcomeIds(r).includes(outcome.id))&&s.score*25>=program.threshold)));
    return {id:enrollment.id+':'+outcome.id,owner:enrollment.owner,programId:program.id,programVersion:program.version,outcomeId:outcome.id,label:outcome.text,
     state:assessed?'assessed':related.length?'developing':'target',
     pilot:true,expertTaxonomyApproved:false,

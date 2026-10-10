@@ -6,13 +6,13 @@
 |---|---|---|---|---|---|
 | B01 · Mevcut pilot envanterini sabitle | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
 | B02 · Akademik ve SEM yetki yollarını ayır | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B03 · Program bilgi paketini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B03 · Program bilgi paketini onayla | kısmi | kısmi · sürüm/arşiv dilimi geçti | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B04 · Veri akışını ve saklamayı onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B07 · SSO ve yönetici MFA bağlantısını kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi · sürüm/arşiv dilimi geçti | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B11 · İtiraz ve moderasyon yolunu kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B12 · Belgeyi akademik karara bağla | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
@@ -21,7 +21,7 @@
 | B15 · İlk LMS adaptörünü kabul et | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B16 · Olay kuyruğu ve idempotency kur | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B17 · Toplu ihraç ve mutabakat ekle | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | engelli | başlamadı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B20 · Tanıma politika setini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B21 · Dış belge ve tanıma akışını bağla | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
@@ -73,3 +73,8 @@ B16/B17: kalıcı işçi, karantina inceleme ve CSV satır mutabakatı 15 yeni s
 ## Paket 7 adayı
 
 B18 kişisel cüzdan, imzalı indirme, tek seferlik süreli bağlantı ve iptal: 9 yeni sunucu senaryosu ve 8 yerel tarayıcı kontrolü. Toplam 230 otomatik test. Canlı kamu paylaşım hizmeti açılmadı.
+
+
+## Paket 8 adayı
+
+B03/B09 çoklu görev/rubrik yazarlığı, arama, sürüm karşılaştırması ve karar dayanağı arşivi: 10 yeni sunucu senaryosu, 8 tarayıcı kontrolü. 240 otomatik test. İmzalı LMS arşivi ve kurum onayı açık; kabul ölçütleri değiştirilmedi. Paket 7 cüzdan kodu yayımlandı; kurumsal hizmet kapalı.
