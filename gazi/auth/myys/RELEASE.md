@@ -32,3 +32,7 @@ Hedef: `dpl_38cDvWWLANqJHMM2u6PTsj34iobu` (kaynak `ffae561ebe5120f7d063d929b8b49
 ## Paket 2 — kullanım rehberi ve eğitim
 
 Hazırlanan kapsam: dokuz sorumluluk grubu, altı bölüm, senaryo soruları, sürümlü kişisel çalışma ilerlemesi ve sık sorulan sorular. Başarı belgesi veya yetki üretmez. Dört yeni rehber testi ile portal toplamı 25/25. Kaynak, dağıtım ve canlı kabul sonucu yayın tamamlandığında aşağıya eklenir.
+
+### Son canlı sürümle birleştirme
+
+Yayın öncesi canlı alias yeniden okundu ve `dpl_FFtPAoJGT2aXLAD8KBLzPWykKqsx` / `d0b6c1216c2eea786a2667e94f129851e914f0e5` bulundu. Bu sürümün kurumsal kaynak, kalite, matris ve 11 sunum profili değişiklikleri birleştirildi. Çakışan kaynakta son canlı menü/profil/bağlam mantığı korundu; rehber eklemesi onun üzerine uygulandı. Derlenmiş dosyalar yeniden üretildi. Birleşik testler: 39 portal + 45 sunucu/güvenlik + 32 eski model/kaynak = 116 geçti. Bu paket için yeni geri alma hedefi `dpl_FFtPAoJGT2aXLAD8KBLzPWykKqsx` olacaktır.

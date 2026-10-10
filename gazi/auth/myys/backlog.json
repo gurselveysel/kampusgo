@@ -1028,11 +1028,12 @@
   "verification": {
     "core_tests": "29/29 yerel kabul (21 çekirdek + 8 LMS/sicil)",
     "existing_auth_badge_tests": "15/15 mevcut + 1 yeni gateway kapı testi",
-    "portal_tests": "25/25 (21 mevcut + 4 rehber)",
-    "legacy_tests": "28/28 model/rol/kaynak",
+    "portal_tests": "39/39 (21 önceki + 14 kurumsal kaynak + 4 rehber)",
+    "legacy_tests": "32/32 model/rol/kaynak",
     "portal_build": "başarılı",
     "browser_visual_acceptance": "Canlı masaüstünde akademik kapalı görünüm, ders alanı ve rozet sicili doğrulandı; izole yerel Chromium/localhost engeli sürüyor.",
     "production_migration": "uygulanmadı",
     "deployment": "İlk paket: dpl_FJBzrCUuxD93XssE2rmrNGubRDYM; 37704e15a4ef43f70b0d6f46eaa192fca43775e8"
-  }
+  },
+  "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5"
 }
