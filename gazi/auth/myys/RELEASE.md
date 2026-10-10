@@ -266,3 +266,16 @@ Kontrollü grup kabulü ekranı: sürümlü plan, görev bazlı koşullar, ayrı
 ## Paket 14 adayı — B04
 
 Akış ve saklama ekranı: sicile bağlı ülke/rol/aşama/süre, ayrı yönetici incelemesi, silmeden önizleme ve ayrı BT ile atomik yerel temizleme. 214 sunucu + 46 portal + 46 regresyon = 306 otomatik test; 12 tarayıcı kontrolü. Coursera aşamaları ayrıdır; ülke seçimi aktarım izni değildir. Gerçek saklama kararları, üretim işçisi ve fiziksel imha kabulü açık. Başlangıç B01–B36 kimlik/bağımlılık/kabul ölçütleri değişmedi.
+
+### Paket 14 — doğrulanmış güvenli kaynak yayını
+
+- Uzak kaynak `e335aa4ec1370b14ab287502e2d6e254e4e39703`; yerel `030d497aa6c8107e2cb885996b7c26e8bc869a84`; ortak ağaç `d3a905cbc3ab313b4eb1d14684d6c76c2af95d4a`.
+- Dağıtım `dpl_4WUwrpKjZt4CLZLKA2k5WgSTNNR2`, READY / production; canlı alias aynı kaynağa bağlı. 150/150 kaynak hash eşleşti, eksik/fazla yok.
+- Canlı yeniden yükleme sonrası kapalı kurum görünümü, sağlam görseller ve taşmasız yerleşim doğrulandı. Giriş/logolar/ders içeriği korundu.
+- 306 otomatik + 12 saklama tarayıcı kontrolü. Akış/saklama ekranı kaynak kodu yayımlandı; gerçek hukuk/kurum kabulü veya üretim temizleme hizmeti açılmadı. configuredCore Vercel'de kapalı.
+- Geri dönüş Paket 13 `dpl_2oSrWPd32ifowdTtirzLmaQpDxAA`; fiilen uygulanmadı.
+
+
+## Paket 15 adayı — B06/B08
+
+Kişi ve üyelik ekranı: süreli görev/geri çekme önerisi, ayrı yönetici incelemesi, sürüm özeti ve aynı kurum oturumlarının atomik iptali. Kurum bağı olmayan eski oturum reddedilir. 228 sunucu + 46 portal + 46 regresyon = 320 otomatik test; 11 yeni ve 13 B11 tarayıcı kontrolü. Akademik geçmiş ve başka kurumlar korunur. Gerçek kurum provizyonu/üretim depo/dağıtık iptal ve tam B08 birim matrisi açık; bütün paketler tamamlanmadı.

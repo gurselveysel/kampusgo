@@ -9,7 +9,7 @@ test('destek kuyrukları kategori, kurum, birim ve MFA ile sınırlandırılır'
  const visible=who=>f.core.view(f.context(who)).support.map(x=>x.id);
  assert.deepEqual(visible('it'),[tech.id]);assert.deepEqual(visible('admin'),[privacy.id]);assert.deepEqual(visible('reviewer'),[academic.id]);assert.deepEqual(visible('teacher'),[]);assert.deepEqual(visible('other'),[]);
  assert.throws(()=>event(f,'it',privacy),e=>e.code==='not_found');
- assert.throws(()=>f.core.view({...f.context('it'),tenant:'other-tenant'}),e=>e.code==='membership_required');
+ assert.throws(()=>f.core.view({...f.context('it'),tenant:'other-tenant'}),e=>e.code==='identity_tenant');
  f.s.db.prepare('UPDATE memberships SET unit=? WHERE person=?').run('other-unit','it');assert.deepEqual(visible('it'),[]);
  f.s.db.prepare('UPDATE memberships SET unit=? WHERE person=?').run('engineering','it');f.s.db.prepare('UPDATE bindings SET mfa=0 WHERE session_hash=?').run(hash('it'));assert.deepEqual(visible('it'),[]);
 }));

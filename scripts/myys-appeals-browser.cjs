@@ -73,7 +73,7 @@ async function assessment(){
   assert.equal(await page.locator('img').evaluateAll(images=>images.filter(i=>!i.complete||!i.naturalWidth).length),0);
   await page.screenshot({path:path.join(out,'mobile.png'),fullPage:true,animations:'disabled'});record('390 px mobil: taşma ve bozuk resim yok');
   const selected=page.getByRole('tab',{selected:true});await selected.press('End');assert.equal(await page.getByRole('tab',{name:/^LMS kaynak olayları/}).getAttribute('aria-selected'),'true');
-  await page.getByRole('tab',{name:/^LMS kaynak olayları/}).press('Home');assert.equal(await page.getByRole('tab',{name:/^İtiraz incelemeleri/}).getAttribute('aria-selected'),'true');record('Akademik sekmeler Home/End tuşları ve seçili durum');
+  await page.getByRole('tab',{name:/^LMS kaynak olayları/}).press('Home');assert.equal(await page.getByRole('tab').first().getAttribute('aria-selected'),'true');record('Akademik sekmeler Home/End tuşları ve seçili durum');
   assert.deepEqual(errors,[]);record('Yakalanmış istemci istisnası yok');
   fs.writeFileSync(path.join(out,'result.json'),JSON.stringify({at:new Date().toISOString(),scope:'isolated-local-acceptance',browser:browser.version(),checks,errors,production:false},null,2));
  }catch(e){if(page)await page.screenshot({path:path.join(out,'failure.png'),fullPage:true,animations:'disabled'}).catch(()=>{});console.error(current,e);process.exitCode=1;}

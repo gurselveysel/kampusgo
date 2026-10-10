@@ -16,7 +16,7 @@ const reason='İtiraz kapsamında ek bir akademik inceleme talep ediyorum.';
 
 test('Kişi kimliği e-postadan bağımsız; kurum ve süreli üyelik zorunlu',()=>use(f=>{
  assert.equal(f.core.view(f.context('student')).personId,'student');
- assert.throws(()=>f.core.view({...f.context('student'),tenant:'other-tenant'}),/üyeliği/);
+ assert.throws(()=>f.core.view({...f.context('student'),tenant:'other-tenant'}),e=>e.code==='identity_tenant');
  f.s.db.prepare('UPDATE memberships SET expires=? WHERE person=?').run('2000-01-01','student');
  assert.throws(()=>f.core.view(f.context('student')),/üyeliği/);
 }));

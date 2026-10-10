@@ -1,0 +1,1 @@
+export const memberRoles=Object.freeze({learner:'Öğrenen',instructor:'Eğitici',coordinator:'Koordinatör',commission:'Komisyon',studentAffairs:'Öğrenci işleri',quality:'Kalite',it:'Bilgi işlem',finance:'Mali işler',admin:'Yönetici'});

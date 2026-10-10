@@ -7,6 +7,7 @@ function addIndependent(f){
  f.s.db.prepare('INSERT INTO persons VALUES(?,?,?,1)').run('teacher2','https://test-idp.invalid','teacher2');
  f.s.db.prepare('INSERT INTO memberships VALUES(?,?,?,?,?,1)').run('test-gazi','teacher2','engineering','["instructor"]','2099-01-01T00:00:00.000Z');
  f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(hash('teacher2'),'teacher2','2099-01-01T00:00:00.000Z');
+ f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(hash('teacher2'),'test-gazi','synthetic-fixture','2026-01-01T00:00:00.000Z');
 }
 const assessInput=(x,extra={})=>({enrollmentId:x.e.id,evidenceIds:[x.ev.id],scores:[{criterionId:'R1',score:4,reason}],reason,...extra});
 const appeal=(f,d)=>f.run('student','appeal',{decisionId:d.id,reason});
@@ -22,7 +23,7 @@ test('itiraz görünümü sahibi ve MFA ile yetkili birime özeldir; bağımsız
  assert.throws(()=>f.run('author','resolve',{appealId:a.id,outcome:'upheld',reason}),e=>e.code==='separation');
  f.s.db.prepare('UPDATE bindings SET mfa=0 WHERE person=?').run('reviewer');
  assert.equal(f.core.view(f.context('reviewer')).appeals.length,0);
- assert.throws(()=>f.core.view({...f.context('student'),tenant:'other-tenant'}),e=>e.code==='membership_required');
+ assert.throws(()=>f.core.view({...f.context('student'),tenant:'other-tenant'}),e=>e.code==='identity_tenant');
 }));
 test('açık itiraz başka bir değerlendirme veya önce hazırlanmış karar yolu ile aşılamaz',()=>use(f=>{
  const x=f.passed();addIndependent(f);

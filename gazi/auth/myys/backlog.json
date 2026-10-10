@@ -215,7 +215,7 @@
         "gazi/auth/myys/RETENTION-CONTRACT.md",
         "gazi/auth/myys/acceptance/B04-20261010.json"
       ],
-      "production_status": "Paket 14 kaynak adayı; yerel kabul geçti, yeni yayın doğrulaması bekliyor. Kurumsal saklama/temizleme kapalı.",
+      "production_status": "Paket 14 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kurumsal saklama/aktarım ve üretim temizleme kapalı.",
       "implementation_note": "Sicile bağlı sürümlü ülke/rol/aşama/süre ve akademik saklama ayrımı; bağımsız inceleme, silmeden önizleme, ayrı BT ile sınırlı atomik yerel oturum temizliği. Hukuki veya üretim onayı değildir.",
       "independent_remaining_work": [
         "Üretim depo/işçi adaptörü, gerçek sağlayıcı ülke/rol belgeleri ve kurum saklama/aktarım kararlarının kabulü; fiziksel imha ve yedek politikası."
@@ -248,7 +248,7 @@
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 14 kaynak adayı; yerel kabul geçti, yeni yayın doğrulaması bekliyor. Kurumsal saklama/temizleme kapalı."
+          "evidence": "Paket 14 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kurumsal saklama/aktarım ve üretim temizleme kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -336,7 +336,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "29 belirteç/kişi + 27 tek kullanımlık giriş/oturum testi. Tüm sunucu 114/114; portal 46, regresyon 46; toplam 206. B11 13 tarayıcı kontrolü yeniden geçti.",
+      "test_status": "14 yeni kişi/üyelik/kapsam sunucu senaryosu; 320 otomatik test, 11 yeni tarayıcı ve 13 itiraz regresyon kontrolü geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -345,12 +345,19 @@
         "gazi/auth/tests/myys-identity.test.mjs",
         "gazi/auth/myys/identity-flow.mjs",
         "gazi/auth/tests/myys-identity-flow.test.mjs",
-        "gazi/auth/myys/acceptance/B06-B07-20261010.json"
+        "gazi/auth/myys/acceptance/B06-B07-20261010.json",
+        "gazi/auth/myys/membership-model.mjs",
+        "gazi/auth/myys/membership.mjs",
+        "gazi/portal/src/membership-workspace.jsx",
+        "gazi/auth/tests/myys-membership.test.mjs",
+        "scripts/myys-membership-browser.cjs",
+        "gazi/auth/myys/MEMBERSHIP-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json"
       ],
-      "production_status": "Paket 5: 24b41c8dba48bfa261a51613fbbc3a83a7939f13 / dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg READY / production. Hazırlık modülleri dağıtıldı; kurumsal SSO ve akademik işlemler kapalı.",
-      "implementation_note": "Yerel kabulde sürümlü OIDC doğrulayıcı, PKCE/state/nonce isteği, atomik tüketim/oturum/kapsam/denetim ve çıkış hazır. Gerçek HTTP/IdP veya kurum deposu değildir.",
+      "production_status": "Paket 15 kaynak adayı; üyelik ekranı ve kurum kapsamı yerelde doğrulandı. Gerçek yetki ve üretim depo/iptal kapalı.",
+      "implementation_note": "Mevcut kişide süreli rol önerisi, bağımsız inceleme, kaynak sürümüyle yarış reddi ve aynı kurum oturumlarının atomik iptali. Kapsamsız legacy oturum reddedilir; akademik geçmiş korunur.",
       "independent_remaining_work": [
-        "Üretim depo adaptörü/kişi yaşam döngüsü, sürümlü rol iptali ve saklama/temizleme sözleşmesi."
+        "Kurumun kişi provizyon/rol sicili sözleşmesi ve üretim depo adaptörü; gerçek dağıtık iptal/IdP kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Mevcut üretim deposu için ayrı migration yetkisi ve gerçek kimlik eşlemesi.",
@@ -365,20 +372,27 @@
             "gazi/auth/tests/myys-identity.test.mjs",
             "gazi/auth/myys/identity-flow.mjs",
             "gazi/auth/tests/myys-identity-flow.test.mjs",
-            "gazi/auth/myys/acceptance/B06-B07-20261010.json"
+            "gazi/auth/myys/acceptance/B06-B07-20261010.json",
+            "gazi/auth/myys/membership-model.mjs",
+            "gazi/auth/myys/membership.mjs",
+            "gazi/portal/src/membership-workspace.jsx",
+            "gazi/auth/tests/myys-membership.test.mjs",
+            "scripts/myys-membership-browser.cjs",
+            "gazi/auth/myys/MEMBERSHIP-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json"
           ],
           "remaining": [
-            "Üretim depo adaptörü/kişi yaşam döngüsü, sürümlü rol iptali ve saklama/temizleme sözleşmesi."
+            "Kurumun kişi provizyon/rol sicili sözleşmesi ve üretim depo adaptörü; gerçek dağıtık iptal/IdP kabulü."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "29 belirteç/kişi + 27 tek kullanımlık giriş/oturum testi. Tüm sunucu 114/114; portal 46, regresyon 46; toplam 206. B11 13 tarayıcı kontrolü yeniden geçti.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "evidence": "14 yeni kişi/üyelik/kapsam sunucu senaryosu; 320 otomatik test, 11 yeni tarayıcı ve 13 itiraz regresyon kontrolü geçti.",
+          "limits": "Sentetik yerel görev/oturum yaşam döngüsü; üretim provizyon veya tüm B08 matris kapanışı değildir."
         },
         "live": {
           "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 5: 24b41c8dba48bfa261a51613fbbc3a83a7939f13 / dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg READY / production. Hazırlık modülleri dağıtıldı; kurumsal SSO ve akademik işlemler kapalı. Gerçek canlıda mevcut oturum ve kapalı akademik görünüm doğrulandı. Yeni kimlik akışı yalnız yerel kabulde sınandı."
+          "evidence": "Paket 15 kaynak adayı; üyelik ekranı ve kurum kapsamı yerelde doğrulandı. Gerçek yetki ve üretim depo/iptal kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -476,15 +490,22 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Çapraz kurum/birim/öğrenen erişimi ve aynı kişide onay reddi.",
+      "test_status": "14 yeni kişi/üyelik/kapsam sunucu senaryosu; 320 otomatik test, 11 yeni tarayıcı ve 13 itiraz regresyon kontrolü geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/membership-model.mjs",
+        "gazi/auth/myys/membership.mjs",
+        "gazi/portal/src/membership-workspace.jsx",
+        "gazi/auth/tests/myys-membership.test.mjs",
+        "scripts/myys-membership-browser.cjs",
+        "gazi/auth/myys/MEMBERSHIP-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Yerel kabulde kurum/birim ve görevler ayrılığı.",
+      "production_status": "Paket 15 kaynak adayı; üyelik ekranı ve kurum kapsamı yerelde doğrulandı. Gerçek yetki ve üretim depo/iptal kapalı.",
+      "implementation_note": "Mevcut kişide süreli rol önerisi, bağımsız inceleme, kaynak sürümüyle yarış reddi ve aynı kurum oturumlarının atomik iptali. Kapsamsız legacy oturum reddedilir; akademik geçmiş korunur.",
       "independent_remaining_work": [
-        "Tüm okuma/yazma/dışa aktarım yollarına iki kurum ve iki birim negatif matrisi."
+        "Bütün modüllerin doğru kurum içindeki çapraz birim okuma/yazma/ihracat matrisi; gerçek görev atamalarıyla kurum kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Gerçek görev atamaları ve kurumsal kabul.",
@@ -493,20 +514,27 @@
           "status": "kısmi",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/myys/membership-model.mjs",
+            "gazi/auth/myys/membership.mjs",
+            "gazi/portal/src/membership-workspace.jsx",
+            "gazi/auth/tests/myys-membership.test.mjs",
+            "scripts/myys-membership-browser.cjs",
+            "gazi/auth/myys/MEMBERSHIP-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json"
           ],
           "remaining": [
-            "Tüm okuma/yazma/dışa aktarım yollarına iki kurum ve iki birim negatif matrisi."
+            "Bütün modüllerin doğru kurum içindeki çapraz birim okuma/yazma/ihracat matrisi; gerçek görev atamalarıyla kurum kabulü."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "Çapraz kurum/birim/öğrenen erişimi ve aynı kişide onay reddi.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "evidence": "14 yeni kişi/üyelik/kapsam sunucu senaryosu; 320 otomatik test, 11 yeni tarayıcı ve 13 itiraz regresyon kontrolü geçti.",
+          "limits": "Sentetik yerel görev/oturum yaşam döngüsü; üretim provizyon veya tüm B08 matris kapanışı değildir."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 15 kaynak adayı; üyelik ekranı ve kurum kapsamı yerelde doğrulandı. Gerçek yetki ve üretim depo/iptal kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",

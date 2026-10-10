@@ -33,7 +33,7 @@ function harness(f,options={}) {
  f.core.clock=()=>h.now().toISOString();
  return h;
 }
-const sessions=f=>f.s.db.prepare('SELECT count(*) AS n FROM identity_scopes').get().n;
+const sessions=f=>f.s.db.prepare("SELECT count(*) AS n FROM identity_scopes WHERE contract_version!='synthetic-fixture'").get().n;
 
 test('B07 PKCE S256 RFC 7636 test vektörüyle eşleşir',()=>{
  assert.equal(pkceS256('dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'),'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM');

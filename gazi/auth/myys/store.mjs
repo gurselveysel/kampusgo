@@ -33,7 +33,7 @@ export class LocalAcceptanceStore {
   const row=this.db.prepare('SELECT p.id,b.mfa FROM bindings b JOIN persons p ON p.id=b.person WHERE b.session_hash=? AND b.expires>? AND p.active=1').get(sessionHash,now);
   requireThat(row,'identity_required','Kişiye bağlı kurumsal oturum gerekli. Pilot rol seçimi yetki sağlamaz.',403);
   const scope=this.db.prepare('SELECT tenant FROM identity_scopes WHERE session_hash=?').get(sessionHash);
-  requireThat(!scope||scope.tenant===tenant,'identity_tenant','Oturum bu kurum için açılamaz.',403);
+  requireThat(scope&&scope.tenant===tenant,'identity_tenant','Oturum bu kurum için açılamaz.',403);
   const memberships=this.db.prepare('SELECT unit,roles FROM memberships WHERE tenant=? AND person=? AND active=1 AND expires>?').all(tenant,row.id,now).map(m=>({...m,roles:JSON.parse(m.roles)}));
   requireThat(memberships.length,'membership_required','Kurum üyeliği yok veya süresi dolmuş.',403);
   return {id:row.id,mfa:!!row.mfa,tenant,memberships};

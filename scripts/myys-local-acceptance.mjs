@@ -22,6 +22,7 @@ if(process.argv.includes('--quality')){
  const t=f.run('student','support',{unit:'engineering',category:'technical',subject:'Sentetik kaynak kontrolü',message:'Yerel gösterge için sentetik destek kaydı.'});f.run('it','support-event',{ticketId:t.id,expectedRevision:0,type:'resolve',message:'Sentetik destek kaynağı yerel kabulde çözüldü.'});
 }
 if(process.argv.includes('--privacy')||process.argv.includes('--retention')){const h=hash('privacy-expired-session');f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(h,'student','2020-01-01T00:00:00.000Z');f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(h,'gazi','local-test','2019-01-01T00:00:00.000Z');}
+if(process.argv.includes('--membership'))f.s.db.prepare('UPDATE memberships SET roles=? WHERE person=?').run('["admin","quality"]','reviewer');
 if(process.argv.includes('--retention')){f.s.db.prepare('UPDATE memberships SET roles=? WHERE person=?').run('["admin","quality"]','reviewer');f.run('admin','registry-draft',{type:'data-flow',unit:'engineering',title:'Yerel oturum saklama sicili',fields:Object.fromEntries(registryFields['data-flow'].map(k=>[k,'Sentetik yerel sicil; gerçek kurum kararı değildir.']))});}
 if(process.argv.includes('--recognition')){const p=f.run('admin','recognition-policy',localRecognitionPolicy);f.run('publisher','recognition-policy-review',{policyId:p.id,outcome:'accepted',reason:'Sentetik politika yalnız izole yerel kabul için incelendi.'});}
 if(process.argv.includes('--operations')){
@@ -35,6 +36,7 @@ for(const [person,role] of [['independent','instructor'],['finance','finance']])
  f.s.db.prepare('INSERT INTO persons VALUES(?,?,?,1)').run(person,'https://test-idp.invalid',person);
  f.s.db.prepare('INSERT INTO memberships VALUES(?,?,?,?,?,1)').run('gazi',person,'engineering',JSON.stringify([role]),'2099-01-01T00:00:00.000Z');
  f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(hash(person),person,'2099-01-01T00:00:00.000Z');
+ f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(hash(person),'gazi','synthetic-fixture','2026-01-01T00:00:00.000Z');
 }
 const root=fileURLToPath(new URL('../gazi/',import.meta.url));
 const roles={author:'Program hazırlayan',publisher:'Program inceleyen',student:'Öğrenen',teacher:'İlk eğitici',independent:'Bağımsız eğitici',judge:'Akademik karar',issuer:'Belge yetkilisi',reviewer:'Kalite',admin:'Sicil yöneticisi',it:'Bilgi işlem',finance:'Mali işler',other:'Başka öğrenen'};

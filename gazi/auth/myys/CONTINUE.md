@@ -1,3 +1,13 @@
+# Güncel devam — Paket 15 kaynak adayı
+
+B06/B08 üyelik yaşam döngüsü ve zorunlu kurum oturumu: 320 otomatik + 11 üyelik + 13 itiraz tarayıcı kontrolü. Önce güvenli kaynak yayını ve canlı doğrulama; son doğrulanmış canlı Paket 14 aşağıda. Sonra B12/B13/B19 belge profili/issuer yetkisi/anahtar-durum sicili/bağımsız doğrulama ve bütün kalan bağımsız B01–B36 işleri. configuredCore kapalı, gerçek kimlik/kurum yetkisi açılmadı.
+
+# Güncel devam — Paket 14 yayımlandı; B06/B08 sürüyor
+
+Uzak `e335aa4ec1370b14ab287502e2d6e254e4e39703`; yerel `030d497aa6c8107e2cb885996b7c26e8bc869a84`; ağaç `d3a905cbc3ab313b4eb1d14684d6c76c2af95d4a`; canlı `dpl_4WUwrpKjZt4CLZLKA2k5WgSTNNR2` READY. 150 kaynak hash ve canlı kapalı kurum/görseller/taşma smoke geçti. Geri dönüş Paket 13. 306 otomatik + 12 saklama tarayıcı kontrolü.
+
+Sıradaki B06/B08: mevcut kişi/birim üzerinde sürümlü üyelik/rol önerisi, bağımsız inceleme ve anlık yerel oturum iptali; kapsamı belirsiz legacy binding reddi ve iki kurum/birim negatif kabul. Yeni kişi veya gerçek yetki oluşturma yok. Sonra B12/B13/B19 belge zinciri ve bütün kalan bağımsız B01–B36 işleri.
+
 # Güncel devam — Paket 14 kaynak adayı
 
 B04 akış/saklama arayüzü ve sınırlı yerel işçi: 306 otomatik + 12 tarayıcı kontrolü geçti. RETENTION-CONTRACT.md kaynak/sürüm/sınırları ve kabul kaydı güncel. Önce Paket 14 güvenli kaynak yayını ve canlı smoke; sonra B06/B08 üyelik/rol yaşam döngüsü, B12/B13/B19 belge zinciri ve kalan bütün bağımsız B01–B36 işleri. Tüm işler tamamlanmadı; devam izni bekleme. Son doğrulanmış canlı Paket 13 aşağıda.

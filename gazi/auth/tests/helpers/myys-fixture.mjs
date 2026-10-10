@@ -13,6 +13,7 @@ export const fixture=(tenant='test-gazi')=>{
   s.db.prepare('INSERT INTO persons VALUES(?,?,?,1)').run(id,'https://test-idp.invalid',id);
   s.db.prepare('INSERT INTO memberships VALUES(?,?,?,?,?,1)').run(tenant,id,'engineering',JSON.stringify(roles),expires);
   s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(hash(id),id,expires);
+  s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(hash(id),tenant,'synthetic-fixture','2026-01-01T00:00:00.000Z');
  }
  const context=who=>({sessionHash:hash(who),tenant});
  const run=(who,action,input,commandId=randomUUID())=>core.run({...context(who),commandId,action,input});

@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-10T23:02:43.175Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Öğrenen yalnız kendi üyeliğini gördü ve kendi yetkisini değiştiremedi",
+    "Süreli görev önerisi aynı kişi/birime bağlandı; hazırlayan inceleme yapamadı",
+    "Hedef kişi öneriyi gördü, bağımsız onay yetkisi verilmedi",
+    "Ayrı yönetici süreli görevi uyguladı; UTC zamanı ve eski oturumun iptali görünür",
+    "Değişiklikten önceki öğrenci oturumu yeniden kullanılamadı",
+    "Yeni öneri ve ayrı incelemeyle birim üyeliği kapatıldı; iki işlem geçmişi korundu",
+    "Yenilemede kişi, süreli görev ve geri çekme geçmişi korundu",
+    "390 px üyelik formunda ve inceleme geçmişinde yatay taşma yok",
+    "Üyelik sekmesinden klavyeyle sonraki çalışma alanına geçildi",
+    "Üyelik iptali mevcut akademik öğrenen kaydını silmedi",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 14,
+  "automated_tests": {
+    "server": 228,
+    "portal": 46,
+    "regression": 46
+  },
+  "regression_browser_checks": 13,
+  "limits": [
+    "Gerçek kişi provizyonu/kurum yetkisi oluşturulmadı.",
+    "Üretim depo ve dağıtık oturum iptali bağlı değil.",
+    "B08 bütün modüllerde doğru kurum içi birim matrisi ayrıca genişletilecek."
+  ]
+}

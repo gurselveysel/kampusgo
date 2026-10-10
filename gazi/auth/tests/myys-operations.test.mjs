@@ -76,7 +76,7 @@ test('Kuyruk teknik rolde kişisel kanıtı sızdırmaz; öğrenci ve başka bir
  const view=f.core.view(f.context('it'));assert.equal(view.queue.length,1);assert.doesNotMatch(JSON.stringify(view.queue),/Türkçe çalışma|"owner":|"grade":|"content":/);
  assert.equal(f.core.view(f.context('student')).queue.length,0);
  f.s.db.prepare('UPDATE memberships SET unit=? WHERE person=?').run('health','it');assert.equal(f.core.view(f.context('it')).queue.length,0);
- assert.throws(()=>f.core.view({sessionHash:hash('it'),tenant:'other'}),e=>e.code==='membership_required');
+ assert.throws(()=>f.core.view({sessionHash:hash('it'),tenant:'other'}),e=>e.code==='identity_tenant');
 }));
 test('CSV Türkçe, virgül, çift tırnak ve satır sonunu korur; bozuk yapıyı reddeder',()=>{
  assert.deepEqual(parseTransferCsv('\uFEFFKarar kimliği,Satır açıklaması\r\nd1,"Öğrenen, İstanbul ""örnek""\nİkinci satır"\r\n'),[{decisionId:'d1',label:'Öğrenen, İstanbul "örnek"\nİkinci satır'}]);

@@ -105,8 +105,9 @@ HTTP callback, cookie, gerçek sağlayıcı istemcisi veya kalıcı erişim olu�
   Denetim yazılamazsa oturum da kurulmaz. Eski oturum iptal edilir; yeni
   ham oturum anahtarının yalnız hash'i saklanır. Token ve MFA tazelik sınırı aşılmaz.
 - `identity_scopes` yeni yerel oturumların kurumunu sabitler; çekirdeğin her
-  principal okumasında kurum ve güncel kişi/üyelik kontrolü sürer. Eski elle
-  kurulmuş fixture bindings kayıtları bu yeni akışın gerçek giriş kanıtı sayılmaz.
+  principal okumasında kurum ve güncel kişi/üyelik kontrolü sürer. Paket 15 ile
+  kurum bağı olmayan eski bindings kayıtları reddedilir. Fixture oturumlarına da
+  açık sentetik kurum kapsamı eklendi; gerçek IdP kanıtı sayılmaz.
 - `logout`: ilgili kurumun yerel oturum bağını ve o tarayıcı bağındaki bekleyen
   istekleri iptal eder; tekrarı zararsızdır. Başka kurum oturumunu silemez.
 - Denetimde yalnız iç kişi kimliği, eylem, korelasyon ve tarih vardır; ham token,
@@ -128,3 +129,7 @@ Açık kalan: güvenli HTTP cookie/CSRF/Origin ve callback sınırı, gerçek sa
 metadata/istemci kaydı, üretim depo adaptörü, dağıtık iptal/back-channel logout,
 anahtar saklama, saklama/temizleme ve gerçek kurum kabulü. Refresh token veya
 `offline_access` kullanılmadı; yerel süre dolunca yeni giriş gerekir.
+
+## Üyelik yaşam döngüsü dilimi
+
+MEMBERSHIP-CONTRACT.md: mevcut kişi için sürümlü görev/süre önerisi, bağımsız inceleme, aynı kurum oturumlarının atomik iptali ve yeni giriş gereği. Kişi çoğaltılmaz; başka kurum ve akademik geçmiş değişmez. Gerçek provizyon/üretim adaptörü ve dağıtık iptal açık.
