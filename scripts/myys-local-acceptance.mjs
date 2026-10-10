@@ -3,6 +3,7 @@ import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {signedFixture} from '../gazi/auth/tests/helpers/local-signing.mjs';
 import {fixture} from '../gazi/auth/tests/helpers/myys-fixture.mjs';
 import {randomBytes,createHmac} from 'node:crypto';
 import {LocalLmsAdapter,LocalLmsWorker} from '../gazi/auth/myys/lms.mjs';
@@ -12,7 +13,7 @@ import {myysRoute} from '../gazi/auth/myys/http.mjs';
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
-const initial=process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+const initial=process.argv.includes('--wallet')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
 if(process.argv.includes('--operations')){
  const key=randomBytes(32),contract={id:'Yerel kabul kaynağı',tenant:'gazi',unit:'engineering',programId:initial.p.id,mode:'local-acceptance',subjects:{source:'student'},key};
  const adapter=new LocalLmsAdapter(f.s,contract);
@@ -45,6 +46,7 @@ const server=createServer(async(req,res)=>{
   }
   if(url.pathname.startsWith('/api/myys/')){
    const actor=(req.headers.cookie||'').match(/(?:^|; )myys_acceptance_actor=([a-z]+)(?:;|$)/)?.[1];
+   if(url.pathname==='/api/myys/paylasim')return await myysRoute({req,path:url.pathname,b,sessionHash:null,json,res,core:f.core});
    if(!actor||!Object.hasOwn(roles,actor))return json(res,401,{error:'Yerel test senaryosunu seçin.'});
    return await myysRoute({req,path:url.pathname,b,sessionHash:hash(actor),json,res,core:f.core});
   }

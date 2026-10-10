@@ -951,7 +951,7 @@
         "scripts/myys-operations-browser.cjs",
         "gazi/auth/myys/acceptance/B16-B17-20261010.json"
       ],
-      "production_status": "Paket 6 yayın adayı; henüz yayımlanmadı. Kurumsal etkinleştirme kapalı.",
+      "production_status": "Paket 6: e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 READY / production. Kod dağıtıldı; kurumsal etkinleştirme kapalı.",
       "implementation_note": "Kalıcı yerel işçi claim/süre/yeniden deneme/karantina; yetkili inceleme ve kalıcı toplu satır mutabakatı, CSV arayüzü. Akademik karar/ihraç kendiliğinden üretilmez.",
       "independent_remaining_work": [
         "Gerçek LMS sözleşmesine bağlı üretim depo/işçi adaptörü ve dağıtık kuyruk kabulü; yeni HTTP alım sözleşmesi."
@@ -983,8 +983,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 6 yayın adayı; henüz yayımlanmadı. Kurumsal etkinleştirme kapalı."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 6: e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 READY / production. Kod dağıtıldı; kurumsal etkinleştirme kapalı. Gerçek canlı oturumda kapalı akademik görünüm ve rehber doğrulandı; yeni işçi/satır akışı yalnız yerel kabulde."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1025,7 +1025,7 @@
         "scripts/myys-operations-browser.cjs",
         "gazi/auth/myys/acceptance/B16-B17-20261010.json"
       ],
-      "production_status": "Paket 6 yayın adayı; henüz yayımlanmadı. Kurumsal etkinleştirme kapalı.",
+      "production_status": "Paket 6: e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 READY / production. Kod dağıtıldı; kurumsal etkinleştirme kapalı.",
       "implementation_note": "Kalıcı yerel işçi claim/süre/yeniden deneme/karantina; yetkili inceleme ve kalıcı toplu satır mutabakatı, CSV arayüzü. Akademik karar/ihraç kendiliğinden üretilmez.",
       "independent_remaining_work": [
         "Toplu imza/teslim adaptörü, satır sonuçlarının yetkili dış alıcı teyidiyle mutabakatı."
@@ -1056,8 +1056,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 6 yayın adayı; henüz yayımlanmadı. Kurumsal etkinleştirme kapalı."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 6: e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 READY / production. Kod dağıtıldı; kurumsal etkinleştirme kapalı. Gerçek canlı oturumda kapalı akademik görünüm ve rehber doğrulandı; yeni işçi/satır akışı yalnız yerel kabulde."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1086,15 +1086,20 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Başka öğrenen göremez; paylaşım özel kanıt içermez; iptal erişimi keser.",
+      "test_status": "9 yeni sunucu senaryosu; 8 gerçek yerel tarayıcı kontrolü; 138 sunucu + 46 portal + 46 regresyon = 230 otomatik test.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/wallet.mjs",
+        "gazi/portal/src/wallet-workspace.jsx",
+        "gazi/auth/tests/myys-wallet.test.mjs",
+        "scripts/myys-wallet-browser.cjs",
+        "gazi/auth/myys/acceptance/B18-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Özel kayıt görünümü ve süreli/iptal edilebilir yerel paylaşım; kamu servisi ve dış cüzdan yok.",
+      "production_status": "Paket 7 yayın adayı; kod henüz dağıtılmadı, kurumsal etkinleştirme kapalı.",
+      "implementation_note": "Kişiye özel cüzdan, imzalı indirme, süreli minimal özet ve anında paylaşım iptali yerel kabulde çalışır. Paylaşım anahtarı işlem önbelleğine ve denetime yazılmaz.",
       "independent_remaining_work": [
-        "Kişisel indirme, paylaşım iptal arayüzü ve minimal kamu okuma uçları."
+        "Üretim deposu ve kimlik adaptörüyle kamu paylaşım hizmetinin hız/saklama/erişilebilirlik kabulü; mevcut örnek cüzdanla geçiş açıklığı."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Üretim kimliği, saklama/paylaşım politikası.",
@@ -1103,20 +1108,25 @@
           "status": "kısmi",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/myys/wallet.mjs",
+            "gazi/portal/src/wallet-workspace.jsx",
+            "gazi/auth/tests/myys-wallet.test.mjs",
+            "scripts/myys-wallet-browser.cjs",
+            "gazi/auth/myys/acceptance/B18-20261010.json"
           ],
           "remaining": [
-            "Kişisel indirme, paylaşım iptal arayüzü ve minimal kamu okuma uçları."
+            "Üretim deposu ve kimlik adaptörüyle kamu paylaşım hizmetinin hız/saklama/erişilebilirlik kabulü; mevcut örnek cüzdanla geçiş açıklığı."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Başka öğrenen göremez; paylaşım özel kanıt içermez; iptal erişimi keser.",
+          "status": "kısmi · cüzdan dilimi geçti",
+          "evidence": "9 yeni sunucu senaryosu; 8 gerçek yerel tarayıcı kontrolü; 138 sunucu + 46 portal + 46 regresyon = 230 otomatik test.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 7 yayın adayı; kod henüz dağıtılmadı, kurumsal etkinleştirme kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2180,18 +2190,18 @@
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
-    "commit": "24b41c8dba48bfa261a51613fbbc3a83a7939f13",
-    "id": "dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg",
+    "commit": "e10989a9084c42f131a798d65da465f392bc8993",
+    "id": "dpl_3QxBAAEiFAEoESH86QRaggCyjBj3",
     "url": "https://gazi.unigoturkiye.com",
-    "runtime_tests": 206,
-    "browser_checks": 13,
-    "manifest_files": 136
+    "runtime_tests": 221,
+    "browser_checks": 21,
+    "manifest_files": 138
   },
   "last_checkpoint": {
     "date": "2026-10-10",
-    "live_deployment": "dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg",
-    "live_source": "24b41c8dba48bfa261a51613fbbc3a83a7939f13",
-    "local_tests": 221,
-    "note": "Paket 6 yerel aday: B16/B17 15 sunucu senaryosu, 8 yeni ve 13 regresyon tarayıcı kontrolü. İmza/teslim, gerçek LMS ve kurum deposu açık."
+    "live_deployment": "dpl_3QxBAAEiFAEoESH86QRaggCyjBj3",
+    "live_source": "e10989a9084c42f131a798d65da465f392bc8993",
+    "local_tests": 230,
+    "note": "B18 özel cüzdan ve paylaşım dilimi yerel kabulde; Paket 7 hazırlanıyor."
   }
 }

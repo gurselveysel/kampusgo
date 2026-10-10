@@ -4,6 +4,7 @@ import {registryCommand} from './registry.mjs';
 import {currentLmsEvidence} from './lms.mjs';
 import {supportCommand,supportReplay,supportView} from './support.mjs';
 import {operationsCommand,operationsReplay,operationsView} from './operations.mjs';
+import {walletView} from './wallet.mjs';
 
 export const ROLES=['learner','instructor','coordinator','commission','studentAffairs','quality','it','finance','admin'];
 const permissions={program:['instructor','coordinator'],publish:['commission'],enroll:['coordinator','studentAffairs'],assess:['instructor'],decide:['commission'],resolve:['quality'],issue:['studentAffairs'],revoke:['studentAffairs'],read:['coordinator','instructor','commission','studentAffairs','quality'],policy:['admin'],support:['it'],recognize:['commission']};
@@ -55,9 +56,10 @@ export class MyysCore {
    const digest=hash(JSON.stringify({action,input}));
    const old=this.store.db.prepare('SELECT digest,result FROM commands WHERE tenant=? AND person=? AND id=?').get(tenant,actor.id,commandId);
    // Recheck current permission even for an idempotent replay.
-   if(old){requireThat(old.digest===digest,'idempotency_conflict','Aynı işlem kimliği farklı içerikle kullanılamaz.',409);const saved=JSON.parse(old.result);this.authorizeReplay(actor,action,saved);return saved;}
+   if(old){requireThat(old.digest===digest,'idempotency_conflict','Aynı işlem kimliği farklı içerikle kullanılamaz.',409);const saved=JSON.parse(old.result);this.authorizeReplay(actor,action,saved);if(action==='share'){delete saved.token;return {...saved,linkAlreadyCreated:true};}return saved;}
    const result=this.execute(actor,action,copy(input),now);
-   this.store.db.prepare('INSERT INTO commands VALUES(?,?,?,?,?)').run(tenant,actor.id,commandId,digest,JSON.stringify(result));
+   const storedResult={...result};if(action==='share')delete storedResult.token;
+   this.store.db.prepare('INSERT INTO commands VALUES(?,?,?,?,?)').run(tenant,actor.id,commandId,digest,JSON.stringify(storedResult));
    this.store.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(tenant,actor.id,action,result.id,now);
    return result;
   });
@@ -163,6 +165,8 @@ export class MyysCore {
   }
   if(action==='share'){
    const issuance=get('issuance',p.issuanceId);requireThat(issuance.owner===a.id&&learner(a,issuance.unit),'forbidden','Yalnız kendi kaydınızı paylaşabilirsiniz.',403);
+   const decision=s.get(a.tenant,'decision',issuance.decisionId);
+   requireThat(this.decisionUsable(a,decision)&&!s.list(a.tenant,'revocation').some(r=>r.issuanceId===issuance.id),'decision_blocked','Belgenin güncel durumu paylaşıma uygun değil.',409);
    requireThat(finite(p.hours,1,168)&&text(p.purpose,12,500),'sharing','Paylaşım amacı ve en fazla 7 günlük süre gerekli.');
    const token=randomUUID()+randomUUID();
    const r=put('share',{id:id(),unit:issuance.unit,owner:a.id,issuanceId:issuance.id,tokenHash:hash(token),expires:new Date(Date.parse(now)+p.hours*3600000).toISOString(),purpose:p.purpose});
@@ -171,6 +175,7 @@ export class MyysCore {
   }
   if(action==='unshare'){
    const share=get('share',p.shareId);requireThat(share.owner===a.id,'forbidden','Paylaşım size ait değil.',403);
+   const old=s.list(a.tenant,'share-revocation').find(x=>x.shareId===share.id);if(old)return old;
    return put('share-revocation',{id:id(),unit:share.unit,owner:a.id,shareId:share.id});
   }
   if(action==='support'){
@@ -196,16 +201,19 @@ export class MyysCore {
  view({sessionHash,tenant}){
   return this.store.transaction(()=>{
    const a=this.store.principal(sessionHash,tenant,this.clock()),s=this.store,visible=kind=>s.list(tenant,kind).filter(r=>readable(a,r));
-   return {...operationsView(s,a,this.clock()),mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment').map(r=>({...r,allowedActions:allow(a,'decide',r.unit)&&![r.owner,r.createdBy,s.get(tenant,'program',r.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'decision').some(d=>d.assessmentId===r.id)&&appealChainReady(s,tenant,r)?['decide']:[]})),decisions:visible('decision').map(d=>({...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d)})),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,blocked:!this.decisionUsable(a,s.get(tenant,'decision',r.decisionId))||s.list(tenant,'revocation').some(x=>x.issuanceId===r.id)})),support:supportView(s,a)};
+   return {wallet:walletView(this,a),...operationsView(s,a,this.clock()),mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment').map(r=>({...r,allowedActions:allow(a,'decide',r.unit)&&![r.owner,r.createdBy,s.get(tenant,'program',r.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'decision').some(d=>d.assessmentId===r.id)&&appealChainReady(s,tenant,r)?['decide']:[]})),decisions:visible('decision').map(d=>({...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d)})),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,blocked:!this.decisionUsable(a,s.get(tenant,'decision',r.decisionId))||s.list(tenant,'revocation').some(x=>x.issuanceId===r.id)})),support:supportView(s,a)};
   });
  }
  shared({tenant,token}){
+  requireThat(typeof tenant==='string'&&tenant.length<=80&&typeof token==='string'&&/^[a-f0-9-]{72}$/.test(token),'not_found','Paylaşım bulunamadı veya sona erdi.',404);
   return this.store.transaction(()=>{
    const s=this.store,share=s.list(tenant,'share').find(r=>r.tokenHash===hash(token));
    requireThat(share&&share.expires>this.clock()&&!s.list(tenant,'share-revocation').some(x=>x.shareId===share.id),'not_found','Paylaşım bulunamadı veya sona erdi.',404);
    const issuance=s.get(tenant,'issuance',share.issuanceId),d=s.get(tenant,'decision',issuance.decisionId),program=s.get(tenant,'program',issuance.programId);
+   const member=s.db.prepare('SELECT roles FROM memberships m JOIN persons p ON p.id=m.person WHERE m.tenant=? AND m.person=? AND m.unit=? AND m.active=1 AND p.active=1 AND m.expires>?').get(tenant,share.owner,share.unit,this.clock());
+   requireThat(member&&JSON.parse(member.roles).includes('learner'),'not_found','Paylaşım bulunamadı veya sona erdi.',404);
    const blocked=!this.decisionUsable({tenant},d)||s.list(tenant,'revocation').some(r=>r.issuanceId===issuance.id);
-   return {title:program.title,pilot:true,state:blocked?'blocked':issuance.state,issuer:issuance.issuer,official:false};
+   return {title:program.title,pilot:true,state:blocked?'blocked':s.get(tenant,'signed',issuance.id)?'signed':issuance.state,issuer:issuance.issuer,official:false};
   });
  }
 }

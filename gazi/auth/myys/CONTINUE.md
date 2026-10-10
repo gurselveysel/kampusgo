@@ -40,3 +40,7 @@ Chromium 138.0.7204.0 bu ortamda çalışıyor. Yeniden indirme veya güvenlik s
 ## Güncel yerel devam — Paket 6 adayı
 
 B16/B17 ilk uçtan uca dilim eklendi: kalıcı işçi, karantina, rol kapsamlı inceleme, satır bazlı toplu hazırlık/CSV. 221 otomatik test ve 8 yeni + 13 B11 tarayıcı kontrolü geçti. Ayrıntı: acceptance/B16-B17-20261010.json. Yayın kimlikleri RELEASE.md içinde ayrıca kaydedilir. Sonraki bağımsız iş: B18 özel cüzdan indirme/paylaşım iptal uçları; ardından sürümlü tanıma/tekil kredi ve veri hakları. B16 üretim/sağlayıcı adaptörü ve B17 imza/teslim açık.
+
+## B18 devam noktası
+
+Paket 6 e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 production READY; 138 kaynak SHA eşleşmesi ve canlı oturum/akademik kapı/rehber smoke geçti. B18 cüzdan kaynak dilimi: 230 otomatik test + 8 cüzdan tarayıcı kontrolü. Paket 7 yayımlanınca RELEASE kaydını güncelle. Sonraki bağımsız işler: B03/B09 çoktan çoğa sürümlü rubrik/görev eşlemesi, B20/B21 tanıma/tekil kredi, B28/B29/B30 veri/kalite/kabul; 36 iş henüz tamamlanmadı.

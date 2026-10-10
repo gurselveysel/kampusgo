@@ -136,3 +136,7 @@ Paket 5 yayın sonucu: `24b41c8dba48bfa261a51613fbbc3a83a7939f13` / `dpl_DzCWthA
 `#/academic` → Aktarım ve mutabakat: bilgi işlem/kalite minimal olay durumunu görür; teknik rol özel kanıtı görmez. Öğrenci işleri aynı birimde CSV veya karar seçimiyle 1–100 satır kayıt oluşturur, her satırı işler, kısmi sonuçları yeniden açar ve UTF-8 CSV indirir. Geçerli satırın ihraç yetkisi ile sonuç/denetim atomiktir. Eksik/yinelenen kişi satırları korunur; yetki ve itiraz tekrar denetlenir. Gönderilen/kabul/işlenen/hazırlanan/imzalı/teslim ayrı sayılır.
 
 221 otomatik test, 8 yeni + 13 B11 tarayıcı kontrolü geçti. İmza, teslim, gerçek HTTP LMS alımı ve üretim adaptörü bu dilimde bağlı değildir; B16/B17 kısmi kalır.
+
+## B18 özel cüzdan dilimi
+
+`wallet.mjs` cüzdanı gerçek kişi/birim üyeliğine göre projekte eder; indirmede sahiplik ve güncel karar/iptal yeniden kontrol edilir. `wallet-workspace.jsx` indirme, tek sefer görünen süreli paylaşım ve iptali mevcut akademik alana bağlar. `#/shared/…` yerelde yalnız minimal özet gösterir. Token HTTP query yerine fragment ve POST gövdesindedir; kalıcı komut önbelleğine ham token yazılmaz. Production koruması değişmez; gerçek kamu hizmeti açılmadı. 9 sunucu ve 8 tarayıcı kontrolü geçti.

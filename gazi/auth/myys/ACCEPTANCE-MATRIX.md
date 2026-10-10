@@ -19,9 +19,9 @@
 | B13 · Anahtar ve durum güvenilirliğini doğrula | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B14 · LMS veri sözleşmesini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B15 · İlk LMS adaptörünü kabul et | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B16 · Olay kuyruğu ve idempotency kur | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
-| B17 · Toplu ihraç ve mutabakat ekle | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B16 · Olay kuyruğu ve idempotency kur | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B17 · Toplu ihraç ve mutabakat ekle | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
+| B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | engelli | başlamadı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B20 · Tanıma politika setini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B21 · Dış belge ve tanıma akışını bağla | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
@@ -69,3 +69,7 @@ B11: 150 otomatik test ve 13 izole tarayıcı kontrolü geçti. Masaüstü 1440 
 ## Paket 6 yerel kabul dilimi
 
 B16/B17: kalıcı işçi, karantina inceleme ve CSV satır mutabakatı 15 yeni sunucu senaryosu ve 8 tarayıcı kontrolünden geçti. Toplam 221 otomatik test; 13 B11 tarayıcı kontrolü tekrarlandı. Kod/yerel kabul kısmi; gerçek LMS, dağıtık üretim işçisi, toplu imza/teslim ve kurum kabulü açık. Yayın sonucu ayrıca RELEASE.md içine işlenir. Kabul ölçütleri değiştirilmedi.
+
+## Paket 7 adayı
+
+B18 kişisel cüzdan, imzalı indirme, tek seferlik süreli bağlantı ve iptal: 9 yeni sunucu senaryosu ve 8 yerel tarayıcı kontrolü. Toplam 230 otomatik test. Canlı kamu paylaşım hizmeti açılmadı.

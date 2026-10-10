@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-10T21:27:44.218Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Kişisel imzalı belge indirildi",
+    "Süreli paylaşım bağlantısı yalnız ilk yanıtta gösterilir",
+    "Oturumsuz özet kimlik ve özel kanıt göstermeden açıldı",
+    "İptal sonrası yeni anonim erişim reddedildi",
+    "Cüzdan ve paylaşım iptali kalıcı; gizli bağlantı tekrar gösterilmiyor",
+    "390 px cüzdan görünümünde yatay taşma yok",
+    "Beş başka rolde kişisel belge gizli",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 9,
+  "automated_tests": {
+    "server": 138,
+    "portal": 46,
+    "regression": 46
+  },
+  "limits": [
+    "Yalnız izole yerel kabul.",
+    "Gerçek kurum depo/kimlik bağlantısı ve kamu hizmeti etkin değil.",
+    "Dış cüzdan bağımsız doğrulama kabulü B19 içinde açık."
+  ]
+}

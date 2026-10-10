@@ -145,3 +145,19 @@ Kaynak dayanağı OpenID Connect Core errata set 2, inceleme 10.10.2026; kurum M
 - configuredCore() Vercel'de kapalı; giriş koruması ve ders materyalleri korunur. Yeni credential, üretim migration, gerçek kişi/rozet işlemi yok.
 - Geri dönüş hedefi Paket 5: `dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg` / `24b41c8dba48bfa261a51613fbbc3a83a7939f13`; geri dönüş uygulanmadı.
 - İş paketi kapanışı değildir: B16 üretim/sağlayıcı kabulü ve B17 toplu imza/teslim açık.
+
+### Paket 6 gerçek yayın ve canlı doğrulama
+
+- Kaynak commit `e10989a9084c42f131a798d65da465f392bc8993`; yerel `1ca21010aedc180a7ba4964f84fec66b54fa75c1`; ortak kaynak ağacı `4ee5c8d2522bec6d19d1502f4d8339e3e1af2fdc`.
+- Dağıtım `dpl_3QxBAAEiFAEoESH86QRaggCyjBj3`, READY / production; mevcut Gazi proje/ekibi ve `gazi/auth` paketlemesi. Canlı alias bu dağıtıma taşındı. 138 kaynak dosyası SHA düzeyinde birebir eşleşti; beklenmeyen/eksik dosya yok. Önceki yayına göre altı kaynak dosyası değişti/eklendi.
+- Süresi dolmuş oturum korumalı girişe döndü. Desteklenen browserAuth ile giriş yenilendi; kod görülmedi/kaydedilmedi. Yeni oturumda 2026.10.10.3 kaynak sürümü, 24 kaynak/76 çıktı/46 kalite göstergesi ve logolar korundu. `#/academic` Kurum bağlantısı bekleniyor, `#/guide` Destek için hazırlanın kontrolü geçti. Masaüstü yatay taşma ve bozuk resim yok.
+- 221 otomatik test + 8 yeni/13 B11 izole tarayıcı kontrolü; yeni kurumsal akış canlıda açılmadı. Bu sınırlı smoke tüm ürün/kurum kabulü değildir.
+- Geri dönüş: `dpl_DzCWthAQgmM2Gr1kjmVLHfgzxFGg` / `24b41c8dba48bfa261a51613fbbc3a83a7939f13`. Geri dönüş uygulanmadı; üretim migration yok.
+
+## Paket 7 — kişisel cüzdan ve süreli paylaşım (yayın adayı)
+
+- Panel: Kanıt ve Akademik Karar → Kişisel cüzdanım. Yalnız sahipte belge/hazırlık ayrımı, imzalı JWT indirme, 1 saat/1 gün/7 gün sınırlı özet bağlantısı, iptal ve süre durumları. İmzasız hazırlık belge indirme/paylaşma düğmesi sunmaz.
+- Paylaşım anahtarı yeni işlem kayıtlarında saklanmaz; tekrar yalnız kaydın oluşturulduğunu bildirir. Kamu özeti beş izinli alanla sınırlı, kimlik/kanıt/puan/ham JWT içermez. Üyelikten ayrılma ve paylaşım iptali yeni erişimi keser; açık itiraz güncel durumu bloke eder.
+- 138 sunucu + 46 portal + 46 regresyon = 230 test. 9 yeni sunucu senaryosu ve 8 yerel cüzdan tarayıcı kontrolü; 390 px görsel kontrol. Birden fazla tarayıcı bağlamının kapanış sırası test çalıştırıcısında düzeltildi; uygulama koruması değiştirilmedi.
+- Kamu özet HTTP yolu yalnız izole çekirdek enjeksiyonunda işler. Production gateway oturum kapısı korunur ve configuredCore() kapalıdır. Gerçek belge/anahtar/kimlik üretimine dokunulmadı.
+- Geri dönüş hedefi Paket 6: `dpl_3QxBAAEiFAEoESH86QRaggCyjBj3` / `e10989a9084c42f131a798d65da465f392bc8993`.
