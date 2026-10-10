@@ -3,6 +3,7 @@ import {MyysCore} from './core.mjs';
 import {prepareBatch,signApproved,verifyWithKeyring} from './credentials.mjs';
 import {qualityMetrics,skillsProjection} from './projections.mjs';
 import {downloadWalletCredential} from './wallet.mjs';
+import {subjectExport} from './privacy.mjs';
 import {decisionArchive} from './archive.mjs';
 
 let singleton;
@@ -24,6 +25,7 @@ export async function myysRoute({req,path,b,sessionHash,json,res,core=configured
    return json(res,200,{...view,metrics:qualityMetrics(view),skills:skillsProjection(view)});
   }
   if(path==='/api/myys/islem'&&req.method==='POST')return json(res,200,core.run({sessionHash,tenant:b?.tenant,commandId:b?.commandId,action:b?.action,input:b?.input}));
+  if(path==='/api/myys/veri-ozetim'&&req.method==='POST')return json(res,200,subjectExport(core,{sessionHash,tenant:b?.tenant}));
   if(path==='/api/myys/karar-arsivi'&&req.method==='POST')return json(res,200,decisionArchive(core,{sessionHash,tenant:b?.tenant},b?.decisionId));
   if(path==='/api/myys/cuzdan-indir'&&req.method==='POST')return json(res,200,downloadWalletCredential(core,{sessionHash,tenant:b?.tenant},b?.issuanceId));
   if(path==='/api/myys/toplu-hazirlik'&&req.method==='POST')return json(res,200,prepareBatch(core,{sessionHash,tenant:b?.tenant},b?.rows));

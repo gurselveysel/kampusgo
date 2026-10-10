@@ -14,7 +14,8 @@ import {myysRoute} from '../gazi/auth/myys/http.mjs';
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
-const initial=process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--wallet')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+const initial=process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--wallet')||process.argv.includes('--privacy')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+if(process.argv.includes('--privacy')){const h=hash('privacy-expired-session');f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(h,'student','2020-01-01T00:00:00.000Z');f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(h,'gazi','local-test','2019-01-01T00:00:00.000Z');}
 if(process.argv.includes('--recognition')){const p=f.run('admin','recognition-policy',localRecognitionPolicy);f.run('publisher','recognition-policy-review',{policyId:p.id,outcome:'accepted',reason:'Sentetik politika yalnız izole yerel kabul için incelendi.'});}
 if(process.argv.includes('--operations')){
  const key=randomBytes(32),contract={id:'Yerel kabul kaynağı',tenant:'gazi',unit:'engineering',programId:initial.p.id,mode:'local-acceptance',subjects:{source:'student'},key};

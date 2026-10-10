@@ -1,3 +1,15 @@
+# Güncel devam — Paket 11 kaynak adayı
+
+B28 veri talebi/özet/yanıt/görüntüleme/paylaşım çekme ve süresi dolmuş yerel oturum temizliği: 276 otomatik + 11 tarayıcı kontrolü. Paket 11 güvenli kaynak yayını ve canlı doğrulaması bekliyor. Son canlı Paket 10 aşağıda. Kurumsal çekirdek kapalı, tam hesap silme/tebligat/fiziksel imha yok. Sonra B29 kaynak mutabakat göstergeleri ve B30 ayrı kabul kapıları; kalan bağımsız B01–B36 işlerini sürdür.
+
+# Güncel devam — Paket 10 yayımlandı; sırada B28/B04
+
+Son uzak kaynak `d9b4b2e19b92c1d668e8fd98f7b83f00a77e0f2f`; yerel `ffe6e3ccd796f8eae2c703453f4f64c06c49c685`; ortak ağaç `5de76cf00a0eb87c59043cc46f77f0f5f6d7aaee`. Canlı `dpl_HZAgv61QLs3rYpLa7fxXYNFEcs64` READY; 143 kaynak hash ve canlı kapalı akademik/rehber/logolar/taşma smoke geçti. Geri dönüş Paket 9 `dpl_HSfAwnVABknt9kGv61x6zn6aSzxB`.
+
+B22 yerel dilimi: 265 otomatik test; 11 OBS ve 8 B16/B17 tarayıcı kontrolü. B16/B17, B18, B03/B09, B20/B21 ve B22 ilk bağımsız dilimleri yayımlandı; bunlar 10 iş paketinin tam kapanışı değildir. Hiçbir kurumsal çekirdek/gerçek belge/OBS/IdP bağlantısı açılmadı.
+
+Sıradaki iş: B28/B04 veri talebi, kişisel dışa aktarma, paylaşımı geri çekme, hesap oturumu temizliği ile akademik saklama kararının ayrımı. KVKK resmî başvuru hakkı ve silme/yok etme/anonimleştirme sayfaları; 01.10.2026 tarihli yanıt bildirim duyurusu 10.10.2026'da okundu. Resmî Gazete tebliğ bağlantısı zaman aşımına uğradı. Kurum saklama süresi veya geçerli başvuru/yanıt kabulü uydurulmayacak. Fiziksel silme yapılmış gibi gösterilmeyecek; üretim imha/hesap işlemleri ayrı yetki gerektirir. Sonra B29 kaynaklı sayım, B30 teknik/akademik/işletim kapıları ve kalan bağımsız B01–B36 işleri.
+
 # Güncel devam — Paket 10 kaynak adayı
 
 Son canlı Paket 9: `b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb` / `dpl_HSfAwnVABknt9kGv61x6zn6aSzxB`; 142 kaynak hash ve canlı smoke geçti. Yerel eş içerik `a915b8c85c967d69969580c18a27ecdad1b544db`, ağaç `670a6a28d611b6eab9f9181cc522116d220c04e9`.

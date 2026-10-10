@@ -212,3 +212,16 @@ Paket 8 yayını öncesinde B11’in 13 izole tarayıcı kontrolü tekrar geçti
 - 265 otomatik test; 11 yeni sunucu, 11 OBS tarayıcı ve yeniden 8 B16/B17 tarayıcı kontrolü. Mobil 390 px ve rol sınırları geçti.
 - Gerçek ağ çağrısı/OBS kaydı yok; bütün durumlar yerel simülasyon. configuredCore() ve Vercel alındı simülatörü kapalı. Kimlik bilgisi, migration veya gerçek akademik işlem yok.
 - Geri dönüş Paket 9: `dpl_HSfAwnVABknt9kGv61x6zn6aSzxB` / `b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb`.
+
+### Paket 10 gerçek yayın ve canlı doğrulama
+
+- Uzak kaynak `d9b4b2e19b92c1d668e8fd98f7b83f00a77e0f2f`; yerel `ffe6e3ccd796f8eae2c703453f4f64c06c49c685`; ortak ağaç `5de76cf00a0eb87c59043cc46f77f0f5f6d7aaee`.
+- Dağıtım `dpl_HZAgv61QLs3rYpLa7fxXYNFEcs64`, READY / production. Canlı alias bu dağıtıma bağlı; 143 kaynak dosyası eksiksiz SHA eşleşti. Üç dağıtım kaynağı değişti/eklendi; korumalı gateway, logolar ve ders içerikleri aynı.
+- Gerçek canlı oturum yeniden yüklendi: Kurum bağlantısı bekleniyor kapısı korundu. İlk anda yüklenmekte olan görsel tamamlandı; son kontrolde bozuk resim ve yatay taşma yok. Rehberde Destek için hazırlanın görünümü doğrulandı.
+- 265 otomatik test; 11 OBS ve 8 B16/B17 tarayıcı kontrolü. Gerçek OBS/veri aktarımı yapılmadı; B22 kısmi kabul. configuredCore() kapalı.
+- Geri dönüş `dpl_HSfAwnVABknt9kGv61x6zn6aSzxB` / `b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb`; uygulanmadı. Migration, gerçek kişiye belge veya hesap işlemi yok.
+
+
+## Paket 11 adayı — B28
+
+Veri talepleri ekranı: kişisel özet, talep/ayrı gerekçeli yanıt/görüntüleme, cüzdan paylaşımını geri çekme, süresi dolmuş yerel oturum temizliği. 184 sunucu + 46 portal + 46 regresyon = 276 otomatik test; 11 tarayıcı kontrolü. 390 px taşma ve klavye seçimi geçti. Akademik kayıt/hesap silinmedi; resmî başvuru, tebligat ve fiziksel imha kabulü yok. B04/B28 açık koşullar PRIVACY-CONTRACT.md ve backlog.json içinde.

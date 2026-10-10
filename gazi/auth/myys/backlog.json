@@ -209,7 +209,7 @@
         "gazi/portal/src/academic-forms.jsx"
       ],
       "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir.",
+      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir. B28 yanıtında akademik saklama ayrımı/dayanak ve sonraki inceleme tarihi ayrı; kurum saklama süresi onaylanmadı.",
       "independent_remaining_work": [
         "Veri akışı siciline süre/ülke doğrulaması ve saklama işçisi ekle."
       ],
@@ -1365,7 +1365,7 @@
         "gazi/portal/src/obs-workspace.jsx",
         "gazi/auth/myys/acceptance/B22-20261010.json"
       ],
-      "production_status": "Paket 10 yayın adayı; yalnız yerel OBS simülasyonu. Gerçek bağlantı etkin değil.",
+      "production_status": "Paket 10: d9b4b2e19b92c1d668e8fd98f7b83f00a77e0f2f / dpl_HZAgv61QLs3rYpLa7fxXYNFEcs64 READY; 143 dosya SHA eşleşmesi ve canlı kapalı akademik/rehber smoke geçti. Gerçek OBS bağlantısı kapalı.",
       "implementation_note": "İnsan kararından değişmez OBS outbox hazırlığı, ayrı yerel alındı/mutabakat, red/hash uyuşmazlığı/kaynak bekletme, bağlı düzeltme/iptal, rol sınırı ve CSV. Gerçek ağ/OBS aktarımı yok.",
       "independent_remaining_work": [
         "Sağlayıcıya özgü OBS şeması/kimlik anahtarı/hata-kota adaptörü ve gerçek test transkript/diploma eki mutabakatı; dağıtık üretim outbox işletimi."
@@ -1392,8 +1392,8 @@
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 10 yayın adayı; yalnız yerel OBS simülasyonu. Gerçek bağlantı etkin değil."
+          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
+          "evidence": "Paket 10: d9b4b2e19b92c1d668e8fd98f7b83f00a77e0f2f / dpl_HZAgv61QLs3rYpLa7fxXYNFEcs64 READY; 143 dosya SHA eşleşmesi ve canlı kapalı akademik/rehber smoke geçti. Gerçek OBS bağlantısı kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1736,32 +1736,48 @@
       "planning_estimate": "3–6 kişi-gün",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Saklama ve hukuki veri talebi politikası yok; uygulama henüz hazırlanmadı.",
+      "implementation_status": "kısmi",
+      "test_status": "11 sunucu senaryosu ve 11 izole tarayıcı kontrolü geçti; tam hesap silme kabulü değildir.",
+      "implementation_evidence": [
+        "gazi/auth/myys/privacy.mjs",
+        "gazi/portal/src/privacy-workspace.jsx",
+        "gazi/auth/tests/myys-privacy.test.mjs",
+        "scripts/myys-privacy-browser.cjs",
+        "gazi/auth/myys/PRIVACY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B28-20261010.json"
+      ],
+      "production_status": "Paket 11 kaynak adayı; canlı akademik hizmet kapalı.",
+      "implementation_note": "Kişiye özel özet indirme, talep, ayrı gerekçeli yanıt, yerel görüntüleme, paylaşım geri çekme ve yalnız süresi dolmuş kurum oturumu temizliği.",
       "independent_remaining_work": [
-        "Veri talebi, hesap verisi temizleme ve akademik saklama ayrımı."
+        "Tam gereksiz hesap verisi envanteri ve üretim silme/yeniden saklama adaptörü; yedeklerde imha doğrulaması.",
+        "Resmî başvuru/bildirim teslim kanıtı ve dış platform kapanışının belge doğrulamasına etkisi kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Hukuki saklama kararı; geri alınamaz üretim silme yetkisi verilmedi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/privacy.mjs",
+            "gazi/portal/src/privacy-workspace.jsx",
+            "gazi/auth/tests/myys-privacy.test.mjs",
+            "scripts/myys-privacy-browser.cjs",
+            "gazi/auth/myys/PRIVACY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B28-20261010.json"
+          ],
           "remaining": [
-            "Veri talebi, hesap verisi temizleme ve akademik saklama ayrımı."
+            "Tam gereksiz hesap verisi envanteri ve üretim silme/yeniden saklama adaptörü; yedeklerde imha doğrulaması.",
+            "Resmî başvuru/bildirim teslim kanıtı ve dış platform kapanışının belge doğrulamasına etkisi kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "kısmi",
+          "evidence": "11 sunucu senaryosu ve 11 izole tarayıcı kontrolü geçti; tam hesap silme kabulü değildir.",
+          "limits": "Sentetik yerel veri; fiziksel imha ve tüm hesap verisi silme kabulü değil."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 11 kaynak adayı; canlı akademik hizmet kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",

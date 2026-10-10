@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-10T22:11:20.488Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Kendi kayıt özeti indirildi; gizli paylaşım alanı yok",
+    "Toplu geri çekme cüzdandaki aynı paylaşımı kapattı",
+    "Kişinin kapsamlı talebi sunucuya kaydedildi",
+    "Başka öğrenen ve teknik destek kişisel talebi göremez",
+    "Ayrı görevli dayanak ve inceleme tarihiyle yazılı yanıt verdi",
+    "Kişinin yerel görüntüleme kaydı resmî tebligattan ayrı tutuldu",
+    "Yalnız süresi dolmuş yerel oturum temizlendi; talep bütünü kapatılmadı",
+    "Yeniden yüklemede talep, yanıt, görüntüleme ve temizlik korundu",
+    "Veri talepleri sekmesi klavye ile seçilebildi",
+    "390 px veri talepleri ekranında yatay taşma yok",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 11,
+  "automated_tests": {
+    "server": 184,
+    "portal": 46,
+    "regression": 46
+  },
+  "limits": [
+    "Yalnız süresi dolmuş yerel kurum oturumları temizlenir; fiziksel imha doğrulanmadı.",
+    "Talep/yanıt/görüntüleme resmî başvuru veya tebligat değildir.",
+    "Kurum saklama ve dış hesap kapanış kabulü açık."
+  ]
+}

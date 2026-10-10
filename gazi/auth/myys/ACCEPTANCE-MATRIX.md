@@ -88,3 +88,8 @@ B20/B21 politika sürümü, iki ayrı payda, öğrenci talebi, insan teknik ince
 ## Paket 10 adayı
 
 B22 karar kaynaklı outbox, yerel alındı, satır mutabakatı ve bağlı düzeltme/iptal; 11 yeni sunucu ve 11 yeni tarayıcı kontrolü. Toplam 265 otomatik test; B16/B17’nin 8 tarayıcı kontrolü yeniden geçti. Gerçek OBS, transkript/diploma eki ve dış test kabulü açık. Başlangıçla karşılaştırmada bütün B01–B36 kimlik/başlık/bağımlılık/kabul ölçütleri aynı.
+
+
+## Paket 11 adayı — B28
+
+Veri talepleri ekranı: kişisel özet, talep/ayrı gerekçeli yanıt/görüntüleme, cüzdan paylaşımını geri çekme, süresi dolmuş yerel oturum temizliği. 184 sunucu + 46 portal + 46 regresyon = 276 otomatik test; 11 tarayıcı kontrolü. 390 px taşma ve klavye seçimi geçti. Akademik kayıt/hesap silinmedi; resmî başvuru, tebligat ve fiziksel imha kabulü yok. B04/B28 açık koşullar PRIVACY-CONTRACT.md ve backlog.json içinde.
