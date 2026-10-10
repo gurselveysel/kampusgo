@@ -312,18 +312,21 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "29 yeni imzalı belirteç/kişi eşleme testi; sunucu toplamı 87/87. Gerçek SSO veya callback/replay kabulü değildir.",
+      "test_status": "29 belirteç/kişi + 27 tek kullanımlık giriş/oturum testi. Tüm sunucu 114/114; portal 46, regresyon 46; toplam 206. B11 13 tarayıcı kontrolü yeniden geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
         "gazi/auth/myys/identity-contract.mjs",
         "gazi/auth/myys/IDENTITY-CONTRACT.md",
-        "gazi/auth/tests/myys-identity.test.mjs"
+        "gazi/auth/tests/myys-identity.test.mjs",
+        "gazi/auth/myys/identity-flow.mjs",
+        "gazi/auth/tests/myys-identity-flow.test.mjs",
+        "gazi/auth/myys/acceptance/B06-B07-20261010.json"
       ],
-      "production_status": "Yeni kimlik hazırlığı kaynak dalında; production giriş yoluna bağlı değil, canlıya bu dilimde dağıtılmadı.",
-      "implementation_note": "Sürümlü güven sözleşmesi, yerel imza/issuer/audience/nonce/MFA doğrulayıcısı ve issuer-sub ile salt okuma kişi eşlemesi. Oturum açma veya üretim bağlantısı değildir.",
+      "production_status": "Paket 5 yayın adayı: güvenlik sınırları korunmuş sunucu hazırlığı. Kurumsal SSO/akademik işlem etkinleştirilmez.",
+      "implementation_note": "Yerel kabulde sürümlü OIDC doğrulayıcı, PKCE/state/nonce isteği, atomik tüketim/oturum/kapsam/denetim ve çıkış hazır. Gerçek HTTP/IdP veya kurum deposu değildir.",
       "independent_remaining_work": [
-        "Üretim depo arayüzü ve kişi/üyelik yaşam döngüsü; ayrı işlemsel şema ve iptal/denetim sözleşmesi."
+        "Üretim depo adaptörü/kişi yaşam döngüsü, sürümlü rol iptali ve saklama/temizleme sözleşmesi."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Mevcut üretim deposu için ayrı migration yetkisi ve gerçek kimlik eşlemesi.",
@@ -335,20 +338,23 @@
             "gazi/auth/tests/myys.test.mjs",
             "gazi/auth/myys/identity-contract.mjs",
             "gazi/auth/myys/IDENTITY-CONTRACT.md",
-            "gazi/auth/tests/myys-identity.test.mjs"
+            "gazi/auth/tests/myys-identity.test.mjs",
+            "gazi/auth/myys/identity-flow.mjs",
+            "gazi/auth/tests/myys-identity-flow.test.mjs",
+            "gazi/auth/myys/acceptance/B06-B07-20261010.json"
           ],
           "remaining": [
-            "Üretim depo arayüzü ve kişi/üyelik yaşam döngüsü; ayrı işlemsel şema ve iptal/denetim sözleşmesi."
+            "Üretim depo adaptörü/kişi yaşam döngüsü, sürümlü rol iptali ve saklama/temizleme sözleşmesi."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "29 yeni imzalı belirteç/kişi eşleme testi; sunucu toplamı 87/87. Gerçek SSO veya callback/replay kabulü değildir.",
+          "evidence": "29 belirteç/kişi + 27 tek kullanımlık giriş/oturum testi. Tüm sunucu 114/114; portal 46, regresyon 46; toplam 206. B11 13 tarayıcı kontrolü yeniden geçti.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Yeni kimlik hazırlığı kaynak dalında; production giriş yoluna bağlı değil, canlıya bu dilimde dağıtılmadı."
+          "evidence": "Paket 5 yayın adayı: güvenlik sınırları korunmuş sunucu hazırlığı. Kurumsal SSO/akademik işlem etkinleştirilmez."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -376,18 +382,21 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "29 yeni imzalı belirteç/kişi eşleme testi; sunucu toplamı 87/87. Gerçek SSO veya callback/replay kabulü değildir.",
+      "test_status": "29 belirteç/kişi + 27 tek kullanımlık giriş/oturum testi. Tüm sunucu 114/114; portal 46, regresyon 46; toplam 206. B11 13 tarayıcı kontrolü yeniden geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
         "gazi/auth/myys/identity-contract.mjs",
         "gazi/auth/myys/IDENTITY-CONTRACT.md",
-        "gazi/auth/tests/myys-identity.test.mjs"
+        "gazi/auth/tests/myys-identity.test.mjs",
+        "gazi/auth/myys/identity-flow.mjs",
+        "gazi/auth/tests/myys-identity-flow.test.mjs",
+        "gazi/auth/myys/acceptance/B06-B07-20261010.json"
       ],
-      "production_status": "Yeni kimlik hazırlığı kaynak dalında; production giriş yoluna bağlı değil, canlıya bu dilimde dağıtılmadı.",
-      "implementation_note": "Sürümlü güven sözleşmesi, yerel imza/issuer/audience/nonce/MFA doğrulayıcısı ve issuer-sub ile salt okuma kişi eşlemesi. Oturum açma veya üretim bağlantısı değildir.",
+      "production_status": "Paket 5 yayın adayı: güvenlik sınırları korunmuş sunucu hazırlığı. Kurumsal SSO/akademik işlem etkinleştirilmez.",
+      "implementation_note": "Yerel kabulde sürümlü OIDC doğrulayıcı, PKCE/state/nonce isteği, atomik tüketim/oturum/kapsam/denetim ve çıkış hazır. Gerçek HTTP/IdP veya kurum deposu değildir.",
       "independent_remaining_work": [
-        "Code/PKCE/state/callback, kalıcı tek kullanımlık nonce tüketimi ve eşzamanlı tekrar denemesi; oturum yenileme/çıkış/iptal."
+        "Güvenli HTTP callback/cookie/CSRF sınırı; gerçek IdP protokol eşlemesi, dağıtık iptal/back-channel logout ve üretim anahtar saklama."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
@@ -399,20 +408,23 @@
             "gazi/auth/tests/myys.test.mjs",
             "gazi/auth/myys/identity-contract.mjs",
             "gazi/auth/myys/IDENTITY-CONTRACT.md",
-            "gazi/auth/tests/myys-identity.test.mjs"
+            "gazi/auth/tests/myys-identity.test.mjs",
+            "gazi/auth/myys/identity-flow.mjs",
+            "gazi/auth/tests/myys-identity-flow.test.mjs",
+            "gazi/auth/myys/acceptance/B06-B07-20261010.json"
           ],
           "remaining": [
-            "Code/PKCE/state/callback, kalıcı tek kullanımlık nonce tüketimi ve eşzamanlı tekrar denemesi; oturum yenileme/çıkış/iptal."
+            "Güvenli HTTP callback/cookie/CSRF sınırı; gerçek IdP protokol eşlemesi, dağıtık iptal/back-channel logout ve üretim anahtar saklama."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "29 yeni imzalı belirteç/kişi eşleme testi; sunucu toplamı 87/87. Gerçek SSO veya callback/replay kabulü değildir.",
+          "evidence": "29 belirteç/kişi + 27 tek kullanımlık giriş/oturum testi. Tüm sunucu 114/114; portal 46, regresyon 46; toplam 206. B11 13 tarayıcı kontrolü yeniden geçti.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Yeni kimlik hazırlığı kaynak dalında; production giriş yoluna bağlı değil, canlıya bu dilimde dağıtılmadı."
+          "evidence": "Paket 5 yayın adayı: güvenlik sınırları korunmuş sunucu hazırlığı. Kurumsal SSO/akademik işlem etkinleştirilmez."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2131,10 +2143,10 @@
   ],
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
-    "server_security_tests": "87/87 (58 yayın paketi + 29 sonraki kimlik hazırlığı)",
+    "server_security_tests": "114/114",
     "portal_tests": "46/46",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 179,
+    "local_total": 206,
     "portal_build": "Paket 4 başarılı; sonraki kimlik dilimi arayüzü değiştirmez",
     "browser_visual_acceptance": "Paket 4: gerçek yerel React/HTTP çekirdeğinde 13 kontrol; 9 çekirdek rol/12 sentetik kişi, masaüstü ve 390 px mobil. Gerçek canlı oturum/logo/destek/kapalı akademik görünüm doğrulandı. Bütün menüler/ekran okuyucu/kurum kabulü değildir.",
     "production_migration": "uygulanmadı",
@@ -2154,7 +2166,7 @@
     "date": "2026-10-10",
     "live_deployment": "dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV",
     "live_source": "2743da31b6b6e278dfc13b27e8bc79145b708731",
-    "local_tests": 179,
-    "note": "Paket 4 yayımlandı ve sınırlı canlı smoke geçti. B06/B07 29 yeni yerel testli kimlik hazırlığı kaynak dalında; canlı girişe bağlı değil. B11, B06 ve B07 bütünü tamamlanmadı."
+    "local_tests": 206,
+    "note": "Paket 4 canlı. Paket 5: B06/B07 yerel tek kullanımlık akış 27 yeni test; toplam 206 ve 13 B11 tarayıcı kontrolü geçti. Kurumsal etkinleştirme kapalı."
   }
 }

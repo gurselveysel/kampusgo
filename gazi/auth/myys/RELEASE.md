@@ -116,3 +116,13 @@ Sabit açık anahtarlarla OIDC ID Token doğrulama ve issuer/subject üzerinden 
 Bu modül hiçbir canlı giriş yoluna bağlanmadı ve bu dilimde Vercel'e dağıtılmadı.
 Kalıcı tek kullanımlık nonce tüketimi, Code/PKCE/state/callback, oturum/çıkış/iptal ve gerçek kurum depo adaptörü açık. B06/B07 tam kabul edilmedi.
 Kaynak dayanağı OpenID Connect Core errata set 2, inceleme 10.10.2026; kurum MFA politikasına dönüştürülmedi. Özel erişim veya credential oluşturulmadı.
+
+
+## Paket 5 — yerel kimlik isteği ve oturum yaşam döngüsü (yayın adayı)
+
+- Başlangıç kaynak: uzak `2f58f210905fee96bfb4a38d18c423cb251f0d0e`, yerel `b19c2aa37db889afbc9b94f781f3edef51706c21`; ortak ağaç `d66d585eedbe04f12336664ba0a9870f13365373`. Temiz başlangıç ve canlı Paket 4 tekrar doğrulandı.
+- B06/B07: yerel PKCE/state/nonce bağı, tek kullanımlık kalıcı istek, eşzamanlı claim, kısa ve kurum kapsamlı oturum, iptal/çıkış, gizli değer içermeyen denetim ve işlem geri alma.
+- 114 sunucu + 46 portal + 46 regresyon = 206 test geçti. 13 B11 tarayıcı kontrolü yeniden geçti. Derleme, 115 korumalı arayüz dosyası paketleme ve diff kontrolü başarılı. Kanıt: `acceptance/B06-B07-20261010.json`.
+- Hazırlanan dağıtım 136 dosya. Paket 4'e göre yalnız `myys/store.mjs` değişti; `myys/identity-contract.mjs` ve `myys/identity-flow.mjs` eklendi. Portal, login/gateway, rozet ve ders materyalleri aynı. Testler, devam metni, sentetik anahtarlar ve SQLite dosyaları dağıtıma alınmaz.
+- Bu paket kurumsal SSO açılışı değildir. Yeni akış Vercel ortamında ve loopback dışı dönüş adresinde reddedilir; hiçbir HTTP giriş yoluna bağlanmaz. `configuredCore()` kapalıdır. Üretim migration, kalıcı credential veya gerçek kişi belgesi yoktur.
+- Geri dönüş hedefi Paket 4: `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV` / `2743da31b6b6e278dfc13b27e8bc79145b708731`. Geri dönüş uygulanmadı. Yayın kimliği ve canlı sonuç aşağıya ayrıca kaydedilir.

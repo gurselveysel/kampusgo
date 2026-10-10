@@ -1,7 +1,7 @@
 # B06/B07 — kimlik doğrulama ve kişi eşleme sözleşmesi
 
 Sürüm: `local-2026.10.10.1`. Durum: bağımsız kod ve sentetik yerel kabul.
-Bu modül giriş uç noktası değildir; oturum, kullanıcı, üyelik veya yetki oluşturmaz.
+Bu doğrulayıcı HTTP giriş uç noktası değildir. Salt okuma yolu oturum, kullanıcı, üyelik veya yetki oluşturmaz. Sonraki yerel akış adaptörü aşağıda ayrıca tanımlanır.
 Pilot TOTP kapısına ve `configuredCore()` yoluna bağlanmamıştır. Gazi IdP'sinin
 protokolü, issuer adresi ve MFA anlamları henüz kurumca teyit edilmemiştir.
 
@@ -53,22 +53,17 @@ iat ve auth_time sınırlarından en erken dolanı aşmaz.
 | Denetim yaz | İstek korelasyonu, kişi iç kimliği, sözleşme sürümü, sonuç kodu; ham token/nonce/e-posta yok |
 | Geri al | Önce yeni girişleri kapat; oturum iptalini uygula; eski yetkiyi geri getirmeden depo geri dönüşünü mutabık kıl |
 
-Bu tablo bir üretim adaptörü uygulaması değildir. İşlemsel kurumsal depo,
-benzersizlik/izolasyon/kilit testleri, nonce tüketimi ve oturum bağlama henüz
-eklenmedi. Mevcut kaynak özeti Supabase tablosu kişi/üyelik deposu yapılmadı.
+Bu tablo bir üretim adaptörü uygulaması değildir. İşlemsel kurumsal depo ve gerçek sağlayıcı kabulü açık. Sonraki yerel adaptörde nonce tüketimi ve oturum bağlama yalnız sentetik kabul için eklendi. Mevcut kaynak özeti Supabase tablosu kişi/üyelik deposu yapılmadı.
 
 ## Açık işler ve etkinleştirme kapısı
 
-- Authorization Code + PKCE/state, kayıtlı callback URI, tek kullanımlık kalıcı
-  nonce deposu, yeniden oynatma ve eşzamanlı callback testleri.
+- Gerçek Authorization Code HTTP callback ve kayıtlı URI kabulü; üretim nonce deposu/işçi ve gerçek sağlayıcı ile PKCE/state denetimi. Yerel sentetik akış aşağıda sınandı.
 - Kurumun açıkça onayladığı issuer/client/JWKS kaynağı, acr/amr eşlemesi,
   çift kimlik/pairwise subject ve rol/birim yaşam döngüsü.
 - Oturum yenileme/çıkış/iptal, MFA yeniden isteme, oturum sabitleme ve denetim izi.
 - Ayrı işlemsel üretim adaptörü; migration, yedek/geri dönüş ve gerçek IdP kabulü.
 
-Doğrulayıcı bir nonce değerini kontrol eder; kalıcı tüketim olmadan tek kullanımlık
-giriş sağlamaz. Bu nedenle token doğrudan bir HTTP kimlik doğrulama yolu veya
-çekirdek `bindings` kaydı için kullanılmamalıdır. Hiçbir üretim etkinleştirme yapılmadı.
+Doğrulayıcı tek başına kalıcı tüketim sağlamaz; doğrudan HTTP kimlik doğrulama yolu yapılmamalıdır. Yeni `LocalIdentityFlow` yalnız izole SQLite kabulünde tüketim ve kısa oturum bağı oluşturur. Hiçbir üretim etkinleştirme yapılmadı.
 
 ## Kaynak ve kabul kanıtı
 
@@ -84,3 +79,52 @@ giriş sağlamaz. Bu nedenle token doğrudan bir HTTP kimlik doğrulama yolu vey
   imza/anahtar rotasyonu, nonce, zaman sınırları, MFA tazeliği, role/tenant taklidi,
   ayrılan kişi/üyelik, e-posta değişimi, kalıcılık ve üretim kapısı denetlenir.
   Gerçek IdP, callback, replay deposu veya üniversite kabulü değildir.
+
+
+## İkinci dilim: tek kullanımlık yerel akış
+
+Sürüm: `local-2026.10.10.2`. `identity-flow.mjs` yalnız `LocalAcceptanceStore`
+ve `http://127.0.0.1` dönüş adresiyle açılır; Vercel ortamında reddedilir.
+`exchangeCode` sunucunun enjekte ettiği sentetik adaptördür. Modül ağ bağlantısı,
+HTTP callback, cookie, gerçek sağlayıcı istemcisi veya kalıcı erişim oluşturmaz.
+
+- `begin`: tek kurum/sözleşme/tarayıcı oturumu bağını, state özetini, süreyi ve
+  pending durumunu SQLite'a yazar. Aynı bağdaki eski pending/claimed istekleri iptal eder.
+- PKCE S256 ve nonce, testte yalnız bellekte bulunan 32 bayt anahtardan ayrı
+  HMAC bağlamlarıyla türetilir; yüksek entropili istek kimliği ve sözleşme özetiyle
+  bağlıdır. Aynı test anahtarıyla depo yeniden açıldığında devam eder. Anahtar
+  değişmiş/kaybolmuşsa istek başarısız olur; yeni giriş gerekir. Bu mekanizma
+  üretim anahtar saklama/rotasyon politikası değildir. Anahtar diske kurulmadı.
+- `complete`: state, tarayıcı bağı, tam issuer/dönüş adresi, süre ve sözleşme
+  denetiminden sonra isteği **async alışverişten önce** atomik claimed yapar.
+  İki ayrı SQLite bağlantısı aynı isteği sağlayıcıya gönderemez. Zaman aşımı,
+  geçersiz yanıt veya belirsiz sonuç aynı istekle yeniden denenmez. İşçi çökmesi
+  sonrası claimed kaydı yeniden çalıştırılmaz; yeni istek eskisini iptal eder.
+- Doğrulanmış kanıt, güncel kişi/üyelik okuması, used durumu, yeni oturum bağı,
+  kurum kapsamı ve `identity.accept` denetim kaydı aynı transaction içindedir.
+  Denetim yazılamazsa oturum da kurulmaz. Eski oturum iptal edilir; yeni
+  ham oturum anahtarının yalnız hash'i saklanır. Token ve MFA tazelik sınırı aşılmaz.
+- `identity_scopes` yeni yerel oturumların kurumunu sabitler; çekirdeğin her
+  principal okumasında kurum ve güncel kişi/üyelik kontrolü sürer. Eski elle
+  kurulmuş fixture bindings kayıtları bu yeni akışın gerçek giriş kanıtı sayılmaz.
+- `logout`: ilgili kurumun yerel oturum bağını ve o tarayıcı bağındaki bekleyen
+  istekleri iptal eder; tekrarı zararsızdır. Başka kurum oturumunu silemez.
+- Denetimde yalnız iç kişi kimliği, eylem, korelasyon ve tarih vardır; ham token,
+  nonce, code, verifier, state ve session token saklanmaz. `identity_scopes`
+  sözleşme sürümünü taşır. Süresi dolmuş isteklerin fiziksel saklama/temizleme
+  politikası ayrıca B28 işidir.
+
+27 yeni test: RFC PKCE vektörü, tekrar/eşzamanlı dönüş, iki depo bağlantısı,
+yeniden açılma, başka issuer/state/tarayıcı/tenant, üyelik iptali, MFA zamanı,
+çıkış, zaman aşımı ve denetim yazısı hatasında geri alma. Bunlar gerçek HTTP/IdP,
+dağıtık production işçisi veya kurumsal kabul testleri değildir.
+
+Kaynaklar (10.10.2026 incelemesi): RFC 7636 §4.1–4.6 ve Appendix B
+<https://www.rfc-editor.org/rfc/rfc7636.html>; RFC 9700 §2.1 ve §4.4–4.5
+<https://www.rfc-editor.org/rfc/rfc9700.html>. Yerel PKCE/state/issuer bağları bu
+teknik çerçeveyle hazırlandı; bütün OAuth/OIDC akışlarına tam uyum iddiası yok.
+
+Açık kalan: güvenli HTTP cookie/CSRF/Origin ve callback sınırı, gerçek sağlayıcı
+metadata/istemci kaydı, üretim depo adaptörü, dağıtık iptal/back-channel logout,
+anahtar saklama, saklama/temizleme ve gerçek kurum kabulü. Refresh token veya
+`offline_access` kullanılmadı; yerel süre dolunca yeni giriş gerekir.

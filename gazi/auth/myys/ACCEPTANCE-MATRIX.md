@@ -44,7 +44,7 @@
 ## Sıradaki bağımsız işler
 
 - B11: itiraz/sonuç arayüzü ve bağımsız yeniden değerlendirme bağlantısı kodlandı, 7 yeni test geçti. 9 çekirdek rol için 13 tarayıcı kontrolü geçti; imzalı belge değiştirme ve sürümlü politika açık.
-- B06/B07: güvenilir issuer/audience/MFA doğrulaması ve kişi eşleme sözleşmesi 29 yeni testle hazır. Sırada kalıcı challenge/PKCE/callback, oturum iptali ve işlemsel kurum depo adaptörü var.
+- B06/B07: 29 doğrulayıcı + 27 akış testiyle yerel tek kullanımlık istek/PKCE/oturum/çıkış hazır. Gerçek HTTP callback, IdP, işlemsel kurum adaptörü ve dağıtık iptal açık.
 - B16/B17: kalıcı işçi karantinası ve satır mutabakatı.
 - B18/B20/B21: özel cüzdan arayüzü ve sürümlü tanıma/tekil kredi defteri.
 - B28/B29/B30: veri talebi, kaynak sayımı ve ayrı kabul kapıları.
@@ -61,3 +61,7 @@ B11: 150 otomatik test ve 13 izole tarayıcı kontrolü geçti. Masaüstü 1440 
 ## B06/B07 hazırlık güncellemesi
 
 `IDENTITY-CONTRACT.md` ve 29 yeni test imza, sağlayıcı, audience, nonce, MFA tazeliği ve kişi/üyelik okumasını kapsar. Yerel depo üretim adaptörü değildir; oturum yaratılmaz. Kod/yerel kabul kısmi; kurum ve dış erişim sütunları değişmez.
+
+## Paket 5 kabul adayı
+
+206 otomatik test ve yeniden çalıştırılan 13 B11 tarayıcı kontrolü geçti. İki ayrı SQLite bağlantısıyla eşzamanlı tekrar denendi; bu dağıtık production testi değildir. B06/B07 kod/yerel kabul kısmi; kurumsal etkinleştirme kapalı. Yayın sonucu RELEASE.md ile güncellenir.

@@ -19,6 +19,7 @@ export class LocalAcceptanceStore {
    CREATE TABLE IF NOT EXISTS persons(id TEXT PRIMARY KEY, issuer TEXT NOT NULL, subject TEXT NOT NULL, active INTEGER NOT NULL, UNIQUE(issuer,subject));
    CREATE TABLE IF NOT EXISTS memberships(tenant TEXT NOT NULL,person TEXT NOT NULL REFERENCES persons(id),unit TEXT NOT NULL,roles TEXT NOT NULL,expires TEXT NOT NULL,active INTEGER NOT NULL,PRIMARY KEY(tenant,person,unit));
    CREATE TABLE IF NOT EXISTS bindings(session_hash TEXT PRIMARY KEY,person TEXT NOT NULL REFERENCES persons(id),expires TEXT NOT NULL,mfa INTEGER NOT NULL);
+   CREATE TABLE IF NOT EXISTS identity_scopes(session_hash TEXT PRIMARY KEY REFERENCES bindings(session_hash) ON DELETE CASCADE,tenant TEXT NOT NULL,contract_version TEXT NOT NULL,created_at TEXT NOT NULL);
    CREATE TABLE IF NOT EXISTS records(tenant TEXT NOT NULL,kind TEXT NOT NULL,id TEXT NOT NULL,unit TEXT NOT NULL,owner TEXT NOT NULL,data TEXT NOT NULL,PRIMARY KEY(tenant,kind,id));
    CREATE TABLE IF NOT EXISTS commands(tenant TEXT NOT NULL,person TEXT NOT NULL,id TEXT NOT NULL,digest TEXT NOT NULL,result TEXT NOT NULL,PRIMARY KEY(tenant,person,id));
    CREATE TABLE IF NOT EXISTS audit(sequence INTEGER PRIMARY KEY AUTOINCREMENT,tenant TEXT NOT NULL,actor TEXT NOT NULL,action TEXT NOT NULL,record_id TEXT NOT NULL,at TEXT NOT NULL);
@@ -31,6 +32,8 @@ export class LocalAcceptanceStore {
  principal(sessionHash,tenant,now){
   const row=this.db.prepare('SELECT p.id,b.mfa FROM bindings b JOIN persons p ON p.id=b.person WHERE b.session_hash=? AND b.expires>? AND p.active=1').get(sessionHash,now);
   requireThat(row,'identity_required','Kişiye bağlı kurumsal oturum gerekli. Pilot rol seçimi yetki sağlamaz.',403);
+  const scope=this.db.prepare('SELECT tenant FROM identity_scopes WHERE session_hash=?').get(sessionHash);
+  requireThat(!scope||scope.tenant===tenant,'identity_tenant','Oturum bu kurum için açılamaz.',403);
   const memberships=this.db.prepare('SELECT unit,roles FROM memberships WHERE tenant=? AND person=? AND active=1 AND expires>?').all(tenant,row.id,now).map(m=>({...m,roles:JSON.parse(m.roles)}));
   requireThat(memberships.length,'membership_required','Kurum üyeliği yok veya süresi dolmuş.',403);
   return {id:row.id,mfa:!!row.mfa,tenant,memberships};

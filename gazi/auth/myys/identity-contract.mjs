@@ -1,4 +1,4 @@
-// B06/B07 readiness contract. Not an HTTP login handler or a session issuer.
+// B06/B07 readiness contract. Not an HTTP login handler.
 // No discovery/network, provisioning, production database or pilot-gateway changes.
 import {createLocalJWKSet, decodeProtectedHeader, jwtVerify} from 'jose';
 import {timingSafeEqual} from 'node:crypto';
@@ -37,6 +37,24 @@ export function createIdentityContract(input) {
   kids.add(k.kid);
  }
  const keys = createLocalJWKSet(c.jwks), proofs = new WeakMap();
+ function resolveMember(proof, {store, now = new Date(), requireMfa = true} = {}, commit = actor => actor) {
+  const at = timestamp(now), identity = proofs.get(proof);
+  requireThat(identity && at >= identity.at && at < identity.expires && at - identity.at <= c.maxTokenAgeSeconds, 'identity_proof', 'Güncel doğrulanmış kimlik kanıtı gerekli.', 403);
+  requireThat(store instanceof LocalAcceptanceStore && !process.env.VERCEL && !process.env.VERCEL_ENV, 'local_only', 'Bu kimlik eşlemesi yalnız yerel kabul deposu içindir.', 503);
+  requireThat(typeof requireMfa === 'boolean' && (!requireMfa || identity.mfa), 'identity_mfa', 'Bu işlem için kurumun doğruladığı çok faktörlü kimlik kanıtı gerekli.', 403);
+  return store.transaction(() => {
+   const person = store.db.prepare('SELECT id FROM persons WHERE issuer=? AND subject=? AND active=1').get(identity.issuer, identity.subject);
+   requireThat(person, 'identity_member', 'Etkin kurum kişisi bulunamadı.', 403);
+   const memberships = store.db.prepare('SELECT unit,roles,expires FROM memberships WHERE tenant=? AND person=? AND active=1 AND expires>?').all(c.tenant, person.id, now.toISOString()).map(row => {
+    let roles;
+    try { roles = JSON.parse(row.roles); } catch { roles = null; }
+    requireThat(Number.isFinite(Date.parse(row.expires)) && Date.parse(row.expires) > now.getTime() && text(row.unit) && Array.isArray(roles) && roles.length > 0 && roles.every(r => ROLES.includes(r)), 'identity_directory', 'Üyelik yetki kaydı doğrulanamadı.', 403);
+    return {unit: row.unit, roles};
+   });
+   requireThat(memberships.length > 0, 'membership_required', 'Kurum üyeliği yok veya süresi dolmuş.', 403);
+   return commit({id: person.id, tenant: c.tenant, mfa: identity.mfa, memberships}, {expiresAt: new Date(identity.expires * 1000).toISOString(), contractVersion: c.version});
+  });
+ }
  return Object.freeze({
   async verify(token, {expectedNonce, now = new Date()} = {}) {
    const at = timestamp(now);
@@ -64,24 +82,11 @@ export function createIdentityContract(input) {
     return proof;
    } catch { throw fail(); } // Never expose token, claims, provider messages or key details.
   },
-  resolveLocalMember(proof, {store, now = new Date(), requireMfa = true} = {}) {
-   const at = timestamp(now), identity = proofs.get(proof);
-   requireThat(identity && at >= identity.at && at < identity.expires && at - identity.at <= c.maxTokenAgeSeconds, 'identity_proof', 'Güncel doğrulanmış kimlik kanıtı gerekli.', 403);
-   requireThat(store instanceof LocalAcceptanceStore && !process.env.VERCEL && !process.env.VERCEL_ENV, 'local_only', 'Bu kimlik eşlemesi yalnız yerel kabul deposu içindir.', 503);
-   requireThat(typeof requireMfa === 'boolean' && (!requireMfa || identity.mfa), 'identity_mfa', 'Bu işlem için kurumun doğruladığı çok faktörlü kimlik kanıtı gerekli.', 403);
-   return store.transaction(() => {
-    const person = store.db.prepare('SELECT id FROM persons WHERE issuer=? AND subject=? AND active=1').get(identity.issuer, identity.subject);
-    requireThat(person, 'identity_member', 'Etkin kurum kişisi bulunamadı.', 403);
-    const memberships = store.db.prepare('SELECT unit,roles,expires FROM memberships WHERE tenant=? AND person=? AND active=1 AND expires>?').all(c.tenant, person.id, now.toISOString()).map(row => {
-     let roles;
-     try { roles = JSON.parse(row.roles); } catch { roles = null; }
-     requireThat(Number.isFinite(Date.parse(row.expires)) && Date.parse(row.expires) > now.getTime() && text(row.unit) && Array.isArray(roles) && roles.length > 0 && roles.every(r => ROLES.includes(r)), 'identity_directory', 'Üyelik yetki kaydı doğrulanamadı.', 403);
-     return {unit: row.unit, roles};
-    });
-    requireThat(memberships.length > 0, 'membership_required', 'Kurum üyeliği yok veya süresi dolmuş.', 403);
-    // Read-only result. No binding, cookie, person or role is created.
-    return {id: person.id, tenant: c.tenant, mfa: identity.mfa, memberships};
-   });
+  resolveLocalMember(proof, options) { return resolveMember(proof, options); },
+  commitLocalMember(proof, options, commit) {
+   requireThat(typeof commit === 'function', 'identity_commit', 'Yerel kabul işlemi gerekli.', 500);
+   // Synchronous server-owned callback: member recheck and commit share one transaction.
+   return resolveMember(proof, options, commit);
   },
  });
 }

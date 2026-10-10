@@ -122,3 +122,7 @@ Genel yayın yetkisi mevcut pilotun korumalı ekranını güncellemeyi kapsar; b
 Paket 4 `2743da31b6b6e278dfc13b27e8bc79145b708731` / `dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV` ile production READY. Sınırlı canlı smoke ve geri dönüş hedefi `RELEASE.md` içinde.
 
 `identity-contract.mjs` sürümlü issuer/audience/açık anahtar/MFA profilini doğrular; `resolveLocalMember` yalnız izole kabul deposunda mevcut kişi ve süreli üyelikleri okur. Token/e-posta/rol iddiaları yetki oluşturmaz. Yeni 29 testle sunucu toplamı 87, kaynak toplamı 179. Ayrıntılar `IDENTITY-CONTRACT.md`; yeni SSO giriş yolu veya üretim depo adaptörü değildir. Bu hazırlık canlıya dağıtılmadı. Kalıcı nonce/callback ve oturum yaşam döngüsü açık kalır.
+
+## B06/B07 ikinci yerel kabul dilimi
+
+`identity-flow.mjs` tek kullanımlık kalıcı istek ile PKCE/state/nonce, atomik oturum ve denetim, kurum kapsamı ve çıkış işlemlerini ekler. `store.mjs` yalnız yeni yerel oturumların tenant bağını denetler. 27 yeni testle sunucu 114, toplam 206; B11 13 tarayıcı kontrolü yeniden geçti. Gerçek HTTP/IdP ve üretim depo adaptörü açık. Yayın durumu RELEASE.md ve backlog.json içinde.

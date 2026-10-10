@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-10T20:24:08.833Z",
+  "scope": "isolated-local-acceptance",
+  "server_tests": 114,
+  "portal_tests": 46,
+  "regression_tests": 46,
+  "total": 206,
+  "identity_tests": 29,
+  "identity_flow_tests": 27,
+  "browser_checks": [
+    "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+    "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+    "Açık itiraz belge hazırlığını kapatır",
+    "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+    "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+    "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+    "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+    "Yalnız karar bekleyen değerlendirme için karar formu",
+    "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+    "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+    "390 px mobil: taşma ve bozuk resim yok",
+    "Akademik sekmeler Home/End tuşları ve seçili durum",
+    "Yakalanmış istemci istisnası yok"
+  ],
+  "browser": "138.0.7204.0",
+  "production": false,
+  "limits": [
+    "Gerçek IdP/HTTP callback yok",
+    "İki SQLite bağlantısı tek test işlemi içinde; dağıtık yük testi değil",
+    "Production migration veya credential oluşturulmadı"
+  ],
+  "screenshots_sha256": {
+    "desktop.png": "057a08e790bb796844a84767432cd032fe39425a22092173f97fb127a6934b0c",
+    "mobile.png": "2624e9ce6e5956cf0ed83fa8852195c4bd5ed7fa083e74016d4a635354571d62"
+  }
+}
