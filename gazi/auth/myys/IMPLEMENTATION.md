@@ -8,8 +8,7 @@ Kaynak tabanı: `ffae561ebe5120f7d063d929b8b4954829ba0adc`.
 ## Teslim kapsamı
 
 Bu değişiklik ilk kritik dilimin **izole yerel kabul uygulamasıdır**. Üretim
-veritabanına migration uygulanmadı, kimlik sağlayıcısı bağlanmadı, canlı
-dağıtım yapılmadı. B01–B36'nın tamamı bitmiş değildir. Her paketin tamlık,
+veritabanına migration uygulanmadı, kimlik sağlayıcısı bağlanmadı. İlk korumalı arayüz paketi canlıya yayımlandı; dağıtım ve gerçek kontrol kanıtı `RELEASE.md` dosyasındadır. B01–B36'nın tamamı bitmiş değildir. Her paketin tamlık,
 test ve dış bağımlılık durumu `backlog.json` içinde ayrı kaydedilir.
 
 - `store.mjs`: dosyaya kalıcı yerel kabul deposu; sabit issuer/subject kişi
@@ -77,7 +76,7 @@ AI değerlendirme ve NFT hizmeti bu değişiklikle açılmaz.
 - `npm run build --prefix gazi/portal`: arayüz derlemesi.
 
 Bu testler canlı entegrasyon, resmî akademik kabul veya WCAG uygunluğu değildir.
-Yeni ekranın tarayıcı/ekran okuyucu kabulü geçmedi: yerel Chromium bulunamadı, standart Playwright indirmesi geçersiz arşiv döndürdü; bulut tarayıcı yerel kabul portunda ERR_CONNECTION_REFUSED verdi. Bu sonuç başarılı görsel kabul değildir.
+Yeni ekranın canlı masaüstü kapalı görünümü kontrol edildi. Tam yerel rol akışı ve ekran okuyucu kabulü geçmedi: yerel Chromium bulunamadı, standart Playwright indirmesi geçersiz arşiv döndürdü; bulut tarayıcı yerel kabul portunda ERR_CONNECTION_REFUSED verdi. Bu sonuç başarılı görsel kabul değildir.
 
 ## Sonraki üretim kapıları — tek liste
 
