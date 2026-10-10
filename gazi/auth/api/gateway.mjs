@@ -4,6 +4,7 @@ import {createHash,createHmac,randomBytes} from 'node:crypto';
 import {isIP} from 'node:net';
 import {verifySync} from 'otplib';
 import {badgeRoute} from '../lib/badge-service.mjs';
+import {myysRoute} from '../myys/http.mjs';
 
 const COOKIE='__Host-gazi_demo_session';
 const ROOT=process.cwd();
@@ -61,6 +62,17 @@ export default async function handler(req,res){
    const {expires}=await store('consume',{step:result.timeStep,hash:sha(session)});
    if(!expires)return json(res,401,{error:'Kod geçersiz veya kullanılmış. Uygulamadaki yeni kodu deneyin.'});
    cookie(res,session,3600);return json(res,200,{ok:true,next:safeNext(b.next),expires});
+  }
+  if(path.startsWith('/api/myys/')){
+   const session=token?await store('session',{hash:sha(token)}):null;
+   if(!session?.expires||Date.parse(session.expires)<=Date.now())return json(res,401,{error:'Oturumunuz sona erdi.'});
+   if(!['GET','POST'].includes(req.method))return json(res,405,{error:'İzin verilmeyen işlem.'});
+   let b;
+   if(req.method==='POST'){
+    if(!validOrigin(req))return json(res,403,{error:'İstek doğrulanamadı.'});
+    try{b=await body(req,64000);}catch{return json(res,400,{error:'Geçerli bir MYYS isteği gerekli.'});}
+   }
+   return await myysRoute({req,path,b,sessionHash:sha(token),json,res});
   }
   if(path.startsWith('/api/rozet/')){
    const publicBadge=['/api/rozet/anahtarlar','/api/rozet/kurum','/api/rozet/durum','/api/rozet/gorsel.svg'].includes(path)&&req.method==='GET';

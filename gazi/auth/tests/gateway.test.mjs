@@ -14,6 +14,19 @@ globalThis.fetch=async(url,opts)=>{if(unavailable)throw Error();const b=JSON.par
  if(b.action==='logout'){session=null;r={ok:true};}
  return new Response(JSON.stringify(r));};
 test.after(()=>{globalThis.fetch=original;});
+test('MYYS keeps session and CSRF gates; production-like deployment cannot open local storage',async()=>{
+ const token='c'.repeat(64),auth={cookie:'__Host-gazi_demo_session='+token};
+ assert.equal((await request('/api/myys/calisma?kurum=gazi')).statusCode,401);
+ session=createHash('sha256').update(token).digest('hex');
+ try{
+  assert.equal((await request('/api/myys/islem','POST',{}, {...auth,origin:'https://evil.test'})).statusCode,403);
+  for(const path of ['/api/myys/calisma?kurum=gazi','/api/myys/islem','/api/myys/imzala']){
+   const r=await request(path,path.includes('calisma')?'GET':'POST',{},auth);
+   assert.equal(r.statusCode,503);assert.equal(JSON.parse(r.data).code,'institution_setup_required');
+  }
+  assert.equal((await request('/myys/store.mjs','GET',undefined,auth)).statusCode,404);
+ }finally{session=null;}
+});
 async function request(url,method='GET',body,extra={}){const req=Readable.from(body===undefined?[]:[JSON.stringify(body)]);Object.assign(req,{url,method,headers:{host:'gazi.unigoturkiye.com',origin:'https://gazi.unigoturkiye.com','content-type':'application/json',...extra}});const res={statusCode:200,headers:{},setHeader(k,v){this.headers[k]=v;},end(data){this.data=data?.toString()||'';}};await handler(req,res);return res;}
 test('Redirects cannot leave this origin or target auth endpoints',()=>{for(const s of ['//evil.test','https://evil.test','/../a','/a\\b','/api/erisim/giris','/giris','/\r\nX:test'])assert.equal(safeNext(s),'/');assert.equal(safeNext('/kurumsal-demo.html#/rozetler'),'/kurumsal-demo.html#/rozetler');});
 test('Cookie parser rejects malformed and duplicate tokens',()=>{assert.equal(getToken('__Host-gazi_demo_session=x'),null);const s='f'.repeat(64);assert.equal(getToken('__Host-gazi_demo_session='+s),s);assert.equal(getToken('__Host-gazi_demo_session='+s+';__Host-gazi_demo_session='+s),null);});

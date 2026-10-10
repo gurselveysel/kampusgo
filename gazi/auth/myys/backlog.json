@@ -1,0 +1,1035 @@
+{
+  "source_library_id": "libfile_dcd1d1343b048191a8d94c43c1ac1be5",
+  "baseline": "ffae561ebe5120f7d063d929b8b4954829ba0adc",
+  "production_changed": false,
+  "packages": [
+    {
+      "work_id": "B01",
+      "title": "Mevcut pilot envanterini sabitle",
+      "service_id": "H11",
+      "phase": "A0",
+      "delivery_mode": "Koru ve doğrula",
+      "owner_role": "UniGO teknik lider + Gazi ürün sahibi",
+      "depends_on": [],
+      "acceptance_criteria": "27 Gazi satırı kaynak ve güncel davranışla eşleşir; eski rozet/giriş/66 ders/9 rol regresyon listesi eksiksizdir.",
+      "planning_estimate": "3–5 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Mevcut 21 portal + 28 model/kaynak testi; eski 15 rozet/erişim testi.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Mevcut kaynak tabanı ve ders/rol/rozet regresyonları korundu; 27 satırın tamamı canlıda yeniden sınanmadı.",
+      "independent_remaining_work": [
+        "27 yetenek satırını rota ve test kanıtıyla tamamla; tarayıcı regresyonunu çalıştır."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Canlı yetkili oturum ve görsel kontrol."
+    },
+    {
+      "work_id": "B02",
+      "title": "Akademik ve SEM yetki yollarını ayır",
+      "service_id": "H11",
+      "phase": "A1",
+      "delivery_mode": "Kurum kararı",
+      "owner_role": "Gazi akademik yönetim + hukuk",
+      "depends_on": [
+        "B01"
+      ],
+      "acceptance_criteria": "Program sahibi, akademik karar sahibi, hukuki düzenleyici ve teknik imzalayan ayrıdır; gerekli Senato ve SEM dosyası olmadan resmî ihraç kapalıdır.",
+      "planning_estimate": "5–10 kişi-gün ve kurum beklemesi",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Merkezi SEM yerel ihraç reddi ve resmî mod reddi.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Dört sorumluluk alanı ve ayrı SEM yolu; gerçek kurum onayı yok.",
+      "independent_remaining_work": [
+        "Yetki sicilinde belge ekleri, geçerlilik ve sorumluluk kapsamını doğrula."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Senato/SEM yetki belgeleri ve atanmış sorumlular."
+    },
+    {
+      "work_id": "B03",
+      "title": "Program bilgi paketini onayla",
+      "service_id": "H01",
+      "phase": "A1",
+      "delivery_mode": "Uyarla",
+      "owner_role": "Program sahibi + ölçme + kalite",
+      "depends_on": [
+        "B02"
+      ],
+      "acceptance_criteria": "Öğrenme çıktısı, iş yükü, rubrik, eğitici, içerik lisansı ve belge profili onaylı sürümle bağlıdır; eksik alan yayınlanmaz.",
+      "planning_estimate": "5–8 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Eksik çıktı/görev/rubrik ve hazırlayanın yayını reddedilir.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/portal/src/academic-forms.jsx"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Program/çıktı/görev/rubrik ve program kayıt formları eklendi; çok görevli tam katalog yazarlığı devam ediyor.",
+      "independent_remaining_work": [
+        "Çok görevli rubrik yazarlığı, katalog arama ve sürüm karşılaştırması."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Programın gerçek akademik ve lisans kabulü."
+    },
+    {
+      "work_id": "B04",
+      "title": "Veri akışını ve saklamayı onayla",
+      "service_id": "H15",
+      "phase": "A1",
+      "delivery_mode": "Kurum kararı",
+      "owner_role": "KVKK/hukuk + BT",
+      "depends_on": [
+        "B02"
+      ],
+      "acceptance_criteria": "Her akış için amaç, taraf rolü, ülke, alıcı, saklama ve silme kuralı kayıtlı; Coursera davet/kullanıcı/ilerleme rolleri ayrıdır.",
+      "planning_estimate": "4–7 kişi-gün ve kurum beklemesi",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/registry.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs",
+        "gazi/portal/src/academic-forms.jsx"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir.",
+      "independent_remaining_work": [
+        "Veri akışı siciline süre/ülke doğrulaması ve saklama işçisi ekle."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Veri sorumlusunun amaç, aktarım ve saklama kararı."
+    },
+    {
+      "work_id": "B05",
+      "title": "İçerik ve sağlayıcı haklarını doğrula",
+      "service_id": "H04",
+      "phase": "A1",
+      "delivery_mode": "Lisansla",
+      "owner_role": "Tedarik + hukuk + içerik sahibi",
+      "depends_on": [
+        "B03"
+      ],
+      "acceptance_criteria": "Kullanıcı grubu, kopyalama, yeniden yayın, marka, API, çıkış ve abonelik sonrası haklar yazılı; izin dışı dağıtım kapalıdır.",
+      "planning_estimate": "3–6 kişi-gün ve teklif beklemesi",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/registry.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs",
+        "gazi/portal/src/academic-forms.jsx"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir.",
+      "independent_remaining_work": [
+        "Hak sicilini materyal indirme/yeniden yayın kararına zorunlu bağla."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Sağlayıcının yazılı kullanıcı grubu ve dağıtım hakları."
+    },
+    {
+      "work_id": "B06",
+      "title": "Kalıcı kişi ve üyelik modelini kur",
+      "service_id": "H11",
+      "phase": "A2",
+      "delivery_mode": "Geliştir",
+      "owner_role": "UniGO backend + Gazi BT",
+      "depends_on": [
+        "B04"
+      ],
+      "acceptance_criteria": "Değişen e-posta kişiyi çoğaltmaz; ayrılma/rol süresi sunucuda uygulanır; kullanıcı sadece kendi kayıtlarını görür.",
+      "planning_estimate": "5–8 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Süreli üyelik, ayrılan kişi, kimlik ve HTTP rol sahteciliği testleri.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Yerel kabulde kalıcı kişi/üyelik/oturum modeli; üretim adapter ve gerçek IdP yok.",
+      "independent_remaining_work": [
+        "Üretim depo arayüzü, işlemsel şema ve kişi yaşam döngüsü adaptörünü yerelde geliştir."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Mevcut üretim deposu için ayrı migration yetkisi ve gerçek kimlik eşlemesi."
+    },
+    {
+      "work_id": "B07",
+      "title": "SSO ve yönetici MFA bağlantısını kur",
+      "service_id": "H15",
+      "phase": "A2",
+      "delivery_mode": "Entegre et",
+      "owner_role": "Gazi kimlik sahibi + UniGO",
+      "depends_on": [
+        "B06"
+      ],
+      "acceptance_criteria": "Yetkisiz issuer, geçersiz oturum, ayrılan kullanıcı ve başka tenant erişimi reddedilir; MFA kapsamı belgeli; mevcut pilot kapısı bozulmaz.",
+      "planning_estimate": "4–8 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "MFA olmayan ayrıcalıklı işlem reddi; eski TOTP regresyonu.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Pilot kapısı korunur; kişi bağlantısı/MFA yokken işlem kapalı. Gerçek SSO entegrasyonu yok.",
+      "independent_remaining_work": [
+        "SSO sözleşmesi, güvenilir issuer/audience doğrulaması, iptal ve MFA negatif fixture testleri."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi."
+    },
+    {
+      "work_id": "B08",
+      "title": "Tenant ve görevler ayrılığını sınırla",
+      "service_id": "H11",
+      "phase": "A2",
+      "delivery_mode": "Geliştir",
+      "owner_role": "UniGO backend + güvenlik",
+      "depends_on": [
+        "B06"
+      ],
+      "acceptance_criteria": "Kurumlar arası okuma/yazma/ihracın bütün negatif testleri reddedilir; hazırlayan tek başına yetkili nihai yayın yapamaz.",
+      "planning_estimate": "4–7 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Çapraz kurum/birim/öğrenen erişimi ve aynı kişide onay reddi.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Yerel kabulde kurum/birim ve görevler ayrılığı.",
+      "independent_remaining_work": [
+        "Tüm okuma/yazma/dışa aktarım yollarına iki kurum ve iki birim negatif matrisi."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Gerçek görev atamaları ve kurumsal kabul."
+    },
+    {
+      "work_id": "B09",
+      "title": "Program rubrik ve kanıtı sürümle",
+      "service_id": "H05",
+      "phase": "A2",
+      "delivery_mode": "Geliştir",
+      "owner_role": "UniGO backend + akademik ölçme",
+      "depends_on": [
+        "B03",
+        "B06"
+      ],
+      "acceptance_criteria": "Kaynağı doğrulanmış imzalı aktarım paketinde program, rubrik, görev ve teslim kimlikleri hash/zamanla bağlı; eski kararın dayanağı aynı içerikle yeniden üretilebilir.",
+      "planning_estimate": "6–10 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/lms.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir.",
+      "independent_remaining_work": [
+        "İmzalı kaynak zincirine rubrik/görev kaynak sürümleri ve arşiv yeniden üretimi ekle."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Gerçek LMS kaynak kimliği ve rubrik sözleşmesi."
+    },
+    {
+      "work_id": "B10",
+      "title": "Yetkili başarı kararını kalıcı yap",
+      "service_id": "H05",
+      "phase": "A2",
+      "delivery_mode": "Geliştir",
+      "owner_role": "Gazi değerlendirici + UniGO",
+      "depends_on": [
+        "B08",
+        "B09"
+      ],
+      "acceptance_criteria": "Eksik not/null kanıt/başarısız sonuç belgeye ilerlemez; sadece doğrulanmış alternatif ölçme ve yetkili karar elle tamamlamayı sağlar.",
+      "planning_estimate": "5–8 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Boş kanıt, null puan ve başarısız sonucun onayı reddedilir.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Kanıta ve sunucuda hesaplanan rubriğe bağlı kalıcı yerel karar.",
+      "independent_remaining_work": [
+        "Alternatif ölçme kanıt türleri ve moderasyon gerekçelerini sürümle."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Yetkili gerçek akademik karar sahipleri."
+    },
+    {
+      "work_id": "B11",
+      "title": "İtiraz ve moderasyon yolunu kur",
+      "service_id": "H05",
+      "phase": "A2",
+      "delivery_mode": "Uyarla",
+      "owner_role": "Gazi kurul sekreteryası + UniGO",
+      "depends_on": [
+        "B10"
+      ],
+      "acceptance_criteria": "İtiraz bağımsız yetkiliye gider; ilk/yeni karar gerekçeleri korunur; açık itirazın belgeye etkisi politikayla işletilir.",
+      "planning_estimate": "4–6 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Açık itiraz ve yeniden değerlendirme testleri.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Bağımsız itiraz, değişmez eski karar; yeniden değerlendirme ihraç kapısını kapatır.",
+      "independent_remaining_work": [
+        "İtiraz/çözüm arayüzünü tamamla; yeniden değerlendirme ve belge değiştirme akışı."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Kurumun itiraz ve moderasyon usulü."
+    },
+    {
+      "work_id": "B12",
+      "title": "Belgeyi akademik karara bağla",
+      "service_id": "H06",
+      "phase": "A2",
+      "delivery_mode": "Koru ve geliştir",
+      "owner_role": "UniGO rozet servisi + yetkili düzenleyici",
+      "depends_on": [
+        "B02",
+        "B10"
+      ],
+      "acceptance_criteria": "Karar kimliği, issuer yetkisi ve EK-1 profili olmadan ihraç yok; pilot etiketi gerçek onay olmadan kaldırılamaz.",
+      "planning_estimate": "5–8 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Karar/kanıt imza bağı; imza sırasında yetki çekme ve tekrar kontrolü.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Yeni yerel karara bağlı imza zinciri; eski sentetik pilot laboratuvarı korunur, resmî yol kapalı.",
+      "independent_remaining_work": [
+        "Belge profili sicili, eski sentetik laboratuvar sınırı ve karar durumuyla zorunlu ilişki."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Hukuki düzenleyici yetkisi; resmî ihraç bu yayınla açılmaz."
+    },
+    {
+      "work_id": "B13",
+      "title": "Anahtar ve durum güvenilirliğini doğrula",
+      "service_id": "H15",
+      "phase": "A2",
+      "delivery_mode": "Koru ve geliştir",
+      "owner_role": "UniGO güvenlik + Gazi BT",
+      "depends_on": [
+        "B12"
+      ],
+      "acceptance_criteria": "Bozuk payload, yanlış issuer, süresi dolmuş ve iptal edilmiş belge doğru reddedilir; rotasyondan önceki geçerli belge doğrulanır; kompromize anahtar prosedürü denenir.",
+      "planning_estimate": "4–7 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Eski güvenilir anahtar kabulü, kompromize anahtar, kurcalama/iptal reddi.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Yeni yerel çekirdekte güvenilir anahtar geçmişi; canlı anahtar rotasyonu yapılmadı.",
+      "independent_remaining_work": [
+        "Anahtar sicili ve durum listesi üretim adaptörünü yerel test et."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Mevcut imza sağlayıcısı yetkili işletim/rotasyon kararı."
+    },
+    {
+      "work_id": "B14",
+      "title": "LMS veri sözleşmesini onayla",
+      "service_id": "H16",
+      "phase": "A3",
+      "delivery_mode": "Entegre et",
+      "owner_role": "GUZEM sistem sahibi + UniGO",
+      "depends_on": [
+        "B03",
+        "B04",
+        "B06"
+      ],
+      "acceptance_criteria": "Gerçek LMS/sürüm, kimlik alanları, kayıt/not/tamamlama anlamı, izin, kota ve hata davranışı yazılı; UzemGO ayrı seçenek olarak işaretli.",
+      "planning_estimate": "3–5 kişi-gün ve kurum erişimi",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/lms.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir.",
+      "independent_remaining_work": [
+        "İç sözleşme doğrulayıcısını sürümlü gerçek sağlayıcı şemasına uyarlama noktası ekle."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Gerçek LMS adı/sürümü, API ve ölçme anlamlarının kurumca teyidi."
+    },
+    {
+      "work_id": "B15",
+      "title": "İlk LMS adaptörünü kabul et",
+      "service_id": "H16",
+      "phase": "A3",
+      "delivery_mode": "Entegre et",
+      "owner_role": "UniGO entegrasyon + LMS sahibi",
+      "depends_on": [
+        "B10",
+        "B14"
+      ],
+      "acceptance_criteria": "Sentetik kohortta kayıt, tamamlama, not düzeltme, lisans iptali ve yanlış kişi eşleme testleri geçer; gerçek veri yalnız onayla kullanılır.",
+      "planning_estimate": "8–15 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/lms.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir.",
+      "independent_remaining_work": [
+        "İç adaptörü sağlayıcı bağımsız kayıt/not/tamamlama senaryolarıyla genişlet."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Seçilen LMS için yetkili test ortamı ve kimlik/veri eşlemesi."
+    },
+    {
+      "work_id": "B16",
+      "title": "Olay kuyruğu ve idempotency kur",
+      "service_id": "H16",
+      "phase": "A3",
+      "delivery_mode": "Geliştir",
+      "owner_role": "UniGO entegrasyon",
+      "depends_on": [
+        "B15"
+      ],
+      "acceptance_criteria": "Aynı olay 10 kez gönderildiğinde tek karar/ihraç; sırasız/geç olay durum geriletmez; 202 yalnız kabul sayılır; çakışma kör tekrar edilmez.",
+      "planning_estimate": "4–7 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "6 sentetik LMS sözleşmesi ve olay testi geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/lms.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir.",
+      "independent_remaining_work": [
+        "Kalıcı işçi yeniden deneme, karantina ve mutabakat arayüzünü ekle."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Üretim kuyruk/depo işletim seçimi; mevcut testler yereldir."
+    },
+    {
+      "work_id": "B17",
+      "title": "Toplu ihraç ve mutabakat ekle",
+      "service_id": "H06",
+      "phase": "A3",
+      "delivery_mode": "Uyarla",
+      "owner_role": "UniGO + program yönetimi",
+      "depends_on": [
+        "B12",
+        "B16"
+      ],
+      "acceptance_criteria": "Türkçe karakter, eksik satır, yinelenen kişi ve kısmi hata raporu doğru; gönderilen/kabul/işlenen kayıtlar tek tek uzlaştırılır.",
+      "planning_estimate": "3–6 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Dört satırda tek hazırlık; iki ayrı hata; imzalı sayı sıfır.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Toplu ihraç hazırlığı satır sonuçları ve tekil sayım; toplu imza/teslim henüz yok.",
+      "independent_remaining_work": [
+        "Toplu imza/teslim, satır bazlı kalıcı mutabakat ve güvenli CSV aktarımı."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Yetkili kurum kararları ve üretim imzalayıcısı."
+    },
+    {
+      "work_id": "B18",
+      "title": "Kişisel cüzdan ve paylaşım ekle",
+      "service_id": "H07",
+      "phase": "A3",
+      "delivery_mode": "Geliştir",
+      "owner_role": "UniGO + veri sahibi",
+      "depends_on": [
+        "B12",
+        "B13"
+      ],
+      "acceptance_criteria": "Kişi yalnız kendi belgesini görür; varsayılan özel; paylaşım iptali yeni erişimi keser; kamu sayfası özel kanıtı göstermez.",
+      "planning_estimate": "5–8 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Başka öğrenen göremez; paylaşım özel kanıt içermez; iptal erişimi keser.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Özel kayıt görünümü ve süreli/iptal edilebilir yerel paylaşım; kamu servisi ve dış cüzdan yok.",
+      "independent_remaining_work": [
+        "Kişisel indirme, paylaşım iptal arayüzü ve minimal kamu okuma uçları."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Üretim kimliği, saklama/paylaşım politikası."
+    },
+    {
+      "work_id": "B19",
+      "title": "Bağımsız belge taşımayı sınat",
+      "service_id": "H16",
+      "phase": "A3",
+      "delivery_mode": "Entegre et",
+      "owner_role": "UniGO + bağımsız test/tedarikçi",
+      "depends_on": [
+        "B13",
+        "B18"
+      ],
+      "acceptance_criteria": "Seçilen OB/VC profilinde dışa aktarım bağımsız araçta doğrulanır; iptal ve issuer kontrolü çalışır; şema testi sertifikasyon diye adlandırılmaz.",
+      "planning_estimate": "4–7 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Bağımsız dış cüzdan kabulü ve seçilen profil sözleşmesi yok.",
+      "independent_remaining_work": [
+        "Seçilen dışa aktarım profilinin bağımsız doğrulama fixture ve paketlerini hazırla."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Bağımsız cüzdan/profil seçimi ve yetkili karşılıklı çalışma testi."
+    },
+    {
+      "work_id": "B20",
+      "title": "Tanıma politika setini onayla",
+      "service_id": "H08",
+      "phase": "A3",
+      "delivery_mode": "Kurum kararı",
+      "owner_role": "Gazi Senato/öğrenci işleri",
+      "depends_on": [
+        "B02",
+        "B03"
+      ],
+      "acceptance_criteria": "Yüzde 10 yolları, uzaktan yüzde 50 paydası, önceki ders/çift sayım ve RPL usulü yazılı; otomatik varsayımsal formül yok.",
+      "planning_estimate": "4–7 kişi-gün ve kurum beklemesi",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/registry.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs",
+        "gazi/portal/src/academic-forms.jsx"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir.",
+      "independent_remaining_work": [
+        "Sürümlemeli politika sicilini tanıma motoruna bağla; payda/çift sayım testleri."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Senato tarafından doğrulanmış politika ve paydalar."
+    },
+    {
+      "work_id": "B21",
+      "title": "Dış belge ve tanıma akışını bağla",
+      "service_id": "H08",
+      "phase": "A3",
+      "delivery_mode": "Uyarla",
+      "owner_role": "Gazi kurul + UniGO",
+      "depends_on": [
+        "B11",
+        "B20"
+      ],
+      "acceptance_criteria": "Teknik doğrulama akademik karardan ayrı; tam/kısmi/red ve itiraz testleri geçti; aynı kazanım ikinci kredi oluşturmaz.",
+      "planning_estimate": "5–8 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "B20 ve üretim karar modeli bekleniyor; mevcut yerel tanıma modeli korunuyor.",
+      "independent_remaining_work": [
+        "Kalıcı dış belge inceleme, tam/kısmi/red/itiraz ve tekil kredi defteri."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Geçerli tanıma politikası ve yetkili kurul."
+    },
+    {
+      "work_id": "B22",
+      "title": "OBS aktarımını kontrollü kabul et",
+      "service_id": "H16",
+      "phase": "A5",
+      "delivery_mode": "Entegre et",
+      "owner_role": "Öğrenci işleri OBS sahibi + UniGO",
+      "depends_on": [
+        "B21"
+      ],
+      "acceptance_criteria": "Yalnız yetkili karar aktarılır; red/düzeltme/mükerrer olay testleri ve transkript veya diploma eki kaydı mutabık; simülasyon etiketi bağlantıdan önce kalkmaz.",
+      "planning_estimate": "6–12 kişi-gün ve kurum erişimi",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "OBS teknik sözleşmesi/test ortamı yok.",
+      "independent_remaining_work": [
+        "OBS outbox sözleşmesi, düzeltme ve yinelenen olay mutabakatı."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "OBS teknik şema/test ortamı ve aktarım izni."
+    },
+    {
+      "work_id": "B23",
+      "title": "SEM merkezi sürecini doğrula",
+      "service_id": "H11",
+      "phase": "A3",
+      "delivery_mode": "Kurum işlemi ve koşullu entegrasyon",
+      "owner_role": "GAZİSEM + yetkili merkez + Gazi BT",
+      "depends_on": [
+        "B02"
+      ],
+      "acceptance_criteria": "Güncel YÖKSİS başvuru ve uygunluk yolu belgeli; merkezi düzenleyici doğru; teknik şema/yetki olmadan otomatik aktarım veya yerel resmî ihraç yapılmaz.",
+      "planning_estimate": "Belge ve yetki erişimine bağlı; henüz ölçülemez",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/registry.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs",
+        "gazi/portal/src/academic-forms.jsx"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir.",
+      "independent_remaining_work": [
+        "Merkezi SEM dosya kontrol listesi ve durum makinesi."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Yetkili merkez, güncel YÖKSİS usulü ve teknik erişim."
+    },
+    {
+      "work_id": "B24",
+      "title": "Erişilebilirlik açılış testini yap",
+      "service_id": "H14",
+      "phase": "A4",
+      "delivery_mode": "Doğrula ve düzelt",
+      "owner_role": "QA + erişilebilirlik sahibi",
+      "depends_on": [
+        "B15",
+        "B18"
+      ],
+      "acceptance_criteria": "Başvuru ders ölçme cüzdan destek ve belge çıktısında klavye/odak/ekran okuyucu/altyazı testleri geçer; kritik engel sıfır.",
+      "planning_estimate": "5–10 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [
+        "scripts/myys-local-acceptance.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Yerel kabul sunucusu hazır; Chromium eksik ve bulut tarayıcıda yerel port bağlantısı reddedildi. Görsel kabul geçmedi.",
+      "independent_remaining_work": [
+        "Yerel kabul senaryoları, klavye/odak testleri ve ekran okuyucu kontrolü."
+      ],
+      "development_blocker": "Tarayıcı çalıştırma ortamı eksik; kod ve API testi engelli değil.",
+      "production_activation_blocker": "Yerel Chromium yok; indirme geçerli arşiv dönmedi; bulut tarayıcı yerel porta erişemedi. Canlı oturum ayrıca gerekli."
+    },
+    {
+      "work_id": "B25",
+      "title": "İçeriği akademik ve lisans yönünden gözden geçir",
+      "service_id": "H04",
+      "phase": "A4",
+      "delivery_mode": "Koru ve iyileştir",
+      "owner_role": "Program sahibi + içerik ekibi",
+      "depends_on": [
+        "B03",
+        "B05"
+      ],
+      "acceptance_criteria": "66 mevcut ders kaybolmaz; seçili programın kaynak/lisans/dil/erişilebilirlik ve rubrik ilişkisi incelenir; yanlış program materyali ve indirme testi kapanır.",
+      "planning_estimate": "5–10 kişi-gün seçili kapsam için",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "21 portal/materyal testi; kaynak dosyaları baseline ile aynı.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "66 ders ve kaynak dosyaları korunur; yeni akademik/lisans kabulü yapılmadı.",
+      "independent_remaining_work": [
+        "66 ders materyalini lisans/erişilebilirlik inceleme siciline eşle."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Akademik içerik ve hak sahiplerinin incelemesi."
+    },
+    {
+      "work_id": "B26",
+      "title": "Destek kılavuzu ve eğitimi güncelle",
+      "service_id": "H13",
+      "phase": "A4",
+      "delivery_mode": "Uyarla",
+      "owner_role": "Gazi akademik destek + UniGO destek",
+      "depends_on": [
+        "B11",
+        "B15",
+        "B18"
+      ],
+      "acceptance_criteria": "Öğrenen/eğitici/yönetici senaryoları uygulanır; teknik destek akademik notu değiştiremez; güncel kılavuz sürümle eşleşir.",
+      "planning_estimate": "3–6 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Teknik destek akademik ihraç yapamaz.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "İlk çekirdek işlem ve engel kılavuzu yazıldı; tüm rollere eğitim henüz hazırlanmadı.",
+      "independent_remaining_work": [
+        "Öğrenen/eğitici/yönetici kılavuzları, destek durum ve çözüm akışı."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Kurumsal destek sahibi ve eğitim kabulü."
+    },
+    {
+      "work_id": "B27",
+      "title": "Olay ve geri yükleme provası yap",
+      "service_id": "H15",
+      "phase": "A4",
+      "delivery_mode": "Doğrula",
+      "owner_role": "Gazi BT + UniGO işletim",
+      "depends_on": [
+        "B13",
+        "B16"
+      ],
+      "acceptance_criteria": "Kesinti, yanlış ihraç, anahtar riski ve yedekten geri yükleme denenir; ölçülen sonuç sözleşmedeki RPO/RTO hedefini karşılar.",
+      "planning_estimate": "3–5 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Üretim deposu/SLA/RPO/RTO yok; yerel yeniden açma testi geri yükleme tatbikatı değildir.",
+      "independent_remaining_work": [
+        "Yerel yedek/geri yükleme ve olay provaları; ölçüm çıktısı."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Üretim RPO/RTO hedefi, yedekleme ve ayrı geri yükleme yetkisi."
+    },
+    {
+      "work_id": "B28",
+      "title": "Silme saklama ve çıkış haklarını sına",
+      "service_id": "H15",
+      "phase": "A4",
+      "delivery_mode": "Uyarla ve doğrula",
+      "owner_role": "KVKK/hukuk + UniGO",
+      "depends_on": [
+        "B04",
+        "B19"
+      ],
+      "acceptance_criteria": "Öğrenen talebi gereksiz hesap verisini sildirir; hukuken gerekli akademik kayıt ayrı dayanak/süreyle korunur; dış platform hesap silmesinin doğrulamaya etkisi açıklanır.",
+      "planning_estimate": "3–6 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Saklama ve hukuki veri talebi politikası yok; uygulama henüz hazırlanmadı.",
+      "independent_remaining_work": [
+        "Veri talebi, hesap verisi temizleme ve akademik saklama ayrımı."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Hukuki saklama kararı; geri alınamaz üretim silme yetkisi verilmedi."
+    },
+    {
+      "work_id": "B29",
+      "title": "Kalite göstergelerini gerçek veriye bağla",
+      "service_id": "H14",
+      "phase": "A4",
+      "delivery_mode": "Geliştir",
+      "owner_role": "Kalite + UniGO veri ekibi",
+      "depends_on": [
+        "B16"
+      ],
+      "acceptance_criteria": "Başvuru, tamamlama, başarı, belge kabulü ve destek paydaları ayrı; örnek/pilot sayı etiketi görünür; kaynak-sayı mutabakatı geçti.",
+      "planning_estimate": "3–5 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Başarı paydası, boş veri, başka öğrenen izolasyonu geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/projections.mjs",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Yetkili kalıcı kayıtlardan ayrı pay/payda üreten yerel analitik; gerçek LMS ve kohort bağlanmadı.",
+      "independent_remaining_work": [
+        "Başvuru/tamamlama/destek kaynakları ve sayı mutabakat ekranları."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Gerçek kohort ve LMS kaynak verisi."
+    },
+    {
+      "work_id": "B30",
+      "title": "Kontrollü kohortu aç ve değerlendir",
+      "service_id": "H11",
+      "phase": "A4",
+      "delivery_mode": "İşlet",
+      "owner_role": "Gazi hizmet sahibi + UniGO",
+      "depends_on": [
+        "B05",
+        "B07",
+        "B12",
+        "B15",
+        "B24",
+        "B25",
+        "B26",
+        "B27",
+        "B28"
+      ],
+      "acceptance_criteria": "Teknik akademik operasyon onayları ayrı; kritik hata sıfır; öğrenen/öğretici/admin akışları gerçek yetkili kohortta tamamlandı; dönem değerlendirmesi kayıtlı. Seçilen hizmet yolunun koşullu kapıları da tamamlanır.",
+      "planning_estimate": "4–6 takvim haftası gözlem",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "SEM yolu seçilirse B23; akademik tanıma açılırsa B20 ve B21; OBS aktarımı açılırsa ayrıca B22 tamamlanır.",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Teknik, akademik, operasyon ve gerçek kimlik kabul kapıları açık.",
+      "independent_remaining_work": [
+        "Teknik/akademik/operasyon kabul kapıları ve dönem değerlendirme kaydı."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Yetkili gerçek kohort ve ayrı kurum kabulleri."
+    },
+    {
+      "work_id": "B31",
+      "title": "Ücretli hizmeti koşullu aç",
+      "service_id": "H12",
+      "phase": "A5",
+      "delivery_mode": "Entegre et",
+      "owner_role": "Mali birim + UniGO",
+      "depends_on": [
+        "B02",
+        "B04",
+        "B05"
+      ],
+      "acceptance_criteria": "Tahsilat yetkisi, vergi/iade şartı açık; PSP token akışı; başarılı/çift/bekleyen ödeme, iade ve ters ibraz mutabakatı geçti.",
+      "planning_estimate": "6–10 kişi-gün; ilk pilot için isteğe bağlı",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Tahsilat yetkisi/sözleşme yok; PSP bağlantısı açılmadı.",
+      "independent_remaining_work": [
+        "Koşullu ödeme durum makinesi ve sağlayıcı simülatörü; kart verisi saklama yok."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Tahsilat/vergi/iade yetkisi ve PSP sözleşmesi; ücretli bağlantı yetkisi yok."
+    },
+    {
+      "work_id": "B32",
+      "title": "Çoklu birim ölçeğini kabul et",
+      "service_id": "H11",
+      "phase": "A5",
+      "delivery_mode": "Geliştir",
+      "owner_role": "Gazi birim sahipleri + UniGO",
+      "depends_on": [
+        "B08",
+        "B30"
+      ],
+      "acceptance_criteria": "İkinci birim açılışında rol, issuer, veri ve rapor ayrımı negatif testleri geçti; ilk kohort hakları/sürümü korunur.",
+      "planning_estimate": "5–8 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "Yetki birimi değişince önceki birimin dosyası reddedilir.",
+      "implementation_evidence": [
+        "gazi/auth/myys/IMPLEMENTATION.md",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Birim sınırı yerel çekirdekte; ikinci gerçek birim açılışı yapılmadı.",
+      "independent_remaining_work": [
+        "İkinci birim ve kurum için kapsamlı negatif test ve kaynak kotası."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "İkinci birimin yetkili katılım kararı."
+    },
+    {
+      "work_id": "B33",
+      "title": "Beceri grafını uzmanla doğrula",
+      "service_id": "H09",
+      "phase": "A5",
+      "delivery_mode": "Uyarla",
+      "owner_role": "Akademik uzman + kariyer merkezi + UniGO",
+      "depends_on": [
+        "B09",
+        "B29"
+      ],
+      "acceptance_criteria": "Taksonomi/kaynak lisanslı; hedef/gelişen/kanıtlı ayrımı var; uzman örneklem incelemesi ve hatalı eşleme düzeltmesi kayıtlı.",
+      "planning_estimate": "5–10 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "kısmi",
+      "test_status": "İtirazda değerlendirme göstergesi düşer; başka öğrenen ilişkisi görünmez.",
+      "implementation_evidence": [
+        "gazi/auth/myys/projections.mjs",
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Program çıktısı–görev–değerlendirme ilişkisi hedef/gelişen/değerlendirilen olarak yansıtılır; uzman taksonomi onayı yok.",
+      "independent_remaining_work": [
+        "Uzman eşleme incelemesi, kaynak lisansı ve hata düzeltme sicili."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Lisanslı taksonomi ve akademik uzman kabulü."
+    },
+    {
+      "work_id": "B34",
+      "title": "İşveren portfolyo pilotunu aç",
+      "service_id": "H10",
+      "phase": "A5",
+      "delivery_mode": "Uyarla",
+      "owner_role": "Kariyer merkezi + UniGO",
+      "depends_on": [
+        "B18",
+        "B33"
+      ],
+      "acceptance_criteria": "Öğrenen izni olmadan kişi portfolyosu görünmez; işveren kendi amaç kapsamını aşamaz; geri bildirim akademik notu otomatik değiştirmez.",
+      "planning_estimate": "4–7 kişi-gün",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "B18/B33 ve kariyer veri amacı/izinleri tamamlanmadı.",
+      "independent_remaining_work": [
+        "Amaçla sınırlı portfolyo izinleri ve nottan ayrı geri bildirim."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Öğrenen izinleri ve işveren veri işleme amacı."
+    },
+    {
+      "work_id": "B35",
+      "title": "Pilot AI araçlarını ayrı dene",
+      "service_id": "H05",
+      "phase": "A5",
+      "delivery_mode": "Koşullu lisans ve test",
+      "owner_role": "Ölçme + KVKK + UniGO",
+      "depends_on": [
+        "B04",
+        "B05",
+        "B10"
+      ],
+      "acceptance_criteria": "Pilot/plan/dil doğrulandı; sentetik örneklerde uzman kıyası ve itiraz var; model tek başına yüksek etkili ret/başarı kararı vermiyor.",
+      "planning_estimate": "5–10 kişi-gün; ihtiyaca bağlı",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Onaylı model/sağlayıcı/veri hakkı yok; otomatik akademik karar yok.",
+      "independent_remaining_work": [
+        "Modelden bağımsız öneri/uzman kıyası/itiraz test sözleşmesi."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Onaylı sağlayıcı, içerik/veri hakkı ve uzman pilotu."
+    },
+    {
+      "work_id": "B36",
+      "title": "İsteğe bağlı gelişmiş cüzdan ve zinciri değerlendir",
+      "service_id": "H16",
+      "phase": "A5",
+      "delivery_mode": "Ertele ve gerekçelendir",
+      "owner_role": "Mimari + hukuk + tedarik",
+      "depends_on": [
+        "B19",
+        "B28"
+      ],
+      "acceptance_criteria": "Somut kullanıcı ihtiyacı ve alternatif kıyası onaylı; kişisel veri zincire yazılmıyor; açık protokol gerçek cüzdanda ihraç/doğrulama/iptal testi geçiyor.",
+      "planning_estimate": "Keşif 3–5 kişi-gün; geliştirme sonradan tahminlenir",
+      "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
+      "conditional_dependencies": "",
+      "implementation_status": "engelli",
+      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
+      "implementation_evidence": [],
+      "production_status": "canlıya uygulanmadı",
+      "implementation_note": "Özgün plandaki isteğe bağlı erteleme korunuyor; protokol/NFT açılmadı.",
+      "independent_remaining_work": [
+        "Zincirsiz alternatiflerin gerekçeli değerlendirmesi; isteğe bağlı erteleme."
+      ],
+      "development_blocker": null,
+      "production_activation_blocker": "Somut ihtiyaç/protokol seçimi; kişisel veri zincire yazılmaz."
+    }
+  ],
+  "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
+  "verification": {
+    "core_tests": "29/29 yerel kabul (21 çekirdek + 8 LMS/sicil)",
+    "existing_auth_badge_tests": "15/15 mevcut + 1 yeni gateway kapı testi",
+    "portal_tests": "21/21 durum/ders/içerik",
+    "legacy_tests": "28/28 model/rol/kaynak",
+    "portal_build": "başarılı",
+    "browser_visual_acceptance": "Yerel Chromium yok; standart indirme başarısız; bulut tarayıcı localhost bağlantısı reddedildi.",
+    "production_migration": "uygulanmadı",
+    "deployment": "yapılmadı"
+  }
+}

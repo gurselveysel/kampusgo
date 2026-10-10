@@ -1,1 +1,5 @@
 private/
+
+# Yerel kabul kayıtları ve SQLite yan dosyaları kaynak değildir.
+*.sqlite
+*.sqlite-*
