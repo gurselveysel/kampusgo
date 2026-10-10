@@ -11,9 +11,9 @@ function requestUsable(s,tenant,requestId){
 }
 const latestDecision=(s,t,requestId)=>s.list(t,'recognition-decision').filter(d=>d.requestId===requestId).at(-1);
 const lastMatched=(s,t,requestId)=>s.list(t,'obs-event').filter(e=>e.requestId===requestId&&s.list(t,'obs-reconciliation').some(r=>r.eventId===e.id&&r.outcome==='matched')).at(-1);
-function active(s,tenant,creditId){const c=recognitionLedger(s,tenant).find(x=>x.id===creditId);return !!c&&requestUsable(s,tenant,c.requestId);}
+export function activeRecognitionCredit(s,tenant,creditId){const c=recognitionLedger(s,tenant).find(x=>x.id===creditId);return !!c&&requestUsable(s,tenant,c.requestId);}
 function current(s,tenant,e){
- if(e.payload.creditId)return active(s,tenant,e.payload.creditId);
+ if(e.payload.creditId)return activeRecognitionCredit(s,tenant,e.payload.creditId);
  return e.payload.operation==='cancel'&&latestDecision(s,tenant,e.requestId)?.id===e.payload.decisionId&&requestUsable(s,tenant,e.requestId)&&!recognitionLedger(s,tenant).some(c=>c.requestId===e.requestId);
 }
 const receipts=(s,t,eventId)=>s.list(t,'obs-receipt').filter(x=>x.eventId===eventId);
@@ -26,14 +26,14 @@ export function obsCommand({action,p,a,s,put,id,now}){
   if(action==='obs-prepare'){
    credit=recognitionLedger(s,tenant).find(c=>c.decisionId===p.decisionId);requireThat(credit&&allowed(a,credit.unit,['studentAffairs']),'not_found','Aktarıma uygun kredi bulunamadı veya erişilemiyor.',404);
    requireThat(!lastMatched(s,tenant,credit.requestId),'obs_correction','Bu talebin önceki aktarımı var; düzeltme zincirini kullanın.',409);
-   requireThat(active(s,tenant,credit.id),'source_blocked','Kararda açık itiraz var; aktarım hazırlanamaz.',409);
+   requireThat(activeRecognitionCredit(s,tenant,credit.id),'source_blocked','Kararda açık itiraz var; aktarım hazırlanamaz.',409);
   }else{
    previous=read(s,a,p.eventId,['studentAffairs']);
    requireThat(lastMatched(s,tenant,previous.requestId)?.id===previous.id,'obs_correction','Düzeltme son mutabık aktarım üzerinden hazırlanmalı.',409);
    correctionDecision=latestDecision(s,tenant,previous.requestId);
    requireThat(correctionDecision&&correctionDecision.id!==previous.payload.decisionId,'obs_correction','Önceki kaydı değiştiren yeni karar bulunamadı.',409);
    credit=recognitionLedger(s,tenant).find(x=>x.decisionId===correctionDecision.id);
-   requireThat(requestUsable(s,tenant,previous.requestId)&&(!credit||active(s,tenant,credit.id)),'source_blocked','Yeni karar henüz aktarıma uygun değil.',409);
+   requireThat(requestUsable(s,tenant,previous.requestId)&&(!credit||activeRecognitionCredit(s,tenant,credit.id)),'source_blocked','Yeni karar henüz aktarıma uygun değil.',409);
   }
   const decision=s.get(tenant,'recognition-decision',credit?.decisionId||correctionDecision.id),request=s.get(tenant,'recognition-request',decision.requestId);
   demand(a,request.unit,['studentAffairs']);requireThat(a.id!==request.owner&&a.id!==decision.createdBy,'separation','Aktarım yetkilisi öğrenen ve akademik karar sahibinden ayrı olmalı.',403);

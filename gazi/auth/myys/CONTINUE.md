@@ -1,3 +1,11 @@
+# Güncel devam — Paket 13 kaynak adayı
+
+B30 kontrollü grup kabulü arayüz ve çekirdeği: 296 otomatik + 12 tarayıcı kontrolü. Güvenli kaynak yayını/canlı doğrulama bekliyor; son canlı Paket 12 aşağıda. Sonra B04 ülke/süre/saklama işçisi, B06/B08 üyelik/rol kapsamı, B12/B13/B19 belge zinciri ve kalan bütün B01–B36 bağımsız işleri. Tüm işlerin tamamlandığı söylenemez. Gerçek kohort/üretim aktivasyonu kapalıdır.
+
+# Güncel devam — Paket 12 yayımlandı; B30 başlıyor
+
+Uzak `770c9bf26283c338964f4f08c98bde77a2e9cb18`; yerel `42d91b178043cb8240acbc53cad796f3abcedf60`; ağaç `98dd89ebb717f5db8b5db58cb5e0695d1a0a5541`; canlı `dpl_9kkNdKVj1n3YSnaUXhvDK31RZuYt` READY. 146 kaynak hash, browserAuth sonrası canlı kapalı akademik/rehber/logolar/taşma smoke geçti. Geri dönüş Paket 11. B29 yerel dilim doğrulandı, kurum kabulü açık. Sıradaki B30: ayrı teknik/akademik/işletim ve koşullu yerel kapılar, kritik hata, açılış provası ve dönem değerlendirmesi; gerçek kohort açılmaz. Sonra B04 ve kalan bütün bağımsız B01–B36 işleri.
+
 # Güncel devam — Paket 12 kaynak adayı
 
 B29 yerel başvuru ve kaynaklı gösterge ekranları: 286 otomatik + 11 gösterge + 8 cüzdan tarayıcı kontrolü. Önce güvenli yayın ve canlı doğrulama; son canlı Paket 11 aşağıda. Sonra B30 teknik/akademik/operasyon kabul kapıları, B04 saklama sicili ve bütün kalan bağımsız B01–B36 işleri. Gerçek kohort/dış kabul/kurumsal hizmet açılmadı.

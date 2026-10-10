@@ -1815,7 +1815,7 @@
         "gazi/auth/myys/QUALITY-CONTRACT.md",
         "gazi/auth/myys/acceptance/B29-20261010.json"
       ],
-      "production_status": "Paket 12 kaynak adayı; kurumsal hizmet kapalı.",
+      "production_status": "Paket 12 kaynak kodu READY yayımlandı; canlı kapalı akademik görünüm ve rehber doğrulandı. Yeni kayıt akışları yalnız yerel kabulde.",
       "implementation_note": "Aynı kalıcı kayıtlara bağlı başvuru-kabul-program kaydı, açık LMS tamamlama, kişisel teslim teyidi, kaynak kimlikli filtre/CSV mutabakatı.",
       "independent_remaining_work": [
         "Yetkili dış belge kabul/teslim kaynağı adaptörü ve gerçek LMS/kohort kaynak sayıları mutabakatı."
@@ -1845,7 +1845,7 @@
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 12 kaynak adayı; kurumsal hizmet kapalı."
+          "evidence": "Paket 12 kaynak kodu READY yayımlandı; canlı kapalı akademik görünüm ve rehber doğrulandı. Yeni kayıt akışları yalnız yerel kabulde."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1880,32 +1880,48 @@
       "planning_estimate": "4–6 takvim haftası gözlem",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "SEM yolu seçilirse B23; akademik tanıma açılırsa B20 ve B21; OBS aktarımı açılırsa ayrıca B22 tamamlanır.",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Teknik, akademik, operasyon ve gerçek kimlik kabul kapıları açık.",
+      "implementation_status": "kısmi",
+      "test_status": "10 yeni sunucu senaryosu ve 12 izole tarayıcı kontrolü; üç ayrı inceleme, koşullu kapılar, kritik hata, kaynak zinciri ve dönem/kapanış geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/cohort-model.mjs",
+        "gazi/auth/myys/cohort.mjs",
+        "gazi/portal/src/cohort-workspace.jsx",
+        "gazi/auth/tests/myys-cohort.test.mjs",
+        "scripts/myys-cohort-browser.cjs",
+        "gazi/auth/myys/COHORT-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B30-20261010.json"
+      ],
+      "production_status": "Paket 13 kaynak adayı; gerçek kohort açılmadı.",
+      "implementation_note": "Kontrollü grup planı, görev bazlı yerel koşullar, ayrı teknik/akademik/işletim incelemeleri, sıfır kritik hata, güncel kaynakla yerel açılış provası ve dönem değerlendirmesi.",
       "independent_remaining_work": [
-        "Teknik/akademik/operasyon kabul kapıları ve dönem değerlendirme kaydı."
+        "Gerçek kurum kabul belgeleri/aktivasyon adaptörü ve gerçek yetkili kohort dönem gözlemi; kapıların dış kaynak doğrulanması."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Yetkili gerçek kohort ve ayrı kurum kabulleri.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/cohort-model.mjs",
+            "gazi/auth/myys/cohort.mjs",
+            "gazi/portal/src/cohort-workspace.jsx",
+            "gazi/auth/tests/myys-cohort.test.mjs",
+            "scripts/myys-cohort-browser.cjs",
+            "gazi/auth/myys/COHORT-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B30-20261010.json"
+          ],
           "remaining": [
-            "Teknik/akademik/operasyon kabul kapıları ve dönem değerlendirme kaydı."
+            "Gerçek kurum kabul belgeleri/aktivasyon adaptörü ve gerçek yetkili kohort dönem gözlemi; kapıların dış kaynak doğrulanması."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "kısmi",
+          "evidence": "10 yeni sunucu senaryosu ve 12 izole tarayıcı kontrolü; üç ayrı inceleme, koşullu kapılar, kritik hata, kaynak zinciri ve dönem/kapanış geçti.",
+          "limits": "Yalnız sentetik yerel prova; kurum onayı ve gerçek 4–6 hafta gözlemi değildir."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 13 kaynak adayı; gerçek kohort açılmadı."
         },
         "institution_decision": {
           "status": "bekleniyor",

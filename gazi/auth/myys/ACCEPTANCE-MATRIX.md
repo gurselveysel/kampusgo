@@ -98,3 +98,8 @@ Veri talepleri ekranı: kişisel özet, talep/ayrı gerekçeli yanıt/görüntü
 ## Paket 12 adayı — B29
 
 Başvurular, kaynaklı göstergeler ve cüzdan teslim teyidi. 194 sunucu + 46 portal + 46 regresyon = 286 otomatik test; 11 gösterge tarayıcı ve 8 cüzdan regresyon kontrolü. Başvuru-kabul-kayıt bağı, açık LMS tamamlama, ayrı başarı/teslim/destek paydaları, filtre ve kaynak CSV mutabakatı yerelde geçti. Gerçek kohort, LMS ve dış belge kabulü açık; bütün B29 kabulü kapanmadı.
+
+
+## Paket 13 adayı — B30
+
+Kontrollü grup kabulü ekranı: sürümlü plan, görev bazlı koşullar, ayrı üç inceleme, kaynak zinciri, kritik hata/bağımsız çözüm, yerel açılış ve dönem/kapanış. 204 sunucu + 46 portal + 46 regresyon = 296 otomatik test; 12 yeni tarayıcı kontrolü. Gerçek kurum grubu ve dönem gözlemi yapılmadı; bütün B30 kabulü kapanmadı. COHORT-CONTRACT.md sınırları ve backlog eksenleri güncel.

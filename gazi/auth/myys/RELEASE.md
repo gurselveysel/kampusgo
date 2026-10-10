@@ -240,3 +240,16 @@ Veri talepleri ekranı: kişisel özet, talep/ayrı gerekçeli yanıt/görüntü
 ## Paket 12 adayı — B29
 
 Başvurular, kaynaklı göstergeler ve cüzdan teslim teyidi. 194 sunucu + 46 portal + 46 regresyon = 286 otomatik test; 11 gösterge tarayıcı ve 8 cüzdan regresyon kontrolü. Başvuru-kabul-kayıt bağı, açık LMS tamamlama, ayrı başarı/teslim/destek paydaları, filtre ve kaynak CSV mutabakatı yerelde geçti. Gerçek kohort, LMS ve dış belge kabulü açık; bütün B29 kabulü kapanmadı.
+
+### Paket 12 — doğrulanmış güvenli kaynak yayını
+
+- Uzak kaynak `770c9bf26283c338964f4f08c98bde77a2e9cb18`; yerel `42d91b178043cb8240acbc53cad796f3abcedf60`; ortak ağaç `98dd89ebb717f5db8b5db58cb5e0695d1a0a5541`.
+- Dağıtım `dpl_9kkNdKVj1n3YSnaUXhvDK31RZuYt`, READY / production; gazi.unigoturkiye.com aynı kaynağa bağlı. 146/146 kaynak hash eşleşti; fazla/eksik yok.
+- Canlı oturum süresi dolmuştu; yalnız browserAuth güvenli formuyla yenilendi. Giriş sonrası gerçek canlı akademik kapalı durum, yardım/rehber, logolar ve taşmasız görünüm doğrulandı. Kod veya credential okunmadı/kaydedilmedi.
+- 286 otomatik test, 11 gösterge + 8 cüzdan tarayıcı kontrolü. Başvurular/kaynaklı göstergeler ve yerel teslim teyidi kaynak kodu yayımlandı; gerçek LMS/kohort/dış belge kabulü açılmadı. configuredCore Vercel'de kapalı.
+- Geri dönüş Paket 11: `dpl_87Cjjpijbg7pNXxi6KhtWEhuS67m`; fiilen uygulanmadı.
+
+
+## Paket 13 adayı — B30
+
+Kontrollü grup kabulü ekranı: sürümlü plan, görev bazlı koşullar, ayrı üç inceleme, kaynak zinciri, kritik hata/bağımsız çözüm, yerel açılış ve dönem/kapanış. 204 sunucu + 46 portal + 46 regresyon = 296 otomatik test; 12 yeni tarayıcı kontrolü. Gerçek kurum grubu ve dönem gözlemi yapılmadı; bütün B30 kabulü kapanmadı. COHORT-CONTRACT.md sınırları ve backlog eksenleri güncel.

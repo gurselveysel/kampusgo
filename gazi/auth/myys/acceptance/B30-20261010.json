@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-10T22:39:24.943Z",
+  "scope": "isolated-local-acceptance",
+  "browser": "138.0.7204.0",
+  "checks": [
+    "Tek programdaki sınırlı grup hazırlandı; eksik kapılarda açılış gösterilmedi",
+    "Dokuz temel koşul farklı görev yetkileriyle yerel kanıta bağlandı",
+    "Teknik, akademik ve işletim incelemeleri üç ayrı kişide tamamlandı",
+    "Yalnız yerel açılış provası kaydedildi; gerçek kohort açılmadı",
+    "Kritik hata provayı bekletti; kendi hatasını çözme formu verilmedi",
+    "Kritik hata çözüldüğünde eski üç inceleme yeniden kullanılmadı",
+    "Güncel dayanaklarla üç ayrı inceleme sonrası prova yenilendi",
+    "Kaynak sayılı dönem değerlendirmesi kaydedildi; kapanış yeniden açılmadı",
+    "Yeniden yüklemede plan, bulgu, inceleme ve kapanış korundu",
+    "390 px grup kabul ekranında yatay taşma yok",
+    "Başka öğrenen grup inceleme kayıtlarına erişemedi",
+    "İstemci istisnası yok"
+  ],
+  "errors": [],
+  "production": false,
+  "server_cases": 10,
+  "automated_tests": {
+    "server": 204,
+    "portal": 46,
+    "regression": 46
+  },
+  "limits": [
+    "Gerçek yetkili kohort açılmadı; aktivasyon false.",
+    "Yerel kapılar B paketlerinin tüm kurum/dış kabulünü kapatmaz.",
+    "Gerçek dönem gözlemi ve resmî kabul tutanağı açık."
+  ]
+}
