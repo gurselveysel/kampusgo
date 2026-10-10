@@ -1,0 +1,1 @@
+module.exports={content:['./src/**/*.{jsx,js}'],theme:{extend:{colors:{ink:'#132e4b',canvas:'#f5f7fb',brand:'#1468d4'}}},plugins:[]};
