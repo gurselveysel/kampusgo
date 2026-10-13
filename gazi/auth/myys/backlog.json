@@ -694,7 +694,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "11 yeni belge yaşam döngüsü testi; 276 sunucu + 46 portal + 46 regresyon = 368 otomatik test. 17 değiştirme + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü geçti.",
+      "test_status": "16 yeni politika testi; 292 sunucu + 46 portal + 46 regresyon = 384 otomatik. 13 politika, 13 itiraz ve 17 değiştirme tarayıcı kontrolü geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -709,18 +709,23 @@
         "gazi/auth/tests/myys-credential-lifecycle.test.mjs",
         "scripts/myys-replacement-browser.cjs",
         "gazi/auth/myys/CREDENTIAL-LIFECYCLE-CONTRACT.md",
-        "gazi/auth/myys/acceptance/B11-replacement-20261013.json"
+        "gazi/auth/myys/acceptance/B11-replacement-20261013.json",
+        "gazi/auth/myys/appeal-policy-model.mjs",
+        "gazi/auth/myys/appeal-policy.mjs",
+        "gazi/auth/myys/APPEAL-POLICY-CONTRACT.md",
+        "gazi/auth/tests/myys-appeal-policy.test.mjs",
+        "gazi/portal/src/appeal-policy-workspace.jsx",
+        "scripts/myys-appeal-policy-browser.cjs",
+        "gazi/auth/myys/acceptance/B11-policy-20261013.json"
       ],
-      "production_status": "Önceki B11 kodu canlıda; Paket 19 yeni değiştirme/iptal dilimi kaynak adayı, yalnız yerel kabulde. Son canlı Paket 16; yeni kurumsal hizmet etkin değil.",
-      "implementation_note": "Önceki itiraz akışı korunur; imzalı belge için öneri/ayrı inceleme/yeni hazırlık/imza/eski iptal atomik bağlıdır. Yeni olumsuz karar bağımsız incelenmiş iptal üretir; eski dosya değişmez.",
-      "independent_remaining_work": [
-        "Süre ve belge etkisini kapsamlı sürümlü itiraz/moderasyon politikasına bağla; gerçek kurum usulü/takvimi/iptal yetkisi kabulü."
-      ],
+      "production_status": "Önceki B11 dilimi canlı; Paket 19 imzalı değiştirme ve Paket 20 politika dilimleri yalnız kaynak/yerel kabul. Paket 20 kaynak eşitlemesi bekleniyor; yeni canlı yayın yok. Son doğrulanmış canlı Paket 16; kurum işlemi kapalı.",
+      "implementation_note": "İtiraz, bağımsız inceleme, yeniden değerlendirme ve imzalı değiştirme zinciri korunur. Politika/kaynak/program sürümü karar anında sabitlenir; ayrı yerel teslim teyidi resmî tebliğ değildir. Geç veya belirsiz süre bağımsız gerekçeli incelemeye gider; açık itiraz belgeyi askıda tutar. Yeni politika eski kararları değiştirmez.",
+      "independent_remaining_work": [],
       "development_blocker": null,
-      "production_activation_blocker": "Kurumun itiraz ve moderasyon usulü.",
+      "production_activation_blocker": "Kapsamlı kurum itiraz/moderasyon usulü, tebliğ ve takvim kabulü, bağımsız görev/iptal yetkisi; üretim kimlik/depo ve canlı kabul.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; bağımsız yerel dilim tamamlandı",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -735,24 +740,31 @@
             "gazi/auth/tests/myys-credential-lifecycle.test.mjs",
             "scripts/myys-replacement-browser.cjs",
             "gazi/auth/myys/CREDENTIAL-LIFECYCLE-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B11-replacement-20261013.json"
+            "gazi/auth/myys/acceptance/B11-replacement-20261013.json",
+            "gazi/auth/myys/appeal-policy-model.mjs",
+            "gazi/auth/myys/appeal-policy.mjs",
+            "gazi/auth/myys/APPEAL-POLICY-CONTRACT.md",
+            "gazi/auth/tests/myys-appeal-policy.test.mjs",
+            "gazi/portal/src/appeal-policy-workspace.jsx",
+            "scripts/myys-appeal-policy-browser.cjs",
+            "gazi/auth/myys/acceptance/B11-policy-20261013.json"
           ],
           "remaining": [
-            "Süre ve belge etkisini kapsamlı sürümlü itiraz/moderasyon politikasına bağla; gerçek kurum usulü/takvimi/iptal yetkisi kabulü."
+            "Kurumca kabul edilmiş gerçek usulün üretim kimlik/depo ve tebliğ adaptörüne bağlanması."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "11 yeni belge yaşam döngüsü testi; 276 sunucu + 46 portal + 46 regresyon = 368 otomatik test. 17 değiştirme + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü geçti.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "yerel dilim geçti",
+          "evidence": "16 yeni politika testi; 292 sunucu + 46 portal + 46 regresyon = 384 otomatik. 13 politika, 13 itiraz ve 17 değiştirme tarayıcı kontrolü geçti.",
+          "limits": "Sentetik yerel politika; kurum usulü ve gerçek tebliğ kabulü değildir. B11 bütün eksenleri kapanmadı."
         },
         "live": {
-          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
-          "evidence": "Önceki B11 kodu canlıda; Paket 19 yeni değiştirme/iptal dilimi kaynak adayı, yalnız yerel kabulde. Son canlı Paket 16; yeni kurumsal hizmet etkin değil."
+          "status": "son iki dilim canlı yayımlanmadı",
+          "evidence": "Önceki B11 dilimi canlı; Paket 19 imzalı değiştirme ve Paket 20 politika dilimleri yalnız kaynak/yerel kabul. Paket 20 kaynak eşitlemesi bekleniyor; yeni canlı yayın yok. Son doğrulanmış canlı Paket 16; kurum işlemi kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
-          "required": "Kurumun itiraz ve moderasyon usulü."
+          "required": "Kapsamlı kurum itiraz/moderasyon usulü, tebliğ ve takvim kabulü, bağımsız görev/iptal yetkisi; üretim kimlik/depo ve canlı kabul."
         },
         "external_access": {
           "status": "bağımsız kod için gerekli değil",

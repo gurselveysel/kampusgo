@@ -1,3 +1,24 @@
+# Güncel devam — Paket 20 yerel kabul, kaynak eşitlemesi sırada
+
+384 otomatik (292+46+46), 13 politika + 13 itiraz + 17 değiştirme tarayıcı kontrolü geçti. B11 bağımsız yerel politika ve imzalı değiştirme dilimleri bağlı; gerçek kurum usulü/tebliğ/takvim ve üretim kabulü açık. APPEAL-POLICY-CONTRACT.md ve kabul JSON güncel. Önce değişiklikleri gözden geçir, özgün 36 backlog kimlik/bağımlılık/kabulü karşılaştır; yerel commit ve uzak expected-head ile aynı kaynak ağacını eşitle. Son uzak Paket 19 ee34cdee91c1ba17c9faabc0c474cfe363877619 / yerel 0cad4c688a8ddefb1cec8ea2252be93825a50067 / ağaç 070ef5879f24858a09f072f9eccfaff28e017370.
+
+Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; alias yeniden READY. Paket 17–20 canlı dağıtımı yok. Kullanıcı browserAuth isteğini iptal etti; kendisi istemeden yeniden auth veya alternatif giriş yapma. configuredCore Vercel’de kapalı. Tek kod sahibi, alt ajan yok.
+
+Sonraki bağımsız B07: gerçek HTTP callback sınırını yerel test IdP ile uygulama; cookie/state/Origin/PKCE/nonce/tek kullanım ve oturum iptal yarışları. Kurum IdP/üretim depo/dağıtık iptal kabulü açık kalır. Ardından kalan bütün B01–B36 işleri; bağımsız geliştirme için yeni devam komutu bekleme.
+
+---
+Aşağıdaki kayıtlar tarihsel çalışma günlüğüdür; güncel devam noktası yukarıdadır.
+
+# Paket 20 ilk taslak — B11 politika modeli
+
+`appeal-policy-model.mjs` yeni, henüz test edilmemiş ve çekirdeğe/arayıze BAĞLI DEĞİL. Manuel inceleme / açık sentetik takvim veya iş günü hesabı; sabit +03:00 teknik profil, ertesi günden sayım, takvim kapsamı dışındaysa manuel inceleme ve geç başvuruda otomatik ret yok. Gerçek kurum süresi veya resmî tebliğ hükmü değildir. Kapsam, kaynak, sürüm ve bağımsız inceleme modülü; karar snapshot/yerel teslim teyidi; UI/test ve kaynak eşitlemesi hâlâ yapılacak. Son tamamlanmış yerel kaynak Paket 19 aşağıdadır.
+
+# Güncel devam — Paket 19 kaynakta; B11 sürümlü politika sırada
+
+Yerel `0cad4c688a8ddefb1cec8ea2252be93825a50067`; uzak `ee34cdee91c1ba17c9faabc0c474cfe363877619`; aynı kaynak ağacı `070ef5879f24858a09f072f9eccfaff28e017370`. 368 otomatik + 17 değiştirme + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü geçti. Son canlı Paket 16; Paket 17–19 için dağıtım yok. browserAuth 13.10.2026 kullanıcı iptalini tekrar isteme; korumayı aşma; bağımsız geliştirmeyi sürdür.
+
+Sıradaki B11: sürümlü itiraz/moderasyon politikası. Kaynak/kapsam/program sürümü ve ayrı inceleme; önceki kayıtlar aynı politikayı korumalı. Gerçek kurum usulü bilinmiyor; sayısal süreyi Türkiye/genel Gazi kuralı gibi uydurma. Yerel sentetik politika modelinde tarih başlangıcı ve takvim açık seçilmeli; resmî tebliğ varsayılmamalı. Geç başvuruyu otomatik ret yerine bağımsız incelemeye bırak; açık itirazın belge etkisi güvenli yerel askı. Sonra bütün kalan bağımsız B01–B36 işleri. Yeni politika kodu henüz yazılmadı. Tasarım notu: politika admin tarafından program sürümüne hazırlanır ve ayrı komisyonca incelenir; kaynak başlık/URL veya belge ref/sürüm/tarih/okunan kapsam saklanır, official=false. Yeni akademik karar seçilen onaylı politikayı değişmez snapshot olarak bağlar; daha sonraki politika eski kararı etkilemez. Öğrencinin ayrı yerel karar teslim teyidi MFA ile sunucu zamanında yazılır; resmî tebliğ değildir. Süre hesabı yalnız açıkça seçilmiş sentetik takvim kuralıysa yapılır; iş gününde kapsamlı takvim yoksa manuel inceleme. Geç başvuru otomatik reddedilmez, bağımsız süre incelemesine işaretlenir. Açık itiraz güvenli yerel askı etkisini korur. Gerçek kurum sürelerini kaynak okunmadan üretme. Mevcut tarihsel kararlarda politika yoksa manuel inceleme sınırı açıkça gösterilir.
+
 # Güncel devam — Paket 19 yerel kabul; sürümlü itiraz politikası sırada
 
 B11 imzalı değiştirme/iptal dilimi bağlı: 368 otomatik + 17 yeni tarayıcı kontrolü; profil/itiraz/cüzdan regresyon sonuçlarını tamamla. CREDENTIAL-LIFECYCLE-CONTRACT.md güncel. Sonra kabul JSON/backlog/matris ile kaynak commitini eşitle. Kaynak son Paket 18: yerel 7fd97f81ae4a676485c41d4638b581e09ea3495e / uzak 589f218e71725d33d429533a289564320a968b2e / ağaç 9244003e1a3ef0f4ba4660e618afb8243888194b.

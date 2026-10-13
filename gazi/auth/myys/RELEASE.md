@@ -329,3 +329,14 @@ Paket 18 son yerel kanıt: 357 otomatik test; 16 durum/ihracat/Python-OpenSSL ta
 Belge hazırlığı öneri/komisyon incelemesi/değiştirme/iptal/geçmiş ekranı. Yeni imza ve eski iptal atomik; eski dosyalar korunur. 368 otomatik + 17 yeni tarayıcı kontrolü. Sürümlü itiraz/moderasyon politikası açık; kurum yetkisi veya canlı etkinleştirme yok.
 
 Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü geçti. 390 px görünüm incelendi; özgün 36 iş kimliği/bağımlılığı/kabulü korunuyor.
+
+### Paket 19 — kaynak eşitlendi, canlı yayımlanmadı (2026-10-13)
+
+- Yerel `0cad4c688a8ddefb1cec8ea2252be93825a50067`; uzak `ee34cdee91c1ba17c9faabc0c474cfe363877619`; ortak ağaç `070ef5879f24858a09f072f9eccfaff28e017370`.
+- 368 otomatik + 17 değiştirme + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü geçti. 36 özgün iş kimliği, başlığı, bağımlılığı ve kabul ölçütü korundu.
+- Kaynak güncellemesi üretim yayını değildir. Son canlı Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` / `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; 13.10.2026'da alias READY yeniden doğrulandı. Paket 17–19 dağıtımı oluşturulmadı; canlı auth kullanıcı iptali ve yeni smoke açık.
+- Sıradaki bağımsız iş sürümlü itiraz/moderasyon politikası; tüm B01–B36 kabulü tamamlanmadı.
+
+## Paket 20 kaynak adayı — B11 (2026-10-13)
+
+İtiraz politikaları ve karar/itiraz süre incelemesi ekranları. 384 otomatik, 13 politika + 13 itiraz + 17 değiştirme tarayıcı kontrolü geçti; 390 px incelendi. 115 dosyalı mevcut korumalı paket üretildi. Üretim dağıtımı oluşturulmadı; son canlı Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, alias READY yeniden doğrulandı. Kaynak temel Paket 19 yerel `0cad4c688a8ddefb1cec8ea2252be93825a50067`, uzak `ee34cdee91c1ba17c9faabc0c474cfe363877619`, aynı ağaç `070ef5879f24858a09f072f9eccfaff28e017370`. Canlı auth kullanıcı iptali nedeniyle yeni smoke yok; tekrar auth isteme. Geri dönüş hedefi son doğrulanmış Package 16; geri dönüş uygulanmadı. Kaynak eşitleme kimlikleri doğrulandıktan sonra ayrıca kaydedilir.

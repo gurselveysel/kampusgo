@@ -1,3 +1,4 @@
+import {appealPolicyCommand,appealPolicyReplay,appealPolicyView,bindAppealPolicy,decisionTiming} from './appeal-policy.mjs';
 import {lifecycleCommand,lifecycleReplay,lifecycleView} from './credential-lifecycle.mjs';
 import {keyCommand,keyReplay,keyView,credentialBlocked} from './key-registry.mjs';
 import {profileCommand,profileReplay,profileView,issuanceProfile} from './credential-profile.mjs';
@@ -24,6 +25,7 @@ const finite=(v,min,max)=>typeof v==='number'&&Number.isFinite(v)&&v>=min&&v<=ma
 const copy=x=>JSON.parse(JSON.stringify(x));
 const allow=(actor,action,unit)=>actor.memberships.some(m=>m.unit===unit&&m.roles.some(r=>(permissions[action]||[]).includes(r)))&&actor.mfa;
 const ownUnit=(actor,unit)=>actor.memberships.some(m=>m.unit===unit);
+const roleLearnerReceipt=(a,u)=>a.mfa&&a.memberships.some(m=>m.unit===u&&m.roles.includes('learner'));
 const learner=(actor,unit)=>actor.memberships.some(m=>m.unit===unit&&m.roles.includes('learner'));
 const guard=(actor,action,unit)=>requireThat(allow(actor,action,unit),'forbidden','Bu birimde işlem yetkiniz veya çok faktörlü doğrulamanız yok.',403);
 const readable=(actor,r)=>r.owner===actor.id&&ownUnit(actor,r.unit)||allow(actor,'read',r.unit);
@@ -79,6 +81,7 @@ export class MyysCore {
   });
  }
  authorizeReplay(a,action,r){
+  if(appealPolicyReplay(a,action,r))return;
   if(lifecycleReplay(a,action,r))return;
   if(keyReplay(a,action,r))return;
   if(profileReplay(a,action,r))return;
@@ -96,6 +99,7 @@ export class MyysCore {
  }
  execute(a,action,p,now){
   const s=this.store,get=(kind,id)=>fetchRecord(s,a,kind,id),put=(kind,r)=>s.put(a.tenant,kind,{...r,createdAt:now,createdBy:a.id}),id=()=>randomUUID();
+  const appealPolicy=appealPolicyCommand({action,p,a,s,put,id,now});if(appealPolicy)return appealPolicy;
   const lifecycle=lifecycleCommand({core:this,action,p,a,s,put,id,now});if(lifecycle)return lifecycle;
   const key=keyCommand({action,p,a,s,put,id,now});if(key)return key;
   const profile=profileCommand({action,p,a,s,put,id,now});if(profile)return profile;
@@ -169,21 +173,22 @@ export class MyysCore {
    requireThat(appealChainReady(s,a.tenant,assessment),'review_pending','Açık itiraz veya yeniden değerlendirme zinciri tamamlanmadan karar verilemez.',409);
    requireThat(assessment.evidenceIds.length&&assessment.evidenceDigests.every(x=>{const e=s.get(a.tenant,'evidence',x.id);return e&&hash(e.content)===x.sha256&&currentLmsEvidence(s,a.tenant,e);}),'missing_evidence','Karar kanıtı doğrulanamadı.');
    requireThat(!s.list(a.tenant,'decision').some(x=>x.assessmentId===assessment.id),'duplicate','Değerlendirme için karar zaten var.',409);
-   return put('decision',{id:id(),unit:assessment.unit,owner:assessment.owner,assessmentId:assessment.id,programId:program.id,enrollmentId:assessment.enrollmentId,outcome:p.outcome,reason:p.reason,score:assessment.score,programVersion:program.version,evidenceDigests:assessment.evidenceDigests,pilot:true});
+   return put('decision',{id:id(),unit:assessment.unit,owner:assessment.owner,assessmentId:assessment.id,programId:program.id,enrollmentId:assessment.enrollmentId,outcome:p.outcome,reason:p.reason,score:assessment.score,programVersion:program.version,evidenceDigests:assessment.evidenceDigests,appealPolicy:bindAppealPolicy(s,a.tenant,program,now),pilot:true});
   }
   if(action==='appeal'){
    const d=get('decision',p.decisionId);requireThat(d.owner===a.id&&learner(a,d.unit),'forbidden','Yalnız kendi kararınıza itiraz edebilirsiniz.',403);
    requireThat(text(p.reason,20),'reason','İtiraz gerekçesi gerekli.');
    requireThat(!s.list(a.tenant,'appeal').some(x=>x.decisionId===d.id),'duplicate','Bu kararın itirazı zaten kayıtlı.',409);
-   return put('appeal',{id:id(),unit:d.unit,owner:a.id,decisionId:d.id,reason:p.reason});
+   return put('appeal',{id:id(),unit:d.unit,owner:a.id,decisionId:d.id,reason:p.reason,timing:decisionTiming(s,a.tenant,d,now)});
   }
   if(action==='resolve'){
    const appeal=get('appeal',p.appealId),d=get('decision',appeal.decisionId),assessment=get('assessment',d.assessmentId);guard(a,'resolve',appeal.unit);
    requireThat(independentReviewer(s,a,appeal),'separation','İtirazı bağımsız bir yetkili incelemeli.',403);
    requireThat(text(p.reason,20)&&['upheld','reassessment'].includes(p.outcome),'resolution','Gerekçe ve itiraz sonucu gerekli.');
    requireThat(!s.list(a.tenant,'resolution').some(x=>x.appealId===appeal.id),'duplicate','İtiraz zaten sonuçlandırıldı.',409);
+   if(appeal.timing?.policyId&&appeal.timing.classification!=='within-local-window')requireThat(p.timeReview==='admitted-local-review'&&text(p.timeReason,20,2000),'appeal_time_review','Belirsiz veya geçmiş yerel süre bağımsız gerekçeli inceleme gerektirir; otomatik ret uygulanmaz.');
    // Reassessment never manufactures a new passing grade.
-   return put('resolution',{id:id(),unit:appeal.unit,owner:appeal.owner,appealId:appeal.id,decisionId:d.id,outcome:p.outcome,reason:p.reason});
+   return put('resolution',{id:id(),unit:appeal.unit,owner:appeal.owner,appealId:appeal.id,decisionId:d.id,outcome:p.outcome,reason:p.reason,...(appeal.timing?.policyId?{timeReview:appeal.timing.classification==='within-local-window'?'within-local-window':'admitted-local-review',timeReason:appeal.timing.classification==='within-local-window'?null:p.timeReason,policyId:appeal.timing.policyId,policyVersion:appeal.timing.policyVersion}:{})});
   }
   if(action==='issue'){
    const d=get('decision',p.decisionId);guard(a,'issue',d.unit);const program=get('program',d.programId);
@@ -239,7 +244,7 @@ export class MyysCore {
  view({sessionHash,tenant}){
   return this.store.transaction(()=>{
    const a=this.store.principal(sessionHash,tenant,this.clock()),s=this.store,visible=kind=>s.list(tenant,kind).filter(r=>readable(a,r));
-   return {credentialLifecycle:lifecycleView(this,a),keys:keyView(s,a),credentialProfiles:profileView(s,a,this.clock()),membership:membershipView(s,a,this.clock()),retention:retentionView(s,a,this.clock()),cohorts:cohortView(this,a,this.clock()),...admissionsView(s,a),lmsReceipts:visible('lms-receipt'),credentialReceipts:visible('credential-receipt'),privacy:privacyView(s,a),obs:obsView(s,a),recognition:recognitionView(s,a),wallet:walletView(this,a),...operationsView(s,a,this.clock()),mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment').map(r=>({...r,allowedActions:allow(a,'decide',r.unit)&&![r.owner,r.createdBy,s.get(tenant,'program',r.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'decision').some(d=>d.assessmentId===r.id)&&appealChainReady(s,tenant,r)?['decide']:[]})),decisions:visible('decision').map(d=>{let profileReady=false;try{issuanceProfile(s,a,s.get(tenant,'program',d.programId),this.clock());profileReady=true;}catch{}return {...d,usable:d.outcome==='approved'&&this.decisionUsable(a,d),canIssue:profileReady&&d.outcome==='approved'&&this.decisionUsable(a,d)&&![d.createdBy,d.owner,s.get(tenant,'program',d.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'issuance').some(x=>s.get(tenant,'decision',x.decisionId)?.enrollmentId===d.enrollmentId)};}),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,signed:!!s.get(tenant,'signed',r.id),blocked:credentialBlocked(this,tenant,r)})),support:supportView(s,a)};
+   return {appealPolicies:appealPolicyView(s,a),credentialLifecycle:lifecycleView(this,a),keys:keyView(s,a),credentialProfiles:profileView(s,a,this.clock()),membership:membershipView(s,a,this.clock()),retention:retentionView(s,a,this.clock()),cohorts:cohortView(this,a,this.clock()),...admissionsView(s,a),lmsReceipts:visible('lms-receipt'),credentialReceipts:visible('credential-receipt'),privacy:privacyView(s,a),obs:obsView(s,a),recognition:recognitionView(s,a),wallet:walletView(this,a),...operationsView(s,a,this.clock()),mode:'local-acceptance',official:false,personId:a.id,memberships:a.memberships,registry:s.list(tenant,'registry').filter(r=>allow(a,'policy',r.unit)),registryReviews:s.list(tenant,'registry-review').filter(r=>allow(a,'policy',r.unit)),lmsEvents:visible('lms-event'),publications:visible('publication'),programs:s.list(tenant,'program').filter(r=>readable(a,r)||ownUnit(a,r.unit)&&s.list(tenant,'enrollment').some(e=>e.programId===r.id&&e.owner===a.id)),enrollments:visible('enrollment'),evidence:visible('evidence'),assessments:visible('assessment').map(r=>({...r,allowedActions:allow(a,'decide',r.unit)&&![r.owner,r.createdBy,s.get(tenant,'program',r.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'decision').some(d=>d.assessmentId===r.id)&&appealChainReady(s,tenant,r)?['decide']:[]})),decisions:visible('decision').map(d=>{let profileReady=false;try{issuanceProfile(s,a,s.get(tenant,'program',d.programId),this.clock());profileReady=true;}catch{}return {...d,appealWindow:decisionTiming(s,tenant,d,this.clock()),canReceive:d.owner===a.id&&roleLearnerReceipt(a,d.unit)&&!s.list(tenant,'decision-receipt').some(r=>r.decisionId===d.id),usable:d.outcome==='approved'&&this.decisionUsable(a,d),canIssue:profileReady&&d.outcome==='approved'&&this.decisionUsable(a,d)&&![d.createdBy,d.owner,s.get(tenant,'program',d.programId)?.createdBy].includes(a.id)&&!s.list(tenant,'issuance').some(x=>s.get(tenant,'decision',x.decisionId)?.enrollmentId===d.enrollmentId)};}),appeals:visible('appeal').map(r=>({...r,resolution:resolutionFor(s,tenant,r.id)||null,allowedActions:!resolutionFor(s,tenant,r.id)&&independentReviewer(s,a,r)?['resolve']:[]})),resolutions:visible('resolution'),issuances:visible('issuance').map(r=>({...r,signed:!!s.get(tenant,'signed',r.id),blocked:credentialBlocked(this,tenant,r)})),support:supportView(s,a)};
   });
  }
  shared({tenant,token}){

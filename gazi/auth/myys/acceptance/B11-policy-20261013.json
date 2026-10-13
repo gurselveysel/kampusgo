@@ -1,0 +1,93 @@
+{
+  "work_id": "B11",
+  "scope": "isolated-local-acceptance",
+  "production": false,
+  "official": false,
+  "automated": {
+    "server": 292,
+    "portal": 46,
+    "regression": 46
+  },
+  "browser": {
+    "policy": {
+      "at": "2026-10-13T22:47:04.803Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "Program sürümü, kaynak ve açık yerel süre kaydedildi; hazırlayan inceleyemedi",
+        "Ayrı komisyon incelemesi kaydedildi",
+        "Yeni akademik karar o andaki incelenmiş politika 1 ile bağlandı",
+        "Teslim teyidi olmayan öğrenenin başvurusu alındı; süre bilinmiyor diye reddedilmedi",
+        "Açık itiraz belge hazırlığını askıya aldı",
+        "Yeni politika sürümü ayrıca incelendi",
+        "Eski karar sürüm 1 kaldı; tekil yerel teyit geçmiş başvuru anını değiştirmedi",
+        "Bağımsız süre gerekçesi zorunlu, etiketli ve klavyeden erişilebilir; ilk karar korundu",
+        "İnceleme sonucu ile diğer belge koşulları birlikte yeniden denetlendi",
+        "İki sürüm ve durdurma yenilemede korundu; eski kararlar değiştirilmedi",
+        "390 px politika ve iş günü takvimi formunda taşma yok",
+        "Başka öğrenene idari politika veya karar açıklanmadı",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    },
+    "appeals": {
+      "at": "2026-10-13T22:47:32.956Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+        "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+        "390 px mobil: taşma ve bozuk resim yok",
+        "Akademik sekmeler Home/End tuşları ve seçili durum",
+        "Yakalanmış istemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    },
+    "replacement": {
+      "at": "2026-10-13T22:47:35.440Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Mevcut imzalı belge için doğrudan ikinci belge yerine incelemeli değiştirme önerildi",
+        "Akademik karar sahibi değiştirmeyi inceleyemedi; ayrı komisyon inceledi",
+        "Yeni hazırlık imza bekliyor; eski belge iptali tamamlandı gibi sunulmadı",
+        "Yeni imza ve eski belge iptali aynı kayıt zincirinde tamamlandı",
+        "Öğrenen yenilemede önceki belge, yeni karar, inceleme ve yeni imzayı birlikte gördü",
+        "Cüzdanda eski belge kapalı ve yeni belge indirilebilir",
+        "390 px önceki/yeni belge ve inceleme geçmişi taşmadan göründü",
+        "Başka öğrenen değişiklik geçmişine erişemedi",
+        "Yakalanmış istemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    }
+  },
+  "limits": [
+    "Kurumun resmî itiraz usulü ve tebliğ/takvim kabulü açık.",
+    "Paket 17–20 canlı yayımlanmadı; son doğrulanmış canlı Paket 16.",
+    "Üretim depo/kimlik ve gerçek öğrenci kabulü yok."
+  ],
+  "criteria_closed_in_local_scope": [
+    "Sürümlü politika ve kaynak karara sabitlenir; eski karar korunur.",
+    "Belirsiz/geç yerel süre otomatik ret üretmez; bağımsız gerekçeli inceleme gerekir.",
+    "Açık itiraz belge etkisi askı; imzalı değiştirme zinciri korunur."
+  ]
+}

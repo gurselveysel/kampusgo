@@ -34,7 +34,7 @@ export async function signApproved(core,context,issuanceId,material,base){
   // Synthetic URLs are resolved only from an offline bundle, not a public service.
   vc.credentialStatus=statusEntries(a.tenant,allocateStatus(core.store,a.tenant,r,a.id,core.clock()));
   vc['@context'].push({academicDecision:{'@id':base+'/vocab/academicDecision','@type':'@json'}});
-  vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance',statusProfile:'MYYS-LOCAL-STATUS-1',profileId:r.profileId,profileVersion:r.profileVersion,authorityId:r.authorityId,profileDigest:r.profileDigest,...(r.replacesId?{replacesId:r.replacesId,previousDigest:r.previousDigest,replacementProposalId:r.replacementProposalId,replacementReviewId:r.replacementReviewId}:{})};
+  vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance',statusProfile:'MYYS-LOCAL-STATUS-1',profileId:r.profileId,profileVersion:r.profileVersion,authorityId:r.authorityId,profileDigest:r.profileDigest,...(d.appealPolicy?.policy?{appealPolicyId:d.appealPolicy.policy.id,appealPolicyVersion:d.appealPolicy.policy.version,appealPolicyDigest:d.appealPolicy.digest,appealPolicyReviewId:d.appealPolicy.reviewId}:{}),...(r.replacesId?{replacesId:r.replacesId,previousDigest:r.previousDigest,replacementProposalId:r.replacementProposalId,replacementReviewId:r.replacementReviewId}:{})};
   return {vc,a,r,d,date,key};
  });
  if(prepared.existing)return prepared.existing;

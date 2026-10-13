@@ -165,3 +165,7 @@ Paket 5 yayın sonucu: `24b41c8dba48bfa261a51613fbbc3a83a7939f13` / `dpl_DzCWthA
 B22: değişmez karar kaynaklı olay, ayrı yerel alındı ve öğrenci işleri mutabakatı; red, içerik uyuşmazlığı ve güncel karar bekletme ayrılır. Son mutabık olaya bağlı düzeltme/iptal; eski kararın daha yeni kredi değişiklikleri atlanmaz. Teknik rol kişi/kredi görmez. Vercel'de simülatör ayrıca kapalıdır. Ağ çağrısı yoktur.
 
 Aktarım ve mutabakat ekranına OBS hazırlığı, filtre, alındı örneği, satır mutabakatı, güncel karar düzeltmesi ve CSV eklendi. 173+46+46=265 otomatik test; 11 OBS ve yeniden 8 B16/B17 tarayıcı kontrolü. Gerçek sağlayıcı şeması, yazma izni ve transkript/diploma eki kabulü açık.
+
+## Paket 20 — B11 yerel politika dilimi
+
+`APPEAL-POLICY-CONTRACT.md`: admin hazırlığı, ayrı komisyon incelemesi, kaynak/program/politika sürümü, karar anındaki değişmez dayanak, sahibi tarafından yerel teslim teyidi ve belirsiz/geç süre için ayrı insan incelemesi. Eski karar ve imzalı dosya korunur. UI politika sicili ve karar/itiraz bölümlerine bağlıdır. 384 otomatik + 13 politika + 13 itiraz + 17 değiştirme tarayıcı kabulü; canlı/kurum kabulü açık.

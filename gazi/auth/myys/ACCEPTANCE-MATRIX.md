@@ -14,7 +14,7 @@
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi · sürüm/arşiv dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B11 · İtiraz ve moderasyon yolunu kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B11 · İtiraz ve moderasyon yolunu kur | kısmi; bağımsız yerel dilim bağlı | yerel politika/değiştirme geçti | son iki dilim kaynakta; canlı kabul açık | usul/tebliğ/takvim/yetki bekleniyor | üretim kimlik/depo kabulü bekleniyor |
 | B12 · Belgeyi akademik karara bağla | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B13 · Anahtar ve durum güvenilirliğini doğrula | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B14 · LMS veri sözleşmesini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
@@ -134,3 +134,7 @@ Paket 18 son yerel kanıt: 357 otomatik test; 16 durum/ihracat/Python-OpenSSL ta
 Belge hazırlığı ve özel cüzdan: öneri/ayrı inceleme/hazırlık/yeni imza/eski iptal; yeni olumsuz kararda belgesiz iptal; geri çekme ve tarihsel dosya bütünlüğü. 368 otomatik test, 17 yeni tarayıcı kontrolü. Sürümlü süre/etki politikası ve gerçek kurum kabulü açık; yeni dilim canlı yayımlanmadı.
 
 Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü geçti. 390 px görünüm incelendi; özgün 36 iş kimliği/bağımlılığı/kabulü korunuyor.
+
+## Paket 20 adayı — B11 sürümlü politika (13.10.2026)
+
+İtiraz politikaları, karara bağlı kaynak sürümü, tekil yerel teslim teyidi ve bağımsız süre gerekçesi ekranları. 384 otomatik + 13 politika + 13 itiraz + 17 değiştirme tarayıcı kontrolü. Kurum usulü ve gerçek tebliğ bağlı değildir; test sayısı tamamlanma yüzdesi değildir. Son canlı Paket 16; Paket 17–20 üretim yayını yok. Kanıt: `acceptance/B11-policy-20261013.json`.
