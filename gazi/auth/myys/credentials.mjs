@@ -1,3 +1,4 @@
+import {signingKey,trustedSignedKey,credentialBlocked,keyFingerprint} from './key-registry.mjs';
 import {issuanceProfile} from './credential-profile.mjs';
 import {stableStringify} from './program-model.mjs';
 import {makeCredential,LEARNERS} from '../lib/badge-model.mjs';
@@ -11,16 +12,18 @@ function ready(core,context,issuanceId){
  requireThat(r&&permitted(a,r.unit),'forbidden','Bu birimde belge imzalama yetkisi yok.',403);
  const d=s.get(a.tenant,'decision',r.decisionId),p=s.get(a.tenant,'program',r.programId);
  requireThat(![d.owner,d.createdBy,p.createdBy].includes(a.id),'separation','Belge imzalayan görevler ayrılığını sağlamalı.',403);
- requireThat(p.mode==='pilot'&&p.pathway==='micro'&&d.outcome==='approved'&&core.decisionUsable(a,d)&&!s.list(a.tenant,'revocation').some(x=>x.issuanceId===r.id),'decision_blocked','Karar veya ihraç yetkisi artık geçerli değil.');
+ requireThat(p.mode==='pilot'&&p.pathway==='micro'&&d.outcome==='approved'&&core.decisionUsable(a,d)&&!credentialBlocked(core,a.tenant,r),'decision_blocked','Karar veya ihraç yetkisi artık geçerli değil.');
  const profile=issuanceProfile(s,a,p,core.clock(),r.profileId);requireThat(r.profileId&&r.profileDigest===hash(stableStringify(profile)),'profile_changed','İhraç yetkisinin belge profili eşleşmiyor.',409);
  return {a,r,d,p,profile};
 }
+export function canSignApproved(core,context,id,material){try{const {a,r}=ready(core,context,id);if(core.store.get(a.tenant,'signed',id))return false;signingKey(core.store,a.tenant,r.unit,material);return true;}catch{return false;}}
 export async function signApproved(core,context,issuanceId,material,base){
  requireThat(base==='https://local-acceptance.invalid','local_only','Yerel kabul imzası gerçek kurum adresi kullanamaz.',503);
  const prepared=core.store.transaction(()=>{
   const {a,r,d,p}=ready(core,context,issuanceId),existing=core.store.get(a.tenant,'signed',r.id);
   if(existing)return {existing};
-  const date=core.clock();
+  const key=signingKey(core.store,a.tenant,r.unit,material);
+  const date=new Date(Math.floor(Date.parse(core.clock())/1000)*1000).toISOString();
   const draft={id:'universite',learner:LEARNERS[0].id,title:p.title,hours:p.hours,ects:p.ects,level:p.level,participation:p.participation,outcomes:p.outcomes.map(o=>o.text).join('\n'),assessment:p.assessmentMethod,criteria:`Rubrik puanı en az ${p.threshold}/100; zorunlu görev kanıtları ve bağımsız akademik karar.`,quality:p.quality,evidence:'İzole yerel kabul değerlendirmesi; gerçek kurum belgesi değildir.'};
   const vc=makeCredential(draft,{id:r.id,index:0,base,date});
   vc.credentialSubject.id='urn:unigo:local-acceptance:'+encodeURIComponent(a.tenant)+':'+encodeURIComponent(r.owner);
@@ -30,29 +33,36 @@ export async function signApproved(core,context,issuanceId,material,base){
   delete vc.credentialStatus;
   vc['@context'].push({academicDecision:{'@id':base+'/vocab/academicDecision','@type':'@json'}});
   vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance',profileId:r.profileId,profileVersion:r.profileVersion,authorityId:r.authorityId,profileDigest:r.profileDigest};
-  return {vc,a,r,d,date};
+  return {vc,a,r,d,date,key};
  });
  if(prepared.existing)return prepared.existing;
  const jwt=await signCredential(prepared.vc,material);
+ requireThat(jwt.length<=24000,'credential_size','Belge metni doğrulama sınırını aşıyor; içerik kısaltılarak yeni akademik sürüm hazırlanmalı.',422);
  // Signature is not released if membership, appeal or revocation changed while signing.
  return core.store.transaction(()=>{
   const {a,r,d}=ready(core,context,issuanceId),existing=core.store.get(a.tenant,'signed',r.id);if(existing)return existing;
+  const key=signingKey(core.store,a.tenant,r.unit,material);requireThat(key.id===prepared.key.id,'signing_key','İmzalama sırasında anahtar değişti.',409);
   requireThat(d.id===prepared.d.id,'decision_changed','Karar değişti.',409);
-  const record={id:r.id,unit:r.unit,owner:r.owner,decisionId:d.id,credential:prepared.vc,jwt,digest:digest(jwt),createdAt:prepared.date,createdBy:a.id,pilot:true,scope:'local-acceptance'};
+  const record={id:r.id,unit:r.unit,owner:r.owner,decisionId:d.id,credential:prepared.vc,jwt,digest:digest(jwt),createdAt:core.clock(),createdBy:a.id,keyId:key.id,kid:key.jwk.kid,keyFingerprint:key.fingerprint,pilot:true,scope:'local-acceptance'};
   core.store.put(a.tenant,'signed',record);
   core.store.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(a.tenant,a.id,'sign',r.id,core.clock());
   return record;
  });
 }
 export async function verifyApproved(core,context,jwt,material,base){
- const actor=core.store.principal(context.sessionHash,context.tenant,core.clock());
- return verifyCredential(jwt,material,base,async id=>{
+ core.store.principal(context.sessionHash,context.tenant,core.clock());
+ const lookup=id=>{
+  const actor=core.store.principal(context.sessionHash,context.tenant,core.clock());
   const r=core.store.get(actor.tenant,'signed',id);if(!r)return null;
   requireThat(r.owner===actor.id&&actor.memberships.some(m=>m.unit===r.unit)||permitted(actor,r.unit),'forbidden','Bu belge size ait değil.',403);
   const d=core.store.get(actor.tenant,'decision',r.decisionId);
-  const blocked=!core.decisionUsable(actor,d)||core.store.list(actor.tenant,'revocation').some(x=>x.issuanceId===id);
+  if(!trustedSignedKey(core.store,actor.tenant,r)||r.keyFingerprint!==keyFingerprint(material.jwk))return null;
+  const blocked=credentialBlocked(core,actor.tenant,core.store.get(actor.tenant,'issuance',r.id));
   return {...r,revoked_at:blocked?core.clock():null};
- });
+ };
+ const result=await verifyCredential(jwt,material,base,lookup);
+ if(result.valid){const current=lookup(result.id);if(!current||current.revoked_at)return {valid:false,error:'Belgenin güven veya akademik durumu doğrulama sırasında değişti.'};}
+ return result;
 }
 
 // Keys come only from the server's trusted registry, never a credential URL.

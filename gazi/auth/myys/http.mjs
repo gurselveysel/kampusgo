@@ -1,7 +1,7 @@
 import {qualityReport} from './quality-report.mjs';
 import {LocalAcceptanceStore,CoreError} from './store.mjs';
 import {MyysCore} from './core.mjs';
-import {prepareBatch,signApproved,verifyWithKeyring} from './credentials.mjs';
+import {prepareBatch,signApproved,canSignApproved,verifyWithKeyring} from './credentials.mjs';
 import {qualityMetrics,skillsProjection} from './projections.mjs';
 import {downloadWalletCredential} from './wallet.mjs';
 import {subjectExport} from './privacy.mjs';
@@ -23,7 +23,7 @@ export async function myysRoute({req,path,b,sessionHash,json,res,core=configured
   if(path==='/api/myys/calisma'&&req.method==='GET'){
    const tenant=new URL(req.url,'https://local.invalid').searchParams.get('kurum');
    const view=core.view({sessionHash,tenant});
-   return json(res,200,{...view,quality:qualityReport(view),metrics:qualityMetrics(view),skills:skillsProjection(view)});
+   return json(res,200,{...view,issuances:view.issuances.map(r=>({...r,canSign:!!signer&&canSignApproved(core,{sessionHash,tenant},r.id,signer.material)})),signerAvailable:!!signer,quality:qualityReport(view),metrics:qualityMetrics(view),skills:skillsProjection(view)});
   }
   if(path==='/api/myys/islem'&&req.method==='POST')return json(res,200,core.run({sessionHash,tenant:b?.tenant,commandId:b?.commandId,action:b?.action,input:b?.input}));
   if(path==='/api/myys/veri-ozetim'&&req.method==='POST')return json(res,200,subjectExport(core,{sessionHash,tenant:b?.tenant}));

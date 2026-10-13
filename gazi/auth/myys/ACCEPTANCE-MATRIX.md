@@ -118,3 +118,7 @@ Kişi ve üyelik ekranı: süreli görev/geri çekme önerisi, ayrı yönetici i
 ## Paket 16 adayı — B12
 
 Belge profilleri ve ihraç hazırlığı: zorunlu program/karar/profil/ayrı yetki sicili bağı, süreli kişi ataması, ayrı komisyon incelemesi, sürüm ve durdurma. Sentetik rozet laboratuvarı açıklaması ve yetki alanı reddi eklendi. 240 sunucu + 46 portal + 46 regresyon = 332 otomatik test; 11 yeni profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü. YÖK tam metnine tekrar erişilemedi; eski kamu özeti korundu. Gerçek kurum/issuer kabulü, üretim imza/durum ve bağımsız standart doğrulaması açık.
+
+## Paket 17 adayı — B13
+
+Anahtar ve belge durumu / Belge hazırlığı / Kişisel cüzdanım: açık anahtar, ayrı inceleme, imza, rotasyon, ele geçirilme ve ortak durum denetimi. 12 yeni güvenlik testi, 11 tarayıcı kontrolü; 252 sunucu + 46 portal + 46 regresyon = 344 otomatik test. Yerel rotasyon ve ele geçirilme prosedürü geçti. İmzalı durum listesi, B19 bağımsız doğrulama ve gerçek sağlayıcı işletim kabulü açık; B13 bütünü kapanmadı.

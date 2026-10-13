@@ -1,3 +1,4 @@
+import {credentialBlocked} from './key-registry.mjs';
 import {requireThat} from './store.mjs';
 const member=(a,u,roles)=>a.memberships.some(m=>m.unit===u&&m.roles.some(r=>roles.includes(r)));
 const manages=(a,u)=>a.mfa&&member(a,u,['coordinator','studentAffairs']);
@@ -20,7 +21,7 @@ export function admissionsCommand({action,p,a,s,put,id,execute,core}){
  if(action==='credential-receive'){
   const r=s.get(a.tenant,'issuance',p.issuanceId),d=r&&s.get(a.tenant,'decision',r.decisionId);
   requireThat(r&&r.owner===a.id&&member(a,r.unit,['learner'])&&a.mfa,'not_found','Kendi belge kaydınıza erişim gerekli.',404);
-  requireThat(s.get(a.tenant,'signed',r.id)&&d&&core.decisionUsable(a,d)&&!s.list(a.tenant,'revocation').some(x=>x.issuanceId===r.id),'credential_blocked','Güncel ve imzalı yerel belge gerekli.',409);
+  requireThat(s.get(a.tenant,'signed',r.id)&&d&&!credentialBlocked(core,a.tenant,r),'credential_blocked','Güncel ve imzalı yerel belge gerekli.',409);
   const old=s.list(a.tenant,'credential-receipt').find(x=>x.issuanceId===r.id);if(old)return old;
   requireThat(p.confirm===true,'receipt','Belgeyi teslim aldığınızı açıkça belirtin.');
   return put('credential-receipt',{id:id(),unit:r.unit,owner:a.id,programId:r.programId,issuanceId:r.id,kind:'owner-local-acknowledgement',externalAcceptance:false,official:false});

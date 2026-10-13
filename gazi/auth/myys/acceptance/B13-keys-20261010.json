@@ -1,0 +1,75 @@
+{
+  "work_id": "B13",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "production_key_changes": false,
+  "automated": {
+    "server": 252,
+    "portal": 46,
+    "regression": 46
+  },
+  "browser": {
+    "at": "2026-10-10T23:29:41.341Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Kayıtlı anahtar yokken belge imzası düğmesi kapalı",
+      "BT açık anahtarı kaydetti; kendi anahtarını inceleyemedi",
+      "İncelenmemiş anahtar imza yetkisi vermedi",
+      "Ayrı yöneticinin gerekçeli incelemesi anahtarı etkinleştirdi",
+      "Atanmış belge görevlisi sentetik belgeyi imzaladı; tekrar düğmesi kapandı",
+      "Aynı imzalı belge öğrenenin özel cüzdanında indirilebilir",
+      "Emekliye ayırma eski imzalı belgenin indirilmesini korudu",
+      "Ele geçirilme yenilemede korundu; anahtarı yeniden açma işlemi yok",
+      "390 px anahtar formu ve geçmişinde yatay taşma yok",
+      "Ele geçirilmiş anahtarın belgesi cüzdanda kapandı; öğrenci idari sicile erişemedi",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false
+  },
+  "remaining": [
+    "İmzalı durum listesi adaptörü, güncellik ve TTL kabulü; B19 bağımsız doğrulama paketi; gerçek sağlayıcı işletim kabulü."
+  ],
+  "regression_browser": {
+    "wallet": {
+      "at": "2026-10-10T23:30:06.560Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "Kişisel imzalı belge indirildi",
+        "Süreli paylaşım bağlantısı yalnız ilk yanıtta gösterilir",
+        "Oturumsuz özet kimlik ve özel kanıt göstermeden açıldı",
+        "İptal sonrası yeni anonim erişim reddedildi",
+        "Cüzdan ve paylaşım iptali kalıcı; gizli bağlantı tekrar gösterilmiyor",
+        "390 px cüzdan görünümünde yatay taşma yok",
+        "Beş başka rolde kişisel belge gizli",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    },
+    "appeals": {
+      "at": "2026-10-10T23:30:38.758Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+        "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+        "390 px mobil: taşma ve bozuk resim yok",
+        "Akademik sekmeler Home/End tuşları ve seçili durum",
+        "Yakalanmış istemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    }
+  }
+}

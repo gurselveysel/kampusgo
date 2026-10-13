@@ -292,3 +292,15 @@ Kişi ve üyelik ekranı: süreli görev/geri çekme önerisi, ayrı yönetici i
 ## Paket 16 adayı — B12
 
 Belge profilleri ve ihraç hazırlığı: zorunlu program/karar/profil/ayrı yetki sicili bağı, süreli kişi ataması, ayrı komisyon incelemesi, sürüm ve durdurma. Sentetik rozet laboratuvarı açıklaması ve yetki alanı reddi eklendi. 240 sunucu + 46 portal + 46 regresyon = 332 otomatik test; 11 yeni profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü. YÖK tam metnine tekrar erişilemedi; eski kamu özeti korundu. Gerçek kurum/issuer kabulü, üretim imza/durum ve bağımsız standart doğrulaması açık.
+
+### Paket 16 — doğrulanmış güvenli kaynak yayını
+
+- Uzak kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; yerel `9d8a858f150c73f45a3cc375b2b332f8bb0661cf`; ortak ağaç `8526203f45f9a4bd052b5c9d64fdd2c8d190a30f`.
+- Dağıtım `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, READY / production; canlı alias aynı kaynağa bağlı. 154/154 kaynak hash eşleşti; eksik/fazla yok.
+- Gerçek canlı kapalı kurum görünümü, sağlam görseller, taşmasız yerleşim, yeni sentetik rozet laboratuvarı açıklaması ve akademik bağlantısı doğrulandı. Giriş koruması kaldırılmadı.
+- 332 otomatik test, 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü. Profil sürümü/bağımsız inceleme/atanmış düzenleyici/ihraç bağı kaynak kodu yayımlandı; akademik akış yalnız yerel kabulde. configuredCore Vercel'de kapalı.
+- Geri dönüş Paket 15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; fiilen uygulanmadı. B12 bütünü veya 16 iş paketi tamamlanmış değildir.
+
+## Paket 17 adayı — B13
+
+Anahtar ve belge durumu ile imza/cüzdan bağlantısı. 344 otomatik ve 11 yeni tarayıcı kontrolü. Açık anahtar kayıt/inceleme/rotasyon/ele geçirilme provası yalnız yerel sentetik ortamda; üretim anahtarları değişmedi. Durum listesi ve bağımsız doğrulama sonraki dilimde.

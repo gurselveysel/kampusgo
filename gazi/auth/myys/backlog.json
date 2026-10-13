@@ -777,7 +777,7 @@
         "gazi/auth/myys/CREDENTIAL-PROFILE-CONTRACT.md",
         "gazi/auth/myys/acceptance/B12-profile-20261010.json"
       ],
-      "production_status": "Paket 16 kaynak adayı; profil akışı yerel kabulde. Kurumsal ihraç yetkisi kapalı.",
+      "production_status": "Paket 16 kaynak kodu yayımlandı ve canlı smoke geçti; profil akışı yalnız yerel kabulde, kurumsal ihraç yetkisi kapalı.",
       "implementation_note": "İhraçta zorunlu program/karar/profil/ayrı yetki sicili bağı; süreli atanmış belge görevlileri, bağımsız profil incelemesi, sürüm ve durdurma. Eski sentetik laboratuvar karar/kurum yetkisi alamaz.",
       "independent_remaining_work": [
         "Gerçek kurumsal EK-1/issuer kaynak ve karar kabulü; üretim imza/depo adaptörüyle profil bağının kabulü."
@@ -809,7 +809,7 @@
         },
         "live": {
           "status": "kısmi pilot",
-          "evidence": "Paket 16 kaynak adayı; profil akışı yerel kabulde. Kurumsal ihraç yetkisi kapalı."
+          "evidence": "Paket 16 kaynak kodu yayımlandı ve canlı smoke geçti; profil akışı yalnız yerel kabulde, kurumsal ihraç yetkisi kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -837,15 +837,21 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Eski güvenilir anahtar kabulü, kompromize anahtar, kurcalama/iptal reddi.",
+      "test_status": "12 yeni güvenlik testi, 11 anahtar + 8 cüzdan + 13 itiraz tarayıcı kontrolü; 344 otomatik test geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/key-registry.mjs",
+        "gazi/portal/src/key-workspace.jsx",
+        "gazi/auth/tests/myys-keys.test.mjs",
+        "scripts/myys-keys-browser.cjs",
+        "gazi/auth/myys/KEY-REGISTRY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B13-keys-20261010.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Yeni yerel çekirdekte güvenilir anahtar geçmişi; canlı anahtar rotasyonu yapılmadı.",
+      "production_status": "Paket 17 kaynak adayı; anahtar ve imza akışı yalnız yerel kabulde. Üretim anahtarları değişmedi.",
+      "implementation_note": "Kalıcı açık anahtar sicili, ayrı yönetici incelemesi, rotasyon ve geri açılamayan ele geçirilme; aynı güven denetimi imza/doğrulama/cüzdan/paylaşım/teslim/kohortta kullanılır.",
       "independent_remaining_work": [
-        "Anahtar sicili ve durum listesi üretim adaptörünü yerel test et."
+        "İmzalı durum listesi adaptörü, güncellik ve TTL kabulü; B19 bağımsız doğrulama paketi; gerçek sağlayıcı işletim kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Mevcut imza sağlayıcısı yetkili işletim/rotasyon kararı.",
@@ -854,20 +860,26 @@
           "status": "kısmi",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/myys/key-registry.mjs",
+            "gazi/portal/src/key-workspace.jsx",
+            "gazi/auth/tests/myys-keys.test.mjs",
+            "scripts/myys-keys-browser.cjs",
+            "gazi/auth/myys/KEY-REGISTRY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B13-keys-20261010.json"
           ],
           "remaining": [
-            "Anahtar sicili ve durum listesi üretim adaptörünü yerel test et."
+            "İmzalı durum listesi adaptörü, güncellik ve TTL kabulü; B19 bağımsız doğrulama paketi; gerçek sağlayıcı işletim kabulü."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "Eski güvenilir anahtar kabulü, kompromize anahtar, kurcalama/iptal reddi.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "evidence": "12 yeni güvenlik testi, 11 anahtar + 8 cüzdan + 13 itiraz tarayıcı kontrolü; 344 otomatik test geçti.",
+          "limits": "Sentetik anahtar/kişi; gerçek kurum, üretim rotasyonu veya bağımsız sertifikasyon değildir."
         },
         "live": {
           "status": "kısmi pilot",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 17 kaynak adayı; anahtar ve imza akışı yalnız yerel kabulde. Üretim anahtarları değişmedi."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",

@@ -1,3 +1,4 @@
+import {localKey} from './helpers/local-key.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtempSync,rmSync} from 'node:fs';
@@ -97,6 +98,7 @@ test('Karara bağlı gerçek kriptografik imza; kurcalama ve sonradan iptal redd
  const {d}=f.passed(),r=f.run('issuer','issue',{decisionId:d.id});const base='https://local-acceptance.invalid';
  const keys=generateKeyPairSync('rsa',{modulusLength:2048});const jwk=keys.privateKey.export({format:'jwk'});jwk.kid=base+'/api/rozet/anahtarlar#test';
  const material={privateKey:await importJWK(jwk,'RS256'),jwk:{...keys.publicKey.export({format:'jwk'}),kid:jwk.kid}};
+ localKey(f,material);
  const signed=await signApproved(f.core,f.context('issuer'),r.id,material,base);
  assert.equal(signed.credential.academicDecision.id,d.id);
  assert.equal((await verifyApproved(f.core,f.context('student'),signed.jwt,material,base)).valid,true);
@@ -122,6 +124,7 @@ test('Anahtar rotasyonu eski güvenilir imzayı korur; kompromize anahtar redded
  const {d}=f.passed(),r=f.run('issuer','issue',{decisionId:d.id}),base='https://local-acceptance.invalid';
  const keys=generateKeyPairSync('rsa',{modulusLength:2048}),jwk=keys.privateKey.export({format:'jwk'});jwk.kid=base+'/api/rozet/anahtarlar#old';
  const material={privateKey:await importJWK(jwk,'RS256'),jwk:{...keys.publicKey.export({format:'jwk'}),kid:jwk.kid}};
+ localKey(f,material);
  const signed=await signApproved(f.core,f.context('issuer'),r.id,material,base);
  assert.equal((await verifyWithKeyring(f.core,f.context('student'),signed.jwt,[{state:'retired',material}],base)).valid,true);
  assert.equal((await verifyWithKeyring(f.core,f.context('student'),signed.jwt,[{state:'compromised',material}],base)).valid,false);
@@ -130,6 +133,7 @@ test('İmzalama sürerken yetki çekilirse belge kaydedilmez veya dışarı veri
  const {d}=f.passed(),r=f.run('issuer','issue',{decisionId:d.id}),base='https://local-acceptance.invalid';
  const keys=generateKeyPairSync('rsa',{modulusLength:2048}),jwk=keys.privateKey.export({format:'jwk'});jwk.kid=base+'/api/rozet/anahtarlar#race';
  const material={privateKey:await importJWK(jwk,'RS256'),jwk:{...keys.publicKey.export({format:'jwk'}),kid:jwk.kid}};
+ localKey(f,material);
  const signing=signApproved(f.core,f.context('issuer'),r.id,material,base);
  f.s.db.prepare('UPDATE memberships SET active=0 WHERE person=?').run('issuer');
  await assert.rejects(()=>signing);assert.equal(f.s.list('test-gazi','signed').length,0);

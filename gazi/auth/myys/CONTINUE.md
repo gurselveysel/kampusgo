@@ -1,3 +1,13 @@
+# Güncel devam — Paket 17 kaynak adayı
+
+B13 açık anahtar sicili, ayrı inceleme, rotasyon/ele geçirilme, yerel imza düğmesi ve ortak cüzdan/paylaşım/teslim/kohort güveni: 344 otomatik + 11 yeni tarayıcı kontrolü. Önce güvenli kaynağı yayımla ve canlı smoke; son doğrulanmış Paket 16 aşağıda. Sonra B13 imzalı durum listesi ve B19 bağımsız OpenSSL doğrulama/ihracat; B11 imzalı belge değiştirme zinciri ve kalan tüm B01–B36 işleri. Gerçek kurum/üretim imza anahtarı kapalı.
+
+# Güncel devam — Paket 16 yayımlandı; B13/B19 sürüyor
+
+Uzak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; yerel `9d8a858f150c73f45a3cc375b2b332f8bb0661cf`; ağaç `8526203f45f9a4bd052b5c9d64fdd2c8d190a30f`; canlı `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY. 154 kaynak hash ve gerçek canlı kapalı kurum/rozet laboratuvarı açıklaması/akademik bağlantısı smoke geçti. Geri dönüş Paket 15. 332 otomatik + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü.
+
+Sıradaki: B13 yerel anahtar sicili (hazırlık/bağımsız inceleme/rotasyon/ele geçirilme), durum ve B19 bağımsız doğrulama; B11 imzalı belge değiştirme zinciri. W3C Bitstring Status List 15.05.2025 Recommendation §2/3/4 okundu: iptal kalıcı, askı geri alınabilir; rastgele en az 131072 indeks, MSB-first gzip multibase. Üretim endpoint'i varmış gibi gösterilmez. Open Badges 3.0 doküman 1.4.5 §8.2.3–8.2.6/8.4/9.1 okundu. Gerçek kurum yetkisi kapalı; kalan tüm bağımsız B01–B36 işleri sürer.
+
 # Güncel devam — Paket 16 kaynak adayı
 
 B12 belge profilleri/ihraç yetkisi ve sentetik laboratuvar sınırı: 332 otomatik + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü. Önce güvenli kaynak yayını ve canlı smoke; son doğrulanmış canlı Paket 15 aşağıda. Sonra B13 anahtar/durum sicili ve B19 bağımsız doğrulama paketi; B11 imzalı belge değiştirme zinciri ve kalan tüm B01–B36 bağımsız işleri. Tüm işler tamamlanmadı; gerçek kurum yetkisi kapalı.
