@@ -317,3 +317,15 @@ Anahtar ve belge durumu ile imza/cüzdan bağlantısı. 344 otomatik ve 11 yeni 
 Anahtar ekranında durum listesi/güven sicili ve cüzdanda doğrulama paketi. 357 otomatik test; yeni tarayıcı ihracı ayrı Python/OpenSSL aracıyla sınanır. Üretim anahtarı veya gerçek kişi işlemi yok. Canlı yayın henüz yapılmadı; son doğrulanmış canlı Paket 16, Paket 17 yalnız kaynakta.
 
 Paket 18 son yerel kanıt: 357 otomatik test; 16 durum/ihracat/Python-OpenSSL tarayıcı ve 8 cüzdan regresyon kontrolü geçti. 390 px görünüm incelendi. 36 özgün kimlik/başlık/bağımlılık/kabul ölçütü korundu.
+
+### Paket 18 — kaynak eşitlendi, canlı yayımlanmadı (2026-10-13)
+
+- Yerel `7fd97f81ae4a676485c41d4638b581e09ea3495e`; uzak `589f218e71725d33d429533a289564320a968b2e`; aynı kaynak ağacı `9244003e1a3ef0f4ba4660e618afb8243888194b`.
+- 357 otomatik, 16 durum/ihracat/Python-OpenSSL tarayıcı ve 8 cüzdan kontrolü geçti. Uzak dal beklenen Paket 17 üzerine karşılaştırmalı güncellendi; geçmiş korunuyor.
+- Yeni üretim dağıtımı yok. Son doğrulanmış canlı Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` / kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; alias READY 13.10.2026'da yeniden doğrulandı. Canlı giriş kullanıcı iptali nedeniyle yeni smoke yapılmadı. Sonraki yayın Paket 17 ve 18 kaynak farkını birlikte kapsamalı; her dosyanın hash'i fiilî canlı paketle karşılaştırılmalı.
+
+## Paket 19 adayı — B11 (2026-10-13)
+
+Belge hazırlığı öneri/komisyon incelemesi/değiştirme/iptal/geçmiş ekranı. Yeni imza ve eski iptal atomik; eski dosyalar korunur. 368 otomatik + 17 yeni tarayıcı kontrolü. Sürümlü itiraz/moderasyon politikası açık; kurum yetkisi veya canlı etkinleştirme yok.
+
+Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü geçti. 390 px görünüm incelendi; özgün 36 iş kimliği/bağımlılığı/kabulü korunuyor.

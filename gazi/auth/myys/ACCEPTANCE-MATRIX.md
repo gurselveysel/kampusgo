@@ -128,3 +128,9 @@ Anahtar ve belge durumu / Belge hazırlığı / Kişisel cüzdanım: açık anah
 Anahtar ve belge durumu / Kişisel cüzdanım: iki imzalı liste, ayrı açık güven sicili, kendi belge ve durum paketi. Python/OpenSSL bağımsız profilde geçerli/rotasyon/bozuk/yanlış issuer/süre/iptal/askı/gzip sınırları test edildi; 357 otomatik test. Eski imza değiştirilmedi. Gerçek dış cüzdan sertifikasyonu ve kurum durum servisi açık; canlı yayımlanmadı.
 
 Paket 18 son yerel kanıt: 357 otomatik test; 16 durum/ihracat/Python-OpenSSL tarayıcı ve 8 cüzdan regresyon kontrolü geçti. 390 px görünüm incelendi. 36 özgün kimlik/başlık/bağımlılık/kabul ölçütü korundu.
+
+## Paket 19 adayı — B11 imzalı belge zinciri
+
+Belge hazırlığı ve özel cüzdan: öneri/ayrı inceleme/hazırlık/yeni imza/eski iptal; yeni olumsuz kararda belgesiz iptal; geri çekme ve tarihsel dosya bütünlüğü. 368 otomatik test, 17 yeni tarayıcı kontrolü. Sürümlü süre/etki politikası ve gerçek kurum kabulü açık; yeni dilim canlı yayımlanmadı.
+
+Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü geçti. 390 px görünüm incelendi; özgün 36 iş kimliği/bağımlılığı/kabulü korunuyor.

@@ -694,7 +694,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "58 sunucu + 46 portal + 46 mevcut regresyon = 150 test; 13 izole Chromium kabul kontrolü geçti (9 çekirdek rol, masaüstü, 390 px, klavye).",
+      "test_status": "11 yeni belge yaşam döngüsü testi; 276 sunucu + 46 portal + 46 regresyon = 368 otomatik test. 17 değiştirme + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -703,12 +703,18 @@
         "gazi/portal/src/appeals.test.mjs",
         "gazi/auth/myys/core.mjs",
         "scripts/myys-appeals-browser.cjs",
-        "gazi/auth/myys/acceptance/B11-20261010.json"
+        "gazi/auth/myys/acceptance/B11-20261010.json",
+        "gazi/auth/myys/credential-lifecycle.mjs",
+        "gazi/portal/src/credential-lifecycle-workspace.jsx",
+        "gazi/auth/tests/myys-credential-lifecycle.test.mjs",
+        "scripts/myys-replacement-browser.cjs",
+        "gazi/auth/myys/CREDENTIAL-LIFECYCLE-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B11-replacement-20261013.json"
       ],
-      "production_status": "Paket 4: 2743da31b6b6e278dfc13b27e8bc79145b708731 / dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV READY; kod yayımlandı, kurumsal akademik etkinleştirme kapalı.",
-      "implementation_note": "İtiraz, bağımsız inceleme, yeniden puanlama ve yeni akademik karar aynı zincirde görünür; sunucu karar eylemleri, tekrar formunun kapatılması ve mobil metin sarımı doğrulandı. Kurumsal etkinleştirme kapalı.",
+      "production_status": "Önceki B11 kodu canlıda; Paket 19 yeni değiştirme/iptal dilimi kaynak adayı, yalnız yerel kabulde. Son canlı Paket 16; yeni kurumsal hizmet etkin değil.",
+      "implementation_note": "Önceki itiraz akışı korunur; imzalı belge için öneri/ayrı inceleme/yeni hazırlık/imza/eski iptal atomik bağlıdır. Yeni olumsuz karar bağımsız incelenmiş iptal üretir; eski dosya değişmez.",
       "independent_remaining_work": [
-        "Önceden imzalanmış belgenin değiştirilmesi/iptal zinciri; süre ve moderasyon politikasını kapsamı belirtilmiş sürümle bağla."
+        "Süre ve belge etkisini kapsamlı sürümlü itiraz/moderasyon politikasına bağla; gerçek kurum usulü/takvimi/iptal yetkisi kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun itiraz ve moderasyon usulü.",
@@ -723,20 +729,26 @@
             "gazi/portal/src/appeals.test.mjs",
             "gazi/auth/myys/core.mjs",
             "scripts/myys-appeals-browser.cjs",
-            "gazi/auth/myys/acceptance/B11-20261010.json"
+            "gazi/auth/myys/acceptance/B11-20261010.json",
+            "gazi/auth/myys/credential-lifecycle.mjs",
+            "gazi/portal/src/credential-lifecycle-workspace.jsx",
+            "gazi/auth/tests/myys-credential-lifecycle.test.mjs",
+            "scripts/myys-replacement-browser.cjs",
+            "gazi/auth/myys/CREDENTIAL-LIFECYCLE-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B11-replacement-20261013.json"
           ],
           "remaining": [
-            "Önceden imzalanmış belgenin değiştirilmesi/iptal zinciri; süre ve moderasyon politikasını kapsamı belirtilmiş sürümle bağla."
+            "Süre ve belge etkisini kapsamlı sürümlü itiraz/moderasyon politikasına bağla; gerçek kurum usulü/takvimi/iptal yetkisi kabulü."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "58 sunucu + 46 portal + 46 mevcut regresyon = 150 test; 13 izole Chromium kabul kontrolü geçti (9 çekirdek rol, masaüstü, 390 px, klavye).",
+          "evidence": "11 yeni belge yaşam döngüsü testi; 276 sunucu + 46 portal + 46 regresyon = 368 otomatik test. 17 değiştirme + 11 profil + 13 itiraz + 8 cüzdan tarayıcı kontrolü geçti.",
           "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
         },
         "live": {
           "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 4: 2743da31b6b6e278dfc13b27e8bc79145b708731 / dpl_3KJc8BhJLm5Agu289W2eQ5oWUUoV READY; kod yayımlandı, kurumsal akademik etkinleştirme kapalı. Canlıda kapalı akademik görünüm doğrulandı; itiraz işlemi yalnız izole yerel kabulde."
+          "evidence": "Önceki B11 kodu canlıda; Paket 19 yeni değiştirme/iptal dilimi kaynak adayı, yalnız yerel kabulde. Son canlı Paket 16; yeni kurumsal hizmet etkin değil."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -854,7 +866,7 @@
         "gazi/auth/myys/STATUS-EXPORT-CONTRACT.md",
         "gazi/auth/myys/acceptance/B13-B19-status-20261013.json"
       ],
-      "production_status": "Paket 18 kaynak adayı; canlı yayımlanmadı. Yerel durum ve bağımsız ihracat; gerçek kurum bağlantısı kapalı.",
+      "production_status": "Paket 18 uzak kaynakla aynı ağaçta eşitlendi; canlı yayımlanmadı. Son canlı Paket 16. Durum/bağımsız ihracat yalnız yerel kabulde, kurum hizmeti kapalı.",
       "implementation_note": "İki ayrı imzalı iptal/askı listesi, atomik kaynak güncelliği ve MFA ile kendi belge ihracı. Ayrı güven siciliyle Python/OpenSSL aracı issuer/imza/zaman/rotasyon/iptal/askı ve profil bağlarını doğrular.",
       "independent_remaining_work": [
         "Gerçek durum/anahtar sağlayıcısı işletim adaptörü ve dış cüzdan karşılıklı çalışma kabulü."
@@ -891,7 +903,7 @@
         },
         "live": {
           "status": "kısmi pilot",
-          "evidence": "Paket 18 kaynak adayı; canlı yayımlanmadı. Yerel durum ve bağımsız ihracat; gerçek kurum bağlantısı kapalı."
+          "evidence": "Paket 18 uzak kaynakla aynı ağaçta eşitlendi; canlı yayımlanmadı. Son canlı Paket 16. Durum/bağımsız ihracat yalnız yerel kabulde, kurum hizmeti kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1264,7 +1276,7 @@
         "gazi/auth/myys/STATUS-EXPORT-CONTRACT.md",
         "gazi/auth/myys/acceptance/B13-B19-status-20261013.json"
       ],
-      "production_status": "Paket 18 kaynak adayı; canlı yayımlanmadı. Yerel durum ve bağımsız ihracat; gerçek kurum bağlantısı kapalı.",
+      "production_status": "Paket 18 uzak kaynakla aynı ağaçta eşitlendi; canlı yayımlanmadı. Son canlı Paket 16. Durum/bağımsız ihracat yalnız yerel kabulde, kurum hizmeti kapalı.",
       "implementation_note": "İki ayrı imzalı iptal/askı listesi, atomik kaynak güncelliği ve MFA ile kendi belge ihracı. Ayrı güven siciliyle Python/OpenSSL aracı issuer/imza/zaman/rotasyon/iptal/askı ve profil bağlarını doğrular.",
       "independent_remaining_work": [
         "Gerçek durum/anahtar sağlayıcısı işletim adaptörü ve dış cüzdan karşılıklı çalışma kabulü."
@@ -1293,7 +1305,7 @@
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 18 kaynak adayı; canlı yayımlanmadı. Yerel durum ve bağımsız ihracat; gerçek kurum bağlantısı kapalı."
+          "evidence": "Paket 18 uzak kaynakla aynı ağaçta eşitlendi; canlı yayımlanmadı. Son canlı Paket 16. Durum/bağımsız ihracat yalnız yerel kabulde, kurum hizmeti kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",

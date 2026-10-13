@@ -1,3 +1,4 @@
+import {replacementReady,completeReplacement} from './credential-lifecycle.mjs';
 import {allocateStatus,statusEntries} from './status-list.mjs';
 import {signingKey,trustedSignedKey,credentialBlocked,keyFingerprint} from './key-registry.mjs';
 import {issuanceProfile} from './credential-profile.mjs';
@@ -15,6 +16,7 @@ function ready(core,context,issuanceId){
  requireThat(![d.owner,d.createdBy,p.createdBy].includes(a.id),'separation','Belge imzalayan görevler ayrılığını sağlamalı.',403);
  requireThat(p.mode==='pilot'&&p.pathway==='micro'&&d.outcome==='approved'&&core.decisionUsable(a,d)&&!credentialBlocked(core,a.tenant,r),'decision_blocked','Karar veya ihraç yetkisi artık geçerli değil.');
  const profile=issuanceProfile(s,a,p,core.clock(),r.profileId);requireThat(r.profileId&&r.profileDigest===hash(stableStringify(profile)),'profile_changed','İhraç yetkisinin belge profili eşleşmiyor.',409);
+ if(!s.get(a.tenant,'signed',r.id))replacementReady(core,a,r);
  return {a,r,d,p,profile};
 }
 export function canSignApproved(core,context,id,material){try{const {a,r}=ready(core,context,id);if(core.store.get(a.tenant,'signed',id))return false;signingKey(core.store,a.tenant,r.unit,material);return true;}catch{return false;}}
@@ -32,7 +34,7 @@ export async function signApproved(core,context,issuanceId,material,base){
   // Synthetic URLs are resolved only from an offline bundle, not a public service.
   vc.credentialStatus=statusEntries(a.tenant,allocateStatus(core.store,a.tenant,r,a.id,core.clock()));
   vc['@context'].push({academicDecision:{'@id':base+'/vocab/academicDecision','@type':'@json'}});
-  vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance',statusProfile:'MYYS-LOCAL-STATUS-1',profileId:r.profileId,profileVersion:r.profileVersion,authorityId:r.authorityId,profileDigest:r.profileDigest};
+  vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance',statusProfile:'MYYS-LOCAL-STATUS-1',profileId:r.profileId,profileVersion:r.profileVersion,authorityId:r.authorityId,profileDigest:r.profileDigest,...(r.replacesId?{replacesId:r.replacesId,previousDigest:r.previousDigest,replacementProposalId:r.replacementProposalId,replacementReviewId:r.replacementReviewId}:{})};
   return {vc,a,r,d,date,key};
  });
  if(prepared.existing)return prepared.existing;
@@ -45,6 +47,7 @@ export async function signApproved(core,context,issuanceId,material,base){
   requireThat(d.id===prepared.d.id,'decision_changed','Karar değişti.',409);
   const record={id:r.id,unit:r.unit,owner:r.owner,decisionId:d.id,credential:prepared.vc,jwt,digest:digest(jwt),createdAt:core.clock(),createdBy:a.id,keyId:key.id,kid:key.jwk.kid,keyFingerprint:key.fingerprint,pilot:true,scope:'local-acceptance'};
   core.store.put(a.tenant,'signed',record);
+  completeReplacement(core,a,r,record);
   core.store.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(a.tenant,a.id,'sign',r.id,core.clock());
   return record;
  });

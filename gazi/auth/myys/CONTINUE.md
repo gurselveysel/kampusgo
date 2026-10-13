@@ -1,3 +1,29 @@
+# Güncel devam — Paket 19 yerel kabul; sürümlü itiraz politikası sırada
+
+B11 imzalı değiştirme/iptal dilimi bağlı: 368 otomatik + 17 yeni tarayıcı kontrolü; profil/itiraz/cüzdan regresyon sonuçlarını tamamla. CREDENTIAL-LIFECYCLE-CONTRACT.md güncel. Sonra kabul JSON/backlog/matris ile kaynak commitini eşitle. Kaynak son Paket 18: yerel 7fd97f81ae4a676485c41d4638b581e09ea3495e / uzak 589f218e71725d33d429533a289564320a968b2e / ağaç 9244003e1a3ef0f4ba4660e618afb8243888194b.
+
+Sonraki bağımsız B11 işi: kapsamı/sürümü/dayanağı açık itiraz ve moderasyon politikası, eski değerlendirmeye etkisi, süreyi hangi olaydan başlattığı, iş günü ise kurum takvimi/manuel inceleme sınırı. Kaynakta okunmamış kurumsal süreyi otomatik kural yapma; gerçek kurum usulü açık. Ardından kalan bütün B01–B36 bağımsız işleri. Son canlı Paket 16; Paket 17/18/19 production yayını yok. browserAuth kullanıcı iptalini yeniden isteme.
+
+# B11 güncel ara nokta — değiştirme çekirdeğe bağlı; tarayıcı kabulü bekliyor
+
+Çalışma ağacındaki `credential-lifecycle.mjs` artık core command/replay/view ve credentials ready/commit ile bağlı. `completeReplacement` yeni signed kaydıyla aynı işlemde eski revocation + replacement-completion + audit yazar; rollback testi geçti. Yeni imzada önceki belge/digest/öneri/inceleme bağları var. Olumsuz yeniden karar ayrı incelenmiş iptal üretir; yeni belge üretmez. Anahtar yeniden ihraç aynı akademik kararı korur. 10 yeni yaşam döngüsü testi geçti; eski 265 sunucu tabanı ilk bağlama sonrası geçti. Son UI ve tüm değişikliklerle tam test tekrar bekliyor.
+
+`CredentialLifecycleWorkspace` Belge hazırlığı sekmesine bağlandı: öneri/inceleme/hazırlık/imza/geri çekme/geçmiş. `--replacement` loopback senaryosu eski imzalı belge ve aynı geçici imzalayıcıyla başlar. Build çalıştırıldı; sonucu kontrol et. Sonraki: scripts/myys-replacement-browser.cjs oluştur; öğrenci itirazı → reviewer yeniden değerlendirme → independent eğitici → judge yeni karar → issuer öneri → publisher ayrı inceleme → issuer yeni hazırlık/imza → öğrenci eski kapalı/yeni açık cüzdan ve korunan geçmiş. İptal/geri çekme ve negatif rol testlerini gözden geçir; tam otomatik testler, mevcut profil/itiraz/cüzdan tarayıcı regresyonu; yeni kabul JSON/sözleşme/backlog/matris/source commit. Sürümlü itiraz ve moderasyon politikası ayrıca açık.
+
+Son uzak kaynak Paket 18 `589f218e71725d33d429533a289564320a968b2e`, yerel `7fd97f81ae4a676485c41d4638b581e09ea3495e`, aynı ağaç `9244003e1a3ef0f4ba4660e618afb8243888194b`. Son canlı Paket 16; auth iptalini yeniden isteme. Kurumsal hizmet kapalı, B01–B36 tamamlanmadı; sıradaki bağımsız işleri sürdür.
+
+# B11 uygulama ara noktası — 2026-10-13
+
+Paket 18 kaynak kimlikleri aşağıda. Çalışma ağacında yeni `credential-lifecycle.mjs` TASLAĞI var; henüz çekirdeğe/arayüze bağlı değil ve TEST EDİLMEDİ. Taslak: aynı imzalı eski belge/öğrenen/program, güncel yeniden değerlendirme veya anahtar yeniden ihraç önerisi; ayrı komisyon incelemesi; hazırlık/iptal/geri çekme; replacementReady denetimi. Tamamlanmış sayma.
+
+Sonraki uygulama: (1) replacementReady içinde imzalayanın incelemeciyle ayrılığını denetle; yalnız henüz imzalanmamış hazırlıkta çağır. (2) Yeni imza + eski revocation + replacement-completion + denetim kayıtlarını aynı işlemde bağlayan completeReplacement yaz. Eski imzalı dosyayı asla değiştirme. (3) core command/replay/view ve credentials ready/commit bağları; yeni imzada önceki belge/digest/öneri/inceleme bağlarını imzalı academicDecision alanına ekle. (4) Belge hazırlığı için kullanıcı öneri/inceleme/uygulama/geri çekme ve geçmiş ekranını bağla. (5) Olumlu/olumsuz yeniden değerlendirme, anahtar yeniden ihraç, atomik hata ve yarış, başka kişi/birim/MFA, idempotency ve tarayıcı kabulü. (6) Sürümlü itiraz/moderasyon politikası ayrı açık iş; gerçek kurum usulü uydurma.
+
+# Güncel devam — Paket 18 kaynakta; B11 imzalı belge değiştirme
+
+Yerel `7fd97f81ae4a676485c41d4638b581e09ea3495e`; uzak `589f218e71725d33d429533a289564320a968b2e`; aynı ağaç `9244003e1a3ef0f4ba4660e618afb8243888194b`. 357 otomatik + 16 durum/Python-OpenSSL + 8 cüzdan tarayıcı kontrolü geçti. Son canlı hâlâ Paket 16: `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`. Paket 17/18 üretim dağıtımı oluşturulmadı; browserAuth 13.10.2026 kullanıcı iptali, yeniden isteme veya korumayı aşma. Bağımsız işleri sürdür.
+
+Sıradaki B11: ayrı belge değiştirme önerisi ve komisyon incelemesi; yeni imza başarıyla kaydedilince eski belgeyi aynı işlemde iptal et, eski imzalı dosyayı değişmeden sakla. Aynı kayıt/öğrenen/program ve yeniden değerlendirme kararını bağla. Anahtar yeniden ihraç yolu akademik not üretmesin. Tekrar/yarış/yetki/iptal geçmişi ve UI kabulü; ayrıca sürümlü itiraz/moderasyon politikasının kalan bağımsız kodunu tamamla. B01–B36 bitmedi; genel devam izni bekleme.
+
 # Güncel devam — Paket 18 yerel kabul, B11 sırada
 
 B13/B19 durum/ihracat dilimi kodlandı: 357 otomatik test; tarayıcıdan gerçek indirilen paketin Python/OpenSSL ile doğrulaması var. Durum bitleri iptal/askı ayrı, atomik kaynak güncelliği, tekil indeks; ayrı güven sicili ve kişisel paket indirilebilir. STATUS-EXPORT-CONTRACT.md sınırları geçerli. Önce son tarayıcı sonucunu/kabul kaydını tamamla, kaynak commitini uzak dalla aynı ağaçta eşitle. Paket 17 yerel a3b181a7a40ee0ad5c783a04589f07ee4b3786e7 / uzak c3b769e36195e644a2d099b9b3aa9fa8d165a0f9 / ağaç 2bd5066ea2c263282a67ad5b5badd75acbb365f9. Son canlı Paket 16; auth kullanıcı iptali yüzünden üretim yayın/smoke yapılmadı. Yeniden auth isteme.
@@ -156,3 +182,5 @@ B16/B17 ilk uçtan uca dilim eklendi: kalıcı işçi, karantina, rol kapsamlı 
 Paket 6 e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 production READY; 138 kaynak SHA eşleşmesi ve canlı oturum/akademik kapı/rehber smoke geçti. B18 cüzdan kaynak dilimi: 230 otomatik test + 8 cüzdan tarayıcı kontrolü. Paket 7 yayımlanınca RELEASE kaydını güncelle. Sonraki bağımsız işler: B03/B09 çoktan çoğa sürümlü rubrik/görev eşlemesi, B20/B21 tanıma/tekil kredi, B28/B29/B30 veri/kalite/kabul; 36 iş henüz tamamlanmadı.
 
 Paket 18 son yerel kanıt: 357 otomatik test; 16 durum/ihracat/Python-OpenSSL tarayıcı ve 8 cüzdan regresyon kontrolü geçti. 390 px görünüm incelendi. 36 özgün kimlik/başlık/bağımlılık/kabul ölçütü korundu.
+
+Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8 cüzdan tarayıcı kontrolü geçti. 390 px görünüm incelendi; özgün 36 iş kimliği/bağımlılığı/kabulü korunuyor.
