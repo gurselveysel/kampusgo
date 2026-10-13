@@ -1,3 +1,15 @@
+# Güncel devam — Paket 23 yerel kabul; kaynak eşitlemesi sırada
+
+B10 alternatif ölçme kanıtı/moderasyon/sürüm akışı tamamlandı: 428 otomatik (336+46+46), 15 yeni + 13 itiraz tarayıcı; 68 komut/12 HTTP, 2.800 olumlu örnek/22.400 kapsam denetimi. 390 px incelendi; 115 dosyalı paket. Sözleşme/kabul/backlog güncel. Önce 36 özgün koşulu ve diff kontrol et; commit ve uzak expected-head üzerinden aynı kaynak ağacını eşitle. Temel Paket 22 yerel 63a0fcfec1c14b50481f537def921ef06b236dcd / uzak dee6e4b8d68a166958b2c5c48f86df9c50a9a610 / ağaç 1b6d46e6114280ce10c19de61ea79ec428006940. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–23 dağıtımı yok. Auth iptalini yeniden isteme; configuredCore kapalı.
+
+Sıradaki bağımsız B23: merkezi SEM dosya kontrol listesi ve durum makinesi; güncel resmî kaynakları yeniden doğrula. YÖK 6 Temmuz 2026 haberinin arama kaydı bulundu, doğrudan open başarısız; GAZİSEM sitesinde yönetmelik/yönerge bağlantılarını incele. Ticari blog/YÖKSİS giriş duvarını teknik şema veya kurum yetkisi sayma. Teknik sözleşme/yetki yokken otomatik aktarım, merkez adına resmî belge ve yerel SEM ihraç kapalı kalır. B07 back-channel/üretim depo ve B09 imzalı dış kaynak arşivi ayrıca açık; sonra bütün kalan bağımsız B01–B36 işleri. Tek kod sahibi; alt ajan yok.
+
+# Güncel devam — Paket 22 kaynakta; B10 alternatif ölçme
+
+Yerel 63a0fcfec1c14b50481f537def921ef06b236dcd; uzak dee6e4b8d68a166958b2c5c48f86df9c50a9a610; ortak ağaç 1b6d46e6114280ce10c19de61ea79ec428006940. 415 otomatik; 66 komut / 12 HTTP kapsam matrisi; 12 saklama + 11 veri talebi tarayıcı kontrolü. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–22 dağıtımı yok. Auth iptalini yeniden isteme.
+
+B10 bağımsız alternatif ölçme/kanıt sürümü/moderasyon akışına geçildi. Henüz yeni uygulama kodu yok. Plan: eğitici alternatif görev kanıtını kayıtlı yöntem, gözlem zamanı ve dayanakla sunar; ayrı kalite yetkilisi sürüm/hash üzerinden gerekçeli kabul/ret verir; yalnız kabul edilmiş kanıt tam rubrik ve ayrı akademik karara ilerler. Yeni sürüm önceki değerlendirme snapshotını değiştirmez. Kurumsal yöntem/yetki kararı uydurulmaz; yalnız sentetik yerel kabul. Yeni komutları B08 envanterine ekle ve tekrar çalıştır. Sonra bütün diğer bağımsız B01–B36 işleri.
+
 # Güncel devam — Paket 22 yerel kabul; kaynak eşitlemesi sırada
 
 B08: 415 otomatik (323+46+46), 66 komut / 12 HTTP yolu / 2.656 olumlu örnek / 21.248 kapsam kontrolü. 12 saklama + 11 veri talebi tarayıcı kontrolü; 390 px incelendi. SCOPE-ACCEPTANCE-CONTRACT ve kabul JSON güncel. Görünür ekran değişikliği yok. Önce commit ve uzak expected-head ile aynı ağacı eşitle. Temel yerel 797d0f044f89bfbff9c44938e6ae2edbbfb1b35a / uzak 0ca90ca4e4d7328ee56ff27cc1091a38dade0c24 / ağaç 75cc5a36e46484af22fcc231a2154b501c950b69. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–22 canlı yayımı yok. Kullanıcı auth iptalini yeniden isteme; configuredCore kapalı.

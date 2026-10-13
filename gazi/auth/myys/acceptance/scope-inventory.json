@@ -1,6 +1,7 @@
 {
-  "version": "2026.10.13.22",
+  "version": "2026.10.13.23",
   "commands": [
+    "alternative-evidence",
     "appeal",
     "appeal-policy",
     "appeal-policy-hold",
@@ -25,6 +26,7 @@
     "decision-receive",
     "enroll",
     "evidence",
+    "evidence-moderate",
     "flow-policy",
     "flow-review",
     "import-lms-evidence",

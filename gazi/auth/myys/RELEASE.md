@@ -362,3 +362,13 @@ Panelde yerel oturum/çıkış/yeniden giriş, ayrı sentetik site üzerinden HT
 Görünür arayüz değişikliği yok; kapsam hataları ve tekrarlanabilir yetki matrisi. 415 otomatik test; 66 komut / 12 HTTP yolu / 21.248 türetilmiş kontrol. 115 dosyalı korumalı paket üretildi. Kaynak temel yerel 797d0f044f89bfbff9c44938e6ae2edbbfb1b35a / uzak 0ca90ca4e4d7328ee56ff27cc1091a38dade0c24 / ağaç 75cc5a36e46484af22fcc231a2154b501c950b69. Canlı alias yeniden doğrulandı: Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 / 16bd55eefed251ce5d23e1791f87ed3871c6a8c6 READY. Yeni dağıtım yok; auth kullanıcı iptali ve yeni smoke açık. Sonraki yayının geri dönüş hedefi Paket 16; geri dönüş uygulanmadı. Kaynak kimlikleri eşitlemeden sonra yazılır.
 
 Paket 22 ek yerel kanıt: 12 saklama + 11 veri talebi tarayıcı kontrolü geçti; 390 px saklama görünümü incelendi. 36 özgün iş kimliği/başlık/bağımlılık/kabul ölçütü korundu.
+
+### Paket 22 — kaynak eşitlendi, canlı yayımlanmadı (2026-10-13)
+
+- Yerel `63a0fcfec1c14b50481f537def921ef06b236dcd`; uzak `dee6e4b8d68a166958b2c5c48f86df9c50a9a610`; ortak ağaç `1b6d46e6114280ce10c19de61ea79ec428006940`. Beklenen uzak başlık üzerinden geçmiş korunarak eşitlendi.
+- 415 otomatik test, 12 saklama + 11 veri talebi tarayıcı kontrolü; mevcut 66 komut ve 12 HTTP yolu kapsam matrisi geçti. 36 özgün iş koşulu korundu.
+- Yeni dağıtım yok; son canlı Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`. Canlı auth kullanıcı iptali nedeniyle yeni smoke açık. B08 gerçek görev/üretim kabulü açık.
+
+## Paket 23 kaynak adayı — B10/B08 (2026-10-13)
+
+Öğrenme kanıtları, Değerlendirmeler ve karar sürüm açıklaması güncellendi. 428 otomatik, 15 alternatif ölçme + 13 itiraz tarayıcı kontrolü; 390 px incelendi. 68 komut / 12 HTTP kapsam matrisi ve 115 dosyalı korumalı paket. Kaynak temel yerel 63a0fcfec1c14b50481f537def921ef06b236dcd / uzak dee6e4b8d68a166958b2c5c48f86df9c50a9a610 / ortak ağaç 1b6d46e6114280ce10c19de61ea79ec428006940. Yeni canlı dağıtımı yok. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 / 16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Auth kullanıcı iptali nedeniyle yeni smoke açık. Sonraki yayımın geri dönüş hedefi Paket 16; uygulanmadı.

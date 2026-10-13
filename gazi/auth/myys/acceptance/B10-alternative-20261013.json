@@ -1,0 +1,105 @@
+{
+  "work_id": "B10",
+  "scope": "isolated-local-acceptance",
+  "production": false,
+  "official": false,
+  "automated": {
+    "server": 336,
+    "portal": 46,
+    "regression": 46
+  },
+  "browser": {
+    "alternative": {
+      "at": "2026-10-13T23:46:56.439Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "Eğitici yöntem, zaman, ürün ve dayanakla alternatif kanıtı kaydetti; kendi inceleyemedi",
+        "İncelenmemiş kanıt rubrik seçimine kapalı",
+        "Ayrı kalite görevlisi gerekçeli ret kaydetti; başarı üretilmedi",
+        "Reddedilen kayıt korundu; gerekçeli ikinci kanıt sürümü oluşturuldu",
+        "İkinci sürüm ayrı kişi tarafından incelendi; alan etiketleri ve klavye sırası çalışıyor",
+        "Kanıt arama ve inceleme filtresi güncel kullanılabilir sürümü buldu",
+        "Eğitici yalnız kabul edilmiş sürümü tam rubrikle değerlendirdi; dayanak ve moderasyon bağlandı",
+        "Ayrı komisyon kararı ve yetkili belge hazırlığı aynı kanıt zincirine bağlandı",
+        "Öğrenen kendi sürümlerini gördü; indirilen arşiv yöntem ve insan incelemesini taşıyor",
+        "Üçüncü taslak ve yenileme eski kararın dayanak arşivini değiştirmedi",
+        "Başka öğrenene alternatif ürün veya moderasyon açıklanmadı",
+        "390 px kanıt ve bağımsız inceleme ekranında taşma yok",
+        "390 px alternatif yöntem ve yeni sürüm formu taşmıyor",
+        "Yeni sürüm hazırlığı kayıt oluşturmadan kapatılabildi",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    },
+    "appeals": {
+      "at": "2026-10-13T23:45:13.655Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+        "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+        "390 px mobil: taşma ve bozuk resim yok",
+        "Akademik sekmeler Home/End tuşları ve seçili durum",
+        "Yakalanmış istemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    }
+  },
+  "scope_matrix": {
+    "at": "2026-10-13T23:46:56.987Z",
+    "commands": 68,
+    "httpRoutes": 12,
+    "positiveSamples": 2800,
+    "totalChecks": 22400,
+    "newActions": {
+      "alternative-evidence": {
+        "positiveSamples": 18,
+        "checks": {
+          "other-unit-fresh:404": 18,
+          "other-unit-replay:403": 18,
+          "other-tenant-fresh:403": 18,
+          "other-tenant-replay:403": 18,
+          "other-unit-read:no-private-record": 18,
+          "other-tenant-read:403": 18,
+          "valid-other-tenant-reference:404": 18,
+          "valid-other-tenant-read:no-tenant-A-record": 18
+        }
+      },
+      "evidence-moderate": {
+        "positiveSamples": 17,
+        "checks": {
+          "other-unit-fresh:404": 17,
+          "other-unit-replay:403": 17,
+          "other-tenant-fresh:403": 17,
+          "other-tenant-replay:403": 17,
+          "other-unit-read:no-private-record": 17,
+          "other-tenant-read:403": 17,
+          "valid-other-tenant-reference:404": 17,
+          "valid-other-tenant-read:no-tenant-A-record": 17
+        }
+      }
+    }
+  },
+  "criteria_closed_in_local_scope": [
+    "Dört alternatif kanıt biçimi; yöntem/dayanak/zaman ve bağımsız gerekçeli inceleme zorunlu.",
+    "Eksik/null/başarısız ölçme belgeye ilerleyemez; alternatif kanıt da tam rubrik ve ayrı insan kararı gerektirir.",
+    "Yeni kanıt ve moderasyon sürümü eski değerlendirme ve karar arşivini değiştirmez; ekranda sürüm etkisi görünür.",
+    "Hazırlayan/moderatör kendi dayanağının nihai karar/itiraz/bağımsız yeniden değerlendirmesini yapamaz."
+  ],
+  "remaining": [
+    "Gerçek kurum alternatif ölçme yöntemi, yetki atamaları ve üretim kimlik/depo kabulü.",
+    "Kaynak dosyasının gerçek kurum doğrulaması; yerel beyan dış hizmet kabulü sayılmaz.",
+    "Paket 17–23 canlı yayımı/smoke açık."
+  ]
+}

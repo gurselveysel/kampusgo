@@ -177,3 +177,7 @@ Aktarım ve mutabakat ekranına OBS hazırlığı, filtre, alındı örneği, sa
 ## B08 mevcut yerel yüzey matrisi — 2026-10-13
 
 SCOPE-ACCEPTANCE-CONTRACT.md, scope-inventory.json ve myys-scope-acceptance.mjs: geçerli komut kopyasıyla tüm mevcut kurum/birim/tekrar/okuma kontrolleri; HTTP arşiv/cüzdan/imza/durum/toplu/kişi ihracı. Alan hatasıyla karışan 403 ayrıldı, saklama yabancı önizlemesi 404. Kurum görevi veya üretim RLS kabulü uydurulmadı; configuredCore kapalı.
+
+## B10 alternatif ölçme — 2026-10-13
+
+ALTERNATIVE-EVIDENCE-CONTRACT.md: eğitici kaydı → ayrı kalite incelemesi → tam rubrik → ayrı komisyon → mevcut belge profili/ihraç. Değişmez kanıt/moderasyon snapshotı ve kişisel arşiv; yeni sürüm geçmişi değiştirmez, ekranda etkisi görünür. Hazırlayan/moderatör bağımsız karar ve kendi itirazında görev alamaz. Kaynak doğrulaması yerel insan incelemesidir; kurum usulü veya gerçek dış dosya kabulü diye sunulmaz.

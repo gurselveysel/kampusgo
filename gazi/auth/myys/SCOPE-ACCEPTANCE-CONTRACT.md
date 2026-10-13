@@ -38,3 +38,7 @@ Destek ve veri talebi oluşturma/paylaşım geri çekme işlemlerinde birim üye
 ## Kabul sınırı
 
 323 sunucu + 46 portal + 46 regresyon = 415 otomatik test. Matrisin 2.656 olumlu işlem örneğinden türettiği 21.248 kontrol ayrı test sayısı veya ürün tamamlanma oranı değildir. Yerel 66/12 envanter kapanışı, B08'in gerçek görev atamaları, üretim deposu/RLS/dağıtık oturum iptali ve kurum kabulünü kapatmaz. Yeni modül eklendikçe matris tekrar genişletilip çalıştırılır. Kaynak eşitlemesi ile canlı yayım ayrı kaydedilir.
+
+## Paket 23 genişlemesi
+
+2026.10.13.23 envanteri alternatif kanıt ve moderasyon komutlarıyla 68 komuta çıktı; 12 HTTP yolu korundu. 2.800 olumlu örnekten 22.400 denetim ve 428 otomatik test geçti. Tarihsel Paket 22 kanıtı değiştirilmedi; yeni sonuç B10-alternative-20261013.json içindedir.

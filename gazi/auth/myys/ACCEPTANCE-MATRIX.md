@@ -148,3 +148,7 @@ Yerel giriş/oturum/çıkış/yeniden giriş ekranları aynı kişiyle akademik 
 Yeni görünür ekran yok. Destek/veri talebi birim yetkisi ve saklama önizlemesi hataları düzeltildi. Mevcut 66 komut / 12 HTTP yolu; olumlu kayıtlardan 2.656 örnek / 21.248 kapsam kontrolü, 415 otomatik test geçti. Okuma, yeni işlem, idempotent tekrar, gerçek ihraç ve geçerli başka kurum oturumu ayrı sınandı. Meşru kişisel geçmiş/boş kurum/paylaşım/toplu satır istisnaları SCOPE-ACCEPTANCE-CONTRACT.md içinde açık. B08 gerçek görev ve üretim kabulü açık; kaynak adayı canlı yayın değildir.
 
 Paket 22 ek yerel kanıt: 12 saklama + 11 veri talebi tarayıcı kontrolü geçti; 390 px saklama görünümü incelendi. 36 özgün iş kimliği/başlık/bağımlılık/kabul ölçütü korundu.
+
+## Paket 23 kaynak adayı — B10/B08 (2026-10-13)
+
+Öğrenme kanıtları ve Değerlendirmeler: alternatif ürün/yöntem kaydı, ayrı kalite incelemesi, gerekçeli ret/kabul, yeni sürüm, arama/filtre ve tarihsel dayanak etkisi. 428 otomatik, 15 yeni + 13 itiraz tarayıcı kontrolü; 390 px incelendi. 68 komut/12 HTTP kapsam matrisi geçti. Eksik/null/başarısız sonuç belgeye ilerlemez. Gerçek kurum yöntemi/yetki ve üretim kabulü açık; kaynak adayı canlı yayın değildir.
