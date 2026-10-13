@@ -1,3 +1,4 @@
+import {currentStatusSnapshot} from './status-list.mjs';
 import {credentialBlocked} from './key-registry.mjs';
 import {requireThat} from './store.mjs';
 
@@ -8,7 +9,7 @@ export function walletView(core,a){
   const signed=s.get(a.tenant,'signed',r.id),d=s.get(a.tenant,'decision',r.decisionId),p=s.get(a.tenant,'program',r.programId);
   const blocked=credentialBlocked(core,a.tenant,r);
   return {id:r.id,title:p.title,programVersion:d.programVersion,createdAt:r.createdAt,visibility:'private',pilot:true,state:blocked?'blocked':signed?'signed':'awaiting-signature',
-   canDownload:!!signed&&!blocked,canShare:!!signed&&!blocked,
+   hasSignedCredential:!!signed,canExportVerification:!!signed&&a.mfa&&!!signed.credential?.credentialStatus&&!!currentStatusSnapshot(core,a.tenant,r.unit),canDownload:!!signed&&!blocked,canShare:!!signed&&!blocked,
    shares:s.list(a.tenant,'share').filter(x=>x.issuanceId===r.id).map(x=>({id:x.id,purpose:x.purpose,expires:x.expires,state:s.list(a.tenant,'share-revocation').some(v=>v.shareId===x.id)?'revoked':x.expires<=now?'expired':blocked?'blocked':'active'}))};
  });
 }

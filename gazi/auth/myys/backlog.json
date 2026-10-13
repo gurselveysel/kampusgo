@@ -837,7 +837,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "12 yeni güvenlik testi, 11 anahtar + 8 cüzdan + 13 itiraz tarayıcı kontrolü; 344 otomatik test geçti.",
+      "test_status": "13 yeni durum/bağımsız doğrulama testi; 265 sunucu + 46 portal + 46 regresyon = 357 otomatik test. 16 gerçek React/Python/OpenSSL ve 8 cüzdan tarayıcı kontrolü geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -846,12 +846,18 @@
         "gazi/auth/tests/myys-keys.test.mjs",
         "scripts/myys-keys-browser.cjs",
         "gazi/auth/myys/KEY-REGISTRY-CONTRACT.md",
-        "gazi/auth/myys/acceptance/B13-keys-20261010.json"
+        "gazi/auth/myys/acceptance/B13-keys-20261010.json",
+        "gazi/auth/myys/status-list.mjs",
+        "gazi/auth/scripts/verify-local-bundle.py",
+        "gazi/auth/tests/myys-status.test.mjs",
+        "scripts/myys-status-browser.cjs",
+        "gazi/auth/myys/STATUS-EXPORT-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B13-B19-status-20261013.json"
       ],
-      "production_status": "Paket 17 kaynak adayı; anahtar ve imza akışı yalnız yerel kabulde. Üretim anahtarları değişmedi.",
-      "implementation_note": "Kalıcı açık anahtar sicili, ayrı yönetici incelemesi, rotasyon ve geri açılamayan ele geçirilme; aynı güven denetimi imza/doğrulama/cüzdan/paylaşım/teslim/kohortta kullanılır.",
+      "production_status": "Paket 18 kaynak adayı; canlı yayımlanmadı. Yerel durum ve bağımsız ihracat; gerçek kurum bağlantısı kapalı.",
+      "implementation_note": "İki ayrı imzalı iptal/askı listesi, atomik kaynak güncelliği ve MFA ile kendi belge ihracı. Ayrı güven siciliyle Python/OpenSSL aracı issuer/imza/zaman/rotasyon/iptal/askı ve profil bağlarını doğrular.",
       "independent_remaining_work": [
-        "İmzalı durum listesi adaptörü, güncellik ve TTL kabulü; B19 bağımsız doğrulama paketi; gerçek sağlayıcı işletim kabulü."
+        "Gerçek durum/anahtar sağlayıcısı işletim adaptörü ve dış cüzdan karşılıklı çalışma kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Mevcut imza sağlayıcısı yetkili işletim/rotasyon kararı.",
@@ -866,20 +872,26 @@
             "gazi/auth/tests/myys-keys.test.mjs",
             "scripts/myys-keys-browser.cjs",
             "gazi/auth/myys/KEY-REGISTRY-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B13-keys-20261010.json"
+            "gazi/auth/myys/acceptance/B13-keys-20261010.json",
+            "gazi/auth/myys/status-list.mjs",
+            "gazi/auth/scripts/verify-local-bundle.py",
+            "gazi/auth/tests/myys-status.test.mjs",
+            "scripts/myys-status-browser.cjs",
+            "gazi/auth/myys/STATUS-EXPORT-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B13-B19-status-20261013.json"
           ],
           "remaining": [
-            "İmzalı durum listesi adaptörü, güncellik ve TTL kabulü; B19 bağımsız doğrulama paketi; gerçek sağlayıcı işletim kabulü."
+            "Gerçek durum/anahtar sağlayıcısı işletim adaptörü ve dış cüzdan karşılıklı çalışma kabulü."
           ]
         },
         "local_acceptance": {
           "status": "kısmi",
-          "evidence": "12 yeni güvenlik testi, 11 anahtar + 8 cüzdan + 13 itiraz tarayıcı kontrolü; 344 otomatik test geçti.",
-          "limits": "Sentetik anahtar/kişi; gerçek kurum, üretim rotasyonu veya bağımsız sertifikasyon değildir."
+          "evidence": "13 yeni durum/bağımsız doğrulama testi; 265 sunucu + 46 portal + 46 regresyon = 357 otomatik test. 16 gerçek React/Python/OpenSSL ve 8 cüzdan tarayıcı kontrolü geçti.",
+          "limits": "Seçilen yerel profil Python/OpenSSL ile bağımsız denetlendi; genel OB sertifikasyonu veya dış kurum kabulü değildir."
         },
         "live": {
           "status": "kısmi pilot",
-          "evidence": "Paket 17 kaynak adayı; anahtar ve imza akışı yalnız yerel kabulde. Üretim anahtarları değişmedi."
+          "evidence": "Paket 18 kaynak adayı; canlı yayımlanmadı. Yerel durum ve bağımsız ihracat; gerçek kurum bağlantısı kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1242,32 +1254,46 @@
       "planning_estimate": "4–7 kişi-gün",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Bağımsız dış cüzdan kabulü ve seçilen profil sözleşmesi yok.",
+      "implementation_status": "kısmi",
+      "test_status": "13 yeni durum/bağımsız doğrulama testi; 265 sunucu + 46 portal + 46 regresyon = 357 otomatik test. 16 gerçek React/Python/OpenSSL ve 8 cüzdan tarayıcı kontrolü geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/status-list.mjs",
+        "gazi/auth/scripts/verify-local-bundle.py",
+        "gazi/auth/tests/myys-status.test.mjs",
+        "scripts/myys-status-browser.cjs",
+        "gazi/auth/myys/STATUS-EXPORT-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B13-B19-status-20261013.json"
+      ],
+      "production_status": "Paket 18 kaynak adayı; canlı yayımlanmadı. Yerel durum ve bağımsız ihracat; gerçek kurum bağlantısı kapalı.",
+      "implementation_note": "İki ayrı imzalı iptal/askı listesi, atomik kaynak güncelliği ve MFA ile kendi belge ihracı. Ayrı güven siciliyle Python/OpenSSL aracı issuer/imza/zaman/rotasyon/iptal/askı ve profil bağlarını doğrular.",
       "independent_remaining_work": [
-        "Seçilen dışa aktarım profilinin bağımsız doğrulama fixture ve paketlerini hazırla."
+        "Gerçek durum/anahtar sağlayıcısı işletim adaptörü ve dış cüzdan karşılıklı çalışma kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Bağımsız cüzdan/profil seçimi ve yetkili karşılıklı çalışma testi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "kısmi",
+          "evidence": [
+            "gazi/auth/myys/status-list.mjs",
+            "gazi/auth/scripts/verify-local-bundle.py",
+            "gazi/auth/tests/myys-status.test.mjs",
+            "scripts/myys-status-browser.cjs",
+            "gazi/auth/myys/STATUS-EXPORT-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B13-B19-status-20261013.json"
+          ],
           "remaining": [
-            "Seçilen dışa aktarım profilinin bağımsız doğrulama fixture ve paketlerini hazırla."
+            "Gerçek durum/anahtar sağlayıcısı işletim adaptörü ve dış cüzdan karşılıklı çalışma kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "kısmi",
+          "evidence": "13 yeni durum/bağımsız doğrulama testi; 265 sunucu + 46 portal + 46 regresyon = 357 otomatik test. 16 gerçek React/Python/OpenSSL ve 8 cüzdan tarayıcı kontrolü geçti.",
+          "limits": "Seçilen yerel profil Python/OpenSSL ile bağımsız denetlendi; genel OB sertifikasyonu veya dış kurum kabulü değildir."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 18 kaynak adayı; canlı yayımlanmadı. Yerel durum ve bağımsız ihracat; gerçek kurum bağlantısı kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",

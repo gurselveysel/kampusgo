@@ -23,6 +23,7 @@ export function keyCommand({action,p,a,s,put,id,now}){
  if(action==='key-register'){
   requireThat(role(a,p.unit,['it']),'forbidden','Bu birimde anahtar hazırlama yetkisi gerekli.',403);
   requireThat(p.mode==='local-acceptance'&&p.issuer===localIssuer&&text(p.reason)&&text(p.custodyReference),'key_fields','Yerel düzenleyici, anahtar sorumluluğu dayanağı ve gerekçe gerekli.');
+  requireThat(s.list(a.tenant,'key').filter(k=>k.unit===p.unit).length<100,'key_capacity','Yerel birim anahtar kapasitesine ulaşıldı.',409);
   const jwk=publicKey(p.publicJwk),fingerprint=keyFingerprint(jwk);
   requireThat(!s.list(a.tenant,'key').some(k=>k.jwk.kid===jwk.kid||k.fingerprint===fingerprint),'duplicate','Anahtar veya kimliği bu kurum sicilinde zaten var.',409);
   const replaced=p.replacesId?s.get(a.tenant,'key',p.replacesId):null;

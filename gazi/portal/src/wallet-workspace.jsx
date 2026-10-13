@@ -3,11 +3,12 @@ import {Card,CardHead,Button,Field,Notice,Pill,Heading} from './ui.jsx';
 
 const names={blocked:'Kullanımı durduruldu',signed:'İmzalı yerel kabul belgesi','awaiting-signature':'Hazırlık kaydı · İmza bekliyor'};
 const shares={active:'Paylaşım açık',revoked:'Paylaşım iptal edildi',expired:'Süresi doldu',blocked:'Belge durumu nedeniyle kapalı'};
-function saveFile(name,text){const url=URL.createObjectURL(new Blob([text],{type:'application/jwt'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-export function WalletWorkspace({data,busy,command,downloadCredential,tenant}){
+function saveFile(name,text,type='application/jwt'){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+export function WalletWorkspace({data,busy,command,downloadCredential,downloadBundle,tenant}){
  const [link,setLink]=useState(''),[error,setError]=useState('');
  async function share(e,r){e.preventDefault();setLink('');setError('');const f=new FormData(e.currentTarget);const result=await command('share',{issuanceId:r.id,hours:Number(f.get('hours')),purpose:f.get('purpose')});if(result?.token)setLink(location.origin+'/#/shared/'+encodeURIComponent(tenant)+'/'+result.token);}
  async function download(r){setError('');try{const record=await downloadCredential(r.id);saveFile('MYYS_'+r.id+'.jwt',record.jwt);}catch(e){setError(e.message);}}
+ async function bundle(r){setError('');try{saveFile('MYYS_dogrulama_'+r.id+'.json',JSON.stringify(await downloadBundle(r.id),null,2),'application/json');}catch(e){setError(e.message);}}
  return <Card><CardHead title="Kişisel belge cüzdanım" sub="Yalnız kişinize bağlı belgeler. Paylaşmadığınız kayıtlar özeldir."/><div className="academic-body form-stack">
  <Notice>İzole yerel kabul belgeleri kurum adına düzenlenmiş resmî belgeler değildir. Hazırlık kaydı imzalı belge yerine geçmez.</Notice>
  {error&&<p role="alert">{error}</p>}
@@ -15,6 +16,7 @@ export function WalletWorkspace({data,busy,command,downloadCredential,tenant}){
  {(data.wallet||[]).map(r=><article key={r.id} className="academic-record"><strong>{r.title}</strong><Pill tone={r.state==='signed'?'green':'amber'}>{names[r.state]||'İnceleme gerekli'}</Pill><p>Program sürümü {r.programVersion} · Varsayılan özel</p>
  {r.canDownload&&((data.credentialReceipts||[]).some(x=>x.issuanceId===r.id)?<p>Yerel belge teslim teyidi kaydedildi. Dış kurum kabulü değildir.</p>:<form onSubmit={e=>{e.preventDefault();command('credential-receive',{issuanceId:r.id,confirm:true});}}><label><input required type="checkbox"/>İmzalı yerel belgeyi teslim aldım.</label><Button disabled={busy} type="submit">Yerel teslim teyidini kaydet</Button></form>)}
  {r.canDownload&&<Button disabled={busy} onClick={()=>download(r)}>İmzalı belgeyi indir</Button>}
+ {r.hasSignedCredential&&<><Button disabled={busy||!r.canExportVerification} onClick={()=>bundle(r)}>Durumuyla doğrulama paketini indir</Button><p>{r.canExportVerification?'Paket imzalı belgeyi ve kısa süreli durum listelerini içerir. Bağımsız doğrulayıcı ayrıca güvenilir kaynaktan alınmış açık anahtar sicili ister; bu paket resmî tanınma veya sertifikasyon değildir.':'Doğrulama paketi için BT tarafından güncel durum listesi hazırlanmalı.'}</p></>}
  {r.canShare&&<form className="form-stack" onSubmit={e=>share(e,r)}><Field label="Paylaşım amacı"><input aria-label={'Paylaşım amacı '+r.id} name="purpose" required minLength={12} maxLength={500}/></Field><Field label="Paylaşım süresi"><select aria-label={'Paylaşım süresi '+r.id} name="hours"><option value="1">1 saat</option><option value="24">1 gün</option><option value="168">7 gün</option></select></Field><Button disabled={busy} type="submit">Süreli bağlantı oluştur</Button></form>}
  <ul>{r.shares.map(s=><li key={s.id}><strong>{shares[s.state]}</strong><p>{s.purpose} · Bitiş: {new Date(s.expires).toLocaleString('tr-TR')}</p>{['active','blocked'].includes(s.state)&&<Button disabled={busy} onClick={async()=>{setLink('');await command('unshare',{shareId:s.id});}}>Paylaşımı iptal et</Button>}</li>)}</ul>
  </article>)}

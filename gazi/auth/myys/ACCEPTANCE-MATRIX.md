@@ -22,7 +22,7 @@
 | B16 · Olay kuyruğu ve idempotency kur | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B17 · Toplu ihraç ve mutabakat ekle | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B19 · Bağımsız belge taşımayı sınat | engelli | başlamadı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B19 · Bağımsız belge taşımayı sınat | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B20 · Tanıma politika setini onayla | kısmi | kısmi · tanıma dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B21 · Dış belge ve tanıma akışını bağla | kısmi | kısmi · tanıma dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B22 · OBS aktarımını kontrollü kabul et | kısmi | kısmi · outbox dilimi geçti | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
@@ -122,3 +122,9 @@ Belge profilleri ve ihraç hazırlığı: zorunlu program/karar/profil/ayrı yet
 ## Paket 17 adayı — B13
 
 Anahtar ve belge durumu / Belge hazırlığı / Kişisel cüzdanım: açık anahtar, ayrı inceleme, imza, rotasyon, ele geçirilme ve ortak durum denetimi. 12 yeni güvenlik testi, 11 tarayıcı kontrolü; 252 sunucu + 46 portal + 46 regresyon = 344 otomatik test. Yerel rotasyon ve ele geçirilme prosedürü geçti. İmzalı durum listesi, B19 bağımsız doğrulama ve gerçek sağlayıcı işletim kabulü açık; B13 bütünü kapanmadı.
+
+## Paket 18 adayı — B13/B19
+
+Anahtar ve belge durumu / Kişisel cüzdanım: iki imzalı liste, ayrı açık güven sicili, kendi belge ve durum paketi. Python/OpenSSL bağımsız profilde geçerli/rotasyon/bozuk/yanlış issuer/süre/iptal/askı/gzip sınırları test edildi; 357 otomatik test. Eski imza değiştirilmedi. Gerçek dış cüzdan sertifikasyonu ve kurum durum servisi açık; canlı yayımlanmadı.
+
+Paket 18 son yerel kanıt: 357 otomatik test; 16 durum/ihracat/Python-OpenSSL tarayıcı ve 8 cüzdan regresyon kontrolü geçti. 390 px görünüm incelendi. 36 özgün kimlik/başlık/bağımlılık/kabul ölçütü korundu.

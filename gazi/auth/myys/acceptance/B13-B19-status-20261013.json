@@ -1,0 +1,69 @@
+{
+  "work_ids": [
+    "B13",
+    "B19"
+  ],
+  "at": "2026-10-13",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "production": false,
+  "automated": {
+    "server": 265,
+    "portal": 46,
+    "regression": 46
+  },
+  "independent_verifier": {
+    "engine": "Python 3.12.14 + OpenSSL 3.0.13",
+    "imports_application_code": false,
+    "certification": false,
+    "network": false,
+    "trust": "separately supplied public registry"
+  },
+  "browser": {
+    "at": "2026-10-13T22:15:53.115Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Kayıtlı anahtar yokken belge imzası düğmesi kapalı",
+      "BT açık anahtarı kaydetti; kendi anahtarını inceleyemedi",
+      "İncelenmemiş anahtar imza yetkisi vermedi",
+      "Ayrı yöneticinin gerekçeli incelemesi anahtarı etkinleştirdi",
+      "Atanmış belge görevlisi sentetik belgeyi imzaladı; tekrar düğmesi kapandı",
+      "Aynı imzalı belge öğrenenin özel cüzdanında indirilebilir",
+      "İmzalı belge güncel durum listesi olmadan doğrulama paketi sunmadı",
+      "BT ayrı iptal/askı listelerini imzaladı ve yalnız açık güven sicilini indirdi",
+      "Öğrenenin indirdiği dosya ayrı Python/OpenSSL aracıyla doğrulandı; sertifikasyon iddiası yok",
+      "Yeni itiraz eski durum listesiyle ihracı ve belge kullanımını kapattı",
+      "Güncel paket bağımsız doğrulamada askıda çıktı; itiraz iptal gibi gösterilmedi",
+      "Bağımsız inceleme ilk kararı koruyunca yenilenen paketin askı biti kalktı",
+      "Yenilemede imzalı kayıt ve güncel doğrulama paketi korundu",
+      "390 px cüzdan, paket açıklaması ve indirme denetimlerinde taşma yok",
+      "Başka öğrenen belge ve durum paketini göremedi",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false
+  },
+  "wallet_regression": {
+    "at": "2026-10-13T22:15:01.417Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Kişisel imzalı belge indirildi",
+      "Süreli paylaşım bağlantısı yalnız ilk yanıtta gösterilir",
+      "Oturumsuz özet kimlik ve özel kanıt göstermeden açıldı",
+      "İptal sonrası yeni anonim erişim reddedildi",
+      "Cüzdan ve paylaşım iptali kalıcı; gizli bağlantı tekrar gösterilmiyor",
+      "390 px cüzdan görünümünde yatay taşma yok",
+      "Beş başka rolde kişisel belge gizli",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false
+  },
+  "remaining": [
+    "Kurum durum yayın adresi/üretim sağlayıcı işletim kabulü",
+    "Gerçek bağımsız dış cüzdan birlikte çalışma testi",
+    "Canlı kaynak yayını ve smoke; browserAuth kullanıcı iptali"
+  ]
+}

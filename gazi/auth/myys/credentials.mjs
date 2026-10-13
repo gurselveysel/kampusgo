@@ -1,3 +1,4 @@
+import {allocateStatus,statusEntries} from './status-list.mjs';
 import {signingKey,trustedSignedKey,credentialBlocked,keyFingerprint} from './key-registry.mjs';
 import {issuanceProfile} from './credential-profile.mjs';
 import {stableStringify} from './program-model.mjs';
@@ -28,11 +29,10 @@ export async function signApproved(core,context,issuanceId,material,base){
   const vc=makeCredential(draft,{id:r.id,index:0,base,date});
   vc.credentialSubject.id='urn:unigo:local-acceptance:'+encodeURIComponent(a.tenant)+':'+encodeURIComponent(r.owner);
   vc.pilotMetadata.learner='Yerel kabul öğreneni · '+r.owner;
-  vc.credentialStatus.id=base+'/api/rozet/durum#0';
-  // This isolated store has no public status-list endpoint. Do not promise one.
-  delete vc.credentialStatus;
+  // Synthetic URLs are resolved only from an offline bundle, not a public service.
+  vc.credentialStatus=statusEntries(a.tenant,allocateStatus(core.store,a.tenant,r,a.id,core.clock()));
   vc['@context'].push({academicDecision:{'@id':base+'/vocab/academicDecision','@type':'@json'}});
-  vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance',profileId:r.profileId,profileVersion:r.profileVersion,authorityId:r.authorityId,profileDigest:r.profileDigest};
+  vc.academicDecision={id:d.id,programVersion:p.version,assessmentId:d.assessmentId,scope:'local-acceptance',statusProfile:'MYYS-LOCAL-STATUS-1',profileId:r.profileId,profileVersion:r.profileVersion,authorityId:r.authorityId,profileDigest:r.profileDigest};
   return {vc,a,r,d,date,key};
  });
  if(prepared.existing)return prepared.existing;

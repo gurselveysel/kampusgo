@@ -1,3 +1,15 @@
+# Güncel devam — Paket 18 yerel kabul, B11 sırada
+
+B13/B19 durum/ihracat dilimi kodlandı: 357 otomatik test; tarayıcıdan gerçek indirilen paketin Python/OpenSSL ile doğrulaması var. Durum bitleri iptal/askı ayrı, atomik kaynak güncelliği, tekil indeks; ayrı güven sicili ve kişisel paket indirilebilir. STATUS-EXPORT-CONTRACT.md sınırları geçerli. Önce son tarayıcı sonucunu/kabul kaydını tamamla, kaynak commitini uzak dalla aynı ağaçta eşitle. Paket 17 yerel a3b181a7a40ee0ad5c783a04589f07ee4b3786e7 / uzak c3b769e36195e644a2d099b9b3aa9fa8d165a0f9 / ağaç 2bd5066ea2c263282a67ad5b5badd75acbb365f9. Son canlı Paket 16; auth kullanıcı iptali yüzünden üretim yayın/smoke yapılmadı. Yeniden auth isteme.
+
+Sıradaki B11: eski imzalı belgeyi koruyan, ayrı öneri/incelemeye bağlı değiştirme; yeni imza ve eski iptali atomik, tarihsel dosya değişmez. Anahtar olayı akademik karar olamaz. Ardından bütün kalan bağımsız B01–B36 işleri. Tarayıcı geçici bileşeni 13.10.2026'da aynı @sparticuz/chromium@138.0.2 ile kuruldu; /tmp/gazi-chromium/chromium, Playwright primary runtime. Güvenlik/site izolasyonunu kaldıran bayraklar testlerde filtreleniyor.
+
+# Güncel devam — 2026-10-13: Paket 17 kaynakta, canlı Paket 16
+
+Yerel `a3b181a7a40ee0ad5c783a04589f07ee4b3786e7`; uzak `c3b769e36195e644a2d099b9b3aa9fa8d165a0f9`; ortak ağaç `2bd5066ea2c263282a67ad5b5badd75acbb365f9`. Kaynak eşitlendi; Paket 17 için dağıtım oluşturulmadı. Canlı `dpl_Coaq5KN2VcNpPjwyXke4neroq877` / `16bd55eefed251ce5d23e1791f87ed3871c6a8c6` READY (Paket 16). browserAuth kullanıcı iptali nedeniyle canlı oturum yenilemesi yapılmadı; kullanıcı istemeden yeniden auth isteği başlatma. Bağımsız geliştirmeyi durdurma.
+
+B13 anahtar sicili/rotasyon/ele geçirilme ve imza UI tamamlanan yerel dilim: 344 otomatik + 11 anahtar + 8 cüzdan + 13 itiraz kontrolü (10.10.2026). Sıradaki B13 imzalı durum listesi ve B19 bağımsız Python/OpenSSL doğrulama, ardından B11 imzalı belge değiştirme zinciri ve tüm kalan bağımsız B01–B36 işleri. Gerçek anahtar, kurum yetkisi ve configuredCore kapalı.
+
 # Güncel devam — Paket 17 kaynak adayı
 
 B13 açık anahtar sicili, ayrı inceleme, rotasyon/ele geçirilme, yerel imza düğmesi ve ortak cüzdan/paylaşım/teslim/kohort güveni: 344 otomatik + 11 yeni tarayıcı kontrolü. Önce güvenli kaynağı yayımla ve canlı smoke; son doğrulanmış Paket 16 aşağıda. Sonra B13 imzalı durum listesi ve B19 bağımsız OpenSSL doğrulama/ihracat; B11 imzalı belge değiştirme zinciri ve kalan tüm B01–B36 işleri. Gerçek kurum/üretim imza anahtarı kapalı.
@@ -142,3 +154,5 @@ B16/B17 ilk uçtan uca dilim eklendi: kalıcı işçi, karantina, rol kapsamlı 
 ## B18 tarihsel devam noktası
 
 Paket 6 e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 production READY; 138 kaynak SHA eşleşmesi ve canlı oturum/akademik kapı/rehber smoke geçti. B18 cüzdan kaynak dilimi: 230 otomatik test + 8 cüzdan tarayıcı kontrolü. Paket 7 yayımlanınca RELEASE kaydını güncelle. Sonraki bağımsız işler: B03/B09 çoktan çoğa sürümlü rubrik/görev eşlemesi, B20/B21 tanıma/tekil kredi, B28/B29/B30 veri/kalite/kabul; 36 iş henüz tamamlanmadı.
+
+Paket 18 son yerel kanıt: 357 otomatik test; 16 durum/ihracat/Python-OpenSSL tarayıcı ve 8 cüzdan regresyon kontrolü geçti. 390 px görünüm incelendi. 36 özgün kimlik/başlık/bağımlılık/kabul ölçütü korundu.

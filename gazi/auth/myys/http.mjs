@@ -1,3 +1,4 @@
+import {statusView,publishStatusSnapshot,exportPublicTrust,exportVerificationBundle} from './status-list.mjs';
 import {qualityReport} from './quality-report.mjs';
 import {LocalAcceptanceStore,CoreError} from './store.mjs';
 import {MyysCore} from './core.mjs';
@@ -23,12 +24,15 @@ export async function myysRoute({req,path,b,sessionHash,json,res,core=configured
   if(path==='/api/myys/calisma'&&req.method==='GET'){
    const tenant=new URL(req.url,'https://local.invalid').searchParams.get('kurum');
    const view=core.view({sessionHash,tenant});
-   return json(res,200,{...view,issuances:view.issuances.map(r=>({...r,canSign:!!signer&&canSignApproved(core,{sessionHash,tenant},r.id,signer.material)})),signerAvailable:!!signer,quality:qualityReport(view),metrics:qualityMetrics(view),skills:skillsProjection(view)});
+   return json(res,200,{...view,statusLists:statusView(core,core.store.principal(sessionHash,tenant,core.clock())),issuances:view.issuances.map(r=>({...r,canSign:!!signer&&canSignApproved(core,{sessionHash,tenant},r.id,signer.material)})),signerAvailable:!!signer,quality:qualityReport(view),metrics:qualityMetrics(view),skills:skillsProjection(view)});
   }
   if(path==='/api/myys/islem'&&req.method==='POST')return json(res,200,core.run({sessionHash,tenant:b?.tenant,commandId:b?.commandId,action:b?.action,input:b?.input}));
   if(path==='/api/myys/veri-ozetim'&&req.method==='POST')return json(res,200,subjectExport(core,{sessionHash,tenant:b?.tenant}));
   if(path==='/api/myys/karar-arsivi'&&req.method==='POST')return json(res,200,decisionArchive(core,{sessionHash,tenant:b?.tenant},b?.decisionId));
   if(path==='/api/myys/cuzdan-indir'&&req.method==='POST')return json(res,200,downloadWalletCredential(core,{sessionHash,tenant:b?.tenant},b?.issuanceId));
+  if(path==='/api/myys/durum-yayinla'&&req.method==='POST'){if(!signer)return json(res,503,{error:'Yetkili durum imzalayıcısı bağlı değil.',code:'signer_required'});return json(res,200,await publishStatusSnapshot(core,{sessionHash,tenant:b?.tenant},b?.unit,signer.material));}
+  if(path==='/api/myys/guven-sicili'&&req.method==='POST')return json(res,200,exportPublicTrust(core,{sessionHash,tenant:b?.tenant},b?.unit));
+  if(path==='/api/myys/dogrulama-paketi'&&req.method==='POST')return json(res,200,exportVerificationBundle(core,{sessionHash,tenant:b?.tenant},b?.issuanceId));
   if(path==='/api/myys/toplu-hazirlik'&&req.method==='POST')return json(res,200,prepareBatch(core,{sessionHash,tenant:b?.tenant},b?.rows));
   if(['/api/myys/imzala','/api/myys/dogrula'].includes(path)&&req.method==='POST'){
    if(!signer)return json(res,503,{error:'Bu ortamda yetkili imza sağlayıcısı bağlı değil.',code:'signer_required'});

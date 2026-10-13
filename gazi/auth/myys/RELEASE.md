@@ -304,3 +304,16 @@ Belge profilleri ve ihraç hazırlığı: zorunlu program/karar/profil/ayrı yet
 ## Paket 17 adayı — B13
 
 Anahtar ve belge durumu ile imza/cüzdan bağlantısı. 344 otomatik ve 11 yeni tarayıcı kontrolü. Açık anahtar kayıt/inceleme/rotasyon/ele geçirilme provası yalnız yerel sentetik ortamda; üretim anahtarları değişmedi. Durum listesi ve bağımsız doğrulama sonraki dilimde.
+
+### Paket 17 — kaynak eşitlendi, canlı yayımlanmadı (2026-10-13)
+
+- Yerel `a3b181a7a40ee0ad5c783a04589f07ee4b3786e7`; uzak `c3b769e36195e644a2d099b9b3aa9fa8d165a0f9`; aynı kaynak ağacı `2bd5066ea2c263282a67ad5b5badd75acbb365f9`.
+- Kaynak eşitlemesi üretim yayını değildir. Yeni dağıtım oluşturulmadı. Canlı alias yeniden doğrulandı: Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, READY.
+- Canlı oturum süresi doldu; browserAuth güvenli giriş isteği kullanıcı tarafından iptal edildi. Yeni istek otomatik tekrarlanmaz; oturum koruması aşılmaz. Paket 17 canlı smoke açık kalır; bağımsız geliştirme sürer.
+- Yerel 344 otomatik + 11 anahtar + 8 cüzdan + 13 itiraz kontrolü 2026-10-10'da geçti; sonuçlar 2026-10-13 canlı kabulü diye sunulmaz.
+
+## Paket 18 kaynak adayı — B13/B19 (2026-10-13)
+
+Anahtar ekranında durum listesi/güven sicili ve cüzdanda doğrulama paketi. 357 otomatik test; yeni tarayıcı ihracı ayrı Python/OpenSSL aracıyla sınanır. Üretim anahtarı veya gerçek kişi işlemi yok. Canlı yayın henüz yapılmadı; son doğrulanmış canlı Paket 16, Paket 17 yalnız kaynakta.
+
+Paket 18 son yerel kanıt: 357 otomatik test; 16 durum/ihracat/Python-OpenSSL tarayıcı ve 8 cüzdan regresyon kontrolü geçti. 390 px görünüm incelendi. 36 özgün kimlik/başlık/bağımlılık/kabul ölçütü korundu.
