@@ -10,7 +10,7 @@
 | B04 · Veri akışını ve saklamayı onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; yerel HTTPS bağlı | HTTPS/ayrı-site dilimi geçti | yeni HTTPS dilimi canlı değil | IdP/MFA kabulü bekleniyor | üretim depo/dağıtık iptal ve IdP açık |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi · sürüm/arşiv dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
@@ -138,3 +138,7 @@ Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8
 ## Paket 20 adayı — B11 sürümlü politika (13.10.2026)
 
 İtiraz politikaları, karara bağlı kaynak sürümü, tekil yerel teslim teyidi ve bağımsız süre gerekçesi ekranları. 384 otomatik + 13 politika + 13 itiraz + 17 değiştirme tarayıcı kontrolü. Kurum usulü ve gerçek tebliğ bağlı değildir; test sayısı tamamlanma yüzdesi değildir. Son canlı Paket 16; Paket 17–20 üretim yayını yok. Kanıt: `acceptance/B11-policy-20261013.json`.
+
+## Paket 21 adayı — B07 HTTPS (13.10.2026)
+
+Yerel giriş/oturum/çıkış/yeniden giriş ekranları aynı kişiyle akademik kayda bağlı. 403 otomatik + 11 HTTPS/ayrı-site + 13 itiraz tarayıcı kontrolü; cookie/Origin/CSRF ve yarışlar denetlendi. Gerçek kurum IdP/üretim depo/dağıtık iptal açık. Kaynak ve canlı durum RELEASE.md içinde ayrıdır.

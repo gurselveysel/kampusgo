@@ -340,3 +340,13 @@ Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8
 ## Paket 20 kaynak adayı — B11 (2026-10-13)
 
 İtiraz politikaları ve karar/itiraz süre incelemesi ekranları. 384 otomatik, 13 politika + 13 itiraz + 17 değiştirme tarayıcı kontrolü geçti; 390 px incelendi. 115 dosyalı mevcut korumalı paket üretildi. Üretim dağıtımı oluşturulmadı; son canlı Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, alias READY yeniden doğrulandı. Kaynak temel Paket 19 yerel `0cad4c688a8ddefb1cec8ea2252be93825a50067`, uzak `ee34cdee91c1ba17c9faabc0c474cfe363877619`, aynı ağaç `070ef5879f24858a09f072f9eccfaff28e017370`. Canlı auth kullanıcı iptali nedeniyle yeni smoke yok; tekrar auth isteme. Geri dönüş hedefi son doğrulanmış Package 16; geri dönüş uygulanmadı. Kaynak eşitleme kimlikleri doğrulandıktan sonra ayrıca kaydedilir.
+
+### Paket 20 — kaynak eşitlendi, canlı yayımlanmadı (2026-10-13)
+
+- Yerel `657ff02fd34c9390e1e737e92c7e939234758db7`; uzak `e9eb449d569a5bc1a82ccf3d75c5d97ee74b1aee`; aynı ağaç `ec7a31676eaa144f5370dbfea3e6a1c0c28849b1`. Uzak güncelleme beklenen Paket 19 üzerinden geçmiş korunarak yapıldı.
+- 384 otomatik + 13 politika + 13 itiraz + 17 değiştirme tarayıcı kabulü. 36 özgün kimlik, başlık, bağımlılık ve kabul ölçütü korundu.
+- Yeni üretim dağıtımı yok; son canlı Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`. Canlı auth kullanıcı iptali nedeniyle yeni smoke açık. B11 kurum usulü/tebliğ/takvim/yetki kabulü tamamlanmadı.
+
+## Paket 21 kaynak adayı — B07 (2026-10-13)
+
+Panelde yerel oturum/çıkış/yeniden giriş, ayrı sentetik site üzerinden HTTPS callback. 403 otomatik + 11 HTTPS + 13 itiraz tarayıcı kontrolü; 390 px incelendi. 115 dosyalı mevcut korumalı paket üretildi. Uzak temel e9eb449d569a5bc1a82ccf3d75c5d97ee74b1aee / yerel 657ff02fd34c9390e1e737e92c7e939234758db7 / ağaç ec7a31676eaa144f5370dbfea3e6a1c0c28849b1. Alias yeniden READY: son canlı dpl_Coaq5KN2VcNpPjwyXke4neroq877 / kaynak 16bd55eefed251ce5d23e1791f87ed3871c6a8c6 (Paket 16). Paket 17–21 dağıtımı oluşturulmadı; canlı auth kullanıcı iptali, yeni smoke açık. Geri dönüş hedefi son doğrulanmış Paket 16; uygulanmadı.

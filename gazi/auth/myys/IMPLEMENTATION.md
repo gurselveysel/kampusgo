@@ -169,3 +169,7 @@ Aktarım ve mutabakat ekranına OBS hazırlığı, filtre, alındı örneği, sa
 ## Paket 20 — B11 yerel politika dilimi
 
 `APPEAL-POLICY-CONTRACT.md`: admin hazırlığı, ayrı komisyon incelemesi, kaynak/program/politika sürümü, karar anındaki değişmez dayanak, sahibi tarafından yerel teslim teyidi ve belirsiz/geç süre için ayrı insan incelemesi. Eski karar ve imzalı dosya korunur. UI politika sicili ve karar/itiraz bölümlerine bağlıdır. 384 otomatik + 13 politika + 13 itiraz + 17 değiştirme tarayıcı kabulü; canlı/kurum kabulü açık.
+
+## Paket 21 — B07 yerel HTTPS dilimi
+
+`identity-http.mjs` ve HTTP-IDENTITY-CONTRACT.md; mevcut akış ve üyelik doğrulamasını aynı kişiyle gerçek React paneline bağlar. Cookie/Origin/CSRF, tek kullanımlık callback/iptal ve çıkış yarışları; panelde oturum süresi/çıkış/yeniden giriş. 403 otomatik + 11 HTTPS + 13 itiraz tarayıcı kabulü. Mevcut pilot gateway ve configuredCore üretim kapısı korunur.

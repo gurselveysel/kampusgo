@@ -1,4 +1,4 @@
-// Isolated synthetic acceptance adapter. No HTTP route, cookie or real IdP connection.
+// Isolated synthetic acceptance adapter. HTTP/cookie boundary is in identity-http.mjs.
 import {randomBytes, randomUUID, createHmac, createHash} from 'node:crypto';
 import {LocalAcceptanceStore, CoreError, hash, requireThat} from './store.mjs';
 import {createIdentityContract} from './identity-contract.mjs';
@@ -17,7 +17,7 @@ export class LocalIdentityFlow {
   requireThat(Buffer.isBuffer(derivationKey) && derivationKey.length === 32 && typeof exchangeCode === 'function' && typeof clock === 'function', 'identity_config', 'Yerel kimlik akışı yapılandırması eksik.', 500);
   let uri;
   try { uri = new URL(redirectUri); } catch { throw new CoreError('identity_config', 'Yerel dönüş adresi geçersiz.', 500); }
-  requireThat(uri.protocol === 'http:' && uri.hostname === '127.0.0.1' && !uri.username && !uri.password && !uri.search && !uri.hash, 'local_only', 'Dönüş adresi yalnız yerel kabul adresi olabilir.', 503);
+  requireThat(['http:','https:'].includes(uri.protocol) && uri.hostname === '127.0.0.1' && !uri.username && !uri.password && !uri.search && !uri.hash, 'local_only', 'Dönüş adresi yalnız yerel kabul adresi olabilir.', 503);
   requireThat([requestLifetimeSeconds,sessionLifetimeSeconds].every(n => Number.isInteger(n) && n >= 1 && n <= 900) && Number.isInteger(exchangeTimeoutMs) && exchangeTimeoutMs >= 10 && exchangeTimeoutMs <= 10000, 'identity_config', 'Kimlik akışı zaman sınırları geçersiz.', 500);
   this.#store=store; this.#config=structuredClone(identityConfig); this.#contract=createIdentityContract(this.#config);
   this.#key=Buffer.from(derivationKey); this.#exchange=exchangeCode; this.#clock=clock; this.#redirect=redirectUri;
@@ -27,7 +27,9 @@ export class LocalIdentityFlow {
    id TEXT PRIMARY KEY,state_hash TEXT NOT NULL UNIQUE,browser_hash TEXT NOT NULL,tenant TEXT NOT NULL,
    contract_digest TEXT NOT NULL,created INTEGER NOT NULL,expires INTEGER NOT NULL,
    status TEXT NOT NULL CHECK(status IN ('pending','claimed','used','failed','cancelled')),finished INTEGER);
-   CREATE INDEX IF NOT EXISTS identity_challenges_browser ON identity_challenges(tenant,browser_hash,status);`);
+   CREATE INDEX IF NOT EXISTS identity_challenges_browser ON identity_challenges(tenant,browser_hash,status);
+   CREATE TABLE IF NOT EXISTS identity_session_links(tenant TEXT NOT NULL,browser_hash TEXT NOT NULL,session_hash TEXT NOT NULL,expires TEXT NOT NULL,PRIMARY KEY(tenant,session_hash));
+   CREATE INDEX IF NOT EXISTS identity_links_parent ON identity_session_links(tenant,browser_hash);`);
  }
  #now() {
   requireThat(!process.env.VERCEL && !process.env.VERCEL_ENV, 'local_only', 'Kimlik akışı canlı ortamda açılamaz.', 503);
@@ -76,6 +78,7 @@ export class LocalIdentityFlow {
     this.#store.db.prepare('DELETE FROM bindings WHERE session_hash=?').run(browserSessionHash);
     this.#store.db.prepare('INSERT INTO bindings VALUES(?,?,?,?)').run(sessionHash,actor.id,expires,actor.mfa?1:0);
     this.#store.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(sessionHash,actor.tenant,grant.contractVersion,now.toISOString());
+    this.#store.db.prepare('INSERT INTO identity_session_links VALUES(?,?,?,?)').run(actor.tenant,browserSessionHash,sessionHash,expires);
     this.#audit('identity.accept',request.id,now,actor.id);
     return {sessionToken,expires,personId:actor.id,tenant:actor.tenant};
    });
@@ -89,16 +92,31 @@ export class LocalIdentityFlow {
    throw new CoreError('identity_callback','Kimlik isteği tamamlanamadı. Yeni bir giriş isteği başlatın.',403);
   } finally {clearTimeout(timer);controller.abort();}
  }
+ cancel({state,browserSessionHash,issuer,redirectUri}) {
+  const now=this.#now();requireThat(responseValue(state)&&sessionHashValid(browserSessionHash)&&issuer===this.#config.issuer&&redirectUri===this.#redirect,'identity_callback','Kimlik dönüş isteği geçersiz.',403);
+  return this.#store.transaction(()=>{
+   const row=this.#store.db.prepare("SELECT id FROM identity_challenges WHERE state_hash=? AND browser_hash=? AND tenant=? AND contract_digest=? AND status='pending' AND created<=? AND expires>?").get(hash(state),browserSessionHash,this.#config.tenant,this.#digest,now.getTime(),now.getTime());
+   requireThat(row,'identity_challenge','Kimlik isteği yok, kullanılmış veya süresi dolmuş.',403);
+   this.#store.db.prepare("UPDATE identity_challenges SET status='cancelled',finished=? WHERE id=?").run(now.getTime(),row.id);this.#audit('identity.deny',row.id,now);return {cancelled:true};
+  });
+ }
  logout({sessionHash}) {
   const now=this.#now();
   requireThat(sessionHashValid(sessionHash),'identity_browser','Sunucunun bağladığı oturum gerekli.',403);
   return this.#store.transaction(()=>{
    const scope=this.#store.db.prepare('SELECT s.tenant,b.person FROM identity_scopes s JOIN bindings b ON b.session_hash=s.session_hash WHERE s.session_hash=?').get(sessionHash);
    requireThat(!scope || scope.tenant===this.#config.tenant,'identity_tenant','Oturum bu kuruma ait değil.',403);
-   const requests=this.#store.db.prepare("SELECT id FROM identity_challenges WHERE tenant=? AND browser_hash=? AND status IN ('pending','claimed')").all(this.#config.tenant,sessionHash);
-   for(const row of requests){this.#store.db.prepare("UPDATE identity_challenges SET status='cancelled',finished=? WHERE id=?").run(now.getTime(),row.id);this.#audit('identity.cancel',row.id,now);}
-   if(scope){this.#store.db.prepare('DELETE FROM bindings WHERE session_hash=?').run(sessionHash);this.#audit('identity.logout',randomUUID(),now,scope.person);}
-   return {revoked:!!scope,cancelledRequests:requests.length};
+   // A logout already in flight may carry the cookie rotated by a callback.
+   // Revoke its local descendants as well, without touching another tenant.
+   const family=this.#store.db.prepare('WITH RECURSIVE family(h) AS (SELECT ? UNION SELECT l.session_hash FROM identity_session_links l JOIN family f ON l.browser_hash=f.h WHERE l.tenant=? AND l.expires>?) SELECT h FROM family').all(sessionHash,this.#config.tenant,now.toISOString());
+   let revoked=false,cancelledRequests=0;
+   for(const {h} of family){
+    const requests=this.#store.db.prepare("SELECT id FROM identity_challenges WHERE tenant=? AND browser_hash=? AND status IN ('pending','claimed')").all(this.#config.tenant,h);
+    for(const row of requests){this.#store.db.prepare("UPDATE identity_challenges SET status='cancelled',finished=? WHERE id=?").run(now.getTime(),row.id);this.#audit('identity.cancel',row.id,now);cancelledRequests++;}
+    const binding=this.#store.db.prepare('SELECT b.person FROM identity_scopes s JOIN bindings b ON b.session_hash=s.session_hash WHERE s.session_hash=? AND s.tenant=?').get(h,this.#config.tenant);
+    if(binding){this.#store.db.prepare('DELETE FROM bindings WHERE session_hash=?').run(h);this.#audit('identity.logout',randomUUID(),now,binding.person);revoked=true;}
+   }
+   return {revoked,cancelledRequests};
   });
  }
 }

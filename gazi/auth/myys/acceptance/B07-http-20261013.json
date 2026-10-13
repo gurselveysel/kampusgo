@@ -1,0 +1,68 @@
+{
+  "work_id": "B07",
+  "scope": "isolated-https-local-acceptance",
+  "production": false,
+  "official": false,
+  "automated": {
+    "server": 311,
+    "portal": 46,
+    "regression": 46
+  },
+  "browser": {
+    "identity": {
+      "at": "2026-10-13T23:09:07.091Z",
+      "scope": "isolated-https-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "Kapalı oturum paneli güvenli yerel giriş ekranına yönlendiriyor",
+        "Kullanıcı iptali yeniden denenebilir, temiz hata ekranına döndü",
+        "Ayrı sitedeki sentetik IdP, state/PKCE/nonce ve HTTP callback ile aynı öğreneni açtı",
+        "Çerez yalnız uygulama sitesinde, Secure/HttpOnly/Lax; token alışverişi tarayıcıda yok",
+        "Gerçek panel komutu aynı kişiye bağlı oturum ve CSRF başlığıyla kaydoldu",
+        "Yenilemede oturum ve akademik başvuru korundu",
+        "CSRF kanıtı olmayan çıkış reddedildi; açık oturum korunuyor",
+        "390 px oturum/itiraz görünümü taşmıyor; çıkış düğmesi klavyeyle erişilebilir",
+        "Çıkış diğer sekmenin sonraki okumasını da kapattı; yeniden giriş yolu açık",
+        "Yeni giriş aynı kişiyi ve önceki akademik geçmişi korudu",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false,
+      "provider": "synthetic; separate localhost site",
+      "tls": "ephemeral certificate public-key pin for browser; CA and host verification for node"
+    },
+    "appeals": {
+      "at": "2026-10-13T23:09:17.191Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+        "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+        "390 px mobil: taşma ve bozuk resim yok",
+        "Akademik sekmeler Home/End tuşları ve seçili durum",
+        "Yakalanmış istemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    }
+  },
+  "limits": [
+    "Gerçek kurum IdP/MFA ve istemci kaydı yok.",
+    "SQLite yerel iptal; dağıtık/back-channel üretim kabulü değil.",
+    "Süre bitimi fiziksel saklama/imha kabulü değildir.",
+    "Yeni canlı yayın/smoke yok; son doğrulanmış canlı Paket 16."
+  ],
+  "criteria_closed_in_local_scope": [
+    "Geçersiz issuer/oturum/MFA, ayrılan kişi ve başka tenant reddi gerçek HTTPS yolundan denetlendi.",
+    "Aynı kişi yerel HTTPS girişinden React komutu ve çıkışa kadar korundu.",
+    "Girişte ve çıkışta yarış/idempotency/Origin/CSRF sınırı doğrulandı; pilot kapısı değişmedi."
+  ]
+}

@@ -1,3 +1,15 @@
+# Güncel devam — Paket 21 yerel kabul; kaynak eşitlemesi sırada
+
+B07 HTTPS dilimi: 403 otomatik (311+46+46), 11 ayrı-site HTTPS + 13 itiraz tarayıcı kontrolü geçti. HTTP-IDENTITY-CONTRACT.md ve kabul JSON yazıldı; 390 px incelendi; 115 dosyalı paket üretildi. Güncel kaynak temel Paket 20 yerel 657ff02fd34c9390e1e737e92c7e939234758db7 / uzak e9eb449d569a5bc1a82ccf3d75c5d97ee74b1aee / ağaç ec7a31676eaa144f5370dbfea3e6a1c0c28849b1. Önce özgün 36 backlog koşulunu ve diff gözden geçir; commit ve uzak expected-head üzerinden aynı ağacı eşitle.
+
+Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–21 dağıtımı yok. Auth kullanıcı iptalini yeniden isteme; configuredCore kapalı kalır. Tek kod sahibi. Sonra B08 tüm modüller için çapraz birim/kurum okuma-yazma-ihracat matrisi ve bulunan boşlukları düzelt; B07 back-channel/çok işçili depo/iptal/anahtar saklama bağımsız sözleşmeleri de açık. Ardından kalan bütün B01–B36 işleri.
+
+# Güncel devam — Paket 20 kaynakta; B07 HTTP kimlik sınırı
+
+Paket 20 yerel 657ff02fd34c9390e1e737e92c7e939234758db7, uzak e9eb449d569a5bc1a82ccf3d75c5d97ee74b1aee, aynı ağaç ec7a31676eaa144f5370dbfea3e6a1c0c28849b1. 384 otomatik + 13 politika + 13 itiraz + 17 değiştirme tarayıcı kabulü. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–20 canlı yayını yok. Auth kullanıcı iptalini yeniden isteme.
+
+B07 bağımsız HTTP/cookie/Origin/callback geliştirmesine geçildi; henüz yeni kod yok. identity-flow.mjs ve identity-contract.mjs okundu; HTTP katmanı mevcut değil. Yerel sentetik HTTPS/loopback kabulü tasarlanıyor; gerçek IdP istemcisi/üretim adapteri/dağıtık iptal ayrıca açık. configuredCore kapalı kalır. Kaynak RFC9700, RFC9207 ve çerez güvenliği resmî kaynakları yeniden inceleniyor. Sonra kalan B01–B36 bağımsız işleri.
+
 # Güncel devam — Paket 20 yerel kabul, kaynak eşitlemesi sırada
 
 384 otomatik (292+46+46), 13 politika + 13 itiraz + 17 değiştirme tarayıcı kontrolü geçti. B11 bağımsız yerel politika ve imzalı değiştirme dilimleri bağlı; gerçek kurum usulü/tebliğ/takvim ve üretim kabulü açık. APPEAL-POLICY-CONTRACT.md ve kabul JSON güncel. Önce değişiklikleri gözden geçir, özgün 36 backlog kimlik/bağımlılık/kabulü karşılaştır; yerel commit ve uzak expected-head ile aynı kaynak ağacını eşitle. Son uzak Paket 19 ee34cdee91c1ba17c9faabc0c474cfe363877619 / yerel 0cad4c688a8ddefb1cec8ea2252be93825a50067 / ağaç 070ef5879f24858a09f072f9eccfaff28e017370.
