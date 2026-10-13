@@ -1,3 +1,18 @@
+# Güncel devam — Paket 22 yerel kabul; kaynak eşitlemesi sırada
+
+B08: 415 otomatik (323+46+46), 66 komut / 12 HTTP yolu / 2.656 olumlu örnek / 21.248 kapsam kontrolü. 12 saklama + 11 veri talebi tarayıcı kontrolü; 390 px incelendi. SCOPE-ACCEPTANCE-CONTRACT ve kabul JSON güncel. Görünür ekran değişikliği yok. Önce commit ve uzak expected-head ile aynı ağacı eşitle. Temel yerel 797d0f044f89bfbff9c44938e6ae2edbbfb1b35a / uzak 0ca90ca4e4d7328ee56ff27cc1091a38dade0c24 / ağaç 75cc5a36e46484af22fcc231a2154b501c950b69. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–22 canlı yayımı yok. Kullanıcı auth iptalini yeniden isteme; configuredCore kapalı.
+
+Sonraki bağımsız B10: alternatif ölçme kanıt türü, değişmez sürüm ve bağımsız moderasyon gerekçesini gerçek Öğrenme kanıtları/Değerlendirmeler ekranlarına bağla. Eksik/null/başarısız sonuç için elle geçiş yok; geçerli alternatif kanıt da tam rubrik ve ayrı akademik karar gerektirir. Yeni kanıt sürümü eski değerlendirmeyi sessizce değiştirmemeli. 66 komut envanteri yeni komutlarla genişletilmeli. B07 back-channel/üretim depo/dağıtık iptal sözleşmesi ve diğer bütün bağımsız B01–B36 işleri sürer. Tek kod sahibi, alt ajan yok.
+
+---
+Aşağıdakiler tarihsel devam kayıtlarıdır.
+
+# Güncel devam — Paket 21 kaynakta; B08 kapsam matrisi
+
+Yerel 797d0f044f89bfbff9c44938e6ae2edbbfb1b35a; uzak 0ca90ca4e4d7328ee56ff27cc1091a38dade0c24; aynı ağaç 75cc5a36e46484af22fcc231a2154b501c950b69. 403 otomatik (311+46+46), 11 HTTPS/ayrı-site + 13 itiraz tarayıcı kabulü. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket 17–21 canlı yayını yok. Kullanıcının auth iptalini yeniden isteme; configuredCore kapalı.
+
+Sıradaki B08: bütün komut/okuma/ihracat yüzeylerinin iki kurum ve aynı kurum iki birim negatif matrisi. Henüz B08 yeni kod yok. Pozitif geçerli komutları temel al; sadece eksik alanla reddedilen istekleri yetki testi sayma. Normal ve idempotent tekrar, okuma ve gerçek ihracı ayrı denetle; kaynak/çıktı/tarihsel üyelik gibi kişiye açık meşru istisnaları açık gerekçeyle ayır. Tek kod sahibi; alt ajan yok. B07 back-channel/üretim depo/dağıtık iptal/anahtar saklama sözleşmesi hâlâ bağımsız açık. Ardından tüm kalan B01–B36 işleri.
+
 # Güncel devam — Paket 21 yerel kabul; kaynak eşitlemesi sırada
 
 B07 HTTPS dilimi: 403 otomatik (311+46+46), 11 ayrı-site HTTPS + 13 itiraz tarayıcı kontrolü geçti. HTTP-IDENTITY-CONTRACT.md ve kabul JSON yazıldı; 390 px incelendi; 115 dosyalı paket üretildi. Güncel kaynak temel Paket 20 yerel 657ff02fd34c9390e1e737e92c7e939234758db7 / uzak e9eb449d569a5bc1a82ccf3d75c5d97ee74b1aee / ağaç ec7a31676eaa144f5370dbfea3e6a1c0c28849b1. Önce özgün 36 backlog koşulunu ve diff gözden geçir; commit ve uzak expected-head üzerinden aynı ağacı eşitle.

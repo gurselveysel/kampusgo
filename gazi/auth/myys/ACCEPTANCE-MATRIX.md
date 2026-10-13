@@ -142,3 +142,9 @@ Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8
 ## Paket 21 adayı — B07 HTTPS (13.10.2026)
 
 Yerel giriş/oturum/çıkış/yeniden giriş ekranları aynı kişiyle akademik kayda bağlı. 403 otomatik + 11 HTTPS/ayrı-site + 13 itiraz tarayıcı kontrolü; cookie/Origin/CSRF ve yarışlar denetlendi. Gerçek kurum IdP/üretim depo/dağıtık iptal açık. Kaynak ve canlı durum RELEASE.md içinde ayrıdır.
+
+## Paket 22 kaynak adayı — B08 (2026-10-13)
+
+Yeni görünür ekran yok. Destek/veri talebi birim yetkisi ve saklama önizlemesi hataları düzeltildi. Mevcut 66 komut / 12 HTTP yolu; olumlu kayıtlardan 2.656 örnek / 21.248 kapsam kontrolü, 415 otomatik test geçti. Okuma, yeni işlem, idempotent tekrar, gerçek ihraç ve geçerli başka kurum oturumu ayrı sınandı. Meşru kişisel geçmiş/boş kurum/paylaşım/toplu satır istisnaları SCOPE-ACCEPTANCE-CONTRACT.md içinde açık. B08 gerçek görev ve üretim kabulü açık; kaynak adayı canlı yayın değildir.
+
+Paket 22 ek yerel kanıt: 12 saklama + 11 veri talebi tarayıcı kontrolü geçti; 390 px saklama görünümü incelendi. 36 özgün iş kimliği/başlık/bağımlılık/kabul ölçütü korundu.

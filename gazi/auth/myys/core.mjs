@@ -221,7 +221,8 @@ export class MyysCore {
    return put('share-revocation',{id:id(),unit:share.unit,owner:a.id,shareId:share.id});
   }
   if(action==='support'){
-   requireThat(ownUnit(a,p.unit)&&text(p.subject,5,200)&&text(p.message,20),'support','Destek birimi, konusu ve açıklaması gerekli.');
+   requireThat(ownUnit(a,p.unit),'forbidden','Bu birimde destek talebi açma yetkiniz yok.',403);
+   requireThat(text(p.subject,5,200)&&text(p.message,20),'support','Destek birimi, konusu ve açıklaması gerekli.');
    requireThat(['technical','academic','privacy'].includes(p.category),'support','Geçerli destek türünü seçin.');
    return put('support',{id:id(),unit:p.unit,owner:a.id,subject:p.subject,message:p.message,category:p.category,state:'open'});
   }

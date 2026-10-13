@@ -173,3 +173,7 @@ Aktarım ve mutabakat ekranına OBS hazırlığı, filtre, alındı örneği, sa
 ## Paket 21 — B07 yerel HTTPS dilimi
 
 `identity-http.mjs` ve HTTP-IDENTITY-CONTRACT.md; mevcut akış ve üyelik doğrulamasını aynı kişiyle gerçek React paneline bağlar. Cookie/Origin/CSRF, tek kullanımlık callback/iptal ve çıkış yarışları; panelde oturum süresi/çıkış/yeniden giriş. 403 otomatik + 11 HTTPS + 13 itiraz tarayıcı kabulü. Mevcut pilot gateway ve configuredCore üretim kapısı korunur.
+
+## B08 mevcut yerel yüzey matrisi — 2026-10-13
+
+SCOPE-ACCEPTANCE-CONTRACT.md, scope-inventory.json ve myys-scope-acceptance.mjs: geçerli komut kopyasıyla tüm mevcut kurum/birim/tekrar/okuma kontrolleri; HTTP arşiv/cüzdan/imza/durum/toplu/kişi ihracı. Alan hatasıyla karışan 403 ayrıldı, saklama yabancı önizlemesi 404. Kurum görevi veya üretim RLS kabulü uydurulmadı; configuredCore kapalı.

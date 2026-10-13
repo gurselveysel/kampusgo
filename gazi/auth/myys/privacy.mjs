@@ -11,7 +11,8 @@ const categories=['account','learning','sharing','support','all'];
 export function privacyReplay(a,action,r){if(!['privacy-request','privacy-response','privacy-acknowledge','privacy-withdraw-shares','privacy-cleanup'].includes(action))return false;requireThat(member(a,r.unit)&&(action==='privacy-response'?reviewer(a,r.unit)&&r.owner!==a.id:r.owner===a.id)&&(action!=='privacy-cleanup'||a.mfa),'forbidden','Bu veri talebinde işlem yetkiniz yok.',403);if(action==='privacy-cleanup')requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Temizleme yalnız izole yerel kabulde çalışır.',503);return true;}
 export function privacyCommand({action,p,a,s,put,id,now}){
  if(action==='privacy-request'){
-  requireThat(member(a,p.unit)&&kinds.includes(p.type)&&categories.includes(p.category)&&text(p.description),'privacy_request','Birim, talep türü, kapsam ve açıklama gerekli.');
+  requireThat(member(a,p.unit),'forbidden','Bu birimde veri talebi açma yetkiniz yok.',403);
+  requireThat(kinds.includes(p.type)&&categories.includes(p.category)&&text(p.description),'privacy_request','Birim, talep türü, kapsam ve açıklama gerekli.');
   return put('privacy-request',{id:id(),unit:p.unit,owner:a.id,type:p.type,category:p.category,description:p.description,submission:'local-acceptance',officialReceivedAt:null,official:false});
  }
  if(action==='privacy-response'){
@@ -28,7 +29,8 @@ export function privacyCommand({action,p,a,s,put,id,now}){
   return put('privacy-read',{id:id(),unit:r.unit,owner:a.id,responseId:r.id,requestId:r.requestId,notification:'local-read-acknowledgement',official:false});
  }
  if(action==='privacy-withdraw-shares'){
-  requireThat(member(a,p.unit)&&p.confirm===true,'privacy_scope','Paylaşımı geri çekme kapsamını açıkça onaylayın.');
+  requireThat(member(a,p.unit),'forbidden','Bu birimde paylaşım yönetme yetkiniz yok.',403);
+  requireThat(p.confirm===true,'privacy_scope','Paylaşımı geri çekme kapsamını açıkça onaylayın.');
   const shares=s.list(a.tenant,'share').filter(r=>r.owner===a.id&&r.unit===p.unit&&!s.list(a.tenant,'share-revocation').some(x=>x.shareId===r.id));
   for(const share of shares)put('share-revocation',{id:id(),unit:p.unit,owner:a.id,shareId:share.id});
   return put('privacy-withdrawal',{id:id(),unit:p.unit,owner:a.id,revokedCount:shares.length,academicRecordsDeleted:0,externalAccountsChanged:false});

@@ -350,3 +350,15 @@ Paket 19 son yerel kabul: 368 otomatik; 17 değiştirme, 11 profil, 13 itiraz, 8
 ## Paket 21 kaynak adayı — B07 (2026-10-13)
 
 Panelde yerel oturum/çıkış/yeniden giriş, ayrı sentetik site üzerinden HTTPS callback. 403 otomatik + 11 HTTPS + 13 itiraz tarayıcı kontrolü; 390 px incelendi. 115 dosyalı mevcut korumalı paket üretildi. Uzak temel e9eb449d569a5bc1a82ccf3d75c5d97ee74b1aee / yerel 657ff02fd34c9390e1e737e92c7e939234758db7 / ağaç ec7a31676eaa144f5370dbfea3e6a1c0c28849b1. Alias yeniden READY: son canlı dpl_Coaq5KN2VcNpPjwyXke4neroq877 / kaynak 16bd55eefed251ce5d23e1791f87ed3871c6a8c6 (Paket 16). Paket 17–21 dağıtımı oluşturulmadı; canlı auth kullanıcı iptali, yeni smoke açık. Geri dönüş hedefi son doğrulanmış Paket 16; uygulanmadı.
+
+### Paket 21 — kaynak eşitlendi, canlı yayımlanmadı (2026-10-13)
+
+- Yerel `797d0f044f89bfbff9c44938e6ae2edbbfb1b35a`; uzak `0ca90ca4e4d7328ee56ff27cc1091a38dade0c24`; ortak ağaç `75cc5a36e46484af22fcc231a2154b501c950b69`. Uzak dal expected-head ile ileri taşındı; geçmiş ve yeni kaynak korundu.
+- 403 otomatik + 11 HTTPS/ayrı-site + 13 itiraz tarayıcı kabulü. 36 özgün iş kimliği/bağımlılık/kabul ölçütü korundu.
+- Yeni üretim dağıtımı yok; son canlı Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` / `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, alias READY tekrar doğrulandı. Paket 17–21 canlı smoke açık; kurum bağlantısı kapalı.
+
+## Paket 22 kaynak adayı — B08 (2026-10-13)
+
+Görünür arayüz değişikliği yok; kapsam hataları ve tekrarlanabilir yetki matrisi. 415 otomatik test; 66 komut / 12 HTTP yolu / 21.248 türetilmiş kontrol. 115 dosyalı korumalı paket üretildi. Kaynak temel yerel 797d0f044f89bfbff9c44938e6ae2edbbfb1b35a / uzak 0ca90ca4e4d7328ee56ff27cc1091a38dade0c24 / ağaç 75cc5a36e46484af22fcc231a2154b501c950b69. Canlı alias yeniden doğrulandı: Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 / 16bd55eefed251ce5d23e1791f87ed3871c6a8c6 READY. Yeni dağıtım yok; auth kullanıcı iptali ve yeni smoke açık. Sonraki yayının geri dönüş hedefi Paket 16; geri dönüş uygulanmadı. Kaynak kimlikleri eşitlemeden sonra yazılır.
+
+Paket 22 ek yerel kanıt: 12 saklama + 11 veri talebi tarayıcı kontrolü geçti; 390 px saklama görünümü incelendi. 36 özgün iş kimliği/başlık/bağımlılık/kabul ölçütü korundu.

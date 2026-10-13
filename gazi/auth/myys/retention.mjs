@@ -7,7 +7,7 @@ const all=(s,t)=>s.list(t,'flow-policy');
 const latest=(s,t,p)=>all(s,t).filter(r=>r.unit===p.unit&&r.flowKey===p.flowKey).at(-1);
 const reviewed=(s,t,p)=>s.list(t,'flow-review').find(r=>r.policyId===p.id);
 const activeReviewer=(s,t,p,now)=>{const r=reviewed(s,t,p);if(r?.outcome!=='accepted')return false;const m=s.db.prepare('SELECT m.roles FROM memberships m JOIN persons p ON p.id=m.person WHERE m.tenant=? AND m.person=? AND m.unit=? AND m.active=1 AND p.active=1 AND m.expires>?').get(t,r.createdBy,p.unit,now);return m&&JSON.parse(m.roles).includes('admin');};
-const scope=(s,a,policyId,roles)=>{const p=s.get(a.tenant,'flow-policy',policyId);requireThat(p&&role(a,p.unit,roles),'not_found','Akış kuralı bulunamadı veya erişilemiyor.',404);return p;};
+const scope=(s,a,policyId,roles)=>{const p=typeof policyId==='string'&&s.get(a.tenant,'flow-policy',policyId);requireThat(p&&role(a,p.unit,roles),'not_found','Akış kuralı bulunamadı veya erişilemiyor.',404);return p;};
 function candidates(s,t,p,cutoff){
  // A session has tenant scope but no unit scope. Multi-unit identities cannot
  // safely inherit the shortest unit retention rule, so they are never removed.
@@ -33,7 +33,8 @@ export function retentionCommand({action,p,a,s,put,id,now}){
  if(action==='flow-review'){
   const policy=scope(s,a,p.policyId,['admin']);requireThat(policy.createdBy!==a.id,'separation','Saklama kuralını farklı yetkili incelemeli.',403);requireThat(!reviewed(s,a.tenant,policy)&&latest(s,a.tenant,policy)?.id===policy.id,'flow_changed','Güncel ve henüz incelenmemiş sürüm gerekli.',409);requireThat(['accepted','rejected'].includes(p.outcome)&&text(p.reason),'flow_review','Gerekçeli yerel inceleme gerekli.');return put('flow-review',{id:id(),unit:policy.unit,owner:policy.owner,policyId:policy.id,outcome:p.outcome,reason:p.reason,official:false,transferAuthorized:false});
  }
- const preview=action==='retention-run'?s.get(a.tenant,'retention-preview',p.previewId):null;
+ const preview=action==='retention-run'&&typeof p.previewId==='string'?s.get(a.tenant,'retention-preview',p.previewId):null;
+ requireThat(action!=='retention-run'||preview,'not_found','Önizleme bulunamadı veya erişilemiyor.',404);
  const policy=scope(s,a,preview?.policyId||p.policyId,['it']);requireThat(latest(s,a.tenant,policy)?.id===policy.id&&activeReviewer(s,a.tenant,policy,now),'flow_changed','Güncel ve bağımsız incelenmiş saklama sürümü gerekli.',409);
  const review=reviewed(s,a.tenant,policy);requireThat(![policy.createdBy,review.createdBy].includes(a.id),'separation','Yerel temizleme hazırlayan ve inceleyen kişilerden ayrı BT görevlisine aittir.',403);
  requireThat(policy.target==='expired-sessions','flow_target','Bu akış yalnız inceleme sicilidir; yerel temizleme hedefi yok.');

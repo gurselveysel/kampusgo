@@ -1,0 +1,956 @@
+{
+  "work_id": "B08",
+  "scope": "isolated-local-acceptance",
+  "production": false,
+  "official": false,
+  "automated": {
+    "server": 323,
+    "portal": 46,
+    "regression": 46
+  },
+  "matrix": {
+    "at": "2026-10-13T23:33:09.640Z",
+    "scope": "isolated-local-acceptance",
+    "official": false,
+    "commandCount": 66,
+    "positiveSamples": 2656,
+    "totalChecks": 21248,
+    "httpRoutes": [
+      "calisma",
+      "cuzdan-indir",
+      "dogrula",
+      "dogrulama-paketi",
+      "durum-yayinla",
+      "guven-sicili",
+      "imzala",
+      "islem",
+      "karar-arsivi",
+      "paylasim",
+      "toplu-hazirlik",
+      "veri-ozetim"
+    ],
+    "actions": {
+      "appeal": {
+        "positiveSamples": 25,
+        "checks": {
+          "other-unit-fresh:404": 25,
+          "other-unit-replay:403": 25,
+          "other-tenant-fresh:403": 25,
+          "other-tenant-replay:403": 25,
+          "other-unit-read:no-private-record": 25,
+          "other-tenant-read:403": 25,
+          "valid-other-tenant-reference:404": 25,
+          "valid-other-tenant-read:no-tenant-A-record": 25
+        }
+      },
+      "appeal-policy": {
+        "positiveSamples": 19,
+        "checks": {
+          "other-unit-fresh:404": 19,
+          "other-unit-replay:403": 19,
+          "other-tenant-fresh:403": 19,
+          "other-tenant-replay:403": 19,
+          "other-unit-read:no-private-record": 19,
+          "other-tenant-read:403": 19,
+          "valid-other-tenant-reference:404": 19,
+          "valid-other-tenant-read:no-tenant-A-record": 19
+        }
+      },
+      "appeal-policy-hold": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:404": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "valid-other-tenant-reference:404": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "appeal-policy-review": {
+        "positiveSamples": 12,
+        "checks": {
+          "other-unit-fresh:404": 12,
+          "other-unit-replay:403": 12,
+          "other-tenant-fresh:403": 12,
+          "other-tenant-replay:403": 12,
+          "other-unit-read:no-private-record": 12,
+          "other-tenant-read:403": 12,
+          "valid-other-tenant-reference:404": 12,
+          "valid-other-tenant-read:no-tenant-A-record": 12
+        }
+      },
+      "application": {
+        "positiveSamples": 5,
+        "checks": {
+          "other-unit-fresh:404": 5,
+          "other-unit-replay:403": 5,
+          "other-tenant-fresh:403": 5,
+          "other-tenant-replay:403": 5,
+          "other-unit-read:no-private-record": 5,
+          "other-tenant-read:403": 5,
+          "valid-other-tenant-reference:404": 5,
+          "valid-other-tenant-read:no-tenant-A-record": 5
+        }
+      },
+      "application-review": {
+        "positiveSamples": 3,
+        "checks": {
+          "other-unit-fresh:404": 3,
+          "other-unit-replay:403": 3,
+          "other-tenant-fresh:403": 3,
+          "other-tenant-replay:403": 3,
+          "other-unit-read:no-private-record": 3,
+          "other-tenant-read:403": 3,
+          "valid-other-tenant-reference:404": 3,
+          "valid-other-tenant-read:no-tenant-A-record": 3
+        }
+      },
+      "assess": {
+        "positiveSamples": 159,
+        "checks": {
+          "other-unit-fresh:404": 159,
+          "other-unit-replay:403": 159,
+          "other-tenant-fresh:403": 159,
+          "other-tenant-replay:403": 159,
+          "other-unit-read:no-private-record": 159,
+          "other-tenant-read:403": 159,
+          "valid-other-tenant-reference:404": 159,
+          "valid-other-tenant-read:no-tenant-A-record": 159
+        }
+      },
+      "batch-create": {
+        "positiveSamples": 5,
+        "checks": {
+          "other-unit-fresh:403": 5,
+          "other-unit-replay:403": 5,
+          "other-tenant-fresh:403": 5,
+          "other-tenant-replay:403": 5,
+          "other-unit-read:no-private-record": 5,
+          "other-tenant-read:403": 5,
+          "valid-other-tenant-reference:foreign-rows-rejected": 5,
+          "valid-other-tenant-read:no-tenant-A-record": 5
+        }
+      },
+      "batch-process": {
+        "positiveSamples": 41,
+        "checks": {
+          "other-unit-fresh:404": 41,
+          "other-unit-replay:403": 41,
+          "other-tenant-fresh:403": 41,
+          "other-tenant-replay:403": 41,
+          "other-unit-read:no-private-record": 41,
+          "other-tenant-read:403": 41,
+          "valid-other-tenant-reference:404": 41,
+          "valid-other-tenant-read:no-tenant-A-record": 41
+        }
+      },
+      "cohort-create": {
+        "positiveSamples": 9,
+        "checks": {
+          "other-unit-fresh:404": 9,
+          "other-unit-replay:403": 9,
+          "other-tenant-fresh:403": 9,
+          "other-tenant-replay:403": 9,
+          "other-unit-read:no-private-record": 9,
+          "other-tenant-read:403": 9,
+          "valid-other-tenant-reference:404": 9,
+          "valid-other-tenant-read:no-tenant-A-record": 9
+        }
+      },
+      "cohort-evaluate": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:404": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "valid-other-tenant-reference:404": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "cohort-gate": {
+        "positiveSamples": 75,
+        "checks": {
+          "other-unit-fresh:404": 75,
+          "other-unit-replay:403": 75,
+          "other-tenant-fresh:403": 75,
+          "other-tenant-replay:403": 75,
+          "other-unit-read:no-private-record": 75,
+          "other-tenant-read:403": 75,
+          "valid-other-tenant-reference:404": 75,
+          "valid-other-tenant-read:no-tenant-A-record": 75
+        }
+      },
+      "cohort-issue": {
+        "positiveSamples": 1,
+        "checks": {
+          "other-unit-fresh:404": 1,
+          "other-unit-replay:403": 1,
+          "other-tenant-fresh:403": 1,
+          "other-tenant-replay:403": 1,
+          "other-unit-read:no-private-record": 1,
+          "other-tenant-read:403": 1,
+          "valid-other-tenant-reference:404": 1,
+          "valid-other-tenant-read:no-tenant-A-record": 1
+        }
+      },
+      "cohort-issue-review": {
+        "positiveSamples": 1,
+        "checks": {
+          "other-unit-fresh:404": 1,
+          "other-unit-replay:403": 1,
+          "other-tenant-fresh:403": 1,
+          "other-tenant-replay:403": 1,
+          "other-unit-read:no-private-record": 1,
+          "other-tenant-read:403": 1,
+          "valid-other-tenant-reference:404": 1,
+          "valid-other-tenant-read:no-tenant-A-record": 1
+        }
+      },
+      "cohort-open": {
+        "positiveSamples": 5,
+        "checks": {
+          "other-unit-fresh:404": 5,
+          "other-unit-replay:403": 5,
+          "other-tenant-fresh:403": 5,
+          "other-tenant-replay:403": 5,
+          "other-unit-read:no-private-record": 5,
+          "other-tenant-read:403": 5,
+          "valid-other-tenant-reference:404": 5,
+          "valid-other-tenant-read:no-tenant-A-record": 5
+        }
+      },
+      "cohort-review": {
+        "positiveSamples": 22,
+        "checks": {
+          "other-unit-fresh:404": 22,
+          "other-unit-replay:403": 22,
+          "other-tenant-fresh:403": 22,
+          "other-tenant-replay:403": 22,
+          "other-unit-read:no-private-record": 22,
+          "other-tenant-read:403": 22,
+          "valid-other-tenant-reference:404": 22,
+          "valid-other-tenant-read:no-tenant-A-record": 22
+        }
+      },
+      "credential-profile": {
+        "positiveSamples": 184,
+        "checks": {
+          "other-unit-fresh:404": 184,
+          "other-unit-replay:403": 184,
+          "other-tenant-fresh:403": 184,
+          "other-tenant-replay:403": 184,
+          "other-unit-read:no-private-record": 184,
+          "other-tenant-read:403": 184,
+          "valid-other-tenant-reference:404": 184,
+          "valid-other-tenant-read:no-tenant-A-record": 184
+        }
+      },
+      "credential-profile-hold": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:404": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "valid-other-tenant-reference:404": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "credential-profile-review": {
+        "positiveSamples": 183,
+        "checks": {
+          "other-unit-fresh:404": 183,
+          "other-unit-replay:403": 183,
+          "other-tenant-fresh:403": 183,
+          "other-tenant-replay:403": 183,
+          "other-unit-read:no-private-record": 183,
+          "other-tenant-read:403": 183,
+          "valid-other-tenant-reference:404": 183,
+          "valid-other-tenant-read:no-tenant-A-record": 183
+        }
+      },
+      "credential-receive": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:404": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "valid-other-tenant-reference:404": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "decide": {
+        "positiveSamples": 156,
+        "checks": {
+          "other-unit-fresh:404": 156,
+          "other-unit-replay:403": 156,
+          "other-tenant-fresh:403": 156,
+          "other-tenant-replay:403": 156,
+          "other-unit-read:no-private-record": 156,
+          "other-tenant-read:403": 156,
+          "valid-other-tenant-reference:404": 156,
+          "valid-other-tenant-read:no-tenant-A-record": 156
+        }
+      },
+      "decision-receive": {
+        "positiveSamples": 6,
+        "checks": {
+          "other-unit-fresh:404": 6,
+          "other-unit-replay:403": 6,
+          "other-tenant-fresh:403": 6,
+          "other-tenant-replay:403": 6,
+          "other-unit-read:no-private-record": 6,
+          "other-tenant-read:403": 6,
+          "valid-other-tenant-reference:404": 6,
+          "valid-other-tenant-read:no-tenant-A-record": 6
+        }
+      },
+      "enroll": {
+        "positiveSamples": 190,
+        "checks": {
+          "other-unit-fresh:404": 190,
+          "other-unit-replay:403": 190,
+          "other-tenant-fresh:403": 190,
+          "other-tenant-replay:403": 190,
+          "other-unit-read:no-private-record": 190,
+          "other-tenant-read:403": 190,
+          "valid-other-tenant-reference:404": 190,
+          "valid-other-tenant-read:no-tenant-A-record": 190
+        }
+      },
+      "evidence": {
+        "positiveSamples": 149,
+        "checks": {
+          "other-unit-fresh:404": 149,
+          "other-unit-replay:403": 149,
+          "other-tenant-fresh:403": 149,
+          "other-tenant-replay:403": 149,
+          "other-unit-read:no-private-record": 149,
+          "other-tenant-read:403": 149,
+          "valid-other-tenant-reference:404": 149,
+          "valid-other-tenant-read:no-tenant-A-record": 149
+        }
+      },
+      "flow-policy": {
+        "positiveSamples": 13,
+        "checks": {
+          "other-unit-fresh:404": 13,
+          "other-unit-replay:403": 13,
+          "other-tenant-fresh:403": 13,
+          "other-tenant-replay:403": 13,
+          "other-unit-read:no-private-record": 13,
+          "other-tenant-read:403": 13,
+          "valid-other-tenant-reference:404": 13,
+          "valid-other-tenant-read:no-tenant-A-record": 13
+        }
+      },
+      "flow-review": {
+        "positiveSamples": 11,
+        "checks": {
+          "other-unit-fresh:404": 11,
+          "other-unit-replay:403": 11,
+          "other-tenant-fresh:403": 11,
+          "other-tenant-replay:403": 11,
+          "other-unit-read:no-private-record": 11,
+          "other-tenant-read:403": 11,
+          "valid-other-tenant-reference:404": 11,
+          "valid-other-tenant-read:no-tenant-A-record": 11
+        }
+      },
+      "import-lms-evidence": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:404": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "valid-other-tenant-reference:404": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "issue": {
+        "positiveSamples": 86,
+        "checks": {
+          "other-unit-fresh:404": 86,
+          "other-unit-replay:403": 86,
+          "other-tenant-fresh:403": 86,
+          "other-tenant-replay:403": 86,
+          "other-unit-read:no-private-record": 86,
+          "other-tenant-read:403": 86,
+          "valid-other-tenant-reference:404": 86,
+          "valid-other-tenant-read:no-tenant-A-record": 86
+        }
+      },
+      "key-register": {
+        "positiveSamples": 75,
+        "checks": {
+          "other-unit-fresh:403": 75,
+          "other-unit-replay:403": 75,
+          "other-tenant-fresh:403": 75,
+          "other-tenant-replay:403": 75,
+          "other-unit-read:no-private-record": 75,
+          "other-tenant-read:403": 75,
+          "own-other-tenant-create-control:separate-record": 69,
+          "valid-other-tenant-read:no-tenant-A-record": 75,
+          "valid-other-tenant-reference:422": 6
+        }
+      },
+      "key-review": {
+        "positiveSamples": 74,
+        "checks": {
+          "other-unit-fresh:404": 74,
+          "other-unit-replay:403": 74,
+          "other-tenant-fresh:403": 74,
+          "other-tenant-replay:403": 74,
+          "other-unit-read:no-private-record": 74,
+          "other-tenant-read:403": 74,
+          "valid-other-tenant-reference:404": 74,
+          "valid-other-tenant-read:no-tenant-A-record": 74
+        }
+      },
+      "key-state": {
+        "positiveSamples": 13,
+        "checks": {
+          "other-unit-fresh:404": 13,
+          "other-unit-replay:403": 13,
+          "other-tenant-fresh:403": 13,
+          "other-tenant-replay:403": 13,
+          "other-unit-read:no-private-record": 13,
+          "other-tenant-read:403": 13,
+          "valid-other-tenant-reference:404": 13,
+          "valid-other-tenant-read:no-tenant-A-record": 13
+        }
+      },
+      "lms-quarantine-review": {
+        "positiveSamples": 1,
+        "checks": {
+          "other-unit-fresh:404": 1,
+          "other-unit-replay:403": 1,
+          "other-tenant-fresh:403": 1,
+          "other-tenant-replay:403": 1,
+          "other-unit-read:no-private-record": 1,
+          "other-tenant-read:403": 1,
+          "valid-other-tenant-reference:404": 1,
+          "valid-other-tenant-read:no-tenant-A-record": 1
+        }
+      },
+      "membership-propose": {
+        "positiveSamples": 14,
+        "checks": {
+          "other-unit-fresh:403": 14,
+          "other-unit-replay:403": 14,
+          "other-tenant-fresh:403": 14,
+          "other-tenant-replay:403": 14,
+          "other-unit-read:no-private-record": 14,
+          "other-tenant-read:403": 14,
+          "valid-other-tenant-reference:404": 14,
+          "valid-other-tenant-read:no-tenant-A-record": 14
+        }
+      },
+      "membership-review": {
+        "positiveSamples": 9,
+        "checks": {
+          "other-unit-fresh:404": 9,
+          "other-unit-replay:403": 9,
+          "other-tenant-fresh:403": 9,
+          "other-tenant-replay:403": 9,
+          "other-unit-read:no-private-record": 9,
+          "other-tenant-read:403": 9,
+          "valid-other-tenant-reference:404": 9,
+          "valid-other-tenant-read:no-tenant-A-record": 9
+        }
+      },
+      "obs-correction": {
+        "positiveSamples": 7,
+        "checks": {
+          "other-unit-fresh:404": 7,
+          "other-unit-replay:403": 7,
+          "other-tenant-fresh:403": 7,
+          "other-tenant-replay:403": 7,
+          "other-unit-read:no-private-record": 7,
+          "other-tenant-read:403": 7,
+          "valid-other-tenant-reference:404": 7,
+          "valid-other-tenant-read:no-tenant-A-record": 7
+        }
+      },
+      "obs-prepare": {
+        "positiveSamples": 12,
+        "checks": {
+          "other-unit-fresh:404": 12,
+          "other-unit-replay:403": 12,
+          "other-tenant-fresh:403": 12,
+          "other-tenant-replay:403": 12,
+          "other-unit-read:no-private-record": 12,
+          "other-tenant-read:403": 12,
+          "valid-other-tenant-reference:404": 12,
+          "valid-other-tenant-read:no-tenant-A-record": 12
+        }
+      },
+      "obs-reconcile": {
+        "positiveSamples": 13,
+        "checks": {
+          "other-unit-fresh:404": 13,
+          "other-unit-replay:403": 13,
+          "other-tenant-fresh:403": 13,
+          "other-tenant-replay:403": 13,
+          "other-unit-read:no-private-record": 13,
+          "other-tenant-read:403": 13,
+          "valid-other-tenant-reference:404": 13,
+          "valid-other-tenant-read:no-tenant-A-record": 13
+        }
+      },
+      "obs-simulate": {
+        "positiveSamples": 13,
+        "checks": {
+          "other-unit-fresh:404": 13,
+          "other-unit-replay:403": 13,
+          "other-tenant-fresh:403": 13,
+          "other-tenant-replay:403": 13,
+          "other-unit-read:no-private-record": 13,
+          "other-tenant-read:403": 13,
+          "valid-other-tenant-reference:404": 13,
+          "valid-other-tenant-read:no-tenant-A-record": 13
+        }
+      },
+      "privacy-acknowledge": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:404": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "valid-other-tenant-reference:404": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "privacy-cleanup": {
+        "positiveSamples": 3,
+        "checks": {
+          "other-unit-fresh:404": 3,
+          "other-unit-replay:403": 3,
+          "other-tenant-fresh:403": 3,
+          "other-tenant-replay:403": 3,
+          "other-unit-read:no-private-record": 3,
+          "other-tenant-read:403": 3,
+          "valid-other-tenant-reference:404": 3,
+          "valid-other-tenant-read:no-tenant-A-record": 3
+        }
+      },
+      "privacy-request": {
+        "positiveSamples": 9,
+        "checks": {
+          "other-unit-fresh:403": 9,
+          "other-unit-replay:403": 9,
+          "other-tenant-fresh:403": 9,
+          "other-tenant-replay:403": 9,
+          "other-unit-read:no-private-record": 9,
+          "other-tenant-read:403": 9,
+          "own-other-tenant-create-control:separate-record": 9,
+          "valid-other-tenant-read:no-tenant-A-record": 9
+        }
+      },
+      "privacy-response": {
+        "positiveSamples": 8,
+        "checks": {
+          "other-unit-fresh:404": 8,
+          "other-unit-replay:403": 8,
+          "other-tenant-fresh:403": 8,
+          "other-tenant-replay:403": 8,
+          "other-unit-read:no-private-record": 8,
+          "other-tenant-read:403": 8,
+          "valid-other-tenant-reference:404": 8,
+          "valid-other-tenant-read:no-tenant-A-record": 8
+        }
+      },
+      "privacy-withdraw-shares": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:403": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "own-other-tenant-create-control:separate-record": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "program": {
+        "positiveSamples": 206,
+        "checks": {
+          "other-unit-fresh:403": 206,
+          "other-unit-replay:403": 206,
+          "other-tenant-fresh:403": 206,
+          "other-tenant-replay:403": 206,
+          "other-unit-read:no-private-record": 206,
+          "other-tenant-read:403": 206,
+          "own-other-tenant-create-control:separate-record": 203,
+          "valid-other-tenant-read:no-tenant-A-record": 206,
+          "valid-other-tenant-reference:409": 3
+        }
+      },
+      "publish": {
+        "positiveSamples": 185,
+        "checks": {
+          "other-unit-fresh:404": 185,
+          "other-unit-replay:403": 185,
+          "other-tenant-fresh:403": 185,
+          "other-tenant-replay:403": 185,
+          "other-unit-read:no-private-record": 185,
+          "other-tenant-read:403": 185,
+          "valid-other-tenant-reference:404": 185,
+          "valid-other-tenant-read:no-tenant-A-record": 185
+        }
+      },
+      "recognition-appeal": {
+        "positiveSamples": 10,
+        "checks": {
+          "other-unit-fresh:404": 10,
+          "other-unit-replay:403": 10,
+          "other-tenant-fresh:403": 10,
+          "other-tenant-replay:403": 10,
+          "other-unit-read:no-private-record": 10,
+          "other-tenant-read:403": 10,
+          "valid-other-tenant-reference:404": 10,
+          "valid-other-tenant-read:no-tenant-A-record": 10
+        }
+      },
+      "recognition-decide": {
+        "positiveSamples": 29,
+        "checks": {
+          "other-unit-fresh:404": 29,
+          "other-unit-replay:403": 29,
+          "other-tenant-fresh:403": 29,
+          "other-tenant-replay:403": 29,
+          "other-unit-read:no-private-record": 29,
+          "other-tenant-read:403": 29,
+          "valid-other-tenant-reference:404": 29,
+          "valid-other-tenant-read:no-tenant-A-record": 29
+        }
+      },
+      "recognition-policy": {
+        "positiveSamples": 25,
+        "checks": {
+          "other-unit-fresh:403": 25,
+          "other-unit-replay:403": 25,
+          "other-tenant-fresh:403": 25,
+          "other-tenant-replay:403": 25,
+          "other-unit-read:no-private-record": 25,
+          "other-tenant-read:403": 25,
+          "own-other-tenant-create-control:separate-record": 24,
+          "valid-other-tenant-read:no-tenant-A-record": 25,
+          "valid-other-tenant-reference:409": 1
+        }
+      },
+      "recognition-policy-review": {
+        "positiveSamples": 24,
+        "checks": {
+          "other-unit-fresh:404": 24,
+          "other-unit-replay:403": 24,
+          "other-tenant-fresh:403": 24,
+          "other-tenant-replay:403": 24,
+          "other-unit-read:no-private-record": 24,
+          "other-tenant-read:403": 24,
+          "valid-other-tenant-reference:404": 24,
+          "valid-other-tenant-read:no-tenant-A-record": 24
+        }
+      },
+      "recognition-request": {
+        "positiveSamples": 28,
+        "checks": {
+          "other-unit-fresh:404": 28,
+          "other-unit-replay:403": 28,
+          "other-tenant-fresh:403": 28,
+          "other-tenant-replay:403": 28,
+          "other-unit-read:no-private-record": 28,
+          "other-tenant-read:403": 28,
+          "valid-other-tenant-reference:404": 28,
+          "valid-other-tenant-read:no-tenant-A-record": 28
+        }
+      },
+      "recognition-resolve": {
+        "positiveSamples": 8,
+        "checks": {
+          "other-unit-fresh:404": 8,
+          "other-unit-replay:403": 8,
+          "other-tenant-fresh:403": 8,
+          "other-tenant-replay:403": 8,
+          "other-unit-read:no-private-record": 8,
+          "other-tenant-read:403": 8,
+          "valid-other-tenant-reference:404": 8,
+          "valid-other-tenant-read:no-tenant-A-record": 8
+        }
+      },
+      "recognition-technical": {
+        "positiveSamples": 28,
+        "checks": {
+          "other-unit-fresh:404": 28,
+          "other-unit-replay:403": 28,
+          "other-tenant-fresh:403": 28,
+          "other-tenant-replay:403": 28,
+          "other-unit-read:no-private-record": 28,
+          "other-tenant-read:403": 28,
+          "valid-other-tenant-reference:404": 28,
+          "valid-other-tenant-read:no-tenant-A-record": 28
+        }
+      },
+      "registry-draft": {
+        "positiveSamples": 210,
+        "checks": {
+          "other-unit-fresh:403": 210,
+          "other-unit-replay:403": 210,
+          "other-tenant-fresh:403": 210,
+          "other-tenant-replay:403": 210,
+          "other-unit-read:no-private-record": 210,
+          "other-tenant-read:403": 210,
+          "own-other-tenant-create-control:separate-record": 210,
+          "valid-other-tenant-read:no-tenant-A-record": 210
+        }
+      },
+      "registry-review": {
+        "positiveSamples": 184,
+        "checks": {
+          "other-unit-fresh:404": 184,
+          "other-unit-replay:403": 184,
+          "other-tenant-fresh:403": 184,
+          "other-tenant-replay:403": 184,
+          "other-unit-read:no-private-record": 184,
+          "other-tenant-read:403": 184,
+          "valid-other-tenant-reference:404": 184,
+          "valid-other-tenant-read:no-tenant-A-record": 184
+        }
+      },
+      "replacement-prepare": {
+        "positiveSamples": 8,
+        "checks": {
+          "other-unit-fresh:404": 8,
+          "other-unit-replay:403": 8,
+          "other-tenant-fresh:403": 8,
+          "other-tenant-replay:403": 8,
+          "other-unit-read:no-private-record": 8,
+          "other-tenant-read:403": 8,
+          "valid-other-tenant-reference:404": 8,
+          "valid-other-tenant-read:no-tenant-A-record": 8
+        }
+      },
+      "replacement-propose": {
+        "positiveSamples": 13,
+        "checks": {
+          "other-unit-fresh:404": 13,
+          "other-unit-replay:403": 13,
+          "other-tenant-fresh:403": 13,
+          "other-tenant-replay:403": 13,
+          "other-unit-read:no-private-record": 13,
+          "other-tenant-read:403": 13,
+          "valid-other-tenant-reference:404": 13,
+          "valid-other-tenant-read:no-tenant-A-record": 13
+        }
+      },
+      "replacement-review": {
+        "positiveSamples": 10,
+        "checks": {
+          "other-unit-fresh:404": 10,
+          "other-unit-replay:403": 10,
+          "other-tenant-fresh:403": 10,
+          "other-tenant-replay:403": 10,
+          "other-unit-read:no-private-record": 10,
+          "other-tenant-read:403": 10,
+          "valid-other-tenant-reference:404": 10,
+          "valid-other-tenant-read:no-tenant-A-record": 10
+        }
+      },
+      "replacement-withdraw": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:404": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "valid-other-tenant-reference:404": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "resolve": {
+        "positiveSamples": 14,
+        "checks": {
+          "other-unit-fresh:404": 14,
+          "other-unit-replay:403": 14,
+          "other-tenant-fresh:403": 14,
+          "other-tenant-replay:403": 14,
+          "other-unit-read:no-private-record": 14,
+          "other-tenant-read:403": 14,
+          "valid-other-tenant-reference:404": 14,
+          "valid-other-tenant-read:no-tenant-A-record": 14
+        }
+      },
+      "retention-preview": {
+        "positiveSamples": 8,
+        "checks": {
+          "other-unit-fresh:404": 8,
+          "other-unit-replay:403": 8,
+          "other-tenant-fresh:403": 8,
+          "other-tenant-replay:403": 8,
+          "other-unit-read:no-private-record": 8,
+          "other-tenant-read:403": 8,
+          "valid-other-tenant-reference:404": 8,
+          "valid-other-tenant-read:no-tenant-A-record": 8
+        }
+      },
+      "retention-run": {
+        "positiveSamples": 4,
+        "checks": {
+          "other-unit-fresh:404": 4,
+          "other-unit-replay:403": 4,
+          "other-tenant-fresh:403": 4,
+          "other-tenant-replay:403": 4,
+          "other-unit-read:no-private-record": 4,
+          "other-tenant-read:403": 4,
+          "valid-other-tenant-reference:404": 4,
+          "valid-other-tenant-read:no-tenant-A-record": 4
+        }
+      },
+      "revoke": {
+        "positiveSamples": 2,
+        "checks": {
+          "other-unit-fresh:404": 2,
+          "other-unit-replay:403": 2,
+          "other-tenant-fresh:403": 2,
+          "other-tenant-replay:403": 2,
+          "other-unit-read:no-private-record": 2,
+          "other-tenant-read:403": 2,
+          "valid-other-tenant-reference:404": 2,
+          "valid-other-tenant-read:no-tenant-A-record": 2
+        }
+      },
+      "share": {
+        "positiveSamples": 12,
+        "checks": {
+          "other-unit-fresh:404": 12,
+          "other-unit-replay:403": 12,
+          "other-tenant-fresh:403": 12,
+          "other-tenant-replay:403": 12,
+          "other-unit-read:no-private-record": 12,
+          "other-tenant-read:403": 12,
+          "valid-other-tenant-reference:404": 12,
+          "valid-other-tenant-read:no-tenant-A-record": 12
+        }
+      },
+      "support": {
+        "positiveSamples": 8,
+        "checks": {
+          "other-unit-fresh:403": 8,
+          "other-unit-replay:403": 8,
+          "other-tenant-fresh:403": 8,
+          "other-tenant-replay:403": 8,
+          "other-unit-read:no-private-record": 8,
+          "other-tenant-read:403": 8,
+          "own-other-tenant-create-control:separate-record": 8,
+          "valid-other-tenant-read:no-tenant-A-record": 8
+        }
+      },
+      "support-event": {
+        "positiveSamples": 9,
+        "checks": {
+          "other-unit-fresh:404": 9,
+          "other-unit-replay:403": 9,
+          "other-tenant-fresh:403": 9,
+          "other-tenant-replay:403": 9,
+          "other-unit-read:no-private-record": 9,
+          "other-tenant-read:403": 9,
+          "valid-other-tenant-reference:404": 9,
+          "valid-other-tenant-read:no-tenant-A-record": 9
+        }
+      },
+      "unshare": {
+        "positiveSamples": 4,
+        "checks": {
+          "other-unit-fresh:404": 4,
+          "other-unit-replay:403": 4,
+          "other-tenant-fresh:403": 4,
+          "other-tenant-replay:403": 4,
+          "other-unit-read:no-private-record": 4,
+          "other-tenant-read:403": 4,
+          "valid-other-tenant-reference:404": 4,
+          "valid-other-tenant-read:no-tenant-A-record": 4
+        }
+      }
+    },
+    "limits": [
+      "Yalnız mevcut yerel çekirdeğin komut ve HTTP yüzeyleri; üretim adaptörü veya gerçek görev ataması kabulü değildir.",
+      "Kişi kendi pasif birim üyelik geçmişini görebilir; bu durum öğrenme kayıtlarını açmaz.",
+      "Geçerli başka kurumda kendi boş görünümü, kendi kayıt oluşturma ve boş güven sicili meşru olumlu kontrollerdir.",
+      "Toplu hazırlık yabancı satırı satır bazında reddeder; kişinin beş alanlı sınırlı paylaşımı anonim yetenek anahtarına dayanır.",
+      "Örnek ve denetim sayıları ayrı test sayısı veya ürün tamamlanma yüzdesi değildir."
+    ]
+  },
+  "browser": {
+    "retention": {
+      "at": "2026-10-13T23:34:51.895Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "Sicile bağlı ülke/rol/süre/yöntem ayrıntısı kaydedildi; hazırlayan inceleyemedi",
+        "Ayrı inceleme olmadan BT önizleme işlemi açılmadı",
+        "Ayrı görevli gerekçeli yerel saklama incelemesi yaptı",
+        "Silme yapmayan önizleme bir süresi dolmuş aday buldu",
+        "Ayrı BT görevlisi yalnız önizlenen yerel oturumu temizledi",
+        "Tekrarlanan önizleme temizlenmiş oturumu tekrar saymadı",
+        "Yeni sürüm eski süreyi korudu ve inceleme bitene kadar işçiyi kapattı",
+        "Yeniden yüklemede sicil sürümleri ve temizlik kanıtı korundu",
+        "390 px saklama ekranında yatay taşma yok",
+        "390 px ülke seçimi ve saklama formunda yatay taşma yok",
+        "Öğrenen idari sicile erişemedi; kendi akademik kaydı korundu",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    },
+    "privacy": {
+      "at": "2026-10-13T23:35:08.747Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "Kendi kayıt özeti indirildi; gizli paylaşım alanı yok",
+        "Toplu geri çekme cüzdandaki aynı paylaşımı kapattı",
+        "Kişinin kapsamlı talebi sunucuya kaydedildi",
+        "Başka öğrenen ve teknik destek kişisel talebi göremez",
+        "Ayrı görevli dayanak ve inceleme tarihiyle yazılı yanıt verdi",
+        "Kişinin yerel görüntüleme kaydı resmî tebligattan ayrı tutuldu",
+        "Yalnız süresi dolmuş yerel oturum temizlendi; talep bütünü kapatılmadı",
+        "Yeniden yüklemede talep, yanıt, görüntüleme ve temizlik korundu",
+        "Veri talepleri sekmesi klavye ile seçilebildi",
+        "390 px veri talepleri ekranında yatay taşma yok",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    }
+  },
+  "criteria_closed_in_local_scope": [
+    "Mevcut çekirdeğin bütün envanter komutları için başka kurum/birim okuma, yeni yazma ve idempotent tekrar reddi.",
+    "İmzalı cüzdan, arşiv, doğrulama paketi, imza/durum, toplu hazırlık ve kişi ihracı HTTP sınırları.",
+    "Hazırlayanın tek başına nihai yayınını engelleyen mevcut görevler ayrılığı kontrolleri yeniden geçti."
+  ],
+  "remaining": [
+    "Gerçek görev atamalarıyla kurum kabulü ve üretim depo/dağıtık oturum/RLS kabulü.",
+    "Yeni modül eklendikçe kapsam envanteri ve negatif matrisin genişletilmesi.",
+    "Paket 17–22 canlı yayım ve gerçek korumalı smoke."
+  ]
+}

@@ -439,7 +439,7 @@
         "gazi/portal/src/academic-workspace.jsx",
         "gazi/auth/myys/acceptance/B07-http-20261013.json"
       ],
-      "production_status": "Önceki hazırlık modülleri canlı kaynakta; yeni Paket 21 HTTPS dilimi yalnız yerel kabulde. Kaynak eşitlemesi bekleniyor. Son canlı Paket 16; Paket 17–21 dağıtımı yok; kurumsal SSO kapalı.",
+      "production_status": "Önceki hazırlık modülleri canlı kaynakta; yeni Paket 21 HTTPS dilimi yalnız yerel kabulde. Paket 21 kaynak ağacı uzak dalla eşitlendi. Son canlı Paket 16; Paket 17–21 dağıtımı yok; kurumsal SSO kapalı.",
       "implementation_note": "Sabit HTTPS callback, tam issuer/Origin/CSRF/cookie bağı, ayrı sentetik sağlayıcıda HTTP kod değişimi, kısa kurum oturumu, çıkış yarışları ve yeniden giriş UI mevcut kişi zincirine bağlı. Gerçek kurum IdP veya üretim bağlantısı değildir.",
       "independent_remaining_work": [
         "Sağlayıcıdan bağımsız back-channel logout ve çok işçili üretim depo/iptal sözleşmesi; oran sınırı ve anahtar saklama adaptörleri. Gerçek IdP eşlemesi ayrıca kurum verisi/erişimi gerektirir."
@@ -478,7 +478,7 @@
         },
         "live": {
           "status": "yeni HTTPS dilimi canlı yayımlanmadı",
-          "evidence": "Önceki hazırlık modülleri canlı kaynakta; yeni Paket 21 HTTPS dilimi yalnız yerel kabulde. Kaynak eşitlemesi bekleniyor. Son canlı Paket 16; Paket 17–21 dağıtımı yok; kurumsal SSO kapalı."
+          "evidence": "Önceki hazırlık modülleri canlı kaynakta; yeni Paket 21 HTTPS dilimi yalnız yerel kabulde. Paket 21 kaynak ağacı uzak dalla eşitlendi. Son canlı Paket 16; Paket 17–21 dağıtımı yok; kurumsal SSO kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -506,7 +506,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "14 yeni kişi/üyelik/kapsam sunucu senaryosu; 320 otomatik test, 11 yeni tarayıcı ve 13 itiraz regresyon kontrolü geçti.",
+      "test_status": "66 komut / 12 HTTP yolu; 2.656 olumlu örnekten 21.248 kapsam kontrolü. 323 sunucu + 46 portal + 46 regresyon = 415 otomatik test geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -516,13 +516,17 @@
         "gazi/auth/tests/myys-membership.test.mjs",
         "scripts/myys-membership-browser.cjs",
         "gazi/auth/myys/MEMBERSHIP-CONTRACT.md",
-        "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json"
+        "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json",
+        "gazi/auth/myys/SCOPE-ACCEPTANCE-CONTRACT.md",
+        "gazi/auth/myys/acceptance/scope-inventory.json",
+        "gazi/auth/tests/helpers/local-scope-probe.mjs",
+        "gazi/auth/tests/myys-scope-http.test.mjs",
+        "scripts/myys-scope-acceptance.mjs",
+        "gazi/auth/myys/acceptance/B08-scope-20261013.json"
       ],
-      "production_status": "Paket 15 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kişi/üyelik işlemleri yalnız izole yerel kabulde; üretim kimlik ve yetki yönetimi kapalı.",
-      "implementation_note": "Mevcut kişide süreli rol önerisi, bağımsız inceleme, kaynak sürümüyle yarış reddi ve aynı kurum oturumlarının atomik iptali. Kapsamsız legacy oturum reddedilir; akademik geçmiş korunur.",
-      "independent_remaining_work": [
-        "Bütün modüllerin doğru kurum içindeki çapraz birim okuma/yazma/ihracat matrisi; gerçek görev atamalarıyla kurum kabulü."
-      ],
+      "production_status": "Paket 22 kaynak adayı; yeni canlı dağıtımı yok. Son doğrulanmış canlı Paket 16; configuredCore Vercel kapalı.",
+      "implementation_note": "Kurum/birim okuma, yeni yazma, idempotent tekrar ve ihraç matrisi mevcut yerel çekirdekte geçti. Destek/veri talebi yetki hataları ayrıldı; yabancı saklama önizlemesi kontrollü 404. Hazırlayanın tek başına nihai yayın yapmasını engelleyen kontroller korundu.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Gerçek görev atamaları ve kurumsal kabul.",
       "acceptance_axes": {
@@ -537,20 +541,26 @@
             "gazi/auth/tests/myys-membership.test.mjs",
             "scripts/myys-membership-browser.cjs",
             "gazi/auth/myys/MEMBERSHIP-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json"
+            "gazi/auth/myys/acceptance/B06-B08-lifecycle-20261010.json",
+            "gazi/auth/myys/SCOPE-ACCEPTANCE-CONTRACT.md",
+            "gazi/auth/myys/acceptance/scope-inventory.json",
+            "gazi/auth/tests/helpers/local-scope-probe.mjs",
+            "gazi/auth/tests/myys-scope-http.test.mjs",
+            "scripts/myys-scope-acceptance.mjs",
+            "gazi/auth/myys/acceptance/B08-scope-20261013.json"
           ],
           "remaining": [
-            "Bütün modüllerin doğru kurum içindeki çapraz birim okuma/yazma/ihracat matrisi; gerçek görev atamalarıyla kurum kabulü."
+            "Üretim depo ve dağıtık oturum sözleşmesinin gerçek görev atamalarıyla kurum kabulü; yeni modüller envantere eklendikçe matrisi genişletme."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "14 yeni kişi/üyelik/kapsam sunucu senaryosu; 320 otomatik test, 11 yeni tarayıcı ve 13 itiraz regresyon kontrolü geçti.",
-          "limits": "Sentetik yerel görev/oturum yaşam döngüsü; üretim provizyon veya tüm B08 matris kapanışı değildir."
+          "status": "mevcut yerel dilim geçti",
+          "evidence": "66 komut / 12 HTTP yolu; 2.656 olumlu örnekten 21.248 kapsam kontrolü. 323 sunucu + 46 portal + 46 regresyon = 415 otomatik test geçti.",
+          "limits": "Mevcut 66 komut ve 12 HTTP yolu. Yeni modüller ayrıca kapsanmalı; gerçek kurum/üretim kabulü değildir."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 15 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kişi/üyelik işlemleri yalnız izole yerel kabulde; üretim kimlik ve yetki yönetimi kapalı."
+          "evidence": "Paket 22 kaynak adayı; yeni canlı dağıtımı yok. Son doğrulanmış canlı Paket 16; configuredCore Vercel kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
