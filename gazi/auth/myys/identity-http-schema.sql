@@ -21,7 +21,7 @@ CREATE TABLE myys_identity_http_history (
 );
 CREATE TABLE myys_identity_http_buckets (
  tenant TEXT NOT NULL, issuer TEXT NOT NULL, audience TEXT NOT NULL,
- purpose TEXT NOT NULL CHECK(purpose IN('login','start','callback','session','logout','backchannel')),
+ purpose TEXT NOT NULL CHECK(purpose IN('login','start','callback','session','logout','backchannel','academic-read','academic-write')),
  kind TEXT NOT NULL CHECK(kind IN('global','network','browser')),
  bucket TEXT NOT NULL CHECK(bucket ~ '^[a-f0-9]{64}$'),
  started BIGINT NOT NULL CHECK(started BETWEEN 0 AND 9007199254740991),

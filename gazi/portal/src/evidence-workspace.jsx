@@ -20,7 +20,7 @@ export function EvidenceWorkspace({data,busy,command}){
  </>}
  </article>)}
  </div></Card>
- {eligible.length>0&&<AlternativeForm key={revision?.id||'new'} data={data} enrollments={eligible} revision={revision} busy={busy} command={command} onDone={()=>setRevision(null)}/>}
+ {eligible.length>0&&(!data.supportedActions||data.supportedActions.includes('alternative-evidence'))&&<AlternativeForm key={revision?.id||'new'} data={data} enrollments={eligible} revision={revision} busy={busy} command={command} onDone={()=>setRevision(null)}/>}
  </>;
 }
 function ModerationForm({evidence,busy,command}){return <form className="form-stack" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);command('evidence-moderate',{evidenceId:evidence.id,basedOn:evidence.evidenceDigest,outcome:f.get('outcome'),reason:f.get('reason'),verificationReference:f.get('reference')});}}>

@@ -83,3 +83,7 @@ Yeni SQL giriş ekranı yalnız loopback; Vercelde reddedilir. Gerçek IdP, prod
 ## Paket64 · mevcut 3 ve 6 numaralı eylemlerin somut kapsamı
 
 SQL kimlik deposundan ayrı, geri yüklemede birlikte geri alınmayacak kontrol hizmetinin mevcut kurumsal hedefi/sahibi; bütün okuyucu-yazıcıların aynı depo kapsamına bağlanması; kesin olmayan işlemlerde eski yazıcıları durdurma/uzlaştırma yetkisi; güvenlik kuyruğu, saklama ve yedek imha usulü gerekir. Yerel özel SQLite dosyası bu hizmetin üretim kabulü değildir. Yeni servis/credential/ücretli kaynak veya13PGadayını üretime kurma işlemi yapılmadı. Önce mevcut hedef ve yazılı işletim sözleşmesi incelemesi; bağımsız kod devam eder.
+
+### Paket66 kapsam notu
+
+İlk8akademik komut aynı SQL kimliğine bağlandı; yeni erişim veya migration uygulanmadı. Mevcut tek eylem listesindeki kurum deposu/IdP/MFA/KMS/control-plane ve native RLS/SSI kabulü değişmez.16PGadayı yalnız testte; birleşik akademik checkpoint bağımsız kod olarak sıradadır.

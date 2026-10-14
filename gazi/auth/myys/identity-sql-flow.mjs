@@ -104,12 +104,27 @@ export class PostgresIdentityFlow {
   }catch(e){if(!finishing)await this.#requests.fail(handle);if(e?.code==='identity_commit_unknown')throw e;throw denied('identity_callback');}
   finally{clearTimeout(timer);abort.abort();}
  }
- async principal({sessionHash,permit,purpose='session'}){
-  if(!['login','session'].includes(purpose))throw denied();
-  if(!hex(sessionHash))throw denied();return this.#transactions.run(async tx=>{
+ async #principalInTransaction(tx,{sessionHash,permit,purpose}){
+  requireThat(this.#transactions.owns(tx),'identity_transaction','Güncel kimlik işlemi gerekli.',500);
    await this.#guard(tx,permit,purpose,sessionHash);const row=await this.#browser(tx,sessionHash),at=this.#now();if(!row||row.status!=='active'||row.contract_digest!==this.#digest||row.mfa!==true||!iso(row.created)||!iso(row.expires)||row.created>at||row.expires<=at)throw denied();
    const current=await this.#directory(tx,{personId:row.person_id}),end=this.#now();if(String(current.person.revision)!==String(row.person_revision)||current.digest!==row.membership_digest||row.expires<=end||row.created>end)throw denied();
    await this.#guard(tx,permit,purpose,sessionHash);return {id:row.person_id,tenant:this.#config.tenant,mfa:true,memberships:current.memberships,expires:row.expires};
+ }
+ async principal({sessionHash,permit,purpose='session'}){
+  if(!['login','session'].includes(purpose)||!hex(sessionHash))throw denied();
+  return this.#transactions.run(tx=>this.#principalInTransaction(tx,{sessionHash,permit,purpose}),{retrySafe:true,browserHash:sessionHash});
+ }
+ // Server-owned SQL work only. Identity and membership are rechecked after work in the SAME transaction.
+ // This does not authorize any academic action: the academic core still checks every role/record.
+ async withPrincipal({sessionHash,permit,purpose='session'},work){
+  if(!['session','academic-read','academic-write'].includes(purpose)||!hex(sessionHash)||typeof work!=='function')throw denied();
+  return this.#transactions.run(async tx=>{
+   const request={sessionHash,permit,purpose},actor=await this.#principalInTransaction(tx,request);
+   const immutable=Object.freeze({...actor,memberships:Object.freeze(actor.memberships.map(m=>Object.freeze({unit:m.unit,roles:Object.freeze([...m.roles])})))});
+   const result=await work(tx,immutable);
+   const current=await this.#principalInTransaction(tx,request);
+   if(stableStringify(current)!==stableStringify(actor))throw denied('identity_directory_revision');
+   return result;
   },{retrySafe:true,browserHash:sessionHash});
  }
  async logout({sessionHash,permit}){

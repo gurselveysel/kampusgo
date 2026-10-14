@@ -368,3 +368,7 @@ Görünür yeni menü/ekran yok. Opsiyonel PostgresIdentityCheckpoint, 12kimlik 
 ## Paket65 — kurum kapsamlı giriş saklama
 
 Akış ve saklama aynı dört komutla yeni dar hedefe bağlandı. Açık kontrol düzlemi görevlendirmesi ve üç kişi ayrımı; tek kurum kural zinciri; grant revizyon pinleri;100aday/15dközet; atomik silme/denetim; gerçek TLS callback tekrarının reddi. Ham güvenlik satırları görünümde yok. Yeni149.kayıt türü;16SQLite ve13PostgreSQLadayı korunur.13yeni/914tamotomatik,14yeni12mevcuttarayıcı;136komut72280negatif örnek. [Sözleşme](UNASSIGNED-LOGIN-RETENTION.md) ve [kanıt](acceptance/B28-unassigned-retention-20261014.json). Gerçek kurum yetkisi/üretim/yedek imhası açık. Son canlı16;65dağıtılmadı.
+
+## Paket66 — aynı SQL kimlik ve akademik akış
+
+Mevcut altı akademik sekme ilk8komutla PostgresIdentityFlow özel ön/son guardına bağlandı. SQLrecords/commands/audit atomik; ortak MyysCore kuralları; hiçbir ikinci kalıcı örnek depo yok. 22yeni/936otomatik,49tarayıcı;115statik.16PGadayı;16SQLite149tür korunur. [Sözleşme](ACADEMIC-SQL-CONTRACT.md) ve [kanıt](acceptance/B06-B11-academic-sql-20261014.json). Kalan128komut, birleşikcheckpoint/native SSI/RLS ve gerçekkurum/IdP/KMS açık. Son canlı16;66yerel.

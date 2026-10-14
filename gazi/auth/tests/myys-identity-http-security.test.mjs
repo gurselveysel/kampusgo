@@ -7,6 +7,24 @@ import {PostgresIdentityTransactions} from '../myys/identity-transactions.mjs';
 import {PostgresIdentityHttpSecurity} from '../myys/identity-http-security.mjs';
 import {hash} from '../myys/store.mjs';
 const code=c=>e=>e.code===c,scope={tenant:'test-gazi',issuer:'https://idp.invalid',audience:'myys'},control={expectedRevision:0,operatorRef:'synthetic-admin',authorityDigest:'a'.repeat(64)};
+test('B07 SQL academic profile cannot reuse an identity-only HTTP epoch or silently enable write purposes',()=>use(async f=>{
+ await assert.rejects(f.security.check({...f.req,purpose:'academic-write'}),code('identity_rate_input'));
+ const academic=f.make({allowAcademic:true});await assert.rejects(academic.assertCurrent(),code('identity_http_epoch'));
+ const next=f.make({allowAcademic:true,key:f.keys[1],keyRevision:2});await next.activate({...control,expectedRevision:1});await next.assertCurrent();
+ await assert.rejects(f.security.assertCurrent(),code('identity_http_epoch'));
+ assert.throws(()=>f.make({allowAcademic:'true'}),code('identity_http_config'));
+}));
+test('B07 SQL academic write requires private successful CSRF verification before any guarded work',()=>use(async f=>{
+ const security=f.make({allowAcademic:true});await security.activate(control);
+ const read=await security.check({...f.req,purpose:'academic-read'}),csrf=await security.csrf(read,f.browserToken),req={...f.req,purpose:'academic-write'},permit=await security.check(req);
+ const guard=p=>f.tx.run(tx=>security.assertPermit(tx,p,req));
+ await assert.rejects(guard(permit),code('identity_http_permit'));
+ await assert.rejects(security.verifyCsrf(permit,f.browserToken,'x'.repeat(43)),code('identity_csrf'));
+ await assert.rejects(guard(permit),code('identity_http_permit'));
+ await security.verifyCsrf(permit,f.browserToken,csrf);await guard(permit);
+ await assert.rejects(guard({...permit,csrfVerified:true}),code('identity_http_permit'));
+ security.close(permit);await assert.rejects(guard(permit),code('identity_http_permit'));
+},{activate:false}));
 async function use(fn,{install=true,activate=true,limits={global:5,network:2,browser:1,seconds:60}}={}){
  const h=await pgliteIdentity();let now=Date.parse('2026-10-14T12:00:00.000Z');try{
  if(install)await h.db.exec(await readFile(new URL('../myys/identity-http-schema.sql',import.meta.url),'utf8'));

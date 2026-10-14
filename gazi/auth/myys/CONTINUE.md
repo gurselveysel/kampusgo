@@ -1,3 +1,17 @@
+# Güncel devam — Paket66 yerel kabul; kaynak eşitlemesi sırada
+
+Akademik Kayıt ve Karar: aynı SQL kişi/üyelik/oturumunda program→kanıt→insan değerlendirmesi→karar→itiraz.8komut/6sekme; belge ve desteklenmeyen işlemler kapalı.22yeni/842sunucu+48portal+46regresyon=936;49tarayıcı. Son NULL şema kontrolü20SQL/TLS ile tekrar geçti.115statik;16PGadayı,16SQLite149tür.136/18kapsam9035pozitif72280negatif SQLite örneği.36özgünölçüt korundu.
+
+Önce66diff/source incele ve commit/tam ağaç eşitle: beklenen uzak a73fd4db8cbdc668bccc87db0c271f9aef13885c, taban a558ced0dc81703d0e13b52e13a22ebeed6db103. Son canlı16dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;17–66yayımlanmadı. BrowserAuthiptaliniyenileme;configuredCorekapalı;tekeditör.
+
+Sıradaki67: Paket64kimlikcheckpointini aynıSQL3akademiktabloya genişleten açık ayrı profil; eski profilin akademik veriyi koruduğunu iddia etme. Üretim migration/credentialyok. Sonra kalan128komut, B28kopya/backup ve bütün bağımsızlar. Raporla durma.
+
+# Güncel devam — Paket65 kaynakta;66 ortak SQL akademik sınırı
+
+65yerel25e1d7b2357788faf1c28945abb9da3d7e2a24de,uzaka73fd4db8cbdc668bccc87db0c271f9aef13885c,ortak tam ağaça558ced0dc81703d0e13b52e13a22ebeed6db103.22blob/tam ağaç/expected-headforce=false,uzakref/commitdoğrulandı.914tamotomatik;14yeni12mevcuttarayıcı;136komut18HTTP9035pozitif72280negatiförnek. Soncanlı16;17–65dağıtılmadı.
+
+66inceleme: SQLkimlik privateguardları ile aynı SERIALIZABLEişlemde akademik run/view; varolan MyysCore işkuralları korunacak. SaltSQL kaynaklı transactioniçi bounded working-set ve pendingappend; ikinci kalıcıSQLite/tarayıcıverisi yok. İlk8program/publish/enroll/evidence/assess/decide/appeal/resolve; kalan işlevler açıkça kapalı. SQLrecords/commands/audit adayı, atomik kimlikön/sonkontrolü, idempotency/audit/rollback/unknownCOMMIT. Coreacademicprojection ortaklaşacak; SQLkimlik+akademik aynıHTTP/TürkçeUI zinciri sıradaki kabul. 66 ürün kodu uygulandı: academic-sql.mjs +3 SQL tablo adayı; aynı HTTP oturumunda altı mevcut React sekmesi. 19 yeni SQL/TLS ve 15 gerçek derlenmiş React/TLS tarayıcı kontrolü geçti. Tam kapsam regresyon çalışıyor; kalıcılık ve private CSRF/profile için üç ek test yazıldı, henüz sonuç bekleniyor. Commit/eşitleme yapılmadı. Kaynak/kimlik/HTTP/işkuralları okundu; gerçek migration/credentialyok. Checkpoint64 yalnız12kimliktablosunukapsar; yeniakademikveriyikoruyormuşgibigösterme. Tümbağımsızlarsürer,tekeditör,configuredCorekapalı,browserAuthiptaliniyenileme.
+
 # Güncel devam — Paket65 yerel kabul; kaynak eşitlemesi sırada
 
 Akış ve saklama: açık kurum kapsamlı üç görevle kişiye bağlanmamış sona ermiş failed/cancelled giriş isteği temizliği.13yeni;820sunucu+48portal+46regresyon=914.14yeni12mevcut tarayıcı;136komut18HTTP9035pozitif72280negatif karşı örnek.115statik;16SQLite149tür13PGadayı. Tam B28/hukuk/üretim/yedek imhası değil. Doküman/proof/backlog5eksen ve özgün36ölçüt korundu.

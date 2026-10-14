@@ -1,0 +1,155 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 66,
+  "work_ids": [
+    "B06",
+    "B07",
+    "B08",
+    "B09",
+    "B10",
+    "B11",
+    "B16"
+  ],
+  "visible_change": "Akademik Kayıt ve Karar: aynı SQL kimliği ile altı sekmede program→kanıt→insan değerlendirmesi→karar→itiraz; yerel opt-in.",
+  "code": [
+    "gazi/auth/myys/academic-sql.mjs",
+    "gazi/auth/myys/academic-sql-schema.sql",
+    "gazi/auth/myys/ACADEMIC-SQL-CONTRACT.md",
+    "gazi/auth/myys/identity-sql-flow.mjs",
+    "gazi/auth/myys/identity-sql-http.mjs",
+    "gazi/auth/myys/identity-http-security.mjs"
+  ],
+  "local_tests": {
+    "new": 22,
+    "server": 842,
+    "portal": 48,
+    "legacy": 46,
+    "total": 936,
+    "final_sql_schema_recheck": 20,
+    "scope": "PGlite0.5.9/PostgreSQL18.6 tek exclusive bağlantı; gerçek HTTPS/sentetik IdP; native SSI/RLS değil"
+  },
+  "browser": {
+    "myys-academic-sql": {
+      "count": 15,
+      "checks": [
+        "Kapalı oturum Türkçe giriş yolu sundu; kayıt veya sahte başarı göstermedi",
+        "Ayrı sentetik sağlayıcıdan imzalı giriş aynı SQL kişisine ve altı açık sekmeye bağlandı",
+        "Koordinatör mevcut formda çıktı–görev–rubrik bağlı programı SQL kaydetti",
+        "Farklı SQL kişisi program sürümünü gerekçesiyle inceledi",
+        "Mevcut SQL öğrenen üyeliği aynı program sürümüne kaydedildi; yeni hesap üretilmedi",
+        "Öğrenen kendi görevinin kanıtını sundu; yenilemede SQL kaydı korundu",
+        "Ayrı eğitici gerçek bağlı kanıtı mevcut rubrik formuyla değerlendirdi",
+        "Bağımsız komisyon kişisi aynı değerlendirmeye akademik karar kaydetti",
+        "Aynı öğrenen kendi kararına itiraz etti; açık olmayan belge işlemi gösterilmedi",
+        "Bağımsız inceleyen ilk karar ve öğrenenin itirazını aynı SQL zincirinde sonuçlandırdı",
+        "İtiraz sonucu yeniden giriş ve yenilemede aynı öğrenene döndü",
+        "320 CSS px, artırılmış metin aralığı ve altı sekmede klavye geçişi çalıştı",
+        "Kapalı sekmeye eski bağlantı erişilebilir açık sekmeye döndü",
+        "Aynı SQL oturumundan çıkış akademik okumayı kapattı",
+        "İstemci istisnası veya beklenmedik sunucu hatası yok"
+      ],
+      "errors": [],
+      "at": "2026-10-14T15:39:42.032Z"
+    },
+    "myys-identity-sql": {
+      "count": 13,
+      "checks": [
+        "Türkçe deneme girişi, kapalı oturum ve özgün logolar",
+        "Klavye ile ayrı sitedeki sentetik sağlayıcıya güvenli yönlendirme",
+        "Gerçek HTTPS callback aynı SQL kişisini ve güncel üyeliğini gösterdi",
+        "Yeni Secure HttpOnly Lax cookie; verifier ve token tarayıcıya taşınmadı",
+        "Yenileme SQL oturumunu aynı kişiyle korudu",
+        "Yanlış CSRF çıkış yapamadı; geçerli oturum korundu",
+        "320 CSS px metin aralığı ve görünür klavye odağı; tam AT/zoom kabulü değil",
+        "Çıkış sonraki sekme okumasını kapattı",
+        "Sağlayıcı iptali temiz Türkçe hata ve yeni giriş yolu verdi",
+        "İmzalı sunucu çıkışı SQL oturumunu kapattı; logout JWT tarayıcıya taşınmadı",
+        "Yeni sağlayıcı doğrulaması aynı SQL kişisine döndü",
+        "Kalıcı SQL bütçesi Türkçe 429 ve klavye dönüşüyle sınırlandı",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "at": null
+    },
+    "myys-programs": {
+      "count": 8,
+      "checks": [
+        "Katalog araması program kodunu ve boş sonucu gösterir",
+        "Birden çok çıktı ve görevle yeni rubrik sürümü kaydedildi",
+        "Yeniden yüklemede iki sürüm ve karşılaştırma korunur",
+        "390 px çoklu yazarlık ve sürüm karşılaştırmasında taşma yok",
+        "Öğrenen eski kayıt sürümünü görür ve programı değiştiremez",
+        "Eski kararın program rubrik ve kanıt dayanakları indirildi",
+        "Başka öğrenenin karar arşivi gösterilmez",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "at": "2026-10-14T15:40:04.658Z"
+    },
+    "myys-appeals": {
+      "count": 13,
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+        "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+        "390 px mobil: taşma ve bozuk resim yok",
+        "Akademik sekmeler Home/End tuşları ve seçili durum",
+        "Yakalanmış istemci istisnası yok"
+      ],
+      "errors": [],
+      "at": "2026-10-14T15:40:21.798Z"
+    }
+  },
+  "scope_matrix": {
+    "commands": 136,
+    "http_routes": 18,
+    "positive_samples": 9035,
+    "derived_negative_samples": 72280,
+    "scope": "Mevcut SQLite kopya matrisi; bağımsız test sayısı veya yeni SQL RLS kabulü değildir."
+  },
+  "contract": "gazi/auth/myys/ACADEMIC-SQL-CONTRACT.md",
+  "source_parent": {
+    "local": "25e1d7b2357788faf1c28945abb9da3d7e2a24de",
+    "remote": "a73fd4db8cbdc668bccc87db0c271f9aef13885c",
+    "tree": "a558ced0dc81703d0e13b52e13a22ebeed6db103"
+  },
+  "live": {
+    "software_package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "commit": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "alias": "gazi.unigoturkiye.com",
+    "status": "READY/production;14.10 salt-okunur alias teyidi; yeni kimlikli smoke yok",
+    "new_deployment": false,
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "rollback_applied": false
+  },
+  "not_accepted": [
+    "Gerçek kurum/IdP/MFA/control-plane/KMS",
+    "Native SSI/RLS/çok bağlantı/üretim rolü",
+    "Kalan128komut ve belge/LMS/OBS/aktarım SQL bağı",
+    "Akademik checkpoint/restore koruması;64 yalnız12kimliktablosu",
+    "Tam WCAG/AT ve gerçek pilot öğrenci kabulü",
+    "Üretim migration, gerçek kişi veya belge işlemi"
+  ],
+  "sources": [
+    {
+      "url": "https://www.postgresql.org/docs/18/transaction-iso.html",
+      "version": "PostgreSQL18 §13.2.3",
+      "verified": "2026-10-14",
+      "scope": "SERIALIZABLE/bütün transaction retry; kurum kararı değil"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/ddl-constraints.html",
+      "version": "PostgreSQL18 §5.5.1–2",
+      "verified": "2026-10-14",
+      "scope": "CHECK null/NOT NULL/FK; kurum kararı değil"
+    }
+  ]
+}

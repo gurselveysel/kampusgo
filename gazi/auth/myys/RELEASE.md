@@ -845,3 +845,15 @@ Panel: Akademik Kayıt ve Karar → Akış ve saklama. Açık kurum kapsamlı ü
 Başlangıç kaynak: yerel `aa746c5e3cd9ebe9dbd486f52c3dd87bd4634d44`, uzak `7fe42883197d1a059fce6fe54e8732f0e9fc93f6`, ortak tam ağaç `79eaddab25e1b2573812fde4fbb775481465ef92`; uzak dal/commit yeniden doğrulandı. Yeni kaynak commit ve tam ağaç eşitlemesi sonraki devam kaydına yazılacak.
 
 14.10.2026salt-okunur canlıalias hâlâ kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, dağıtım `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction.17–65dağıtılmadı; yeni kimlikli canlısmoke yapılmadı. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Önceki browserAuthiptali yenilenmedi; configuredCorekapalı. Üretim migration/gerçek veri silme/yeni credential yok.
+
+### Paket65 kaynak eşitleme sonucu
+
+Yerel `25e1d7b2357788faf1c28945abb9da3d7e2a24de`, uzak `a73fd4db8cbdc668bccc87db0c271f9aef13885c`, ortak tam kaynak ağacı `a558ced0dc81703d0e13b52e13a22ebeed6db103`.22blobSHA/tam ağaç eşitliği,expected-headforce=false ve uzakref/commit teyidi geçti. Yeni canlı dağıtım yapılmadı.
+
+## Paket66 — aynı SQL kimlik ve akademik işlem; yerel kabul, yayın değil
+
+Panelin altı mevcut akademik sekmesi aynı SQL kişi/üyelik/oturumuyla programdan itiraza bağlıdır.22yeni/842sunucu+48portal+46regresyon=936; son NULL şema sıkılaştırması20SQL/TLS testinde yeniden geçti.15yeni+34mevcut=49tarayıcı;115statik.136komut18HTTP9035pozitif72280türetilmiş negatif örnek mevcut SQLite kapsamıdır, SQL RLS kabulü değildir. [Kanıt](acceptance/B06-B11-academic-sql-20261014.json).
+
+Başlangıç yerel `25e1d7b2357788faf1c28945abb9da3d7e2a24de`, uzak `a73fd4db8cbdc668bccc87db0c271f9aef13885c`, ortak tam ağaç `a558ced0dc81703d0e13b52e13a22ebeed6db103`; uzak ref/commit tekrar doğrulandı. Yeni kaynak eşitleme sonucu sonraki devam kaydına yazılır.
+
+14.10alias hâlâ `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`.17–66dağıtılmadı; yeni kimlikli canlısmoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. BrowserAuthiptali yenilenmedi;configuredCorekapalı. Kalan128komut, akademikcheckpoint/restore, native SSI/RLS ve gerçekkurum açık.
