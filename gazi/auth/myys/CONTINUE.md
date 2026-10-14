@@ -1,3 +1,9 @@
+# En güncel devam — çalışma ortamı kesintisi, Paket76 doğrulanmadı
+
+Önce [RUNTIME-CHECKPOINT-20261014.md](RUNTIME-CHECKPOINT-20261014.md) ve [RECOVERY-76-UNVERIFIED.json](RECOVERY-76-UNVERIFIED.json) dosyalarını okuyun. Son doğrulanmış uygulama kaynağı Paket75 uzak `1a266c14962a095b0bbe92be689c1bdb90d89ba1`, yerel `edf951a570e2dcf07d098c41d9ab8bf7e5a19ffb`, tam ağaç `c945f922e34c2a9e6bb5d14b3221281fbf59f6b9`.1038 otomatik ve77 tarayıcı kontrolü geçti. Son canlı16 değişmedi.
+
+Paket76 ilk düzenlemesi yerelde kaldı; test sonucu bilinmiyor. Altı dosyanın taban/öneri içeriği kurtarma JSON'unda. Bu checkpoint yalnız belgeleri/kurtarma verisini değiştirir; doğrulanmamış uygulama kaynağını etkinleştirmez. Komut ortamını doğrulayınca kullanıcı değişikliklerini koruyarak birleştir, test et ve bağımsız işleri sürdür. Reset/clean ve yeniden browserAuth başlatma yok; configuredCorekapalı.
+
 # Güncel devam — Paket75 yerel kabul tamam; kaynak eşitlemesi sırada
 
 Paket75:10yeni SQL/HTTPS testi;933sunucu+59portal+46regresyon=1038.66SQL+11mevcutanahtar=77tarayıcı.136komut/18HTTP için9035pozitif72280türetilmiş negatif SQLite kapsam örneği;115statik paket.
