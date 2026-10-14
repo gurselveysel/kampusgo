@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.47",
+  "version": "2026.10.14.48",
   "commands": [
     "advice-compare",
     "advice-contest",
@@ -86,6 +86,8 @@
     "recognition-basis-hold",
     "recognition-basis-review",
     "recognition-decide",
+    "recognition-document",
+    "recognition-document-download",
     "recognition-offer",
     "recognition-offer-appeal",
     "recognition-offer-decide",

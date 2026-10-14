@@ -1,3 +1,4 @@
+import {recognitionDocumentCommand,recognitionDocumentReplay,recognitionDocumentFileResult} from './recognition-document.mjs';
 import {recognitionBasisCommand,recognitionBasisReplay} from './recognition-basis.mjs';
 import {materialCommand,materialReplay,materialView,materialFileResult,bindMaterial,materialSnapshotValid} from './material.mjs';
 import {programPackageSummary} from './program-package.mjs';
@@ -88,15 +89,16 @@ export class MyysCore {
    const digest=hash(JSON.stringify({action,input}));
    const old=this.store.db.prepare('SELECT digest,result FROM commands WHERE tenant=? AND person=? AND id=?').get(tenant,actor.id,commandId);
    // Recheck current permission even for an idempotent replay.
-   if(old){requireThat(old.digest===digest,'idempotency_conflict','Aynı işlem kimliği farklı içerikle kullanılamaz.',409);const saved=JSON.parse(old.result);this.authorizeReplay(actor,action,saved);if(action==='share'){delete saved.token;return {...saved,linkAlreadyCreated:true};}if(action==='material-download')return materialFileResult(this.store,actor,saved,now);if(action==='authority-download')return authorityFileResult(this.store,actor,saved);return saved;}
+   if(old){requireThat(old.digest===digest,'idempotency_conflict','Aynı işlem kimliği farklı içerikle kullanılamaz.',409);const saved=JSON.parse(old.result);this.authorizeReplay(actor,action,saved);if(action==='share'){delete saved.token;return {...saved,linkAlreadyCreated:true};}if(action==='recognition-document-download')return recognitionDocumentFileResult(this.store,actor,saved);if(action==='material-download')return materialFileResult(this.store,actor,saved,now);if(action==='authority-download')return authorityFileResult(this.store,actor,saved);return saved;}
    const result=this.execute(actor,action,copy(input),now);
-   const storedResult={...result};if(action==='share')delete storedResult.token;if(['authority-download','material-download'].includes(action))delete storedResult.file;
+   const storedResult={...result};if(action==='share')delete storedResult.token;if(['authority-download','material-download','recognition-document-download'].includes(action))delete storedResult.file;
    this.store.db.prepare('INSERT INTO commands VALUES(?,?,?,?,?)').run(tenant,actor.id,commandId,digest,JSON.stringify(storedResult));
    this.store.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(tenant,actor.id,action,result.id,now);
    return result;
   });
  }
  authorizeReplay(a,action,r){
+  if(recognitionDocumentReplay(a,action,r))return;
   if(materialReplay(a,action,r))return;
   if(authorityReplay(a,action,r))return;
   if(walletStudyReplay(a,action,r))return;
@@ -129,6 +131,7 @@ export class MyysCore {
  }
  execute(a,action,p,now){
   const s=this.store,get=(kind,id)=>fetchRecord(s,a,kind,id),put=(kind,r)=>s.put(a.tenant,kind,{...r,createdAt:now,createdBy:a.id}),id=()=>randomUUID();
+  const document=recognitionDocumentCommand({action,p,a,s,put,id,now});if(document)return document;
   const material=materialCommand({action,p,a,s,put,id,now});if(material)return material;
   const authority=authorityCommand({action,p,a,s,put,id,now});if(authority)return authority;
   const walletStudy=walletStudyCommand({action,p,a,s,put,id,now});if(walletStudy)return walletStudy;

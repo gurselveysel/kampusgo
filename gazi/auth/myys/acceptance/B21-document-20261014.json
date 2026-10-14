@@ -1,0 +1,58 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 48,
+  "work_id": "B21",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "server_tests": 637,
+  "new_server_tests": 11,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 731,
+  "browser_checks": {
+    "recognition-document": 11,
+    "recognition": 12,
+    "recognition-offers": 11,
+    "obs": 11
+  },
+  "browser_total": 45,
+  "document_browser_checks": [
+    "Öğrenci talebi dosya özetiyle oluştu; gerçek teslim ayrı gösterildi",
+    "Büyük dosya gönderimi istemcide kapalı",
+    "Başka dosya talebin özeti yerine geçemedi",
+    "Aynı gerçek baytlar teslim edildi; imza veya teknik kabul oluşmadı",
+    "Öğrenci yeniden yüklemeden sonra aynı baytları güvenli dosya adıyla indirdi",
+    "390 px teslim bölümünde taşma yok; indirme düğmesi klavye odağı alıyor",
+    "Yetkili teknik görevli aynı dosyayı indirdi; insan raporu ayrı kayıt oldu",
+    "Arşiv teslimi sonuçlanmamış teknik incelemeyi aşarak kredi açmadı",
+    "Koordinatör teslim bilgisini gördü; ham dosya indirme yetkisi verilmedi",
+    "Başka öğrenci teslimi veya belgenin içeriğini göremedi",
+    "İstemci istisnası yok"
+  ],
+  "command_count": 133,
+  "http_routes": 17,
+  "positive_samples": 7843,
+  "derived_scope_checks": 62744,
+  "static_files": 115,
+  "technical_tables": 16,
+  "record_kinds": 144,
+  "local_slice_closed": [
+    "actual JWT bytes match request SHA, owner, tenant and unit",
+    "immutable private archive, atomic audit and idempotency",
+    "current authorized download with request/file integrity recheck",
+    "technical/academic separation preserved; no credit from delivery",
+    "metadata-only workspace and subject summary",
+    "browser upload mismatch/size, actual download bytes, reload, mobile and keyboard"
+  ],
+  "open": [
+    "trusted external issuer/key/subject verification adapter",
+    "actual institutional delivery and board/prior-course acceptance",
+    "production storage/scanning/retention and real integration",
+    "live deployment and authenticated smoke"
+  ],
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "deployed": false,
+  "source_parent_remote": "84a3e18be965db720fd401b16be74a46e5b49a8a",
+  "source_parent_tree": "d02a302bec99c3681c1f6489617c5cf9a4ddbe4e",
+  "source_contract": "RECOGNITION-DOCUMENT-CONTRACT.md"
+}

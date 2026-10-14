@@ -673,3 +673,13 @@ Tanıma ve kredi → Kaynak ve istisna incelemesi eklendi; Politika ve hak sicil
 626+48+46=720 otomatik;11 yeni sunucu;10kaynak+12tekders+11çokdersli+11OBS=44tarayıcı;131komut/17HTTP7625örnek61000türetilmiş kapsam denetimi;115statik;16tablo141tür.390px görsel inceleme/klavye ve iki SQLite bağlantısında eski karar formu/durdurma geçti. İlk browser option kontrolü DOM disabled özelliğiyle kesinleştirildi; son akış geçti. Kaynak dosyasının baytları veya özgünlüğü doğrulanmış sayılmaz; kaynak/istisna kapalı sözleşmesi B20 kurum kabulü değildir. Gerçek ölçü birimi/istisna/müfredat ve önceki kayıt kaynağı ile buna bağlı koşullu hesap adaptörleri açık.
 
 Ayrıntı RECOGNITION-BASIS-CONTRACT.md ve B20-basis kabul JSON.36 özgün iş/kabul/bağımlılık değişmedi. Yeni canlı yayın yok;17–47 dağıtılmadı. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Yeni authenticated smoke yok;browserAuth iptali tekrar denenmedi;configuredCore kapalı.
+
+Paket47 kaynak doğrulaması: yerel `795a1666f0681ca1e061f8a87b4ab3b92b5f1ca8`, uzak `84a3e18be965db720fd401b16be74a46e5b49a8a`, ortak tam ağaç `d02a302bec99c3681c1f6489617c5cf9a4ddbe4e`.25blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+## Paket48 — B21 belge teslimi ve arşivi (14.10.2026)
+
+Paket48: gerçek 32 KiB JWT baytları aynı talep/kişi/kurum/birim ve sunucu SHA ile değişmez özel arşive teslim edilir; güncel yetkili indirme ve audit/idempotency atomiktir. İnceleme sonrası değiştirme kapalı; ham dosya çalışma ekranı/kişi özeti/commands sonucuna girmez. İmza/düzenleyici/subject doğrulaması yapılmadı, teslim kredi üretmez.
+
+637+48+46=731 otomatik;11 yeni sunucu;11teslim+12tekders+11teklif+11OBS=45tarayıcı.133komut/17HTTP7843örnek62744türetilmiş kapsam denetimi;115statik;16tablo144tür. İki SQLite bağlantısında arşiv/tekrar, audit rollback, güncel rol/MFA, yanlış dosya/kişi, kota ve inceleme sonrası değişiklik testleri geçti. Tarayıcıdan indirilen baytlar karşılaştırıldı;390px görüntü incelendi. İlk tam koşudaki envanter tür sayısı yeni üç kayıt için144 olarak güncellendi; son tam koşu geçti.
+
+Yeni yayın yok;17–48 dağıtılmadı. Alias `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY/production ve kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6` olarak yeniden okundu; bu authenticated smoke değildir. Geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. BrowserAuth iptali tekrar denenmedi;configuredCore kapalı. Kaynak commit/tam ağaç eşitlemesi aşağıda kaydedilecek.

@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.47",
+  "version": "2026.10.14.48",
   "scope": "local-acceptance-source-inventory",
   "generatedFrom": "schema declarations and reviewed explicit recordGroups/subjectFields",
   "institutionApproved": false,
@@ -296,6 +296,7 @@
     "Structural hashes and pseudonyms can remain personal data; raw security records are not self-service exports.",
     "Free-text authored by the subject may mention others; no semantic anonymization claim.",
     "Authority files are untrusted local attachments, admin-only downloads; no automatic malware, signature or institutional authenticity validation. Raw bytes stay out of workspace and command results, but the immutable local file record needs an approved retention policy.",
-    "Material deliveries export only receipt metadata for the owner; source files and rights-review actor details are not copied into self-service summaries."
+    "Material deliveries export only receipt metadata for the owner; source files and rights-review actor details are not copied into self-service summaries.",
+    "Recognition compact-JWT deliveries retain actual untrusted bytes only in private local file records. Workspace, subject export and idempotency results contain no raw file. Exact-byte downloads require current person/unit/role/MFA and audit; production storage, scanner, retention, signature and issuer/subject validation remain separate."
   ]
 }

@@ -1,3 +1,17 @@
+# Güncel devam — Paket48 yerel kabul; kaynak eşitlemesi sırada
+
+Tanıma ve kredi → Belge teslimi:731 otomatik/45tarayıcı;133komut17HTTP7843örnek62744denetim;115statik16tablo144tür. Gerçek32KiBJWT baytları/aynı talepSHA/güncel yetkili indirme/atomik audit; imza doğrulanmış sayılmaz. RECOGNITION-DOCUMENT-CONTRACT ve B21-documentJSON ayrıntıdır.
+
+Önce diff/commit ve expected-head `84a3e18be965db720fd401b16be74a46e5b49a8a`,base-tree `d02a302bec99c3681c1f6489617c5cf9a4ddbe4e` ile tam ağaç eşitle. Son canlı16;17–48 dağıtılmadı;configuredCore kapalı;browserAuth iptalini tekrar isteme;tek editör/alt ajan yok.
+
+Ardından B21 dış belgeye özel güvenilir issuer/key/subject sözleşmesi ve kriptografik adaptör. Arşivlenmiş dosya zorunlu, header/JWK/URL güven kaynağı değil; teknik doğrulama akademik karar değil. Mevcut JOSE/credential/source-trust ve HTTP async commit recheck örneklerini incele. Gerçek issuer/credential/üretim kurma;B07 repository/KMS,B28checkpoint ve tüm diğer bağımsızları sürdür.
+
+# Güncel devam — Paket47 kaynakta; B21 belge teslim/doğrulama dilimi sürüyor
+
+Paket47 kaynak doğrulaması: yerel `795a1666f0681ca1e061f8a87b4ab3b92b5f1ca8`, uzak `84a3e18be965db720fd401b16be74a46e5b49a8a`, ortak tam ağaç `d02a302bec99c3681c1f6489617c5cf9a4ddbe4e`.25blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+720otomatik44tarayıcı;131komut17HTTP7625örnek61000denetim;115statik16tablo141tür. B21 gerçek teslim edilen baytları aynı öğrenci/tanımaya bağlama ve kriptografik doğrulama adaptörünü mevcut credential/trust/recognition üzerinden incele. Henüz48kod yok. Gerçek issuer/kurum/credential/üretim bağlantısı uydurma;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok. B07 repository/KMS,B28checkpoint ve diğer bağımsızlar açık.
+
 # Güncel devam — Paket47 yerel kabul; kaynak eşitlemesi sırada
 
 B20 Kaynak ve istisna incelemesi:626+48+46=720 otomatik;44tarayıcı;131komut17HTTP7625örnek61000denetim;115statik16tablo141tür. Yeni politika kaynak dosyası zorunlu; özel yollar ve kredi dışı/belirsiz ölçü birimi pozitif kredi hesaplamaz. Eski yerel politika ve kararlar korunur. RECOGNITION-BASIS-CONTRACT.md ve B20-basis JSON ayrıntıdır.

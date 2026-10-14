@@ -21,7 +21,7 @@ test('B28 veri envanteri oluşturulan 16 teknik tabloyu ve kaynakta anılan büt
  }finally{await h.close();}
  const dir=new URL('../myys/',import.meta.url),kinds=new Set();
  for(const file of readdirSync(dir).filter(f=>f.endsWith('.mjs'))){const text=readFileSync(new URL(file,dir),'utf8');for(const regex of [/\bput\('([a-z0-9-]+)'/g,/\.(?:put|list)\([^,]+,\s*'([a-z0-9-]+)'/g])for(const match of text.matchAll(regex))kinds.add(match[1]);}
- for(const kind of kinds)assert.ok(Object.hasOwn(kindCategory,kind),'Inventory missing '+kind);assert.equal(Object.keys(kindCategory).length,141);assert.equal(inventory.institutionApproved,false);
+ for(const kind of kinds)assert.ok(Object.hasOwn(kindCategory,kind),'Inventory missing '+kind);assert.equal(Object.keys(kindCategory).length,144);assert.equal(inventory.institutionApproved,false);
 });
 
 test('B28 destek yanıtı/kapanışı ve mali prova tam sayısal mutabakatı kişi özetine bağlanır',()=>use(f=>{
