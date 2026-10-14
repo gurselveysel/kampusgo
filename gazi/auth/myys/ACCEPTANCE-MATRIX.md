@@ -271,3 +271,11 @@ Cüzdan seçenekleri sekmesi özel cüzdanla bağlantılıdır. Mevcut özel cü
 ## Paket41 — sahipli tamamlanmış giriş isteği temizliği
 
 651 otomatik ve 48 tarayıcı kontrolü. Ayrı kapsamlı yanıt, sahibi/MFA, ençok100 adayın özetli önizlemesi, 15dakika ve açık teyit. Giriş devamı/iptal/aile/anahtar/akademik kayıtlar korunur; fiziksel ve tam hesap imhası iddiası yok. `LOGIN-CLEANUP-CONTRACT.md` ve B28 JSON’u ayrıntıdır. Yeni canlı yayın yok.
+
+## Paket44 — B05/B25 ders ve materyal kabulü (14.10.2026)
+
+Ders ve materyal ekranı 66 dersin envanterini, program/görev/rubrik eşlemesini, sürüme bağlı hak sicilini, ayrı yönetici hak kararını ve ders başına kalite incelemesini sunar. Yalnız kayıtlı öğrenen veya yetkili görevli özgün HTML/CSV teslimi alır; kalite incelemesi için ayrı indirme amacı vardır. Öğrenme kanıtı aynı kişinin teslimine bağlanır; insan değerlendirmesi ve ayrı karar korunur. Harici dosya kopyası/marka/API kapalı; yeniden yayın yalnız ayrıca izinli dosya hazırlığı, gerçek yayın yok.
+
+591+48+46=685 otomatik;14 materyal+19 gezinme+13 itiraz=46 tarayıcı;123 komut/17 HTTP,7028 pozitif örnek/56224 türetilmiş olumsuz denetim;98 menü/288 rol paneli,390 px/klavye. 6 koleksiyon22 modül66 ders ve88 özgün dosya baytları aynı,115 korumalı statik dosya. Kaynak altında yeni133 kayıt türü,14 tablo. İlk tarayıcı koşusundaki aynı adlı summary/button seçici belirsizliği testte giderildi; son tam akış geçti.
+
+B05/B25 bağımsız yerel alt koşulları kapandı; gerçek yazılı sağlayıcı/hak sahibi kararı, seçili Gazi programının akademik/dil/erişilebilirlik incelemesi ve üretim dağıtım adaptörü açık. Bütün iş paketleri tamamlanmadı. Ayrıntı MATERIAL-RIGHTS-CONTRACT.md, MATERIAL-SOURCE-REVIEW.md ve B05-B25 kabul JSON’unda. Yeni canlı yayın ve canlı smoke yok; son canlı16 READY,17–44 dağıtılmadı;configuredCore kapalı.

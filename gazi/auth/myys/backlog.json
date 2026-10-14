@@ -334,39 +334,50 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+      "test_status": "13 yeni sunucu +14 materyal tarayıcı kontrolü; tam685 otomatik/46 tarayıcı; yanlış ders, sürüm, idempotency, iki bağlantı ve eski ekran yarışı geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/registry.mjs",
         "gazi/auth/tests/myys-lms.test.mjs",
-        "gazi/portal/src/academic-forms.jsx"
+        "gazi/portal/src/academic-forms.jsx",
+        "gazi/auth/myys/material.mjs",
+        "gazi/auth/myys/material-catalog.mjs",
+        "gazi/auth/myys/MATERIAL-RIGHTS-CONTRACT.md",
+        "gazi/auth/myys/MATERIAL-SOURCE-REVIEW.md",
+        "gazi/auth/myys/acceptance/B05-B25-material-20261014.json",
+        "gazi/auth/tests/myys-material.test.mjs",
+        "gazi/portal/src/material-workspace.jsx",
+        "scripts/myys-material-browser.cjs"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir.",
-      "independent_remaining_work": [
-        "Hak sicilini materyal indirme/yeniden yayın kararına zorunlu bağla."
-      ],
+      "production_status": "Materyal dilimi Paket44 kaynak/yerel kabul; yeni canlı yayın yok. Son canlı Paket16; configuredCore kapalı.",
+      "implementation_note": "66 dersin tek kanonik kaynağı ve sürümlü envanteri; seçili koleksiyonun program/görev/rubrik eşlemesi; tam sürüm hak sicili, ayrı yönetici ve kalite incelemesi; özgün HTML/CSV teslimi ve öğrenen kanıtı bağı. Harici eserler bağlantı; gerçek hak sahibi/akademik kabul yok.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Sağlayıcının yazılı kullanıcı grubu ve dağıtım hakları.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; bağımsız özgün materyal dilimi kabul edildi",
           "evidence": [
-            "gazi/auth/myys/registry.mjs",
-            "gazi/auth/tests/myys-lms.test.mjs",
-            "gazi/portal/src/academic-forms.jsx"
+            "gazi/auth/myys/material.mjs",
+            "gazi/auth/myys/material-catalog.mjs",
+            "gazi/auth/myys/MATERIAL-RIGHTS-CONTRACT.md",
+            "gazi/auth/myys/MATERIAL-SOURCE-REVIEW.md",
+            "gazi/auth/myys/acceptance/B05-B25-material-20261014.json",
+            "gazi/auth/tests/myys-material.test.mjs",
+            "gazi/portal/src/material-workspace.jsx",
+            "scripts/myys-material-browser.cjs"
           ],
           "remaining": [
-            "Hak sicilini materyal indirme/yeniden yayın kararına zorunlu bağla."
+            "Gerçek sağlayıcı sözleşmesinin kapsamıyla üretim materyal depo/dağıtım adaptörü kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "yerel alt dilim geçti",
+          "evidence": "13 yeni sunucu +14 materyal tarayıcı kontrolü; tam685 otomatik/46 tarayıcı; yanlış ders, sürüm, idempotency, iki bağlantı ve eski ekran yarışı geçti.",
+          "limits": "Sentetik P01 15 ders inceleme akışı; gerçek akademik, telif sahibi veya yardımcı teknoloji kabulü değildir. Mevcut özgün pilot dosya erişimi korunur, kurumsal teslim sayılmaz."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "yeni dilim yayımlanmadı",
+          "evidence": "Materyal dilimi Paket44 kaynak/yerel kabul; yeni canlı yayın yok. Son canlı Paket16; configuredCore kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1870,37 +1881,49 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "21 portal/materyal testi; kaynak dosyaları baseline ile aynı.",
+      "test_status": "13 yeni sunucu +14 materyal tarayıcı kontrolü; tam685 otomatik/46 tarayıcı; yanlış ders, sürüm, idempotency, iki bağlantı ve eski ekran yarışı geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/material.mjs",
+        "gazi/auth/myys/material-catalog.mjs",
+        "gazi/auth/myys/MATERIAL-RIGHTS-CONTRACT.md",
+        "gazi/auth/myys/MATERIAL-SOURCE-REVIEW.md",
+        "gazi/auth/myys/acceptance/B05-B25-material-20261014.json",
+        "gazi/auth/tests/myys-material.test.mjs",
+        "gazi/portal/src/material-workspace.jsx",
+        "scripts/myys-material-browser.cjs"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "66 ders ve kaynak dosyaları korunur; yeni akademik/lisans kabulü yapılmadı.",
-      "independent_remaining_work": [
-        "66 ders materyalini lisans/erişilebilirlik inceleme siciline eşle."
-      ],
+      "production_status": "Materyal dilimi Paket44 kaynak/yerel kabul; yeni canlı yayın yok. Son canlı Paket16; configuredCore kapalı.",
+      "implementation_note": "66 dersin tek kanonik kaynağı ve sürümlü envanteri; seçili koleksiyonun program/görev/rubrik eşlemesi; tam sürüm hak sicili, ayrı yönetici ve kalite incelemesi; özgün HTML/CSV teslimi ve öğrenen kanıtı bağı. Harici eserler bağlantı; gerçek hak sahibi/akademik kabul yok.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Akademik içerik ve hak sahiplerinin incelemesi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; bağımsız özgün materyal dilimi kabul edildi",
           "evidence": [
-            "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/myys/material.mjs",
+            "gazi/auth/myys/material-catalog.mjs",
+            "gazi/auth/myys/MATERIAL-RIGHTS-CONTRACT.md",
+            "gazi/auth/myys/MATERIAL-SOURCE-REVIEW.md",
+            "gazi/auth/myys/acceptance/B05-B25-material-20261014.json",
+            "gazi/auth/tests/myys-material.test.mjs",
+            "gazi/portal/src/material-workspace.jsx",
+            "scripts/myys-material-browser.cjs"
           ],
           "remaining": [
-            "66 ders materyalini lisans/erişilebilirlik inceleme siciline eşle."
+            "Gerçek sağlayıcı sözleşmesinin kapsamıyla üretim materyal depo/dağıtım adaptörü kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "21 portal/materyal testi; kaynak dosyaları baseline ile aynı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "yerel alt dilim geçti",
+          "evidence": "13 yeni sunucu +14 materyal tarayıcı kontrolü; tam685 otomatik/46 tarayıcı; yanlış ders, sürüm, idempotency, iki bağlantı ve eski ekran yarışı geçti.",
+          "limits": "Sentetik P01 15 ders inceleme akışı; gerçek akademik, telif sahibi veya yardımcı teknoloji kabulü değildir. Mevcut özgün pilot dosya erişimi korunur, kurumsal teslim sayılmaz."
         },
         "live": {
-          "status": "kısmi pilot",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "yeni dilim yayımlanmadı",
+          "evidence": "Materyal dilimi Paket44 kaynak/yerel kabul; yeni canlı yayın yok. Son canlı Paket16; configuredCore kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2727,16 +2750,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 43,
-    "server_security_tests": "578/578",
+    "software_package": 44,
+    "server_security_tests": "591/591",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 672,
+    "local_total": 685,
     "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
-    "browser_visual_acceptance": "9 bilgi paketi+8 program+13 itiraz=30 kontrol;390 px/klavye/iki bağımsız tarayıcı işlemiyle eski ekran yarışı. Kurum veya gerçek ekran okuyucu kabulü değil.",
+    "browser_visual_acceptance": "14 materyal+19 gezinme+13 itiraz=46 kontrol;98 menü/288 rol paneli;390 px/klavye/iki ayrı Chromium eski ekran yarışı. Gerçek yardımcı teknoloji veya kurum kabulü değildir.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–43 dağıtılmadı;configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B03-program-package-20261014.json"
+    "deployment": "Son canlı16 READY;17–44 dağıtılmadı;configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B05-B25-material-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2758,12 +2781,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 43,
-    "source_parent_remote": "2c4d1e31bcfd621b30489ab6488fd9c495de6066",
-    "source_parent_tree": "64e7a0e3a62c107a0f309fed2367bb4b67829499",
+    "software_package": 44,
+    "source_parent_remote": "7e0261866225a14fcd6446ce6e42e94207addebb",
+    "source_parent_tree": "e2f38573cc81eba3e1aa7e9de8ad73406fad4f04",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 672,
-    "note": "B03 program/profil bilgi paketi görünür ve güncel indirme kabulü; kaynak eşitlemesi sırada. B05/B25 hak sicili-materyal ilişkisi sırada; B07/B28 ve diğer tüm bağımsızlar açık."
+    "local_tests": 685,
+    "note": "B05/B25 özgün materyal-sicil/inceleme/teslim/kanıt bağı yerel kabul; kaynak eşitlemesi sırada. B07 atomik kimlik anahtarı bariyeri ve B28 güvenlik checkpoint/saklama bağımsızları sürer; tüm36 tamamlanmadı."
   },
   "verification_history": [
     {
@@ -2856,6 +2879,19 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16 READY;17–42 dağıtılmadı; configuredCore kapalı.",
       "evidence": "gazi/auth/myys/acceptance/B02-authority-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 43,
+      "server_security_tests": "578/578",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46 model/kaynak/demo",
+      "local_total": 672,
+      "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
+      "browser_visual_acceptance": "9 bilgi paketi+8 program+13 itiraz=30 kontrol;390 px/klavye/iki bağımsız tarayıcı işlemiyle eski ekran yarışı. Kurum veya gerçek ekran okuyucu kabulü değil.",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16 READY;17–43 dağıtılmadı;configuredCore kapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B03-program-package-20261014.json"
     },
     {
       "as_of": "2026-10-14",

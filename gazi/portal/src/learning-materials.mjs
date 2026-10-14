@@ -1,9 +1,2 @@
-import {slidesFor} from './learning-cases.mjs';
-import {contentVersion} from './learning-resources.mjs';
-const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function renderSlides(lesson,refs){
- const pages=slidesFor(lesson).map(s=>`<section><small>${esc(s.label)}</small><h1>${esc(s.title)}</h1><p>${esc(s.text)}</p>${s.rows?'<table>'+s.rows.map(r=>'<tr>'+r.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('')+'</table>':''}${s.bullets?'<ol>'+s.bullets.map(b=>'<li>'+esc(b)+'</li>').join('')+'</ol>':''}<footer>UniGO MYYS · Türkçe çalışma sunumu · ${esc(lesson.id)}</footer></section>`).join('');
- const html=`<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(lesson.title)}</title><style>body{font:18px/1.7 system-ui;background:#eef2f7;color:#19354f;margin:0}section{max-width:960px;min-height:510px;margin:24px auto;padding:48px;background:white;border-top:8px solid #193e61;box-sizing:border-box;break-after:page}h1{font-size:34px;line-height:1.3}small,footer{color:#61758b;font-size:13px}footer{margin-top:40px}li{margin:15px 0}table{border-collapse:collapse;width:100%}td{border-bottom:1px solid #dce3eb;padding:12px}a{color:#17579b;overflow-wrap:anywhere}@media print{body{background:white}section{margin:0;box-shadow:none}}@media(max-width:700px){section{padding:24px}h1{font-size:26px}}</style>${pages}<section><h1>Kaynaklar ve kullanım bilgisi</h1><p>Bu Türkçe çalışma sunumu UniGO pilotu için hazırlanmış özgün bir rehberdir. Vaka verileri kurgudur. Üniversite onaylı ders izlencesi değildir. Aşağıdaki yayınlar ayrıca incelenebilir.</p><ul>${refs.map(r=>`<li><a href="${esc(r.url)}">${esc(r.title)}</a> — ${esc(r.publisher)} · ${esc(r.license)}</li>`).join('')}</ul><p>İçerik sürümü ${contentVersion} · Kaynak inceleme tarihi 10.10.2026.</p></section></html>`;
- return html;
-}
-export const renderCaseCsv=x=>'\uFEFFAlan;Değer\r\n'+x.rows.map(r=>r.map(v=>'\"'+v.replaceAll('\"','\"\"')+'\"').join(';')).join('\r\n');
+// Shared canonical teaching content; retained import path for the portal.
+export * from '../../auth/myys/learning-materials.mjs';

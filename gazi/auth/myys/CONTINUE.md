@@ -1,3 +1,17 @@
+# Güncel devam — Paket44 yerel kabul; kaynak eşitlemesi sırada
+
+B05/B25 Ders ve materyal + Öğrenme kanıtları: tek66ders kaynağı, sürümlü program/görev/rubrik/hak sicili bağı, ayrı yönetici ve kalite incelemesi, gerçek özgün HTML/CSV indirmesi, kendi tesliminden çalışma ve karar zinciri. Üçüncü taraf dosyalar kopyalanmaz; mevcut özgün pilot erişimi kurumsal teslim sayılmaz.685 otomatik/46 tarayıcı;123komut/17HTTP7028örnek56224denetim;98menü288panel;115statik/88özgünbayt aynı;133tür14tablo.
+
+Önce diff/uzak baş/alias kontrolü, commit, expected-head `7e0261866225a14fcd6446ce6e42e94207addebb`, base-tree `e2f38573cc81eba3e1aa7e9de8ad73406fad4f04` ile tam kaynak eşitlemesi. Son canlı16;17–44 dağıtımı yok. BrowserAuth iptalini yeniden isteme;configuredCore kapalı;tek editör/alt ajan yok.
+
+Sıradaki bağımsız B07: kimlik HTTP akışında PKCE/nonce anahtar sürümü ile oturum commit’i arasında atomik yerel bariyer; SQL repository/gerçek PG/RLS/KMS kabulü ayrı açık. B28 güvenlik checkpoint/idempotency saklama ve diğer bütün36 bağımsızlar açık. Önce ilgili identity-flow/http/key-provider ve test sözleşmelerini oku; kurumsal erişim veya tamamlama uydurma. Devam komutu bekleme.
+
+# Güncel devam — Paket43 kaynakta; B05/B25 materyal hakları sırada
+
+Yerel `4d3bfe7990139447409cbcc7a4065089daebf349` / uzak `7e0261866225a14fcd6446ce6e42e94207addebb` / ortak ağaç `e2f38573cc81eba3e1aa7e9de8ad73406fad4f04`;18 blob ve tam ağaç eşleşti.672 otomatik/30 tarayıcı. Son canlı16;17–43 dağıtımı yok; browserAuth iptalini yeniden isteme;configuredCore kapalı;tek editör/alt ajan yok.
+
+B05 özgün bağımsız: hak sicilini materyal indirme/yeniden yayın kararına zorunlu bağla. B25:66 ders materyalini lisans/erişilebilirlik siciline eşle. Mevcut6 program22modül66ders ve kaynaklar korunmalı; açık erişim açık lisans değildir. Önce mevcut materyal veri modeli ve görüntüleme/indirme/yeniden yayın yollarını oku. B07/B28 ve tüm diğer bağımsızlar açık;devam komutu bekleme.
+
 # Güncel devam — Paket43 yerel kabul; kaynak eşitlemesi sırada
 
 B03 Program sürümleri: yedi dayanak durumu, güncel program/profil/yetki dosyası bağıyla yetkili JSON indirme; eksik/durdurulmuş kaynak eski açık ekranı aşamaz. Öğrenen yalnız kendi programının durumunu görür. Yerel publish gerçek kurum paketi onayı değildir; eski akademik arşiv korunur.672 otomatik/30 tarayıcı;118 komut/17 HTTP;6816 örnek/54528 denetim;115 statik. İki oturum yarışı iki ayrı Chromium süreciyle geçti.

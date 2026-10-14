@@ -44,6 +44,7 @@ export const privacyCategories={
 };
 export const recordGroups={
   "learning": [
+    "material-delivery",
     "application",
     "application-review",
     "enrollment",
@@ -163,6 +164,10 @@ export const recordGroups={
     "authority-review",
     "authority-hold",
     "authority-download",
+    "material-plan",
+    "material-rights",
+    "material-review",
+    "material-hold",
     "registry",
     "registry-review",
     "retention-preview",
@@ -189,6 +194,7 @@ export const recordGroups={
   ]
 };
 export const subjectFields={
+  "material-delivery": ["programId","enrollmentId","planId","catalogId","lessonId","lessonDigest","taskIds","format","name","sha256","bytes","operation","official","published","externalMaterialsIncluded"],
   "advice-sample": [
     "id",
     "unit",
@@ -844,6 +850,7 @@ const alternative=fields('method methodReference sourceReference observedAt reas
 const member={...fields('unit expires active personActive'),roles:[scalar]};
 const totals=fields('captured refunded refundHeld disputeHeld chargedBack available');
 const nested={
+ 'material-delivery':{taskIds:[scalar]},
  evidence:{alternative},
  assessment:{scores:[score],evidenceIds:[scalar],evidenceDigests:[{...fields('id sha256'),alternative:{method:alternative,moderation:fields('id outcome reason verificationReference version createdAt')}}]},
  decision:{evidenceDigests:[fields('id sha256')]},

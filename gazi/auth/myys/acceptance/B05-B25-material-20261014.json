@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-14",
+  "package": 44,
+  "work_ids": [
+    "B05",
+    "B25"
+  ],
+  "ui": "Ders ve materyal; Öğrenme kanıtları teslim bağı",
+  "production_enabled": false,
+  "new_tests": 13,
+  "automated": {
+    "server": 591,
+    "portal": 48,
+    "regression": 46,
+    "total": 685
+  },
+  "browser": {
+    "material": 14,
+    "navigation": 19,
+    "appeals": 13,
+    "total": 46,
+    "panels": 288,
+    "menu_routes": 98,
+    "viewport": 390,
+    "stale_page_race": "two separate Chromium processes with independent actor sessions"
+  },
+  "scope": {
+    "commands": 123,
+    "http_routes": 17,
+    "positive_samples": 7028,
+    "derived_negative_checks": 56224
+  },
+  "preserved": {
+    "collections": 6,
+    "modules": 22,
+    "lessons": 66,
+    "original_files_byte_equal": 88,
+    "protected_static_files": 115
+  },
+  "completed_slice": [
+    "Exact catalog/program/task/rubric and accepted registry binding",
+    "Separate written local rights decision, per-lesson source/language/accessibility/academic review",
+    "Actual original HTML/CSV delivery, current checks on replay, independent quality inspection download",
+    "Own enrollment delivery attaches to evidence and human assessment/decision; later holds preserve historical academic records"
+  ],
+  "limits": [
+    "Synthetic P01 workflow is not Gazi academic or copyright-owner acceptance",
+    "Publisher materials remain links only; no external redistribution, brand or API rights inferred",
+    "Existing original pilot download paths remain; they are not governed enrollment delivery or institutional records",
+    "No production deployment or authenticated live smoke"
+  ],
+  "live": {
+    "package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "new_deployment": null
+  }
+}

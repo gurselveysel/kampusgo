@@ -1,3 +1,4 @@
+import {localMaterialSetup} from '../gazi/auth/tests/helpers/local-material.mjs';
 import {localAuthorityDossier} from '../gazi/auth/tests/helpers/local-authority.mjs';
 import {seedLoginRequest} from '../gazi/auth/tests/helpers/local-login-cleanup.mjs';
 import {localWalletStudySetup} from '../gazi/auth/tests/helpers/local-wallet-study.mjs';
@@ -63,6 +64,7 @@ if(process.argv.includes('--privacy-inventory')){
  const ticket=f.run('student','support',{unit:'engineering',category:'technical',subject:'Kayıt özeti denemesi',message:'Sentetik kayıt özetinde destek geçmişimi incelemek istiyorum.'});f.run('it','support-event',{ticketId:ticket.id,expectedRevision:0,type:'resolve',message:'Sentetik veri kapsamı incelemesi tamamlandı.'});
  const p=await localPortfolioSetup(f,{initial}),access=f.run('employer','portfolio-access',{grantId:p.grant.id,purpose:portfolioPurpose,confirm:true});f.run('employer','portfolio-feedback',{grantId:p.grant.id,purpose:portfolioPurpose,accessId:access.id,kind:'strength',message:portfolioReason});f.run('student','portfolio-revoke',{grantId:p.grant.id,confirm:true});
 }
+if(process.argv.includes('--materials'))localMaterialSetup(f,{initial,prepared:false});
 if(process.argv.includes('--login-cleanup')){seedLoginRequest(f);seedLoginRequest(f);seedLoginRequest(f,{status:'pending'});seedLoginRequest(f,{person:'other'});}
 if(process.argv.includes('--wallet-study'))localWalletStudySetup(f,{initial,prepared:false});
 if(process.argv.includes('--advice'))localAdviceSetup(f,{initial,prepared:false});
