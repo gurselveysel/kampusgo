@@ -19,7 +19,7 @@ function source(core,t,u){
  const s=core.store,allocations=s.list(t,'status-allocation').filter(x=>x.unit===u);
  const rows=allocations.map(x=>{const r=s.get(t,'issuance',x.id),d=r&&s.get(t,'decision',r.decisionId);return {id:x.id,index:x.index,revoked:s.list(t,'revocation').some(v=>v.issuanceId===x.id),suspended:!d||d.outcome!=='approved'||!core.decisionUsable({tenant:t},d)};});
  // Include immutable key and academic records so a concurrent change cannot publish an older status.
- const kinds=['issuance','signed','decision','assessment','evidence','appeal','resolution','revocation','key','key-review','key-state'];
+ const kinds=['issuance','signed','decision','assessment','evidence','appeal','resolution','revocation','key','key-review','key-state','source-contract','source-contract-review','source-trust-state'];
  const digest=hash(stableStringify({rows,records:kinds.map(kind=>[kind,s.list(t,kind).filter(r=>r.unit===u)])}));return {rows,digest};
 }
 function snapshotTrusted(s,t,r){return trustedSignedKey(s,t,{...r,keyFingerprint:r.keyFingerprint,credential:{issuer:{id:localIssuer}}});}

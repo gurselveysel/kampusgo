@@ -1,3 +1,4 @@
+import {sourceEventTrusted} from './source-trust.mjs';
 import {requireThat,CoreError} from './store.mjs';
 import {queueState} from './lms.mjs';
 import {parseTransferCsv} from './transfer-csv.mjs';
@@ -52,7 +53,7 @@ export function operationsView(s,a,now){
  const reviews=s.list(a.tenant,'lms-review');
  const queue=s.list(a.tenant,'lms-event').filter(e=>queueAllowed(a,e.unit)).map(e=>{
   const q=queueState(s,a.tenant,e,now),review=reviews.find(r=>r.stateId===q.lastId);
-  return {id:e.id,unit:e.unit,contractId:e.contractId,type:e.type,revision:e.revision,receivedAt:e.receivedAt,sourceSigned:!!e.sourceProof,sourceSubmissionVersion:e.sourceProof?.submissionVersion||null,
+  return {id:e.id,unit:e.unit,contractId:e.contractId,type:e.type,revision:e.revision,receivedAt:e.receivedAt,sourceSigned:!!e.sourceProof,sourceTrusted:sourceEventTrusted(s,a.tenant,e),sourceSubmissionVersion:e.sourceProof?.submissionVersion||null,
    state:q.state,stateId:q.lastId,attempt:q.attempt,nextAttemptAt:q.nextAttemptAt,errorCode:q.errorCode,leaseExpired:q.leaseExpired,review:review?{reason:review.reason,createdAt:review.createdAt}:null,
    history:q.history.map(h=>({state:h.state,at:h.at,errorCode:h.errorCode||null})),
    allowedActions:q.state==='quarantined'&&!review&&allowed(a,['it'],e.unit)?['lms-quarantine-review']:[]};

@@ -4,7 +4,7 @@ import {Card,CardHead,Button,Field,Notice,Pill} from './ui.jsx';
 import {transferCsv} from '../../auth/myys/transfer-csv.mjs';
 
 const states={accepted:'Kabul edildi · İşlenmedi',processing:'İşleniyor','retry-wait':'Yeniden deneme bekliyor',quarantined:'Karantinada',processed:'İşlendi',stale:'Eski sürüm · Kullanılmadı',prepared:'Belge hazırlığı kaydedildi',rejected:'Satır reddedildi'};
-const errors={invalid_row:'Satır eksik veya sütun sayısı hatalı.',not_found:'Karar bulunamadı veya bu birimden erişilemiyor.',duplicate_learner:'Bu kişi ve program aynı listede tekrar ediyor.',duplicate:'Bu kayıt için belge hazırlığı zaten var.',decision_blocked:'Karar güncel değil veya açık itiraz var.',separation:'Görevler ayrılığı sağlanmıyor.',issuer_pathway:'Bu belge yolu yerel hazırlığa kapalı.',temporary_failure:'Geçici işleme sorunu.',attempt_limit:'Deneme sınırına ulaşıldı.',lms_identity:'Öğrenen üyeliği yeniden doğrulanmalı.',lms_scope:'Kaynak sözleşmesi ve olay kapsamı uyuşmuyor.',processing_failed:'İşleme hatası inceleme gerektiriyor.',idempotency_conflict:'Aynı olay kimliği farklı içerikle geldi.',lms_revision_conflict:'Aynı kaynak sürümü başka olayla kayıtlı.'};
+const errors={source_trust:'Kaynak sözleşmesi veya anahtarı kullanıma kapalı.',invalid_row:'Satır eksik veya sütun sayısı hatalı.',not_found:'Karar bulunamadı veya bu birimden erişilemiyor.',duplicate_learner:'Bu kişi ve program aynı listede tekrar ediyor.',duplicate:'Bu kayıt için belge hazırlığı zaten var.',decision_blocked:'Karar güncel değil veya açık itiraz var.',separation:'Görevler ayrılığı sağlanmıyor.',issuer_pathway:'Bu belge yolu yerel hazırlığa kapalı.',temporary_failure:'Geçici işleme sorunu.',attempt_limit:'Deneme sınırına ulaşıldı.',lms_identity:'Öğrenen üyeliği yeniden doğrulanmalı.',lms_scope:'Kaynak sözleşmesi ve olay kapsamı uyuşmuyor.',processing_failed:'İşleme hatası inceleme gerektiriyor.',idempotency_conflict:'Aynı olay kimliği farklı içerikle geldi.',lms_revision_conflict:'Aynı kaynak sürümü başka olayla kayıtlı.'};
 const status=value=>states[value]||'İnceleme gerekli';
 const issue=code=>errors[code]||'Satırın yetki ve kaynak bilgilerini inceleyin.';
 function download(name,rows){const url=URL.createObjectURL(new Blob([transferCsv(rows)],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
@@ -20,7 +20,8 @@ export function OperationsWorkspace({data,busy,command,sourceAction,sourceTrust}
  <p role="status">{queue.length} olay gösteriliyor.</p>
  {queue.map(e=><article key={e.id} className="academic-record"><strong>{data.sourceContracts?.find(c=>c.id===e.contractId)?.name||e.contractId} · Kaynak sürümü {e.revision}</strong><Pill tone={e.state==='processed'?'green':'amber'}>{status(e.state)}</Pill><small>Olay: {e.id}</small><p>İşleme denemesi: {e.attempt}</p>
  {e.sourceSigned&&<p>İmzalı kaynak dosyası · Teslim sürümü {e.sourceSubmissionVersion}. {e.type==='grade'?'Program, rubrik ve görev':'Program ve rubrik'} bağı saklandı.</p>}
- {e.sourceSigned&&data.sourceContracts?.some(c=>c.id===e.contractId)&&(['accepted'].includes(e.state)||e.leaseExpired||e.state==='retry-wait'&&e.nextAttemptAt<=new Date().toISOString())&&<Button disabled={busy} onClick={()=>sourceAction('kaynak-isle',{contractId:e.contractId,eventId:e.id})}>Kaynak olayını işle</Button>}
+ {e.sourceSigned&&!e.sourceTrusted&&<p>Kaynak güveni doğrulanmadı veya kapatıldı. Bu olay işlenemez; güven sicilini inceleyin.</p>}
+ {e.sourceSigned&&e.sourceTrusted&&data.sourceContracts?.some(c=>c.id===e.contractId)&&(['accepted'].includes(e.state)||e.leaseExpired||e.state==='retry-wait'&&e.nextAttemptAt<=new Date().toISOString())&&<Button disabled={busy} onClick={()=>sourceAction('kaynak-isle',{contractId:e.contractId,eventId:e.id})}>Kaynak olayını işle</Button>}
  {e.nextAttemptAt&&<p>Sonraki deneme: {new Date(e.nextAttemptAt).toLocaleString('tr-TR')}</p>}{e.leaseExpired&&<p>Önceki işçinin süresi doldu; sıradaki işçi kaydı yeniden alabilir.</p>}{e.errorCode&&<p>{issue(e.errorCode)}</p>}
  <details><summary>İşlem geçmişi</summary><ol>{e.history.map((h,i)=><li key={i}>{status(h.state)} · {new Date(h.at).toLocaleString('tr-TR')}{h.errorCode?' · '+issue(h.errorCode):''}</li>)}</ol></details>
  {e.review&&<p>İnceleme kaydı: {e.review.reason}</p>}
@@ -52,13 +53,14 @@ function SourcePacketForm({contracts,busy,sourceAction,sourceTrust}){
  <form className="academic-body form-stack source-packet-form" onSubmit={submit}>
  <Notice>Yalnız izole yerel kabul. Gerçek LMS hizmeti bağlı değildir. Kaynak imzası başarı veya belge kararı vermez; işlenen kanıtı eğitici rubrikle inceler.</Notice>
  <Field label="İmzalı dosyanın kaynak sözleşmesi"><select aria-label="İmzalı dosyanın kaynak sözleşmesi" value={contractId} onChange={e=>setContractId(e.target.value)}>{contracts.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></Field>
+ {!contracts.find(c=>c.id===contractId)?.canAccept&&<p role="status">Bu kaynak şu anda alıma kapalı. Kaynak güven sicilindeki güncel sürüm, tarih ve ayrı inceleme gereklidir.</p>}
  <input ref={fileInput} className="sr-only" tabIndex={-1} aria-label="İmzalı kaynak dosyası" type="file" accept=".json,application/json" onChange={e=>{setFile(e.target.files?.[0]||null);setError('');}}/>
  <Button type="button" disabled={busy} onClick={()=>fileInput.current?.click()}>İmzalı dosya seç</Button>
  <p role="status">{file?'Seçilen dosya: '+file.name:'Henüz dosya seçilmedi.'}</p>
  <p>Özel anahtar yüklemeyin. Yalnız kaynak tarafından imzalanmış, tek öğrenene ait aktarım dosyası kullanın.</p>
  {error&&<p role="alert">{error}</p>}
- <Button type="submit" disabled={busy||!file}>İmzayı doğrula ve kuyruğa al</Button>
- <Button type="button" disabled={busy} onClick={()=>sourceTrust(contractId)}>Kaynak açık güven kaydını indir</Button>
+ <Button type="submit" disabled={busy||!file||!contracts.find(c=>c.id===contractId)?.canAccept}>İmzayı doğrula ve kuyruğa al</Button>
+ <Button type="button" disabled={busy||!contracts.find(c=>c.id===contractId)?.canExportTrust} onClick={()=>sourceTrust(contractId)}>Kaynak açık güven kaydını indir</Button>
  </form></Card>;
 }
 function BatchForm({data,busy,command}){

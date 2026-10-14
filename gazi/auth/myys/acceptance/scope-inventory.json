@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.27",
+  "version": "2026.10.14.28",
   "commands": [
     "alternative-evidence",
     "appeal",
@@ -72,6 +72,9 @@
     "sem-review",
     "sem-withdraw",
     "share",
+    "source-contract",
+    "source-contract-review",
+    "source-trust-state",
     "support",
     "support-event",
     "unshare"

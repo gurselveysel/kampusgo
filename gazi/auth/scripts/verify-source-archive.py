@@ -132,6 +132,7 @@ def verify(archive, trust):
     check(trust.get('format') == 'myys-source-trust/1' and trust.get('scope') == 'local-acceptance' and trust.get('official') is False, 'trust_profile')
     check(isinstance(trust.get('issuer'), str) and re.fullmatch(r'https://[A-Za-z0-9.-]+\.invalid', trust['issuer']), 'local_source_only')
     check(date(trust['exportedAt']) <= now < date(trust['expiresAt']) and date(trust['expiresAt'])-date(trust['exportedAt']) <= 300, 'trust_freshness')
+    check(trust.get('contractState', 'active') in ['active', 'retired'], 'source_contract_state')
     check(isinstance(trust.get('keys'), list) and 0 < len(trust['keys']) <= 8 and len({k['jwk']['kid'] for k in trust['keys']}) == len(trust['keys']), 'trust_keys')
     check(archive.get('signed') is False and archive.get('official') is False and archive.get('scope') == 'local-acceptance', 'archive_profile')
     body = archive['payload']
@@ -145,6 +146,7 @@ def verify(archive, trust):
     check(len(evidence) == len(body['evidence']) == len(refs) == len(assessment['evidenceIds']) and set(evidence) == set(assessment['evidenceIds']) == {r['id'] for r in refs}, 'evidence_ids')
     check({t['id'] for t in program['tasks']} <= {e['taskId'] for e in evidence.values()}, 'required_tasks')
     count = 0
+    approved = 0
     for ref in refs:
         ev = evidence[ref['id']]
         check(ev['enrollmentId'] == assessment['enrollmentId'] and ev['owner'] == assessment['owner'] and ev['unit'] == program['unit'] and ev['programId'] == program['id'], 'evidence_scope')
@@ -154,6 +156,15 @@ def verify(archive, trust):
             continue
         source = ref['source']
         proof = source['proof']
+        if 'approvals' in trust or 'trustRecordId' in proof or 'trustDigest' in proof:
+            check(isinstance(trust.get('approvals'), list), 'source_approval')
+            approvals = [r for r in trust['approvals'] if r.get('id') == proof.get('trustRecordId') and r.get('digest') == proof.get('trustDigest')]
+            check(len(approvals) == 1, 'source_approval')
+            approval = approvals[0]
+            approved += 1
+            check(date(approval['approvedAt']) <= date(proof['receivedAt']) and date(approval['validFrom']) <= date(proof['receivedAt']) < date(approval['expiresAt']), 'source_approval_time')
+            if trust.get('contractState') == 'retired':
+                check(date(proof['receivedAt']) <= date(trust['contractClosedAt']), 'source_contract_retired')
         jwt, header = source_jwt(proof['jwt'], trust)
         token_hash = digest(proof['jwt'].encode('ascii'))
         check(token_hash == proof['sha256'] == source['digest'] == ev['sourceDigest'] and digest(proof) == ev['sourceProofDigest'], 'source_pin')
@@ -176,7 +187,7 @@ def verify(archive, trust):
         score += r['weight']*v['score']/4
     check(score == assessment['score'] == decision['score'] and assessment['passed'] is (score >= program['threshold']), 'reproduced_score')
     check(decision['outcome'] in ['approved', 'rejected'] and (decision['outcome'] != 'approved' or assessment['passed']), 'decision_outcome')
-    return {'validSourceSignatures':True, 'sourceSignatures':count, 'unsignedEvidence':len(evidence)-count, 'historicalContentReproduced':True, 'score':score, 'archiveSha256':archive['sha256'], 'academicDecisionSignature':False, 'currentEligibilityVerified':False, 'official':False, 'scope':'local-acceptance'}
+    return {'validSourceSignatures':True, 'sourceApprovalReferencesVerified':approved == count, 'sourceSignatures':count, 'unsignedEvidence':len(evidence)-count, 'historicalContentReproduced':True, 'score':score, 'archiveSha256':archive['sha256'], 'academicDecisionSignature':False, 'currentEligibilityVerified':False, 'official':False, 'scope':'local-acceptance'}
 
 
 def main():

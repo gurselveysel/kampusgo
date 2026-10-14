@@ -1,5 +1,7 @@
 # B09/B15/B16 — imzalı kaynak dosyası ve tarihsel karar dayanağı
 
+Güncel ek: Paket28 `SOURCE-TRUST-CONTRACT.md` ile sürümlü bağımsız inceleme ve kaynak/anahtar kapanışları eklendi. Aşağıdaki Paket26 kayıtları bu ekle birlikte okunmalıdır.
+
 14.10.2026 · `myys-source-packet/1` / `myys-source+jwt` · İzole yerel kabul. Gerçek UzemGO, LTI, OBS veya başka sağlayıcı kurulmuş değildir. Gerçek öğrenci, credential, üretim migration'ı ve resmî ihraç yoktur. `configuredCore()` Vercel'de kapalı kalır.
 
 ## Kullanıcının tamamladığı işlem
@@ -55,4 +57,4 @@ Doğrulayıcı Python standart kitaplığı ve OpenSSL kullanır; uygulama/JOSE/
 
 14.10.2026 incelemesi: [IETF RFC 7515](https://www.rfc-editor.org/rfc/rfc7515.html), Mayıs 2015, §5.1–5.2 ve §6: imza girdisi, doğrulama ve güvenilen anahtar seçimi. [IETF RFC 8725](https://www.rfc-editor.org/rfc/rfc8725.html), BCP 225, Şubat 2020, §3.12: amaçlar arasında farklı tür/alıcı/doğrulama koşulları. Bunlar teknik kaynaklardır; yerel paket şeması ekip tasarımıdır, resmî LMS veya Gazi usulü değildir.
 
-Gerçek sağlayıcı örnek dosyası, kişi/ders/program/rubrik sürüm eşlemesi, lisans sözleşmesi, anahtar yetkisi ve taşıma protokolü dış kabule bağlıdır. Bağımsız açık geliştirme: kaynak güven sicilinin sürümlü yetkili incelemesi ve anahtar/kontrat iptalinin mevcut akademik uygunluğa dağıtılması; gerçek üretim depo/worker adaptörü. Bu dilim yalnız statik sentetik güven sözleşmesini doğrular. B09/B15/B16 genel kabulü kapanmış sayılmaz. Yeni canlı yayın ve smoke ayrıca açık kalır.
+Gerçek sağlayıcı örnek dosyası, kişi/ders/program/rubrik sürüm eşlemesi, lisans sözleşmesi, anahtar yetkisi ve taşıma protokolü dış kabule bağlıdır. Paket26 statik güven sınırından sonra Paket28 kaynak sicili/ayrı inceleme/iptal yayılımı yerel dilimi tamamlandı; bkz. SOURCE-TRUST-CONTRACT.md. Gerçek üretim depo/worker adaptörü ve onaylı sağlayıcı kabulü açık. B09/B15/B16 genel kabulü kapanmış sayılmaz. Yeni canlı yayın ve smoke ayrıca açık kalır.

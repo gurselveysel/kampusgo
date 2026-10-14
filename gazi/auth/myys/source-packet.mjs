@@ -1,3 +1,5 @@
+import {sourceDescriptor} from './source-contract.mjs';
+import {sourceAcceptTrust,sourceTrustDigest,sourceEventTrusted,sourceLifecycle,sourceKeyLifecycle} from './source-trust.mjs';
 // Provider-neutral synthetic source packet. No production LMS endpoint or credential.
 import {createPublicKey} from 'node:crypto';
 import {createLocalJWKSet,decodeProtectedHeader,jwtVerify} from 'jose';
@@ -34,8 +36,13 @@ export class LocalSignedSourceAdapter {
  }
  get store(){return this.#store;}get contract(){return structuredClone(this.#contract);}get clock(){return this.#clock;}
  #actor(context){local(this.#store);const c=this.#contract,a=this.#store.principal(context.sessionHash,context.tenant,this.#clock());requireThat(a.tenant===c.tenant&&can(a,c.unit),'forbidden','Bu birimde imzalı kaynak alımı için bilgi işlem görevi ve çok faktörlü doğrulama gerekli.',403);return a;}
- view(a){const c=this.#contract;return a.tenant===c.tenant&&can(a,c.unit)?[{id:c.id,name:c.name,unit:c.unit,programId:c.programId,version:c.version,scope:'local-acceptance',official:false}]:[];}
- trust(context){this.#actor(context);const c=this.#contract;return {format:'myys-source-trust/1',scope:'local-acceptance',official:false,exportedAt:this.#clock(),expiresAt:new Date(Date.parse(this.#clock())+300000).toISOString(),contractId:c.id,contractVersion:c.version,tenant:c.tenant,unit:c.unit,programId:c.programId,issuer:c.issuer,audience:c.audience,courseId:c.courseId,sourceProgramVersion:c.sourceProgramVersion,sourceRubricVersion:c.sourceRubricVersion,keys:structuredClone(c.keys)};}
+ view(a){const c=this.#contract;if(a.tenant!==c.tenant||!can(a,c.unit))return [];let canAccept=false;for(const k of c.keys)try{sourceAcceptTrust(this.#store,c,k.jwk.kid,this.#clock());canAccept=true;}catch{}return [{id:c.id,name:c.name,unit:c.unit,programId:c.programId,programTitle:this.#store.get(c.tenant,'program',c.programId)?.title||c.name,version:c.version,descriptor:sourceDescriptor(c),canPrepare:c.keys.every(k=>sourceKeyLifecycle(this.#store,c.tenant,{unit:c.unit},k).state!=='compromised')&&c.keys.some(k=>sourceKeyLifecycle(this.#store,c.tenant,{unit:c.unit},k).state==='active'),canExportTrust:this.#store.list(c.tenant,'source-contract').some(r=>r.unit===c.unit&&r.descriptor.id===c.id&&this.#store.list(c.tenant,'source-contract-review').some(v=>v.contractId===r.id&&v.outcome==='accepted')),canAccept,scope:'local-acceptance',official:false}];}
+ trust(context,trustRecordId){
+  this.#actor(context);const c=this.#contract,s=this.#store,all=s.list(c.tenant,'source-contract').filter(r=>r.unit===c.unit&&r.descriptor.id===c.id),r=trustRecordId?all.find(r=>r.id===trustRecordId):all.filter(r=>r.descriptorDigest===hash(stableStringify(sourceDescriptor(c)))).at(-1);
+  requireThat(r,'source_trust','İndirilecek kaynak güven sürümü bulunamadı.',404);const d=r.descriptor,life=sourceLifecycle(s,c.tenant,r);
+  const approvals=all.filter(x=>x.descriptorDigest===r.descriptorDigest).flatMap(x=>{const v=s.list(c.tenant,'source-contract-review').find(v=>v.contractId===x.id);return v?.outcome==='accepted'?[{id:x.id,digest:sourceTrustDigest(x),revision:x.revision,approvedAt:v.createdAt,validFrom:x.validFrom,expiresAt:x.expiresAt}]:[];});
+  return {format:'myys-source-trust/1',scope:'local-acceptance',official:false,exportedAt:this.#clock(),expiresAt:new Date(Date.parse(this.#clock())+300000).toISOString(),contractId:d.id,contractVersion:d.version,tenant:d.tenant,unit:d.unit,programId:d.programId,issuer:d.issuer,audience:d.audience,courseId:d.courseId,sourceProgramVersion:d.sourceProgramVersion,sourceRubricVersion:d.sourceRubricVersion,contractState:life.state,contractClosedAt:life.createdAt,approvals,keys:d.keys.map(k=>{const state=sourceKeyLifecycle(s,c.tenant,r,k);return {...k,state:state.state,...(state.state==='retired'?{retiredAt:state.createdAt}:{})};})};
+ }
  #binding(payload){
   const c=this.#contract,s=this.#store,program=s.get(c.tenant,'program',c.programId),e=payload.event;
   requireThat(program&&s.list(c.tenant,'publication').some(p=>p.programId===program.id),'source_program','Yayımlanmış yerel program sürümü gerekli.',409);
@@ -61,10 +68,11 @@ export class LocalSignedSourceAdapter {
    if(e.type==='grade'){if(!text(e.taskId)||typeof e.content!=='string'||e.contentSha256!==hash(e.content)||e.completed!==null)throw Error();}
    else if(e.taskId!==null||e.content!==null||e.contentSha256!==null||e.grade!==null||(e.type==='completion'?typeof e.completed!=='boolean':e.completed!==null))throw Error();
   }catch{throw new CoreError('source_signature','Kaynak dosyasının imzası, süresi veya sözleşmesi doğrulanamadı.',422);}
-  const digest=hash(token),proof={format:sourcePacketFormat,jwt:token,sha256:digest,kid:header.kid,issuer:c.issuer,contractVersion:c.version,receivedAt,binding:structuredClone(p.binding),submissionId:p.event.submissionId,submissionVersion:p.event.submissionVersion,sourceProgramVersion:c.sourceProgramVersion,sourceRubricVersion:c.sourceRubricVersion,official:false};
-  return acceptLmsEvent(this.#store,c,{...p.event,contractId:c.id,tenant:c.tenant,programId:c.programId,subject:p.sub},{digest,sourceProof:proof,clock:this.#clock,authorize:()=>{this.#actor(context);requireThat(Date.parse(this.#clock())<p.exp*1000,'source_expired','Kaynak dosyasının işleme süresi doldu.',409);this.#binding(p);}});
+  const trust=sourceAcceptTrust(this.#store,c,header.kid,this.#clock());
+  const digest=hash(token),proof={format:sourcePacketFormat,trustRecordId:trust.id,trustDigest:sourceTrustDigest(trust),jwt:token,sha256:digest,kid:header.kid,issuer:c.issuer,contractVersion:c.version,receivedAt,binding:structuredClone(p.binding),submissionId:p.event.submissionId,submissionVersion:p.event.submissionVersion,sourceProgramVersion:c.sourceProgramVersion,sourceRubricVersion:c.sourceRubricVersion,official:false};
+  return acceptLmsEvent(this.#store,c,{...p.event,contractId:c.id,tenant:c.tenant,programId:c.programId,subject:p.sub},{digest,sourceProof:proof,clock:this.#clock,authorize:()=>{this.#actor(context);requireThat(sourceAcceptTrust(this.#store,c,header.kid,this.#clock()).id===trust.id,'source_trust','Kaynak güven sürümü değişti.',409);requireThat(Date.parse(this.#clock())<p.exp*1000,'source_expired','Kaynak dosyasının işleme süresi doldu.',409);this.#binding(p);}});
  }
- processInTransaction(eventId){return processLmsEventInTransaction(this.#store,this.#contract,eventId,this.#clock);}
+ processInTransaction(eventId){requireThat(sourceEventTrusted(this.#store,this.#contract.tenant,this.#store.get(this.#contract.tenant,'lms-event',eventId)),'source_trust','Kaynak kanıtının güveni kullanıma kapalı.',409);return processLmsEventInTransaction(this.#store,this.#contract,eventId,this.#clock);}
  worker(context){this.#actor(context);return new LocalLmsWorker(this,{authorize:()=>this.#actor(context)});}
  process(context,eventId){return this.worker(context).run(eventId);}
 }

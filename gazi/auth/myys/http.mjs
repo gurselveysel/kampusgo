@@ -33,7 +33,7 @@ export async function myysRoute({req,path,b,sessionHash,json,res,core=configured
    const context={sessionHash,tenant:b?.tenant};
    if(path==='/api/myys/kaynak-al')return json(res,202,await sourceAdapter.accept(context,b?.token));
    if(path==='/api/myys/kaynak-isle')return json(res,200,sourceAdapter.process(context,b?.eventId));
-   return json(res,200,sourceAdapter.trust(context));
+   return json(res,200,sourceAdapter.trust(context,b?.trustRecordId));
   }
   if(path==='/api/myys/kurtarma-dene'&&req.method==='POST'){if(!recoveryService)return json(res,503,{error:'İzole kurtarma tatbikatı bu ortamda bağlı değil.',code:'recovery_unavailable'});return json(res,200,await recoveryService.run({sessionHash,tenant:b?.tenant},b?.planId));}
   if(path==='/api/myys/islem'&&req.method==='POST')return json(res,200,core.run({sessionHash,tenant:b?.tenant,commandId:b?.commandId,action:b?.action,input:b?.input}));

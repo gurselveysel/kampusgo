@@ -520,7 +520,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "391+46+46=483 otomatik. 72 komut/15 HTTP yüzeyi; 3086 pozitif örnek ve 24688 türetilmiş kontrol. Yeni kaynak HTTP alım/işleme/güven ihracı için başka rol/birim ve geçerli başka tenant reddi; ayrı sayılar ürün yüzdesi değildir.",
+      "test_status": "Paket28: 418 sunucu +46 portal +46 regresyon; 77 komut/16 HTTP, 3337 olumlu örnek/26696 türetilmiş kapsam denetimi. Örnek sayısı ayrı test veya tamamlanma oranı değildir.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -571,7 +571,7 @@
         },
         "local_acceptance": {
           "status": "mevcut yerel dilim geçti",
-          "evidence": "391+46+46=483 otomatik. 72 komut/15 HTTP yüzeyi; 3086 pozitif örnek ve 24688 türetilmiş kontrol. Yeni kaynak HTTP alım/işleme/güven ihracı için başka rol/birim ve geçerli başka tenant reddi; ayrı sayılar ürün yüzdesi değildir.",
+          "evidence": "Paket28: 418 sunucu +46 portal +46 regresyon; 77 komut/16 HTTP, 3337 olumlu örnek/26696 türetilmiş kapsam denetimi. Örnek sayısı ayrı test veya tamamlanma oranı değildir.",
           "limits": "Mevcut 72 komut ve 12 HTTP yolu; gerçek kurum/üretim kabulü değildir."
         },
         "live": {
@@ -605,7 +605,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "391 sunucu +46 portal +46 regresyon =483 otomatik; 14 kaynak aktarımı ve 13 itiraz tarayıcı kontrolü. 13 yeni kaynak paketi +6 HTTP testi, bağımsız doğrulama ve 72 komut/15 HTTP kapsam matrisi geçti.",
+      "test_status": "418 sunucu +46 portal +46 regresyon =510 otomatik. 15 yeni güven yaşam döngüsü testi; 14 güven sicili +14 kaynak +13 tatbikat +13 itiraz tarayıcı kontrolü. 77 komut/16 HTTP: 3337 örnek/26696 kapsam denetimi.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -623,12 +623,19 @@
         "gazi/auth/tests/myys-source-http.test.mjs",
         "gazi/portal/src/operations-workspace.jsx",
         "scripts/myys-source-browser.cjs",
-        "gazi/auth/myys/acceptance/B09-source-20261014.json"
+        "gazi/auth/myys/acceptance/B09-source-20261014.json",
+        "gazi/auth/myys/source-contract.mjs",
+        "gazi/auth/myys/source-trust.mjs",
+        "gazi/auth/myys/status-list.mjs",
+        "gazi/auth/tests/myys-source-trust.test.mjs",
+        "gazi/portal/src/source-trust-workspace.jsx",
+        "scripts/myys-source-trust-browser.cjs",
+        "gazi/auth/myys/SOURCE-TRUST-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B09-trust-20261014.json"
       ],
-      "production_status": "Paket26 kaynak adayı yalnız yerel kabulde; Paket17–26 canlı dağıtımı yok. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; kurumsal akademik çekirdek kapalı.",
-      "implementation_note": "Statik sentetik açık kaynak sözleşmesiyle RS256 dosya alımı, program/rubrik/görev/teslim/kişi/hash/zaman bağı, mevcut olay kuyruğu, insan değerlendirmesi ve değişmez kaynak dayanağı arşivi bağlı. Ayrı Python/OpenSSL doğrulayıcısı kaynak imzasını ve tarihsel rubrik hesabını doğrular; karar zarfı imzasızdır.",
+      "production_status": "Yalnız yerel kabul ve kaynak adayı. Paket28 dağıtımı yok; son canlı Paket16. Gerçek LMS/kurum deposu ve configuredCore kapalı.",
+      "implementation_note": "Paket26 imzalı dosya/kanıt/arşiv zincirine Paket28 sürümlü kaynak güven sicili, ayrı yönetici incelemesi, tarih/kapsam/eşleme özeti, anahtar ve sözleşme kapanışları bağlandı. Yeni taslak yeni alımı durdurur; iptal/risk güncel kanıt/karar/belge/paylaşım/durum uygunluğunu kapatır. Tarihsel arşiv aynı; bağımsız Python/OpenSSL ayrı güven dosyasındaki inceleme referansını da denetler. Karar ve güven dosyaları imzalı kurumsal karar değildir.",
       "independent_remaining_work": [
-        "Kaynak güven siciline sürümlü yetkili ve bağımsız inceleme; kaynak anahtarı/kontrat iptalini mevcut akademik uygunluğa dağıtma. Statik sentetik sözleşme bu yaşam döngüsünün tamamı değildir.",
         "Gerçek sağlayıcı dosyası/kimlik-ders-sürüm eşleme sözleşmesini onaylı örnek üzerinden kabul et; üretim depo/worker ve dosya saklama/geri yükleme adaptörünü tamamla. Gerçek erişim/migration ayrı yetki sınırıdır."
       ],
       "development_blocker": null,
@@ -653,21 +660,28 @@
             "gazi/auth/tests/myys-source-http.test.mjs",
             "gazi/portal/src/operations-workspace.jsx",
             "scripts/myys-source-browser.cjs",
-            "gazi/auth/myys/acceptance/B09-source-20261014.json"
+            "gazi/auth/myys/acceptance/B09-source-20261014.json",
+            "gazi/auth/myys/source-contract.mjs",
+            "gazi/auth/myys/source-trust.mjs",
+            "gazi/auth/myys/status-list.mjs",
+            "gazi/auth/tests/myys-source-trust.test.mjs",
+            "gazi/portal/src/source-trust-workspace.jsx",
+            "scripts/myys-source-trust-browser.cjs",
+            "gazi/auth/myys/SOURCE-TRUST-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B09-trust-20261014.json"
           ],
           "remaining": [
-            "Kaynak güven siciline sürümlü yetkili ve bağımsız inceleme; kaynak anahtarı/kontrat iptalini mevcut akademik uygunluğa dağıtma. Statik sentetik sözleşme bu yaşam döngüsünün tamamı değildir.",
             "Gerçek sağlayıcı dosyası/kimlik-ders-sürüm eşleme sözleşmesini onaylı örnek üzerinden kabul et; üretim depo/worker ve dosya saklama/geri yükleme adaptörünü tamamla. Gerçek erişim/migration ayrı yetki sınırıdır."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi; yerel imzalı kaynak dilimi geçti",
-          "evidence": "391 sunucu +46 portal +46 regresyon =483 otomatik; 14 kaynak aktarımı ve 13 itiraz tarayıcı kontrolü. 13 yeni kaynak paketi +6 HTTP testi, bağımsız doğrulama ve 72 komut/15 HTTP kapsam matrisi geçti.",
-          "limits": "Statik sentetik güven; dış karar zarfı imzasız. Gerçek sağlayıcı veya kurumsal yetki kabulü değil."
+          "status": "yerel dilim doğrulandı",
+          "evidence": "418 sunucu +46 portal +46 regresyon =510 otomatik. 15 yeni güven yaşam döngüsü testi; 14 güven sicili +14 kaynak +13 tatbikat +13 itiraz tarayıcı kontrolü. 77 komut/16 HTTP: 3337 örnek/26696 kapsam denetimi.",
+          "limits": "Statik yapılandırmayla eşleşen ayrı yerel inceleme; gerçek sağlayıcı/üretim kabulü değil. İmzasız dış karar zarfı tutarlı yeniden yazmaya karşı imza koruması sağlamaz."
         },
         "live": {
           "status": "Paket26 canlı yayımlanmadı",
-          "evidence": "Paket26 kaynak adayı yalnız yerel kabulde; Paket17–26 canlı dağıtımı yok. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; kurumsal akademik çekirdek kapalı."
+          "evidence": "Yalnız yerel kabul ve kaynak adayı. Paket28 dağıtımı yok; son canlı Paket16. Gerçek LMS/kurum deposu ve configuredCore kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1083,7 +1097,7 @@
         "gazi/auth/myys/acceptance/B09-source-20261014.json"
       ],
       "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir. Paket26: imzalı kaynak JSON taşıması, 202/kuyruk/işleme ayrımı ve işlem içinde worker yetki denetimi mevcut zincire eklendi; gerçek sağlayıcı kabulü değildir.",
+      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir. Paket26: imzalı kaynak JSON taşıması, 202/kuyruk/işleme ayrımı ve işlem içinde worker yetki denetimi mevcut zincire eklendi; gerçek sağlayıcı kabulü değildir. Paket28: sürümlü ayrı kaynak güven incelemesi, anahtar/kontrat kapanışı ve eski kaynak/arşiv bağı mevcut zincire yayıldı; gerçek sağlayıcı kabulü açık.",
       "independent_remaining_work": [
         "İç adaptörü sağlayıcı bağımsız kayıt/not/tamamlama senaryolarıyla genişlet."
       ],
@@ -1151,7 +1165,7 @@
         "gazi/auth/myys/acceptance/B09-source-20261014.json"
       ],
       "production_status": "Paket 6: e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 READY / production. Kod dağıtıldı; kurumsal etkinleştirme kapalı.",
-      "implementation_note": "Kalıcı yerel işçi claim/süre/yeniden deneme/karantina; yetkili inceleme ve kalıcı toplu satır mutabakatı, CSV arayüzü. Akademik karar/ihraç kendiliğinden üretilmez. Paket26: imzalı kaynak JSON taşıması, 202/kuyruk/işleme ayrımı ve işlem içinde worker yetki denetimi mevcut zincire eklendi; gerçek sağlayıcı kabulü değildir.",
+      "implementation_note": "Kalıcı yerel işçi claim/süre/yeniden deneme/karantina; yetkili inceleme ve kalıcı toplu satır mutabakatı, CSV arayüzü. Akademik karar/ihraç kendiliğinden üretilmez. Paket26: imzalı kaynak JSON taşıması, 202/kuyruk/işleme ayrımı ve işlem içinde worker yetki denetimi mevcut zincire eklendi; gerçek sağlayıcı kabulü değildir. Paket28: sürümlü ayrı kaynak güven incelemesi, anahtar/kontrat kapanışı ve eski kaynak/arşiv bağı mevcut zincire yayıldı; gerçek sağlayıcı kabulü açık.",
       "independent_remaining_work": [
         "Gerçek LMS sözleşmesine bağlı üretim depo/işçi adaptörü ve dağıtık kuyruk kabulü; yeni HTTP alım sözleşmesi."
       ],

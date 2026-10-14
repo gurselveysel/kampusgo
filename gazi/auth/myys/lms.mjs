@@ -1,3 +1,4 @@
+import {sourceEventTrusted} from './source-trust.mjs';
 import {createHmac,timingSafeEqual,randomUUID} from 'node:crypto';
 import {hash,requireThat,LocalAcceptanceStore} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
@@ -105,7 +106,7 @@ export class LocalLmsWorker {
   const transient=['source_temporarily_unavailable','SQLITE_BUSY','ETIMEDOUT'].includes(error?.code);
   const retryable=transient&&q.attempt<this.maxAttempts;
   // Never persist provider messages, stack traces, credentials or raw payloads.
-  const errorCode=transient?'temporary_failure':['lms_identity','lms_scope','idempotency_conflict','lms_revision_conflict'].includes(error?.code)?error.code:'processing_failed';
+  const errorCode=transient?'temporary_failure':['lms_identity','lms_scope','source_trust','idempotency_conflict','lms_revision_conflict'].includes(error?.code)?error.code:'processing_failed';
   return this.append(e,retryable?'retry-wait':'quarantined',{claimId:claim.id,errorCode,retryable,nextAttemptAt:retryable?new Date(Date.parse(this.clock())+this.retryMs*2**(q.attempt-1)).toISOString():null});
  });}
  run(eventId){const claim=this.claim(eventId);if(!claim)return {claimed:false};try{return {claimed:true,receipt:this.finish(claim)};}catch(e){if(e.code==='lease_lost')return {claimed:true,leaseLost:true};return {claimed:true,failure:this.fail(claim,e)};}}
@@ -116,7 +117,7 @@ export class LocalLmsWorker {
 export function currentLmsEvidence(store,tenant,evidence){
  if(evidence.source!=='signed-lms-local')return true;
  const e=store.get(tenant,'lms-event',evidence.sourceEventId),r=e&&store.get(tenant,'lms-receipt',e.id);
- if(!e||r?.state!=='processed'||e.digest!==evidence.sourceDigest)return false;
+ if(!e||r?.state!=='processed'||e.digest!==evidence.sourceDigest||!sourceEventTrusted(store,tenant,e))return false;
  if(e.sourceProof?evidence.sourceProofDigest!==hash(stableStringify(e.sourceProof)):!!evidence.sourceProofDigest)return false;
  return !store.list(tenant,'lms-event').some(x=>x.contractId===e.contractId&&x.owner===e.owner&&(x.type==='license-revoked'||x.stream===e.stream&&x.revision>e.revision));
 }

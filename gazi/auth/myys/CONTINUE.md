@@ -1,3 +1,17 @@
+# Güncel devam — Paket28 yerel kabul; kaynak eşitlemesi sırada
+
+B09 kaynak güven sicili ve kapatma yayılımı hazır. 418+46+46=510 otomatik; 14 güven sicili +14 kaynak +13 tatbikat +13 itiraz tarayıcı. 77 komut/16 HTTP, 3337 örnek/26696 kontrol. Eski statik proof, onay referansı silme/yeniden hashleme, anahtar rotasyonu/eski güven dosyası, worker ve cüzdan/durum negatifleri geçti. SOURCE-TRUST-CONTRACT ve B09-trust-20261014.json güncel. 390 px ve odak incelendi; 115 dosya paketlendi.
+
+Önce diff/özgün36 kriter, commit ve expected-head eşitle. Temel yerel 50c1e66063007a1c5f1d7b84c3d596288b0f7d36 / uzak 307ca9d73e642d9fe09d2cd66f81adb36948e275 / ortak ağaç 2ca737db28dda29df19f8253a083ee061d22acc5. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–28 dağıtımı yok. BrowserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör, alt ajan yok.
+
+Sonraki bağımsız B07 üretim transaction/anahtar sağlayıcı adaptörü hazırlığı: BACKCHANNEL-IDENTITY-CONTRACT sözleşmesini oku; mevcut PostgreSQL/Supabase hedefi için ilgili becerileri ve resmî teknik kaynakları doğrula. Yeni migration/credential/ücretli servis oluşturma; çalıştırılabilir sağlayıcı sınırı ve bağımsız yerel sürücü testlerini hazırla. Gerçek depo/IdP/dağıtık kabul ayrı açık. B15 kayıt senaryosu, B01/B24 tam ekran/erişilebilirlik ve bütün kalan B01–B36 bağımsız işler de açık; devam komutu bekleme.
+
+# Güncel devam — Paket27 kaynakta; B09 kaynak güven sicili sırada
+
+Yerel 50c1e66063007a1c5f1d7b84c3d596288b0f7d36 / uzak 307ca9d73e642d9fe09d2cd66f81adb36948e275 / ortak ağaç 2ca737db28dda29df19f8253a083ee061d22acc5. 495 otomatik; 13 tatbikat +14 kaynak +13 itiraz tarayıcı, 74 komut/16 HTTP. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; Paket17–27 dağıtımı yok. Auth iptalini yeniden isteme; configuredCore kapalı; tek editör, alt ajan yok.
+
+B09 source-packet.mjs/key-registry.mjs/LMS/bağımsız verifier inceleniyor. Henüz yeni güven sicili kodu yok. Sürümlü açık kaynak sözleşmesi, kişi eşlemesi özeti (ham eşleme ihracı yok), ayrı yönetici incelemesi, tarih/kapsam, contract/key retire/revoke/compromise ve eski kanıtın uygunluğuna etki hedefleniyor. Eski arşiv değişmeyecek. İptal güncel kanıt/karar/belge/paylaşım/durum listesine yayılmalı; tarihsel güven ihracı ve bağımsız Python doğrulayıcı ayrı sürüm bağını bilmeli. Gerçek hizmet/credential/migration yok. Sonra B07 üretim transaction/anahtar adaptörü ve bütün bağımsız B01–B36 işleri.
+
 # Güncel devam — Paket27 yerel kabul; kaynak eşitlemesi sırada
 
 B27 Kurtarma tatbikatları ekranı/prova/ayrı inceleme hazır. 403+46+46=495 otomatik; 13 tatbikat +14 kaynak +13 itiraz tarayıcı; 74 komut/16 HTTP, 3128 örnek/25024 kontrol. RECOVERY-CONTRACT ve B27-recovery-20261014.json güncel. 390 px form incelendi; 115 dosyalı paket. Önce özgün36 kriter/diff kontrolü, commit ve expected-head kaynak eşitleme. Temel yerel aea164d471e2c208cdd34d6e20da4c50dd9b0021 / uzak 0a33084efd394fdd9c847b4ef7184e4e9be53ed3 / ağaç fe01101aba1f7dcd4ab9947ad093ee5f9377c1b9.

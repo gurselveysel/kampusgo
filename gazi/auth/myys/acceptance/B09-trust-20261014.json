@@ -1,0 +1,79 @@
+{
+  "work_ids": [
+    "B09",
+    "B15",
+    "B16",
+    "B13",
+    "B08"
+  ],
+  "at": "2026-10-14T01:52:20.945280+00:00",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "production": false,
+  "automated": {
+    "server": 418,
+    "portal": 46,
+    "regression": 46
+  },
+  "new_tests": 15,
+  "browser": {
+    "source_trust": {
+      "at": "2026-10-14T01:48:38.907Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "İncelenmemiş kaynak alım ve güven ihracına kapalı",
+        "Hazırlık kaydoldu; hazırlayan kendi incelemesini yapamıyor",
+        "Gerekçeli ret ve yeni sürümün ayrı onayı",
+        "Sürüme bağlı güven dosyası kişi listesi ve özel anahtar içermiyor",
+        "Onaylı kaynaktan dosya kabulü ve ayrı işleme",
+        "Onaylı kaynak insan rubriği ve ayrı akademik karara bağlandı",
+        "Bağımsız Python/OpenSSL özgün kaynak ve ayrı onay bağını doğruladı",
+        "Yeni taslak yeni alımı durduruyor; önceki geçerli değerlendirme değişmiyor",
+        "Risk kapanışı tüm inceleme sürümlerinin aynı anahtarına yayılıyor",
+        "Güncel uygunluk kapandı; değişmeyen arşiv ve güncel güvende bağımsız ret",
+        "Arama ve kuyruktaki kapalı kaynak açıklaması",
+        "Öğrenene diğer rollerin güven sicili açılmıyor",
+        "390 px güven geçmişi ve klavye erişimi",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    },
+    "source_checks": 14,
+    "recovery_checks": 13,
+    "appeal_checks": 13
+  },
+  "scope_matrix": {
+    "commandCount": 77,
+    "positiveSamples": 3337,
+    "totalChecks": 26696,
+    "httpRoutes": [
+      "calisma",
+      "cuzdan-indir",
+      "dogrula",
+      "dogrulama-paketi",
+      "durum-yayinla",
+      "guven-sicili",
+      "imzala",
+      "islem",
+      "karar-arsivi",
+      "kaynak-al",
+      "kaynak-guveni",
+      "kaynak-isle",
+      "kurtarma-dene",
+      "paylasim",
+      "toplu-hazirlik",
+      "veri-ozetim"
+    ]
+  },
+  "legacy": "Statik eski proof değişmez; yeni sicil onayı geriye yazılmaz; güncel kullanım kapalı, yeni imzalı sürüm ayrı kabul edilir.",
+  "limits": [
+    "Kaynak/açık anahtar yapılandırmasının gerçek sağlayıcı ve yetki kabulü yok.",
+    "Güven dosyası ayrı güvenilen yerel girdidir; imzalı kurumsal karar değildir.",
+    "İmzasız insan değerlendirmesi/karar zarfının tutarlı yeniden yazımını LMS imzası tespit etmez.",
+    "Yeni kaynak/anahtar sürümü ayrıca sunucu yapılandırması eşleşmesi gerektirir.",
+    "Üretim depo/worker/backup ve dağıtık kabul açık.",
+    "Paket28 canlı dağıtımı yok; son doğrulanmış canlı Paket16."
+  ]
+}
