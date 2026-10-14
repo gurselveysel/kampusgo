@@ -1,0 +1,19 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {randomBytes} from 'node:crypto';
+import {sqlIdentityFlow} from './helpers/sql-identity-flow.mjs';
+import {PostgresIdentityTransactions} from '../myys/identity-transactions.mjs';
+import {PostgresIdentityHttpSecurity} from '../myys/identity-http-security.mjs';
+import {identitySqlContractDigest} from '../myys/identity-sql-flow.mjs';
+import {hash} from '../myys/store.mjs';
+async function use(t){const h=await sqlIdentityFlow(t);await h.sql.db.exec(await readFile(new URL('../myys/identity-http-schema.sql',import.meta.url),'utf8'));const transactions=new PostgresIdentityTransactions({pool:h.sql.pool,tenant:h.config.tenant,issuer:h.config.issuer,audience:h.config.audience}),config={transactions,tenant:h.config.tenant,issuer:h.config.issuer,audience:h.config.audience,origin:'https://portal.invalid',contractDigest:identitySqlContractDigest(h.config,h.redirectUri),key:randomBytes(32),clock:h.clock},security=new PostgresIdentityHttpSecurity(config),flow=h.newFlow({transactions,httpSecurity:security});await security.activate({...h.control,expectedRevision:0});return {h,config,transactions,security,flow,check:(purpose,browserHash=h.browser)=>security.check({purpose,network:'127.0.0.1',browserHash})};}
+test('B07 guarded SQL flow cannot omit copy or change permit purpose',async t=>{
+ const f=await use(t),{h,flow,security}=f;await assert.rejects(h.begin(flow),e=>e.code==='identity_http_permit');const login=await f.check('login');await assert.rejects(h.begin(flow,h.browser,login),e=>e.code==='identity_http_permit');const p=await f.check('start');await assert.rejects(h.begin(flow,h.browser,{...p}),e=>e.code==='identity_http_permit');const start=await h.begin(flow,h.browser,p);security.close(p);await assert.rejects(h.begin(flow,h.browser,p),e=>e.code==='identity_http_permit');await assert.rejects(h.complete(start,{},flow),e=>e.code==='identity_http_permit');assert.equal(h.exchanges,0);const cb=await f.check('callback'),session=await h.complete(start,{},flow,h.browser,cb),sessionHash=hash(session.sessionToken);await assert.rejects(flow.principal({sessionHash}),e=>e.code==='identity_http_permit');await assert.rejects(flow.logout({sessionHash}),e=>e.code==='identity_http_permit');assert.equal((await h.rows('myys_identity_sessions'))[0].status,'active');const read=await f.check('session',sessionHash);assert.equal((await flow.principal({sessionHash,permit:read})).id,'student');
+});
+test('B07 guarded SQL begin rejects key rotation during KMS I/O without writing a request',async t=>{
+ const f=await use(t),{h,flow}=f,p=await f.check('start'),mac=h.driver.mac;let rotated=false;h.driver.mac=async ref=>{const result=await mac(ref);if(!rotated){rotated=true;h.advance(60000);await new PostgresIdentityHttpSecurity({...f.config,key:randomBytes(32),keyRevision:2}).activate({...h.control,expectedRevision:1});}return result;};await assert.rejects(h.begin(flow,h.browser,p),e=>e.code==='identity_http_permit'||e.code==='identity_http_epoch');assert.ok(rotated);assert.equal((await h.rows('myys_identity_challenges')).length,0);
+});
+test('B07 guarded SQL rejects another repository or security instance with identical scope',async t=>{
+ const f=await use(t),p=await f.check('start'),otherTx=new PostgresIdentityTransactions({pool:f.h.sql.pool,tenant:f.h.config.tenant,issuer:f.h.config.issuer,audience:f.h.config.audience});await assert.rejects(f.h.begin(f.h.newFlow({transactions:otherTx,httpSecurity:f.security}),f.h.browser,p),e=>e.code==='identity_http_scope');const otherSecurity=new PostgresIdentityHttpSecurity(f.config);await assert.rejects(f.h.begin(f.h.newFlow({transactions:f.transactions,httpSecurity:otherSecurity}),f.h.browser,p),e=>e.code==='identity_http_permit');assert.equal((await f.h.rows('myys_identity_challenges')).length,0);
+});

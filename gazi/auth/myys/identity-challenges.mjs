@@ -36,7 +36,8 @@ export class PostgresIdentityChallenges {
  #callback({state,browserHash,issuer,redirectUri}){
   if(!opaque(state)||!hex(browserHash)||issuer!==this.#scope.issuer||redirectUri!==this.#redirect)throw failure();
  }
- async begin({browserHash}){
+ async begin({browserHash},{guard}={}){
+  if(guard!==undefined&&typeof guard!=='function')throw failure();
   if(!hex(browserHash))throw failure();
   const id=randomUUID(),state=randomBytes(32).toString('base64url'),created=this.#now();
   const context=this.#context(id,hash(state),browserHash);
@@ -45,7 +46,7 @@ export class PostgresIdentityChallenges {
   if(receipts.some(r=>r.binding.tenant!==this.#scope.tenant||r.binding.contractDigest!==this.#contract||r.binding.context!==context))throw failure();
   const row={id,...this.#scope,created,expires:receipts.map(r=>r.binding.expires).sort()[0]};
   await this.#keys.withKeys(receipts,async tx=>{
-   this.#scopeCheck(tx);const at=this.#now();if(created>at||row.expires<=at)throw failure();
+   this.#scopeCheck(tx);if(guard)await guard(tx);const at=this.#now();if(created>at||row.expires<=at)throw failure();
    // Global browser advisory lock is taken by withKeys. Other scopes cannot share a pending login.
    const current=await tx.query("SELECT * FROM myys_identity_challenges WHERE browser_hash=$1 AND status IN ('pending','claimed') ORDER BY id FOR UPDATE",[browserHash]);
    if(current.rows.some(r=>r.expires>at&&(r.tenant!==this.#scope.tenant||r.issuer!==this.#scope.issuer||r.audience!==this.#scope.audience)))throw new CoreError('identity_browser_scope','Tarayıcıda başka kurumun giriş isteği sürüyor.',403);
@@ -53,7 +54,7 @@ export class PostgresIdentityChallenges {
     await tx.query("UPDATE myys_identity_challenges SET status='cancelled',finished_at=$2 WHERE id=$1",[old.id,this.#atFor(old)]);await this.#audit(tx,old,'cancel');
    }
    await tx.query("INSERT INTO myys_identity_challenges (id,tenant,issuer,audience,contract_digest,state_hash,browser_hash,context_digest,created,expires,pkce_binding,nonce_binding,status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12::jsonb,'pending')",[id,...this.#params(),this.#contract,hash(state),browserHash,context,created,row.expires,JSON.stringify(receipts[0].binding),JSON.stringify(receipts[1].binding)]);
-   await this.#audit(tx,row,'begin');
+   await this.#audit(tx,row,'begin');if(guard)await guard(tx);
   },{browserHash});
   return Object.freeze({state,nonce:receipts[1].mac,code_challenge:pkceS256(receipts[0].mac),code_challenge_method:'S256',client_id:this.#scope.audience,redirect_uri:this.#redirect,response_type:'code',scope:'openid'});
  }
@@ -63,14 +64,15 @@ export class PostgresIdentityChallenges {
    await tx.query("UPDATE myys_identity_challenges SET status='failed',finished_at=$2 WHERE id=$1",[row.id,this.#atFor(current)]);await this.#audit(tx,current,'fail');return true;
   },{retrySafe:true,browserHash:row.browser_hash});
  }
- async claim(input){
+ async claim(input,{guard}={}){
+  if(guard!==undefined&&typeof guard!=='function')throw failure();
   this.#callback(input);const {state,browserHash}=input;
   // Irreversible request claim is committed BEFORE any resumed key/provider I/O.
   const row=await this.#transactions.run(async tx=>{
-   this.#scopeCheck(tx);const result=await tx.query('SELECT * FROM myys_identity_challenges WHERE tenant=$1 AND issuer=$2 AND audience=$3 AND state_hash=$4 AND browser_hash=$5 AND contract_digest=$6 FOR UPDATE',[...this.#params(),hash(state),browserHash,this.#contract]);
+   this.#scopeCheck(tx);if(guard)await guard(tx);const result=await tx.query('SELECT * FROM myys_identity_challenges WHERE tenant=$1 AND issuer=$2 AND audience=$3 AND state_hash=$4 AND browser_hash=$5 AND contract_digest=$6 FOR UPDATE',[...this.#params(),hash(state),browserHash,this.#contract]);
    const found=result.rows[0];this.#rowValid(found,'pending');
    const changed=await tx.query("UPDATE myys_identity_challenges SET status='claimed',claimed_at=$2 WHERE id=$1 AND status='pending' RETURNING *",[found.id,this.#now()]);
-   if(changed.rows.length!==1)throw failure();await this.#audit(tx,found,'claim');return changed.rows[0];
+   if(changed.rows.length!==1)throw failure();await this.#audit(tx,found,'claim');if(guard)await guard(tx);return changed.rows[0];
   },{retrySafe:true,browserHash});
   try{
    const receipts=[];for(const purpose of ['pkce','nonce'])receipts.push(await this.#keys.resume(row[purpose+'_binding']));
@@ -78,22 +80,25 @@ export class PostgresIdentityChallenges {
    this.#handles.set(handle,{row,receipts,used:false});return handle;
   }catch(e){if(e?.code!=='identity_commit_unknown')await this.#fail(row);throw failure();}
  }
- async finish(handle,work){
+ async finish(handle,work,{guard}={}){
+  if(guard!==undefined&&typeof guard!=='function')throw failure();
   const entry=this.#handles.get(handle);if(!entry||entry.used||typeof work!=='function')throw failure();entry.used=true;
   try{return await this.#keys.withKeys(entry.receipts,async tx=>{
+   if(guard)await guard(tx);
    const row=await this.#find(tx,entry.row.id,entry.row.browser_hash);this.#rowValid(row,'claimed');if(digest(row)!==digest(entry.row))throw failure();
    // Trusted SQL callback must separately validate opaque identity proof and current membership/session revocation.
    const result=await work(tx,Object.freeze({requestId:row.id,browserHash:row.browser_hash,created:row.created,expires:row.expires,contractDigest:row.contract_digest,...this.#scope}));this.#rowValid(row,'claimed');
-   await tx.query("UPDATE myys_identity_challenges SET status='used',finished_at=$2 WHERE id=$1 AND status='claimed'",[row.id,this.#now()]);await this.#audit(tx,row,'use');return result;
+   await tx.query("UPDATE myys_identity_challenges SET status='used',finished_at=$2 WHERE id=$1 AND status='claimed'",[row.id,this.#now()]);await this.#audit(tx,row,'use');if(guard)await guard(tx);return result;
   },{browserHash:entry.row.browser_hash});}
   catch(e){if(e?.code!=='identity_commit_unknown')await this.#fail(entry.row);throw e;}
  }
  async fail(handle){const entry=this.#handles.get(handle);if(!entry||entry.used)throw failure();entry.used=true;return this.#fail(entry.row);}
- async cancel(input){
+ async cancel(input,{guard}={}){
+  if(guard!==undefined&&typeof guard!=='function')throw failure();
   this.#callback(input);const {state,browserHash}=input;
   return this.#transactions.run(async tx=>{
-   this.#scopeCheck(tx);const result=await tx.query('SELECT * FROM myys_identity_challenges WHERE tenant=$1 AND issuer=$2 AND audience=$3 AND state_hash=$4 AND browser_hash=$5 AND contract_digest=$6 FOR UPDATE',[...this.#params(),hash(state),browserHash,this.#contract]);
-   const row=result.rows[0];this.#rowValid(row,'pending');await tx.query("UPDATE myys_identity_challenges SET status='cancelled',finished_at=$2 WHERE id=$1",[row.id,this.#now()]);await this.#audit(tx,row,'deny');return {cancelled:true};
+   this.#scopeCheck(tx);if(guard)await guard(tx);const result=await tx.query('SELECT * FROM myys_identity_challenges WHERE tenant=$1 AND issuer=$2 AND audience=$3 AND state_hash=$4 AND browser_hash=$5 AND contract_digest=$6 FOR UPDATE',[...this.#params(),hash(state),browserHash,this.#contract]);
+   const row=result.rows[0];this.#rowValid(row,'pending');await tx.query("UPDATE myys_identity_challenges SET status='cancelled',finished_at=$2 WHERE id=$1",[row.id,this.#now()]);await this.#audit(tx,row,'deny');if(guard)await guard(tx);return {cancelled:true};
   },{retrySafe:true,browserHash});
  }
  // Future authenticated logout calls this server-owned boundary; there is no anonymous HTTP endpoint.

@@ -141,3 +141,7 @@ MEMBERSHIP-CONTRACT.md: mevcut kişi için sürümlü görev/süre önerisi, ba�
 ## 14.10.2026 — dördüncü yerel kimlik dilimi
 
 Sağlayıcıdan bağımsız imzalı back-channel logout, kurum/issuer/audience/sub/sid eşlemesi, kalıcı tek makbuz/iptal bariyeri ve HTTPS giriş oran sınırı eklendi. Güncel sınırlar ve üretim adaptör yükümlülükleri `BACKCHANNEL-IDENTITY-CONTRACT.md`; kabul `acceptance/B07-backchannel-20261014.json`. Önceki bölümün back-channel/oran henüz yok ifadesi bu yerel dilim için güncellendi; gerçek IdP/üretim depo/anahtar/dağıtık kabul açık kalır.
+
+## Paket59 — yerel SQL HTTPS giriş/oturum ekranı (14.10.2026)
+
+Paket59 LocalPostgresIdentityHttp ayrı loopback HTTPS ve Türkçe giriş/oturum ekranını SQL kişi/üyelik/sessiona bağladı. Aynı private güvenlik nesnesinin permit/epoch guardı begin/claim/finalsession/principal/logout/backchannel transactionlarının başı/sonunda; sağlayıcı beklerken üyelik veya epoch değişirse kabul yok. No-store/TLS/Host/Origin/CSRF/cookie/body/tek callback/timeout/unknownCOMMIT kapalı. Akademik SQL zinciri bağlı değil;academicAccessfalse,officialfalse;Vercelde kapalı.12 PGadayı/16aktifSQLite148tür aynı. Paket59:29 yeni test (26 gerçek HTTPS+SQL,3 guard);784 sunucu+48 portal+46 regresyon=878. Yeni SQL giriş ekranında13, eski yerel girişte15 Chromium kontrolü geçti;320CSSpx/metin aralığı/odak/logolar incelendi. IDENTITY-SQL-HTTP-CONTRACT.md ayrıntıdır.36 özgün kimlik/bağımlılık/kabul korunur. B06/B07 tam kabul veya canlı etkinleştirme değildir.

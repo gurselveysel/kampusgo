@@ -1,0 +1,53 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 59,
+  "work_ids": [
+    "B06",
+    "B07"
+  ],
+  "scope": "isolated-pglite-real-https-synthetic-provider",
+  "official": false,
+  "server_tests": 784,
+  "new_server_tests": 29,
+  "new_http_tests": 26,
+  "new_guard_tests": 3,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 878,
+  "browser_checks": {
+    "new-sql-https": 13,
+    "existing-local-identity-http": 15
+  },
+  "new_sql_http_connected": true,
+  "new_flow_academic_store_connected": false,
+  "synthetic_subjects_only": true,
+  "engine": {
+    "package": "@electric-sql/pglite",
+    "version": "0.5.9",
+    "postgresql": "18.6",
+    "exclusive_connections": 1,
+    "native_multisession_acceptance": false
+  },
+  "static_files": 115,
+  "active_sqlite_tables": 16,
+  "record_kinds": 148,
+  "unapplied_postgresql_candidate_table_count": 12,
+  "local_slice_closed": [
+    "real HTTPS and synthetic cross-site provider to current SQL person membership session and Turkish page",
+    "budget permit and key epoch bound at claim and final session SQL commit",
+    "Origin Host TLS CSRF cookie replay provider cancel and signed backchannel",
+    "actual uncertain claim/final COMMIT fail closed without cookie and without automatic retry",
+    "expiry during provider and final writes rolls back login logout and revocation",
+    "keyboard and 320CSSpx spacing in new isolated login UI"
+  ],
+  "open": [
+    "Async akademik repository ve HTTP kimliği/komut yetkisini aynı scope/transaction zincirine bağla; iki ayrı depo gerçek tek işlem olarak sunulamaz.",
+    "Directory/key/HTTP kontrol düzlemi yetkisi, bütün yazıcılar ve monoton iptal/anahtar geri yükleme checkpoint bağı açık.",
+    "Üretim HTTP/TLS/proxy/origin/cookie ve gerçek IdP/client/MFA/KMS; native çok bağlantı/SSI/RLS/driver/pool/kapasite ve saklama kabulü gerekir. Yeni credential/production migration özel yetki dışında kapalı."
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "0e27338722d70f7f8e3a1c811e0a798a4f4f393b",
+  "source_parent_tree": "0f7a07c8bc1cdceab8a9445c39ccddf047f5a6ed",
+  "contract": "IDENTITY-SQL-HTTP-CONTRACT.md"
+}

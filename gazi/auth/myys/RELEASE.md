@@ -783,3 +783,11 @@ Paket57 kaynak eşitlemesi doğrulandı: yerel `2041c6003bbc64d846f19b429b294a6f
 Görünür ekran değişikliği yok. Paket58:22 yeni SQL HTTP güvenlik testi;755 sunucu+48 portal+46 regresyon=849. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti; yeni SQL sınırı henüz HTTP/flowa bağlı değil. Ortak bütçe/anahtar epochu/CSRF ve permit dilimi yerel kabulde; yeni HTTP handler/flow bağlantısı yok.12 adayPGtablo üretime uygulanmadı;16SQLite148tür ve115 statik korunur.
 
 Başlangıç uzak `4d5d2d8ddacbc587df7d1df90a8eaebabe5dbe9f`, ortak ağaç `3861696ea04da6bdcf7e60dbc5c449bc700975af`; kaynak eşitlemesi ayrıca kaydedilecek.14.10.2026 alias yeniden `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; yeni authenticated smoke değildir.17–58 yayımlanmadı;configuredCore kapalı;browserAuth iptali tekrar denenmedi. Son canlı geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı.
+
+Paket58 kaynak eşitlemesi: yerel `5d56f1e5965ecf1597fce4ff1ba143424af3732e`, uzak `0e27338722d70f7f8e3a1c811e0a798a4f4f393b`, ortak tam ağaç `0f7a07c8bc1cdceab8a9445c39ccddf047f5a6ed`.12 blob SHA/tam ağaç ve expected-head force=false doğrulandı; uzak ref/commit yeniden okundu. Yeni dağıtım yok.
+
+## Paket59 — SQL kimlik giriş/oturum ekranı (yalnız yerel kabul)
+
+Kurum girişi denemesi ve oturum ekranı: sentetik giriş, aynı SQL kişi/üyelik/rolü ve bitiş zamanı, yenileme/çıkış/sağlayıcı iptali. Akademik işlem kapalı olduğu görünür; canlıda açık değil. Paket59:29 yeni test (26 gerçek HTTPS+SQL,3 guard);784 sunucu+48 portal+46 regresyon=878. Yeni SQL giriş ekranında13, eski yerel girişte15 Chromium kontrolü geçti;320CSSpx/metin aralığı/odak/logolar incelendi.115 statik,16SQLite148tür ve12uygulanmamışPGaday; yeni migration yok.
+
+Başlangıç uzak `0e27338722d70f7f8e3a1c811e0a798a4f4f393b`, ortak `0f7a07c8bc1cdceab8a9445c39ccddf047f5a6ed`; kaynak eşitlemesi ayrıca kaydedilecek.14.10.2026 canlı alias `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6` yeniden okundu; yeni authenticated smoke değildir.17–59 dağıtılmadı;configuredCore kapalı;browserAuth iptali tekrar denenmedi. Son canlı geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı.

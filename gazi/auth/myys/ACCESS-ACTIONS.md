@@ -72,3 +72,7 @@ Beş yeni SQL adayı yalnız PGlite sentetik testine kuruldu; toplam9PGadayı ü
 ## Paket58 HTTP güvenliği özel yetki sınırı
 
 Üç yeni adayla toplam12 PGtablosu yalnız sentetik PGlite testinde; production DDL/credential/KMS yok. HTTP epoch activate ayrı yetkili kontrol düzlemine aittir; parametre operatör/dayanak kendiliğinden yetki sağlamaz. Ortak HTTP MAC anahtarının güvenli temini, gerçek transport/proxy sözleşmesi, bütün yazarlar ve geri yükleme checkpoint kabulü gerekir. AktifSQLite16/148 değişmedi.
+
+## Paket59 yerel HTTPS sınırı
+
+Yeni SQL giriş ekranı yalnız loopback; Vercelde reddedilir. Gerçek IdP, production proxy/TLS, KMS/credential, şema veya kişi kaydı kurulmadı. Tek bağlantılı PGlite/HTTPS kabulü, native DB/kurum erişimi onayı sağlamaz. Mevcut tek eylem listesi geçerli; bağımsız async akademik depo ve restore checkpoint geliştirmesi sürer.

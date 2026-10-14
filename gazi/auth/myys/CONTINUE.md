@@ -1,3 +1,17 @@
+# Güncel devam — Paket59 yerel kabul; kaynak eşitlemesi sırada
+
+Paket59:29 yeni test (26 gerçek HTTPS+SQL,3 guard);784 sunucu+48 portal+46 regresyon=878. Yeni SQL giriş ekranında13, eski yerel girişte15 Chromium kontrolü geçti;320CSSpx/metin aralığı/odak/logolar incelendi.Yeni Kurum girişi/oturumu denemesi yalnız loopback SQLde; akademik depoya bağlı değil.115statik/16SQLite148tür/12uygulanmamışPGaday.
+
+Önce diff/commit ve expectedremote0e27338722d70f7f8e3a1c811e0a798a4f4f393b/base0f7a07c8bc1cdceab8a9445c39ccddf047f5a6ed ile tam ağaç eşitle. Son canlı16;17–59dağıtılmadı. ConfiguredCore kapalı;browserAuth iptalini yeniden isteme;tek editör.
+
+Sıradaki60 görünür bağımsız B24 metin karşıtlığı:98 menü/288rol paneli ortak CSS taramasında gerçek hesaplanabilir ön/arka plan ölçümleri; gradient/resim/opacity belirsizlerini manuel ayrı tut. WCAG1.4.3/1.4.11 resmi kapsamını oku, taşma düzeltmelerini ve özgün logoları koru. Tam AT/zoom veya tüm ürünü sıfır hata diye iddia etme. Ardından async akademik repository/kimlik scope bağını, directory/key kontrol düzlemi ve B28monoton restorecheckpoint dahil bütün bağımsızları sürdür.
+
+# Güncel devam — Paket58 kaynakta;59 HTTP bağı geliştiriliyor
+
+Paket58 yerel `5d56f1e5965ecf1597fce4ff1ba143424af3732e`, uzak `0e27338722d70f7f8e3a1c811e0a798a4f4f393b`, ortak tam ağaç `0f7a07c8bc1cdceab8a9445c39ccddf047f5a6ed`.12 blob/tam ağaç/expected-head force=false doğrulandı;849 otomatik15 mevcut HTTPS tarayıcı;115statik. Son canlı16;17–58dağıtılmadı.
+
+59: SQL flow/challenge transaction guard ve ayrı yerel SQL HTTPS kabulü. Güvenlik nesnesi yapılandırılan flow permit olmadan çalışamaz; claim/finalsession/begin/principal/logout/backchannel aynı işlemde guard. Gerçek TLS loopback/test IdP; akademik LocalSQLite deposuna bağlanmış gibi sunulmaz. BrowserAuth iptalini yineleme;configuredCore kapalı;tek editör.
+
 # Güncel devam — Paket58 yerel kabul; kaynak eşitlemesi sırada
 
 Paket58:22 yeni SQL HTTP güvenlik testi;755 sunucu+48 portal+46 regresyon=849. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti; yeni SQL sınırı henüz HTTP/flowa bağlı değil.115statik;12uygulanmamışPGaday,16aktifSQLite148tür. Görünür ekran değişikliği yok. Son canlı16;17–58dağıtılmadı.
