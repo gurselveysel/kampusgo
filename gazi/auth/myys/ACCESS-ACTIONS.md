@@ -64,3 +64,7 @@ YÖK mikro yeterlilik5sayfa ve Gazi kredi transferi4sayfa okuma engeli kaldırı
 ## Paket53 SQL adayının özel yetki sınırı
 
 `identity-key-schema.sql` yalnız PGlite testine kuruldu. Mevcut üretim veya Supabase projesine DDL, credential ya da servis kurulmadı. Gerçek kabul için önce mevcut ayrı test deposunun sürüm/rol/RLS/bağlantı ve anahtar kontrol düzlemi sözleşmesi gerekir; bu başlık yeni bir erişim isteğinin gönderildiği anlamına gelmez. Tek bağlantılı WASM sonucu çok bağlantılı PostgreSQL veya KMS kabulü sayılmaz. Bağımsız repository geliştirmesi sürer.
+
+## Paket55 kişi/üyelik/session özel yetki sınırı
+
+Beş yeni SQL adayı yalnız PGlite sentetik testine kuruldu; toplam9PGadayı üretime uygulanmadı. putPerson merkezi issuer kişi yaşam döngüsü yetkisi, putMembership tenant/birim kaynak yetkisi gerektirir; bu fonksiyonlar normal yönetici veya anonim HTTPye açılmadı. Yeni credential/üretim migration/gerçek kişi kaydı yok. Native çok bağlantı/RLS/IdP/KMS ve geri yükleme checkpoint dış kabulü mevcut tek eylem listesinde açık kalır.

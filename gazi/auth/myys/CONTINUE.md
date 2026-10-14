@@ -1,3 +1,21 @@
+# Güncel devam — Paket55 yerel kabul; kaynak eşitlemesi sırada
+
+Paket55:21 yeni imzalı SQL akış testi;733 sunucu+48 portal+46 regresyon=827. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. Yeni SQL flow henüz HTTP/React/akademik depo bağlantısı değildir; tek bağlantılı PGlite kabulüdür.136/18 8924/71392;115statik;16aktifSQLite148tür+9uygulanmamışPGaday. IDENTITY-SQL-FLOW-CONTRACT.md ayrıntıdır.
+
+Önce diff/commit ve expected-head ccb42733000f5e25b67efcbbfb600cc224ee77bb/base269554739666fddc061635519852378ff1c291ad ile tam ağaç eşitle. Son canlı16;17–55 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör.
+
+SQL kimlik akışı bağımsız hazır; HTTP/cookie/Origin/CSRF/rate ve akademik core senkronLocalSQLite bağı açık. YeniSQL kayıtları panelde gerçek akademik zincir diye gösterilemez. Directory/key kontrol düzlemi yetkilendirmesi, restorecheckpoint, gerçekmulti-session/RLS/IdP/KMS açık. Sonraki görünür bağımsız B24 belge yükleme alanlarının Türkçe/klavye/mobil kabulünü incele; yalnızaltyapıyla sınırlanma. B07 HTTP/rate ve B28checkpoint dahil bütün bağımsızları sürdür.
+
+# Güncel devam — Paket54 kaynakta; SQL kişi/üyelik/oturum sırada
+
+Paket54 kaynak doğrulaması: yerel `e4299e6540f77fd4db2ecc0ef3936d8ca3abd31f`, uzak `ccb42733000f5e25b67efcbbfb600cc224ee77bb`, ortak tam ağaç `269554739666fddc061635519852378ff1c291ad`.11blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+806otomatik15mevcutkimliktarayıcı;136/18 8924/71392;115statik;16aktifSQLite148tür+4uygulanmamışPGaday. Sonraki expectedremote ccb42733000f5e25b67efcbbfb600cc224ee77bb/base269554739666fddc061635519852378ff1c291ad.
+
+B07 sonraki bağımsız: identity-contract private WeakMap kanıtını currenttime/MFA ile async SQL callback içinde doğrulayan server-only yöntem; LocalAcceptanceStore kısıtını kaldırma. Aynı SQL transaction içinde kişi issuer/subject, current üyelik/rol/süre, challenge/keybarrier, session rotate/family/revocation ve audit. Codeexchange+KMS+JWT verify dışarıda, claim öncesinde kalıcı; sonuç yalnız COMMIT sonrası. Üyelik/person revizyonu değişince eski oturum geri canlanmamalı. Başlangıç/finish/okumada kurum kapsamı; logout eski cookie family/claimed kapatma; imzalı logout proof ANDsub/sid ve tekJTI barrier. Öneri: injected driver/transactions/config üzerinde yeni PostgresIdentityFlow; bütün modüllerin contractDigestini identityConfig+redirectten tek hesapla. Gerçek HTTP/akademik core senkronLocalSQLite bağı ayrı açık.
+
+Henüz55kod yok. identity-flow/contract/revocation ve29kimlik testleri okundu. Kişi/üyelik kontrol düzlemi yalnız güvenilen sunucu çağrısı; tarayıcı rol/claim seçemez. Üretim migration/credentials/KMS/IdP yok;PGlite tek exclusive bağlantı,multi-session kabulü değil. SQLrate/CSRF,B28checkpoint ve bütün diğer bağımsızlar sürer. Son canlı16;17–54dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör.
+
 # Güncel devam — Paket54 yerel kabul; kaynak eşitlemesi sırada
 
 Paket54:18 yeni SQL giriş isteği testi;712 sunucu+48 portal+46 regresyon=806. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite tek bağlantılıdır; yeni repository HTTP/oturum kabulü değildir.136/18 8924/71392;115statik;16aktifSQLite148tür+4uygulanmamışPGaday. IDENTITY-CHALLENGE-SQL-CONTRACT.md ayrıntıdır.

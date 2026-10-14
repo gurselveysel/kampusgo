@@ -1,0 +1,60 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 55,
+  "work_ids": [
+    "B06",
+    "B07"
+  ],
+  "scope": "isolated-pglite-signed-identity-acceptance",
+  "official": false,
+  "server_tests": 733,
+  "new_server_tests": 21,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 827,
+  "browser_checks": {
+    "existing-local-identity-http": 15
+  },
+  "new_flow_http_connected": false,
+  "new_flow_academic_store_connected": false,
+  "synthetic_subjects_only": true,
+  "engine": {
+    "package": "@electric-sql/pglite",
+    "version": "0.5.9",
+    "postgresql": "18.6",
+    "exclusive_connections": 1,
+    "native_multisession_acceptance": false
+  },
+  "command_count": 136,
+  "http_routes": 18,
+  "positive_samples": 8924,
+  "derived_scope_checks": 71392,
+  "static_files": 115,
+  "active_sqlite_tables": 16,
+  "record_kinds": 148,
+  "unapplied_postgresql_candidate_table_count": 9,
+  "new_sql_candidate_tables": [
+    "myys_identity_persons",
+    "myys_identity_memberships",
+    "myys_identity_sessions",
+    "myys_identity_logout_receipts",
+    "myys_identity_session_audit"
+  ],
+  "local_slice_closed": [
+    "opaque verified identity and current directory/session/key/challenge/audit in one SQL commit",
+    "strict directory revisions and non-resurrecting historical sessions",
+    "scope/role/MFA/time checks with server-owned roles",
+    "rotation/family logout and signed sub/sid/JTI/late-callback revocation",
+    "actual SQL audit rollback, provider timeout and uncertain COMMIT"
+  ],
+  "open": [
+    "SQL kimlik flowunun güvenli HTTP/cookie/Origin/CSRF/oran sınırı ve rol ekranı kabulünü tamamla; mevcut akademik core senkron LocalAcceptanceStorea bağlı, iki ayrı depo gerçek tek akademik zincir diye gösterilemez.",
+    "Directory ve key control-plane için gerçek yetkilendirme ve kurumsal kaynak/provisioning; SQL rate/CSRF rotasyonu, bütün yazarlar ve güvenilir iptal/checkpoint geri yükleme bağı açık.",
+    "Gerçek çok bağlantılı PostgreSQL/SSI/rol/RLS/driver/TLS/pool/KMS/IdP ve bölgesel kapasite kabulü açık; yeni credential ve üretim migration özel yetki sınırında kapalı."
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "ccb42733000f5e25b67efcbbfb600cc224ee77bb",
+  "source_parent_tree": "269554739666fddc061635519852378ff1c291ad",
+  "contract": "IDENTITY-SQL-FLOW-CONTRACT.md"
+}

@@ -83,7 +83,7 @@ export class PostgresIdentityChallenges {
   try{return await this.#keys.withKeys(entry.receipts,async tx=>{
    const row=await this.#find(tx,entry.row.id,entry.row.browser_hash);this.#rowValid(row,'claimed');if(digest(row)!==digest(entry.row))throw failure();
    // Trusted SQL callback must separately validate opaque identity proof and current membership/session revocation.
-   const result=await work(tx);this.#rowValid(row,'claimed');
+   const result=await work(tx,Object.freeze({requestId:row.id,browserHash:row.browser_hash,created:row.created,expires:row.expires,contractDigest:row.contract_digest,...this.#scope}));this.#rowValid(row,'claimed');
    await tx.query("UPDATE myys_identity_challenges SET status='used',finished_at=$2 WHERE id=$1 AND status='claimed'",[row.id,this.#now()]);await this.#audit(tx,row,'use');return result;
   },{browserHash:entry.row.browser_hash});}
   catch(e){if(e?.code!=='identity_commit_unknown')await this.#fail(entry.row);throw e;}
@@ -98,9 +98,12 @@ export class PostgresIdentityChallenges {
  }
  // Future authenticated logout calls this server-owned boundary; there is no anonymous HTTP endpoint.
  async cancelBrowser({browserHash}){
-  if(!hex(browserHash))throw failure();return this.#transactions.run(async tx=>{
-   this.#scopeCheck(tx);const result=await tx.query("SELECT * FROM myys_identity_challenges WHERE tenant=$1 AND issuer=$2 AND audience=$3 AND browser_hash=$4 AND status IN ('pending','claimed') ORDER BY id FOR UPDATE",[...this.#params(),browserHash]);
-   for(const row of result.rows){await tx.query("UPDATE myys_identity_challenges SET status='cancelled',finished_at=$2 WHERE id=$1",[row.id,this.#now()]);await this.#audit(tx,row,'cancel');}return {cancelled:result.rows.length};
-  },{retrySafe:true,browserHash});
+  if(!hex(browserHash))throw failure();return this.#transactions.run(tx=>this.cancelBrowserInTransaction(tx,{browserHash}),{retrySafe:true,browserHash});
+ }
+ // Server-owned session/logout repository only. Caller already holds its scope/browser transaction locks.
+ async cancelBrowserInTransaction(tx,{browserHash}){
+  if(!hex(browserHash))throw failure();this.#scopeCheck(tx);
+  const result=await tx.query("SELECT * FROM myys_identity_challenges WHERE tenant=$1 AND issuer=$2 AND audience=$3 AND browser_hash=$4 AND status IN ('pending','claimed') ORDER BY id FOR UPDATE",[...this.#params(),browserHash]);
+  for(const row of result.rows){await tx.query("UPDATE myys_identity_challenges SET status='cancelled',finished_at=$2 WHERE id=$1",[row.id,this.#atFor(row)]);await this.#audit(tx,row,'cancel');}return {cancelled:result.rows.length};
  }
 }

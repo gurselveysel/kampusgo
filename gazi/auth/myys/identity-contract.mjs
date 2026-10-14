@@ -88,6 +88,15 @@ export function createIdentityContract(input) {
    } catch { throw fail(); } // Never expose token, claims, provider messages or key details.
   },
   resolveLocalMember(proof, options) { return resolveMember(proof, options); },
+  // Server-owned async SQL adapters call this INSIDE their transaction, using the current clock.
+  // This validates an opaque proof, not membership or authorization; no HTTP claim is accepted.
+  withVerifiedIdentity(proof,{now=new Date(),requireMfa=true}={},work) {
+   const at=timestamp(now),identity=proofs.get(proof);
+   requireThat(identity&&at>=identity.at&&at<identity.expires&&at-identity.at<=c.maxTokenAgeSeconds,'identity_proof','Güncel doğrulanmış kimlik kanıtı gerekli.',403);
+   requireThat(typeof requireMfa==='boolean'&&(!requireMfa||identity.mfa),'identity_mfa','Bu işlem için kurumun doğruladığı çok faktörlü kimlik kanıtı gerekli.',403);
+   requireThat(typeof work==='function','identity_commit','Güvenilen kimlik depo işlemi gerekli.',500);
+   return work(Object.freeze({tenant:c.tenant,issuer:identity.issuer,subject:identity.subject,audience:c.audience,mfa:identity.mfa,expiresAt:new Date(identity.expires*1000).toISOString(),contractVersion:c.version,providerSessionId:identity.sid,issuedAt:identity.iat,authenticatedAt:identity.authTime}));
+  },
   async verifyLogout(token,{now=new Date()}={}) {
    const at=timestamp(now);
    try {
@@ -110,6 +119,11 @@ export function createIdentityContract(input) {
    requireThat(store instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Oturum iptali yalnız yerel kabulde çalışır.',503);
    requireThat(grant&&at>=grant.at&&at<grant.expires&&at-grant.issued<=120+c.clockToleranceSeconds&&typeof commit==='function','identity_logout','Güncel imzalı oturum kapatma kanıtı gerekli.',400);
    return store.transaction(()=>commit({...grant}));
+  },
+  withVerifiedLogout(proof,{now=new Date()}={},work) {
+   const at=timestamp(now),grant=logoutProofs.get(proof);
+   requireThat(grant&&at>=grant.at&&at<grant.expires&&at-grant.issued<=120+c.clockToleranceSeconds&&typeof work==='function','identity_logout','Güncel imzalı oturum kapatma kanıtı gerekli.',400);
+   return work(Object.freeze({...grant}));
   },
   commitLocalMember(proof, options, commit) {
    requireThat(typeof commit === 'function', 'identity_commit', 'Yerel kabul işlemi gerekli.', 500);

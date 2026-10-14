@@ -62,3 +62,7 @@ Tarihsel Paket29 sınırının SQL metadata köprüsü `IDENTITY-KEY-BRIDGE-CONT
 ## Paket54 izleme
 
 `IDENTITY-CHALLENGE-SQL-CONTRACT.md`: anahtar köprüsüne bağlı kalıcı giriş isteği ve claim-before-provider yerel SQL kabulü eklendi. Oturum/kişi/iptal/HTTP bağlantısı hâlâ açık;16 aktifSQLite ve4 uygulanmamışPGadayı ayrı tutulur.
+
+## Paket55 izleme
+
+`IDENTITY-SQL-FLOW-CONTRACT.md`: opak imza kanıtı/current SQL kişi ve üyelik, session/family/iptal/audit zinciri bağımsız kabulde bağlandı. Eski LocalAcceptanceStore kısıtları değişmedi; HTTP/akademik SQL/gerçek control-plane ve dağıtık kabul açık.9PGaday16aktifSQLite ayrı.

@@ -745,3 +745,13 @@ Paket54 PostgresIdentityChallenges anahtar köprüsüyle begin/claim/finish/fail
 Paket54:18 yeni SQL giriş isteği testi;712 sunucu+48 portal+46 regresyon=806. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite tek bağlantılıdır; yeni repository HTTP/oturum kabulü değildir.136komut/18HTTP8924örnek71392kapsam denetimi;115statik.36 özgün iş/bağımlılık/kabul aynı. İlk15senaryo geçti; son incelemede geri saat, yanlış yapılandırılmış redirect/contract ve begin rollback denetimi genişletildi; son tam koşu geçti.
 
 Paket54 dağıtılmadı. Alias yeniden okundu: dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu authenticated smoke değildir;17–54 canlı değil;configuredCore kapalı;browserAuth iptali tekrar denenmedi. Geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. Kaynak commit/tam ağaç ayrıca kaydedilir.
+
+Paket54 kaynak doğrulaması: yerel `e4299e6540f77fd4db2ecc0ef3936d8ca3abd31f`, uzak `ccb42733000f5e25b67efcbbfb600cc224ee77bb`, ortak tam ağaç `269554739666fddc061635519852378ff1c291ad`.11blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+## Paket55 — SQL imzalı kimlik/üyelik/oturum (14.10.2026)
+
+Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque signed proof/MFA, challenge/keybarrier, session ve audit atomik zincirini bağladı. Strict+1 directory control; person ve membership revizyonu sessiona pinli, kapat/aç eski sessionı canlandırmaz. Rotate/parentfamilylogout, sub/sidANDJTI backchannel ve session öncesi iptal bariyeri, timeout ve belirsiz COMMIT kapalı.9 uygulanmamışPGadayı; aktifSQLite16tablo148tür aynı. YeniSQL HTTP/rate/CSRF/akademik sınırı ve güvenilirrestore checkpoint açıktır.
+
+Paket55:21 yeni imzalı SQL akış testi;733 sunucu+48 portal+46 regresyon=827. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. Yeni SQL flow henüz HTTP/React/akademik depo bağlantısı değildir; tek bağlantılı PGlite kabulüdür.136komut/18HTTP8924örnek71392kapsam denetimi;115statik.36 özgün iş/bağımlılık/kabul aynı. İlk20senaryo geçti; ikinci incelemede iki flow tekrar, logout opaqueproof ve kişi audit rollback eklendi; son21yeni ve tam733sunucu geçti.
+
+Paket55 dağıtılmadı. Alias yeniden okundu: dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu authenticated smoke değildir;17–55 canlı değil;configuredCore kapalı;browserAuth iptali tekrar denenmedi. Geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. Kaynak commit/tam ağaç ayrıca kaydedilir.
