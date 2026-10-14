@@ -1,3 +1,19 @@
+# Güncel devam — Paket52 yerel kabul; kaynak eşitlemesi sırada
+
+14.10.2026 Paket52:678+48+46=772 otomatik;6 yeni sunucu;10 sürüm+12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=68 tarayıcı;136komut/18HTTP8924örnek71392kapsam denetimi.115statik16tablo148tür. RECOGNITION-VERSION-CONTRACT.md ve B21-version JSON ayrıntıdır. Son tasarım: TÜM yeni kararlar (arşivsiz dahil) açık expectedTechnicalId veya null taşır; eski API sessiz bypass yok; eski kayıtlar değişmez.
+
+Önce diff/commit ve expected-head8107c2145b7ecd0c1882eceb4eb76fad473c4b48,base-tree bd7a49ee4b93cc49dda445a3f67244737f9d2930 ile tam ağaç eşitle. Son canlı16;17–52 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok.
+
+Sırada B07 kalıcı kimlik repository/provider köprüsü. identity-transactions.mjs yalnız injected Postgres transaction wrapper; identity-key-provider.mjs yalnız describe/mac sınırı. Gerçek SQL repository ve provider metadata→commit bağı eksik. Yerelde postgres/psql yok, apt-cache var fakat paket listesi boş. Yeni servis/credential/üretim migration yapma; gerçek PG erişimi yoksa bağımsız adaptör ve kapalı sözleşme/test sürdür. B28 güvenlik checkpoint ve tüm diğer bağımsızlar açık.
+
+# Güncel devam — Paket51 kaynakta; karar formunun teknik sürümü inceleniyor
+
+Paket51 kaynak doğrulaması: yerel `49c7943c7f4614253ed75f2ce8130153100e347f`, uzak `8107c2145b7ecd0c1882eceb4eb76fad473c4b48`, ortak tam ağaç `bd7a49ee4b93cc49dda445a3f67244737f9d2930`.19blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+766otomatik58tarayıcı;136komut18HTTP8761örnek70088denetim;115statik16tablo148tür. Sırada arşivli karar için expectedTechnicalId zorunlu, yeni UI bütün kararlarda açık sürüm pimi; eski arşivsiz API korunur ancak pin gönderirse doğrulanır. Grup satırları da bağımsız pin taşır; sıfır kredili negatif karar geçerli imza şartı almaz, yalnız görülen rapor sürümünü teyit eder. İki tarayıcı süreci ve iki SQLite eski form testi gerekir.
+
+Son canlı16;17–51 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok. B07 repository/KMS,B28checkpoint ve tüm diğer bağımsızlar sürer.
+
 # Güncel devam — Paket51 yerel kabul; kaynak eşitlemesi sırada
 
 14.10.2026 Paket51:672+48+46=766 otomatik;11 yeni sunucu;12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=58 tarayıcı;136komut/18HTTP8761örnek70088kapsam denetimi.115statik16tablo148tür. RECOGNITION-IDENTITY-CONTRACT.md ve B21-identity JSON ayrıntıdır.

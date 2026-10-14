@@ -1,0 +1,56 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 52,
+  "work_id": "B21",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "server_tests": 678,
+  "new_server_tests": 6,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 772,
+  "browser_checks": {
+    "recognition-version": 10,
+    "recognition-identity": 12,
+    "recognition-review": 12,
+    "recognition": 12,
+    "recognition-offers": 11,
+    "obs": 11
+  },
+  "browser_total": 68,
+  "version_browser_checks": [
+    "Komisyon açık formda ilk teknik raporun sürümünü ve dayanağını gördü",
+    "Ayrı tarayıcı sürecindeki bilgi işlem ikinci olumlu raporu kaydetti",
+    "İlk tarayıcının kimliği ve eski açık formu diğer oturumdan ayrı kaldı",
+    "Eski form 409 ile reddedildi; yeni rapor sessizce karara alınmadı",
+    "Rapor yenilenince eski form temizlendi; başarısız işlem kredi oluşturmadı",
+    "Yeniden incelenen ikinci rapor açık dayanakla akademik karara bağlandı",
+    "Öğrenci iki raporun geçmişini ve kararın seçtiği raporu yenilemede gördü",
+    "390 px karar dayanağı taşmıyor; teknik geçmiş klavyeyle açılıyor",
+    "Başka öğrenci rapor ve karar dayanağını göremedi",
+    "İstemci istisnası yok"
+  ],
+  "stale_form_browser_processes": 2,
+  "command_count": 136,
+  "http_routes": 18,
+  "positive_samples": 8924,
+  "derived_scope_checks": 71392,
+  "static_files": 115,
+  "technical_tables": 16,
+  "record_kinds": 148,
+  "local_slice_closed": [
+    "all new single and offer-row decisions explicitly identify the technical version or null absence",
+    "stale human form rejected and cleared after authoritative refresh",
+    "two SQLite connections and two Chromium process race",
+    "historical decision displays its pinned technical report; negative zero-credit path preserved"
+  ],
+  "open": [
+    "real signed achievement/outcome and institutional prior-course mapping",
+    "general VC/status/schema/interoperability and real production/OBS/live acceptance"
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "8107c2145b7ecd0c1882eceb4eb76fad473c4b48",
+  "source_parent_tree": "bd7a49ee4b93cc49dda445a3f67244737f9d2930",
+  "contract": "RECOGNITION-VERSION-CONTRACT.md"
+}

@@ -1,3 +1,4 @@
+import {latestRecognitionTechnical} from '../myys/recognition-review.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {use} from './helpers/myys-fixture.mjs';
@@ -8,7 +9,7 @@ import {localRecognitionPolicy as policyInput,localRecognitionBasis} from './hel
 const setup=f=>{const {e}=f.setup(),p=f.run('admin','recognition-policy',policyInput);localRecognitionBasis(f,p);f.run('publisher','recognition-policy-review',{policyId:p.id,outcome:'accepted',reason});return {e,p};};
 const request=(f,x,patch={})=>f.run('student','recognition-request',{enrollmentId:x.e.id,policyId:x.p.id,sourceTitle:'Sentetik dış eğitim belgesi',sourceIssuer:'Test sağlayıcı',sourceCredentialId:'TEST-CREDENTIAL-1',sourceOutcomeKey:'SOURCE-O1',sourceDigest:hash('synthetic-document'),targetCourseCode:'COURSE-1',mappingReason:reason,requestedCredits:10,remoteCredits:5,...patch});
 const technical=(f,r,outcome='accepted')=>f.run('it','recognition-technical',{requestId:r.id,outcome,method:'issuer-record-reviewed',reportReference:'Sentetik kaynak inceleme raporu',reason});
-const decide=(f,r,patch={},actor='judge')=>f.run(actor,'recognition-decide',{requestId:r.id,outcome:'full',credits:r.requestedCredits,remoteCredits:r.remoteCredits,reason,authorityReference:'Yerel kabul kurulu kayıt referansı',gainKey:'GAIN-1',priorCourseChecked:true,priorCourseReference:'Sentetik önceki ders incelemesi',...patch});
+const decide=(f,r,patch={},actor='judge')=>f.run(actor,'recognition-decide',{requestId:r.id,expectedTechnicalId:latestRecognitionTechnical(f.s,f.context('judge').tenant,r.id)?.id||null,outcome:'full',credits:r.requestedCredits,remoteCredits:r.remoteCredits,reason,authorityReference:'Yerel kabul kurulu kayıt referansı',gainKey:'GAIN-1',priorCourseChecked:true,priorCourseReference:'Sentetik önceki ders incelemesi',...patch});
 test('politika paydaları ayrı; uzaktan oran mezuniyet kredisine bölünmez',()=>{
  assert.deepEqual(recognitionLimits(policyInput,{credit:10,remoteCredit:5,existing:14}),{credit:{numerator:24,denominator:240,capPercent:10},remote:{numerator:5,denominator:10,capPercent:50}});
  assert.throws(()=>recognitionLimits(policyInput,{credit:10,remoteCredit:6,existing:0}),e=>e.code==='remote_cap');assert.throws(()=>recognitionLimits(policyInput,{credit:10,remoteCredit:5,existing:14.01}),e=>e.code==='credit_cap');assert.throws(()=>recognitionLimits({...policyInput,remoteDenominator:'graduation-credits'},{credit:10,remoteCredit:0,existing:0}),e=>e.code==='denominator');

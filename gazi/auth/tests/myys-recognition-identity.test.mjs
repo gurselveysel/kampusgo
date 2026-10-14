@@ -1,3 +1,4 @@
+import {latestRecognitionTechnical} from '../myys/recognition-review.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
@@ -14,7 +15,7 @@ const error=code=>e=>e.code===code;
 async function setup(f){
  const x=await localExternalCredential(f);
  const review=async(row,verifier=x.verifier)=>{const proof=await verifier.verify(f.context('it'),row.document.id);return f.run('it','recognition-technical',{requestId:row.request.id,outcome:'accepted',method:'verified-file-reviewed',verificationId:proof.id,statusChecked:true,statusOutcome:'active',statusReference:x.reason,reportReference:x.reason,reason:x.reason});};
- const input=(row,patch={})=>({requestId:row.request.id,outcome:'full',credits:10,remoteCredits:5,gainKey:'GAIN-'+row.request.targetCourseCode,priorCourseChecked:true,priorCourseReference:x.reason,authorityReference:x.reason,reason:x.reason,...patch});
+ const input=(row,patch={})=>({requestId:row.request.id,expectedTechnicalId:latestRecognitionTechnical(f.s,x.config.tenant,row.request.id)?.id||null,outcome:'full',credits:10,remoteCredits:5,gainKey:'GAIN-'+row.request.targetCourseCode,priorCourseChecked:true,priorCourseReference:x.reason,authorityReference:x.reason,reason:x.reason,...patch});
  const decide=(row,patch={},who='judge')=>f.run(who,'recognition-decide',input(row,patch));
  const duplicate=async(changes={})=>{const row=x.deliver(await x.token(x.payload({name:'Yeni imzalı sentetik nüsha'})),changes);row.tech=await review(row);return row;};
  const tech=await review(x);return {...x,review,input,decide,duplicate,tech};

@@ -713,3 +713,15 @@ Paket51: aynı doğrulanmış issuer/belge/kanonik çıktı kimliği, yeniden im
 14.10.2026 Paket51:672+48+46=766 otomatik;11 yeni sunucu;12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=58 tarayıcı;136komut/18HTTP8761örnek70088kapsam denetimi. 390px görsel incelendi. İlk yeni testte ekran için zenginleştirilmiş talep yerine değişmez kaynak talebinin özeti kullanılarak uyarı bağı düzeltildi; son tam koşular geçti.16tablo148tür/115statik. Sözleşme RECOGNITION-IDENTITY-CONTRACT.md ve B21-identity JSON ayrıntıdır.36 özgün iş/bağımlılık/kabul değişmedi.
 
 Paket51 dağıtılmadı; son doğrulanan canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Yeni authenticated smoke yok;configuredCore kapalı. 17–51 dağıtılmadı; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı;browserAuth iptali tekrar denenmedi. Kaynak kimliği ve tam ağaç eşitlemesi ayrıca kaydedilir.
+
+Paket51 kaynak doğrulaması: yerel `49c7943c7f4614253ed75f2ce8130153100e347f`, uzak `8107c2145b7ecd0c1882eceb4eb76fad473c4b48`, ortak tam ağaç `bd7a49ee4b93cc49dda445a3f67244737f9d2930`.19blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+## Paket52 — B21 kararın görülen teknik rapora bağlanması (14.10.2026)
+
+Paket52: her yeni tek ders ve teklif satırı kararı expectedTechnicalId ile insanın gördüğü raporu veya açık null yokluğunu taşır. Eksik/eski/başka rapor409; tek eski satır tüm teklifi geri alır. Arşivsiz yeni karar da aynı kurala bağlı; eski kayıtlar korunur. Ekran yenilenince eski karar taslağı temizlenir; geçmiş kararda gerçekten kullanılan rapor sürümü/ref görünür. Negatif0kredi için imza geçerliliği şartı eklenmez.
+
+14.10.2026 Paket52:678+48+46=772 otomatik;6 yeni sunucu;10 sürüm+12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=68 tarayıcı;136komut/18HTTP8924örnek71392kapsam denetimi. İki ayrı Chromium sürecinde eski komisyon kimliği ayrıca doğrulandı; diğer oturumun ikinci olumlu raporundan sonra eski form gerçekHTTP409 aldı, güncel form başarılı oldu.390px görsel incelendi.16tablo148tür/115statik. RECOGNITION-VERSION-CONTRACT.md ve B21-version JSON ayrıntıdır.36 özgün iş/bağımlılık/kabul aynı.
+
+Paket52 dağıtılmadı; son doğrulanan canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Yeni authenticated smoke yok;configuredCore kapalı. 17–52 dağıtılmadı; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı;browserAuth iptali tekrar denenmedi. Kaynak kimliği ve tam ağaç eşitlemesi ayrıca kaydedilir.
+
+Paket52 kaynak eşitlemesi öncesi canlı alias yeniden okundu: `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY/production ve `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`. Bu salt okunur kontrol yeni authenticated smoke değildir.

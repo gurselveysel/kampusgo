@@ -7,10 +7,10 @@
 | B01 · Mevcut pilot envanterini sabitle | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
 | B02 · Akademik ve SEM yetki yollarını ayır | kısmi; belge ekli yerel dosya bağlı | 13 yeni test ve 13 yeni tarayıcı; profil bağı geçti | Paket42 canlı değil | gerçek Senato/SEM/görev/süre kabulü açık | tam usul, dosya deposu/tarama/e-imza kabulü açık |
 | B03 · Program bilgi paketini onayla | kısmi; program/profil/yetki paketi bağlı | 8 yeni test, 9 yeni tarayıcı; güncel indirme geçti | Paket43 canlı değil | gerçek program/lisans/kurum yayını kabulü açık | bağımsız kod için gerekli değil |
-| B04 · Veri akışını ve saklamayı onayla | kısmi; 14 tablo/120 tür kaynak envanteri | yerel kapsam/özet geçti | Paket40 canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
+| B04 · Veri akışını ve saklamayı onayla | kısmi; güncel kaynak envanteri16tablo/148tür | yerel kapsam/özne özeti geçti; kurum alan kabulü değil | yeni envanter dilimleri canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; yerel HTTP anahtar dönüşümü bağlı | 8 yeni test, 15 HTTPS +13 itiraz tarayıcı kontrolü | Paket39 canlı değil | IdP/MFA kabulü bekleniyor | SQL repository/atomik PKCE bariyeri ve gerçek depo/KMS/IdP açık |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; Paket45 yerel PKCE/nonce commit bariyeri bağlı |11yeni sunucu,24tarayıcı; iki SQLite yarış kabulü | Paket45 canlı değil | gerçek IdP/MFA kabulü açık | SQL repository/KMS metadata köprüsü ve gerçek depo/RLS/IdP açık |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi; imzalı kaynak/arşiv bağlı | 19 yeni test, 14 kaynak tarayıcı; bağımsız doğrulama | Paket26 canlı değil | kaynak yetki/usul kabulü açık | güven yaşam döngüsü, gerçek sağlayıcı/depo açık |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
@@ -24,7 +24,7 @@
 | B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B20 · Tanıma politika setini onayla | kısmi | kısmi · tanıma dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B21 · Dış belge ve tanıma akışını bağla | kısmi; kanonik belge çıktısı/çift kredi koruması bağlı | Paket51:11 yeni sunucu,58 tarayıcı; tanımlı dilim geçti | Paket51 canlı değil | gerçek teslim/usul/çıktı/önceki ders/kurul kabulü açık | gerçek issuer/status/schema ve üretim kabulü açık |
+| B21 · Dış belge ve tanıma akışını bağla | kısmi; imza/insan raporu/tekil kredi/karar sürümü bağlı | Paket52:6 yeni sunucu,68 tarayıcı; tanımlı dilim geçti | Paket52 canlı değil | gerçek teslim/usul/çıktı/önceki ders/kurul kabulü açık | gerçek issuer/status/schema ve üretim kabulü açık |
 | B22 · OBS aktarımını kontrollü kabul et | kısmi; kaynak güveni ve iptal düzeltmesi bağlı | Paket50 bağlı zincir ve11 OBS tarayıcı geçti | Paket50 canlı değil | operasyonel kabul açık | gerçek OBS şeması/transkript/diploma eki/işçi kabulü açık |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B24 · Erişilebilirlik açılış testini yap | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
@@ -34,10 +34,10 @@
 | B28 · Silme saklama ve çıkış haklarını sına | kısmi; envanter, özne özeti ve sınırlı giriş isteği temizliği | 8 yeni test, 48 tarayıcı kontrolü | Paket41 canlı değil | dayanak/süre/başvuru usulü bekleniyor | tam silme, güvenlik checkpoint, yedek ve dış hesap kabulü açık |
 | B29 · Kalite göstergelerini gerçek veriye bağla | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B30 · Kontrollü kohortu aç ve değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B31 · Ücretli hizmeti koşullu aç | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
+| B31 · Ücretli hizmeti koşullu aç | kısmi; Paket33 yerel mali simülatör hazır |16mali tarayıcı; yerel iade/itiraz/mutabakat geçti | Paket33 canlı değil | ücret/tahsilat/iade yetkisi ve uygulanabilirlik açık | gerçek PSP/settlement/vergi-fatura kabulü koşullu açık |
 | B32 · Çoklu birim ölçeğini kabul et | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B33 · Beceri grafını uzmanla doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B34 · İşveren portfolyo pilotunu aç | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
+| B34 · İşveren portfolyo pilotunu aç | kısmi; Paket36 dar amaçlı izin/geri bildirim bağlı |11sunucu ve14tarayıcı dilimi geçti | Paket36 canlı değil | gerçek amaç/alıcı/veri/izin kararı açık | gerçek alıcı kimliği, üretim depo ve dış kabul açık |
 | B35 · Pilot AI araçlarını ayrı dene | kısmi; sentetik öneri/kıyas/itiraz bağlı | 13 sunucu + 13 tarayıcı; tanımlı dilim geçti | Paket37 canlı değil | sağlayıcı/veri/içerik/pilot yetkisi açık | gerçek model-plan-Türkçe pilotu ve üretim depo açık |
 | B36 · İsteğe bağlı gelişmiş cüzdan ve zinciri değerlendir | kısmi; bağımsız alternatif/erteleme dilimi hazır | 8 sunucu + 11 tarayıcı; tanımlı dilim geçti | Paket38 canlı değil | somut ihtiyaç/alternatif kararı açık | gerçek cüzdan/protokol ihraç-doğrulama-iptal açık |
 
@@ -329,3 +329,11 @@ Paket51: aynı doğrulanmış issuer/belge/kanonik çıktı kimliği, yeniden im
 14.10.2026 Paket51:672+48+46=766 otomatik;11 yeni sunucu;12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=58 tarayıcı;136komut/18HTTP8761örnek70088kapsam denetimi. 390px görsel incelendi. İlk yeni testte ekran için zenginleştirilmiş talep yerine değişmez kaynak talebinin özeti kullanılarak uyarı bağı düzeltildi; son tam koşular geçti.16tablo148tür/115statik. Sözleşme RECOGNITION-IDENTITY-CONTRACT.md ve B21-identity JSON ayrıntıdır.36 özgün iş/bağımlılık/kabul değişmedi.
 
 Paket51 dağıtılmadı; son doğrulanan canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Yeni authenticated smoke yok;configuredCore kapalı. 17–51 dağıtılmadı; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı;browserAuth iptali tekrar denenmedi. Kaynak kimliği ve tam ağaç eşitlemesi ayrıca kaydedilir.
+
+## Paket52 — B21 kararın görülen teknik rapora bağlanması (14.10.2026)
+
+Paket52: her yeni tek ders ve teklif satırı kararı expectedTechnicalId ile insanın gördüğü raporu veya açık null yokluğunu taşır. Eksik/eski/başka rapor409; tek eski satır tüm teklifi geri alır. Arşivsiz yeni karar da aynı kurala bağlı; eski kayıtlar korunur. Ekran yenilenince eski karar taslağı temizlenir; geçmiş kararda gerçekten kullanılan rapor sürümü/ref görünür. Negatif0kredi için imza geçerliliği şartı eklenmez.
+
+14.10.2026 Paket52:678+48+46=772 otomatik;6 yeni sunucu;10 sürüm+12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=68 tarayıcı;136komut/18HTTP8924örnek71392kapsam denetimi. İki ayrı Chromium sürecinde eski komisyon kimliği ayrıca doğrulandı; diğer oturumun ikinci olumlu raporundan sonra eski form gerçekHTTP409 aldı, güncel form başarılı oldu.390px görsel incelendi.16tablo148tür/115statik. RECOGNITION-VERSION-CONTRACT.md ve B21-version JSON ayrıntıdır.36 özgün iş/bağımlılık/kabul aynı.
+
+Paket52 dağıtılmadı; son doğrulanan canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Yeni authenticated smoke yok;configuredCore kapalı. 17–52 dağıtılmadı; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı;browserAuth iptali tekrar denenmedi. Kaynak kimliği ve tam ağaç eşitlemesi ayrıca kaydedilir.

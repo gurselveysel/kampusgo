@@ -80,6 +80,7 @@ function executeRecognition(ctx,batch){
   requireOfferBatch(s,tenant,r.id,batch);
   requireThat(policy.transferScope!=='multi-course-offer'||batch,'offer_required','Bu politika çok dersli teklif kararı gerektirir.',409);
   const technical=latestRecognitionTechnical(s,tenant,r.id),prior=decisions(s,tenant,r.id).at(-1);
+  requireThat(p.expectedTechnicalId===(technical?.id||null),'technical_version','Teknik rapor değişti veya kararın rapor sürümü belirtilmedi. Güncel raporu inceleyip kararı yeniden hazırlayın.',409);
   requireThat(![r.owner,technical?.createdBy,policy.createdBy].includes(a.id),'separation','Teknik inceleme ve akademik karar ayrı kişilerce yürütülmeli.',403);
   let res;
   if(prior){res=s.list(tenant,'recognition-resolution').find(x=>x.decisionId===prior.id&&x.outcome==='reassessment'&&x.id===p.resolutionId);requireThat(res&&!s.list(tenant,'recognition-decision').some(x=>x.resolutionId===res.id),'duplicate','Önceki kararı değiştirmek için bağımsız yeniden inceleme gerekli.',409);requireThat(![prior.createdBy,res.createdBy].includes(a.id),'separation','Yeni karar önceki karar sahibi ve incelemeciden bağımsız olmalı.',403);}
@@ -192,7 +193,7 @@ function offerCommand(ctx){
   // Rejecting an entire offer needs no new credit authorization. A zero denominator is displayed as not applicable.
   const limits=credits?recognitionLimits(policy,{credit:credits,remoteCredit:remoteCredits,existing:existing.reduce((n,r)=>n+creditUnits(r.credits),0)/100}):null;
   const decisionId=id(),batch={offer:o,decisionId,priorDecisionIds,limits};
-  const ds=requests.map(r=>{const row=p.rows.find(x=>x.requestId===r.id),resolutionId=res?.rowResolutionIds.find(key=>s.get(t,'recognition-resolution',key)?.decisionId===decisions(s,t,r.id).at(-1)?.id);return executeRecognition({...ctx,action:'recognition-decide',p:{requestId:r.id,outcome:row.outcome,credits:row.credits,remoteCredits:row.remoteCredits,gainKey:canonicalKey(row.gainKey),priorCourseChecked:row.priorCourseChecked,priorCourseReference:row.priorCourseReference,reason:p.reason,authorityReference:p.authorityReference,...(resolutionId?{resolutionId}:{})}},batch);});
+  const ds=requests.map(r=>{const row=p.rows.find(x=>x.requestId===r.id),resolutionId=res?.rowResolutionIds.find(key=>s.get(t,'recognition-resolution',key)?.decisionId===decisions(s,t,r.id).at(-1)?.id);return executeRecognition({...ctx,action:'recognition-decide',p:{requestId:r.id,...(Object.hasOwn(row,'expectedTechnicalId')?{expectedTechnicalId:row.expectedTechnicalId}:{}),outcome:row.outcome,credits:row.credits,remoteCredits:row.remoteCredits,gainKey:canonicalKey(row.gainKey),priorCourseChecked:row.priorCourseChecked,priorCourseReference:row.priorCourseReference,reason:p.reason,authorityReference:p.authorityReference,...(resolutionId?{resolutionId}:{})}},batch);});
   return put('recognition-offer-decision',{id:decisionId,unit:o.unit,owner:o.owner,offerId:o.id,rowDecisionIds:ds.map(d=>d.id),credits,remoteCredits,limits,reason:p.reason,authorityReference:p.authorityReference,...(res?{resolutionId:res.id,supersedesDecisionId:prior.id}:{}),official:false});
  }
  if(action==='recognition-offer-appeal'){

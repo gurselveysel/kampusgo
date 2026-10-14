@@ -7,8 +7,8 @@ export function localRecognitionCase(f){
  localRecognitionBasis(f,policy);
  f.run('publisher','recognition-policy-review',{policyId:policy.id,outcome:'accepted',reason});
  const request=f.run('student','recognition-request',{enrollmentId:e.id,policyId:policy.id,sourceTitle:'Sentetik dış eğitim belgesi',sourceIssuer:'Test sağlayıcı',sourceCredentialId:'TEST-CREDENTIAL-1',sourceOutcomeKey:'SOURCE-O1',sourceDigest:'a'.repeat(64),targetCourseCode:'COURSE-1',mappingReason:reason,requestedCredits:10,remoteCredits:5});
- f.run('it','recognition-technical',{requestId:request.id,outcome:'accepted',method:'issuer-record-reviewed',reportReference:'Sentetik teknik inceleme raporu',reason});
- const decide=(actor='judge',patch={})=>f.run(actor,'recognition-decide',{requestId:request.id,outcome:'full',credits:10,remoteCredits:5,reason,authorityReference:'Sentetik yerel kurul karar referansı',gainKey:'GAIN-1',priorCourseChecked:true,priorCourseReference:'Sentetik önceki ders incelemesi',...patch});
+ const technical=f.run('it','recognition-technical',{requestId:request.id,outcome:'accepted',method:'issuer-record-reviewed',reportReference:'Sentetik teknik inceleme raporu',reason});
+ const decide=(actor='judge',patch={})=>f.run(actor,'recognition-decide',{requestId:request.id,expectedTechnicalId:technical.id,outcome:'full',credits:10,remoteCredits:5,reason,authorityReference:'Sentetik yerel kurul karar referansı',gainKey:'GAIN-1',priorCourseChecked:true,priorCourseReference:'Sentetik önceki ders incelemesi',...patch});
  const decision=decide();
  const revise=(old,actor='publisher',patch={outcome:'partial',credits:6,remoteCredits:3})=>{const appeal=f.run('student','recognition-appeal',{decisionId:old.id,reason});const resolution=f.run('reviewer','recognition-resolve',{appealId:appeal.id,outcome:'reassessment',reason});return decide(actor,{...patch,resolutionId:resolution.id});};
  return {program,e,policy,request,decision,decide,revise,reason};
