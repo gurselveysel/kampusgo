@@ -601,3 +601,17 @@ Yerel `70ed4097299cf75106cccfe149a939938bdfe097`; uzak `b606baeb86dc8114dabea875
 - Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction.17–41dağıtımı/yeni oturumlu smoke yok;browserAuth kullanıcıiptaliniyenidenisteme;configuredCorekapalı.
 - Canlı geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
 - İlk toplu koşu sentetik IdP saati farkını yakaladı; fixture saati eşitlendi, üretim doğrulaması gevşetilmeden tam koşu yeniden geçti. Yeni servis/credential/migration/gerçek kişi verisi yok. Resmî kanal, kurum saklama, üretim/tam hesap/yedek imhası ve dış hesap kabulü açık. B28/tümB01–B36tamamlanmadı.
+
+### Paket41 kaynak kimlikleri
+
+Yerel `522836521214df457774567b65deb851b499669a`; uzak `8a5c605f101b63d3f4a62c4456bb37abdfff6fa0`; ortak tam ağaç `a67894ffba6534d2a688e986f5980ea89df0c15a`. 21 blob SHA ve tam ağaç eşleşti; beklenen uzak baş `b606baeb86dc8114dabea8754e8dc7f24ad02a43`, force=false. Uzak yeni baş ve 14.10 canlı alias16 yeniden doğrulandı; yeni canlı yayın yok.
+
+## Paket42 — belge ekli yetki dosyası; kaynak adayı
+
+14.10.2026. Politika ve hak siciline gerçek yerel dosya ekleri/indirme, kaynak-sürüm-kapsam, dört sorumluluk, süre, ayrı yönetici incelemesi, yeni sürüm ve durdurma eklendi. Belge profili dosyanın kimliğini ve SHA'sını sabitler. Yeni dosya eski profili değiştirmez; eski imzalı belge kendiliğinden iptal olmaz.
+
+- 570 sunucu +48 portal +46 regresyon =664 otomatik. 13 yetki dosyası +11 profil +13 itiraz +19 gezinme =56 tarayıcı kontrolü. 118 komut/16 HTTP, 6709 örnek/53672 kapsam kontrolü; 115 korumalı statik dosya. 98 menü/279 rol-panel/66 ders korundu; 390 px görsel kontrol yapıldı.
+- Taban yerel `522836521214df457774567b65deb851b499669a` / uzak `8a5c605f101b63d3f4a62c4456bb37abdfff6fa0` / ortak `a67894ffba6534d2a688e986f5980ea89df0c15a`. Güncel uzak baş ve canlı alias 14.10 yeniden okundu.
+- Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production. 17–42 dağıtımı ve yeni oturumlu smoke yok. BrowserAuth kullanıcı iptali yeniden istenmedi; configuredCore kapalı.
+- Canlı geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
+- Yerel ek sınırı 32 KiB; gerçek kurum evrak deposu, imza/zararlı içerik doğrulaması, saklama ve Senato/SEM yetki kabulü açık. YÖK/Gazi tam usul erişimi yeniden denendi, doğrulanamadı; okunmayan hüküm kural yapılmadı. B02/B12 ve bütün B01–B36 tamamlanmadı.

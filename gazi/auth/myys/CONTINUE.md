@@ -1,3 +1,19 @@
+# Güncel devam — Paket42 yerel kabul; kaynak eşitlemesi sırada
+
+Politika ve hak sicili: gerçek 32 KiB ek baytları, ayrı metadata/indirme makbuzu, program/sicil/ek SHA, dört sorumluluk kapsamı, UTC süre, ayrı yönetici incelemesi, yeni sürüm ve durdurma. Belge profili güncel dosya kimliğini/SHA'sını sabitler; eski imzayı değiştirmez. B02 bağımsız yerel dilimi kabul edildi; gerçek ek doğrulama/kurum kararı/tam usul/üretim depo/tarama/e-imza açık.
+
+570+48+46=664 otomatik; 13 yetki+11 profil+13 itiraz+19 gezinme=56 tarayıcı.118 komut/16 HTTP;6709 örnek/53672 denetim;115 statik;128 tür/14 tablo. Özgün36 kimlik/başlık/bağımlılık/kabul ölçütü aynen korundu. Tam YÖK PDF ve Gazi yönergesi tekrar arandı, tam metin elde edilemedi; SEM-SOURCE-REVIEW.md sınırı kaydeder.
+
+Önce diff/commit ve expected-head `8a5c605f101b63d3f4a62c4456bb37abdfff6fa0`, base-tree `a67894ffba6534d2a688e986f5980ea89df0c15a` ile blob ve tam ağaç eşitle. Son canlı16;17–42 dağıtımı yok. BrowserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör/alt ajan yok.
+
+Sıradaki bağımsız B03: backlog'taki program bilgi paketi onayı ve program/rubrik/kanıt sürüm bağı kalanını incele/uygula. B07 SQL repository/HTTP PKCE atomik bariyeri, B28 güvenlik checkpoint/idempotency kopyaları ve bütün B01–B36 diğer bağımsız işler açık. Devam komutu bekleme.
+
+# Güncel devam — Paket41 kaynakta; B02/B23 tam resmî kaynak incelemesi
+
+Yerel522836521214df457774567b65deb851b499669a/uzak8a5c605f101b63d3f4a62c4456bb37abdfff6fa0/ortaka67894ffba6534d2a688e986f5980ea89df0c15a;21blobtam ağaç eşleşti.651otomatik/48tarayıcı;sonkimlik15tekrarbaşarılı. Soncanlı16;17–41 dağıtımı yok. BrowserAuthiptaliniyenidenisteme;configuredCorekapalı;tekeditöraltajanyok.
+
+Şimdi B02/B23 daha önce tam okunamayan YÖK mikro-yeterlilik/Gazi SEM usul metinlerini resmî kaynaklarda tekrarara/oku; yeni okunan hükmü kuruma özgü kapsam ve sürümüyle kaydet, kurum kararı uydurma. B07SQLrepository/HTTPPKCEatomikbariyer, B28checkpoint/idempotencykopyasaklaması ve bütünB01–B36 bağımsızlar açık; araştırma dış engeliyle tüm işi durdurma. Devamkomutubekleme.
+
 # Güncel devam — Paket41 yerel kabul; kaynak eşitlemesi sırada
 
 B28 tamamlanmış giriş isteği temizliği UI veçekirdek: ayrı local-login-cleanupyanıtı,privacy-login-preview/cleanup,ownedusedexpiredauditproof,max100,15dakika,digest,kişiMFAconfirm,atomicrollback/idempotency;diğer güvenliktabloları/akademik korunur.14tablo122tür60export.8yeni test;557+48+46=651otomatik.113komut/16HTTP5229örnek41832denetim.9temizlik+11privacy+15kimlik+13itiraz=48tarayıcı;390pxincelendi. İlk tam koşudaki39freezeclockIdPduvarsaati hatası fixtureprovider/logoutToken clock()ile düzeltildi;son tamkoşubaşarılı. Yeni kimlikbrowserregresyonu /tmp/gazi-package41-identity-browser.logsonucunu teyit et.

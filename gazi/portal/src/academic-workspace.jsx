@@ -1,3 +1,4 @@
+import {AuthorityWorkspace} from './authority-workspace.jsx';
 import {WalletStudyWorkspace} from './wallet-study-workspace.jsx';
 import {AdviceWorkspace} from './advice-workspace.jsx';
 import {PortfolioWorkspace} from './portfolio-workspace.jsx';
@@ -83,6 +84,7 @@ export function AcademicWorkspace(){
  </article>)}</div></Card>}
  {tab==='enrollments'&&can(['coordinator','studentAffairs'])&&<EnrollmentForm programs={programs} publications={data.publications||[]} busy={busy} onSubmit={p=>command('enroll',p)}/>}
  {tab==='registry'&&can(['admin'])&&<RegistryForm memberships={data.memberships} busy={busy} onSubmit={p=>command('registry-draft',p)}/>}
+ {tab==='registry'&&<AuthorityWorkspace data={data} busy={busy} command={command}/>}
  {tab==='evidence'&&can(['learner'])&&<EvidenceForm enrollments={enrollments.filter(x=>x.owner===data.personId)} programs={programs} busy={busy} onSubmit={p=>command('evidence',p)}/>}
  {tab==='assessments'&&can(['instructor'])&&<AssessmentForm data={data} busy={busy} onSubmit={p=>command('assess',p)}/>}
  </div></>}

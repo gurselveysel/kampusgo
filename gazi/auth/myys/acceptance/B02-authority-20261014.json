@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-14",
+  "package": 42,
+  "work_ids": [
+    "B02",
+    "B12"
+  ],
+  "ui": "Politika ve hak sicili: belge ekleri/kapsam/süre/inceleme/sürüm/durdurma; Belge profilleri: tam yetki dosyası bağı",
+  "production_enabled": false,
+  "new_tests": 13,
+  "automated": {
+    "server": 570,
+    "portal": 48,
+    "regression": 46,
+    "total": 664
+  },
+  "browser": {
+    "authority": 13,
+    "profile": 11,
+    "appeals": 13,
+    "navigation": 19,
+    "total": 56,
+    "viewport": 390
+  },
+  "scope": {
+    "commands": 118,
+    "http_routes": 16,
+    "positive_samples": 6709,
+    "derived_negative_checks": 53672
+  },
+  "protected_static_files": 115,
+  "inventory": {
+    "tables": 14,
+    "record_types": 128,
+    "subject_export_types": 60
+  },
+  "completed_slice": [
+    "actual bounded local attachment bytes, source metadata and audited admin-only download",
+    "program/registry/attachment hashes and all four responsibility scopes",
+    "validity, independent review, version, hold and current membership checks",
+    "profile pins authority dossier; new draft prevents fallback, signed history preserved"
+  ],
+  "limits": [
+    "Local acceptance only; maximum attachment size 32768 bytes; no official document authenticity, malware or electronic-signature validation",
+    "Senate and SEM files are an internal preparation gate, not an inferred universal legal rule",
+    "Current full YÖK/Gazi rules not successfully retrieved; actual institution authority, production file store and retention remain open",
+    "No new production deployment or authenticated live smoke"
+  ],
+  "live": {
+    "package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "new_deployment": null
+  }
+}

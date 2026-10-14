@@ -86,46 +86,62 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Merkezi SEM yerel ihraç reddi ve resmî mod reddi.",
+      "test_status": "13 yeni B02 sunucu ve 13 yeni tarayıcı kontrolü; 570+48+46=664 otomatik. 118 komut/16 HTTP için 6709 örnekten 53672 kapsam denetimi.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/myys/authority.mjs",
+        "gazi/auth/myys/authority-model.mjs",
+        "gazi/auth/myys/credential-profile.mjs",
+        "gazi/portal/src/authority-workspace.jsx",
+        "gazi/auth/tests/myys-authority.test.mjs",
+        "scripts/myys-authority-browser.cjs",
+        "gazi/auth/myys/AUTHORITY-DOSSIER-CONTRACT.md",
+        "gazi/auth/myys/SEM-SOURCE-REVIEW.md",
+        "gazi/auth/myys/acceptance/B02-authority-20261014.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Dört sorumluluk alanı ve ayrı SEM yolu; gerçek kurum onayı yok.",
-      "independent_remaining_work": [
-        "Yetki sicilinde belge ekleri, geçerlilik ve sorumluluk kapsamını doğrula."
-      ],
+      "production_status": "Paket42 kaynak adayı; yeni canlı dağıtımı yok. Son canlı16, configuredCore kapalı. Yeni yetki dosyası yalnız yerel kabulde.",
+      "implementation_note": "Politika ve hak sicilinde 32 KiB gerçek yerel ek arşivi/indirme, kaynak-sürüm-kapsam, program ve dört sorumluluk bağı, UTC süre, ayrı yönetici incelemesi/yeni sürüm/durdurma. Belge profili aynı dosya SHA bağını tekrar denetler; eski imza/akademik kayıt değişmez. Yerel inceleme gerçek kurum yetkisi değildir.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Senato/SEM yetki belgeleri ve atanmış sorumlular.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; bağımsız belge ekli yerel dosya dilimi bağlı",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/tests/myys.test.mjs",
+            "gazi/auth/myys/authority.mjs",
+            "gazi/auth/myys/authority-model.mjs",
+            "gazi/auth/myys/credential-profile.mjs",
+            "gazi/portal/src/authority-workspace.jsx",
+            "gazi/auth/tests/myys-authority.test.mjs",
+            "scripts/myys-authority-browser.cjs",
+            "gazi/auth/myys/AUTHORITY-DOSSIER-CONTRACT.md",
+            "gazi/auth/myys/SEM-SOURCE-REVIEW.md",
+            "gazi/auth/myys/acceptance/B02-authority-20261014.json"
           ],
           "remaining": [
-            "Yetki sicilinde belge ekleri, geçerlilik ve sorumluluk kapsamını doğrula."
+            "Gerçek kurum usulü/ek gerçekliği, üretim belge deposu/tarama/e-imza/saklama sözleşmesi ve yetkili görev kapsamı eşlemesi."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Merkezi SEM yerel ihraç reddi ve resmî mod reddi.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "belge ekli yerel yetki dosyası dilimi geçti",
+          "evidence": "13 yeni B02 sunucu ve 13 yeni tarayıcı kontrolü; 570+48+46=664 otomatik. 118 komut/16 HTTP için 6709 örnekten 53672 kapsam denetimi.",
+          "limits": "Sentetik belge baytları; 32 KiB yerel ek sınırı. Gerçek Senato/SEM kararı, e-imza doğrulaması, malware taraması veya resmî yetki kabulü değildir."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "yeni dilim yayımlanmadı",
+          "evidence": "Paket42 kaynak adayı; yeni canlı dağıtımı yok. Son canlı16, configuredCore kapalı. Yeni yetki dosyası yalnız yerel kabulde."
         },
         "institution_decision": {
           "status": "bekleniyor",
-          "required": "Senato/SEM yetki belgeleri ve atanmış sorumlular."
+          "required": "Seçili programın gerçek Senato/SEM dayanakları, dört sorumluluk görevlendirmesi, süre/kapsam ve bağımsız kurum incelemecileri."
         },
         "external_access": {
-          "status": "bağımsız kod için gerekli değil",
-          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
-          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+          "status": "belge/üretim sözleşmesi bekleniyor",
+          "target": "Tam güncel YÖK/Gazi usulü; kurum belge doğrulama/depo/tarama/e-imza sözleşmesi.",
+          "next_action": "ACCESS-ACTIONS.md 5 ve 5a; önce belge incelemesi, yeni erişim oluşturulmadı."
         }
       }
     },
@@ -2697,16 +2713,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 36,
-    "server_security_tests": "511/511",
+    "software_package": 42,
+    "server_security_tests": "570/570",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 605,
-    "portal_build": "Başarılı;115statik dosyalı mevcut korumalı paket",
-    "browser_visual_acceptance": "14portfolyo+19gezinme+11veri talebi+8cüzdan+13itiraz;98menü/261rol-panel/66ders. Gerçek işveren veya ekran okuyucu kabulü değil.",
+    "local_total": 664,
+    "portal_build": "Başarılı; 115 statik dosyalı mevcut korumalı paket",
+    "browser_visual_acceptance": "13 yetki dosyası, 11 profil, 13 itiraz, 19 gezinme: 56 kontrol; 98 menü/279 rol-panel/66 ders. Gerçek ekran okuyucu veya kurum dosyası kabulü değil.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–36dağıtılmadı.configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B34-portfolio-20261014.json"
+    "deployment": "Son canlı16 READY;17–42 dağıtılmadı; configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B02-authority-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2728,12 +2744,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 33,
-    "source_parent_remote": "36a81a550060a66a4cb26a9f97933c376ea26b24",
-    "source_parent_tree": "e617d524b9c1ece5ce409da496f120a67b13e0c6",
+    "software_package": 42,
+    "source_parent_remote": "8a5c605f101b63d3f4a62c4456bb37abdfff6fa0",
+    "source_parent_tree": "a67894ffba6534d2a688e986f5980ea89df0c15a",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 572,
-    "note": "B31 yerel ödeme/iade/ters ibraz mutabakatı geçti; kaynak eşitlemesi sırada. Sonraki B32 ikinci birim/kurum ve kota; B07/B28 ve tüm kalan bağımsız işler açık."
+    "local_tests": 664,
+    "note": "B02 yerel ek/süre/kapsam/profil bağı kabulü; tam resmî usul erişimi yeniden denendi, doğrulanamadı. B03 onaylı program bilgi paketi bağı sırada; B07/B28 ve diğer B01–B36 bağımsızlar açık."
   },
   "verification_history": [
     {
@@ -2813,6 +2829,19 @@
         "local_tests": 559,
         "note": "B26 yerel rol/takvim/rehber kabulü geçti; kaynak eşitlemesi sırada. Sonraki B31 koşullu ödeme durum makinesi ve simülatör; gerçek tahsilat kapalı. B07 ve tüm bağımsız kalanlar açık."
       }
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 42,
+      "server_security_tests": "570/570",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46 model/kaynak/demo",
+      "local_total": 664,
+      "portal_build": "Başarılı; 115 statik dosyalı mevcut korumalı paket",
+      "browser_visual_acceptance": "13 yetki dosyası, 11 profil, 13 itiraz, 19 gezinme: 56 kontrol; 98 menü/279 rol-panel/66 ders. Gerçek ekran okuyucu veya kurum dosyası kabulü değil.",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16 READY;17–42 dağıtılmadı; configuredCore kapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B02-authority-20261014.json"
     }
   ]
 }

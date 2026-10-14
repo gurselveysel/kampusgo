@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.41",
+  "version": "2026.10.14.42",
   "scope": "local-acceptance-source-inventory",
   "generatedFrom": "schema declarations and reviewed explicit recordGroups/subjectFields",
   "institutionApproved": false,
@@ -263,6 +263,7 @@
     "Records data JSON fields are governed by positive subject export schemas; this is not a full institution field inventory.",
     "No external IdP/LMS/OBS/PSP/KMS/backup inventory or legal retention period is inferred.",
     "Structural hashes and pseudonyms can remain personal data; raw security records are not self-service exports.",
-    "Free-text authored by the subject may mention others; no semantic anonymization claim."
+    "Free-text authored by the subject may mention others; no semantic anonymization claim.",
+    "Authority files are untrusted local attachments, admin-only downloads; no automatic malware, signature or institutional authenticity validation. Raw bytes stay out of workspace and command results, but the immutable local file record needs an approved retention policy."
   ]
 }

@@ -249,3 +249,7 @@ B26: `support-service.mjs` sürümlü yerel takvim/ayrı inceleme/hold; `support
 ## B36 · Paket38 bağımsız cüzdan keşfi
 
 `wallet-study.mjs`, `wallet-study-model.mjs` ve `wallet-study-workspace.jsx`: mevcut özel cüzdan/açık protokol/zincir alternatiflerini kaydeden, iki ayrı disiplin incelemesiyle erteleme veya zincirsiz keşif önerisini sürdüren yerel modül. Üç komut, sürüm/durdurma; gerçek test sonuçlarını veya transportu açan alan yok.626otomatik/51tarayıcı geçti;kurum ihtiyacı ve gerçek dış cüzdan kabulü açık. Ayrıntı `WALLET-STUDY-CONTRACT.md` veB36JSON.
+
+## B02 · Paket42 belge ekli yetki dosyası
+
+Politika ve hak sicili içinde gerçek yerel ek yükleme/indirme, program/sicil/ek SHA bağı, dört sorumluluk kapsamı, UTC geçerlilik, ayrı yönetici incelemesi, yeni sürüm ve durdurma. `authority.mjs` beş komut ve altı kayıt türü; ham dosya workspace/command.result dışında. Belge profili dosyanın kimliğini/SHA'sını sabitler; yeni dosya eski profil bağını veya imzalı belgeyi değiştirmez. 13 yeni test/13 yeni tarayıcı kontrolü; 664 otomatik toplam. `AUTHORITY-DOSSIER-CONTRACT.md` ve B02 kabul JSON'u sınırları açıklar. Gerçek kurum yetkisi, tam kaynak, dosya tarama/e-imza/üretim deposu ve canlı kabul açık.
