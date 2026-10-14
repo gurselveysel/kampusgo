@@ -1,3 +1,4 @@
+import {isLocalSqlAcademicStore} from './academic-sql-store.mjs';
 import {authorityReady,currentAuthorityDossier} from './authority.mjs';
 import {LocalAcceptanceStore,requireThat,hash} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
@@ -30,7 +31,7 @@ export function issuanceProfile(s,a,program,now,profileId=null){
 export function profileReplay(a,action,r){if(!['credential-profile','credential-profile-review','credential-profile-hold'].includes(action))return false;requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Belge profili işlemi yalnız yerel kabulde çalışır.',503);requireThat(role(a,r.unit,action==='credential-profile'?['admin']:['commission']),'forbidden','Güncel profil görevi ve çok faktörlü doğrulama gerekli.',403);return true;}
 export function profileCommand({action,p,a,s,put,id,now}){
  if(!['credential-profile','credential-profile-review','credential-profile-hold'].includes(action))return null;
- requireThat(s instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Belge profili yalnız izole yerel kabulde hazırlanabilir.',503);
+ requireThat((s instanceof LocalAcceptanceStore||isLocalSqlAcademicStore(s))&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Belge profili yalnız izole yerel kabulde hazırlanabilir.',503);
  if(action==='credential-profile'){
   const program=s.get(a.tenant,'program',p.programId);requireThat(program&&role(a,program.unit,['admin']),'not_found','Yetkili birimde program sürümü gerekli.',404);
   requireThat(program.mode==='pilot'&&program.pathway==='micro'&&p.mode==='local-acceptance'&&p.sourceVersion===profileSource.version&&p.format===profileFormat&&!p.official,'official_disabled','Yalnız kaynak özetiyle yerel mikro yeterlilik profili hazırlanabilir.');

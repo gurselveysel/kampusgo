@@ -5,21 +5,21 @@
 | Paket | Kod | Yerel kabul | Canlı | Kurum kararı | Dış erişim |
 |---|---|---|---|---|---|
 | B01 · Mevcut pilot envanterini sabitle | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
-| B02 · Akademik ve SEM yetki yollarını ayır | kısmi; belge ekli yerel dosya bağlı | 13 yeni test ve 13 yeni tarayıcı; profil bağı geçti | Paket42 canlı değil | gerçek Senato/SEM/görev/süre kabulü açık | tam usul, dosya deposu/tarama/e-imza kabulü açık |
+| B02 · Akademik ve SEM yetki yollarını ayır | kısmi;24SQLkomut, yetki dosyası/profil bağlı | Paket72:15yeni/1004toplam;58tarayıcı | Son canlı16;72yayımlanmadı | gerçek Senato/SEM/görev/süre kabulü açık | tam usul, dosya deposu/tarama/e-imza kabulü açık |
 | B03 · Program bilgi paketini onayla | kısmi; program/profil/yetki paketi bağlı | 8 yeni test, 9 yeni tarayıcı; güncel indirme geçti | Paket43 canlı değil | gerçek program/lisans/kurum yayını kabulü açık | bağımsız kod için gerekli değil |
 | B04 · Veri akışını ve saklamayı onayla | kısmi; güncel kaynak envanteri16tablo/149tür | yerel kapsam/özne özeti geçti; kurum alan kabulü değil | yeni envanter dilimleri canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B06 · Kalıcı kişi ve üyelik modelini kur | kısmi; ilk14SQLkomut/15tablo checkpoint; alternatifölçme yerel | Paket69:10yeni/970toplam;41tarayıcı | Son canlı16;69yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; ilk12SQLkomut/15tablo checkpoint; itiraz usulü yerel | Paket68:11yeni/960toplam;34tarayıcı | Son canlı16;68yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
-| B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B06 · Kalıcı kişi ve üyelik modelini kur | kısmi;24SQLkomut, yetki dosyası/profil bağlı | Paket72:15yeni/1004toplam;58tarayıcı | Son canlı16;72yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi;24SQLkomut, yetki dosyası/profil bağlı | Paket72:15yeni/1004toplam;58tarayıcı | Son canlı16;72yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
+| B08 · Tenant ve görevler ayrılığını sınırla | kısmi;24SQLkomut, yetki dosyası/profil bağlı | Paket72:15yeni/1004toplam;58tarayıcı | Son canlı16;72yayımlanmadı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi; ilk14SQLkomut/15tablo checkpoint; alternatifölçme yerel | Paket69:10yeni/970toplam;41tarayıcı | Son canlı16;69yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi; ilk14SQLkomut/15tablo checkpoint; alternatifölçme yerel | Paket69:10yeni/970toplam;41tarayıcı | Son canlı16;69yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
 | B11 · İtiraz ve moderasyon yolunu kur | kısmi; ilk14SQLkomut/15tablo checkpoint; alternatifölçme yerel | Paket69:10yeni/970toplam;41tarayıcı | Son canlı16;69yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
-| B12 · Belgeyi akademik karara bağla | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
+| B12 · Belgeyi akademik karara bağla | kısmi;24SQLkomut, yetki dosyası/profil bağlı | Paket72:15yeni/1004toplam;58tarayıcı | Son canlı16;72yayımlanmadı | bekleniyor | bağımsız kod için gerekli değil |
 | B13 · Anahtar ve durum güvenilirliğini doğrula | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B14 · LMS veri sözleşmesini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B15 · İlk LMS adaptörünü kabul et | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B16 · Olay kuyruğu ve idempotency kur | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B16 · Olay kuyruğu ve idempotency kur | kısmi;24SQLkomut, yetki dosyası/profil bağlı | Paket72:15yeni/1004toplam;58tarayıcı | Son canlı16;72yayımlanmadı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B17 · Toplu ihraç ve mutabakat ekle | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
@@ -31,7 +31,7 @@
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi; ilk8SQLkomut/15tablo birleşikcheckpoint | Paket67:13yeni/949toplam;29tarayıcı; yerel dilim | Son canlı16;67yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
-| B28 · Silme saklama ve çıkış haklarını sına | kısmi; ilk8SQLkomut/15tablo birleşikcheckpoint | Paket67:13yeni/949toplam;29tarayıcı; yerel dilim | Son canlı16;67yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
+| B28 · Silme saklama ve çıkış haklarını sına | kısmi;24SQLkomut, yetki dosyası/profil bağlı | Paket72:15yeni/1004toplam;58tarayıcı | Son canlı16;72yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
 | B29 · Kalite göstergelerini gerçek veriye bağla | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B30 · Kontrollü kohortu aç ve değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B31 · Ücretli hizmeti koşullu aç | kısmi; Paket33 yerel mali simülatör hazır |16mali tarayıcı; yerel iade/itiraz/mutabakat geçti | Paket33 canlı değil | ücret/tahsilat/iade yetkisi ve uygulanabilirlik açık | gerçek PSP/settlement/vergi-fatura kabulü koşullu açık |
@@ -415,3 +415,7 @@ Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+1
 ## Paket71 — aynı SQL politika ve hak sicili
 
 Paket71:8yeni SQL testi;884sunucu+59portal+46regresyon=989.32SQL+14mevcut yetki dosyası+19gezinme=65tarayıcı.136komut/18HTTP kapsamında9035pozitif72280negatif örnek;115statik paket. [Kanıt](acceptance/B02-B20-registry-sql-20261014.json). Beş tür ve ayrı yönetici incelemesi, Türkçe alan/durum/gerekçe/filtre, currentrole/tenant/replay/atomic audit/checkpoint geçti. B02/B04/B05/B08/B12/B14/B16/B20 alt dilimleri; bütün paket kabulü değildir. Kod kısmi; yerel geçti; canlı17–71yok; kurum ve dış erişim/gerçek sözleşme/nativeSSI/RLS/tamAT açık.
+
+## Paket72 — aynı SQL yetki dosyası ve belge profili
+
+Paket72: yetki eki/dosyası/ayrı inceleme/durdurma/indirme ve belge profili/inceleme/durdurma aynı SQL zincirinde. İki ek kaydı atomik; indirme tekrarı güncel yetki ve byteözetini denetler; yeni sürümler geçmiş bağı değiştirmez. SQL ihraç/imza/program paketi henüz kapalı. Paket72:15yeni SQL testi;899sunucu+59portal+46regresyon=1004.44SQL+14mevcut yetki dosyası=58tarayıcı.136komut/18HTTP kapsamında9035pozitif72280türetilmiş negatif örnek;115statik paket. [Sözleşme](AUTHORITY-PROFILE-SQL-CONTRACT.md), [kanıt](acceptance/B02-B12-authority-profile-sql-20261014.json). B02/B06/B07/B08/B12/B16/B28 yerel alt kabulü; kurum ve dış erişim sütunları kapanmadı. Son canlı16;17–72dağıtılmadı.

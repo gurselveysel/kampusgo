@@ -1,16 +1,18 @@
+import {authorityView,authorityFileResult} from './authority.mjs';
+import {profileView} from './credential-profile.mjs';
 // Isolated SQL academic unit of work. No connection, DDL, seed, production route or second persistent store.
-import {LocalSqlAcademicWorkingSet,academicSqlKinds} from './academic-sql-store.mjs';
+import {LocalSqlAcademicWorkingSet,academicSqlKinds,academicSqlCapacity} from './academic-sql-store.mjs';
 import {appealPolicyView} from './appeal-policy.mjs';
 import {MyysCore,ROLES} from './core.mjs';
 import {PostgresIdentityFlow} from './identity-sql-flow.mjs';
 import {requireThat,hash} from './store.mjs';
-export const academicSqlActions=Object.freeze(['program','publish','enroll','evidence','assess','decide','appeal','resolve','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive','alternative-evidence','evidence-moderate','registry-draft','registry-review']);
+export const academicSqlActions=Object.freeze(['program','publish','enroll','evidence','assess','decide','appeal','resolve','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive','alternative-evidence','evidence-moderate','registry-draft','registry-review','authority-attachment','authority-dossier','authority-review','authority-hold','authority-download','credential-profile','credential-profile-review','credential-profile-hold']);
 const kinds=new Set(academicSqlKinds);
 const local=()=>requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Akademik SQL denemesi yalnız izole yerel kabulde çalışır.',503);
 const copy=v=>JSON.parse(JSON.stringify(v));
 const iso=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
 const field=(v,max=160)=>typeof v==='string'&&v.length>0&&v.length<=max&&!/[\x00-\x1f]/.test(v);
-const maxRows=10000,maxBytes=16*1024*1024;
+const {maxRows,maxBytes}=academicSqlCapacity;
 export class LocalPostgresAcademicCore {
  #identity;#clock;
  constructor({identity,clock=()=>new Date()}){local();requireThat(identity instanceof PostgresIdentityFlow&&typeof clock==='function','academic_config','Aynı SQL kimlik akışı gerekli.',503);this.#identity=identity;this.#clock=clock;}
@@ -34,12 +36,19 @@ export class LocalPostgresAcademicCore {
   return this.#identity.withPrincipal({sessionHash,permit,purpose:'academic-write'},async(tx,actor)=>{
    requireThat(actor.tenant===tenant,'not_found','Bu kurum kaydına erişilemiyor.',404);const set=await this.#snapshot(tx,actor);try{
     const now=this.#now(),core=new MyysCore(set.store,{clock:()=>now}),old=(await tx.query('SELECT action,digest,result FROM public.myys_academic_commands WHERE tenant=$1 AND person_id=$2 AND id=$3',[tenant,actor.id,commandId])).rows[0];
-    if(old){requireThat(old.action===action&&old.digest===digest,'idempotency_conflict','Aynı işlem kimliği farklı içerikle kullanılamaz.',409);core.authorizeReplay(actor,action,old.result);return copy(old.result);}
+    if(old){requireThat(old.action===action&&old.digest===digest,'idempotency_conflict','Aynı işlem kimliği farklı içerikle kullanılamaz.',409);core.authorizeReplay(actor,action,old.result);return action==='authority-download'?authorityFileResult(set.store,actor,old.result):copy(old.result);}
     // Use the existing synchronous policy evaluator, never an independent second set of academic rules.
-    const result=core.execute(actor,action,value,now);requireThat(set.pending.length===1||action==='decision-receive'&&set.pending.length===0&&set.store.get(tenant,'decision-receipt',result.id)?.decisionId===value.decisionId,'academic_record','Bu akademik işlem tam bir değişmez kayıt üretmeli.',503);
+    const result=core.execute(actor,action,value,now),pending=set.pending;
+    const attachmentPair=action==='authority-attachment'&&pending.length===2&&pending[0].kind==='authority-attachment'&&pending[1].kind==='authority-file'&&pending.every(r=>r.data.id===result.id&&r.data.unit===result.unit&&r.data.owner===actor.id);
+    requireThat(attachmentPair||action!=='authority-attachment'&&pending.length===1||action==='decision-receive'&&pending.length===0&&set.store.get(tenant,'decision-receipt',result.id)?.decisionId===value.decisionId,'academic_record','Bu akademik işlem eksiksiz değişmez kayıt üretmeli.',503);
+    const storedResult={...result};if(action==='authority-download')delete storedResult.file;
     // Semantic append order derives from immutable tenant rows, never an independently mutable sequence.
-    for(const r of set.pending)await tx.query('INSERT INTO public.myys_academic_records (position,tenant,kind,id,unit,owner,data) SELECT coalesce(max(position),0)+1,$1,$2,$3,$4,$5,$6::jsonb FROM public.myys_academic_records WHERE tenant=$1',[tenant,r.kind,r.data.id,r.data.unit,r.data.owner,JSON.stringify(r.data)]);
-    await tx.query('INSERT INTO public.myys_academic_commands (tenant,person_id,id,action,digest,result) VALUES ($1,$2,$3,$4,$5,$6::jsonb)',[tenant,actor.id,commandId,action,digest,JSON.stringify(result)]);
+    for(const r of pending)await tx.query('INSERT INTO public.myys_academic_records (position,tenant,kind,id,unit,owner,data) SELECT coalesce(max(position),0)+1,$1,$2,$3,$4,$5,$6::jsonb FROM public.myys_academic_records WHERE tenant=$1',[tenant,r.kind,r.data.id,r.data.unit,r.data.owner,JSON.stringify(r.data)]);
+    // PostgreSQL JSONB text can be larger than compact JSON; check the stored
+    // representation before committing an upload that could lock later reads.
+    const storedSize=(await tx.query('SELECT count(*) AS rows,coalesce(sum(octet_length(data::text)),0) AS bytes FROM public.myys_academic_records WHERE tenant=$1',[tenant])).rows[0];
+    requireThat(Number(storedSize.rows)<=maxRows&&Number(storedSize.bytes)<=maxBytes,'academic_capacity','Bu yerel akademik veri dilimi işlem sınırını aşıyor.',503);
+    await tx.query('INSERT INTO public.myys_academic_commands (tenant,person_id,id,action,digest,result) VALUES ($1,$2,$3,$4,$5,$6::jsonb)',[tenant,actor.id,commandId,action,digest,JSON.stringify(storedResult)]);
     await tx.query('INSERT INTO public.myys_academic_audit (tenant,actor,action,record_id,recorded_at) VALUES ($1,$2,$3,$4,$5)',[tenant,actor.id,action,result.id,now]);
     requireThat(this.#now()>=now,'academic_clock','Akademik işlem zamanı geri döndü.',503);return copy(result);
    }finally{set.close();}
@@ -47,7 +56,7 @@ export class LocalPostgresAcademicCore {
  }
  async view({sessionHash,tenant,permit}){
   local();requireThat(field(tenant,80),'command','Kurum kapsamı gerekli.');return this.#identity.withPrincipal({sessionHash,permit,purpose:'academic-read'},async(tx,actor)=>{
-   requireThat(actor.tenant===tenant,'not_found','Bu kurum kaydına erişilemiyor.',404);const set=await this.#snapshot(tx,actor);try{const now=this.#now(),core=new MyysCore(set.store,{clock:()=>now}),view=core.academicView(actor),adminUnits=new Set(actor.mfa?actor.memberships.filter(m=>m.roles.includes('admin')).map(m=>m.unit):[]),registry=set.list(actor.tenant,'registry').filter(r=>adminUnits.has(r.unit)),registryIds=new Set(registry.map(r=>r.id));return {...view,registry,registryReviews:set.list(actor.tenant,'registry-review').filter(r=>registryIds.has(r.recordId)&&adminUnits.has(r.unit)),mode:'isolated-sql-acceptance',official:false,personId:actor.id,sessionExpires:actor.expires,memberships:copy(actor.memberships),supportedActions:[...academicSqlActions],appealPolicies:appealPolicyView(set.store,actor),decisions:view.decisions.map(d=>({...d,canIssue:false})),supportedTabs:[...(adminUnits.size?['registry']:[]),...(actor.memberships.some(m=>m.roles.some(r=>['admin','commission','quality'].includes(r)))?['appealPolicies']:[]),'programs','enrollments','evidence','assessments','decisions','appeals'],scope:'same-sql-identity-academic-transaction'};}finally{set.close();}
+   requireThat(actor.tenant===tenant,'not_found','Bu kurum kaydına erişilemiyor.',404);const set=await this.#snapshot(tx,actor);try{const now=this.#now(),core=new MyysCore(set.store,{clock:()=>now}),view=core.academicView(actor),adminUnits=new Set(actor.mfa?actor.memberships.filter(m=>m.roles.includes('admin')).map(m=>m.unit):[]),registry=set.list(actor.tenant,'registry').filter(r=>adminUnits.has(r.unit)),registryIds=new Set(registry.map(r=>r.id));return {...view,programs:view.programs.map(p=>({...p,packageStatus:p.packageStatus?{...p.packageStatus,canDownload:false}:p.packageStatus})),authority:authorityView(set.store,actor,now),credentialProfiles:profileView(set.store,actor,now),registry,registryReviews:set.list(actor.tenant,'registry-review').filter(r=>registryIds.has(r.recordId)&&adminUnits.has(r.unit)),mode:'isolated-sql-acceptance',official:false,personId:actor.id,sessionExpires:actor.expires,memberships:copy(actor.memberships),supportedActions:[...academicSqlActions],appealPolicies:appealPolicyView(set.store,actor),decisions:view.decisions.map(d=>({...d,canIssue:false})),supportedTabs:[...(actor.memberships.some(m=>m.roles.some(r=>['admin','commission','studentAffairs'].includes(r)))?['credentialProfiles']:[]),...(adminUnits.size?['registry']:[]),...(actor.memberships.some(m=>m.roles.some(r=>['admin','commission','quality'].includes(r)))?['appealPolicies']:[]),'programs','enrollments','evidence','assessments','decisions','appeals'],scope:'same-sql-identity-academic-transaction'};}finally{set.close();}
   });
  }
 }

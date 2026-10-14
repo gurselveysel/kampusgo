@@ -913,3 +913,13 @@ Yerel `54c17436eec6632501061952e939bc149f946b64`, uzak `f12b0e70ab6d1f68de0f5bc7
 Politika ve hak sicilinde beş tür taslak, farklı yönetici incelemesi, uygun/uygun değil/bekliyor, Türkçe gerekçe/alan ve filtreler. Paket71:8yeni SQL testi;884sunucu+59portal+46regresyon=989.32SQL+14mevcut yetki dosyası+19gezinme=65tarayıcı.136komut/18HTTP kapsamında9035pozitif72280negatif örnek;115statik paket. [Kanıt](acceptance/B02-B20-registry-sql-20261014.json).
 
 Başlangıç yerel `54c17436eec6632501061952e939bc149f946b64`, uzak `f12b0e70ab6d1f68de0f5bc74a242a0ef6dd512e`, ortak tam ağaç `52f5327baddcda173895ed85fffa646eabbd4b3f`. Uzak dal/alias tekrar okundu; değişmedi. Yeni kaynak sonucu sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–71dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; üretimDDL/credential/gerçek kişi işlemi yok. Kurum/dış erişim/120SQLişlem açık.
+
+### Paket71 kaynak eşitleme sonucu
+
+Yerel `6bba0d745fd7aa835c6e6994c79348e3391ad85d`, uzak `c9c3f67f6ef17a1052c022a251662e68aab68765`, ortak tam ağaç `49d2f77f42cf5ea4961ccffc3390f545dd4e7c5f`.22blob SHA/tam ağaç eşitliği,expected-headforce=false,uzakref/commit teyidi geçti. Yeni canlı dağıtım yapılmadı.
+
+## Paket72 — aynı SQL yetki dosyası ve belge profili
+
+Paket72: yetki eki/dosyası/ayrı inceleme/durdurma/indirme ve belge profili/inceleme/durdurma aynı SQL zincirinde. İki ek kaydı atomik; indirme tekrarı güncel yetki ve byteözetini denetler; yeni sürümler geçmiş bağı değiştirmez. SQL ihraç/imza/program paketi henüz kapalı. Paket72:15yeni SQL testi;899sunucu+59portal+46regresyon=1004.44SQL+14mevcut yetki dosyası=58tarayıcı.136komut/18HTTP kapsamında9035pozitif72280türetilmiş negatif örnek;115statik paket. [Sözleşme](AUTHORITY-PROFILE-SQL-CONTRACT.md), [kanıt](acceptance/B02-B12-authority-profile-sql-20261014.json). B02/B06/B07/B08/B12/B16/B28 yerel alt kabulü; kurum ve dış erişim sütunları kapanmadı. Son canlı16;17–72dağıtılmadı.
+
+Başlangıç yerel `6bba0d745fd7aa835c6e6994c79348e3391ad85d`, uzak `c9c3f67f6ef17a1052c022a251662e68aab68765`, ortak tam ağaç `49d2f77f42cf5ea4961ccffc3390f545dd4e7c5f`. Güncel uzak ref/ağaç ve alias yeniden okundu; değişmedi. Son canlı `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, READY. Yeni dağıtım/kimlikli canlı smoke yok. Geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Yeni kaynak kimlikleri sonraki devam kaydında; test seçici düğme adı düzeltildi, ürün yetkisi gevşetilmedi.

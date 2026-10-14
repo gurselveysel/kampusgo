@@ -1,8 +1,16 @@
-# Güncel devam — Paket71 yerel kabul; kaynak eşitlemesi sırada
+# Güncel devam — Paket72 yerel kabul tamam; kaynak eşitlemesi sırada
 
-Paket71:8yeni SQL testi;884sunucu+59portal+46regresyon=989.32SQL+14mevcut yetki dosyası+19gezinme=65tarayıcı.136komut/18HTTP kapsamında9035pozitif72280negatif örnek;115statik paket.16SQLkomut15tür;120komut açık.36özgün ölçüt korunur. Beş sicil, farklı yönetici incelemesi, Türkçe durum/gerekçe/filtreler; SQLde henüz bağlı olmayan yetki dosyası formları kapalı, eskiSQLite14kontrol geçti.
+Paket72:15yeni SQL testi;899sunucu+59portal+46regresyon=1004.44SQL+14mevcut yetki dosyası=58tarayıcı.136komut/18HTTP kapsamında9035pozitif72280türetilmiş negatif örnek;115statik paket.
 
-Önce71diff/commit/tam ağaç eşitle: beklenen uzakf12b0e70ab6d1f68de0f5bc74a242a0ef6dd512e,taban52f5327baddcda173895ed85fffa646eabbd4b3f. Soncanlı16;17–71dağıtılmadı;configuredCorekapalı;browserAuthiptaliniyenileme. Sıradaki72: aynıSQL authority-attachment/dossier/review/hold/download ve credential-profile/review/hold. attachment iki kayıt atomik; indirme makbuzunda filebytes saklama, replayde currentyetki+hash ile yeniden aç; kapalı/genericSQLworksetreddi; dört sorumluluk, Senato/SEM ek bağı, eski profil dayanağı/süre/askı korunacak. Henüz72kod yok;önce tam authority/profile/test kurallarını oku. Tekeditör, bağımsızları sürdür.
+Paket72: yetki eki/dosyası/ayrı inceleme/durdurma/indirme ve belge profili/inceleme/durdurma aynı SQL zincirinde. İki ek kaydı atomik; indirme tekrarı güncel yetki ve byteözetini denetler; yeni sürümler geçmiş bağı değiştirmez. SQL ihraç/imza/program paketi henüz kapalı.
+
+24SQLkomut24tür; aynı16PGadaytablo;112komut taşınmadı. İki ek kaydı atomik,9999→2kayıt kapasite reddi,16MiB SQL JSONB kontrolü, yetkili indirme replay ve eski yedek checkpoint testleri geçti. 320CSSpx profil ekranı görsel incelendi. Orijinal36kabul ölçütü korundu.
+
+Başlangıç yerel6bba0d745fd7aa835c6e6994c79348e3391ad85d/uzakc9c3f67f6ef17a1052c022a251662e68aab68765/ağaç49d2f77f42cf5ea4961ccffc3390f545dd4e7c5f. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;17–72dağıtılmadı. configuredCorekapalı; browserAuthiptaliniyenileme; tekeditör; kullanıcıdeğişikliklerinikoruyarakdevamet.
+
+Sonraki bağımsız iş73: B03 program bilgi paketi aynıSQL/HTTP. program-package.mjs ve mevcut test/PROGRAM-PACKAGE-CONTRACT okundu. Aynı işkuralını yeniden kullan; payloadözelalanlarını koru; güncelprofile/authority/member/CSRFvecheckpoint kapısını transactionsonunda koru. PaketindirmePOSTendpointini desteklemeden düğmeyi açma; eskiSQLite testi ve ikiayrıChromium yarışı korunur. Henüz73kod yok.
+
+72günlükleri /tmp/gazi-package72-{scope,new-final,browser-fixed,authority-browser,portal,regression,build,package}.log; test-results/myys-authority-profile-sql/result.json44, myys-authority/result.json14. İlk başarısız seçicitarayıcı koşusu sayılmadı. Kaynakcommit+tamuzakağaçeşitlemeden72kaynakbitti deme.
 
 # Paket71 ara çalışma — SQL sicil kodu ve ilk testler
 

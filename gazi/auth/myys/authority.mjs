@@ -1,3 +1,4 @@
+import {isLocalSqlAcademicStore} from './academic-sql-store.mjs';
 import {LocalAcceptanceStore,requireThat,hash} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
 import {authorityResponsibilities,authorityDocumentKinds,authorityFileLimit} from './authority-model.mjs';
@@ -7,7 +8,7 @@ const text=v=>typeof v==='string'&&v.trim().length>=20&&v.length<=2000;
 const short=v=>typeof v==='string'&&v.trim().length>=3&&v.length<=200;
 const role=(a,u)=>a.mfa&&a.memberships.some(m=>m.unit===u&&m.roles.includes('admin'));
 const active=(s,t,p,u,now)=>{const r=s.db.prepare('SELECT m.roles FROM memberships m JOIN persons p ON p.id=m.person WHERE m.tenant=? AND m.person=? AND m.unit=? AND m.active=1 AND m.expires>? AND p.active=1').get(t,p,u,now);return !!r&&JSON.parse(r.roles).includes('admin');};
-const local=s=>requireThat(s instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Yetki dosyası yalnız izole yerel kabulde kullanılabilir.',503);
+const local=s=>requireThat((s instanceof LocalAcceptanceStore||isLocalSqlAcademicStore(s))&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Yetki dosyası yalnız izole yerel kabulde kullanılabilir.',503);
 const shape=(p,keys)=>requireThat(Object.keys(p).every(k=>keys.includes(k)),'authority_fields','Yetki dosyasında tanınmayan alan var.');
 const utc=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
 const get=(s,a,k,id)=>{const r=s.get(a.tenant,k,id);requireThat(r&&role(a,r.unit),'not_found','Yetki dosyası bulunamadı veya erişilemiyor.',404);return r;};

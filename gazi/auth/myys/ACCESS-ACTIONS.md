@@ -107,3 +107,7 @@ Alternatifgözlem/ayrı kaliteincelemesi aynıSQL yerel zincirde. Gerçek kurumu
 ### Paket71 durum notu
 
 Sicil taslağı ve ayrı yönetici incelemesi bağımsız geliştirildi; yeni erişim gerektirmedi. Gerçek veri/saklama/hak/LMS/tanıma/kurum yetki sözleşmeleri kurum kararlarıyla açık kalır. Yerel uygun incelemesi bu yetkilerin yerine geçmez. configuredCorekapalı; soncanlı16; browserAuthiptali yenilenmedi.120SQLkomut geliştirmesi sürer.
+
+### Paket72 durum notu
+
+Yetki eki/dosyası ve profil aynı SQL zincirinde yerel olarak doğrulandı. Gerçek Senato/SEM dayanakları, görev/süre, belge deposu/tarama/e-imza ve üretim kabulü mevcut tek eylem listesinde açık. Yeni credential/migration/gerçek belge işlemi yok. Son canlı16; browserAuth iptali yenilenmedi.112SQLkomut ve B03 aynı SQL program paketi bağımsız olarak sürer.

@@ -396,3 +396,7 @@ Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+1
 [SQL sicil sözleşmesi](REGISTRY-SQL-CONTRACT.md). Mevcut registryCommand kuralları aynen;16komut15kayıt türü. MFA yönetici birimleriyle salt okunur projeksiyon; review başka kişiye ait, tekil ve değişmez. Yeni RegistryWorkspace eskiSQLite ve SQL ekranında çalışır. SQLde yetki dosyası/profil/ihraç formu kapalı; eski yetki dosyası korunur.
 
 Paket71:8yeni SQL testi;884sunucu+59portal+46regresyon=989.32SQL+14mevcut yetki dosyası+19gezinme=65tarayıcı.136komut/18HTTP kapsamında9035pozitif72280negatif örnek;115statik paket. Kalan120SQLkomut/kurum/üretim şartları sürer.
+
+## Paket72 — aynı SQL yetki dosyası ve belge profili
+
+Paket72: yetki eki/dosyası/ayrı inceleme/durdurma/indirme ve belge profili/inceleme/durdurma aynı SQL zincirinde. İki ek kaydı atomik; indirme tekrarı güncel yetki ve byteözetini denetler; yeni sürümler geçmiş bağı değiştirmez. SQL ihraç/imza/program paketi henüz kapalı. Paket72:15yeni SQL testi;899sunucu+59portal+46regresyon=1004.44SQL+14mevcut yetki dosyası=58tarayıcı.136komut/18HTTP kapsamında9035pozitif72280türetilmiş negatif örnek;115statik paket. [Sözleşme](AUTHORITY-PROFILE-SQL-CONTRACT.md), [kanıt](acceptance/B02-B12-authority-profile-sql-20261014.json). B02/B06/B07/B08/B12/B16/B28 yerel alt kabulü; kurum ve dış erişim sütunları kapanmadı. Son canlı16;17–72dağıtılmadı.
