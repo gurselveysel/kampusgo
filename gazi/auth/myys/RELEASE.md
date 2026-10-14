@@ -735,3 +735,13 @@ Paket53 IdentityKeyProvider genel metadata revizyonunu aynı SQL transaction ön
 Paket53:16 yeni SQL testi;694 sunucu+48 portal+46 regresyon=788. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite0.5.9/PostgreSQL18.6 tek bağlantı SQL kabulü; gerçek çok bağlantı/KMS/HTTP repository kabulü değil. 136komut/18HTTP8924örnek71392kapsam denetimi;115statik.36 özgün iş/bağımlılık/kabul aynı.
 
 Paket53 dağıtılmadı. Canlı alias yeniden okundu: dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu authenticated smoke değildir.17–53 canlı değil;configuredCore kapalı;browserAuth iptali yeniden denenmedi. Geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. Kaynak commit/tam ağaç ayrıca kaydedilir.
+
+Paket53 kaynak doğrulaması: yerel `9473ee5dd485eafefdf85754698b9a36a3c7107e`, uzak `dccbe33222cde2ef89950933510b4dfd1e04a234`, ortak tam ağaç `7420bf4839a219f459d912afc289c9bf596bc0bb`.16blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+## Paket54 — B07 kalıcı giriş isteği (14.10.2026)
+
+Paket54 PostgresIdentityChallenges anahtar köprüsüyle begin/claim/finish/fail/cancel yaşam döngüsünü bağladı. Claim provider I/O öncesi commit, değişmez state/browser/scope/redirect/contract bağı, tek kullanımlık handle, terminal durumlar ve atomik audit. Belirsiz claim/final COMMIT yeniden kullanılmaz; saat geri giderse kapalıdır. İki yeni SQL adayıyla toplam4 uygulanmamış PGtablosu; aktifSQLite16tablo148tür değişmedi. Kişi/üyelik/session/iptal/HTTP bağlantısı açık.
+
+Paket54:18 yeni SQL giriş isteği testi;712 sunucu+48 portal+46 regresyon=806. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite tek bağlantılıdır; yeni repository HTTP/oturum kabulü değildir.136komut/18HTTP8924örnek71392kapsam denetimi;115statik.36 özgün iş/bağımlılık/kabul aynı. İlk15senaryo geçti; son incelemede geri saat, yanlış yapılandırılmış redirect/contract ve begin rollback denetimi genişletildi; son tam koşu geçti.
+
+Paket54 dağıtılmadı. Alias yeniden okundu: dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu authenticated smoke değildir;17–54 canlı değil;configuredCore kapalı;browserAuth iptali tekrar denenmedi. Geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. Kaynak commit/tam ağaç ayrıca kaydedilir.

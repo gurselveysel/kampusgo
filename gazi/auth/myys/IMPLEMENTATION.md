@@ -327,3 +327,7 @@ Paket52 dağıtılmadı; son doğrulanan canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq8
 ## Paket53 — B07 SQL anahtar commit bağı
 
 Paket53 IdentityKeyProvider genel metadata revizyonunu aynı SQL transaction öncesi/sonrası yeniden denetleyen PostgresIdentityKeyBridge ekledi. SQL değişiklik/denetim atomik; strict+1 ve terminal iptal, amaç/bağlam/scope, emekli devam, süre ve belirsiz COMMIT kapalı. İki aday tablo sadece PGlite testinde; LocalAcceptanceStore16tablo148tür değişmedi. Gerçek oturum repository ve HTTP bağlantısı hâlâ açık. Paket53:16 yeni SQL testi;694 sunucu+48 portal+46 regresyon=788. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite0.5.9/PostgreSQL18.6 tek bağlantı SQL kabulü; gerçek çok bağlantı/KMS/HTTP repository kabulü değil.
+
+## Paket54 — B07 kalıcı SQL giriş isteği
+
+Paket54 PostgresIdentityChallenges anahtar köprüsüyle begin/claim/finish/fail/cancel yaşam döngüsünü bağladı. Claim provider I/O öncesi commit, değişmez state/browser/scope/redirect/contract bağı, tek kullanımlık handle, terminal durumlar ve atomik audit. Belirsiz claim/final COMMIT yeniden kullanılmaz; saat geri giderse kapalıdır. İki yeni SQL adayıyla toplam4 uygulanmamış PGtablosu; aktifSQLite16tablo148tür değişmedi. Kişi/üyelik/session/iptal/HTTP bağlantısı açık. Paket54:18 yeni SQL giriş isteği testi;712 sunucu+48 portal+46 regresyon=806. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite tek bağlantılıdır; yeni repository HTTP/oturum kabulü değildir.

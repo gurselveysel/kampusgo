@@ -1,0 +1,54 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 54,
+  "work_id": "B07",
+  "scope": "isolated-pglite-challenge-acceptance",
+  "official": false,
+  "server_tests": 712,
+  "new_server_tests": 18,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 806,
+  "browser_checks": {
+    "existing-local-identity-http": 15
+  },
+  "new_repository_http_connected": false,
+  "real_identity_or_session_created": false,
+  "engine": {
+    "package": "@electric-sql/pglite",
+    "version": "0.5.9",
+    "postgresql": "18.6",
+    "exclusive_connections": 1,
+    "native_multisession_acceptance": false
+  },
+  "command_count": 136,
+  "http_routes": 18,
+  "positive_samples": 8924,
+  "derived_scope_checks": 71392,
+  "static_files": 115,
+  "active_sqlite_tables": 16,
+  "record_kinds": 148,
+  "unapplied_postgresql_candidate_tables": [
+    "myys_identity_key_barriers",
+    "myys_identity_key_audit",
+    "myys_identity_challenges",
+    "myys_identity_challenge_audit"
+  ],
+  "local_slice_closed": [
+    "claim and audit commit before resumed provider I/O",
+    "state/browser/issuer/audience/contract/redirect and key binding",
+    "terminal single use, current row digest, expiry and backward clock",
+    "begin/claim/use audit rollback and uncertain actual COMMIT",
+    "opaque one-worker handles and separate scope/browser cancellation"
+  ],
+  "open": [
+    "Opak imzalı kimlik kanıtını aynı async SQL kişi/üyelik/session/family/iptal/audit işlemine bağla. Paket54 challenge claim provider öncesi commit edildi; bunu gerçek doğrulayıcıya bağlama, kalıcı session mutabakatı ve HTTP/akademik senkron depo sınırı açık.",
+    "SQL rate/CSRF rotasyonu, bütün oturum yazarlarının anahtar kapatma protokolü ve güvenilir iptal/checkpoint geri yükleme; gerçek kontrol düzlemi yetkilendirmesi açık.",
+    "Gerçek çok bağlantılı PostgreSQL/SSI/rol/RLS, driver/TLS/pool, KMS/IdP ve dağıtık kapasite kabulü açık; yeni credential/üretim migration özel yetki sınırında kapalı."
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "dccbe33222cde2ef89950933510b4dfd1e04a234",
+  "source_parent_tree": "7420bf4839a219f459d912afc289c9bf596bc0bb",
+  "contract": "IDENTITY-CHALLENGE-SQL-CONTRACT.md"
+}

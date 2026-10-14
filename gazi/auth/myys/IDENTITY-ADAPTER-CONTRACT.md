@@ -58,3 +58,7 @@ Yerel statik PKCE/nonce anahtarı artık aynı oturum transaction’ında monoto
 ## Paket53 izleme
 
 Tarihsel Paket29 sınırının SQL metadata köprüsü `IDENTITY-KEY-BRIDGE-CONTRACT.md` ile eklendi.16 yeni gerçek PostgreSQL WASM SQL senaryosu geçti. PGlite0.5.9 yalnız devDependency; iki aday tablo test-only. Genel metadata sağlayıcı sonucuna eklendi; gerçek session repository, kontrol düzlemi, çok bağlantı ve KMS kabulü açık.
+
+## Paket54 izleme
+
+`IDENTITY-CHALLENGE-SQL-CONTRACT.md`: anahtar köprüsüne bağlı kalıcı giriş isteği ve claim-before-provider yerel SQL kabulü eklendi. Oturum/kişi/iptal/HTTP bağlantısı hâlâ açık;16 aktifSQLite ve4 uygulanmamışPGadayı ayrı tutulur.

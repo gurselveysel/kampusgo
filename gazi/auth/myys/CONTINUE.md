@@ -1,3 +1,17 @@
+# Güncel devam — Paket54 yerel kabul; kaynak eşitlemesi sırada
+
+Paket54:18 yeni SQL giriş isteği testi;712 sunucu+48 portal+46 regresyon=806. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite tek bağlantılıdır; yeni repository HTTP/oturum kabulü değildir.136/18 8924/71392;115statik;16aktifSQLite148tür+4uygulanmamışPGaday. IDENTITY-CHALLENGE-SQL-CONTRACT.md ayrıntıdır.
+
+Önce diff/commit ve expected-head dccbe33222cde2ef89950933510b4dfd1e04a234/base7420bf4839a219f459d912afc289c9bf596bc0bb ile tam ağaç eşitle. Son canlı16;17–54 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör.
+
+Sırada opak imza kanıtı→async SQL kişi/üyelik/session/family/iptal; challenge.finish güvenilenSQLcallback içinde aynı atomiccommit olmalı. Token/KMS/ağ transaction dışında; session başarı COMMITten önce dönmez. HTTP/akademik core mevcut senkronLocalAcceptanceStorea bağlı, bunu üretimSQL diye sunma. SQL rate/CSRF ve B28checkpoint, gerçekmulti-session/RLS/KMS/IdP ayrı açık. Bütün bağımsız işleri sürdür.
+
+# Güncel devam — Paket53 kaynakta; B07 kalıcı giriş isteği sırada
+
+Paket53 kaynak doğrulaması: yerel `9473ee5dd485eafefdf85754698b9a36a3c7107e`, uzak `dccbe33222cde2ef89950933510b4dfd1e04a234`, ortak tam ağaç `7420bf4839a219f459d912afc289c9bf596bc0bb`.16blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+788otomatik15mevcutkimliktarayıcı;136/18 8924/71392;115statik. Sırada anahtar köprüsü üzerinde kalıcı challenge begin/claim/provider-before-use/terminal işlem ve audit SQL repository. Tek kullanımlı claim provider I/O öncesi commit; opaque handle, current scope/time/key recheck ve bütün SQL rollback. Bu henüz kimlik/person/session/HTTP bütünü değil. PGlite tek exclusiveconnection; gerçekmulti-session değil. GerçekIdP/KMS/üretimkapalı. Sonraki expected remote dccbe33222cde2ef89950933510b4dfd1e04a234/base7420bf4839a219f459d912afc289c9bf596bc0bb. B28checkpoint ve bütün bağımsızlar sürer;browserAuth iptalini yeniden isteme;tek editör.
+
 # Güncel devam — Paket53 yerel kabul; kaynak eşitlemesi sırada
 
 Paket53:16 yeni SQL testi;694 sunucu+48 portal+46 regresyon=788. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite0.5.9/PostgreSQL18.6 tek bağlantı SQL kabulü; gerçek çok bağlantı/KMS/HTTP repository kabulü değil. 136komut18HTTP8924örnek71392denetim;115statik;aktifSQLite16tablo148tür. Yeni2PGadaytablo yalnıztest;16envantere ekleme. IDENTITY-KEY-BRIDGE-CONTRACT.md ve B07-key-bridge JSON ayrıntıdır.
