@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 58,
+  "work_ids": [
+    "B07"
+  ],
+  "scope": "isolated-pglite-http-security-boundary",
+  "official": false,
+  "server_tests": 755,
+  "new_server_tests": 22,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 849,
+  "browser_checks": {
+    "existing-local-identity-http": 15
+  },
+  "new_sql_http_connected": false,
+  "new_flow_academic_store_connected": false,
+  "engine": {
+    "package": "@electric-sql/pglite",
+    "version": "0.5.9",
+    "postgresql": "18.6",
+    "exclusive_connections": 1,
+    "native_multisession_acceptance": false
+  },
+  "static_files": 115,
+  "active_sqlite_tables": 16,
+  "record_kinds": 148,
+  "unapplied_postgresql_candidate_table_count": 12,
+  "new_sql_candidate_tables": [
+    "myys_identity_http_epochs",
+    "myys_identity_http_history",
+    "myys_identity_http_buckets"
+  ],
+  "local_slice_closed": [
+    "shared per-purpose budgets and atomic all-counter admission",
+    "strict atomic key epoch/history with active-window drain and no key reuse",
+    "opaque time/purpose/browser/current-transaction guards and SQL-bound CSRF",
+    "rollback, actual uncertain COMMIT, scoped cleanup and disk close/reopen"
+  ],
+  "open": [
+    "SQL HTTP handler ve flow hook: gerçek TLS/cookie/Origin/Host/CSRF/body; claim ve final session commit içinde aynı permit epoch kontrolü; tek request finally close ve Türkçe oturum ekranı.",
+    "Async akademik depo ve kimlik scope bağını tamamla; LocalAcceptanceStore ile ayrı SQL kimliğini gerçek tek zincir gibi sunma. Directory/key/HTTP control-plane yetkisi ve bütün yazarlar/restore checkpoint açık.",
+    "Gerçek native çok bağlantı/SSI/RLS/driver/TLS/pool/KMS/IdP ve kapasite kabulü; yeni credential ve üretim migration özel yetki sınırında kapalı."
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "4d5d2d8ddacbc587df7d1df90a8eaebabe5dbe9f",
+  "source_parent_tree": "3861696ea04da6bdcf7e60dbc5c449bc700975af",
+  "contract": "IDENTITY-HTTP-SECURITY-CONTRACT.md"
+}

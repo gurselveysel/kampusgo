@@ -357,3 +357,7 @@ ACCEPTANCE-MATRIX.md içindeki B24 satırı tam kapanmadı. 14 kontrollü dosya 
 ## Paket57 — dar ekran ve metin aralığı
 
 98 menü,288 panel ve22 vaka;320 CSS px normal/artırılmış metin aralığı928 ölçümde0 taşma kaydı.66 tarayıcı kontrolü ve106 yeniden koşulan otomatik test; tam sunucu733 Paketi56dan kalır, sunucu kodu değişmedi. Bu sayılar tam B24/AT/zoom/altyazı/karşıtlık kabulü değildir. `acceptance/B24-reflow-20261014.json`. Özgün36 ölçüt korunur.
+
+## Paket58 — B07 SQL HTTP güvenliği (14.10.2026)
+
+Görünür ekran değişikliği yok. Paket58 SQL HTTP epoch/history/buckets üç adayını bağladı: strict+1 ve anahtar yeniden kullanım yasağı, tüm amaçların aktif bütçe sönmesini bekleyen atomik rotasyon/audit; kapsamlı per-purpose global/peer/browser bütçesi; COMMIT sonrası opak kısa ömürlü permit ve aynı tx sahipliği; cookie/contract/revision HMAC CSRF ve güncel SQL epoch. Yeni toplam12 uygulanmamış PGadayı; aktifSQLite16tablo148tür aynı. Gerçek HTTP claim/finalsession bağı bu pakette açık. Paket58:22 yeni SQL HTTP güvenlik testi;755 sunucu+48 portal+46 regresyon=849. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti; yeni SQL sınırı henüz HTTP/flowa bağlı değil.115 statik;36 özgün kimlik/bağımlılık/kabul değişmedi. IDENTITY-HTTP-SECURITY-CONTRACT.md ayrıntıdır. B07 tam kabul ve yeni canlı yayın değildir.

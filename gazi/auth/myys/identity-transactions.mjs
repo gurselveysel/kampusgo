@@ -8,12 +8,14 @@ const failure=(uncertain=false)=>new CoreError(uncertain?'identity_commit_unknow
 const lockKey=value=>BigInt.asIntN(64,BigInt('0x'+createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0,16))).toString();
 const retryable=e=>['40001','40P01'].includes(e?.code);
 export class PostgresIdentityTransactions {
- #pool;#timeout;#retries;#scope;#lock;
+ #pool;#timeout;#retries;#scope;#lock;#activeTransactions=new WeakSet();
  constructor({pool,tenant,issuer,audience,statementTimeoutMs=3000,maxRetries=2}){
   requireThat(pool&&typeof pool.connect==='function'&&[tenant,issuer,audience].every(safeText)&&Number.isInteger(statementTimeoutMs)&&statementTimeoutMs>=50&&statementTimeoutMs<=10000&&Number.isInteger(maxRetries)&&maxRetries>=0&&maxRetries<=3,'identity_store_config','Kimlik işlem adaptörü yapılandırması geçersiz.',500);
   let url;try{url=new URL(issuer);}catch{}requireThat(url?.protocol==='https:'&&!url.username&&!url.password&&!url.search&&!url.hash,'identity_store_config','Kimlik işlem kapsamı geçersiz.',500);
   this.#pool=pool;this.#timeout=statementTimeoutMs;this.#retries=maxRetries;this.#scope=Object.freeze({tenant,issuer,audience});this.#lock=lockKey(['myys-identity-scope-v1',tenant,issuer,audience]);
  }
+ // Repository guards can require this exact active transaction, not a forged/cross-pool scope object.
+ owns(tx){return this.#activeTransactions.has(tx);}
  // The callback is SERVER-OWNED database work only. No IdP/KMS/HTTP call belongs here.
  // Retries are opt-in and apply only to complete, side-effect-free SQL callbacks.
  async run(work,{retrySafe=false,browserHash=null}={}){
@@ -41,9 +43,10 @@ export class PostgresIdentityTransactions {
        result.catch(()=>{});return result;
       }
      });
-     escaped=()=>{active=false;};
+     this.#activeTransactions.add(tx);
+     escaped=()=>{active=false;this.#activeTransactions.delete(tx);};
      let value;
-     try{value=await work(tx);requireThat(!busy&&!poison,'identity_transaction','Bütün kimlik sorguları tamamlanmalı.',500);}finally{active=false;}
+     try{value=await work(tx);requireThat(!busy&&!poison,'identity_transaction','Bütün kimlik sorguları tamamlanmalı.',500);}finally{active=false;this.#activeTransactions.delete(tx);}
      phase='commit';await client.query('COMMIT');open=false;phase='done';
      return value;
     }catch(e){

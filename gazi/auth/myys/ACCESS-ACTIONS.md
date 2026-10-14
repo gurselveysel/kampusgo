@@ -68,3 +68,7 @@ YÖK mikro yeterlilik5sayfa ve Gazi kredi transferi4sayfa okuma engeli kaldırı
 ## Paket55 kişi/üyelik/session özel yetki sınırı
 
 Beş yeni SQL adayı yalnız PGlite sentetik testine kuruldu; toplam9PGadayı üretime uygulanmadı. putPerson merkezi issuer kişi yaşam döngüsü yetkisi, putMembership tenant/birim kaynak yetkisi gerektirir; bu fonksiyonlar normal yönetici veya anonim HTTPye açılmadı. Yeni credential/üretim migration/gerçek kişi kaydı yok. Native çok bağlantı/RLS/IdP/KMS ve geri yükleme checkpoint dış kabulü mevcut tek eylem listesinde açık kalır.
+
+## Paket58 HTTP güvenliği özel yetki sınırı
+
+Üç yeni adayla toplam12 PGtablosu yalnız sentetik PGlite testinde; production DDL/credential/KMS yok. HTTP epoch activate ayrı yetkili kontrol düzlemine aittir; parametre operatör/dayanak kendiliğinden yetki sağlamaz. Ortak HTTP MAC anahtarının güvenli temini, gerçek transport/proxy sözleşmesi, bütün yazarlar ve geri yükleme checkpoint kabulü gerekir. AktifSQLite16/148 değişmedi.

@@ -505,7 +505,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket55:21 yeni imzalı SQL akış testi;733 sunucu+48 portal+46 regresyon=827. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. Yeni SQL flow henüz HTTP/React/akademik depo bağlantısı değildir; tek bağlantılı PGlite kabulüdür.",
+      "test_status": "Paket58:22 yeni SQL HTTP güvenlik testi;755 sunucu+48 portal+46 regresyon=849. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti; yeni SQL sınırı henüz HTTP/flowa bağlı değil.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -556,20 +556,25 @@
         "gazi/auth/myys/IDENTITY-SQL-FLOW-CONTRACT.md",
         "gazi/auth/tests/helpers/sql-identity-flow.mjs",
         "gazi/auth/tests/myys-identity-sql-flow.test.mjs",
-        "gazi/auth/myys/acceptance/B06-B07-sql-flow-20261014.json"
+        "gazi/auth/myys/acceptance/B06-B07-sql-flow-20261014.json",
+        "gazi/auth/myys/identity-http-security.mjs",
+        "gazi/auth/myys/identity-http-schema.sql",
+        "gazi/auth/myys/IDENTITY-HTTP-SECURITY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B07-http-security-20261014.json",
+        "gazi/auth/tests/myys-identity-http-security.test.mjs"
       ],
-      "production_status": "Son canlı Paket16. Paket55 yalnız kaynak/yerel kabul;17–55 dağıtılmadı;configuredCore kapalı.",
-      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı. Paket39 yerel HTTP CSRF/oran anahtarının ardışık kalıcı revizyonunu ve bütçe sıfırlamasını engelleyen geçişi bağladı. Eski işçiler boşaltılmalı; yeni etkin sürüm eskilerini reddeder. Bu, PKCE/nonce anahtar revizyonunun session commit bariyeri değildir. Paket45 mevcut yerel HTTP/PKCE akışında anahtar revizyonunu challenge sözleşmesine ve aynı session-commit transaction’ına bağladı; paylaşılan anahtarı bütün namespace’lerde durduran güvenilen yerel operatör sınırı var. Gerçek KMS metadata köprüsü ve SQL repository ayrı açık. Paket53 IdentityKeyProvider genel metadata revizyonunu aynı SQL transaction öncesi/sonrası yeniden denetleyen PostgresIdentityKeyBridge ekledi. SQL değişiklik/denetim atomik; strict+1 ve terminal iptal, amaç/bağlam/scope, emekli devam, süre ve belirsiz COMMIT kapalı. İki aday tablo sadece PGlite testinde; LocalAcceptanceStore16tablo148tür değişmedi. Gerçek oturum repository ve HTTP bağlantısı hâlâ açık. Paket54 PostgresIdentityChallenges anahtar köprüsüyle begin/claim/finish/fail/cancel yaşam döngüsünü bağladı. Claim provider I/O öncesi commit, değişmez state/browser/scope/redirect/contract bağı, tek kullanımlık handle, terminal durumlar ve atomik audit. Belirsiz claim/final COMMIT yeniden kullanılmaz; saat geri giderse kapalıdır. İki yeni SQL adayıyla toplam4 uygulanmamış PGtablosu; aktifSQLite16tablo148tür değişmedi. Kişi/üyelik/session/iptal/HTTP bağlantısı açık. Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque signed proof/MFA, challenge/keybarrier, session ve audit atomik zincirini bağladı. Strict+1 directory control; person ve membership revizyonu sessiona pinli, kapat/aç eski sessionı canlandırmaz. Rotate/parentfamilylogout, sub/sidANDJTI backchannel ve session öncesi iptal bariyeri, timeout ve belirsiz COMMIT kapalı.9 uygulanmamışPGadayı; aktifSQLite16tablo148tür aynı. YeniSQL HTTP/rate/CSRF/akademik sınırı ve güvenilirrestore checkpoint açıktır.",
+      "production_status": "Son canlı Paket16. Paket58 yalnız kaynak/yerel kabul;17–58 dağıtılmadı;configuredCore kapalı.",
+      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı. Paket39 yerel HTTP CSRF/oran anahtarının ardışık kalıcı revizyonunu ve bütçe sıfırlamasını engelleyen geçişi bağladı. Eski işçiler boşaltılmalı; yeni etkin sürüm eskilerini reddeder. Bu, PKCE/nonce anahtar revizyonunun session commit bariyeri değildir. Paket45 mevcut yerel HTTP/PKCE akışında anahtar revizyonunu challenge sözleşmesine ve aynı session-commit transaction’ına bağladı; paylaşılan anahtarı bütün namespace’lerde durduran güvenilen yerel operatör sınırı var. Gerçek KMS metadata köprüsü ve SQL repository ayrı açık. Paket53 IdentityKeyProvider genel metadata revizyonunu aynı SQL transaction öncesi/sonrası yeniden denetleyen PostgresIdentityKeyBridge ekledi. SQL değişiklik/denetim atomik; strict+1 ve terminal iptal, amaç/bağlam/scope, emekli devam, süre ve belirsiz COMMIT kapalı. İki aday tablo sadece PGlite testinde; LocalAcceptanceStore16tablo148tür değişmedi. Gerçek oturum repository ve HTTP bağlantısı hâlâ açık. Paket54 PostgresIdentityChallenges anahtar köprüsüyle begin/claim/finish/fail/cancel yaşam döngüsünü bağladı. Claim provider I/O öncesi commit, değişmez state/browser/scope/redirect/contract bağı, tek kullanımlık handle, terminal durumlar ve atomik audit. Belirsiz claim/final COMMIT yeniden kullanılmaz; saat geri giderse kapalıdır. İki yeni SQL adayıyla toplam4 uygulanmamış PGtablosu; aktifSQLite16tablo148tür değişmedi. Kişi/üyelik/session/iptal/HTTP bağlantısı açık. Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque signed proof/MFA, challenge/keybarrier, session ve audit atomik zincirini bağladı. Strict+1 directory control; person ve membership revizyonu sessiona pinli, kapat/aç eski sessionı canlandırmaz. Rotate/parentfamilylogout, sub/sidANDJTI backchannel ve session öncesi iptal bariyeri, timeout ve belirsiz COMMIT kapalı.9 uygulanmamışPGadayı; aktifSQLite16tablo148tür aynı. YeniSQL HTTP/rate/CSRF/akademik sınırı ve güvenilirrestore checkpoint açıktır. Paket58 SQL HTTP epoch/history/buckets üç adayını bağladı: strict+1 ve anahtar yeniden kullanım yasağı, tüm amaçların aktif bütçe sönmesini bekleyen atomik rotasyon/audit; kapsamlı per-purpose global/peer/browser bütçesi; COMMIT sonrası opak kısa ömürlü permit ve aynı tx sahipliği; cookie/contract/revision HMAC CSRF ve güncel SQL epoch. Yeni toplam12 uygulanmamış PGadayı; aktifSQLite16tablo148tür aynı. Gerçek HTTP claim/finalsession bağı bu pakette açık.",
       "independent_remaining_work": [
-        "SQL kimlik flowunun güvenli HTTP/cookie/Origin/CSRF/oran sınırı ve rol ekranı kabulünü tamamla; mevcut akademik core senkron LocalAcceptanceStorea bağlı, iki ayrı depo gerçek tek akademik zincir diye gösterilemez.",
-        "Directory ve key control-plane için gerçek yetkilendirme ve kurumsal kaynak/provisioning; SQL rate/CSRF rotasyonu, bütün yazarlar ve güvenilir iptal/checkpoint geri yükleme bağı açık.",
-        "Gerçek çok bağlantılı PostgreSQL/SSI/rol/RLS/driver/TLS/pool/KMS/IdP ve bölgesel kapasite kabulü açık; yeni credential ve üretim migration özel yetki sınırında kapalı."
+        "SQL HTTP handler ve flow hook: gerçek TLS/cookie/Origin/Host/CSRF/body; claim ve final session commit içinde aynı permit epoch kontrolü; tek request finally close ve Türkçe oturum ekranı.",
+        "Async akademik depo ve kimlik scope bağını tamamla; LocalAcceptanceStore ile ayrı SQL kimliğini gerçek tek zincir gibi sunma. Directory/key/HTTP control-plane yetkisi ve bütün yazarlar/restore checkpoint açık.",
+        "Gerçek native çok bağlantı/SSI/RLS/driver/TLS/pool/KMS/IdP ve kapasite kabulü; yeni credential ve üretim migration özel yetki sınırında kapalı."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; SQL kişi/üyelik/oturum/iptal bağlı; HTTP ve akademik depo/gerçek control-plane açık",
+          "status": "kısmi; SQL HTTP güvenlik sınırı hazır; HTTP/flow/akademik depo bağlantısı ve gerçek kontrol düzlemi açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -620,22 +625,27 @@
             "gazi/auth/myys/IDENTITY-SQL-FLOW-CONTRACT.md",
             "gazi/auth/tests/helpers/sql-identity-flow.mjs",
             "gazi/auth/tests/myys-identity-sql-flow.test.mjs",
-            "gazi/auth/myys/acceptance/B06-B07-sql-flow-20261014.json"
+            "gazi/auth/myys/acceptance/B06-B07-sql-flow-20261014.json",
+            "gazi/auth/myys/identity-http-security.mjs",
+            "gazi/auth/myys/identity-http-schema.sql",
+            "gazi/auth/myys/IDENTITY-HTTP-SECURITY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B07-http-security-20261014.json",
+            "gazi/auth/tests/myys-identity-http-security.test.mjs"
           ],
           "remaining": [
-            "SQL kimlik flowunun güvenli HTTP/cookie/Origin/CSRF/oran sınırı ve rol ekranı kabulünü tamamla; mevcut akademik core senkron LocalAcceptanceStorea bağlı, iki ayrı depo gerçek tek akademik zincir diye gösterilemez.",
-            "Directory ve key control-plane için gerçek yetkilendirme ve kurumsal kaynak/provisioning; SQL rate/CSRF rotasyonu, bütün yazarlar ve güvenilir iptal/checkpoint geri yükleme bağı açık.",
-            "Gerçek çok bağlantılı PostgreSQL/SSI/rol/RLS/driver/TLS/pool/KMS/IdP ve bölgesel kapasite kabulü açık; yeni credential ve üretim migration özel yetki sınırında kapalı."
+            "SQL HTTP handler ve flow hook: gerçek TLS/cookie/Origin/Host/CSRF/body; claim ve final session commit içinde aynı permit epoch kontrolü; tek request finally close ve Türkçe oturum ekranı.",
+            "Async akademik depo ve kimlik scope bağını tamamla; LocalAcceptanceStore ile ayrı SQL kimliğini gerçek tek zincir gibi sunma. Directory/key/HTTP control-plane yetkisi ve bütün yazarlar/restore checkpoint açık.",
+            "Gerçek native çok bağlantı/SSI/RLS/driver/TLS/pool/KMS/IdP ve kapasite kabulü; yeni credential ve üretim migration özel yetki sınırında kapalı."
           ]
         },
         "local_acceptance": {
           "status": "yerel alt dilim geçti",
-          "evidence": "Paket55:21 yeni imzalı SQL akış testi;733 sunucu+48 portal+46 regresyon=827. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. Yeni SQL flow henüz HTTP/React/akademik depo bağlantısı değildir; tek bağlantılı PGlite kabulüdür.",
-          "limits": "Sentetik ES256+PGlite tek exclusive bağlantı; gerçek kişi/kurum/IdP/KMS/native multi-session/RLS veya yeni HTTP/akademik depo kabulü değildir."
+          "evidence": "Paket58:22 yeni SQL HTTP güvenlik testi;755 sunucu+48 portal+46 regresyon=849. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti; yeni SQL sınırı henüz HTTP/flowa bağlı değil.",
+          "limits": "PGlite tek exclusive bağlantı;15 tarayıcı eski yerel HTTP regresyonudur, yeni SQL HTTP kabulü değildir."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı Paket16. Paket55 yalnız kaynak/yerel kabul;17–55 dağıtılmadı;configuredCore kapalı."
+          "evidence": "Son canlı Paket16. Paket58 yalnız kaynak/yerel kabul;17–58 dağıtılmadı;configuredCore kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2930,23 +2940,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 57,
-    "server_security_tests": "12/12 gateway ve pilot envanteri; tam733 sunucu Paketi56da geçti, sunucu kodu değişmedi",
+    "software_package": 58,
+    "server_security_tests": "755/755",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 106,
-    "last_full_suite": {
-      "software_package": 56,
-      "server": 733,
-      "portal": 48,
-      "legacy": 46,
-      "total": 827
-    },
+    "local_total": 849,
     "portal_build": "Başarılı;115 statik korumalı paket",
-    "browser_visual_acceptance": "66 kontrol;98 menü/288 panel/22 vaka320 CSS px ve metin aralığı928 ölçümde0 taşma; gerçekAT/zoom değil.",
+    "browser_visual_acceptance": "15 mevcut yerel HTTPS kimlik kontrolü; yeni SQL sınırı HTTPye bağlı değil",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–57 dağıtılmadı;configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B24-reflow-20261014.json"
+    "deployment": "Son canlı16 READY;17–58 dağıtılmadı;configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B07-http-security-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2968,12 +2971,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 57,
-    "source_parent_remote": "b64461873dd94b119605f7ede7a0e733bf0b670d",
-    "source_parent_tree": "c084369a87c235726d6984963afab8cd4328138f",
+    "software_package": 58,
+    "source_parent_remote": "4d5d2d8ddacbc587df7d1df90a8eaebabe5dbe9f",
+    "source_parent_tree": "3861696ea04da6bdcf7e60dbc5c449bc700975af",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 106,
-    "note": "B24 dar ekran/metin aralığı yerel kabulde geçti; kaynak eşitlemesi sırada. B07 SQL HTTP/rate/CSRF/akademik depo, B28 checkpoint, karşıtlık ve kalan bağımsızlar sürer."
+    "local_tests": 849,
+    "note": "SQL HTTP güvenliği yerel kabulde geçti;59 handler/flow bağını tamamla. B01–B36 bütünü açık."
   },
   "verification_history": [
     {
@@ -3261,6 +3264,26 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16 READY;17–56 dağıtılmadı;configuredCore kapalı.",
       "evidence": "gazi/auth/myys/acceptance/B24-file-input-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 57,
+      "server_security_tests": "12/12 gateway ve pilot envanteri; tam733 sunucu Paketi56da geçti, sunucu kodu değişmedi",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46 model/kaynak/demo",
+      "local_total": 106,
+      "last_full_suite": {
+        "software_package": 56,
+        "server": 733,
+        "portal": 48,
+        "legacy": 46,
+        "total": 827
+      },
+      "portal_build": "Başarılı;115 statik korumalı paket",
+      "browser_visual_acceptance": "66 kontrol;98 menü/288 panel/22 vaka320 CSS px ve metin aralığı928 ölçümde0 taşma; gerçekAT/zoom değil.",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16 READY;17–57 dağıtılmadı;configuredCore kapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B24-reflow-20261014.json"
     }
   ]
 }

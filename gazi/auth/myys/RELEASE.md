@@ -775,3 +775,11 @@ Panel: Matris ve Rubrik Stüdyosu, Müfredat, Bağlantılar, eski rol/alım form
 Kabul:106 otomatik test yeniden geçti (12 gateway/envanter,48 portal,46 regresyon); son tam733 sunucu koşusu Paketi56dır, sunucu kodu değişmedi.66 tarayıcı;98 menü,288 rol paneli,22 vaka ve ek sekme/pencereler320 CSS px/metin aralığı928 ölçümde0 taşma. Gerçek ekran okuyucu/zoom/altyazı/karşıtlık ve tüm B24 kabulü açık.115 dosyalı korumalı paket hazır; üretim migration yok.
 
 Başlangıç uzak `b64461873dd94b119605f7ede7a0e733bf0b670d` / ortak `c084369a87c235726d6984963afab8cd4328138f`. Kaynak eşitlemesi sonucu ayrıca eklenecek.14.10.2026 canlı alias `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6` olarak yeniden okundu; bu yeni kimlikli smoke değildir.17–57 yayımlanmadı; configuredCore kapalı. Son canlı geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. BrowserAuth iptali tekrar denenmedi.
+
+Paket57 kaynak eşitlemesi doğrulandı: yerel `2041c6003bbc64d846f19b429b294a6fd99001d4`, uzak `4d5d2d8ddacbc587df7d1df90a8eaebabe5dbe9f`, ortak tam ağaç `3861696ea04da6bdcf7e60dbc5c449bc700975af`.11 blob SHA ve tam ağaç birebir; expected-head/force=false; uzak ref ve commit ağacı yeniden okundu. Yeni dağıtım yok.
+
+## Paket58 — SQL HTTP güvenliği (yalnız yerel kabul)
+
+Görünür ekran değişikliği yok. Paket58:22 yeni SQL HTTP güvenlik testi;755 sunucu+48 portal+46 regresyon=849. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti; yeni SQL sınırı henüz HTTP/flowa bağlı değil. Ortak bütçe/anahtar epochu/CSRF ve permit dilimi yerel kabulde; yeni HTTP handler/flow bağlantısı yok.12 adayPGtablo üretime uygulanmadı;16SQLite148tür ve115 statik korunur.
+
+Başlangıç uzak `4d5d2d8ddacbc587df7d1df90a8eaebabe5dbe9f`, ortak ağaç `3861696ea04da6bdcf7e60dbc5c449bc700975af`; kaynak eşitlemesi ayrıca kaydedilecek.14.10.2026 alias yeniden `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; yeni authenticated smoke değildir.17–58 yayımlanmadı;configuredCore kapalı;browserAuth iptali tekrar denenmedi. Son canlı geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı.

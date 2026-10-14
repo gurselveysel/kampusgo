@@ -1,3 +1,17 @@
+# Güncel devam — Paket58 yerel kabul; kaynak eşitlemesi sırada
+
+Paket58:22 yeni SQL HTTP güvenlik testi;755 sunucu+48 portal+46 regresyon=849. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti; yeni SQL sınırı henüz HTTP/flowa bağlı değil.115statik;12uygulanmamışPGaday,16aktifSQLite148tür. Görünür ekran değişikliği yok. Son canlı16;17–58dağıtılmadı.
+
+Önce diff/commit ve expectedremote4d5d2d8ddacbc587df7d1df90a8eaebabe5dbe9f/base3861696ea04da6bdcf7e60dbc5c449bc700975af ile tam ağaç eşitle.59 SQL HTTP: claim VE finalsession commit içinde permit/epoch guard; logout/backchannel/begin/principal da kapsamlı, finallyclose. Aynı tx nesnesi sahipliği gereklidir. Gerçek TLS loopback ve Türkçe oturum ekranını test et; akademik LocalSQLite bağını SQL diye gösterme. ConfiguredCore kapalı, browserAuth iptali tekrar denenmez. B28checkpoint/B24karşıtlık ve diğer bütün bağımsızlar sürer; tek editör.
+
+# Güncel devam — Paket57 kaynakta; B07 SQL HTTP sınırı sırada
+
+Paket57 yerel `2041c6003bbc64d846f19b429b294a6fd99001d4`, uzak `4d5d2d8ddacbc587df7d1df90a8eaebabe5dbe9f`, ortak tam ağaç `3861696ea04da6bdcf7e60dbc5c449bc700975af`.11 blob ve tam ağaç eşleşti; expected-head/force=false doğrulandı.106 yeniden koşulan otomatik test ve66 tarayıcı; son tam733 sunucu Paketi56, sunucu kodu değişmedi.928 yeniden akış/metin aralığı ölçümü geçti;115 statik. Son canlı16;17–57 dağıtılmadı.
+
+Sıradaki58 B07: SQL kimlik akışının güvenli HTTP/rate/CSRF bağı. Önce kalıcı SQL oran sınırı ve CSRF anahtar/politika sürüm bariyerini incele; LocalIdentityRateLimit/Http SQLite sınırlamasını kaldırma. Kimlik SQL flow asyncdir, akademik core hâlâ sync LocalAcceptanceStore; iki depoyu gerçek tek zincir gibi sunma. Gerçek HTTP callback için SQL rate/CSRF, Origin/Host/TLS/cookie/tek kullanımlık callback ve belirsiz COMMIT kabulünü birlikte izle. Üretim migration/credential/KMS/IdP yok, SQL aday tablolara otomatik DDL ekleme. PGlite tek exclusive bağlantıdır, gerçek çok bağlantı/RLS değildir. B28 checkpoint, karşıtlık ve bütün bağımsızlar açık; browserAuth iptalini yeniden isteme; tek editör.
+
+Henüz58 kod yok. `identity-http.mjs` okundu; rate dosyası `identity-rate-limit.mjs` (identity-rate.mjs yok). SQL flowu cookie bağlamından üretim akademik storea bağlamak ayrıca açık. Sonraki expectedremote4d5d2d8ddacbc587df7d1df90a8eaebabe5dbe9f/base3861696ea04da6bdcf7e60dbc5c449bc700975af.
+
 # Güncel devam — Paket57 yerel kabul; kaynak eşitlemesi sırada
 
 Görünür: Matris/Müfredat/Bağlantılar/eski rol ve alım formu/22 vaka tablosunda dar ekran taşmaları giderildi. B24 dilimi; tam AT/zoom/altyazı/karşıtlık kabulü değil.106 yeniden koşulan otomatik test (12 gateway/envanter48 portal46 regresyon) +66 tarayıcı. Son tam733 sunucu Paketi56; sunucu kodu değişmedi.98 menü/288 panel/22 vaka320 CSS px ve metin aralığı928 ölçümde0 taşma.115 statik korumalı paket. Özgün36 ölçüt korunuyor.
