@@ -1,0 +1,62 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 50,
+  "work_ids": [
+    "B21",
+    "B22"
+  ],
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "server_tests": 661,
+  "new_server_tests": 12,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 755,
+  "browser_checks": {
+    "recognition-review": 12,
+    "recognition": 12,
+    "recognition-offers": 11,
+    "obs": 11,
+    "external-credential": 13,
+    "recognition-document": 11
+  },
+  "browser_total": 70,
+  "review_browser_checks": [
+    "Arşivli belgenin olumlu insan incelemesi güncel imza makbuzunu bekledi",
+    "İnsan durum kaynağını ayrıca inceleyip makbuza bağladı; kredi oluşmadı",
+    "Ayrı akademik karar ve öğrenci işleri hazırlığı ilk yerel mutabakatı oluşturdu",
+    "Yeni olumlu teknik rapor eski karar ve mutabakatı kendiliğinden yenilemedi",
+    "Bağımsız itiraz ve yeni karar, yenilenen teknik raporla altı kredilik düzeltmeye bağlandı",
+    "İki teknik sürüm ve iki akademik karar birlikte korundu",
+    "390 px rapor/karar geçmişi taşmadan okunuyor; geçmiş özeti klavye odağı alıyor",
+    "Anahtar riski yeni aktarımı kapattı; geçmiş kredi ve mutabakat silinmedi",
+    "Yeni bağımsız olumsuz karar, kapalı anahtara rağmen önceki aktarımın iptal düzeltmesini tamamladı",
+    "Yeniden yüklemede kredi ters kaydı ve üç kararın geçmişi korundu",
+    "Başka öğrenci teknik rapor ve karar zincirini göremedi",
+    "İstemci istisnası yok"
+  ],
+  "command_count": 136,
+  "http_routes": 18,
+  "positive_samples": 8453,
+  "derived_scope_checks": 67624,
+  "static_files": 115,
+  "technical_tables": 16,
+  "record_kinds": 148,
+  "local_slice_closed": [
+    "archived proof bound to immutable human technical report and separate human status reference",
+    "independent decision pins technical version; new report does not revive prior credit",
+    "current proof/trust and injected clock gate positive decisions and OBS",
+    "whole-offer hold, historical reconciliation preserved, independently decided zero-credit cancellation",
+    "cross-connection stale forms, atomic audit rollback, scoped subject export"
+  ],
+  "open": [
+    "re-signed credential semantic identity and duplicate-credit protection",
+    "real issuer/subject/status/schema/prior-course and institutional decision acceptance",
+    "production archive/worker/OBS transcript or diploma supplement and authenticated live verification"
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "20e5761933bdf3307d53498d813f11620cb50d4b",
+  "source_parent_tree": "de21ec8048f24574b0042404938e4cc2a09af3b6",
+  "contract": "RECOGNITION-REVIEW-CONTRACT.md"
+}

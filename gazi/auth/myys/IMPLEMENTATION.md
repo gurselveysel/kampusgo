@@ -299,3 +299,11 @@ Paket48: gerçek 32 KiB JWT baytları aynı talep/kişi/kurum/birim ve sunucu SH
 ## Paket49 — B21 dış belge doğrulayıcısı
 
 Paket49: dış belgeye özel sunucu issuer/anahtar/kişi eşleme sözleşmesi, IT hazırlığı/ayrı yönetici incelemesi, sürüm/süre/anahtar kapanışı; arşiv baytlarından gerçek JOSE RS256, typ/issuer/audience/subject/id/süre denetimi ve asenkron işlem sonrası atomik yeniden yetkilendirme. Makbuz yalnız imza/kişi eşlemesidir; durum/insan teknik kabulü ve kredi üretmez. Mevcut insan raporuna ve karar/OBS güven zincirine zorunlu bağ sonraki bağımsız dilimdir. Sözleşme `EXTERNAL-CREDENTIAL-CONTRACT.md`;743otomatik/47tarayıcı;16tablo148tür.
+
+## Paket50 — B21/B22 bağlı insan raporu ve karar/aktarım (14.10.2026)
+
+Paket50: arşivli olumlu insan raporu güncel imza makbuzuna ve ayrıca insanın incelediği durum kaynağına bağlı; değişmez rapor sürümleri ve kararın sabitlediği teknik rapor korunur. Yeni rapor eski krediyi otomatik yenilemez. Güven kapanışı pozitif kararı ve bütün teklifin OBS kullanımını bekletir; ayrı olumsuz kararın sıfır kredili iptal düzeltmesi yürür. Kişi özeti iç SHA/görevli alanlarını açmaz.
+
+14.10.2026 Paket50:661+48+46=755 otomatik;12 yeni sunucu;12 bağlı inceleme+12 tanıma+11 teklif+11 OBS+13 kriptografik+11 teslim=70 tarayıcı;136komut/18HTTP8453örnek67624kapsam denetimi. 390px geçmiş görüntüsü incelendi; yeni tarayıcıda sekme ve aynı adlı option/Pill seçicileri düzeltildi. Son altı akış tam geçti.16tablo148tür/115statik. Sözleşme RECOGNITION-REVIEW-CONTRACT.md; kanıt acceptance/B21-review-20261014.json.36 özgün iş/bağımlılık/kabul aynı. Yeniden imzalanan belge için kanonik çift kredi koruması, gerçek durum kaynağı/kurul/OBS/üretim kabulü açık.
+
+Paket50 dağıtılmadı; son canlı16 alias dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY yeniden okundu. Yeni authenticated smoke yok; configuredCore kapalı. 17–50 dağıtılmadı. Canlı kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. BrowserAuth iptali tekrar denenmedi. Kaynak commit ve tam ağaç eşitlemesi ayrı kaydedilecek.

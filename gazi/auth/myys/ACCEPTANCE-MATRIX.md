@@ -24,8 +24,8 @@
 | B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B20 · Tanıma politika setini onayla | kısmi | kısmi · tanıma dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B21 · Dış belge ve tanıma akışını bağla | kısmi; arşiv + sınırlı imza/güven adaptörü bağlı | 12 yeni sunucu, 47 tarayıcı; insan raporu/karar bağı açık | Paket49 canlı değil | gerçek teslim/usul/önceki ders/kurul kabulü açık | gerçek issuer/kişi, genel VC/status/schema ve üretim arşiv kabulü açık |
-| B22 · OBS aktarımını kontrollü kabul et | kısmi | kısmi · outbox dilimi geçti | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B21 · Dış belge ve tanıma akışını bağla | kısmi; arşiv/imza/insan raporu/karar bağlı | Paket50:12 yeni sunucu,70 tarayıcı; bağlı zincir geçti | Paket50 canlı değil | gerçek teslim/usul/önceki ders/kurul kabulü açık | kanonik çift kredi, gerçek issuer/status/schema ve üretim kabulü açık |
+| B22 · OBS aktarımını kontrollü kabul et | kısmi; kaynak güveni ve iptal düzeltmesi bağlı | Paket50 bağlı zincir ve11 OBS tarayıcı geçti | Paket50 canlı değil | operasyonel kabul açık | gerçek OBS şeması/transkript/diploma eki/işçi kabulü açık |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B24 · Erişilebilirlik açılış testini yap | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
@@ -313,3 +313,11 @@ Paket48: gerçek 32 KiB JWT baytları aynı talep/kişi/kurum/birim ve sunucu SH
 ## Paket49 — B21 dış belge imzası
 
 Paket49: dış belgeye özel sunucu issuer/anahtar/kişi eşleme sözleşmesi, IT hazırlığı/ayrı yönetici incelemesi, sürüm/süre/anahtar kapanışı; arşiv baytlarından gerçek JOSE RS256, typ/issuer/audience/subject/id/süre denetimi ve asenkron işlem sonrası atomik yeniden yetkilendirme. Makbuz yalnız imza/kişi eşlemesidir; durum/insan teknik kabulü ve kredi üretmez. Mevcut insan raporuna ve karar/OBS güven zincirine zorunlu bağ sonraki bağımsız dilimdir. 743 otomatik/47 tarayıcı;136komut/18HTTP8145örnek65160denetim. Ayrıntı `acceptance/B21-external-20261014.json`. B21 ve bütün36 işin tam kabulü açık; son canlı16,17–49 dağıtılmadı.
+
+## Paket50 — B21/B22 bağlı insan raporu ve karar/aktarım (14.10.2026)
+
+Paket50: arşivli olumlu insan raporu güncel imza makbuzuna ve ayrıca insanın incelediği durum kaynağına bağlı; değişmez rapor sürümleri ve kararın sabitlediği teknik rapor korunur. Yeni rapor eski krediyi otomatik yenilemez. Güven kapanışı pozitif kararı ve bütün teklifin OBS kullanımını bekletir; ayrı olumsuz kararın sıfır kredili iptal düzeltmesi yürür. Kişi özeti iç SHA/görevli alanlarını açmaz.
+
+14.10.2026 Paket50:661+48+46=755 otomatik;12 yeni sunucu;12 bağlı inceleme+12 tanıma+11 teklif+11 OBS+13 kriptografik+11 teslim=70 tarayıcı;136komut/18HTTP8453örnek67624kapsam denetimi. 390px geçmiş görüntüsü incelendi; yeni tarayıcıda sekme ve aynı adlı option/Pill seçicileri düzeltildi. Son altı akış tam geçti.16tablo148tür/115statik. Sözleşme RECOGNITION-REVIEW-CONTRACT.md; kanıt acceptance/B21-review-20261014.json.36 özgün iş/bağımlılık/kabul aynı. Yeniden imzalanan belge için kanonik çift kredi koruması, gerçek durum kaynağı/kurul/OBS/üretim kabulü açık.
+
+Paket50 dağıtılmadı; son canlı16 alias dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY yeniden okundu. Yeni authenticated smoke yok; configuredCore kapalı. 17–50 dağıtılmadı. Canlı kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. BrowserAuth iptali tekrar denenmedi. Kaynak commit ve tam ağaç eşitlemesi ayrı kaydedilecek.

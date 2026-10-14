@@ -1,5 +1,5 @@
 // Local data inventory and positive export schema. This is not a legal retention policy.
-export const inventoryVersion='2026.10.14.49';
+export const inventoryVersion='2026.10.14.50';
 export const privacyCategories={
   "learning": {
     "label": "Öğrenme ve değerlendirme",
@@ -602,6 +602,12 @@ export const subjectFields={
     "createdAt"
   ],
   "recognition-technical": [
+    "version",
+    "previousTechnicalId",
+    "changeReason",
+    "verification",
+    "statusReview",
+    "humanReview",
     "id",
     "unit",
     "requestId",
@@ -873,6 +879,7 @@ const alternative=fields('method methodReference sourceReference observedAt reas
 const member={...fields('unit expires active personActive'),roles:[scalar]};
 const totals=fields('captured refunded refundHeld disputeHeld chargedBack available');
 const nested={
+ 'recognition-technical':{verification:fields('id'),statusReview:fields('outcome reference checkedAt method automated')},
  'recognition-offer':{rows:[fields('requestId')]},
  'recognition-offer-decision':{rowDecisionIds:[scalar]},
  'recognition-offer-appeal':{rowAppealIds:[scalar]},

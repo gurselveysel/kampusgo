@@ -1,3 +1,19 @@
+# Güncel devam — Paket50 yerel kabul; kaynak eşitlemesi sırada
+
+14.10.2026 Paket50:661+48+46=755 otomatik;12 yeni sunucu;12 bağlı inceleme+12 tanıma+11 teklif+11 OBS+13 kriptografik+11 teslim=70 tarayıcı;136komut/18HTTP8453örnek67624kapsam denetimi.115statik;16tablo148tür. RECOGNITION-REVIEW-CONTRACT.md ve B21-review JSON ayrıntıdır. Yeni rapor eski kararı canlandırmaz; sıfır kredili bağımsız karar OBS iptaline izin verir.
+
+Önce diff/commit ve expected-head20e5761933bdf3307d53498d813f11620cb50d4b,base-tree de21ec8048f24574b0042404938e4cc2a09af3b6 ile tam ağaç eşitle. Son canlı16;17–50 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok.
+
+Sırada B21 yeniden imzalanmış aynı issuer/credential/subject/çıktı için kanonik çift kredi koruması. Dosya SHA değişebilir, insan gain/target değiştirebilir; imza makbuzunun güvenli kimlik bağını kullan. Eski arşivsiz manuel akışta kurum kimliği uydurma. Güncel formun beklediği teknik sürümü karar girdisine açık bağlama ihtiyacını da incele. B07 repository/KMS, B28 güvenlik checkpoint ve bütün diğer bağımsızlar açık.
+
+# Güncel devam — Paket49 kaynakta; B21 teknik rapor/karar bağı sürüyor
+
+Paket49 kaynak doğrulaması: yerel `6faceebad502629d7dcf965da2a645c3db8d726a`, uzak `20e5761933bdf3307d53498d813f11620cb50d4b`, ortak tam ağaç `de21ec8048f24574b0042404938e4cc2a09af3b6`.26blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+743otomatik47tarayıcı;136komut18HTTP8145örnek65160denetim;115statik16tablo148tür. Makbuz-insan teknik raporu/durum incelemesi ve karar/OBS güven kapanışı bağı sırada. Henüz50kod yok. Eski manuel raporu otomatik kriptografik sayma; akademik karar/kredi geçmişini silme veya kendiliğinden iptal etme. Mevcut recognition/issuer/verifier/OBS ve itiraz/sürüm akışlarını oku.
+
+Son canlı16;17–49 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok. B07 repository/KMS,B28checkpoint ve bütün diğer bağımsızlar açık.
+
 # Güncel devam — Paket49 yerel kabul; kaynak eşitlemesi sırada
 
 B21 Dış belge düzenleyicileri + Belge imzasını denetle:743otomatik47tarayıcı;136komut18HTTP8145örnek65160denetim;115statik16tablo148tür. EXTERNAL-CREDENTIAL-CONTRACT ve B21-external JSON ayrıntıdır. İmza/kişi doğrulaması insan teknik raporuna henüz zorunlu bağlanmaz; durum/akademik kabul üretmez.
