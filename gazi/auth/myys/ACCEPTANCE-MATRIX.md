@@ -10,7 +10,7 @@
 | B04 · Veri akışını ve saklamayı onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; yerel HTTPS bağlı | HTTPS/ayrı-site dilimi geçti | yeni HTTPS dilimi canlı değil | IdP/MFA kabulü bekleniyor | üretim depo/dağıtık iptal ve IdP açık |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; yerel imzalı iptal/oran bağlı | 99 kimlik testi, 15 HTTPS tarayıcı kontrolü | Paket25 canlı değil | IdP/MFA kabulü bekleniyor | üretim depo/anahtar adaptörü, dağıtık kabul ve IdP açık |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi · sürüm/arşiv dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
@@ -156,3 +156,7 @@ Paket 22 ek yerel kanıt: 12 saklama + 11 veri talebi tarayıcı kontrolü geçt
 ## Paket 24 kaynak adayı — B23/B08 (2026-10-14)
 
 SEM dosyaları: iç kontrol listesi/kaynak kapsamı, eksik/düzeltme, sürüm, ayrı inceleme/aktarım hazırlığı, JSON indirme ve geri çekme. 440 otomatik; 13 SEM +13 itiraz tarayıcı, 390 px form incelendi. 72 komut/12 HTTP matrisi geçti. Merkezi onay, gönderim, düzenleyici teyidi ve yerel resmî SEM ihraç kapalı. Güncel YÖK/Gazi usul ve gerçek YÖKSİS kabulü açık; kaynak adayı canlı yayın değildir.
+
+## Paket25 kaynak adayı — B07/B08 (14.10.2026)
+
+Akademik panelin kapalı oturum/yeniden giriş davranışı sağlayıcı çıkışına bağlandı; yerel girişte Türkçe oran sınırı ekranı eklendi. İmzalı sub/sid iptali, kurum/issuer/audience sınırı, aynı jti tekrarı/çakışması, audit geri alma, gecikmiş callback ve başka tenant tarayıcı bağı denetlendi. 372+46+46=464 otomatik; 15 gerçek yerel HTTPS tarayıcı kontrolü geçti. 72 akademik komut/12 HTTP matrisi: 2945 pozitif örnek, 23560 türetilmiş kontrol; ayrı test veya tamamlanma oranı değildir. `acceptance/B07-backchannel-20261014.json`. Üretim transaction/anahtar adaptörü ve dağıtık kabul hâlâ bağımsız açıktır; gerçek IdP/MFA/kurum saklama/erişim ayrıca gerekir. Son canlı Paket16; Paket17–25 dağıtımı yok. B01–B36 bütünü tamamlanmadı.

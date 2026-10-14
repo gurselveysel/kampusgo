@@ -382,3 +382,18 @@ Paket 22 ek yerel kanıt: 12 saklama + 11 veri talebi tarayıcı kontrolü geçt
 ## Paket 24 kaynak adayı — B23/B08 (2026-10-14)
 
 SEM dosyaları menüsü ve mobil kaynak/kontrol formları eklendi. 440 otomatik; 13 SEM +13 itiraz tarayıcı; 72 komut/12 HTTP kapsam matrisi. 115 dosyalı korumalı paket üretildi. Temel yerel 42748e05904c05f5e3d5b1447181b4c17e86fd15 / uzak a2032738b05ec46bbe60d488cbae55fd1427c780 / ağaç 51f4c03507bbb684bd2ac50bec90950bd304a05c. Yeni dağıtım yok. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 / 16bd55eefed251ce5d23e1791f87ed3871c6a8c6; auth kullanıcı iptali ve yeni smoke açık. Sonraki yayımın geri dönüş hedefi Paket16; uygulanmadı. SEM resmi usul/merkezi düzenleyici/teknik şema ve kurum kabulü açık.
+
+### Paket 24 — kaynak eşitlendi, canlı yayımlanmadı (2026-10-14)
+
+- Yerel `9ecf625e4873586e3425d5e542fc9de868b7778e`; uzak `d256623050f34c353a7f7eeaba1ea0494de66c43`; ortak ağaç `3e29a1bc5bf457507a4800eeca687c2c451ec681`. Beklenen uzak başlık üzerinden geçmiş korunarak eşitlendi.
+- 440 otomatik, 13 SEM +13 itiraz tarayıcı; 72 komut/12 HTTP kapsam matrisi geçti. 36 özgün iş kimliği/bağımlılık/kabul ölçütü korundu.
+- Yeni canlı dağıtımı yok; son canlı Paket16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, alias READY yeniden doğrulandı. Auth kullanıcı iptali nedeniyle yeni smoke açık. Gerçek merkezi SEM kurum/teknik kabulü bekleniyor.
+
+## Paket25 kaynak adayı — B07 (14.10.2026)
+
+- Ekran: Akademik çalışma alanında sağlayıcı iptalinden sonra kapalı oturum/yeniden giriş; yerel girişte Türkçe kota bekleme sayfası. Yeni doğrulama aynı kişiyi ve itiraz kaydını korur.
+- Yerel: imzalı sağlayıcı çıkışı, tenant/issuer/audience/sub/sid eşlemesi, tek makbuz, atomik audit/iptal, gecikmiş callback bariyeri, başka tenant tarayıcı bağının korunması ve kalıcı oran sınırı.
+- Kabul: 372 sunucu +46 portal +46 regresyon =464; 15 HTTPS tarayıcı; 72 komut/12 HTTP, 2945 pozitif örnek ve 23560 türetilmiş kapsam kontrolü. 115 dosyalı korumalı paket üretildi. Kanıt B07-backchannel-20261014.json.
+- Üretim transaction/anahtar adaptörü, çok işçi/region kabulü, gerçek IdP/MFA ve güvenlik kayıtlarının kurumsal saklama kabulü açık; B07 tamamlandı sayılmaz.
+- 14.10.2026 alias sorgusu: dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY, Paket16 değişmedi. Paket17–25 dağıtımı ve yeni korumalı canlı smoke yok; kullanıcı iptal ettiği browserAuth yeniden başlatılmadı. Rollback hedefi dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 değişmedi ve uygulanmadı.
+- Kaynak eşitleme öncesi başlık d256623050f34c353a7f7eeaba1ea0494de66c43; eski dal yayımlanmaz. Tam yeni commit/ağaç kimlikleri eşitleme sonrasında bir sonraki kayıtla eklenir.

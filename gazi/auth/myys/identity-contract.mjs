@@ -4,6 +4,11 @@ import {createLocalJWKSet, decodeProtectedHeader, jwtVerify} from 'jose';
 import {timingSafeEqual} from 'node:crypto';
 import {CoreError, LocalAcceptanceStore, requireThat} from './store.mjs';
 import {ROLES} from './core.mjs';
+import {stableStringify} from './program-model.mjs';
+import {hash} from './store.mjs';
+
+export const logoutEvent = 'http://schemas.openid.net/event/backchannel-logout';
+const identifier = v => typeof v === 'string' && /^[\x21-\x7e]{1,255}$/.test(v);
 
 const text = v => typeof v === 'string' && v.length > 0 && v.length <= 512;
 const integer = v => Number.isSafeInteger(v) && v >= 0;
@@ -36,7 +41,7 @@ export function createIdentityContract(input) {
   config((!k.use || k.use === 'sig') && (!k.key_ops || (Array.isArray(k.key_ops) && k.key_ops.length === 1 && k.key_ops[0] === 'verify')));
   kids.add(k.kid);
  }
- const keys = createLocalJWKSet(c.jwks), proofs = new WeakMap();
+ const keys = createLocalJWKSet(c.jwks), proofs = new WeakMap(), logoutProofs = new WeakMap();
  function resolveMember(proof, {store, now = new Date(), requireMfa = true} = {}, commit = actor => actor) {
   const at = timestamp(now), identity = proofs.get(proof);
   requireThat(identity && at >= identity.at && at < identity.expires && at - identity.at <= c.maxTokenAgeSeconds, 'identity_proof', 'Güncel doğrulanmış kimlik kanıtı gerekli.', 403);
@@ -52,7 +57,7 @@ export function createIdentityContract(input) {
     return {unit: row.unit, roles};
    });
    requireThat(memberships.length > 0, 'membership_required', 'Kurum üyeliği yok veya süresi dolmuş.', 403);
-   return commit({id: person.id, tenant: c.tenant, mfa: identity.mfa, memberships}, {expiresAt: new Date(identity.expires * 1000).toISOString(), contractVersion: c.version});
+   return commit({id: person.id, tenant: c.tenant, mfa: identity.mfa, memberships}, {expiresAt: new Date(identity.expires * 1000).toISOString(), contractVersion: c.version, issuer:identity.issuer, subject:identity.subject, audience:c.audience, providerSessionId:identity.sid, issuedAt:identity.iat, authenticatedAt:identity.authTime});
   });
  }
  return Object.freeze({
@@ -72,17 +77,40 @@ export function createIdentityContract(input) {
     // This profile trusts one audience only. Additional audiences require a new contract.
     const audiences = Array.isArray(p.aud) ? p.aud : [p.aud];
     if (audiences.length !== 1 || audiences[0] !== c.audience || (p.azp !== undefined && p.azp !== c.audience)) throw fail();
-    if (typeof p.sub !== 'string' || !/^[\x21-\x7e]{1,255}$/.test(p.sub)) throw fail();
+    if (!identifier(p.sub) || (p.sid !== undefined && !identifier(p.sid)) || 'events' in p) throw fail();
     if (![p.iat,p.exp,p.auth_time].every(integer) || p.exp <= p.iat || p.auth_time > p.iat + c.clockToleranceSeconds || p.auth_time > at + c.clockToleranceSeconds || at - p.auth_time > c.maxAuthAgeSeconds + c.clockToleranceSeconds) throw fail();
     const wanted = Buffer.from(expectedNonce), received = Buffer.from(typeof p.nonce === 'string' ? p.nonce : '');
     if (wanted.length !== received.length || !timingSafeEqual(wanted, received)) throw fail();
     const mfa = Array.isArray(p.amr) && p.amr.every(text) && c.mfaProfiles.some(profile => profile.acr === p.acr && profile.amr.every(method => p.amr.includes(method)));
     const proof = Object.freeze({});
-    proofs.set(proof, {issuer: c.issuer, subject: p.sub, mfa, at, expires: Math.min(p.exp, p.iat + c.maxTokenAgeSeconds + c.clockToleranceSeconds, p.auth_time + c.maxAuthAgeSeconds + c.clockToleranceSeconds)});
+    proofs.set(proof, {issuer: c.issuer, subject: p.sub, sid:p.sid ?? null, iat:p.iat, authTime:p.auth_time, mfa, at, expires: Math.min(p.exp, p.iat + c.maxTokenAgeSeconds + c.clockToleranceSeconds, p.auth_time + c.maxAuthAgeSeconds + c.clockToleranceSeconds)});
     return proof;
    } catch { throw fail(); } // Never expose token, claims, provider messages or key details.
   },
   resolveLocalMember(proof, options) { return resolveMember(proof, options); },
+  async verifyLogout(token,{now=new Date()}={}) {
+   const at=timestamp(now);
+   try {
+    if(typeof token!=='string'||token.length>16384||token.split('.').length!==3)throw fail();
+    const header=decodeProtectedHeader(token);
+    // Deliberately stricter local profile: explicit type and one trusted audience.
+    if(header.typ!=='logout+jwt'||!kids.has(header.kid)||!c.algorithms.includes(header.alg)||['jku','jwk','x5u'].some(k=>k in header))throw fail();
+    const {payload:p}=await jwtVerify(token,keys,{issuer:c.issuer,audience:c.audience,algorithms:c.algorithms,currentDate:now,clockTolerance:c.clockToleranceSeconds,maxTokenAge:120,requiredClaims:['iss','aud','iat','exp','jti','events']});
+    const audiences=Array.isArray(p.aud)?p.aud:[p.aud];
+    if(audiences.length!==1||audiences[0]!==c.audience||!identifier(p.jti)||'nonce' in p)throw fail();
+    if(![p.iat,p.exp].every(integer)||p.exp<=p.iat||p.exp-p.iat>120||at>=p.exp)throw fail();
+    if((p.sub===undefined&&p.sid===undefined)||(p.sub!==undefined&&!identifier(p.sub))||(p.sid!==undefined&&!identifier(p.sid)))throw fail();
+    if(!p.events||typeof p.events!=='object'||Array.isArray(p.events)||!Object.hasOwn(p.events,logoutEvent))throw fail();
+    const event=p.events[logoutEvent];if(!event||typeof event!=='object'||Array.isArray(event))throw fail();
+    const proof=Object.freeze({});logoutProofs.set(proof,{tenant:c.tenant,issuer:c.issuer,audience:c.audience,subjectHash:p.sub===undefined?null:hash(p.sub),sidHash:p.sid===undefined?null:hash(p.sid),jtiHash:hash(p.jti),issued:p.iat,expires:p.exp,digest:hash(stableStringify(p)),at});return proof;
+   } catch {throw new CoreError('identity_logout','Oturum kapatma bildirimi doğrulanamadı.',400);}
+  },
+  commitLocalLogout(proof,{store,now=new Date()}={},commit) {
+   const at=timestamp(now),grant=logoutProofs.get(proof);
+   requireThat(store instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Oturum iptali yalnız yerel kabulde çalışır.',503);
+   requireThat(grant&&at>=grant.at&&at<grant.expires&&at-grant.issued<=120+c.clockToleranceSeconds&&typeof commit==='function','identity_logout','Güncel imzalı oturum kapatma kanıtı gerekli.',400);
+   return store.transaction(()=>commit({...grant}));
+  },
   commitLocalMember(proof, options, commit) {
    requireThat(typeof commit === 'function', 'identity_commit', 'Yerel kabul işlemi gerekli.', 500);
    // Synchronous server-owned callback: member recheck and commit share one transaction.

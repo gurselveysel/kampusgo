@@ -1,0 +1,76 @@
+{
+  "work_id": "B07",
+  "at": "2026-10-14T00:22:51.047Z",
+  "scope": "isolated-https-local-acceptance",
+  "production": false,
+  "official": false,
+  "automated": {
+    "server": 372,
+    "portal": 46,
+    "regression": 46
+  },
+  "identity_tests": {
+    "tokens_and_person": 29,
+    "flow": 27,
+    "https": 25,
+    "backchannel_and_rate": 18
+  },
+  "browser": {
+    "at": "2026-10-14T00:22:51.047Z",
+    "scope": "isolated-https-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Kapalı oturum paneli güvenli yerel giriş ekranına yönlendiriyor",
+      "Kullanıcı iptali yeniden denenebilir, temiz hata ekranına döndü",
+      "Ayrı sitedeki sentetik IdP, state/PKCE/nonce ve HTTP callback ile aynı öğreneni açtı",
+      "Çerez yalnız uygulama sitesinde, Secure/HttpOnly/Lax; token alışverişi tarayıcıda yok",
+      "Gerçek panel komutu aynı kişiye bağlı oturum ve CSRF başlığıyla kaydoldu",
+      "Yenilemede oturum ve akademik başvuru korundu",
+      "CSRF kanıtı olmayan çıkış reddedildi; açık oturum korunuyor",
+      "390 px oturum/itiraz görünümü taşmıyor; çıkış düğmesi klavyeyle erişilebilir",
+      "Çıkış diğer sekmenin sonraki okumasını da kapattı; yeniden giriş yolu açık",
+      "Yeni giriş aynı kişiyi ve önceki akademik geçmişi korudu",
+      "Sağlayıcının imzalı sunucu bildirimi iki sekmeyi sonraki istekte kapattı; eski CSRF oturumu açamıyor",
+      "İmzalı çıkış belirteci tarayıcıya taşınmadan ayrı HTTPS sunucu çağrısıyla işlendi",
+      "Sağlayıcı iptalinden sonra yeni doğrulama aynı kişiyi ve önceki başvuruyu korudu",
+      "390 px giriş sınırı ekranı Türkçe uyarı, klavye bağlantısı ve taşmayan metin gösteriyor",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "provider": "synthetic; separate localhost site",
+    "tls": "ephemeral certificate public-key pin for browser; CA and host verification for node"
+  },
+  "scope_matrix": {
+    "commands": 72,
+    "http_routes": 12,
+    "positive_samples": 2945,
+    "derived_checks": 23560,
+    "note": "Akademik API matrisi; kimlik HTTPS uçları ayrıca 25 HTTP +18 iptal/oran testiyle sınanır. Örnek/kontrol sayısı ayrı test veya ürün yüzdesi değildir."
+  },
+  "criteria_closed_in_local_scope": [
+    "İmzalı sağlayıcı çıkışı tenant/issuer/audience/sub/sid kapsamıyla yalnız doğru oturumu iptal eder.",
+    "Mükerrer teslim, iki depo bağlantısı, audit geri alma ve gecikmiş giriş iptali doğrulandı.",
+    "Başka tenant tarayıcı bağı giriş başlangıcında veya callback dönüşünde değişmez.",
+    "Mevcut panel kapalı oturum ekranına döner; yeni giriş aynı kişiyi ve akademik geçmişini korur.",
+    "Kalıcı oran sınırı, sahte IP/çerez değiştirme, depo hatası ve mobil Türkçe bekleme ekranı doğrulandı."
+  ],
+  "limits": [
+    "Gerçek kurum IdP/MFA/istemci kaydı yok.",
+    "Üretim transaction/anahtar adaptörü ve çok işçi/region kabulü henüz tamamlanmadı.",
+    "Güvenlik makbuzları için kurum saklama/imha kararı yok.",
+    "Bütün tarayıcı/ekran okuyucu/üretim ölçeği kabulü değildir.",
+    "Paket25 yalnız kaynak; son canlı Paket16, Paket17–25 dağıtımı yok."
+  ],
+  "source_review": {
+    "url": "https://openid.net/specs/openid-connect-backchannel-1_0.html",
+    "version": "1.0 incorporating errata set 1",
+    "published": "2023-12-15",
+    "reviewed": "2026-10-14",
+    "read_sections": [
+      "2.4–2.8",
+      "4–4.1"
+    ],
+    "local_profile": "explicit logout+jwt; single audience; signed only; max 120s; no JWE"
+  }
+}

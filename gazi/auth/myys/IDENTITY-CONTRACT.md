@@ -137,3 +137,7 @@ MEMBERSHIP-CONTRACT.md: mevcut kişi için sürümlü görev/süre önerisi, ba�
 ## Üçüncü dilim — HTTPS sınırı (13.10.2026)
 
 `HTTP-IDENTITY-CONTRACT.md` güncel devamdır. Önceki HTTP/cookie açık maddesinin bağımsız yerel dilimi uygulandı: ayrı sentetik sağlayıcıyla gerçek HTTPS callback, katı Origin/CSRF/cookie, sağlayıcı iptali, kısa oturum ve yerel çıkış yarışları. LocalIdentityFlow artık yerel HTTP ve HTTPS dönüşlerini kabul eder; HTTP sınır sınıfı yalnız HTTPS açılır. 19 yeni test ve 11 tarayıcı kontrolü; toplam 403 otomatik. Gerçek IdP/üretim depo/back-channel logout/dağıtık iptal kabulü açık. Önceki bölümdeki test sayıları kendi sürümlerinin tarihsel kanıtıdır.
+
+## 14.10.2026 — dördüncü yerel kimlik dilimi
+
+Sağlayıcıdan bağımsız imzalı back-channel logout, kurum/issuer/audience/sub/sid eşlemesi, kalıcı tek makbuz/iptal bariyeri ve HTTPS giriş oran sınırı eklendi. Güncel sınırlar ve üretim adaptör yükümlülükleri `BACKCHANNEL-IDENTITY-CONTRACT.md`; kabul `acceptance/B07-backchannel-20261014.json`. Önceki bölümün back-channel/oran henüz yok ifadesi bu yerel dilim için güncellendi; gerçek IdP/üretim depo/anahtar/dağıtık kabul açık kalır.

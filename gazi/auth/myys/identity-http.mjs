@@ -2,9 +2,10 @@
 import {randomBytes,createHmac,timingSafeEqual} from 'node:crypto';
 import {LocalAcceptanceStore,CoreError,hash,requireThat} from './store.mjs';
 import {LocalIdentityFlow} from './identity-flow.mjs';
-export const identityPaths=Object.freeze({login:'/__identity/login',session:'/api/myys/kimlik/oturum',start:'/api/myys/kimlik/baslat',callback:'/api/myys/kimlik/donus',logout:'/api/myys/kimlik/cikis'});
+import {LocalIdentityRateLimit} from './identity-rate-limit.mjs';
+export const identityPaths=Object.freeze({login:'/__identity/login',session:'/api/myys/kimlik/oturum',start:'/api/myys/kimlik/baslat',callback:'/api/myys/kimlik/donus',logout:'/api/myys/kimlik/cikis',backchannel:'/api/myys/kimlik/saglayici-cikis'});
 export const identityCookie='__Host-myys-session';
-export function localIdentityFailure(e){return {error:'Yerel giriş isteği doğrulanamadı.',code:e.code,...(e.code==='session_required'?{scope:'local-acceptance',loginPath:identityPaths.login}:{})};}
+export function localIdentityFailure(e){return {error:e.code==='identity_rate'?'Çok fazla giriş isteği. Bir dakika sonra yeniden deneyin.':'Yerel giriş isteği doğrulanamadı.',code:e.code,...(e.code==='session_required'?{scope:'local-acceptance',loginPath:identityPaths.login}:{})};}
 const opaque=v=>typeof v==='string'&&/^[A-Za-z0-9_-]{43}$/.test(v);
 const escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const local=()=>requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Yerel giriş üretimde etkin değildir.',503);
@@ -21,12 +22,13 @@ async function body(req){
  requireThat(type==='application/x-www-form-urlencoded','identity_body','Giriş formunun türü geçersiz.',415);const p=new URLSearchParams(raw);requireThat([...p.keys()].every(k=>p.getAll(k).length===1),'identity_body','Yinelenen giriş alanı.',400);return Object.fromEntries(p);
 }
 export class LocalIdentityHttp {
- #store;#config;#flow;#origin;#authorization;#key;#clock;
+ #store;#config;#flow;#origin;#authorization;#key;#clock;#rate;
  constructor({store,identityConfig,origin,authorizationEndpoint,derivationKey,csrfKey,exchangeCode,clock=()=>new Date(),...limits}){
   local();requireThat(store instanceof LocalAcceptanceStore&&Buffer.isBuffer(csrfKey)&&csrfKey.length===32,'identity_config','Yerel kimlik HTTP yapılandırması eksik.',503);
   const app=localUrl(origin),authorization=localUrl(authorizationEndpoint,['127.0.0.1','localhost']);requireThat(app.origin===origin&&app.pathname==='/'&&authorization.pathname!=='/','identity_config','Tam origin ve yetkilendirme yolu gerekli.',503);
   this.#store=store;this.#origin=origin;this.#authorization=authorization.href;this.#config=structuredClone(identityConfig);this.#key=Buffer.from(csrfKey);this.#clock=clock;
   this.#flow=new LocalIdentityFlow({store,identityConfig,derivationKey,redirectUri:origin+identityPaths.callback,exchangeCode,clock,...limits});
+  this.#rate=new LocalIdentityRateLimit({store,identityConfig,key:csrfKey,clock});
  }
  #check(req){
   local();requireThat(req.socket?.encrypted===true&&req.headers.host===new URL(this.#origin).host&&!req.headers['x-forwarded-host']&&!req.headers['x-forwarded-proto'],'identity_origin','Giriş kaynağı doğrulanamadı.',403);
@@ -46,7 +48,17 @@ export class LocalIdentityHttp {
  async handle(req,res){
   const rawPath=typeof req.url==='string'?req.url.split('?')[0]:'';if(!Object.values(identityPaths).includes(rawPath))return false;
   try{
-   this.#check(req);const url=new URL(req.url,this.#origin),path=url.pathname;let token=cookie(req);
+   this.#check(req);const url=new URL(req.url,this.#origin),path=url.pathname;
+   if(path===identityPaths.backchannel){
+    this.#rate.check({purpose:'backchannel',network:req.socket.remoteAddress});
+    try{
+     requireThat(req.method==='POST'&&!url.search&&(req.headers['content-type']||'').split(';')[0].trim()==='application/x-www-form-urlencoded','identity_logout','Oturum kapatma isteği geçersiz.',400);
+     let raw='';for await(const chunk of req){raw+=chunk;requireThat(Buffer.byteLength(raw)<=24576,'identity_logout','Oturum kapatma isteği geçersiz.',400);}
+     const form=new URLSearchParams(raw);requireThat(form.getAll('logout_token').length===1,'identity_logout','Oturum kapatma isteği geçersiz.',400);
+     await this.#flow.backchannelLogout({logoutToken:form.get('logout_token')});json(res,200,{accepted:true});return true;
+    }catch(e){json(res,400,{error:'invalid_request',error_description:'Oturum kapatma bildirimi işlenemedi.'});return true;}
+   }
+   let token=cookie(req);this.#rate.check({purpose:Object.keys(identityPaths).find(k=>identityPaths[k]===path),network:req.socket.remoteAddress,browserHash:token?hash(token):null});
    if(path===identityPaths.login&&req.method==='GET'){
     requireThat([...url.searchParams.keys()].every(k=>k==='result')&&url.searchParams.getAll('result').length<=1,'identity_url','Giriş yolu geçersiz.',400);
     if(!token){token=randomBytes(32).toString('base64url');setCookie(res,token,900);}
@@ -68,6 +80,13 @@ export class LocalIdentityHttp {
     }catch(e){if(!(e instanceof CoreError))throw e;redirect(res,identityPaths.login+'?result=failed');return true;}
    }
    res.setHeader('Allow',[identityPaths.start,identityPaths.logout].includes(path)?'POST':'GET');json(res,405,{error:'Bu giriş yöntemi desteklenmiyor.'});return true;
-  }catch(e){if(!(e instanceof CoreError))throw e;json(res,e.status,localIdentityFailure(e));return true;}
+  }catch(e){
+   if(!(e instanceof CoreError))throw e;
+   if(e.status===429){
+    res.setHeader('Retry-After','60');
+    if(rawPath!==identityPaths.backchannel&&(req.headers.accept||'').includes('text/html')){headers(res);res.writeHead(429,{'Content-Type':'text/html; charset=utf-8'});res.end(`<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Giriş isteği sınırı</title><main><h1>Giriş isteği sınırına ulaşıldı</h1><p role="alert">Çok fazla giriş isteği alındı. Bir dakika sonra yeniden deneyebilirsiniz.</p><p>Akademik kayıtlarınız korunur.</p><a href="${identityPaths.login}">Giriş ekranına dön</a></main></html>`);return true;}
+   }
+   json(res,e.status,localIdentityFailure(e));return true;
+  }
  }
 }

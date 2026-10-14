@@ -1,3 +1,15 @@
+# Güncel devam — Paket25 yerel kabulü geçti; kaynak eşitleme
+
+B07 imzalı sağlayıcı çıkışı/kalıcı oran/Türkçe bekleme ekranı: 372+46+46=464 otomatik, 15 gerçek yerel HTTPS tarayıcı; 72 komut/12 HTTP, 2945 örnek/23560 kontrol. Kayıtlar BACKCHANNEL-IDENTITY-CONTRACT.md ve B07-backchannel-20261014.json. Mevcut kaynak temel yerel 9ecf625e4873586e3425d5e542fc9de868b7778e / uzak d256623050f34c353a7f7eeaba1ea0494de66c43 / ağaç 3e29a1bc5bf457507a4800eeca687c2c451ec681. Önce diff/özgün 36 kriter kontrolü ve kaynak commitini aynı ağaca eşitle.
+
+Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; Paket17–25 dağıtımı yok. BrowserAuth kullanıcı iptalini yeniden isteme; configuredCore kapalı. Tek kod sahibi, alt ajan yok. Sonraki B09 imzalı kaynak/kanıt aktarım dosyası, sürüm doğrulama ve eski kararın yeniden üretilmesi. B07 üretim transaction/anahtar adaptörü ile çok işçi/region/geri yükleme ve bütün diğer B01–B36 bağımsız işler açık; bunları atlama.
+
+# Güncel devam — Paket24 kaynakta; B07 oturum kapatma bildirimi
+
+Yerel 9ecf625e4873586e3425d5e542fc9de868b7778e / uzak d256623050f34c353a7f7eeaba1ea0494de66c43 / ortak ağaç 3e29a1bc5bf457507a4800eeca687c2c451ec681. 440 otomatik (348+46+46), 13 SEM +13 itiraz tarayıcı; 72 komut/12 HTTP kapsam matrisi. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–24 dağıtımı yok. Auth iptalini yeniden isteme; configuredCore kapalı.
+
+B07 sağlayıcıdan bağımsız back-channel logout kaynağı ve mevcut identity-flow/identity-contract okunuyor. Henüz yeni kod yok. İmzalı olay, issuer/audience/iat/jti/event/nonce/sub-sid, kurum kapsamlı eşleme, tek kullanım/atomik iptal ve yarışları tasarla; gerçek IdP/prod migration/credential yok. Kalıcı oran sınırı ve depo/anahtar saklama sözleşmesi de bağımsız açık. Sonra B09 imzalı dış kaynak arşivi, B27 geri yükleme/yeniden oynatma ve tüm diğer B01–B36 bağımsız işleri. Tek kod sahibi; alt ajan yok.
+
 # Güncel devam — Paket 24 yerel kabul; kaynak eşitlemesi sırada
 
 B23 SEM hazırlık ekranı tamamlandı: 440 otomatik (348+46+46), 13 SEM +13 itiraz tarayıcı; 72 komut/12 HTTP, 2.875 olumlu örnek/23.000 kapsam denetimi. 390 px form iyileştirildi ve incelendi; 115 dosyalı paket. Kabul/sözleşme/kaynak boşluğu/backlog güncel. Önce 36 özgün koşul ve diff denetimi; commit ve uzak expected-head ile aynı ağacı eşitle. Temel Paket23 yerel 42748e05904c05f5e3d5b1447181b4c17e86fd15 / uzak a2032738b05ec46bbe60d488cbae55fd1427c780 / ağaç 51f4c03507bbb684bd2ac50bec90950bd304a05c. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–24 dağıtımı yok. Auth iptalini yeniden isteme; configuredCore kapalı.

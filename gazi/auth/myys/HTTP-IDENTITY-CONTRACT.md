@@ -51,3 +51,7 @@ OIDC Core errata set 2, RFC 7636 ve önceki doğrulayıcı kaynakları `IDENTITY
 19 yeni gerçek HTTPS sunucu testi; önceki 29 token/kişi ve 27 akış testi dahil toplam 311 sunucu + 46 portal + 46 regresyon = 403 otomatik test. 11 HTTPS/ayrı-site tarayıcı ve 13 mevcut itiraz tarayıcı kontrolü geçti. 390 px görüntü incelendi. Kanıt `acceptance/B07-http-20261013.json`.
 
 Gerçek IdP protokolü/metadata/istemci kaydı, üretim depot/transaction adaptörü, sağlayıcı bağımsız back-channel logout kabulü, dağıtık iptal, anahtar saklama ve kurum yetkisi açık kalır. Kaynak yayını ve canlı smoke ayrı eksenlerdir; Paket 17–21 canlı yayımlanmadı, son doğrulanmış canlı Paket 16'dır.
+
+## 14.10.2026 — dördüncü yerel kimlik dilimi
+
+Sağlayıcıdan bağımsız imzalı back-channel logout, kurum/issuer/audience/sub/sid eşlemesi, kalıcı tek makbuz/iptal bariyeri ve HTTPS giriş oran sınırı eklendi. Güncel sınırlar ve üretim adaptör yükümlülükleri `BACKCHANNEL-IDENTITY-CONTRACT.md`; kabul `acceptance/B07-backchannel-20261014.json`. Önceki bölümün back-channel/oran henüz yok ifadesi bu yerel dilim için güncellendi; gerçek IdP/üretim depo/anahtar/dağıtık kabul açık kalır.

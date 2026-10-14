@@ -2,6 +2,7 @@
 import {randomBytes, randomUUID, createHmac, createHash} from 'node:crypto';
 import {LocalAcceptanceStore, CoreError, hash, requireThat} from './store.mjs';
 import {createIdentityContract} from './identity-contract.mjs';
+import {LocalIdentityRevocation} from './identity-revocation.mjs';
 
 export function pkceS256(verifier) {
  requireThat(typeof verifier === 'string' && /^[A-Za-z0-9._~-]{43,128}$/.test(verifier), 'identity_pkce', 'PKCE doğrulama verisi geçersiz.', 403);
@@ -11,7 +12,7 @@ const sessionHashValid = value => typeof value === 'string' && /^[a-f0-9]{64}$/.
 const responseValue = value => typeof value === 'string' && /^[A-Za-z0-9_-]{43}$/.test(value);
 
 export class LocalIdentityFlow {
- #store; #config; #contract; #key; #clock; #exchange; #redirect; #digest; #requestMs; #sessionMs; #timeout;
+ #store; #config; #contract; #key; #clock; #exchange; #redirect; #digest; #requestMs; #sessionMs; #timeout; #revocation;
  constructor({store, identityConfig, derivationKey, redirectUri, exchangeCode, clock = () => new Date(), requestLifetimeSeconds = 300, sessionLifetimeSeconds = 300, exchangeTimeoutMs = 5000}) {
   requireThat(store instanceof LocalAcceptanceStore && !process.env.VERCEL && !process.env.VERCEL_ENV, 'local_only', 'Kimlik akışı yalnız izole yerel kabulde çalışır.', 503);
   requireThat(Buffer.isBuffer(derivationKey) && derivationKey.length === 32 && typeof exchangeCode === 'function' && typeof clock === 'function', 'identity_config', 'Yerel kimlik akışı yapılandırması eksik.', 500);
@@ -30,6 +31,7 @@ export class LocalIdentityFlow {
    CREATE INDEX IF NOT EXISTS identity_challenges_browser ON identity_challenges(tenant,browser_hash,status);
    CREATE TABLE IF NOT EXISTS identity_session_links(tenant TEXT NOT NULL,browser_hash TEXT NOT NULL,session_hash TEXT NOT NULL,expires TEXT NOT NULL,PRIMARY KEY(tenant,session_hash));
    CREATE INDEX IF NOT EXISTS identity_links_parent ON identity_session_links(tenant,browser_hash);`);
+  this.#revocation=new LocalIdentityRevocation(store);
  }
  #now() {
   requireThat(!process.env.VERCEL && !process.env.VERCEL_ENV, 'local_only', 'Kimlik akışı canlı ortamda açılamaz.', 503);
@@ -39,11 +41,16 @@ export class LocalIdentityFlow {
  }
  #derive(kind,id) {return createHmac('sha256',this.#key).update(JSON.stringify([kind,id,this.#config.tenant,this.#digest])).digest('base64url');}
  #audit(action,id,now,actor='') {this.#store.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(this.#config.tenant,actor,action,id,now.toISOString());}
+ #browserScope(sessionHash){
+  const bound=this.#store.db.prepare('SELECT s.tenant FROM bindings b LEFT JOIN identity_scopes s ON s.session_hash=b.session_hash WHERE b.session_hash=?').get(sessionHash);
+  requireThat(!bound||bound.tenant===this.#config.tenant,'identity_tenant','Tarayıcı oturumu başka bir kurum için bağlı.',403);
+ }
  begin({browserSessionHash}) {
   const now=this.#now();
   requireThat(sessionHashValid(browserSessionHash), 'identity_browser', 'Sunucunun bağladığı tarayıcı oturumu gerekli.', 403);
   const id=randomUUID(),state=randomBytes(32).toString('base64url');
   this.#store.transaction(()=>{
+   this.#browserScope(browserSessionHash);
    const old=this.#store.db.prepare("SELECT id FROM identity_challenges WHERE tenant=? AND browser_hash=? AND status IN ('pending','claimed')").all(this.#config.tenant,browserSessionHash);
    for(const row of old) {this.#store.db.prepare("UPDATE identity_challenges SET status='cancelled',finished=? WHERE id=?").run(now.getTime(),row.id);this.#audit('identity.cancel',row.id,now);}
    this.#store.db.prepare("INSERT INTO identity_challenges VALUES(?,?,?,?,?,?,?,'pending',NULL)").run(id,hash(state),browserSessionHash,this.#config.tenant,this.#digest,now.getTime(),now.getTime()+this.#requestMs);
@@ -71,6 +78,7 @@ export class LocalIdentityFlow {
    const proof=await this.#contract.verify(token,{expectedNonce:this.#derive('nonce',request.id),now:this.#now()});
    const now=this.#now(),sessionToken=randomBytes(32).toString('base64url'),sessionHash=hash(sessionToken);
    return this.#contract.commitLocalMember(proof,{store:this.#store,now},(actor,grant)=>{
+    this.#browserScope(browserSessionHash);
     const changed=this.#store.db.prepare("UPDATE identity_challenges SET status='used',finished=? WHERE id=? AND status='claimed' AND created<=? AND expires>?").run(now.getTime(),request.id,now.getTime(),now.getTime());
     requireThat(changed.changes===1, 'identity_challenge', 'Kimlik isteği artık kullanılamıyor.', 403);
     const expires=new Date(Math.min(now.getTime()+this.#sessionMs,Date.parse(grant.expiresAt))).toISOString();
@@ -78,6 +86,7 @@ export class LocalIdentityFlow {
     this.#store.db.prepare('DELETE FROM bindings WHERE session_hash=?').run(browserSessionHash);
     this.#store.db.prepare('INSERT INTO bindings VALUES(?,?,?,?)').run(sessionHash,actor.id,expires,actor.mfa?1:0);
     this.#store.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(sessionHash,actor.tenant,grant.contractVersion,now.toISOString());
+    this.#revocation.bind({tenant:actor.tenant,sessionHash,grant,requestCreated:request.created});
     this.#store.db.prepare('INSERT INTO identity_session_links VALUES(?,?,?,?)').run(actor.tenant,browserSessionHash,sessionHash,expires);
     this.#audit('identity.accept',request.id,now,actor.id);
     return {sessionToken,expires,personId:actor.id,tenant:actor.tenant};
@@ -99,6 +108,10 @@ export class LocalIdentityFlow {
    requireThat(row,'identity_challenge','Kimlik isteği yok, kullanılmış veya süresi dolmuş.',403);
    this.#store.db.prepare("UPDATE identity_challenges SET status='cancelled',finished=? WHERE id=?").run(now.getTime(),row.id);this.#audit('identity.deny',row.id,now);return {cancelled:true};
   });
+ }
+ async backchannelLogout({logoutToken}) {
+  const proof=await this.#contract.verifyLogout(logoutToken,{now:this.#now()}),now=this.#now();
+  return this.#contract.commitLocalLogout(proof,{store:this.#store,now},grant=>this.#revocation.apply(grant,now));
  }
  logout({sessionHash}) {
   const now=this.#now();

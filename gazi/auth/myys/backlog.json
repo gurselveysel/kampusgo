@@ -420,7 +420,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "29 belirteç/kişi + 27 akış + 19 gerçek yerel HTTPS testi. 311 sunucu + 46 portal + 46 regresyon = 403 otomatik; 11 HTTPS/ayrı-site ve 13 itiraz tarayıcı kontrolü geçti.",
+      "test_status": "29 belirteç/kişi +27 akış +25 HTTPS +18 iptal/oran testi. Güncel 372 sunucu +46 portal +46 regresyon =464; 15 ayrı-site HTTPS tarayıcı kontrolü geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -437,18 +437,25 @@
         "scripts/myys-identity-local.mjs",
         "scripts/myys-identity-browser.cjs",
         "gazi/portal/src/academic-workspace.jsx",
-        "gazi/auth/myys/acceptance/B07-http-20261013.json"
+        "gazi/auth/myys/acceptance/B07-http-20261013.json",
+        "gazi/auth/myys/identity-revocation.mjs",
+        "gazi/auth/myys/identity-rate-limit.mjs",
+        "gazi/auth/myys/BACKCHANNEL-IDENTITY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B07-backchannel-20261014.json",
+        "gazi/auth/tests/myys-backchannel.test.mjs",
+        "gazi/auth/tests/helpers/local-backchannel.mjs"
       ],
-      "production_status": "Önceki hazırlık modülleri canlı kaynakta; yeni Paket 21 HTTPS dilimi yalnız yerel kabulde. Paket 21 kaynak ağacı uzak dalla eşitlendi. Son canlı Paket 16; Paket 17–21 dağıtımı yok; kurumsal SSO kapalı.",
-      "implementation_note": "Sabit HTTPS callback, tam issuer/Origin/CSRF/cookie bağı, ayrı sentetik sağlayıcıda HTTP kod değişimi, kısa kurum oturumu, çıkış yarışları ve yeniden giriş UI mevcut kişi zincirine bağlı. Gerçek kurum IdP veya üretim bağlantısı değildir.",
+      "production_status": "Paket25 kaynak adayı yalnız yerel kabulde. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–25 dağıtımı yok, kurumsal SSO kapalı.",
+      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil.",
       "independent_remaining_work": [
-        "Sağlayıcıdan bağımsız back-channel logout ve çok işçili üretim depo/iptal sözleşmesi; oran sınırı ve anahtar saklama adaptörleri. Gerçek IdP eşlemesi ayrıca kurum verisi/erişimi gerektirir."
+        "Üretim transaction ve anahtar sağlayıcısının çalıştırılabilir adaptörünü bağımsız test sürücüleriyle tamamla; sözleşme BACKCHANNEL-IDENTITY-CONTRACT.md içinde. Gerçek migration/credential oluşturma yetkisine geçme.",
+        "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo ve IdP verisi/erişimi gerektiren adımları ayrı tut."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; HTTPS yerel dilimi bağlı",
+          "status": "kısmi; yerel imzalı iptal ve oran sınırı bağlı",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -465,20 +472,27 @@
             "scripts/myys-identity-local.mjs",
             "scripts/myys-identity-browser.cjs",
             "gazi/portal/src/academic-workspace.jsx",
-            "gazi/auth/myys/acceptance/B07-http-20261013.json"
+            "gazi/auth/myys/acceptance/B07-http-20261013.json",
+            "gazi/auth/myys/identity-revocation.mjs",
+            "gazi/auth/myys/identity-rate-limit.mjs",
+            "gazi/auth/myys/BACKCHANNEL-IDENTITY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B07-backchannel-20261014.json",
+            "gazi/auth/tests/myys-backchannel.test.mjs",
+            "gazi/auth/tests/helpers/local-backchannel.mjs"
           ],
           "remaining": [
-            "Sağlayıcıdan bağımsız back-channel logout ve çok işçili üretim depo/iptal sözleşmesi; oran sınırı ve anahtar saklama adaptörleri. Gerçek IdP eşlemesi ayrıca kurum verisi/erişimi gerektirir."
+            "Üretim transaction ve anahtar sağlayıcısının çalıştırılabilir adaptörünü bağımsız test sürücüleriyle tamamla; sözleşme BACKCHANNEL-IDENTITY-CONTRACT.md içinde. Gerçek migration/credential oluşturma yetkisine geçme.",
+            "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo ve IdP verisi/erişimi gerektiren adımları ayrı tut."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi; HTTPS dilimi geçti",
-          "evidence": "29 belirteç/kişi + 27 akış + 19 gerçek yerel HTTPS testi. 311 sunucu + 46 portal + 46 regresyon = 403 otomatik; 11 HTTPS/ayrı-site ve 13 itiraz tarayıcı kontrolü geçti.",
-          "limits": "Sentetik ayrı-site HTTPS; gerçek IdP, dağıtık üretim veya tüm tarayıcı/kurum kabulü değildir."
+          "status": "kısmi; yerel HTTPS/iptal dilimi geçti",
+          "evidence": "29 belirteç/kişi +27 akış +25 HTTPS +18 iptal/oran testi. Güncel 372 sunucu +46 portal +46 regresyon =464; 15 ayrı-site HTTPS tarayıcı kontrolü geçti.",
+          "limits": "Sentetik iki-site HTTPS ve iki SQLite bağlantısı; üretim dağıtık kabul değil."
         },
         "live": {
-          "status": "yeni HTTPS dilimi canlı yayımlanmadı",
-          "evidence": "Önceki hazırlık modülleri canlı kaynakta; yeni Paket 21 HTTPS dilimi yalnız yerel kabulde. Paket 21 kaynak ağacı uzak dalla eşitlendi. Son canlı Paket 16; Paket 17–21 dağıtımı yok; kurumsal SSO kapalı."
+          "status": "Paket25 canlı yayımlanmadı",
+          "evidence": "Paket25 kaynak adayı yalnız yerel kabulde. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–25 dağıtımı yok, kurumsal SSO kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",

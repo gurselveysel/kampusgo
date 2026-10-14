@@ -185,3 +185,7 @@ ALTERNATIVE-EVIDENCE-CONTRACT.md: eğitici kaydı → ayrı kalite incelemesi �
 ## B23 yerel SEM dosyası — 2026-10-14
 
 SEM-DOSSIER-CONTRACT.md ve SEM-SOURCE-REVIEW.md: kaynakların okunan/kalan kapsamı, program snapshotı, iç kontrol listesi ve ayrı görevlerle hazırlık paketi. Tarihsel duyuru/genel haber teknik şema veya otomatik karar yapılmadı. Güncel sürüm/geri çekme ve tekrar/atomiklik denetlendi. Merkezi düzenleyici yetkisi yerel kullanıcıya verilmedi; dış gönderim/resmî ihraç kapalı.
+
+## Paket25 — B07 yerel sağlayıcı çıkışı ve oran sınırı
+
+Akademik panelin yeniden giriş akışı ve yerel giriş bekleme ekranı tamamlandı. `identity-revocation.mjs` doğrulanmış provider eşlemesi/tek makbuz/iptal bariyerini, `identity-rate-limit.mjs` kalıcı kapsamlı kotayı mevcut HTTPS akışına bağlar. Başka tenant tarayıcı bağını döndürme de başlangıç ve commit sırasında reddedilir. 372 sunucu +46 portal +46 regresyon; 15 HTTPS tarayıcı kontrolü. BACKCHANNEL-IDENTITY-CONTRACT ve kabul JSON sınırları açıklar. Gerçek transaction/anahtar adaptörü, dağıtık kabul ve IdP hâlâ açıktır.
