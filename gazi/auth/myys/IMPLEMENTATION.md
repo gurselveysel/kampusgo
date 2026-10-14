@@ -205,3 +205,8 @@ Kurtarma tatbikatları ekranı: plan → sunucu sentetik provası → ölçüm/i
 Kaynak güven sicili: sürüm/tarih/dayanak, ayrı ret-kabul, açık güven dosyası ihracı, anahtar/kontrat kapanışı. İptal mevcut kanıt/karar/cüzdan/paylaşım/durum uygunluğuna yayılır; tarihsel arşiv aynı kalır. Eski statik kayda geriye dönük onay eklenmez; yeni incelemeli imzalı sürüm gerekir. 418+46+46=510 otomatik; 15 yeni sunucu testi, 14 güven sicili +14 kaynak +13 tatbikat +13 itiraz tarayıcı. 77 komut/16 HTTP: 3337 örnek/26696 denetim. 390 px görünüm ve odak incelendi; 115 korumalı statik dosya paketlendi. Kaynak adayı canlı yayın değildir; son canlı Paket16, Paket17–28 dağıtımı yok. Gerçek sağlayıcı, üretim adaptörü, kurumsal karar ve dış kabul açık.
 
 `SOURCE-TRUST-CONTRACT.md` ve `acceptance/B09-trust-20261014.json`. configuredCore Vercel üzerinde kapalı; yeni credential, migration veya gerçek belge işlemi yok. Geri dönüş hedefi dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı.
+
+
+## Paket29 · B07 bağımsız adaptör sınırları
+
+Ekran değişikliği yok. PostgresIdentityTransactions yalnız enjekte edilen tek client ile serializable transaction, sıralı xact kilidi, başarısız audit rollback, opt-in 40001/40P01 bütün işlem tekrarı ve belirsiz COMMIT için sonuç vermeme/bağlantıyı atma uygular. IdentityKeyProvider yalnız PKCE/nonce için version/purpose/tenant/contract bağı, zamanlı MAC ve öncesi/sonrası metadata denetimi yapar; sır çıkmaz. Yeni bağımlılık, driver bağlantısı, migration veya credential yok. 20 yeni hata sürücüsü testi ve 15 mevcut HTTPS tarayıcı kontrolü; toplam530. SQL repository/HTTP bağlaması, atomik key revision bariyeri ve gerçek PostgreSQL/KMS kabulü açık. IDENTITY-ADAPTER-CONTRACT.md sınırları belirler.

@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-14",
+  "package": 29,
+  "work_ids": [
+    "B07"
+  ],
+  "profile": "identity-adapter-boundary/1",
+  "ui_change": false,
+  "production_enabled": false,
+  "real_postgres_tested": false,
+  "real_kms_tested": false,
+  "new_tests": 20,
+  "automated": {
+    "server": 438,
+    "portal": 46,
+    "regression": 46,
+    "total": 530
+  },
+  "browser": {
+    "existing_local_https_regression": 15,
+    "new_adapter_browser_acceptance": false
+  },
+  "scope": {
+    "commands": 77,
+    "http_routes": 16,
+    "positive_samples": 3337,
+    "derived_negative_checks": 26696
+  },
+  "source_evidence": [
+    "identity-transactions.mjs",
+    "identity-key-provider.mjs",
+    "../tests/myys-identity-adapters.test.mjs",
+    "IDENTITY-ADAPTER-CONTRACT.md"
+  ],
+  "open": [
+    "SQL repository and identity HTTP integration",
+    "key revision barrier atomic with session commit",
+    "CSRF/rate key rotation without quota reset",
+    "real PostgreSQL isolation/RLS/driver configuration",
+    "authorized IdP/KMS/production store and distributed acceptance"
+  ],
+  "live": {
+    "package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "new_deployment": null
+  }
+}

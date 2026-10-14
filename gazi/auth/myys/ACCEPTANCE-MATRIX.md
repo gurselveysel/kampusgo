@@ -176,3 +176,8 @@ Kurtarma tatbikatları ekranı: plan → sunucu sentetik provası → ölçüm/i
 Kaynak güven sicili: sürüm/tarih/dayanak, ayrı ret-kabul, açık güven dosyası ihracı, anahtar/kontrat kapanışı. İptal mevcut kanıt/karar/cüzdan/paylaşım/durum uygunluğuna yayılır; tarihsel arşiv aynı kalır. Eski statik kayda geriye dönük onay eklenmez; yeni incelemeli imzalı sürüm gerekir. 418+46+46=510 otomatik; 15 yeni sunucu testi, 14 güven sicili +14 kaynak +13 tatbikat +13 itiraz tarayıcı. 77 komut/16 HTTP: 3337 örnek/26696 denetim. 390 px görünüm ve odak incelendi; 115 korumalı statik dosya paketlendi. Kaynak adayı canlı yayın değildir; son canlı Paket16, Paket17–28 dağıtımı yok. Gerçek sağlayıcı, üretim adaptörü, kurumsal karar ve dış kabul açık.
 
 `SOURCE-TRUST-CONTRACT.md` ve `acceptance/B09-trust-20261014.json`. configuredCore Vercel üzerinde kapalı; yeni credential, migration veya gerçek belge işlemi yok. Geri dönüş hedefi dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı.
+
+
+## Paket29 — B07 işlem/anahtar sınırı, yerel ve kısmi
+
+Görünür ekran değişikliği yok; yeni SQL/KMS/HTTP bağlantısı yok. 20 hata sürücüsü testi; 530 otomatik, mevcut HTTPS akışında 15 tarayıcı. 77 komut/16 HTTP kapsam sayıları değişmedi. Tek-client transaction, rollback/COMMIT belirsizliği ve sürümlü PKCE/nonce MAC doğrulandı. Gerçek PostgreSQL/RLS/KMS, SQL repository/HTTP ve atomik anahtar revizyon bariyeri açık. Kanıt: IDENTITY-ADAPTER-CONTRACT.md / acceptance/B07-adapters-20261014.json. B07 ve bütün B01–B36 tamamlandı denmez.

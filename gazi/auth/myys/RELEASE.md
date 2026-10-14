@@ -429,3 +429,14 @@ Yerel `50c1e66063007a1c5f1d7b84c3d596288b0f7d36`; uzak `307ca9d73e642d9fe09d2cd6
 Kaynak güven sicili: sürüm/tarih/dayanak, ayrı ret-kabul, açık güven dosyası ihracı, anahtar/kontrat kapanışı. İptal mevcut kanıt/karar/cüzdan/paylaşım/durum uygunluğuna yayılır; tarihsel arşiv aynı kalır. Eski statik kayda geriye dönük onay eklenmez; yeni incelemeli imzalı sürüm gerekir. 418+46+46=510 otomatik; 15 yeni sunucu testi, 14 güven sicili +14 kaynak +13 tatbikat +13 itiraz tarayıcı. 77 komut/16 HTTP: 3337 örnek/26696 denetim. 390 px görünüm ve odak incelendi; 115 korumalı statik dosya paketlendi. Kaynak adayı canlı yayın değildir; son canlı Paket16, Paket17–28 dağıtımı yok. Gerçek sağlayıcı, üretim adaptörü, kurumsal karar ve dış kabul açık.
 
 `SOURCE-TRUST-CONTRACT.md` ve `acceptance/B09-trust-20261014.json`. configuredCore Vercel üzerinde kapalı; yeni credential, migration veya gerçek belge işlemi yok. Geri dönüş hedefi dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı.
+
+
+## Paket28 kaynak kimlikleri — 14.10.2026
+
+Yerel eddd7de825e0924c3e3304d4077d152b584ac46c; uzak 8d74c9ce928ef199a5ea05d2b1acf082bf9f029a; ortak kaynak ağacı 4064721bdd8857906a6d73eaf91d695c8dc37cd8. 27 blob birebir doğrulandı; expected-head307ca9d73e642d9fe09d2cd66f81adb36948e275, force=false. Dağıtım yapılmadı.
+
+## Paket29 aday — 14.10.2026, B07 işlem/anahtar sınırı
+
+Görünür ekran değişikliği yok. 20 yeni bağımsız hata sürücüsü testi; 438+46+46=530 ve mevcut yerel HTTPS akışında15 tarayıcı kontrolü. 77komut/16HTTP kapsam matrisi, 115dosyalı korumalı paket. Gerçek PostgreSQL/KMS veya yeni adaptörlerin HTTP kabulü değildir. SQL repository/anahtar revizyon köprüsü açık; B07 kısmi.
+
+Canlı dağıtım yok: son doğrulanan Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production; kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. Paket17–29 yayımlanmadı. İptal edilen browserAuth yeniden istenmedi; canlı smoke yapılmış sayılmaz. configuredCore kapalı.

@@ -420,7 +420,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "29 belirteç/kişi +27 akış +25 HTTPS +18 iptal/oran testi. Güncel 372 sunucu +46 portal +46 regresyon =464; 15 ayrı-site HTTPS tarayıcı kontrolü geçti.",
+      "test_status": "20 yeni işlem/anahtar hata sürücüsü testi; 438 sunucu +46 portal +46 regresyon =530. Mevcut ayrı-site yerel HTTPS akışının 15 tarayıcı kontrolü tekrar geçti; yeni sınırlar bu HTTP akışına henüz bağlı değil.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -443,19 +443,25 @@
         "gazi/auth/myys/BACKCHANNEL-IDENTITY-CONTRACT.md",
         "gazi/auth/myys/acceptance/B07-backchannel-20261014.json",
         "gazi/auth/tests/myys-backchannel.test.mjs",
-        "gazi/auth/tests/helpers/local-backchannel.mjs"
+        "gazi/auth/tests/helpers/local-backchannel.mjs",
+        "gazi/auth/myys/identity-transactions.mjs",
+        "gazi/auth/myys/identity-key-provider.mjs",
+        "gazi/auth/tests/myys-identity-adapters.test.mjs",
+        "gazi/auth/myys/IDENTITY-ADAPTER-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B07-adapters-20261014.json"
       ],
-      "production_status": "Paket25 kaynak adayı yalnız yerel kabulde. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–25 dağıtımı yok, kurumsal SSO kapalı.",
-      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil.",
+      "production_status": "Paket29 yalnız bağımsız yerel sınır kabulünde; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–29 dağıtımı yok; kurumsal SSO kapalı.",
+      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı.",
       "independent_remaining_work": [
-        "Üretim transaction ve anahtar sağlayıcısının çalıştırılabilir adaptörünü bağımsız test sürücüleriyle tamamla; sözleşme BACKCHANNEL-IDENTITY-CONTRACT.md içinde. Gerçek migration/credential oluşturma yetkisine geçme.",
-        "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo ve IdP verisi/erişimi gerektiren adımları ayrı tut."
+        "Kişi/üyelik/challenge/session/iptal/rate/audit SQL repository ve HTTP bağlamasını bu işlem sınırıyla tamamla; PostgreSQL şema/driver gerçek kabulünü bağımsız fault-driver kabulüyle karıştırma.",
+        "Monoton anahtar revizyonu/iptal bariyerini session commit içinde atomik denetle; kalıcı CSRF/rate key rotasyonunda bütçe sıfırlanmasını önle; gerçek KMS driver kabulünü ayrı tut.",
+        "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo/IdP erişimi, migration ve yeni credential özel yetki sınırında kapalı."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; yerel imzalı iptal ve oran sınırı bağlı",
+          "status": "kısmi; üretim sınırları kodlandı, repository/anahtar-epoch köprüsü açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -478,21 +484,27 @@
             "gazi/auth/myys/BACKCHANNEL-IDENTITY-CONTRACT.md",
             "gazi/auth/myys/acceptance/B07-backchannel-20261014.json",
             "gazi/auth/tests/myys-backchannel.test.mjs",
-            "gazi/auth/tests/helpers/local-backchannel.mjs"
+            "gazi/auth/tests/helpers/local-backchannel.mjs",
+            "gazi/auth/myys/identity-transactions.mjs",
+            "gazi/auth/myys/identity-key-provider.mjs",
+            "gazi/auth/tests/myys-identity-adapters.test.mjs",
+            "gazi/auth/myys/IDENTITY-ADAPTER-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B07-adapters-20261014.json"
           ],
           "remaining": [
-            "Üretim transaction ve anahtar sağlayıcısının çalıştırılabilir adaptörünü bağımsız test sürücüleriyle tamamla; sözleşme BACKCHANNEL-IDENTITY-CONTRACT.md içinde. Gerçek migration/credential oluşturma yetkisine geçme.",
-            "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo ve IdP verisi/erişimi gerektiren adımları ayrı tut."
+            "Kişi/üyelik/challenge/session/iptal/rate/audit SQL repository ve HTTP bağlamasını bu işlem sınırıyla tamamla; PostgreSQL şema/driver gerçek kabulünü bağımsız fault-driver kabulüyle karıştırma.",
+            "Monoton anahtar revizyonu/iptal bariyerini session commit içinde atomik denetle; kalıcı CSRF/rate key rotasyonunda bütçe sıfırlanmasını önle; gerçek KMS driver kabulünü ayrı tut.",
+            "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo/IdP erişimi, migration ve yeni credential özel yetki sınırında kapalı."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi; yerel HTTPS/iptal dilimi geçti",
-          "evidence": "29 belirteç/kişi +27 akış +25 HTTPS +18 iptal/oran testi. Güncel 372 sunucu +46 portal +46 regresyon =464; 15 ayrı-site HTTPS tarayıcı kontrolü geçti.",
-          "limits": "Sentetik iki-site HTTPS ve iki SQLite bağlantısı; üretim dağıtık kabul değil."
+          "status": "kısmi; bağımsız hata sürücüsü sınır kabulü geçti",
+          "evidence": "20 yeni işlem/anahtar hata sürücüsü testi; 438 sunucu +46 portal +46 regresyon =530. Mevcut ayrı-site yerel HTTPS akışının 15 tarayıcı kontrolü tekrar geçti; yeni sınırlar bu HTTP akışına henüz bağlı değil.",
+          "limits": "Gerçek PostgreSQL/KMS testi yok; yeni sınırlar mevcut yerel HTTP akışına bağlı değil."
         },
         "live": {
-          "status": "Paket25 canlı yayımlanmadı",
-          "evidence": "Paket25 kaynak adayı yalnız yerel kabulde. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–25 dağıtımı yok, kurumsal SSO kapalı."
+          "status": "Paket29 canlı yayımlanmadı",
+          "evidence": "Paket29 yalnız bağımsız yerel sınır kabulünde; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–29 dağıtımı yok; kurumsal SSO kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -520,7 +532,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket28: 418 sunucu +46 portal +46 regresyon; 77 komut/16 HTTP, 3337 olumlu örnek/26696 türetilmiş kapsam denetimi. Örnek sayısı ayrı test veya tamamlanma oranı değildir.",
+      "test_status": "Güncel Paket29: 438 sunucu +46 portal +46 regresyon =530; 77 komut/16 HTTP,3337 olumlu örnek/26696 türetilmiş kapsam kontrolü. PostgreSQL/RLS üretim kabulü değildir.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",

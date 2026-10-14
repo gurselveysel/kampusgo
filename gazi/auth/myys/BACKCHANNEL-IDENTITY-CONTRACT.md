@@ -53,3 +53,8 @@ Aşağıdakiler uygulama tasarımı ve kabul yükümlülüğüdür; kurulmuş hi
 Yeni envanter: `identity_provider_sessions` aktif bağın kaldırılmasında FK ile düşer; `identity_logout_receipts` yeniden oynatma/iptal bariyeridir; `identity_rate_buckets` kısa operasyonel sayaçtır. Önceki challenge/link ve audit envanteri korunur. Logout makbuzları sırf JWT süresi doldu diye silinmez: geç giriş ve eski kimlik kanıtını engelleme süresi ayrıca hesaba katılmalıdır. Kalıcı güvenlik makbuzlarının kurumca onaylı saklama/imha süresi henüz yoktur; test deposu topluca imha edilir. B04/B28 üretim kayıt/backup/saklama kabulü açık.
 
 Kabul sonuçları `acceptance/B07-backchannel-20261014.json` içine kaydedilir. Gerçek IdP/MFA, metadata/istemci kaydı, depo ve anahtar adaptörü, dağıtık iptal/kapasite, kurum kararı ve canlı doğrulama ayrı açık eksenlerdir. Bu modül canlı pilot kapısına import edilmez.
+
+
+## Paket29 — bağımsız adaptör sınırı (14.10.2026)
+
+IDENTITY-ADAPTER-CONTRACT.md güncel devamdır. İşlem ve PKCE/nonce MAC sağlayıcı sınırı kodlandı, 20 fault-driver testi geçti. SQL repository/HTTP ve atomik anahtar revizyon köprüsü hâlâ açık; gerçek PostgreSQL/KMS kabulü yok. Önceki üretim adaptörü açık ifadesi bu ayrımla korunur.

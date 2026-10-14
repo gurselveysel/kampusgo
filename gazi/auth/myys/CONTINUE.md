@@ -1,3 +1,11 @@
+# Güncel devam — Paket29 yerel sınır kabulü; kaynak eşitlemesi sırada
+
+Görünür ekran değişikliği yok. B07 işlem/PKCE-nonce sağlayıcı sınırı20 yeni fault-driver testiyle hazır;438+46+46=530,15 mevcut HTTPS tarayıcı,77komut/16HTTP3337örnek26696kontrol. IDENTITY-ADAPTER-CONTRACT.md sınırlamaları oku: gerçek PostgreSQL/KMS yok; yeni sınırlar yerel HTTP'ye bağlı değil, SQL repository/atomik key revision bariyeri bağımsız açık. Bunları bitmiş gösterme.
+
+Paket28 eşitlendi: yerel eddd7de825e0924c3e3304d4077d152b584ac46c / uzak8d74c9ce928ef199a5ea05d2b1acf082bf9f029a / ortak ağaç4064721bdd8857906a6d73eaf91d695c8dc37cd8. Önce29 diff/özgün36kriter/commit ve expected-head eşitle. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–29yayın yok, browserAuth kullanıcı iptalini yeniden isteme. configuredCore kapalı, tek editör, alt ajan yok.
+
+Ardından görünür B15 kayıt/ilerleme senaryosunu mevcut LMS olay/kanıt zincirine bağla; sağlayıcı ürün/sözleşmesi uydurma. B07 repository/key-epoch, B01/B24 tüm menü/roller/erişilebilirlik ve bütün B01–B36 kalan bağımsız işleri sürdür. Gerçek migration/credential/IdP/KMS özel yetki sınırında kapalı; devam komutu bekleme.
+
 # Güncel devam — Paket28 yerel kabul; kaynak eşitlemesi sırada
 
 B09 kaynak güven sicili ve kapatma yayılımı hazır. 418+46+46=510 otomatik; 14 güven sicili +14 kaynak +13 tatbikat +13 itiraz tarayıcı. 77 komut/16 HTTP, 3337 örnek/26696 kontrol. Eski statik proof, onay referansı silme/yeniden hashleme, anahtar rotasyonu/eski güven dosyası, worker ve cüzdan/durum negatifleri geçti. SOURCE-TRUST-CONTRACT ve B09-trust-20261014.json güncel. 390 px ve odak incelendi; 115 dosya paketlendi.
