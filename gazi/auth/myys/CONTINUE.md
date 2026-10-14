@@ -1,3 +1,17 @@
+# Güncel devam — Paket68 yerel kabul; kaynak eşitlemesi sırada
+
+İtirazpolitika/bağımsızinceleme/sürüm/askı/kişiselteslim aynıSQL12komut12tür zincirinde.11yeni/866sunucu+48portal+46regresyon=960;21SQL13mevcut=34tarayıcı;115statik. Son25SQLsıra testi ve ardından866tam+136/18kapsam9035pozitif72280negatif geçti. Academicposition ordinaryBIGINT/tenantunique; aynıtransactionmax+1; bağımsızsequence yok. Öncekişema/üretim migration uygulanmadı.36özgünölçüt korundu;16PG/16SQLite149tür.
+
+Önce68diff/commit/tamağaç eşitle: beklenen uzak461d644e5164c79ac6d8f7981bc93ba10cae6387, taban7a4a902f3edb90db20b71a73ec0413536c323e5e. Soncanlı16;17–68dağıtılmadı;configuredCorekapalı;browserAuthiptaliniyenileme. Sıradaki69: alternatifölçme/evidence-moderate aynıSQLişkuralları+ayrıkaliteincelemesi; mevcutkanıt/rubrik/kaynak/sürüm korunsun. Sonra diğer124komut/bağımsızlar. Tekeditör;raporladurma.
+
+68 ara kabul: 11yeniSQLtesti ve21yeni+13mevcut politika tarayıcı kontrolü geçti. Son incelemede akademik kayıt sırası bağımsız PostgreSQLsequence yerine kurumun değişmez kayıtlarından aynıSERIALIZABLEişlemde max(position)+1 olarak üretildi; şema adayı artık ordinaryposition+tenant/positionunique. Üretim migration yok. Bu son değişikliğin testleri yeniden çalıştırılmalı; henüz68commit yok.
+
+# Güncel devam — Paket67 kaynakta;68 SQL itiraz usulü
+
+67yerel51de1defac9508283d232fe585727a133aadc6e5,uzak461d644e5164c79ac6d8f7981bc93ba10cae6387,ortak tam ağaç7a4a902f3edb90db20b71a73ec0413536c323e5e.22blobSHA/tam ağaç/expected-headforce=false/uzakrefcommit doğrulandı.949otomatik29tarayıcı. Soncanlı16;17–67dağıtılmadı.
+
+68başladı: ilk8SQLkomuta itirazpolitikası, bağımsız inceleme, askıyaalma, yerelkararteslimteyidi eklenecek. Mevcut politika işkuralları korunacak; LocalAcceptanceStore veya yeni gerçek transactioniçi SQL çalışma kümesi türü dışında policyçalışmaz; Vercelkapalı. İkinci kalıcıdepo yok. Yeni12komut/12kayıttürü aynı3SQLtablo+15tablocheckpoint. GerçekGaziusulü/resmîtebligat açık. Henüz68kabul/commit yok. Sırada uygulanması,testler,arayüz,kaynak. B01–B36bağımsızlarısürer;tekeditör;browserAuthiptaliniyenileme.
+
 # Güncel devam — Paket67 yerel kabul; kaynak eşitlemesi sırada
 
 AkademikUIgüvenlikuyuşmazlığında kayıt/formlar kapanır, Türkçeuyarı odağa gelir.15tablo birleşikcheckpoint;13yeni/855sunucu+48portal+46regresyon=949;16birleşik13mevcut=29tarayıcı;115statik. Eskiidentity-onlydosya migration olmadan okunur/akademik yenidenetiketleme reddedilir.36özgünölçüt korunur;16PGadayı/16SQLite149tür.

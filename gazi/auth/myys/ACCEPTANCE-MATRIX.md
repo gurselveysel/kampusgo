@@ -9,12 +9,12 @@
 | B03 · Program bilgi paketini onayla | kısmi; program/profil/yetki paketi bağlı | 8 yeni test, 9 yeni tarayıcı; güncel indirme geçti | Paket43 canlı değil | gerçek program/lisans/kurum yayını kabulü açık | bağımsız kod için gerekli değil |
 | B04 · Veri akışını ve saklamayı onayla | kısmi; güncel kaynak envanteri16tablo/149tür | yerel kapsam/özne özeti geçti; kurum alan kabulü değil | yeni envanter dilimleri canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B06 · Kalıcı kişi ve üyelik modelini kur | kısmi; ilk8SQLkomut/15tablo birleşikcheckpoint | Paket67:13yeni/949toplam;29tarayıcı; yerel dilim | Son canlı16;67yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; ilk8SQLkomut/15tablo birleşikcheckpoint | Paket67:13yeni/949toplam;29tarayıcı; yerel dilim | Son canlı16;67yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
+| B06 · Kalıcı kişi ve üyelik modelini kur | kısmi; ilk12SQLkomut/15tablo checkpoint; itiraz usulü yerel | Paket68:11yeni/960toplam;34tarayıcı | Son canlı16;68yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; ilk12SQLkomut/15tablo checkpoint; itiraz usulü yerel | Paket68:11yeni/960toplam;34tarayıcı | Son canlı16;68yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B09 · Program rubrik ve kanıtı sürümle | kısmi; ilk8SQLkomut/15tablo birleşikcheckpoint | Paket67:13yeni/949toplam;29tarayıcı; yerel dilim | Son canlı16;67yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
-| B10 · Yetkili başarı kararını kalıcı yap | kısmi; ilk8komut aynı SQL kimliğine bağlı | Paket66:22yeni/936toplam;49tarayıcı; tek bağlantı yerel dilim | Son canlı16;66yayımlanmadı | gerçek kurum/IdP/MFA/usul kabulü açık | birleşik checkpoint, kalan işlemler, native SSI/RLS/KMS ve gerçek entegrasyon açık |
-| B11 · İtiraz ve moderasyon yolunu kur | kısmi; ilk8SQLkomut/15tablo birleşikcheckpoint | Paket67:13yeni/949toplam;29tarayıcı; yerel dilim | Son canlı16;67yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
+| B09 · Program rubrik ve kanıtı sürümle | kısmi; ilk12SQLkomut/15tablo checkpoint; itiraz usulü yerel | Paket68:11yeni/960toplam;34tarayıcı | Son canlı16;68yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
+| B10 · Yetkili başarı kararını kalıcı yap | kısmi; ilk12SQLkomut/15tablo checkpoint; itiraz usulü yerel | Paket68:11yeni/960toplam;34tarayıcı | Son canlı16;68yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
+| B11 · İtiraz ve moderasyon yolunu kur | kısmi; ilk12SQLkomut/15tablo checkpoint; itiraz usulü yerel | Paket68:11yeni/960toplam;34tarayıcı | Son canlı16;68yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
 | B12 · Belgeyi akademik karara bağla | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B13 · Anahtar ve durum güvenilirliğini doğrula | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B14 · LMS veri sözleşmesini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
@@ -397,3 +397,7 @@ Program→kayıt→kanıt→rubrik→insan kararı→itiraz alt dilimi mevcut ku
 ## Paket67 — akademik kayıt geri yükleme sınırı
 
 Kimlik12+akademik3veri tablosu açık ayrı profile bağlıdır. Eski kimlik dosyası değiştirilmeden okunur; akademik kapsama yeniden etiketlenemez. Uyuşmazlıkta formlar kapanır/uyarı odaklanır.13yeni/949otomatik29tarayıcı. [Sözleşme](ACADEMIC-CHECKPOINT-CONTRACT.md), [kanıt](acceptance/B07-B28-academic-checkpoint-20261014.json). B27 gerçek RPO/RTO ve B28hukuki imha ölçütü açık;36özgünölçüt korunur.
+
+## Paket68 — SQL itiraz politikası ve teslim teyidi
+
+Dört mevcut işlem aynıSQLkimlik+checkpoint zincirinde. Sürüm/askı eski kararı değiştirmez; yerel teslim resmîtebliğ değildir; geç veya belirsiz süre ayrı gerekçeli insan incelemesine gider. Akademik sıra değişmez kurum kayıtlarından transactioniçinde üretilir; bağımsızsequencea bağlı değildir.11yeni/960otomatik34tarayıcı. [Sözleşme](APPEAL-SQL-CONTRACT.md), [kanıt](acceptance/B11-appeal-sql-20261014.json).36özgünölçüt korunur.

@@ -869,3 +869,15 @@ Akademik ekranda güvenlik uyuşmazlığı kayıt/formları kapatır ve Türkçe
 Başlangıç yerel `30ae36b3f55a1e75cea2fe353948e804c3e4ce34`, uzak `44484f981a009922a9153cbdf26e431d94064241`, ortak tam ağaç `d70ba2dcbde9550e9d2c2beba4708f9a9db88cf1`. Yeni kaynak eşitleme sonucu sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–67dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; browserAuthiptali yenilenmedi; üretim/hukukiimha/RPO-RTO kabulü açık.
 
 14.10.2026 Paket67 eşitlemesi öncesi uzak dal ve canlıalias tekrar okundu: beklenen66kaynağı ve canlı16READY değişmedi; kimlikli canlısmoke yapılmadı.
+
+### Paket67 kaynak eşitleme sonucu
+
+Yerel `51de1defac9508283d232fe585727a133aadc6e5`, uzak `461d644e5164c79ac6d8f7981bc93ba10cae6387`, ortak tam ağaç `7a4a902f3edb90db20b71a73ec0413536c323e5e`.22blobSHA/tam ağaç eşitliği,expected-headforce=false,uzakref/commit teyidi geçti. Yeni canlı dağıtım yapılmadı.
+
+## Paket68 — aynı SQLitiraz politikası/teslim; yayın değil
+
+İtirazpolitikaları ve Akademikkararlar sekmesinde kaynaklıpolitika, bağımsızinceleme, sürüm/askı ve kişisel yerelteslim tamamlandı. Resmîtebligat veya gerçekkurumusulü değildir. Semantiksıra aynıtransactiondeğişmezkurumsatırlarından üretilir; bağımsızsequencea bağlı değildir.11yeni/866sunucu+48portal+46regresyon=960;21SQL13mevcut=34tarayıcı;115statik.136/18kapsam9035pozitif72280negatif örnek. [Kanıt](acceptance/B11-appeal-sql-20261014.json).
+
+Başlangıç yerel `51de1defac9508283d232fe585727a133aadc6e5`, uzak `461d644e5164c79ac6d8f7981bc93ba10cae6387`, ortak tam ağaç `7a4a902f3edb90db20b71a73ec0413536c323e5e`. Yeni kaynak eşitleme sonucu sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–68dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; browserAuthiptali yenilenmedi;kurum/üretim/124SQLişlem açık.
+
+14.10.2026 Paket68 eşitlemesi öncesi uzak dal/alias tekrar okundu:67kaynağı ve canlı16READY değişmedi; yeni kimlikli smoke yapılmadı.

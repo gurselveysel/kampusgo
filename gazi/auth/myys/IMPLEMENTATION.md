@@ -376,3 +376,7 @@ Mevcut altı akademik sekme ilk8komutla PostgresIdentityFlow özel ön/son guard
 ## Paket67 — birleşik akademik checkpoint
 
 15kimlik+akademik tablo ayrı profil pinine bağlandı. Eski SQL/yeni başlık kopyalama ve akademikrecord/command/audit değişimi kapanır; belirsizCOMMIT/ayrıseal sonuç vermez. Eskiidentity-only dosya migration olmadan okunur. AkademikUIuyarı odağı/formları kapatma;13yeni/949otomatik29tarayıcı. [Sözleşme](ACADEMIC-CHECKPOINT-CONTRACT.md).16PGadayı/16SQLite149tür/115statik korundu. Gerçekhizmet/nativeSSI/RLS/RPO/RTO/kurum açık;soncanlı16.
+
+## Paket68 — SQL itiraz usulü ve teslim
+
+İtirazpolitikası/inceleme/askı/teslim aynı SQLkimlik+checkpoint akışında; mevcut işkuralları korunur. Açık özelalan markalı transactioniçi çalışma kümesi; generic/prototype/kapanmışnesne reddi. Sıra aynıtransactiondeğişmezkurumsatırlarından; üretimDDL/credentialyok.11yeni/960otomatik34tarayıcı;136komut18HTTP9035pozitif72280negatif kapsamörneği.12SQLkomut/12tür;16PGadayı/16SQLite149tür/115statik. [Sözleşme](APPEAL-SQL-CONTRACT.md). Soncanlı16.

@@ -42,3 +42,7 @@ Kalan 128 mevcut komut, belge/iptal/yenileme, LMS/OBS, cüzdan/tanıma, kurum po
 ## Paket67 devamı
 
 Paket66 sırasında açık olan akademik checkpoint yerel alt dilimi [ayrı birleşik profil](ACADEMIC-CHECKPOINT-CONTRACT.md) ile kabul edildi. HTTP fixture artık `academic:true,checkpoint:true` seçimini doğru15tablo profiliyle kullanır. Varsayılan kapalı kalır; gerçek hizmet ve bütün üretim yazıcıları kabulü açık. Önceki22test/936sayısı Paket66 tarihsel kaydıdır.
+
+## Paket68 devamı
+
+[SQL itiraz dilimi](APPEAL-SQL-CONTRACT.md) dört işlemi daha bağladı:12komut/12akademik kayıt türü. Yerel politika sekmesi yalnız yönetici/komisyon/kalite rolüne; kişisel karar teslimi yalnız sahibine açılır. Akademikposition artık ordinaryBIGINT ve kurum+positionunique; sıra aynıtransaction değişmez satırlardan üretilir. Eski aday şeması otomatik değiştirilmez. Kalan124komut/gerçekkurumusulü/resmîtebligat/üretim açık.

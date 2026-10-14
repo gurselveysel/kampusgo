@@ -1,31 +1,16 @@
 // Isolated SQL academic unit of work. No connection, DDL, seed, production route or second persistent store.
+import {LocalSqlAcademicWorkingSet,academicSqlKinds} from './academic-sql-store.mjs';
+import {appealPolicyView} from './appeal-policy.mjs';
 import {MyysCore,ROLES} from './core.mjs';
 import {PostgresIdentityFlow} from './identity-sql-flow.mjs';
 import {requireThat,hash} from './store.mjs';
-export const academicSqlActions=Object.freeze(['program','publish','enroll','evidence','assess','decide','appeal','resolve']);
-const kinds=new Set(['program','publication','enrollment','evidence','assessment','decision','appeal','resolution']);
+export const academicSqlActions=Object.freeze(['program','publish','enroll','evidence','assess','decide','appeal','resolve','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive']);
+const kinds=new Set(academicSqlKinds);
 const local=()=>requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Akademik SQL denemesi yalnız izole yerel kabulde çalışır.',503);
 const copy=v=>JSON.parse(JSON.stringify(v));
 const iso=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
 const field=(v,max=160)=>typeof v==='string'&&v.length>0&&v.length<=max&&!/[\x00-\x1f]/.test(v);
-const membershipQueries=new Set([
- 'SELECT roles FROM memberships m JOIN persons p ON p.id=m.person WHERE m.tenant=? AND m.person=? AND m.unit=? AND m.active=1 AND p.active=1 AND m.expires>?',
- 'SELECT m.roles FROM memberships m JOIN persons p ON p.id=m.person WHERE m.tenant=? AND m.person=? AND m.unit=? AND m.active=1 AND m.expires>? AND p.active=1'
-]);
 const maxRows=10000,maxBytes=16*1024*1024;
-function workingSet(tenant,records,memberships){
- // Read snapshot and pending immutable appends exist only for this SERIALIZABLE SQL transaction.
- // This is NOT a fallback database or a generic SQLite/SQL parser.
- let active=true;const pending=[],rows=records.map(r=>({kind:r.kind,data:copy(r.data)}));
- const guard=t=>{local();requireThat(active&&t===tenant,'academic_scope','Akademik işlem kapsamı kullanılamaz.',503);};
- const store={
-  get(t,kind,id){guard(t);const r=rows.find(r=>r.kind===kind&&r.data.id===id);return r?copy(r.data):undefined;},
-  list(t,kind){guard(t);return rows.filter(r=>r.kind===kind).map(r=>copy(r.data));},
-  put(t,kind,data){guard(t);requireThat(kinds.has(kind)&&[data?.id,data?.unit,data?.owner,data?.createdBy].every(v=>field(v))&&iso(data.createdAt)&&!rows.some(r=>r.kind===kind&&r.data.id===data.id),'academic_record','Değişmez akademik kayıt geçersiz.',503);const r={kind,data:copy(data)};rows.push(r);pending.push(r);return copy(data);},
-  db:{prepare(query){guard(tenant);requireThat(membershipQueries.has(query),'academic_query','Bu depo sorgusu akademik SQL diliminde desteklenmiyor.',503);return {get(t,person,unit,now){guard(t);requireThat(iso(now),'academic_clock','Geçerli akademik zaman gerekli.',503);const r=memberships.find(m=>m.person_id===person&&m.unit===unit&&m.active&&m.person_active&&m.not_before<=now&&m.expires>now);return r?{roles:JSON.stringify(r.roles)}:undefined;}};}}
- };
- return {store,pending,close(){active=false;rows.length=0;pending.length=0;memberships.length=0;}};
-}
 export class LocalPostgresAcademicCore {
  #identity;#clock;
  constructor({identity,clock=()=>new Date()}){local();requireThat(identity instanceof PostgresIdentityFlow&&typeof clock==='function','academic_config','Aynı SQL kimlik akışı gerekli.',503);this.#identity=identity;this.#clock=clock;}
@@ -40,7 +25,7 @@ export class LocalPostgresAcademicCore {
   requireThat(records.length<=maxRows&&memberships.length<=maxRows&&Buffer.byteLength(JSON.stringify({records,memberships}))<=maxBytes,'academic_capacity','Bu yerel akademik veri dilimi işlem sınırını aşıyor.',503);
   for(const r of records)requireThat(kinds.has(r.kind)&&r.data&&typeof r.data==='object'&&!Array.isArray(r.data)&&r.id===r.data.id&&r.unit===r.data.unit&&r.owner===r.data.owner&&field(r.id)&&field(r.unit)&&field(r.owner)&&field(r.data.createdBy)&&iso(r.data.createdAt),'academic_record','Akademik kayıt bütünlüğü doğrulanamadı.',503);
   for(const m of memberships)requireThat(field(m.person_id)&&field(m.unit)&&Array.isArray(m.roles)&&m.roles.length>0&&m.roles.every(r=>ROLES.includes(r))&&new Set(m.roles).size===m.roles.length&&typeof m.active==='boolean'&&typeof m.person_active==='boolean'&&iso(m.not_before)&&iso(m.expires)&&m.not_before<m.expires,'academic_directory','Kişi ve üyelik kaynağı doğrulanamadı.',503);
-  return workingSet(actor.tenant,records,memberships);
+  return new LocalSqlAcademicWorkingSet({tenant:actor.tenant,records,memberships});
  }
  async run({sessionHash,tenant,commandId,action,input={},permit}){
   local();requireThat(field(tenant,80)&&typeof commandId==='string'&&commandId.length>=8&&commandId.length<=100&&!/[\x00-\x1f]/.test(commandId),'command','Kurum ve tekil işlem kimliği gerekli.');
@@ -51,8 +36,9 @@ export class LocalPostgresAcademicCore {
     const now=this.#now(),core=new MyysCore(set.store,{clock:()=>now}),old=(await tx.query('SELECT action,digest,result FROM public.myys_academic_commands WHERE tenant=$1 AND person_id=$2 AND id=$3',[tenant,actor.id,commandId])).rows[0];
     if(old){requireThat(old.action===action&&old.digest===digest,'idempotency_conflict','Aynı işlem kimliği farklı içerikle kullanılamaz.',409);core.authorizeReplay(actor,action,old.result);return copy(old.result);}
     // Use the existing synchronous policy evaluator, never an independent second set of academic rules.
-    const result=core.execute(actor,action,value,now);requireThat(set.pending.length===1,'academic_record','Bu akademik işlem tam bir değişmez kayıt üretmeli.',503);
-    for(const r of set.pending)await tx.query('INSERT INTO public.myys_academic_records (tenant,kind,id,unit,owner,data) VALUES ($1,$2,$3,$4,$5,$6::jsonb)',[tenant,r.kind,r.data.id,r.data.unit,r.data.owner,JSON.stringify(r.data)]);
+    const result=core.execute(actor,action,value,now);requireThat(set.pending.length===1||action==='decision-receive'&&set.pending.length===0&&set.store.get(tenant,'decision-receipt',result.id)?.decisionId===value.decisionId,'academic_record','Bu akademik işlem tam bir değişmez kayıt üretmeli.',503);
+    // Semantic append order derives from immutable tenant rows, never an independently mutable sequence.
+    for(const r of set.pending)await tx.query('INSERT INTO public.myys_academic_records (position,tenant,kind,id,unit,owner,data) SELECT coalesce(max(position),0)+1,$1,$2,$3,$4,$5,$6::jsonb FROM public.myys_academic_records WHERE tenant=$1',[tenant,r.kind,r.data.id,r.data.unit,r.data.owner,JSON.stringify(r.data)]);
     await tx.query('INSERT INTO public.myys_academic_commands (tenant,person_id,id,action,digest,result) VALUES ($1,$2,$3,$4,$5,$6::jsonb)',[tenant,actor.id,commandId,action,digest,JSON.stringify(result)]);
     await tx.query('INSERT INTO public.myys_academic_audit (tenant,actor,action,record_id,recorded_at) VALUES ($1,$2,$3,$4,$5)',[tenant,actor.id,action,result.id,now]);
     requireThat(this.#now()>=now,'academic_clock','Akademik işlem zamanı geri döndü.',503);return copy(result);
@@ -61,7 +47,7 @@ export class LocalPostgresAcademicCore {
  }
  async view({sessionHash,tenant,permit}){
   local();requireThat(field(tenant,80),'command','Kurum kapsamı gerekli.');return this.#identity.withPrincipal({sessionHash,permit,purpose:'academic-read'},async(tx,actor)=>{
-   requireThat(actor.tenant===tenant,'not_found','Bu kurum kaydına erişilemiyor.',404);const set=await this.#snapshot(tx,actor);try{const now=this.#now(),core=new MyysCore(set.store,{clock:()=>now}),view=core.academicView(actor);return {...view,mode:'isolated-sql-acceptance',official:false,personId:actor.id,sessionExpires:actor.expires,memberships:copy(actor.memberships),supportedActions:[...academicSqlActions],decisions:view.decisions.map(d=>({...d,canReceive:false,canIssue:false})),supportedTabs:['programs','enrollments','evidence','assessments','decisions','appeals'],scope:'same-sql-identity-academic-transaction'};}finally{set.close();}
+   requireThat(actor.tenant===tenant,'not_found','Bu kurum kaydına erişilemiyor.',404);const set=await this.#snapshot(tx,actor);try{const now=this.#now(),core=new MyysCore(set.store,{clock:()=>now}),view=core.academicView(actor);return {...view,mode:'isolated-sql-acceptance',official:false,personId:actor.id,sessionExpires:actor.expires,memberships:copy(actor.memberships),supportedActions:[...academicSqlActions],appealPolicies:appealPolicyView(set.store,actor),decisions:view.decisions.map(d=>({...d,canIssue:false})),supportedTabs:[...(actor.memberships.some(m=>m.roles.some(r=>['admin','commission','quality'].includes(r)))?['appealPolicies']:[]),'programs','enrollments','evidence','assessments','decisions','appeals'],scope:'same-sql-identity-academic-transaction'};}finally{set.close();}
   });
  }
 }

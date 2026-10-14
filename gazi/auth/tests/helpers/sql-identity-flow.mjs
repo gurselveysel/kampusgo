@@ -10,7 +10,7 @@ import {hash} from '../../myys/store.mjs';
 import {pkceS256} from '../../myys/identity-flow.mjs';
 import {PostgresIdentityCheckpoint,identityCheckpointProfile,academicCheckpointProfile} from '../../myys/identity-checkpoint.mjs';
 import {LocalIdentityCheckpointJournal} from '../../scripts/lib/local-identity-checkpoint.mjs';
-export async function sqlIdentityFlow(t,{configPatch={},redirectUri='https://portal.invalid/callback',clock=null,checkpointDirectory=null,academic=false}={}){
+export async function sqlIdentityFlow(t,{configPatch={},redirectUri='https://portal.invalid/callback',clock=null,checkpointDirectory=null,academic=false,keyLifetimeMs=3600000}={}){
  const sql=await pgliteIdentity();t.after(()=>sql.close());await sql.install();
  for(const name of ['identity-challenge-schema.sql','identity-session-schema.sql'])await sql.db.exec(await readFile(new URL('../../myys/'+name,import.meta.url),'utf8'));
  if(academic)await sql.db.exec(await readFile(new URL('../../myys/academic-sql-schema.sql',import.meta.url),'utf8'));
@@ -24,7 +24,7 @@ export async function sqlIdentityFlow(t,{configPatch={},redirectUri='https://por
  }
  h.newTransactions=(cfg=config)=>new PostgresIdentityTransactions({pool:sql.pool,tenant:cfg.tenant,issuer:cfg.issuer,audience:cfg.audience,checkpoint:h.checkpoint||null});
  if(h.checkpoint)await h.newTransactions().initializeCheckpoint(h.control);
- const secrets=new Map(),pending=new Map();for(const purpose of ['pkce','nonce']){secrets.set(purpose,randomBytes(32));h.keyRows.set(purpose,{tenant:config.tenant,purpose,version:'v1',algorithm:'HMAC-SHA-256',state:'active',notBefore:new Date(now()-3600000).toISOString(),notAfter:new Date(now()+3600000).toISOString(),retiredAt:null,revision:1});}
+ const secrets=new Map(),pending=new Map();for(const purpose of ['pkce','nonce']){secrets.set(purpose,randomBytes(32));h.keyRows.set(purpose,{tenant:config.tenant,purpose,version:'v1',algorithm:'HMAC-SHA-256',state:'active',notBefore:new Date(now()-3600000).toISOString(),notAfter:new Date(now()+keyLifetimeMs).toISOString(),retiredAt:null,revision:1});}
  h.driver={describe:async ref=>structuredClone(h.keyRows.get(ref.purpose)),mac:async ref=>({tenant:ref.tenant,purpose:ref.purpose,version:ref.version,revision:ref.revision,mac:createHmac('sha256',secrets.get(ref.purpose)).update(ref.message).digest('base64url')})};
  h.sign=async(patch,nonce)=>{const at=Math.floor(now()/1000);return new SignJWT({iss:config.issuer,sub:'student',aud:config.audience,iat:at,exp:at+300,auth_time:at,nonce,acr:'urn:test:strong',amr:['pwd','otp'],sid:'sid-student',...patch}).setProtectedHeader({alg:'ES256',kid:'test-key',typ:'JWT'}).sign(signing.privateKey);};
  h.exchange=async ref=>{h.exchanges++;assert.equal(sql.active,0);const p=pending.get(ref.code);assert.ok(p);assert.equal(pkceS256(ref.codeVerifier),p.start.code_challenge);await h.exchangeHook(ref,p);return h.sign(p.patch,p.start.nonce);};

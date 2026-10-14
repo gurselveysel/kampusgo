@@ -91,3 +91,7 @@ SQL kimlik deposundan ayrı, geri yüklemede birlikte geri alınmayacak kontrol 
 ### Paket67 kapsam notu
 
 Birleşik15veri tablosu profili yerel kabulde. Mevcut tek eylem listesindeki SQLden bağımsız güvenilir kontrol hizmeti, bütün okuyucu/yazıcılar, belirsiz işlem kurtarma yetkisi ve RPO/RTO işletimi gereksinimleri değişmez. Yeni hizmet/credential/migration yok; kurum kararı beklerken bağımsız geliştirme sürer.
+
+### Paket68 kapsam notu
+
+Yerel itirazpolitikası ve kişiselteslim aynıSQLakışında. GerçekGaziusulü, yetkilikişiler, resmîtebligat/kanıtı ve imzalıbelgeiptal/değişim usulü mevcut tek eylem listesinde açık. Sentetik günhesabı gerçek süre kuralı değildir. Şema adayı değişti; üretim/öncekişema migrationı veya yeni erişim uygulanmadı.

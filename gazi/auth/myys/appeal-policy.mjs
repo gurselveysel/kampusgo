@@ -1,10 +1,11 @@
+import {isLocalSqlAcademicStore} from './academic-sql-store.mjs';
 import {LocalAcceptanceStore,requireThat,hash} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
 import {appealTiming,validDay} from './appeal-policy-model.mjs';
 const actions=['appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive'];
 const role=(a,u,r)=>a.mfa&&a.memberships.some(m=>m.unit===u&&m.roles.includes(r));
 const text=v=>typeof v==='string'&&v.trim().length>=20&&v.length<=2000;
-const local=s=>requireThat(s instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','İtiraz politikası yalnız izole yerel kabulde çalışır.',503);
+const local=s=>requireThat((s instanceof LocalAcceptanceStore||isLocalSqlAcademicStore(s))&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','İtiraz politikası yalnız izole yerel kabulde çalışır.',503);
 const review=(s,t,id)=>s.list(t,'appeal-policy-review').find(x=>x.policyId===id);
 const held=(s,t,id)=>s.list(t,'appeal-policy-hold').some(x=>x.policyId===id);
 export function appealPolicyReplay(a,action,r){if(!actions.includes(action))return false;requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Üretim itiraz politikası kapalı.',503);requireThat(action==='decision-receive'?r.owner===a.id&&role(a,r.unit,'learner'):role(a,r.unit,action==='appeal-policy'?'admin':'commission'),'forbidden','Güncel politika veya kişisel teslim yetkisi gerekli.',403);return true;}

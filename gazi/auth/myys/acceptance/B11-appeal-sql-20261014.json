@@ -1,0 +1,121 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 68,
+  "work_ids": [
+    "B06",
+    "B07",
+    "B08",
+    "B09",
+    "B10",
+    "B11",
+    "B16"
+  ],
+  "visible_change": "İtiraz politikaları/Akademik kararlar: aynı SQL kaynağında politika hazırlığı, bağımsız inceleme, sürüm, askı ve kişisel yerel teslim teyidi.",
+  "code": [
+    "gazi/auth/myys/academic-sql-store.mjs",
+    "gazi/auth/myys/academic-sql.mjs",
+    "gazi/auth/myys/academic-sql-schema.sql",
+    "gazi/auth/myys/appeal-policy.mjs",
+    "gazi/auth/tests/myys-appeal-sql.test.mjs",
+    "scripts/myys-academic-sql-browser.cjs"
+  ],
+  "local_tests": {
+    "new": 11,
+    "server": 866,
+    "portal": 48,
+    "legacy": 46,
+    "total": 960,
+    "final_record_order_subset": 25,
+    "nativeSSI": false,
+    "nativeRLS": false,
+    "engine": "PGlite0.5.9/PostgreSQL18.6 exclusive single connection"
+  },
+  "browser": {
+    "myys-appeal-sql": {
+      "count": 21,
+      "checks": [
+        "Kapalı oturum Türkçe giriş yolu sundu; kayıt veya sahte başarı göstermedi",
+        "Ayrı sentetik sağlayıcıdan imzalı giriş aynı SQL kişisine ve altı açık sekmeye bağlandı",
+        "Koordinatör mevcut formda çıktı–görev–rubrik bağlı programı SQL kaydetti",
+        "Farklı SQL kişisi program sürümünü gerekçesiyle inceledi",
+        "Yönetici program sürümüne kaynak ve süreli yerel politika bağladı; resmî onay üretilmedi",
+        "Hazırlayandan farklı SQL komisyon kişisi aynı politikayı inceledi",
+        "Mevcut SQL öğrenen üyeliği aynı program sürümüne kaydedildi; yeni hesap üretilmedi",
+        "Öğrenen kendi görevinin kanıtını sundu; yenilemede SQL kaydı korundu",
+        "Ayrı eğitici gerçek bağlı kanıtı mevcut rubrik formuyla değerlendirdi",
+        "Bağımsız komisyon kişisi aynı değerlendirmeye akademik karar kaydetti",
+        "Öğrenen kendi kararını gördüğünü teyit etti; kaynak sürümü ve yalnız yerel süre göründü",
+        "Yeni politika sürümü bağımsız incelemeden sonra gelecekteki kullanım için durduruldu",
+        "Yeni sürüm ve durdurma eski kararın politika dayanağını veya tekil teslim teyidini değiştirmedi",
+        "Aynı öğrenen kendi kararına itiraz etti; açık olmayan belge işlemi gösterilmedi",
+        "Bağımsız inceleyen ilk karar ve öğrenenin itirazını aynı SQL zincirinde sonuçlandırdı",
+        "İtiraz sonucu yeniden giriş ve yenilemede aynı öğrenene döndü",
+        "320 CSS px, artırılmış metin aralığı ve altı sekmede klavye geçişi çalıştı",
+        "Kapalı sekmeye eski bağlantı erişilebilir açık sekmeye döndü",
+        "Aynı SQL oturumundan çıkış akademik okumayı kapattı",
+        "Güvenlik kaydı uyuşmazlığında yeni kanıt reddedildi; eski kayıtlar ve formlar kapandı, doğru Türkçe uyarı görüldü",
+        "İstemci istisnası veya beklenmedik sunucu hatası yok"
+      ],
+      "errors": [],
+      "at": "2026-10-14T16:14:18.433Z"
+    },
+    "myys-appeal-policy": {
+      "count": 13,
+      "checks": [
+        "Program sürümü, kaynak ve açık yerel süre kaydedildi; hazırlayan inceleyemedi",
+        "Ayrı komisyon incelemesi kaydedildi",
+        "Yeni akademik karar o andaki incelenmiş politika 1 ile bağlandı",
+        "Teslim teyidi olmayan öğrenenin başvurusu alındı; süre bilinmiyor diye reddedilmedi",
+        "Açık itiraz belge hazırlığını askıya aldı",
+        "Yeni politika sürümü ayrıca incelendi",
+        "Eski karar sürüm 1 kaldı; tekil yerel teyit geçmiş başvuru anını değiştirmedi",
+        "Bağımsız süre gerekçesi zorunlu, etiketli ve klavyeden erişilebilir; ilk karar korundu",
+        "İnceleme sonucu ile diğer belge koşulları birlikte yeniden denetlendi",
+        "İki sürüm ve durdurma yenilemede korundu; eski kararlar değiştirilmedi",
+        "390 px politika ve iş günü takvimi formunda taşma yok",
+        "Başka öğrenene idari politika veya karar açıklanmadı",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "at": "2026-10-14T16:09:32.572Z"
+    }
+  },
+  "scope_matrix": {
+    "commands": 136,
+    "http_routes": 18,
+    "positive_samples": 9035,
+    "derived_negative_samples": 72280,
+    "scope": "Mevcut SQLitekopya matrisi; SQLRLS veya bağımsıztest sayısı değil"
+  },
+  "contract": "gazi/auth/myys/APPEAL-SQL-CONTRACT.md",
+  "source_parent": {
+    "local": "51de1defac9508283d232fe585727a133aadc6e5",
+    "remote": "461d644e5164c79ac6d8f7981bc93ba10cae6387",
+    "tree": "7a4a902f3edb90db20b71a73ec0413536c323e5e"
+  },
+  "live": {
+    "software_package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "new_deployment": false,
+    "new_authenticated_smoke": false,
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "rollback_applied": false
+  },
+  "not_accepted": [
+    "Gerçek Gazi itiraz usulü/resmîtebligat",
+    "İmzalıbelgeiptal/değişim SQL bağı",
+    "Kalan124SQLkomut, gerçekIdP/MFA/KMS/LMS/OBS",
+    "NativeSSI/RLS/çokbağlantı veüretimşeması/upgrade",
+    "Gerçekcheckpointhizmeti/RPO-RTO/kurumkararı",
+    "TamWCAG/AT ve gerçeköğrencikabulü"
+  ],
+  "sources": [
+    {
+      "url": "https://www.postgresql.org/docs/18/functions-sequence.html",
+      "version": "PostgreSQL18 §9.17",
+      "verified": "2026-10-14",
+      "scope": "Sequence rollback dışı; akademik sıra proje tasarımı,kurumkuralı değil"
+    }
+  ]
+}

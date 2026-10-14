@@ -1,9 +1,9 @@
 -- REVIEW CANDIDATE ONLY. Install explicitly in an empty isolated test database.
 -- No production migration, provisioning, grant or RLS acceptance is implied.
 CREATE TABLE public.myys_academic_records (
- position bigint GENERATED ALWAYS AS IDENTITY UNIQUE,
+ position bigint NOT NULL CHECK(position BETWEEN 1 AND 9007199254740991),
  tenant text NOT NULL,
- kind text NOT NULL CHECK (kind IN ('program','publication','enrollment','evidence','assessment','decision','appeal','resolution')),
+ kind text NOT NULL CHECK (kind IN ('program','publication','enrollment','evidence','assessment','decision','appeal','resolution','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receipt')),
  id text NOT NULL,
  unit text NOT NULL,
  owner text NOT NULL REFERENCES public.myys_identity_persons(id),
@@ -12,6 +12,7 @@ CREATE TABLE public.myys_academic_records (
   AND jsonb_typeof(data->'createdAt')='string' AND jsonb_typeof(data->'createdBy')='string'
   AND data->>'id'=id AND data->>'unit'=unit AND data->>'owner'=owner),
  PRIMARY KEY (tenant,kind,id),
+ UNIQUE (tenant,position),
  FOREIGN KEY (tenant,owner,unit) REFERENCES public.myys_identity_memberships(tenant,person_id,unit)
 );
 CREATE INDEX myys_academic_records_order ON public.myys_academic_records(tenant,position);
@@ -19,7 +20,7 @@ CREATE TABLE public.myys_academic_commands (
  tenant text NOT NULL,
  person_id text NOT NULL REFERENCES public.myys_identity_persons(id),
  id text NOT NULL,
- action text NOT NULL CHECK (action IN ('program','publish','enroll','evidence','assess','decide','appeal','resolve')),
+ action text NOT NULL CHECK (action IN ('program','publish','enroll','evidence','assess','decide','appeal','resolve','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive')),
  digest text NOT NULL CHECK (digest ~ '^[a-f0-9]{64}$'),
  result jsonb NOT NULL CHECK (jsonb_typeof(result)='object'),
  PRIMARY KEY (tenant,person_id,id)
