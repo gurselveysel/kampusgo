@@ -14,6 +14,11 @@ function usable(s,t,p,now){
  const dossier=s.get(t,'authority-dossier',p.authorityDossierId);
  return !!dossier&&dossier.authorityId===p.authorityId&&hash(stableStringify(dossier))===p.authorityDossierDigest&&authorityReady(s,t,dossier,now)&&p.expires<=dossier.validUntil&&p.expires>now&&!hold(s,t,p.id)&&r?.outcome==='accepted'&&active(s,t,r.createdBy,p.unit,'commission',now)&&authority&&hash(stableStringify(authority))===p.authorityDigest&&ar?.outcome==='accepted'&&active(s,t,ar.createdBy,p.unit,'admin',now);
 }
+// Internal read model: callers must enforce their own program read/export scope.
+export function programProfileBinding(s,t,program,now){
+ const p=versions(s,t,program).at(-1);
+ return p&&p.programVersion===program.version&&p.programDigest===hash(stableStringify(program))&&usable(s,t,p,now)&&p.issuerPeople.some(person=>active(s,t,person,p.unit,'studentAffairs',now))?p:null;
+}
 export function issuanceProfile(s,a,program,now,profileId=null){
  requireThat(s instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Yerel belge profili üretim ihracını etkinleştiremez.',503);
  const p=profileId?s.get(a.tenant,'credential-profile',profileId):versions(s,a.tenant,program).at(-1);

@@ -253,3 +253,7 @@ B26: `support-service.mjs` sürümlü yerel takvim/ayrı inceleme/hold; `support
 ## B02 · Paket42 belge ekli yetki dosyası
 
 Politika ve hak sicili içinde gerçek yerel ek yükleme/indirme, program/sicil/ek SHA bağı, dört sorumluluk kapsamı, UTC geçerlilik, ayrı yönetici incelemesi, yeni sürüm ve durdurma. `authority.mjs` beş komut ve altı kayıt türü; ham dosya workspace/command.result dışında. Belge profili dosyanın kimliğini/SHA'sını sabitler; yeni dosya eski profil bağını veya imzalı belgeyi değiştirmez. 13 yeni test/13 yeni tarayıcı kontrolü; 664 otomatik toplam. `AUTHORITY-DOSSIER-CONTRACT.md` ve B02 kabul JSON'u sınırları açıklar. Gerçek kurum yetkisi, tam kaynak, dosya tarama/e-imza/üretim deposu ve canlı kabul açık.
+
+## B03 · Paket43 program bilgi paketi görünürlüğü
+
+`program-package.mjs` program/profil/yetki bağını aynı SQL okuma işleminde denetler; yeni `program-paketi` HTTP yolu idari atama ve ek baytlarını açmadan program snapshotı/profil referansını indirir. Program sürümleri yedi dayanak durumunu gösterir; eski ekrandan indirmede güncel kontrol ve yenileme vardır. Mevcut yerel publish tam kurumsal onay sayılmaz.672 otomatik/30 tarayıcı;ayrıntı PROGRAM-PACKAGE-CONTRACT.md ve B03 JSON.

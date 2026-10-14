@@ -615,3 +615,17 @@ Yerel `522836521214df457774567b65deb851b499669a`; uzak `8a5c605f101b63d3f4a62c44
 - Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production. 17–42 dağıtımı ve yeni oturumlu smoke yok. BrowserAuth kullanıcı iptali yeniden istenmedi; configuredCore kapalı.
 - Canlı geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
 - Yerel ek sınırı 32 KiB; gerçek kurum evrak deposu, imza/zararlı içerik doğrulaması, saklama ve Senato/SEM yetki kabulü açık. YÖK/Gazi tam usul erişimi yeniden denendi, doğrulanamadı; okunmayan hüküm kural yapılmadı. B02/B12 ve bütün B01–B36 tamamlanmadı.
+
+### Paket42 kaynak kimlikleri
+
+Yerel `7ffe6aea852438654500a45ce7ca0741cd5b7798`; uzak `2c4d1e31bcfd621b30489ab6488fd9c495de6066`; ortak tam ağaç `64e7a0e3a62c107a0f309fed2367bb4b67829499`. 26 blob SHA ve tam ağaç eşleşti; beklenen uzak baş `8a5c605f101b63d3f4a62c4456bb37abdfff6fa0`, force=false. Uzak yeni baş doğrulandı; yeni canlı yayın yok.
+
+## Paket43 — program bilgi paketinin güncel bağı; kaynak adayı
+
+14.10.2026. Program sürümlerinde yedi dayanak durumu, yetkili yerel bilgi paketi indirmesi ve belge profili incelemesine geçiş. İndirme program/yayın/profil/yetki dosyası/üyelik/süreyi tekrar denetler. Başka yönetici oturumunda durdurulan dosya eski açık ekrandan indirilemez. Eski karar arşivi ve programlar korunur.
+
+- 578 sunucu +48 portal +46 regresyon =672 otomatik.9 bilgi paketi +8 program +13 itiraz =30 tarayıcı.118 komut/17 HTTP;6816 örnek/54528 denetim.115 korumalı statik dosya.390 px/klavye görsel kontrol; yeni menü yok.
+- Taban yerel `7ffe6aea852438654500a45ce7ca0741cd5b7798` / uzak `2c4d1e31bcfd621b30489ab6488fd9c495de6066` / ortak `64e7a0e3a62c107a0f309fed2367bb4b67829499`.
+- Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production;17–43 dağıtımı/yeni oturumlu smoke yok. BrowserAuth kullanıcı iptali yeniden istenmedi;configuredCore kapalı. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`;uygulanmadı.
+- İlk iki oturumlu tarayıcı denemesi tek süreçte test bağlamı ayrımı sorununu yakaladı; son kabul iki ayrı Chromium işlemi ve ayrı sentetik kişi oturumlarıyla geçti. Yetki kontrolü gevşetilmedi.
+- Gerçek program/lisans/akademik onay ve tam kurum yayını kabulü açık. Yerel program yayını tek başına bu kabul değildir. B03 ve bütün B01–B36 tamamlanmadı.

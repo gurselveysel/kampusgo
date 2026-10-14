@@ -1,3 +1,4 @@
+import {exportProgramPackage} from './program-package.mjs';
 import {statusView,publishStatusSnapshot,exportPublicTrust,exportVerificationBundle} from './status-list.mjs';
 import {qualityReport} from './quality-report.mjs';
 import {LocalAcceptanceStore,CoreError} from './store.mjs';
@@ -38,6 +39,7 @@ export async function myysRoute({req,path,b,sessionHash,json,res,core=configured
   if(path==='/api/myys/kurtarma-dene'&&req.method==='POST'){if(!recoveryService)return json(res,503,{error:'İzole kurtarma tatbikatı bu ortamda bağlı değil.',code:'recovery_unavailable'});return json(res,200,await recoveryService.run({sessionHash,tenant:b?.tenant},b?.planId));}
   if(path==='/api/myys/islem'&&req.method==='POST')return json(res,200,core.run({sessionHash,tenant:b?.tenant,commandId:b?.commandId,action:b?.action,input:b?.input}));
   if(path==='/api/myys/veri-ozetim'&&req.method==='POST')return json(res,200,subjectExport(core,{sessionHash,tenant:b?.tenant}));
+  if(path==='/api/myys/program-paketi'&&req.method==='POST')return json(res,200,exportProgramPackage(core,{sessionHash,tenant:b?.tenant},b?.programId));
   if(path==='/api/myys/karar-arsivi'&&req.method==='POST')return json(res,200,decisionArchive(core,{sessionHash,tenant:b?.tenant},b?.decisionId));
   if(path==='/api/myys/cuzdan-indir'&&req.method==='POST')return json(res,200,downloadWalletCredential(core,{sessionHash,tenant:b?.tenant},b?.issuanceId));
   if(path==='/api/myys/durum-yayinla'&&req.method==='POST'){if(!signer)return json(res,503,{error:'Yetkili durum imzalayıcısı bağlı değil.',code:'signer_required'});return json(res,200,await publishStatusSnapshot(core,{sessionHash,tenant:b?.tenant},b?.unit,signer.material));}

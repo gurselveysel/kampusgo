@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.42",
+  "version": "2026.10.14.43",
   "commands": [
     "advice-compare",
     "advice-contest",
@@ -135,6 +135,7 @@
     "kaynak-isle",
     "kurtarma-dene",
     "paylasim",
+    "program-paketi",
     "toplu-hazirlik",
     "veri-ozetim"
   ],

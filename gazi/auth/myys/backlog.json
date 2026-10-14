@@ -160,7 +160,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "148 sunucu + 46 portal + 46 regresyon = 240 test; 10 yeni program/arşiv senaryosu, 8 program tarayıcı kontrolü. B11 regresyon sonucu ayrıca RELEASE.md içinde.",
+      "test_status": "7 yeni paket testi +1 HTTP kapsam satırı;578+48+46=672 otomatik.9 bilgi paketi+8 program+13 itiraz=30 tarayıcı.118 komut/17 HTTP;6816 örnek/54528 denetim.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -169,18 +169,24 @@
         "gazi/auth/myys/archive.mjs",
         "gazi/auth/tests/myys-programs.test.mjs",
         "gazi/portal/src/program-workspace.jsx",
-        "gazi/auth/myys/acceptance/B03-B09-20261010.json"
+        "gazi/auth/myys/acceptance/B03-B09-20261010.json",
+        "gazi/auth/myys/credential-profile.mjs",
+        "gazi/auth/myys/authority.mjs",
+        "gazi/auth/myys/program-package.mjs",
+        "gazi/auth/tests/myys-program-package.test.mjs",
+        "gazi/auth/tests/myys-scope-http.test.mjs",
+        "scripts/myys-program-package-browser.cjs",
+        "gazi/auth/myys/PROGRAM-PACKAGE-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B03-program-package-20261014.json"
       ],
-      "production_status": "Paket 8: bcb89ab08e35979df903262eb2be6adb4d617c37 / dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ READY. 141 kaynak hash eşleşmesi ve canlı smoke; kurumsal akış kapalı.",
-      "implementation_note": "Çok görevli yazarlık, çoktan çoğa Öğrenme Çıktısı/görev/rubrik ilişkileri, katalog araması ve aynı kod/birim sürüm karşılaştırması. Güncel önceki sürüm bağı ve gerekçe zorunlu; eski kayıtlar taşınmaz.",
-      "independent_remaining_work": [
-        "Belge profil sicilini program sürümüne ve yetkili incelemeye bağla; gerçek içerik/lisans/akademik onay ayrı kalır."
-      ],
+      "production_status": "Paket8 eski sürüm/arşiv dilimi canlı geçmişte; Paket43 bilgi paketi dilimi yalnız kaynakta/yerel kabulde. Son canlı16;17–43 dağıtılmadı, configuredCore kapalı.",
+      "implementation_note": "Program sürümlerinde yedi dayanak durumu; program/yayın/profil/yetki dosyası bağını güncel görev ve süreyle yeniden denetleyen yerel bilgi paketi indirmesi. Eski ekran durdurmayı aşamaz. Öğrenen durum görür; idari ek veya indirme yetkisi almaz. Eski yerel publish tek başına tam kurumsal bilgi paketi onayı değildir.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Programın gerçek akademik ve lisans kabulü.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; bağımsız program/profil/yetki paketi bağı bağlı",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -189,20 +195,28 @@
             "gazi/auth/myys/archive.mjs",
             "gazi/auth/tests/myys-programs.test.mjs",
             "gazi/portal/src/program-workspace.jsx",
-            "gazi/auth/myys/acceptance/B03-B09-20261010.json"
+            "gazi/auth/myys/acceptance/B03-B09-20261010.json",
+            "gazi/auth/myys/credential-profile.mjs",
+            "gazi/auth/myys/authority.mjs",
+            "gazi/auth/myys/program-package.mjs",
+            "gazi/auth/tests/myys-program-package.test.mjs",
+            "gazi/auth/tests/myys-scope-http.test.mjs",
+            "scripts/myys-program-package-browser.cjs",
+            "gazi/auth/myys/PROGRAM-PACKAGE-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B03-program-package-20261014.json"
           ],
           "remaining": [
-            "Belge profil sicilini program sürümüne ve yetkili incelemeye bağla; gerçek içerik/lisans/akademik onay ayrı kalır."
+            "Gerçek program/lisans/akademik onay ve kurum yayınına zorunlu açılış kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi · sürüm/arşiv dilimi geçti",
-          "evidence": "148 sunucu + 46 portal + 46 regresyon = 240 test; 10 yeni program/arşiv senaryosu, 8 program tarayıcı kontrolü. B11 regresyon sonucu ayrıca RELEASE.md içinde.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "sürüm, profil ve bilgi paketi indirmesi geçti",
+          "evidence": "7 yeni paket testi +1 HTTP kapsam satırı;578+48+46=672 otomatik.9 bilgi paketi+8 program+13 itiraz=30 tarayıcı.118 komut/17 HTTP;6816 örnek/54528 denetim.",
+          "limits": "Program incelemesi veya lisans beyanı gerçek kurum onayı değildir. Tam kurumsal yayın kapısı ve üretim kabulü açık."
         },
         "live": {
-          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 8: bcb89ab08e35979df903262eb2be6adb4d617c37 / dpl_7PvY4GxTK9fKBN51R7qbd2xHboGJ READY. 141 kaynak hash eşleşmesi ve canlı smoke; kurumsal akış kapalı."
+          "status": "yeni bilgi paketi dilimi yayımlanmadı",
+          "evidence": "Paket8 eski sürüm/arşiv dilimi canlı geçmişte; Paket43 bilgi paketi dilimi yalnız kaynakta/yerel kabulde. Son canlı16;17–43 dağıtılmadı, configuredCore kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2713,16 +2727,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 42,
-    "server_security_tests": "570/570",
+    "software_package": 43,
+    "server_security_tests": "578/578",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 664,
-    "portal_build": "Başarılı; 115 statik dosyalı mevcut korumalı paket",
-    "browser_visual_acceptance": "13 yetki dosyası, 11 profil, 13 itiraz, 19 gezinme: 56 kontrol; 98 menü/279 rol-panel/66 ders. Gerçek ekran okuyucu veya kurum dosyası kabulü değil.",
+    "local_total": 672,
+    "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
+    "browser_visual_acceptance": "9 bilgi paketi+8 program+13 itiraz=30 kontrol;390 px/klavye/iki bağımsız tarayıcı işlemiyle eski ekran yarışı. Kurum veya gerçek ekran okuyucu kabulü değil.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–42 dağıtılmadı; configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B02-authority-20261014.json"
+    "deployment": "Son canlı16 READY;17–43 dağıtılmadı;configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B03-program-package-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2744,12 +2758,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 42,
-    "source_parent_remote": "8a5c605f101b63d3f4a62c4456bb37abdfff6fa0",
-    "source_parent_tree": "a67894ffba6534d2a688e986f5980ea89df0c15a",
+    "software_package": 43,
+    "source_parent_remote": "2c4d1e31bcfd621b30489ab6488fd9c495de6066",
+    "source_parent_tree": "64e7a0e3a62c107a0f309fed2367bb4b67829499",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 664,
-    "note": "B02 yerel ek/süre/kapsam/profil bağı kabulü; tam resmî usul erişimi yeniden denendi, doğrulanamadı. B03 onaylı program bilgi paketi bağı sırada; B07/B28 ve diğer B01–B36 bağımsızlar açık."
+    "local_tests": 672,
+    "note": "B03 program/profil bilgi paketi görünür ve güncel indirme kabulü; kaynak eşitlemesi sırada. B05/B25 hak sicili-materyal ilişkisi sırada; B07/B28 ve diğer tüm bağımsızlar açık."
   },
   "verification_history": [
     {
@@ -2842,6 +2856,19 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16 READY;17–42 dağıtılmadı; configuredCore kapalı.",
       "evidence": "gazi/auth/myys/acceptance/B02-authority-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 43,
+      "server_security_tests": "578/578",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46 model/kaynak/demo",
+      "local_total": 672,
+      "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
+      "browser_visual_acceptance": "9 bilgi paketi+8 program+13 itiraz=30 kontrol;390 px/klavye/iki bağımsız tarayıcı işlemiyle eski ekran yarışı. Kurum veya gerçek ekran okuyucu kabulü değil.",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16 READY;17–43 dağıtılmadı;configuredCore kapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B03-program-package-20261014.json"
     }
   ]
 }

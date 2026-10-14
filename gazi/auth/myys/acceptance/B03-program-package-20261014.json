@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-14",
+  "package": 43,
+  "work_ids": [
+    "B03"
+  ],
+  "ui": "Program sürümleri: yedi dayanak durumu, güncel yerel bilgi paketi indirme ve belge profili bağlantısı",
+  "production_enabled": false,
+  "new_tests": 8,
+  "automated": {
+    "server": 578,
+    "portal": 48,
+    "regression": 46,
+    "total": 672
+  },
+  "browser": {
+    "program_package": 9,
+    "programs": 8,
+    "appeals": 13,
+    "total": 30,
+    "viewport": 390,
+    "stale_page_race": "two separate Chromium processes with independent actor sessions"
+  },
+  "scope": {
+    "commands": 118,
+    "http_routes": 17,
+    "positive_samples": 6816,
+    "derived_negative_checks": 54528
+  },
+  "protected_static_files": 115,
+  "completed_slice": [
+    "program/profile/authority same-version readiness visible without administrative file leakage",
+    "fresh authorized read-only package with immutable snapshot and digest references",
+    "stale screen recheck after authority hold; existing academic archive preserved"
+  ],
+  "limits": [
+    "Local academic publication alone is not a complete institution information-package approval",
+    "License declaration and public-source summary do not establish actual rights or institution approval",
+    "Private source digests are references, not signatures or full self-contained institutional evidence",
+    "No production deployment or authenticated live smoke"
+  ],
+  "live": {
+    "package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "new_deployment": null
+  }
+}

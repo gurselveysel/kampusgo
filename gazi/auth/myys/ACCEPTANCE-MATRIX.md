@@ -6,7 +6,7 @@
 |---|---|---|---|---|---|
 | B01 · Mevcut pilot envanterini sabitle | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
 | B02 · Akademik ve SEM yetki yollarını ayır | kısmi; belge ekli yerel dosya bağlı | 13 yeni test ve 13 yeni tarayıcı; profil bağı geçti | Paket42 canlı değil | gerçek Senato/SEM/görev/süre kabulü açık | tam usul, dosya deposu/tarama/e-imza kabulü açık |
-| B03 · Program bilgi paketini onayla | kısmi | kısmi · sürüm/arşiv dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B03 · Program bilgi paketini onayla | kısmi; program/profil/yetki paketi bağlı | 8 yeni test, 9 yeni tarayıcı; güncel indirme geçti | Paket43 canlı değil | gerçek program/lisans/kurum yayını kabulü açık | bağımsız kod için gerekli değil |
 | B04 · Veri akışını ve saklamayı onayla | kısmi; 14 tablo/120 tür kaynak envanteri | yerel kapsam/özet geçti | Paket40 canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |

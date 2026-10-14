@@ -9,7 +9,7 @@ import {publishStatusSnapshot} from '../myys/status-list.mjs';
 
 const tenant='test-gazi',unit='engineering',otherTenant='scope-http-tenant-b';
 const cases=[
- ['calisma','student','GET'],['karar-arsivi','student'],['cuzdan-indir','student'],
+ ['program-paketi','author'],['calisma','student','GET'],['karar-arsivi','student'],['cuzdan-indir','student'],
  ['dogrulama-paketi','student'],['veri-ozetim','student'],['guven-sicili','it'],
  ['durum-yayinla','it'],['imzala','issuer'],['dogrula','student'],['toplu-hazirlik','issuer']
 ];
@@ -32,9 +32,10 @@ for(const [name,who,method]of cases)test('HTTP kapsam matrisi: '+name+' — olum
  const assessment=f.run('teacher','assess',{enrollmentId:enrolled.id,evidenceIds:[ev.id],scores:[{criterionId:'R1',score:4,reason:'Bağımsız kanıt içeriği rubrikle incelendi.'}],reason:'İkinci öğrencinin tüm görevleri ve ölçme dayanakları incelendi.'});
  const decision=f.run('judge','decide',{assessmentId:assessment.id,outcome:'approved',reason:'İkinci öğrencinin ölçme sonuçları bağımsız incelendi.'});
  await publishStatusSnapshot(f.core,f.context('it'),unit,x.material);
- const input={decisionId:x.d.id,issuanceId:x.issuance.id,unit,jwt:x.signed.jwt,rows:[{commandId:randomUUID(),decisionId:decision.id}]};
+ const input={programId:x.p.id,decisionId:x.d.id,issuanceId:x.issuance.id,unit,jwt:x.signed.jwt,rows:[{commandId:randomUUID(),decisionId:decision.id}]};
  const positive=await invoke(f,x,name,f.context(who),input,method);assert.equal(positive.status,200,JSON.stringify(positive));
  if(name==='calisma')assert.equal(positive.data.wallet[0].id,x.issuance.id);
+ if(name==='program-paketi')assert.equal(positive.data.payload.program.id,x.p.id);
  if(name==='karar-arsivi')assert.equal(positive.data.payload.decision.id,x.d.id);
  if(name==='cuzdan-indir')assert.equal(positive.data.jwt,x.signed.jwt);
  if(name==='dogrulama-paketi')assert.equal(positive.data.credential,x.signed.jwt);

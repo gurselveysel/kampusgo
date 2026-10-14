@@ -1,3 +1,17 @@
+# Güncel devam — Paket43 yerel kabul; kaynak eşitlemesi sırada
+
+B03 Program sürümleri: yedi dayanak durumu, güncel program/profil/yetki dosyası bağıyla yetkili JSON indirme; eksik/durdurulmuş kaynak eski açık ekranı aşamaz. Öğrenen yalnız kendi programının durumunu görür. Yerel publish gerçek kurum paketi onayı değildir; eski akademik arşiv korunur.672 otomatik/30 tarayıcı;118 komut/17 HTTP;6816 örnek/54528 denetim;115 statik. İki oturum yarışı iki ayrı Chromium süreciyle geçti.
+
+Önce özgün36 kriter/diff/uzak baş/alias kontrolü, commit ve expected-head `2c4d1e31bcfd621b30489ab6488fd9c495de6066`, base-tree `64e7a0e3a62c107a0f309fed2367bb4b67829499` ile tam kaynak eşitlemesi. Son canlı16;17–43 dağıtımı yok. BrowserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör/alt ajan yok.
+
+Sıradaki B05/B25: hak sicilini materyal indirme/yeniden yayın kararına zorunlu bağlama ve66 dersin lisans/erişilebilirlik sicili eşlemesi. Mevcut6 program22modül66ders ve kaynakları koru; erişilebilir kaynak açık lisans demek değil. Önce mevcut materyal veri modeli ve sunum/indirme yollarını oku. B07 SQL repository/HTTP PKCE atomik bariyeri, B28 güvenlik checkpoint/idempotency saklama ve tüm diğer bağımsızlar açık. Devam komutu bekleme.
+
+# Güncel devam — Paket42 kaynakta; B03 bilgi paketi bağı inceleniyor
+
+Yerel `7ffe6aea852438654500a45ce7ca0741cd5b7798` / uzak `2c4d1e31bcfd621b30489ab6488fd9c495de6066` / ortak ağaç `64e7a0e3a62c107a0f309fed2367bb4b67829499`;26 blob ve tam ağaç eşleşti.664 otomatik/56 tarayıcı. Son canlı16;17–42 dağıtımı yok; browserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör/alt ajan yok.
+
+Sıradaki B03 program bilgi paketi onay bağı: backlog'taki özgün kabul ve bağımsız kalan işleri program-model/core/program UI/testleri üzerinden incele; B02 dosyasını gerçek kurum onayı sayma. B07/B28 ve diğer bütün bağımsızlar açık; devam komutu bekleme.
+
 # Güncel devam — Paket42 yerel kabul; kaynak eşitlemesi sırada
 
 Politika ve hak sicili: gerçek 32 KiB ek baytları, ayrı metadata/indirme makbuzu, program/sicil/ek SHA, dört sorumluluk kapsamı, UTC süre, ayrı yönetici incelemesi, yeni sürüm ve durdurma. Belge profili güncel dosya kimliğini/SHA'sını sabitler; eski imzayı değiştirmez. B02 bağımsız yerel dilimi kabul edildi; gerçek ek doğrulama/kurum kararı/tam usul/üretim depo/tarama/e-imza açık.
