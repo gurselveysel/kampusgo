@@ -38,3 +38,19 @@ Portal ve demo CSS derlendi. Enhancements tam build'i o klasörde esbuild bulunm
 - [axe-core4.14.0 release](https://github.com/dequelabs/axe-core/releases/tag/v4.14.0),5Ekim yayını;14.10.2026 erişildi. Paket npm registry üzerinden exact4.14.0, --ignore-scripts ile yalnız geçici test runtime'ına kuruldu;MPL-2.0. Integrity `sha512-9WTZxEjsZ7b13TH8JPmbV2z8CHbl80/2hm3XPEG4JgNdQLK81IBRXmSxHfMAOkSqQeRxT/0dwNDz2GOm3zzpcQ==`. Production bağımlılığı veya dış hizmet bağlantısı değildir.
 
 `B24-contrast-20261014.json` kapsam/sayıları; `B24-contrast-colors-20261014.json` tam renk eşlemesi; `B24-contrast-review-20261014.json` nedenler ve sınırlı örnekleri kaydeder. Tam yeniden üretim scripts/myys-contrast-browser.cjs ile mümkündür. Yerel baseline/after-literals/result raporları test-results/myys-contrast altındadır; yayın dosyası değildir.
+
+## Paket61 — sayaç ve kısa metinler
+
+14.10.2026; yalnız yerel kabul. Bildirim sayaçları, sunum sayfa numaraları, Kaynak ve Mevzuat Merkezi döngü adımları ve eski demo adımları daha belirgin oldu. Beş CSS değeri dışında ürün kodu değişmedi; iki kırmızı sayaç zemini ve üç sayı metni tonu koyulaştı. Logolar, yerleşim ve işlevler korunur.
+
+Axe4.14.0 varsayılanı başarısız tek karakteri `shortTextContent` olarak belirsiz bırakır. Kaynak kodu ve kamu API'si okundu; `ignoreLength:true` tek karakteri denetimden çıkarmak değil bu belirsizlik kestirmesini kaldırmaktır. Kuralın gömülü seçenekleri check-only ayarını bastırdığı için check-only deneme karşı örnekte başarısız oldu ve kullanılmadı. Son profil aynı `color-contrast` checkini documented `rules.any` listesinde adla tutar; bütün4.14.0 seçenekleri check configuration'a aynen aktarılır, yalnız ignoreLength değişir. Değerlendirme işlevi,4.5/3 eşikleri,18pt/14ptbold ayrımı, pseudo ve Unicode davranışı değiştirilmez.
+
+Her koşunun başında bağımsız gerçek Chromium sayfasında8 kontrol yapılır: düşük karşıtlıklı tek rakam eski profilde incomplete/yeni profilde violation; normal düşük metin iki profilde violation; yüksek karşıtlıklı rakam ve uygun büyük metin iki profilde pass; gradient iki profilde incomplete. Normal ve büyük metin eşikleri ayrıca doğrulanır. Bu profili geçemeyen koşu ürün taramasına başlamaz.
+
+571 frame taraması önce703 yinelenen ihlal, düzeltmeden sonra0 verdi. 518yeni bildirim,45eski bildirim,110sunum sayfası,20döngü adımı,10demo adımı görünümü; bunlar703 benzersiz kusur değildir. Yeni beş çift beyaza karşı en az4.70:1 hesaplandı; tam değerler kabul JSON'undadır.
+
+Kalan8106 inceleme bulgusu:3903gradient,4173kısmen örtülme,20pseudo,6nonBmp,4kısmen örtme. Önceki1124shortTextContent'ın703'ü belirlenmiş ihlale dönüştü ve düzeldi;421'i asıl gradient belirsizliğine taşındı.421bulgu geçmiş sayılmadı.
+
+106otomatik ve19gezinme kontrolü geçti; 8profil kontrolü ayrıca kaydedildi. Son tam784sunucu testi Paket59; yeniden akış Paketi60ın928ölçümüdür, bu dilimde yeniden koşulmuş gibi sunulmaz. Sunum ve mobil bağlantı ekranları görsel incelendi.115dosyalı korumalı paket hazır. Tam B24, gerçek AT, zoom, nontext, medya/belge ve canlı kabulü açık.
+
+Yeniden üretim: `scripts/myys-contrast-browser.cjs` artık varsayılan olarak tek karakter profilini kullanır. Eski ölçüm karşılaştırması için `MYYS_CONTRAST_SINGLE_CHAR=0`; değişiklik öncesi kayıt için `MYYS_CONTRAST_BASELINE=1`. Axe exact4.14.0/integrity önceki araç kaydıyla aynıdır. `single-char-result.json` ve `single-char-baseline.json` ayrı tutulur; Paket60ın raporları korunur. Kamu kaynak [Deque API axe.configure](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md),14.10.2026: checks.options, rules.any ve her frame için ayrı yapılandırma bölümleri okundu. Kurulu4.14.0 axe.js ve axe.d.ts ile karşılaştırıldı.

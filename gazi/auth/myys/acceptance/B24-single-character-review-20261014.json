@@ -1,0 +1,335 @@
+{
+  "as_of": "2026-10-14T13:26:54.185Z",
+  "software_package": 61,
+  "status": "open-review-not-pass",
+  "counts": {
+    "bgGradient": 3903,
+    "elmPartiallyObscured": 4173,
+    "pseudoContent": 20,
+    "nonBmp": 6,
+    "elmPartiallyObscuring": 4
+  },
+  "samples": {
+    "bgGradient": [
+      {
+        "label": "Öğrenci / learning",
+        "frame": "portal",
+        "framePath": "/#/learning",
+        "target": [
+          ".pilot-tile > strong"
+        ],
+        "html": "<strong>Kontrol sizde.</strong>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "9.0pt (12px)",
+          "fontWeight": "bold",
+          "messageKey": "bgGradient",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Öğrenci / learning",
+        "frame": "portal",
+        "framePath": "/#/learning",
+        "target": [
+          ".pilot-tile > p"
+        ],
+        "html": "<p>İnsan denetimi, gerekçeli karar,<br>izlenebilir süreç.</p>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "bgGradient",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Öğrenci / learning",
+        "frame": "portal",
+        "framePath": "/#/learning",
+        "target": [
+          ".pilot-tile > button"
+        ],
+        "html": "<button>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "bgGradient",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Öğrenci / learning",
+        "frame": "portal",
+        "framePath": "/#/learning",
+        "target": [
+          ".learn-chip"
+        ],
+        "html": "<span class=\"learn-chip\">ÖĞREN · UYGULA · GELİŞ</span>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "6.8pt (9px)",
+          "fontWeight": "bold",
+          "messageKey": "bgGradient",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Öğrenci / learning",
+        "frame": "portal",
+        "framePath": "/#/learning",
+        "target": [
+          ".learn-hero-copy > h2"
+        ],
+        "html": "<h2>Bir sonraki adımın,<br>yeni bir öğrenme çıktısı.</h2>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "21.8pt (29px)",
+          "fontWeight": "normal",
+          "messageKey": "bgGradient",
+          "expectedContrastRatio": "3:1"
+        }
+      }
+    ],
+    "elmPartiallyObscured": [
+      {
+        "label": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "framePath": "/#/academic",
+        "target": [
+          "#academic-tab-quality"
+        ],
+        "html": "<button id=\"academic-tab-quality\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-quality\" tabindex=\"-1\">Kaynaklı göstergeler (6)</button>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "elmPartiallyObscured",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "framePath": "/#/academic",
+        "target": [
+          "#academic-tab-registry"
+        ],
+        "html": "<button id=\"academic-tab-registry\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-registry\" tabindex=\"-1\">Politika ve hak sicili (0)</button>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "elmPartiallyObscured",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "framePath": "/#/academic",
+        "target": [
+          "#academic-tab-recognition"
+        ],
+        "html": "<button id=\"academic-tab-recognition\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-recognition\" tabindex=\"-1\">Tanıma ve kredi (0)</button>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "elmPartiallyObscured",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "framePath": "/#/academic",
+        "target": [
+          "#academic-tab-wallet"
+        ],
+        "html": "<button id=\"academic-tab-wallet\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-wallet\" tabindex=\"-1\">Kişisel cüzdanım (0)</button>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "elmPartiallyObscured",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "framePath": "/#/academic",
+        "target": [
+          "#academic-tab-operations"
+        ],
+        "html": "<button id=\"academic-tab-operations\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-operations\" tabindex=\"-1\">Aktarım ve mutabakat (0)</button>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "elmPartiallyObscured",
+          "expectedContrastRatio": "4.5:1"
+        }
+      }
+    ],
+    "pseudoContent": [
+      {
+        "label": "Kalite Komisyonu / requests",
+        "frame": "portal",
+        "framePath": "/#/requests",
+        "target": [
+          "b"
+        ],
+        "html": "<b>3</b>",
+        "data": {
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "bold",
+          "messageKey": "pseudoContent",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Kalite Komisyonu / proctoring",
+        "frame": "portal",
+        "framePath": "/#/proctoring",
+        "target": [
+          ".room-0 > .sample-watermark"
+        ],
+        "html": "<div class=\"sample-watermark\">ÖRNEK GÖRÜNTÜ</div>",
+        "data": {
+          "fontSize": "5.3pt (7px)",
+          "fontWeight": "normal",
+          "messageKey": "pseudoContent",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Kalite Komisyonu / proctoring",
+        "frame": "portal",
+        "framePath": "/#/proctoring",
+        "target": [
+          ".room-0 > .feed-alert"
+        ],
+        "html": "<div class=\"feed-alert\">",
+        "data": {
+          "fontSize": "6.0pt (8px)",
+          "fontWeight": "normal",
+          "messageKey": "pseudoContent",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Kalite Komisyonu / proctoring",
+        "frame": "portal",
+        "framePath": "/#/proctoring",
+        "target": [
+          ".room-1 > .sample-watermark"
+        ],
+        "html": "<div class=\"sample-watermark\">ÖRNEK GÖRÜNTÜ</div>",
+        "data": {
+          "fontSize": "5.3pt (7px)",
+          "fontWeight": "normal",
+          "messageKey": "pseudoContent",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "Kalite Komisyonu / proctoring",
+        "frame": "portal",
+        "framePath": "/#/proctoring",
+        "target": [
+          ".room-2 > .sample-watermark"
+        ],
+        "html": "<div class=\"sample-watermark\">ÖRNEK GÖRÜNTÜ</div>",
+        "data": {
+          "fontSize": "5.3pt (7px)",
+          "fontWeight": "normal",
+          "messageKey": "pseudoContent",
+          "expectedContrastRatio": "4.5:1"
+        }
+      }
+    ],
+    "nonBmp": [
+      {
+        "label": "Bilgi İşlem / connections",
+        "frame": "portal",
+        "framePath": "/#/connections",
+        "target": [
+          ".terminal-prompt"
+        ],
+        "html": "<div class=\"terminal-prompt\">❯ <span class=\"cursor\"></span></div>",
+        "data": {
+          "messageKey": "nonBmp"
+        }
+      }
+    ],
+    "elmPartiallyObscuring": [
+      {
+        "label": "pilot modal",
+        "frame": "portal",
+        "framePath": "/#/connections",
+        "target": [
+          "li:nth-child(5)"
+        ],
+        "html": "<li>Pilot rozetler sunucuda imzalanır; standart sertifikasyonu veya kurum onayı içermez.</li>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "9.0pt (12px)",
+          "fontWeight": "normal",
+          "messageKey": "elmPartiallyObscuring",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "mobile drawer",
+        "frame": "portal",
+        "framePath": "/#/connections",
+        "target": [
+          ".institution-brand > div > strong"
+        ],
+        "html": "<strong>Gazi Üniversitesi</strong>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "12.8pt (17px)",
+          "fontWeight": "bold",
+          "messageKey": "elmPartiallyObscuring",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "mobile drawer",
+        "frame": "portal",
+        "framePath": "/#/connections",
+        "target": [
+          ".institution-brand > div > span"
+        ],
+        "html": "<span>Mikro Yeterlilik<br>Yönetişim Sistemi</span>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "elmPartiallyObscuring",
+          "expectedContrastRatio": "4.5:1"
+        }
+      },
+      {
+        "label": "mobile drawer",
+        "frame": "portal",
+        "framePath": "/#/connections",
+        "target": [
+          ".pilot-tile > p"
+        ],
+        "html": "<p>İnsan denetimi, gerekçeli karar,<br>izlenebilir süreç.</p>",
+        "data": {
+          "contrastRatio": 0,
+          "fontSize": "7.5pt (10px)",
+          "fontWeight": "normal",
+          "messageKey": "elmPartiallyObscuring",
+          "expectedContrastRatio": "4.5:1"
+        }
+      }
+    ]
+  }
+}

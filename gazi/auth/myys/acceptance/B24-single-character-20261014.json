@@ -1,0 +1,235 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 61,
+  "work_ids": [
+    "B24"
+  ],
+  "scope": "isolated-single-character-text-contrast",
+  "deployed": false,
+  "official": false,
+  "tests_rerun": {
+    "gateway_inventory": 12,
+    "portal": 48,
+    "legacy": 46,
+    "total": 106
+  },
+  "browser_checks": {
+    "navigation": 19,
+    "measurement_profile_assertions": 8
+  },
+  "contrast": {
+    "engine": "axe-core4.14.0",
+    "browser": "138.0.7204.0",
+    "rule": "color-contrast",
+    "ignoreLength": true,
+    "normal_threshold": 4.5,
+    "large_threshold": 3,
+    "routes": 98,
+    "panels": 288,
+    "lessons": 66,
+    "frame_scans": 571,
+    "baseline_repeated_violations": 703,
+    "final_repeated_violations": 0,
+    "final_repeated_review_nodes": 8106,
+    "review_reasons": {
+      "bgGradient": 3903,
+      "elmPartiallyObscured": 4173,
+      "pseudoContent": 20,
+      "nonBmp": 6,
+      "elmPartiallyObscuring": 4
+    },
+    "full_wcag_acceptance": false,
+    "nontext_acceptance": false
+  },
+  "changes": [
+    {
+      "file": "gazi/portal/src/style.css",
+      "selector": ".notification-trigger>span",
+      "property": "background",
+      "before": "#e85261",
+      "after": "#c74653",
+      "ratio_against_white": 4.741055939604431
+    },
+    {
+      "file": "gazi/styles.css",
+      "selector": ".notification i",
+      "property": "background",
+      "before": "#d75b5b",
+      "after": "#be5050",
+      "ratio_against_white": 4.716206068849295
+    },
+    {
+      "file": "gazi/learning.css",
+      "selector": ".lc-slide-controls button",
+      "property": "color",
+      "before": "#6e849a",
+      "after": "#627589",
+      "ratio_against_white": 4.74567849628699
+    },
+    {
+      "file": "gazi/portal/src/knowledge.css",
+      "selector": ".ki-pdca b",
+      "property": "color",
+      "before": "#6688a5",
+      "after": "#597790",
+      "ratio_against_white": 4.701959543337477
+    },
+    {
+      "file": "gazi/workspace.css",
+      "selector": ".demo-step>span",
+      "property": "color",
+      "before": "#728695",
+      "after": "#647683",
+      "ratio_against_white": 4.7074888716703
+    }
+  ],
+  "profile_proof": {
+    "normal": {
+      "violations": [
+        {
+          "target": "#word-low",
+          "data": {
+            "fgColor": "#888888",
+            "bgColor": "#ffffff",
+            "contrastRatio": 3.54,
+            "fontSize": "12.0pt (16px)",
+            "fontWeight": "normal",
+            "messageKey": null,
+            "expectedContrastRatio": "4.5:1"
+          }
+        }
+      ],
+      "incomplete": [
+        {
+          "target": "#digit-low",
+          "data": {
+            "fgColor": "#888888",
+            "bgColor": "#ffffff",
+            "contrastRatio": 3.54,
+            "fontSize": "12.0pt (16px)",
+            "fontWeight": "normal",
+            "messageKey": "shortTextContent",
+            "expectedContrastRatio": "4.5:1"
+          }
+        },
+        {
+          "target": "#gradient",
+          "data": {
+            "contrastRatio": 0,
+            "fontSize": "12.0pt (16px)",
+            "fontWeight": "normal",
+            "messageKey": "bgGradient",
+            "expectedContrastRatio": "4.5:1"
+          }
+        }
+      ],
+      "passes": [
+        {
+          "target": "#digit-good",
+          "data": {
+            "fgColor": "#000000",
+            "bgColor": "#ffffff",
+            "contrastRatio": 21,
+            "fontSize": "12.0pt (16px)",
+            "fontWeight": "normal",
+            "expectedContrastRatio": "4.5:1"
+          }
+        },
+        {
+          "target": "#large-good",
+          "data": {
+            "fgColor": "#888888",
+            "bgColor": "#ffffff",
+            "contrastRatio": 3.54,
+            "fontSize": "18.0pt (24px)",
+            "fontWeight": "normal",
+            "expectedContrastRatio": "3:1"
+          }
+        }
+      ]
+    },
+    "strict": {
+      "violations": [
+        {
+          "target": "#digit-low",
+          "data": {
+            "fgColor": "#888888",
+            "bgColor": "#ffffff",
+            "contrastRatio": 3.54,
+            "fontSize": "12.0pt (16px)",
+            "fontWeight": "normal",
+            "messageKey": null,
+            "expectedContrastRatio": "4.5:1"
+          }
+        },
+        {
+          "target": "#word-low",
+          "data": {
+            "fgColor": "#888888",
+            "bgColor": "#ffffff",
+            "contrastRatio": 3.54,
+            "fontSize": "12.0pt (16px)",
+            "fontWeight": "normal",
+            "messageKey": null,
+            "expectedContrastRatio": "4.5:1"
+          }
+        }
+      ],
+      "incomplete": [
+        {
+          "target": "#gradient",
+          "data": {
+            "contrastRatio": 0,
+            "fontSize": "12.0pt (16px)",
+            "fontWeight": "normal",
+            "messageKey": "bgGradient",
+            "expectedContrastRatio": "4.5:1"
+          }
+        }
+      ],
+      "passes": [
+        {
+          "target": "#digit-good",
+          "data": {
+            "fgColor": "#000000",
+            "bgColor": "#ffffff",
+            "contrastRatio": 21,
+            "fontSize": "12.0pt (16px)",
+            "fontWeight": "normal",
+            "expectedContrastRatio": "4.5:1"
+          }
+        },
+        {
+          "target": "#large-good",
+          "data": {
+            "fgColor": "#888888",
+            "bgColor": "#ffffff",
+            "contrastRatio": 3.54,
+            "fontSize": "18.0pt (24px)",
+            "fontWeight": "normal",
+            "expectedContrastRatio": "3:1"
+          }
+        }
+      ]
+    }
+  },
+  "static_files": 115,
+  "css_only_five_color_values_verified": true,
+  "runtime_js_changed": false,
+  "last_full_suite": {
+    "software_package": 59,
+    "server": 784,
+    "portal": 48,
+    "legacy": 46,
+    "total": 878
+  },
+  "open": [
+    "Geçişli zeminler3903, kısmen örtülen4173, pseudo20, nonBmp6 ve kısmen örten4 yinelenen inceleme bulgusu açık. Kısa gradient sayaçları pass sayılmadı; kısa metin nedeni kalkınca gerçek belirsizlik grubuna taşındı.",
+    "Metin dışı kontrol/odak/ikon karşıtlığı, gerçek ekran okuyucu, tüm dinamik form hataları ve200% metin büyütme kabulü açık.",
+    "Video Türkçe altyazı/döküm doğruluğu, indirilen belge çıktısı okuma sırası ve gerçek canlı rol/akış kabulü açık."
+  ],
+  "source_parent_remote": "36e09a3e17c748471e762298b6d567c4787ffe36",
+  "source_parent_tree": "4ca6a740e8c6d5bdbb8e04e5bc1944ef71a68548",
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "contract": "CONTRAST-ACCEPTANCE.md"
+}

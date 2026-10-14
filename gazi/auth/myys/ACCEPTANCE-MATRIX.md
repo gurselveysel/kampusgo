@@ -27,7 +27,7 @@
 | B21 · Dış belge ve tanıma akışını bağla | kısmi; imza/insan raporu/tekil kredi/karar sürümü bağlı | Paket52:6 yeni sunucu,68 tarayıcı; tanımlı dilim geçti | Paket52 canlı değil | gerçek teslim/usul/çıktı/önceki ders/kurul kabulü açık | gerçek issuer/status/schema ve üretim kabulü açık |
 | B22 · OBS aktarımını kontrollü kabul et | kısmi; kaynak güveni ve iptal düzeltmesi bağlı | Paket50 bağlı zincir ve11 OBS tarayıcı geçti | Paket50 canlı değil | operasyonel kabul açık | gerçek OBS şeması/transkript/diploma eki/işçi kabulü açık |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B24 · Erişilebilirlik açılış testini yap | kısmi; gezinme/dosya/yeniden akış bağlı | Paket57:66 tarayıcı;320px/metin aralığı dilimi geçti | Paket57 canlı değil | gerçek AT/altyazı/çıktı/karşıtlık ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
+| B24 · Erişilebilirlik açılış testini yap | kısmi; gezinme/dosya/reflow ve ölçülebilir kısa metin bağlı | Paket61:106 otomatik,19 gezinme;571 kontrast taramasında0 ihlal,8106 inceleme açık | Son canlı16;17–61 yayımlanmadı | gerçek AT/altyazı/çıktı/karşıtlık ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi | yerel dilim doğrulandı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
@@ -369,3 +369,7 @@ Paket59 LocalPostgresIdentityHttp ayrı loopback HTTPS ve Türkçe giriş/oturum
 ## Paket60 — B24 ölçülebilir metin karşıtlığı
 
 Paket60 8kaynakCSS içinde152metin foreground bildirimi ve2semantik muted değişkenini ölçüme göre düzeltti;137 ölçülen foreground rengi, hue korunarak açık zeminde koyulaştı, terminal yorumu açıklaştı, örnek damgası okunur oldu. Background/layout/logo değişmedi. 571 aynı kapsam taraması önce22824 yinelenen violation, sonra0; gradient/kısa sayaç/örtüşme gibi8809 inceleme bulgusu pass değildir. Tam1.4.3/WCAG/AT/nontext kabulü açık. Paket60:106 yeniden koşulan test (12 gateway/envanter48portal46regresyon),19 gezinme+7reflow;928 geometri ölçümünde0 taşma. Axe-core4.14.0 yalnız color-contrast:98menü/288panel/66ders,571frame taramasında0 belirlenmiş violation;8809 yinelenen incomplete açık. Son tam784sunucu Paketi59dur; bu dilimde runtime JS değişmedi. CONTRAST-ACCEPTANCE.md ayrıntıdır.115statik/36özgün kabul korundu; tamB24ve canlı kabul değildir.
+
+## Paket61 — B24 sayaç ve kısa metin
+
+Paket61: bildirim sayaçları, sunum sayfa düğmeleri ve rehber adım numaralarında beş renk çifti düzeltildi. Aynı 571 taramada tek karakterleri de değerlendiren profille 703 yinelenen ihlal 0 oldu; 8106 incomplete bulgusu açık. Eşikler 4.5:1/3:1 değişmedi. Tam B24/WCAG kabulü değildir. 106 otomatik test (12 gateway/envanter,48 portal,46 regresyon) ve19 gezinme kontrolü yeniden geçti; ölçüm profilinin8 karşı örnek kontrolü geçti. Son tam784 sunucu testi Paket59dadır; bu dilimde runtime JS değişmedi. Ayrıntı: CONTRAST-ACCEPTANCE.md ve acceptance/B24-single-character-20261014.json.

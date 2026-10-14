@@ -1,3 +1,13 @@
+# Güncel devam — Paket61 yerel kabul; kaynak eşitlemesi sırada
+
+Paket61: bildirim sayaçları, sunum sayfa düğmeleri ve rehber adım numaralarında beş renk çifti düzeltildi. Aynı 571 taramada tek karakterleri de değerlendiren profille 703 yinelenen ihlal 0 oldu; 8106 incomplete bulgusu açık. Eşikler 4.5:1/3:1 değişmedi. Tam B24/WCAG kabulü değildir. 106 otomatik test (12 gateway/envanter,48 portal,46 regresyon) ve19 gezinme kontrolü yeniden geçti; ölçüm profilinin8 karşı örnek kontrolü geçti. Son tam784 sunucu testi Paket59dadır; bu dilimde runtime JS değişmedi.115statik. Önce diff/commit ve expectedremote36e09a3e17c748471e762298b6d567c4787ffe36/base4ca6a740e8c6d5bdbb8e04e5bc1944ef71a68548 ile tam ağacı eşitle. Son canlı16;17–61dağıtılmadı.
+
+Sıradaki62: B24 geçişli zemin metinlerini gerçek render ile ölç. Yeni profilde3903gradient/4173obscured/20pseudo/6nonBmp/4obscuring açık. Gradiente keyfi tek arka plan atayıp pass sayma; kısa sayaçlar bu gruba taşındı. Sahte başarılı kabul için öğe gizleme/exclude yok. B28checkpoint/asyncacademicrepo ve bütün bağımsızlar sürer; configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör.
+
+# Güncel devam — Paket60 kaynakta;61 kısa metin karşıtlığı
+
+Paket60 yerel `104069f16fa40cd265575cbe87f28a308838a992`, uzak `36e09a3e17c748471e762298b6d567c4787ffe36`, ortak tam ağaç `4ca6a740e8c6d5bdbb8e04e5bc1944ef71a68548`.22 blob ve tam ağaç/uzak ref doğrulandı; son canlı16.17–60dağıtılmadı.61: axe4.14.0 tek karakter belirsizliğini kaldıran aynı4.5/3 eşikli profil gerçek Chromium bağımsız karşı örnekle doğrulandı; kapsam taraması ve sayaç/sunum/adım renkleri sırada. Gradient/örtüşme ayrı açık; configuredCore kapalı,browserAuth iptali yeniden denenmez.
+
 # Güncel devam — Paket60 yerel kabul; kaynak eşitlemesi sırada
 
 Paket60:106 yeniden koşulan test (12 gateway/envanter48portal46regresyon),19 gezinme+7reflow;928 geometri ölçümünde0 taşma. Axe-core4.14.0 yalnız color-contrast:98menü/288panel/66ders,571frame taramasında0 belirlenmiş violation;8809 yinelenen incomplete açık. Son tam784sunucu Paketi59dur; bu dilimde runtime JS değişmedi.Görünür ortakmetin renkleri düzeldi;137renk152bildirim+2semanticvar. CONTRAST-ACCEPTANCE.md detaylıdır. TamB24değil.
