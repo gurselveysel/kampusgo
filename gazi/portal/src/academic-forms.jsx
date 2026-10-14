@@ -36,7 +36,7 @@ export function EnrollmentForm({programs,publications,busy,onSubmit}){
  const published=programs.filter(p=>publications.some(r=>r.programId===p.id));
  return <Card><CardHead title="Öğreneni programa kaydet" sub="Kimlik önceden güvenilir kurum üyeliğinde bulunmalıdır; bu form hesap oluşturmaz."/><form className="academic-body form-stack" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);onSubmit({programId:f.get('programId'),learnerId:f.get('learnerId')});}}><Field label="Yayımlanmış pilot program"><select aria-label="Yayımlanmış pilot program" name="programId" required><option value="">Seçin</option>{published.map(p=><option key={p.id} value={p.id}>{p.title} · Sürüm {p.version}</option>)}</select></Field><Text name="learnerId" label="Kalıcı öğrenen kimliği" minLength={1}/><Button type="submit" disabled={busy||!published.length}>Program kaydını oluştur</Button></form></Card>;
 }
-const registryTypes={
+export const registryTypes={
  'data-flow':['Veri akışı ve saklama',{purpose:'Amaç',controller:'Veri sorumlusu',processor:'Veri işleyen',country:'Ülke',recipient:'Alıcı',dataCategories:'Veri kategorileri',retention:'Saklama kuralı',deletion:'Silme kuralı',legalBasis:'Hukuki dayanak'}],
  'content-rights':['İçerik ve sağlayıcı hakları',{provider:'Sağlayıcı',userGroup:'Kullanıcı grubu',copying:'Kopyalama hakkı',republishing:'Yeniden yayın hakkı',brand:'Marka kullanımı',api:'API hakkı',exit:'Çıkış hakkı',postSubscription:'Abonelik sonrası haklar',sourceReference:'Yazılı kaynak referansı'}],
  'recognition-policy':['Tanıma politikası',{authorityReference:'Yetkili karar referansı',creditPath:'Kredi yolu',remoteDenominator:'Uzaktan eğitim paydası',priorLearning:'Önceki öğrenme',doubleCounting:'Çift sayım kuralı',appeal:'İtiraz yolu'}],

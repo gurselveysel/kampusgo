@@ -411,3 +411,7 @@ Dört mevcut işlem aynıSQLkimlik+checkpoint zincirinde. Sürüm/askı eski kar
 Üst panel ve akademik kayıt aynı imzalı yerel SQL kişisini gösterir.11sunum profili yetki değiştirmez. İptal/süre/çıkış/başka sekmedeki kişi değişimi eski kişi ve formları kapatır. B06/B07/B24 alt kabulü; B23 SEM ölçütü kapanmadı.
 
 Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu. [Kanıt](acceptance/B06-B07-B24-session-display-20261014.json). Son tamkapsam SQLite matrisi69; bu yayında tekrar çalıştırılmadı, test toplamına eklenmedi. Kod kısmi; yerel dilim geçti; canlı17–70yok; kurum/dış erişim/nativeSSI/RLS/tamAT açık.
+
+## Paket71 — aynı SQL politika ve hak sicili
+
+Paket71:8yeni SQL testi;884sunucu+59portal+46regresyon=989.32SQL+14mevcut yetki dosyası+19gezinme=65tarayıcı.136komut/18HTTP kapsamında9035pozitif72280negatif örnek;115statik paket. [Kanıt](acceptance/B02-B20-registry-sql-20261014.json). Beş tür ve ayrı yönetici incelemesi, Türkçe alan/durum/gerekçe/filtre, currentrole/tenant/replay/atomic audit/checkpoint geçti. B02/B04/B05/B08/B12/B14/B16/B20 alt dilimleri; bütün paket kabulü değildir. Kod kısmi; yerel geçti; canlı17–71yok; kurum ve dış erişim/gerçek sözleşme/nativeSSI/RLS/tamAT açık.

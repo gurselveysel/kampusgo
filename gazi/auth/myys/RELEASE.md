@@ -903,3 +903,13 @@ Yerel `8c9e743c6eb6d17f0ef6ad4ec34b37fd6e41eaae`, uzak `91e0996121747112cd75662f
 Üst panel, bildirim menüsü ve akademik alan güncellendi. Sunucu kişisi/rol/süre görünür;11örnek profil yetki vermez; süre/iptal/kişi değişimi eski kayıtları kapatır. Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu. [Kanıt](acceptance/B06-B07-B24-session-display-20261014.json).
 
 Başlangıç yerel `8c9e743c6eb6d17f0ef6ad4ec34b37fd6e41eaae`, uzak `91e0996121747112cd75662f6ee806bd7e516529`, ortak tam ağaç `dbe6748153cb0a1791e2605582d06b501bc8b163`. Uzak dal ve canlı alias yeniden okundu; değişmedi. Yeni kaynak kimlikleri sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–70dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; browserAuthiptali yenilenmedi. B06/B07/B24 yerel alt dilim; B23 SEM ve diğer kurum/üretim/122SQLişlem şartları açık.
+
+### Paket70 kaynak eşitleme sonucu
+
+Yerel `54c17436eec6632501061952e939bc149f946b64`, uzak `f12b0e70ab6d1f68de0f5bc74a242a0ef6dd512e`, ortak tam ağaç `52f5327baddcda173895ed85fffa646eabbd4b3f`.21blob SHA/tam ağaç eşitliği,expected-headforce=false,uzakref/commit teyidi geçti. Yeni canlı dağıtım yapılmadı.
+
+## Paket71 — aynı SQL sicil; yayın değil
+
+Politika ve hak sicilinde beş tür taslak, farklı yönetici incelemesi, uygun/uygun değil/bekliyor, Türkçe gerekçe/alan ve filtreler. Paket71:8yeni SQL testi;884sunucu+59portal+46regresyon=989.32SQL+14mevcut yetki dosyası+19gezinme=65tarayıcı.136komut/18HTTP kapsamında9035pozitif72280negatif örnek;115statik paket. [Kanıt](acceptance/B02-B20-registry-sql-20261014.json).
+
+Başlangıç yerel `54c17436eec6632501061952e939bc149f946b64`, uzak `f12b0e70ab6d1f68de0f5bc74a242a0ef6dd512e`, ortak tam ağaç `52f5327baddcda173895ed85fffa646eabbd4b3f`. Uzak dal/alias tekrar okundu; değişmedi. Yeni kaynak sonucu sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–71dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; üretimDDL/credential/gerçek kişi işlemi yok. Kurum/dış erişim/120SQLişlem açık.

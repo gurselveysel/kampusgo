@@ -1,3 +1,23 @@
+# Güncel devam — Paket71 yerel kabul; kaynak eşitlemesi sırada
+
+Paket71:8yeni SQL testi;884sunucu+59portal+46regresyon=989.32SQL+14mevcut yetki dosyası+19gezinme=65tarayıcı.136komut/18HTTP kapsamında9035pozitif72280negatif örnek;115statik paket.16SQLkomut15tür;120komut açık.36özgün ölçüt korunur. Beş sicil, farklı yönetici incelemesi, Türkçe durum/gerekçe/filtreler; SQLde henüz bağlı olmayan yetki dosyası formları kapalı, eskiSQLite14kontrol geçti.
+
+Önce71diff/commit/tam ağaç eşitle: beklenen uzakf12b0e70ab6d1f68de0f5bc74a242a0ef6dd512e,taban52f5327baddcda173895ed85fffa646eabbd4b3f. Soncanlı16;17–71dağıtılmadı;configuredCorekapalı;browserAuthiptaliniyenileme. Sıradaki72: aynıSQL authority-attachment/dossier/review/hold/download ve credential-profile/review/hold. attachment iki kayıt atomik; indirme makbuzunda filebytes saklama, replayde currentyetki+hash ile yeniden aç; kapalı/genericSQLworksetreddi; dört sorumluluk, Senato/SEM ek bağı, eski profil dayanağı/süre/askı korunacak. Henüz72kod yok;önce tam authority/profile/test kurallarını oku. Tekeditör, bağımsızları sürdür.
+
+# Paket71 ara çalışma — SQL sicil kodu ve ilk testler
+
+Mevcut70kaynak54c17436eec6632501061952e939bc149f946b64 / uzakf12b0e70ab6d1f68de0f5bc74a242a0ef6dd512e / ağaç52f5327baddcda173895ed85fffa646eabbd4b3f.71henüzcommit yok.
+
+registry-draft/registry-review aynıSQL eklendi:16komut15akademiktür, aynı16PGadaytablo; adminbirimindeki registry/review projeksiyonu, registrar adlı ayrı sentetik yönetici. Yeni RegistryWorkspace Türkçe alanlar, uygun/uygun değil/bekliyor, gerekçe, 3filtre; eskiSQLiteekranını da kullanır.8yeniSQLtest geçti;6HTTPregresyon geçti; build/paket115geçti. Bekleyenler: tamkapsam server+136/18matris, portal/regresyon,32SQL ve19gezinme tarayıcı; görselinceleme;71sözleşme/kanıt/backlog/kaynak eşitlemesi. Yeni testte revokedüyelik hata kodu membership_required olarak düzeltildi; tarayıcıda optionlabel ile kayıt rozeti strictselector ayrımı düzeltildi, yeni koşu sürüyor.
+
+Aktif günlükler /tmp/gazi-package71-{scope,portal,regression,new-final,browser-verified,navigation}.log; ilgili sonuçlar test-results/myys-registry-sql ve myys-navigation. Kodda configuredCoreaçılmadı; üretimDDL yok;belge/authority/profileSQL henüzkapalı. Soncanlı16;17–71dağıtılmadı;browserAuthiptaliniyenileme;tekeditör;bağımsızişlersürsün.
+
+# Güncel devam — Paket70 kaynakta;71 kurum yetki/hak sicili SQL bağı
+
+70 yerel54c17436eec6632501061952e939bc149f946b64, uzakf12b0e70ab6d1f68de0f5bc74a242a0ef6dd512e, ortak tam ağaç52f5327baddcda173895ed85fffa646eabbd4b3f.21blob SHA/tam ağaç/expected-headforce=false/uzakrefcommit doğrulandı.981otomatik83tarayıcı; soncanlı16,17–70dağıtılmadı.
+
+71 başladı: aynıSQL registry-draft/registry-review iki komutu ve Politika ve hak sicili ekranı.5sicil türü, ayrı hazırlayan/inceleyen admin, currentrole/tenant/replay/audit/checkpoint, açık yerel inceleme durumları. Belge/yetki dosyası/kurumsal onay yerine geçmez. Henüz71ürün kodu yok; önce mevcut registry/core/RegistryForm/SQLfixture/testleri oku. Mevcut14SQLkomut13tür; hedef16komut15tür. ÜretimDDL yok; configuredCorekapalı;browserAuthiptaliniyenileme;tekeditör; B01–B36bağımsızlar sürsün.
+
 # Güncel devam — Paket70 yerel kabul; kaynak eşitlemesi sırada
 
 Üst panel kişi/sunum ayrımı, sıralı istek ve süre/iptal/kişi değişimi kapanışı. Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu. B06/B07/B24 alt kabulü; B23 SEM ölçütü kapanmadı; önceki çapraz üstpanel notu bu kayıtla düzeltildi.

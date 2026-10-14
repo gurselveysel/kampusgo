@@ -390,3 +390,9 @@ Mevcut alternative-evidence/evidence-moderate kuralları özelalan markalı aç�
 [Oturum gösterimi sözleşmesi](SESSION-DISPLAY-CONTRACT.md). İmzalı yerel kişi/kurum/rol/süre özeti; sunum ve örnek bildirim ayrımı; aynı sekmede tamamlanan yanıt sırası; otomatik yazma tekrarı yok. Başlatılmış istek iptal edilse de yanıt tüketilir. CSRF bellekte; geç başarısız yanıt süre/checkpoint kapanış gerekçesini düşürmez.
 
 Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu. Aynı SQL14komut13kayıt türü;122işlem açık. Yeni kurum kararı veya üretim yetkisi üretilmedi.
+
+## Paket71: politika ve hak sicili SQL bağı
+
+[SQL sicil sözleşmesi](REGISTRY-SQL-CONTRACT.md). Mevcut registryCommand kuralları aynen;16komut15kayıt türü. MFA yönetici birimleriyle salt okunur projeksiyon; review başka kişiye ait, tekil ve değişmez. Yeni RegistryWorkspace eskiSQLite ve SQL ekranında çalışır. SQLde yetki dosyası/profil/ihraç formu kapalı; eski yetki dosyası korunur.
+
+Paket71:8yeni SQL testi;884sunucu+59portal+46regresyon=989.32SQL+14mevcut yetki dosyası+19gezinme=65tarayıcı.136komut/18HTTP kapsamında9035pozitif72280negatif örnek;115statik paket. Kalan120SQLkomut/kurum/üretim şartları sürer.

@@ -103,3 +103,7 @@ Alternatifgözlem/ayrı kaliteincelemesi aynıSQL yerel zincirde. Gerçek kurumu
 ### Paket70 durum notu
 
 Üst panel kişi/sunum ayrımı bağımsız olarak tamamlandı; yeni erişim talebi yaratmadı. Gerçek IdP ve ad-soyad kaynağı, kurum görev yetkisi, üretim depo/checkpoint/nativeSSI/RLS ve kimlikli canlı smoke mevcut tek eylem listesindeki yetkilerle sınırlı kalır. browserAuth iptali yenilenmedi. Son canlı16;17–70yayımlanmadı. Kalan122SQLişlem geliştirmesi sürer.
+
+### Paket71 durum notu
+
+Sicil taslağı ve ayrı yönetici incelemesi bağımsız geliştirildi; yeni erişim gerektirmedi. Gerçek veri/saklama/hak/LMS/tanıma/kurum yetki sözleşmeleri kurum kararlarıyla açık kalır. Yerel uygun incelemesi bu yetkilerin yerine geçmez. configuredCorekapalı; soncanlı16; browserAuthiptali yenilenmedi.120SQLkomut geliştirmesi sürer.

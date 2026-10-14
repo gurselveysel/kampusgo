@@ -1,0 +1,166 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 71,
+  "work_ids": [
+    "B02",
+    "B04",
+    "B05",
+    "B08",
+    "B12",
+    "B14",
+    "B16",
+    "B20"
+  ],
+  "visible_change": "Politika ve hak sicili aynı SQL üzerinde: beş tür taslak, farklı yönetici incelemesi, uygun/uygun değil/bekliyor, Türkçe alanlar ve arama/tür/durum filtreleri.",
+  "code": [
+    "gazi/auth/myys/academic-sql.mjs",
+    "gazi/auth/myys/academic-sql-store.mjs",
+    "gazi/auth/myys/academic-sql-schema.sql",
+    "gazi/portal/src/registry-workspace.jsx",
+    "gazi/portal/src/academic-forms.jsx",
+    "gazi/auth/tests/myys-registry-sql.test.mjs",
+    "scripts/myys-academic-sql-browser.cjs"
+  ],
+  "local_tests": {
+    "new": 8,
+    "server": 884,
+    "portal": 59,
+    "legacy": 46,
+    "total": 989,
+    "targeted_http_regression": 6,
+    "nativeSSI": false,
+    "nativeRLS": false
+  },
+  "browser": {
+    "myys-registry-sql": {
+      "count": 32,
+      "at": "2026-10-14T17:15:39.824Z",
+      "checks": [
+        "Kapalı oturum Türkçe giriş yolu sundu; kayıt veya sahte başarı göstermedi",
+        "Ayrı sentetik sağlayıcıdan imzalı giriş aynı SQL kişisine ve altı açık sekmeye bağlandı",
+        "SQL yöneticisi beş tür kaynak/hak/sorumluluk taslağı kaydetti; kendi inceleme düğmesi yok",
+        "Ayrı imzalı SQL yönetici kişisi aynı birimin beş taslağını Türkçe alanlarıyla gördü",
+        "Ayrı yönetici dört taslağı uygun, birini uygun değil olarak gerekçelendirdi; kararlar resmî onay sayılmadı",
+        "Sicil incelemeleri yenilemede korundu; tür/durum/arama filtreleri ve boş sonuç çalıştı",
+        "Sicil kaynakları ve inceleme gerekçesi320CSSpx/metin aralığında taşmadı; filtre klavyeyle erişildi",
+        "Yetkisiz eğitici sicili veya eski bağlantı üzerinden yönetici formunu açamadı",
+        "Koordinatör mevcut formda çıktı–görev–rubrik bağlı programı SQL kaydetti",
+        "Farklı SQL kişisi program sürümünü gerekçesiyle inceledi",
+        "Yönetici program sürümüne kaynak ve süreli yerel politika bağladı; resmî onay üretilmedi",
+        "Hazırlayandan farklı SQL komisyon kişisi aynı politikayı inceledi",
+        "Mevcut SQL öğrenen üyeliği aynı program sürümüne kaydedildi; yeni hesap üretilmedi",
+        "Öğrenen kendi görevinin kanıtını sundu; yenilemede SQL kaydı korundu",
+        "Eğitici sözlü gözlem kaydetti; bağımsız inceleme öncesi alternatif kanıt rubriğe alınmadı",
+        "Ayrı SQL kalite kişisi gözlem ve yöntem dayanağını karşılaştırarak aynı kanıtı inceledi",
+        "Ayrı eğitici gerçek bağlı kanıtı mevcut rubrik formuyla değerlendirdi",
+        "Bağımsız komisyon kişisi aynı değerlendirmeye akademik karar kaydetti",
+        "Öğrenen kendi kararını gördüğünü teyit etti; kaynak sürümü ve yalnız yerel süre göründü",
+        "Yeni politika sürümü bağımsız incelemeden sonra gelecekteki kullanım için durduruldu",
+        "Yeni sürüm ve durdurma eski kararın politika dayanağını veya tekil teslim teyidini değiştirmedi",
+        "Aynı öğrenen kendi kararına itiraz etti; açık olmayan belge işlemi gösterilmedi",
+        "Bağımsız inceleyen ilk karar ve öğrenenin itirazını aynı SQL zincirinde sonuçlandırdı",
+        "İtiraz sonucu yeniden giriş ve yenilemede aynı öğrenene döndü",
+        "Eğitici gerekçeli portfolyo sürümünü önceki kanıta bağladı; ilk sürüm silinmedi",
+        "İncelenmiş yeni sürüm sonraki değerlendirmede seçildi; eski sürüm yeni rubrikte seçilemez oldu",
+        "Aynı öğrenen eski karar ve rubriğinin ilk kanıt sürümüyle korunduğunu gördü",
+        "320 CSS px, artırılmış metin aralığı ve altı sekmede klavye geçişi çalıştı",
+        "Kapalı sekmeye eski bağlantı erişilebilir açık sekmeye döndü",
+        "Aynı SQL oturumundan çıkış akademik okumayı kapattı",
+        "Güvenlik kaydı uyuşmazlığında yeni kanıt reddedildi; eski kayıtlar ve formlar kapandı, doğru Türkçe uyarı görüldü",
+        "İstemci istisnası veya beklenmedik sunucu hatası yok"
+      ]
+    },
+    "myys-authority": {
+      "count": 14,
+      "at": "2026-10-14T17:12:45.545Z",
+      "checks": [
+        "Öğrenen idari dosyaya ve ek yükleme formuna erişmedi",
+        "Yavaş dosya okumasında çift tıklama tek işlem kaldı; seçili ek ve kapsam alanları değiştirilemedi",
+        "İki gerçek yerel dosya tarayıcıdan yüklendi; kaynak, tarih ve sürüm saklandı",
+        "Dört sorumluluk ve belge bağları kaydedildi; hazırlayan kendi dosyasını inceleyemedi",
+        "İncelenmemiş yetki dosyası belge profili formunu açmadı",
+        "Ayrı yönetici ek dosyasını gerçek indirmeyle bayt bayt aynı aldı",
+        "Ayrı yönetici incelemesi dosyayı yerel kullanıma açtı",
+        "İncelenmiş dosya ve ayrı komisyon profili aynı başarı kararının hazırlığına bağlandı",
+        "Dosya durdurulunca yeni belge hazırlığı kapandı",
+        "Yeni yetki dosyası eski profilin bağını sessizce değiştirmedi",
+        "Yeni dosya ayrıca incelenmiş profil 2 üzerinden aynı karara bağlandı",
+        "Arama boş sonucu ve yenilemede ekler, incelemeler, iki sürüm korundu",
+        "390 px ek ve kapsam formları taşmadı; klavye sırası çalıştı",
+        "İstemci istisnası yok"
+      ]
+    },
+    "myys-navigation": {
+      "count": 19,
+      "at": "2026-10-14T17:11:22.738Z",
+      "checks": [
+        "Mobil kapalı menü odak/erişilebilirlik ağacından çıkar; içeriğe geç bağlantısı çalışır",
+        "Mobil menü adlandırılmış modal; ileri/geri odak döngüsü, Escape ve tetikleyiciye dönüş çalışır",
+        "Menü araması boş sonucu açıklar; seçilen sayfaya başlık ve ana içerik odağı taşınır",
+        "Menüden pilot penceresi tek modal olarak açılır; kapanınca mobil menü düğmesine dönülür",
+        "Masaüstüne geçince menü kilidi kalkar; pencere odağı özgün düğmeye döner",
+        "Çalışma alanı seçme penceresi hedef sayfayı açtı ve odağı yeni ana içeriğe taşıdı",
+        "Aynı sayfa seçimi ve dar ekrana dönüşte odak gizli menüde kalmaz; 390 px taşma yok",
+        "11 sunum profilinin tüm menü hedefleri içerikle açıldı; sunum yetkisi uyarısına veya boş sayfaya düşmedi",
+        "Öğrenen katalogdan dört örnek programı planına ekledi; yetkisiz program öneri düğmesi gösterilmedi",
+        "Altı programın 66 dersi doğru başlıkla açıldı; dört materyal sekmesi ve 66 sunum dosyası korundu",
+        "Sunum HTML ve vaka CSV dosyaları gerçek tarayıcı indirmesiyle alındı",
+        "Ders notu ve kişisel tamamlama yenilemede korundu; materyal sekmeleri klavyeyle kullanılabildi",
+        "Rehber ve destek özeti kullanıcı işlemiyle indirildi; dış sisteme gönderildiği iddia edilmedi",
+        "Sayfa geçişi sürerken kullanıcı hedef içerikte odağı taşıdıysa geçiş tamamlanınca odağı çalınmıyor",
+        "Kaynak, matris ve rozet sekmeleri adlandırılmış panele bağlı; ok/Home/End ve tek Tab durağı çalışır",
+        "Kalite ve paydaş kategori filtreleri doğru seçili düğme anlamıyla ve klavyeyle çalışır",
+        "Dokuz çekirdek rolün tüm akademik alt sayfaları boş olmayan adlandırılmış panellerle açıldı",
+        "Akademik sekmelerde End, sağ okla başa dönüş ve Tab ile panel odağı çalışır",
+        "Sunum ve çekirdek gezinmesinde istemci istisnası yok"
+      ]
+    }
+  },
+  "browser_total": 65,
+  "scope_matrix": {
+    "commands": 136,
+    "routes": 18,
+    "positive_samples": 9035,
+    "derived_negative_samples": 72280,
+    "scope": "SQLitecopy matrix; standalone test or native SQL RLS count değildir."
+  },
+  "sql": {
+    "actions": 16,
+    "academic_record_kinds": 15,
+    "candidate_tables": 16,
+    "unported_actions": 120,
+    "checkpoint_profile": "myys-sql-identity-academic-checkpoint/1"
+  },
+  "static_files": 115,
+  "preserved": {
+    "programs": 6,
+    "modules": 22,
+    "lessons": 66,
+    "presentation_profiles": 11,
+    "core_roles": 9,
+    "menu_targets": 98,
+    "academic_panels": 288
+  },
+  "source_parent": {
+    "local": "54c17436eec6632501061952e939bc149f946b64",
+    "remote": "f12b0e70ab6d1f68de0f5bc74a242a0ef6dd512e",
+    "tree": "52f5327baddcda173895ed85fffa646eabbd4b3f"
+  },
+  "live": {
+    "software_package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "state": "READY",
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "new_deployment": false,
+    "authenticated_smoke": false,
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "rollback_applied": false
+  },
+  "limits": [
+    "Yerel sicil incelemesi gerçek kurum kararı veya okunan kaynak hükmünün kabulü değildir.",
+    "Yetki dosyası/belge profili/ihraç bu SQL diliminde kapalı; eski SQLite işlevi korunur.",
+    "Üretim IdP/kalıcı depo/checkpoint/nativeSSI/RLS/tamAT/gerçek kurum erişimi kabulü değil.",
+    "Şema adayı dışında üretim migration yapılmadı; configuredCore kapalı.",
+    "16SQLkomut dışındaki120işlem sürer; hiçbir Bpaketinin tüm kabulü kapanmadı."
+  ]
+}
