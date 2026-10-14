@@ -3,7 +3,7 @@
 CREATE TABLE public.myys_academic_records (
  position bigint NOT NULL CHECK(position BETWEEN 1 AND 9007199254740991),
  tenant text NOT NULL,
- kind text NOT NULL CHECK (kind IN ('program','publication','enrollment','evidence','assessment','decision','appeal','resolution','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receipt')),
+ kind text NOT NULL CHECK (kind IN ('program','publication','enrollment','evidence','assessment','decision','appeal','resolution','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receipt','evidence-moderation')),
  id text NOT NULL,
  unit text NOT NULL,
  owner text NOT NULL REFERENCES public.myys_identity_persons(id),
@@ -20,7 +20,7 @@ CREATE TABLE public.myys_academic_commands (
  tenant text NOT NULL,
  person_id text NOT NULL REFERENCES public.myys_identity_persons(id),
  id text NOT NULL,
- action text NOT NULL CHECK (action IN ('program','publish','enroll','evidence','assess','decide','appeal','resolve','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive')),
+ action text NOT NULL CHECK (action IN ('program','publish','enroll','evidence','assess','decide','appeal','resolve','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive','alternative-evidence','evidence-moderate')),
  digest text NOT NULL CHECK (digest ~ '^[a-f0-9]{64}$'),
  result jsonb NOT NULL CHECK (jsonb_typeof(result)='object'),
  PRIMARY KEY (tenant,person_id,id)

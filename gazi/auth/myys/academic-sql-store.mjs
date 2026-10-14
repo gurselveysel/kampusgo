@@ -1,7 +1,7 @@
 // Transient SQL transaction working set. No connection, seed, DDL or persistent fallback store.
 // SQL runtime constructs this after identity/tenant checks; no client or production factory exposes it.
 import {requireThat} from './store.mjs';
-export const academicSqlKinds=Object.freeze(['program','publication','enrollment','evidence','assessment','decision','appeal','resolution','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receipt']);
+export const academicSqlKinds=Object.freeze(['program','publication','enrollment','evidence','assessment','decision','appeal','resolution','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receipt','evidence-moderation']);
 const kinds=new Set(academicSqlKinds);
 const local=()=>requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Akademik SQL denemesi yalnız izole yerel kabulde çalışır.',503);
 const copy=v=>JSON.parse(JSON.stringify(v));

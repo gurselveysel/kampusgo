@@ -460,7 +460,7 @@
       "production_activation_blocker": "Mevcut üretim deposu için ayrı migration yetkisi ve gerçek kimlik eşlemesi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk12komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan124işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynıSQLkimlik/checkpoint zincirinde; alternatifölçme yerel; kalan122işlem/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -508,23 +508,27 @@
             "gazi/auth/tests/myys-appeal-sql.test.mjs",
             "scripts/myys-academic-sql-browser.cjs",
             "gazi/auth/myys/APPEAL-SQL-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json",
+            "gazi/auth/myys/alternative-evidence.mjs",
+            "gazi/auth/tests/myys-alternative-sql.test.mjs",
+            "gazi/auth/myys/ALTERNATIVE-SQL-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
           ],
           "remaining": [
             "Directory/key/HTTP kontrol düzlemi yetkisi, bütün yazıcılar ve monoton iptal/anahtar geri yükleme checkpoint bağı açık.",
             "Üretim HTTP/TLS/proxy/origin/cookie ve gerçek IdP/client/MFA/KMS; native çok bağlantı/SSI/RLS/driver/pool/kapasite ve saklama kabulü gerekir. Yeni credential/production migration özel yetki dışında kapalı.",
-            "İlk12komut dışındaki124işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
-            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan124SQLkomut sürer."
+            "İlk14komut dışındaki122işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
+            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan122SQLkomut sürer."
           ]
         },
         "local_acceptance": {
-          "status": "yerel SQLitiraz alt dilimi geçti",
-          "evidence": "Paket68:11yeni;866sunucu+48portal+46regresyon=960.21yeniSQL+13mevcutpolitika tarayıcı;320CSSpx/metin aralığı.136/18kapsam9035pozitif72280türetilmişnegatif örnek.",
-          "limits": "TekexclusivePGlite;12komut. Gerçekusul/resmîtebligat/imzalıbelge/nativeSSI/RLS/kurum/üretim kabulü değil."
+          "status": "yerel SQLalternatifölçme alt dilimi geçti",
+          "evidence": "Paket69:10yeni;876sunucu+48portal+46regresyon=970.26SQL+15mevcut=41tarayıcı;320CSSpx/metin aralığı;136/18kapsam9035pozitif72280negatif örnek.",
+          "limits": "TekexclusivePGlite;14komut. Gerçek kurum yöntemi/kanıtı/IdP/üretim/nativeSSI/RLS/AT kabulü değil."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;17–68dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
+          "evidence": "Son canlı16;17–69dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -539,7 +543,8 @@
       "implementation_notes": [
         "Paket66: ilk8akademik komut aynı SQL kişi/üyelik/oturumunda, mevcut işkurallarıyla atomik kayıt+komut+audit;22yeni/936toplam,49tarayıcı. Yalnız yerel; tam B kabulü veya kurum/üretim bağlantısı değildir.",
         "Paket67: 15kimlik+akademik tablonun ayrı profil pinli güncellik kontrolü; eski SQL kopyası/yeni başlık kopyalama/akademik kayıt–komut–audit değişimi reddedilir. UIformlar kapanır/uyarı odaklanır.13yeni/949toplam29tarayıcı; yerel dilim, gerçek RPO/RTO/hukukiimha/kurum kabulü değildir.",
-        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır."
+        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır.",
+        "Paket69: eğitici alternatifkanıtı+ayrı kaliteincelemesi aynıSQL/14komut/13tür/15tablocheckpoint. Geçersiz/null/başarısız puan atlanmaz; hazırlayan ve moderatör karar/itirazdan ayrılır. Yeni sürüm gelecekteki seçimi değiştirir, eski rubric/kararı değiştirmez.10yeni/970otomatik41tarayıcı;kurum/üretim/122SQLkomut açık."
       ]
     },
     {
@@ -641,7 +646,7 @@
       "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk12komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan124işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan122işlem/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -730,8 +735,8 @@
           "remaining": [
             "Directory/key/HTTP kontrol düzlemi yetkisi, bütün üretim yazarları ve bağımsız monoton kontrol hizmeti; Paket64 yerel checkpoint geçti. Belirsiz işlem uzlaştırma ve restore kuyruğu açık.",
             "Üretim HTTP/TLS/proxy/origin/cookie ve gerçek IdP/client/MFA/KMS; native çok bağlantı/SSI/RLS/driver/pool/kapasite ve saklama kabulü gerekir. Yeni credential/production migration özel yetki dışında kapalı.",
-            "İlk12komut dışındaki124işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
-            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan124SQLkomut sürer."
+            "İlk14komut dışındaki122işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
+            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan122SQLkomut sürer."
           ]
         },
         "local_acceptance": {
@@ -801,7 +806,7 @@
       "production_activation_blocker": "Gerçek görev atamaları ve kurumsal kabul.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk12komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan124işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynıSQLkimlik/checkpoint zincirinde; alternatifölçme yerel; kalan122işlem/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -831,21 +836,25 @@
             "gazi/auth/tests/myys-appeal-sql.test.mjs",
             "scripts/myys-academic-sql-browser.cjs",
             "gazi/auth/myys/APPEAL-SQL-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json",
+            "gazi/auth/myys/alternative-evidence.mjs",
+            "gazi/auth/tests/myys-alternative-sql.test.mjs",
+            "gazi/auth/myys/ALTERNATIVE-SQL-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
           ],
           "remaining": [
             "Üretim depo ve dağıtık oturum sözleşmesinin gerçek görev atamalarıyla kurum kabulü; yeni modüller envantere eklendikçe matrisi genişletme.",
-            "İlk12komut dışındaki124işlem, birleşik akademik checkpoint, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık."
+            "İlk14komut dışındaki122işlem, birleşik akademik checkpoint, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık."
           ]
         },
         "local_acceptance": {
-          "status": "yerel SQLitiraz alt dilimi geçti",
-          "evidence": "Paket68:11yeni;866sunucu+48portal+46regresyon=960.21yeniSQL+13mevcutpolitika tarayıcı;320CSSpx/metin aralığı.136/18kapsam9035pozitif72280türetilmişnegatif örnek.",
-          "limits": "TekexclusivePGlite;12komut. Gerçekusul/resmîtebligat/imzalıbelge/nativeSSI/RLS/kurum/üretim kabulü değil."
+          "status": "yerel SQLalternatifölçme alt dilimi geçti",
+          "evidence": "Paket69:10yeni;876sunucu+48portal+46regresyon=970.26SQL+15mevcut=41tarayıcı;320CSSpx/metin aralığı;136/18kapsam9035pozitif72280negatif örnek.",
+          "limits": "TekexclusivePGlite;14komut. Gerçek kurum yöntemi/kanıtı/IdP/üretim/nativeSSI/RLS/AT kabulü değil."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;17–68dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
+          "evidence": "Son canlı16;17–69dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -859,7 +868,8 @@
       },
       "implementation_notes": [
         "Paket66: ilk8akademik komut aynı SQL kişi/üyelik/oturumunda, mevcut işkurallarıyla atomik kayıt+komut+audit;22yeni/936toplam,49tarayıcı. Yalnız yerel; tam B kabulü veya kurum/üretim bağlantısı değildir.",
-        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır."
+        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır.",
+        "Paket69: eğitici alternatifkanıtı+ayrı kaliteincelemesi aynıSQL/14komut/13tür/15tablocheckpoint. Geçersiz/null/başarısız puan atlanmaz; hazırlayan ve moderatör karar/itirazdan ayrılır. Yeni sürüm gelecekteki seçimi değiştirir, eski rubric/kararı değiştirmez.10yeni/970otomatik41tarayıcı;kurum/üretim/122SQLkomut açık."
       ]
     },
     {
@@ -915,7 +925,7 @@
       "production_activation_blocker": "Gerçek LMS kaynak kimliği ve rubrik sözleşmesi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk12komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan124işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynıSQLkimlik/checkpoint zincirinde; alternatifölçme yerel; kalan122işlem/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -961,22 +971,26 @@
             "gazi/auth/tests/myys-appeal-sql.test.mjs",
             "scripts/myys-academic-sql-browser.cjs",
             "gazi/auth/myys/APPEAL-SQL-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json",
+            "gazi/auth/myys/alternative-evidence.mjs",
+            "gazi/auth/tests/myys-alternative-sql.test.mjs",
+            "gazi/auth/myys/ALTERNATIVE-SQL-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
           ],
           "remaining": [
             "Gerçek sağlayıcı dosyası/kimlik-ders-sürüm eşleme sözleşmesini onaylı örnek üzerinden kabul et; üretim depo/worker ve dosya saklama/geri yükleme adaptörünü tamamla. Gerçek erişim/migration ayrı yetki sınırıdır.",
-            "İlk12komut dışındaki124işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
-            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan124SQLkomut sürer."
+            "İlk14komut dışındaki122işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
+            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan122SQLkomut sürer."
           ]
         },
         "local_acceptance": {
-          "status": "yerel SQLitiraz alt dilimi geçti",
-          "evidence": "Paket68:11yeni;866sunucu+48portal+46regresyon=960.21yeniSQL+13mevcutpolitika tarayıcı;320CSSpx/metin aralığı.136/18kapsam9035pozitif72280türetilmişnegatif örnek.",
-          "limits": "TekexclusivePGlite;12komut. Gerçekusul/resmîtebligat/imzalıbelge/nativeSSI/RLS/kurum/üretim kabulü değil."
+          "status": "yerel SQLalternatifölçme alt dilimi geçti",
+          "evidence": "Paket69:10yeni;876sunucu+48portal+46regresyon=970.26SQL+15mevcut=41tarayıcı;320CSSpx/metin aralığı;136/18kapsam9035pozitif72280negatif örnek.",
+          "limits": "TekexclusivePGlite;14komut. Gerçek kurum yöntemi/kanıtı/IdP/üretim/nativeSSI/RLS/AT kabulü değil."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;17–68dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
+          "evidence": "Son canlı16;17–69dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -991,7 +1005,8 @@
       "implementation_notes": [
         "Paket66: ilk8akademik komut aynı SQL kişi/üyelik/oturumunda, mevcut işkurallarıyla atomik kayıt+komut+audit;22yeni/936toplam,49tarayıcı. Yalnız yerel; tam B kabulü veya kurum/üretim bağlantısı değildir.",
         "Paket67: 15kimlik+akademik tablonun ayrı profil pinli güncellik kontrolü; eski SQL kopyası/yeni başlık kopyalama/akademik kayıt–komut–audit değişimi reddedilir. UIformlar kapanır/uyarı odaklanır.13yeni/949toplam29tarayıcı; yerel dilim, gerçek RPO/RTO/hukukiimha/kurum kabulü değildir.",
-        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır."
+        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır.",
+        "Paket69: eğitici alternatifkanıtı+ayrı kaliteincelemesi aynıSQL/14komut/13tür/15tablocheckpoint. Geçersiz/null/başarısız puan atlanmaz; hazırlayan ve moderatör karar/itirazdan ayrılır. Yeni sürüm gelecekteki seçimi değiştirir, eski rubric/kararı değiştirmez.10yeni/970otomatik41tarayıcı;kurum/üretim/122SQLkomut açık."
       ]
     },
     {
@@ -1029,7 +1044,7 @@
       "production_activation_blocker": "Yetkili gerçek akademik karar sahipleri.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk12komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan124işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynıSQLkimlik/checkpoint zincirinde; alternatifölçme yerel; kalan122işlem/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -1052,21 +1067,24 @@
             "gazi/auth/tests/myys-appeal-sql.test.mjs",
             "scripts/myys-academic-sql-browser.cjs",
             "gazi/auth/myys/APPEAL-SQL-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json",
+            "gazi/auth/tests/myys-alternative-sql.test.mjs",
+            "gazi/auth/myys/ALTERNATIVE-SQL-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
           ],
           "remaining": [
             "Gerçek kurum ölçme/yetki ve üretim kimlik/depo kabulü; kaynak dosyasının kurum doğrulaması.",
-            "İlk12komut dışındaki124işlem, birleşik akademik checkpoint, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık."
+            "İlk14komut dışındaki122işlem, birleşik akademik checkpoint, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık."
           ]
         },
         "local_acceptance": {
-          "status": "yerel SQLitiraz alt dilimi geçti",
-          "evidence": "Paket68:11yeni;866sunucu+48portal+46regresyon=960.21yeniSQL+13mevcutpolitika tarayıcı;320CSSpx/metin aralığı.136/18kapsam9035pozitif72280türetilmişnegatif örnek.",
-          "limits": "TekexclusivePGlite;12komut. Gerçekusul/resmîtebligat/imzalıbelge/nativeSSI/RLS/kurum/üretim kabulü değil."
+          "status": "yerel SQLalternatifölçme alt dilimi geçti",
+          "evidence": "Paket69:10yeni;876sunucu+48portal+46regresyon=970.26SQL+15mevcut=41tarayıcı;320CSSpx/metin aralığı;136/18kapsam9035pozitif72280negatif örnek.",
+          "limits": "TekexclusivePGlite;14komut. Gerçek kurum yöntemi/kanıtı/IdP/üretim/nativeSSI/RLS/AT kabulü değil."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;17–68dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
+          "evidence": "Son canlı16;17–69dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1080,7 +1098,8 @@
       },
       "implementation_notes": [
         "Paket66: ilk8akademik komut aynı SQL kişi/üyelik/oturumunda, mevcut işkurallarıyla atomik kayıt+komut+audit;22yeni/936toplam,49tarayıcı. Yalnız yerel; tam B kabulü veya kurum/üretim bağlantısı değildir.",
-        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır."
+        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır.",
+        "Paket69: eğitici alternatifkanıtı+ayrı kaliteincelemesi aynıSQL/14komut/13tür/15tablocheckpoint. Geçersiz/null/başarısız puan atlanmaz; hazırlayan ve moderatör karar/itirazdan ayrılır. Yeni sürüm gelecekteki seçimi değiştirir, eski rubric/kararı değiştirmez.10yeni/970otomatik41tarayıcı;kurum/üretim/122SQLkomut açık."
       ]
     },
     {
@@ -1129,7 +1148,7 @@
       "production_activation_blocker": "Kapsamlı kurum itiraz/moderasyon usulü, tebliğ ve takvim kabulü, bağımsız görev/iptal yetkisi; üretim kimlik/depo ve canlı kabul.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk12komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan124işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynıSQLkimlik/checkpoint zincirinde; alternatifölçme yerel; kalan122işlem/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -1170,22 +1189,26 @@
             "gazi/auth/tests/myys-appeal-sql.test.mjs",
             "scripts/myys-academic-sql-browser.cjs",
             "gazi/auth/myys/APPEAL-SQL-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json",
+            "gazi/auth/myys/alternative-evidence.mjs",
+            "gazi/auth/tests/myys-alternative-sql.test.mjs",
+            "gazi/auth/myys/ALTERNATIVE-SQL-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
           ],
           "remaining": [
             "Kurumca kabul edilmiş gerçek usulün üretim kimlik/depo ve tebliğ adaptörüne bağlanması.",
-            "İlk12komut dışındaki124işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
-            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan124SQLkomut sürer."
+            "İlk14komut dışındaki122işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
+            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan122SQLkomut sürer."
           ]
         },
         "local_acceptance": {
-          "status": "yerel SQLitiraz alt dilimi geçti",
-          "evidence": "Paket68:11yeni;866sunucu+48portal+46regresyon=960.21yeniSQL+13mevcutpolitika tarayıcı;320CSSpx/metin aralığı.136/18kapsam9035pozitif72280türetilmişnegatif örnek.",
-          "limits": "TekexclusivePGlite;12komut. Gerçekusul/resmîtebligat/imzalıbelge/nativeSSI/RLS/kurum/üretim kabulü değil."
+          "status": "yerel SQLalternatifölçme alt dilimi geçti",
+          "evidence": "Paket69:10yeni;876sunucu+48portal+46regresyon=970.26SQL+15mevcut=41tarayıcı;320CSSpx/metin aralığı;136/18kapsam9035pozitif72280negatif örnek.",
+          "limits": "TekexclusivePGlite;14komut. Gerçek kurum yöntemi/kanıtı/IdP/üretim/nativeSSI/RLS/AT kabulü değil."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;17–68dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
+          "evidence": "Son canlı16;17–69dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1200,7 +1223,8 @@
       "implementation_notes": [
         "Paket66: ilk8akademik komut aynı SQL kişi/üyelik/oturumunda, mevcut işkurallarıyla atomik kayıt+komut+audit;22yeni/936toplam,49tarayıcı. Yalnız yerel; tam B kabulü veya kurum/üretim bağlantısı değildir.",
         "Paket67: 15kimlik+akademik tablonun ayrı profil pinli güncellik kontrolü; eski SQL kopyası/yeni başlık kopyalama/akademik kayıt–komut–audit değişimi reddedilir. UIformlar kapanır/uyarı odaklanır.13yeni/949toplam29tarayıcı; yerel dilim, gerçek RPO/RTO/hukukiimha/kurum kabulü değildir.",
-        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır."
+        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır.",
+        "Paket69: eğitici alternatifkanıtı+ayrı kaliteincelemesi aynıSQL/14komut/13tür/15tablocheckpoint. Geçersiz/null/başarısız puan atlanmaz; hazırlayan ve moderatör karar/itirazdan ayrılır. Yeni sürüm gelecekteki seçimi değiştirir, eski rubric/kararı değiştirmez.10yeni/970otomatik41tarayıcı;kurum/üretim/122SQLkomut açık."
       ]
     },
     {
@@ -1535,7 +1559,7 @@
       "production_activation_blocker": "Üretim kuyruk/depo işletim seçimi; mevcut testler yereldir.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk12komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan124işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynıSQLkimlik/checkpoint zincirinde; alternatifölçme yerel; kalan122işlem/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -1569,22 +1593,26 @@
             "gazi/auth/tests/myys-appeal-sql.test.mjs",
             "scripts/myys-academic-sql-browser.cjs",
             "gazi/auth/myys/APPEAL-SQL-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json",
+            "gazi/auth/myys/alternative-evidence.mjs",
+            "gazi/auth/tests/myys-alternative-sql.test.mjs",
+            "gazi/auth/myys/ALTERNATIVE-SQL-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
           ],
           "remaining": [
             "Gerçek LMS sözleşmesine bağlı üretim depo/işçi adaptörü ve dağıtık kuyruk kabulü; yeni HTTP alım sözleşmesi.",
-            "İlk12komut dışındaki124işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
-            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan124SQLkomut sürer."
+            "İlk14komut dışındaki122işlem, birleşik checkpoint üretim hizmeti, native RLS/SSI ve gerçek kurum yetkisi/IdP/KMS/üretim kabulü açık.",
+            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan122SQLkomut sürer."
           ]
         },
         "local_acceptance": {
-          "status": "yerel SQLitiraz alt dilimi geçti",
-          "evidence": "Paket68:11yeni;866sunucu+48portal+46regresyon=960.21yeniSQL+13mevcutpolitika tarayıcı;320CSSpx/metin aralığı.136/18kapsam9035pozitif72280türetilmişnegatif örnek.",
-          "limits": "TekexclusivePGlite;12komut. Gerçekusul/resmîtebligat/imzalıbelge/nativeSSI/RLS/kurum/üretim kabulü değil."
+          "status": "yerel SQLalternatifölçme alt dilimi geçti",
+          "evidence": "Paket69:10yeni;876sunucu+48portal+46regresyon=970.26SQL+15mevcut=41tarayıcı;320CSSpx/metin aralığı;136/18kapsam9035pozitif72280negatif örnek.",
+          "limits": "TekexclusivePGlite;14komut. Gerçek kurum yöntemi/kanıtı/IdP/üretim/nativeSSI/RLS/AT kabulü değil."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;17–68dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
+          "evidence": "Son canlı16;17–69dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -1599,7 +1627,8 @@
       "implementation_notes": [
         "Paket66: ilk8akademik komut aynı SQL kişi/üyelik/oturumunda, mevcut işkurallarıyla atomik kayıt+komut+audit;22yeni/936toplam,49tarayıcı. Yalnız yerel; tam B kabulü veya kurum/üretim bağlantısı değildir.",
         "Paket67: 15kimlik+akademik tablonun ayrı profil pinli güncellik kontrolü; eski SQL kopyası/yeni başlık kopyalama/akademik kayıt–komut–audit değişimi reddedilir. UIformlar kapanır/uyarı odaklanır.13yeni/949toplam29tarayıcı; yerel dilim, gerçek RPO/RTO/hukukiimha/kurum kabulü değildir.",
-        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır."
+        "Paket68: aynı SQL politika hazırlığı/bağımsızinceleme/sürüm/askı/kişiselteslim;12komut/12akademiktür,15tablocheckpoint.11yeni/960otomatik34tarayıcı;136komut72280kapsamkarşıörneği. Semantiksıra aynıtransaction değişmez kurum satırlarından üretilir. Gerçekkurumusulü/resmîtebligat/üretim açıktır.",
+        "Paket69: eğitici alternatifkanıtı+ayrı kaliteincelemesi aynıSQL/14komut/13tür/15tablocheckpoint. Geçersiz/null/başarısız puan atlanmaz; hazırlayan ve moderatör karar/itirazdan ayrılır. Yeni sürüm gelecekteki seçimi değiştirir, eski rubric/kararı değiştirmez.10yeni/970otomatik41tarayıcı;kurum/üretim/122SQLkomut açık."
       ]
     },
     {
@@ -2162,7 +2191,8 @@
             "gazi/auth/myys/acceptance/B23-sem-20261014.json"
           ],
           "remaining": [
-            "Güncel YÖK/Gazi usul ve teknik YÖKSİS şema/yetki kabulüyle gerçek başvuru/uygunluk/merkezi düzenleyici eşlemesi."
+            "Güncel YÖK/Gazi usul ve teknik YÖKSİS şema/yetki kabulüyle gerçek başvuru/uygunluk/merkezi düzenleyici eşlemesi.",
+            "Üst panel kişi gösterimini gerçek yerel kurum oturumu ile tutarlı yap;11sunum profilini erişim yetkisi gibi sunma; örnek kayıtları gerçek kişiye mal etme."
           ]
         },
         "local_acceptance": {
@@ -2508,7 +2538,7 @@
       "production_activation_blocker": "Üretim RPO/RTO hedefi, yedekleme ve ayrı geri yükleme yetkisi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; aynıSQLilk12komut ve15tablo birleşikcheckpoint bağlı; kalan işlemler/kurum/üretim açık",
+          "status": "kısmi; aynıSQLilk14komut ve15tablo birleşikcheckpoint bağlı; kalan işlemler/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/recovery.mjs",
             "gazi/auth/myys/recovery-model.mjs",
@@ -2537,7 +2567,7 @@
           ],
           "remaining": [
             "Üretim depo/işçi/KMS, bağımsız güvenilir kontrol hizmeti, belirsiz işlem uzlaştırma ve güvenlik kuyruğu ile gerçek RPO/RTO provası. Paket64 yalnız SQL kimlik kopyasının güncellik kapısını sınar.",
-            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan124SQLkomut sürer."
+            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan122SQLkomut sürer."
           ]
         },
         "local_acceptance": {
@@ -2628,7 +2658,7 @@
       "production_activation_blocker": "Hukuki saklama kararı; geri alınamaz üretim silme yetkisi verilmedi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; aynıSQLilk12komut ve15tablo birleşikcheckpoint bağlı; kalan işlemler/kurum/üretim açık",
+          "status": "kısmi; aynıSQLilk14komut ve15tablo birleşikcheckpoint bağlı; kalan işlemler/kurum/üretim açık",
           "evidence": [
             "gazi/auth/myys/privacy.mjs",
             "gazi/portal/src/privacy-workspace.jsx",
@@ -2675,7 +2705,7 @@
             "Komut/audit sonuç kopyalarının ve iptal/aile/anahtar kayıtlarının amaç/süre/yeniden oynatma/geri yükleme sözleşmesi; üretim silme ve yedeklerde imha doğrulaması. Sahipli used/expired giriş isteği Paket41, kişiye bağlanmamış failed/cancelled yerel dilimi Paket65 ile geçti.",
             "Kurumun bütün JSON iş alanları, dış hizmet/işleyen/ülke/alıcı ve dayanak/süre envanteri;16 tablo/149 tür kaynak envanteri bunun tamamı değildir.",
             "Resmî başvuru/bildirim teslim kanıtı ve dış platform kapanışının belge doğrulamasına etkisi kabulü.",
-            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan124SQLkomut sürer."
+            "Ayrı güvenilir kontrol hizmeti, bütün üretim okuyucu/yazıcıları, yetkili belirsiz işlem kurtarması, gerçek RPO/RTO/fsync/native SSI/RLS kabulü açık; kalan122SQLkomut sürer."
           ]
         },
         "local_acceptance": {
@@ -3257,23 +3287,23 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 68,
-    "server_security_tests": "866/866",
+    "software_package": 69,
+    "server_security_tests": "876/876",
     "portal_tests": "48/48",
     "legacy_tests": "46/46",
-    "local_total": 960,
+    "local_total": 970,
     "last_full_suite": {
-      "software_package": 68,
-      "server": 866,
+      "software_package": 69,
+      "server": 876,
       "portal": 48,
       "legacy": 46,
-      "total": 960
+      "total": 970
     },
-    "portal_build": "React/115statik korumalı paket geçti.",
-    "browser_visual_acceptance": "21SQL+13mevcutpolitika=34;320CSSpx/metin aralığı;tamAT/zoomdeğil",
+    "portal_build": "Mevcut derlenmişReact/115statik paket ve yeniSQLverisiyle tarayıcı geçti; portal kaynak değişmedi.",
+    "browser_visual_acceptance": "26SQL+15mevcut=41;320CSSpx/metin aralığı/390pxeski formlar;tamAT/zoomdeğil",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16;17–68yayımlanmadı;configuredCorekapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+    "deployment": "Son canlı16;17–69yayımlanmadı;configuredCorekapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -3295,12 +3325,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 68,
-    "source_parent_remote": "461d644e5164c79ac6d8f7981bc93ba10cae6387",
-    "source_parent_tree": "7a4a902f3edb90db20b71a73ec0413536c323e5e",
+    "software_package": 69,
+    "source_parent_remote": "fc380103385ba9a732956440c2e4c198fbc7fdcd",
+    "source_parent_tree": "18dd309db23b58ee53c13818987a984edf423008",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 960,
-    "note": "Aynı SQLitirazusulü/kişiselteslim yerel kabulde. Sıradaki69: alternatifölçme+ayrı kaliteincelemesi SQLbağı. Bütünbağımsızlar sürer."
+    "local_tests": 970,
+    "note": "Alternatifölçme/ayrıinceleme aynıSQLyerelkabulde. Sıradaki70: üstpanel kimlik gösterimi/kurumoturumu tutarlılığı,11sunumprofili korunarak örnekler ayırt edilsin. Bütünbağımsızlar sürer."
   },
   "verification_history": [
     {
@@ -3797,6 +3827,26 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16;17–67yayımlanmadı;configuredCorekapalı.",
       "evidence": "gazi/auth/myys/acceptance/B07-B28-academic-checkpoint-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 68,
+      "server_security_tests": "866/866",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46",
+      "local_total": 960,
+      "last_full_suite": {
+        "software_package": 68,
+        "server": 866,
+        "portal": 48,
+        "legacy": 46,
+        "total": 960
+      },
+      "portal_build": "React/115statik korumalı paket geçti.",
+      "browser_visual_acceptance": "21SQL+13mevcutpolitika=34;320CSSpx/metin aralığı;tamAT/zoomdeğil",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16;17–68yayımlanmadı;configuredCorekapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
     }
   ]
 }

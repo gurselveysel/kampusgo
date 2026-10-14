@@ -1,3 +1,15 @@
+# Güncel devam — Paket69 yerel kabul; kaynak eşitlemesi sırada
+
+Alternatifölçme+ayrıkalite incelemesi aynıSQL14komut13tür zincirinde.10yeni/876sunucu+48portal+46regresyon=970;26SQL15mevcut=41tarayıcı;115statik.136/18kapsam9035pozitif72280negatif geçti. Eski rubric/karar/kanıt sürümü korunur.36özgünölçüt korundu;16PG/16SQLite149tür.
+
+Önce69diff/commit/tamağaç eşitle: beklenen uzakfc380103385ba9a732956440c2e4c198fbc7fdcd,taban18dd309db23b58ee53c13818987a984edf423008. Soncanlı16;17–69dağıtılmadı;configuredCorekapalı;browserAuthiptaliniyenileme. Sıradaki70: gazi/portal/src/main.jsx üstpaneldeki örnek AhmetYılmaz profili ile gerçek yerel kurum kişi gösterimini tutarlı yap;11sunumprofilini koru ama örneği gerçekkişinin kaydı gibi sunma. Yetki sunucuda kalır, CSRF/sessiontoken localStoragea yazılmaz. Sonra kalan122SQLkomut/B01–B36bağımsızlar. Tekeditör;raporladurma.
+
+# Güncel devam — Paket68 kaynakta;69 alternatif ölçme SQL bağı
+
+68yerel085f9cea6400725719f29f9fcc4e7d4a4db90afe,uzakfc380103385ba9a732956440c2e4c198fbc7fdcd,ortak tam ağaç18dd309db23b58ee53c13818987a984edf423008.22blobSHA/tam ağaç/expected-headforce=false/uzakrefcommit doğrulandı.960otomatik34tarayıcı,136/18kapsam9035pozitif72280negatif. Soncanlı16;17–68dağıtılmadı.
+
+69başladı: alternative-evidence/evidence-moderate aynıSQLkimlik+checkpoint zincirine; eğitici/ayrı kalite/karar/itiraz ayrımı; eski sürüm/snapshot korunacak.14komut/13akademiktür hedefi,aynı16PGadaytablo. Yeni moderator sentetikkişi kalite görevinde; gerçekhesap yok. Kod/test/UIkabulü henüz bitmedi,69commit yok. Önce alternatifkanıtguard/class/kind/actions; sonraSQL/TLS/derlenmişReact/tamkapsam,kanıt/backlog/eşitleme. configuredCorekapalı;browserAuthiptaliniyenileme;tekeditör;B01–B36bağımsızlarısürdür.
+
 # Güncel devam — Paket68 yerel kabul; kaynak eşitlemesi sırada
 
 İtirazpolitika/bağımsızinceleme/sürüm/askı/kişiselteslim aynıSQL12komut12tür zincirinde.11yeni/866sunucu+48portal+46regresyon=960;21SQL13mevcut=34tarayıcı;115statik. Son25SQLsıra testi ve ardından866tam+136/18kapsam9035pozitif72280negatif geçti. Academicposition ordinaryBIGINT/tenantunique; aynıtransactionmax+1; bağımsızsequence yok. Öncekişema/üretim migration uygulanmadı.36özgünölçüt korundu;16PG/16SQLite149tür.

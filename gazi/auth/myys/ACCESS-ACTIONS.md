@@ -95,3 +95,7 @@ Birleşik15veri tablosu profili yerel kabulde. Mevcut tek eylem listesindeki SQL
 ### Paket68 kapsam notu
 
 Yerel itirazpolitikası ve kişiselteslim aynıSQLakışında. GerçekGaziusulü, yetkilikişiler, resmîtebligat/kanıtı ve imzalıbelgeiptal/değişim usulü mevcut tek eylem listesinde açık. Sentetik günhesabı gerçek süre kuralı değildir. Şema adayı değişti; üretim/öncekişema migrationı veya yeni erişim uygulanmadı.
+
+### Paket69 kapsam notu
+
+Alternatifgözlem/ayrı kaliteincelemesi aynıSQL yerel zincirde. Gerçek kurumun yöntem ve kanıt kabulü, güncel eğitici/kalite/komisyon görevleri ve gerçek kaynak doğrulaması mevcut tek eylem listesinde açık. Fixturedaki yeni kişi sentetiktir; gerçek hesap/rol/yeni erişim oluşturulmadı.

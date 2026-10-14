@@ -1,3 +1,4 @@
+import {isLocalSqlAcademicStore} from './academic-sql-store.mjs';
 import {LocalAcceptanceStore,requireThat,hash} from './store.mjs';
 import {programBaseline,stableStringify} from './program-model.mjs';
 import {alternativeMethods} from './alternative-evidence-model.mjs';
@@ -12,7 +13,7 @@ function accepted(s,t,e){const r=review(s,t,e);return r?.outcome==='accepted'&&r
 const independent=(s,a,e)=>role(a,e.unit,'quality')&&![e.owner,e.createdBy,s.get(a.tenant,'program',e.programId)?.createdBy].includes(a.id);
 export function alternativeReplay(a,action,r){if(!actions.includes(action))return false;requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Üretim alternatif ölçme yolu kapalı.',503);requireThat(role(a,r.unit,action==='alternative-evidence'?'instructor':'quality'),'forbidden','Güncel alternatif ölçme görevi ve çok faktörlü oturum gerekli.',403);return true;}
 export function alternativeCommand({action,p,a,s,put,id,now}){
- if(!actions.includes(action))return null;requireThat(s instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Alternatif ölçme yalnız izole yerel kabulde çalışır.',503);
+ if(!actions.includes(action))return null;requireThat((s instanceof LocalAcceptanceStore||isLocalSqlAcademicStore(s))&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Alternatif ölçme yalnız izole yerel kabulde çalışır.',503);
  if(action==='alternative-evidence'){
   const e=typeof p.enrollmentId==='string'&&s.get(a.tenant,'enrollment',p.enrollmentId);requireThat(e&&role(a,e.unit,'instructor'),'not_found','Yetkili birimde öğrenen kaydı gerekli.',404);
   requireThat(e.owner!==a.id,'separation','Kendi alternatif kanıtınızı eğitici olarak hazırlayamazsınız.',403);

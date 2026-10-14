@@ -46,3 +46,7 @@ Paket66 sırasında açık olan akademik checkpoint yerel alt dilimi [ayrı birl
 ## Paket68 devamı
 
 [SQL itiraz dilimi](APPEAL-SQL-CONTRACT.md) dört işlemi daha bağladı:12komut/12akademik kayıt türü. Yerel politika sekmesi yalnız yönetici/komisyon/kalite rolüne; kişisel karar teslimi yalnız sahibine açılır. Akademikposition artık ordinaryBIGINT ve kurum+positionunique; sıra aynıtransaction değişmez satırlardan üretilir. Eski aday şeması otomatik değiştirilmez. Kalan124komut/gerçekkurumusulü/resmîtebligat/üretim açık.
+
+## Paket69 devamı
+
+[Alternatif ölçme dilimi](ALTERNATIVE-SQL-CONTRACT.md) iki işlemi daha bağladı:14komut/13akademik tür. Aynı veri ve güncellik kontrolü, ayrı kalite/karar/itiraz görevleri. Kalan122komut ve gerçek kurum kabulü açık; eski sürümler değişmez.

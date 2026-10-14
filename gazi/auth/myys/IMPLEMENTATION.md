@@ -380,3 +380,7 @@ Mevcut altı akademik sekme ilk8komutla PostgresIdentityFlow özel ön/son guard
 ## Paket68 — SQL itiraz usulü ve teslim
 
 İtirazpolitikası/inceleme/askı/teslim aynı SQLkimlik+checkpoint akışında; mevcut işkuralları korunur. Açık özelalan markalı transactioniçi çalışma kümesi; generic/prototype/kapanmışnesne reddi. Sıra aynıtransactiondeğişmezkurumsatırlarından; üretimDDL/credentialyok.11yeni/960otomatik34tarayıcı;136komut18HTTP9035pozitif72280negatif kapsamörneği.12SQLkomut/12tür;16PGadayı/16SQLite149tür/115statik. [Sözleşme](APPEAL-SQL-CONTRACT.md). Soncanlı16.
+
+## Paket69 — SQL alternatif kanıt ve moderasyon
+
+Mevcut alternative-evidence/evidence-moderate kuralları özelalan markalı açıkSQLçalışma kümesine bağlandı.14komut/13tür;16PGadayı/16SQLite149tür/115statik korunur.10yeni/970tamotomatik41tarayıcı;136/18kapsam9035pozitif72280negatif örnek. [Sözleşme](ALTERNATIVE-SQL-CONTRACT.md). Gerçekkurum/üretim/122SQLkomut ve üstpanel kişi tutarlılığı açık;soncanlı16.

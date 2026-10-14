@@ -4,7 +4,7 @@ import {appealPolicyView} from './appeal-policy.mjs';
 import {MyysCore,ROLES} from './core.mjs';
 import {PostgresIdentityFlow} from './identity-sql-flow.mjs';
 import {requireThat,hash} from './store.mjs';
-export const academicSqlActions=Object.freeze(['program','publish','enroll','evidence','assess','decide','appeal','resolve','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive']);
+export const academicSqlActions=Object.freeze(['program','publish','enroll','evidence','assess','decide','appeal','resolve','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receive','alternative-evidence','evidence-moderate']);
 const kinds=new Set(academicSqlKinds);
 const local=()=>requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Akademik SQL denemesi yalnız izole yerel kabulde çalışır.',503);
 const copy=v=>JSON.parse(JSON.stringify(v));

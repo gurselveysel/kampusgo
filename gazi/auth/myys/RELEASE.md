@@ -881,3 +881,15 @@ Yerel `51de1defac9508283d232fe585727a133aadc6e5`, uzak `461d644e5164c79ac6d8f798
 Başlangıç yerel `51de1defac9508283d232fe585727a133aadc6e5`, uzak `461d644e5164c79ac6d8f7981bc93ba10cae6387`, ortak tam ağaç `7a4a902f3edb90db20b71a73ec0413536c323e5e`. Yeni kaynak eşitleme sonucu sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–68dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; browserAuthiptali yenilenmedi;kurum/üretim/124SQLişlem açık.
 
 14.10.2026 Paket68 eşitlemesi öncesi uzak dal/alias tekrar okundu:67kaynağı ve canlı16READY değişmedi; yeni kimlikli smoke yapılmadı.
+
+### Paket68 kaynak eşitleme sonucu
+
+Yerel `085f9cea6400725719f29f9fcc4e7d4a4db90afe`, uzak `fc380103385ba9a732956440c2e4c198fbc7fdcd`, ortak tam ağaç `18dd309db23b58ee53c13818987a984edf423008`.22blobSHA/tam ağaç eşitliği,expected-headforce=false,uzakref/commit teyidi geçti. Yeni canlı dağıtım yapılmadı.
+
+## Paket69 — aynı SQLalternatif ölçme/kalite; yayın değil
+
+Öğrenmekanıtları/Değerlendirmeler: eğitici gözlemi, ayrı kaliteincelemesi, değişmez sürüm/dayanak, bağımsız karar/itiraz.10yeni/876sunucu+48portal+46regresyon=970;26SQL15mevcut=41tarayıcı;115statik.136/18kapsam9035pozitif72280negatif örnek. [Kanıt](acceptance/B09-B10-alternative-sql-20261014.json).
+
+Başlangıç yerel `085f9cea6400725719f29f9fcc4e7d4a4db90afe`, uzak `fc380103385ba9a732956440c2e4c198fbc7fdcd`, ortak tam ağaç `18dd309db23b58ee53c13818987a984edf423008`. Yeni kaynak eşitleme sonucu sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–69dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; browserAuthiptali yenilenmedi;kurum/üretim/122SQLişlem açık.
+
+14.10.2026 Paket69 eşitlemesi öncesi uzak dal/alias tekrar okundu:68kaynağı ve canlı16READY değişmedi; yeni kimlikli smoke yapılmadı.

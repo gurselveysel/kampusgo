@@ -1,0 +1,120 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 69,
+  "work_ids": [
+    "B06",
+    "B08",
+    "B09",
+    "B10",
+    "B11",
+    "B16"
+  ],
+  "visible_change": "Öğrenme kanıtları/Değerlendirmeler: alternatif gözlem, ayrı kalite incelemesi ve sürüm seçimi aynı SQLkimlik/karar/itiraz zincirinde.",
+  "code": [
+    "gazi/auth/myys/academic-sql-store.mjs",
+    "gazi/auth/myys/academic-sql.mjs",
+    "gazi/auth/myys/academic-sql-schema.sql",
+    "gazi/auth/myys/alternative-evidence.mjs",
+    "gazi/auth/tests/myys-alternative-sql.test.mjs",
+    "scripts/myys-academic-sql-browser.cjs"
+  ],
+  "local_tests": {
+    "new": 10,
+    "server": 876,
+    "portal": 48,
+    "legacy": 46,
+    "total": 970,
+    "targeted_new_and_existing": 23,
+    "nativeSSI": false,
+    "nativeRLS": false,
+    "engine": "PGlite0.5.9/PostgreSQL18.6 exclusive single connection"
+  },
+  "browser": {
+    "myys-alternative-sql": {
+      "count": 26,
+      "checks": [
+        "Kapalı oturum Türkçe giriş yolu sundu; kayıt veya sahte başarı göstermedi",
+        "Ayrı sentetik sağlayıcıdan imzalı giriş aynı SQL kişisine ve altı açık sekmeye bağlandı",
+        "Koordinatör mevcut formda çıktı–görev–rubrik bağlı programı SQL kaydetti",
+        "Farklı SQL kişisi program sürümünü gerekçesiyle inceledi",
+        "Yönetici program sürümüne kaynak ve süreli yerel politika bağladı; resmî onay üretilmedi",
+        "Hazırlayandan farklı SQL komisyon kişisi aynı politikayı inceledi",
+        "Mevcut SQL öğrenen üyeliği aynı program sürümüne kaydedildi; yeni hesap üretilmedi",
+        "Öğrenen kendi görevinin kanıtını sundu; yenilemede SQL kaydı korundu",
+        "Eğitici sözlü gözlem kaydetti; bağımsız inceleme öncesi alternatif kanıt rubriğe alınmadı",
+        "Ayrı SQL kalite kişisi gözlem ve yöntem dayanağını karşılaştırarak aynı kanıtı inceledi",
+        "Ayrı eğitici gerçek bağlı kanıtı mevcut rubrik formuyla değerlendirdi",
+        "Bağımsız komisyon kişisi aynı değerlendirmeye akademik karar kaydetti",
+        "Öğrenen kendi kararını gördüğünü teyit etti; kaynak sürümü ve yalnız yerel süre göründü",
+        "Yeni politika sürümü bağımsız incelemeden sonra gelecekteki kullanım için durduruldu",
+        "Yeni sürüm ve durdurma eski kararın politika dayanağını veya tekil teslim teyidini değiştirmedi",
+        "Aynı öğrenen kendi kararına itiraz etti; açık olmayan belge işlemi gösterilmedi",
+        "Bağımsız inceleyen ilk karar ve öğrenenin itirazını aynı SQL zincirinde sonuçlandırdı",
+        "İtiraz sonucu yeniden giriş ve yenilemede aynı öğrenene döndü",
+        "Eğitici gerekçeli portfolyo sürümünü önceki kanıta bağladı; ilk sürüm silinmedi",
+        "İncelenmiş yeni sürüm sonraki değerlendirmede seçildi; eski sürüm yeni rubrikte seçilemez oldu",
+        "Aynı öğrenen eski karar ve rubriğinin ilk kanıt sürümüyle korunduğunu gördü",
+        "320 CSS px, artırılmış metin aralığı ve altı sekmede klavye geçişi çalıştı",
+        "Kapalı sekmeye eski bağlantı erişilebilir açık sekmeye döndü",
+        "Aynı SQL oturumundan çıkış akademik okumayı kapattı",
+        "Güvenlik kaydı uyuşmazlığında yeni kanıt reddedildi; eski kayıtlar ve formlar kapandı, doğru Türkçe uyarı görüldü",
+        "İstemci istisnası veya beklenmedik sunucu hatası yok"
+      ],
+      "errors": [],
+      "at": "2026-10-14T16:28:53.280Z"
+    },
+    "myys-alternative": {
+      "count": 15,
+      "checks": [
+        "Eğitici yöntem, zaman, ürün ve dayanakla alternatif kanıtı kaydetti; kendi inceleyemedi",
+        "İncelenmemiş kanıt rubrik seçimine kapalı",
+        "Ayrı kalite görevlisi gerekçeli ret kaydetti; başarı üretilmedi",
+        "Reddedilen kayıt korundu; gerekçeli ikinci kanıt sürümü oluşturuldu",
+        "İkinci sürüm ayrı kişi tarafından incelendi; alan etiketleri ve klavye sırası çalışıyor",
+        "Kanıt arama ve inceleme filtresi güncel kullanılabilir sürümü buldu",
+        "Eğitici yalnız kabul edilmiş sürümü tam rubrikle değerlendirdi; dayanak ve moderasyon bağlandı",
+        "Ayrı komisyon kararı ve yetkili belge hazırlığı aynı kanıt zincirine bağlandı",
+        "Öğrenen kendi sürümlerini gördü; indirilen arşiv yöntem ve insan incelemesini taşıyor",
+        "Üçüncü taslak ve yenileme eski kararın dayanak arşivini değiştirmedi",
+        "Başka öğrenene alternatif ürün veya moderasyon açıklanmadı",
+        "390 px kanıt ve bağımsız inceleme ekranında taşma yok",
+        "390 px alternatif yöntem ve yeni sürüm formu taşmıyor",
+        "Yeni sürüm hazırlığı kayıt oluşturmadan kapatılabildi",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "at": "2026-10-14T16:25:49.431Z"
+    }
+  },
+  "scope_matrix": {
+    "commands": 136,
+    "http_routes": 18,
+    "positive_samples": 9035,
+    "derived_negative_samples": 72280,
+    "scope": "Mevcut SQLitekopya matrisi; SQLRLS veya bağımsıztest sayısı değil"
+  },
+  "contract": "gazi/auth/myys/ALTERNATIVE-SQL-CONTRACT.md",
+  "source_parent": {
+    "local": "085f9cea6400725719f29f9fcc4e7d4a4db90afe",
+    "remote": "fc380103385ba9a732956440c2e4c198fbc7fdcd",
+    "tree": "18dd309db23b58ee53c13818987a984edf423008"
+  },
+  "live": {
+    "software_package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "new_deployment": false,
+    "new_authenticated_smoke": false,
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "rollback_applied": false
+  },
+  "not_accepted": [
+    "Gerçek kurum alternatif yöntem/kanıt/yetki kabulü",
+    "Belge imzalama veya dışkaynakdosyadoğrulama SQLbağı",
+    "Kalan122SQLkomut, gerçekIdP/MFA/KMS/LMS/OBS",
+    "NativeSSI/RLS/çokbağlantı/üretim/gerçekcheckpointhizmeti",
+    "TamWCAG/AT ve gerçeköğrencikabulü",
+    "Üst panel sunum profili ile gerçek yerel oturum kişi gösterimi henüz ortak değil"
+  ],
+  "sources": "Yeni hukuk/standart kuralı çıkarılmadı; mevcut alternatif ölçme modelindeki açık yerel kaynak/dayanak/sürüm sözleşmeleri korunur."
+}
