@@ -119,3 +119,7 @@ Program paketi aynı SQL yerel kaynaklardan indirildi; gerçek kurum yayını, p
 ### Paket74 durum notu
 
 SQL hazırlık kaydı imza veya resmî belge değildir. Gerçek görevli ataması/kurum belgesi/KMS/imza hizmeti/üretim durum hizmeti ve dış doğrulama mevcut tek eylem listesinde açık. Yeni credential, üretim migration veya gerçek kişiye belge işlemi yok. Son canlı16; browserAuthiptali yenilenmedi.111SQLkomut bağımsız geliştirmesi sürer.
+
+### Paket75 durum notu
+
+SQL açık anahtar metadata incelemesi gerçek KMS/anahtar emaneti veya imza hizmeti kurmaz. Gerçek kurum anahtar sorumluluğu, rotasyon/olay müdahalesi, imza ve bağımsız doğrulama hizmetleri mevcut tek eylem listesinde açık. Sentetik test anahtarları kalıcı erişim değildir; özel kısmı saklanmadı. Son canlı16; browserAuthiptali yenilenmedi.108SQLkomut bağımsız geliştirmesi sürer.

@@ -79,3 +79,5 @@
 
 /* Long information-package states must remain readable at narrow widths. */
 .program-package-status>.pill{white-space:normal;overflow-wrap:anywhere;max-width:100%;text-align:left;justify-content:flex-start}
+
+.key-record>.pill{white-space:normal;overflow-wrap:anywhere;max-width:100%;text-align:left;justify-content:flex-start}

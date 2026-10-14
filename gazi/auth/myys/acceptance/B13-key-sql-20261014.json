@@ -1,0 +1,190 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 75,
+  "work_ids": [
+    "B06",
+    "B07",
+    "B08",
+    "B13",
+    "B16",
+    "B24",
+    "B28"
+  ],
+  "visible_change": "Paket75: Anahtar ve belge durumunda SQL bilgi işlem kişisi açık JWK kaydeder; farklı yönetici inceler. Emeklilik/ele geçirilme ve önceki anahtar bağı silinmeden izlenir. Özel anahtar alanları reddedilir; imza sağlayıcısı açılmaz. Uygun inceleme imzalama bağlı değil açıklaması taşır; arama/boş sonuç ve320CSSpx uzun rozet sarımı çalışır.",
+  "code": [
+    "gazi/auth/myys/key-registry.mjs",
+    "gazi/auth/myys/academic-sql.mjs",
+    "gazi/auth/myys/academic-sql-store.mjs",
+    "gazi/auth/myys/academic-sql-schema.sql",
+    "gazi/portal/src/key-workspace.jsx",
+    "gazi/portal/src/style.css",
+    "gazi/auth/tests/helpers/sql-key.mjs",
+    "gazi/auth/tests/helpers/sql-identity-http.mjs",
+    "gazi/auth/tests/myys-key-sql.test.mjs",
+    "scripts/myys-academic-sql-browser.cjs"
+  ],
+  "local_tests": {
+    "new": 10,
+    "server": 933,
+    "portal": 59,
+    "legacy": 46,
+    "total": 1038,
+    "nativeSSI": false,
+    "nativeRLS": false
+  },
+  "browser": {
+    "myys-key-sql": {
+      "count": 66,
+      "at": "2026-10-14T18:18:49.185Z",
+      "checks": [
+        "Kapalı oturum Türkçe giriş yolu sundu; kayıt veya sahte başarı göstermedi",
+        "Ayrı sentetik sağlayıcıdan imzalı giriş aynı SQL kişisine ve yedi açık sekmeye bağlandı",
+        "İmzalı SQL bilgi işlem kişisi yalnız açık JWK kaydetti; kendi incelemesi açılmadı",
+        "Ayrı SQL yönetici anahtarı inceledi; bağlı olmayan imza ve durum hizmeti açık gösterilmedi",
+        "Yeni SQL açık anahtar önceki incelenmiş kayda bağlandı ve ayrıca incelendi",
+        "SQL anahtar emekliye ayrıldı; eski kayıt ve yeni anahtar bağlantısı korundu",
+        "Ele geçirilme SQL geçmişe eklendi; aynı anahtarı yeniden açan form kalmadı",
+        "SQL anahtar araması ve boş sonucu çalıştı; yenilemede iki kayıt ve durumları korundu",
+        "SQL anahtar durumları320CSSpx/metin aralığında kırpılmadı; arama klavye odağı görünür",
+        "Öğrenen SQL anahtar sicilini veya eski bağlantı üzerinden idari formu açamadı",
+        "SQL yöneticisi beş tür kaynak/hak/sorumluluk taslağı kaydetti; kendi inceleme düğmesi yok",
+        "Ayrı imzalı SQL yönetici kişisi aynı birimin beş taslağını Türkçe alanlarıyla gördü",
+        "Ayrı yönetici dört taslağı uygun, birini uygun değil olarak gerekçelendirdi; kararlar resmî onay sayılmadı",
+        "Sicil incelemeleri yenilemede korundu; tür/durum/arama filtreleri ve boş sonuç çalıştı",
+        "Sicil kaynakları ve inceleme gerekçesi320CSSpx/metin aralığında taşmadı; filtre klavyeyle erişildi",
+        "Yetkisiz eğitici sicili veya eski bağlantı üzerinden yönetici formunu açamadı",
+        "Koordinatör mevcut formda çıktı–görev–rubrik bağlı programı SQL kaydetti",
+        "Programın dört ayrı sorumluluğuna bağlı SQL yetki sicili ayrı yönetici tarafından incelendi",
+        "İki özel kaynak dosyası gerçek tarayıcı yüklemesiyle aynı SQL kayda bağlandı; seçilen dosya temizlendi",
+        "Dört kapsam aynı program, sicil ve eklerle bağlandı; hazırlayan dosyayı kendisi inceleyemedi",
+        "İncelenmemiş SQL yetki dosyası belge profili hazırlığını açmadı",
+        "Ayrı yönetici özel eki gerçek indirmede bayt bayt aynı aldı",
+        "Ayrı SQL yönetici dosya dayanağını gerekçesiyle inceledi; resmî yetki işaretlenmedi",
+        "On bir kaynak alanı, gerçek SQL belge görevlisi ve ayrı komisyon incelemesi program profiline bağlandı",
+        "Farklı SQL kişisi program sürümünü gerekçesiyle inceledi",
+        "Yönetici program sürümüne kaynak ve süreli yerel politika bağladı; resmî onay üretilmedi",
+        "Hazırlayandan farklı SQL komisyon kişisi aynı politikayı inceledi",
+        "Mevcut SQL öğrenen üyeliği aynı program sürümüne kaydedildi; yeni hesap üretilmedi",
+        "Öğrenen kendi görevinin kanıtını sundu; yenilemede SQL kaydı korundu",
+        "Eğitici sözlü gözlem kaydetti; bağımsız inceleme öncesi alternatif kanıt rubriğe alınmadı",
+        "Ayrı SQL kalite kişisi gözlem ve yöntem dayanağını karşılaştırarak aynı kanıtı inceledi",
+        "Ayrı eğitici gerçek bağlı kanıtı mevcut rubrik formuyla değerlendirdi",
+        "Bağımsız komisyon kişisi aynı değerlendirmeye akademik karar kaydetti",
+        "Öğrenen kendi kararını gördüğünü teyit etti; kaynak sürümü ve yalnız yerel süre göründü",
+        "Yeni politika sürümü bağımsız incelemeden sonra gelecekteki kullanım için durduruldu",
+        "Yeni sürüm ve durdurma eski kararın politika dayanağını veya tekil teslim teyidini değiştirmedi",
+        "Aynı öğrenen kendi kararına itiraz etti; açık olmayan belge işlemi gösterilmedi",
+        "Bağımsız inceleyen ilk karar ve öğrenenin itirazını aynı SQL zincirinde sonuçlandırdı",
+        "İtiraz sonucu yeniden giriş ve yenilemede aynı öğrenene döndü",
+        "Eğitici gerekçeli portfolyo sürümünü önceki kanıta bağladı; ilk sürüm silinmedi",
+        "İncelenmiş yeni sürüm sonraki değerlendirmede seçildi; eski sürüm yeni rubrikte seçilemez oldu",
+        "Aynı öğrenen eski karar ve rubriğinin ilk kanıt sürümüyle korunduğunu gördü",
+        "Aynı SQL program ekranı yedi bilgi paketi dayanağını bağlı gösterdi",
+        "Gerçek SQL bilgi paketi indirildi; aynı sürüm ve özel alan süzmesi ile içerik özeti doğrulandı",
+        "SQL öğrenen kendi programının durumunu gördü; idari bilgi paketi indirmesi açılmadı",
+        "İncelenmiş SQL profil hazırlık işlemini açtı; belge görevlisine akademik paket indirme yetkisi vermedi",
+        "Yetkili SQL belge görevlisi aynı karar ve profile tek imzasız hazırlık bağladı; tekrar düğmesi kapandı",
+        "Belge hazırlığı aynı SQL kaydını imzasız gösterdi; imza ve değiştirme formu açılmadı",
+        "Aynı SQL öğrenen kendi kararından gelen hazırlık kaydını gördü; imza yetkisi edinmedi",
+        "Başka SQL öğrenen özel hazırlık kaydını göremedi",
+        "Yeniden giriş ve yenilemede aynı tekil hazırlık kaydı korundu",
+        "SQL yetki dosyası durdurulunca ona bağlı profilin güncel kullanım göstergesi kapandı",
+        "İkinci Chromium süreci aynı SQL üzerinde ayrı koordinatör oturumunu korudu",
+        "Ayrı yöneticinin SQL dosya durdurması eski koordinatör ekranındaki indirmeyi son kontrolde kapattı",
+        "Yenilemede kapalı paket durumu korundu; indirilmiş tarihsel dosyanın özeti değişmedi",
+        "SQL bilgi paketi dayanakları320CSSpx/metin aralığında taşmadı; klavye ile açıldı",
+        "Yeni dosya sürümünün ayrı incelemesi eski profilin dayanağını kendiliğinden değiştirmedi",
+        "İkinci profil güncel dosyaya bağlandı; ayrı komisyon incelemesi ve açık durdurma kaydı korundu",
+        "İki profil sürümü ve durdurma gerekçeleri320CSSpx/metin aralığında taşmadı; arama klavyeyle erişildi",
+        "Yeni dosya ve profil sürümleri tarihsel hazırlığı yeniden yazmadı veya imzalı göstermedi",
+        "SQL hazırlık kaydı320CSSpx/metin aralığında taşmadan okundu",
+        "320 CSS px, artırılmış metin aralığı ve yedi sekmede klavye geçişi çalıştı",
+        "Kapalı sekmeye eski bağlantı erişilebilir açık sekmeye döndü",
+        "Aynı SQL oturumundan çıkış akademik okumayı kapattı",
+        "Güvenlik kaydı uyuşmazlığında yeni kanıt reddedildi; eski kayıtlar ve formlar kapandı, doğru Türkçe uyarı görüldü",
+        "İstemci istisnası veya beklenmedik sunucu hatası yok"
+      ]
+    },
+    "myys-keys": {
+      "count": 11,
+      "at": "2026-10-14T18:16:13.600Z",
+      "checks": [
+        "Kayıtlı anahtar yokken belge imzası düğmesi kapalı",
+        "BT açık anahtarı kaydetti; kendi anahtarını inceleyemedi",
+        "İncelenmemiş anahtar imza yetkisi vermedi",
+        "Ayrı yöneticinin gerekçeli incelemesi anahtarı etkinleştirdi",
+        "Atanmış belge görevlisi sentetik belgeyi imzaladı; tekrar düğmesi kapandı",
+        "Aynı imzalı belge öğrenenin özel cüzdanında indirilebilir",
+        "Emekliye ayırma eski imzalı belgenin indirilmesini korudu",
+        "Ele geçirilme yenilemede korundu; anahtarı yeniden açma işlemi yok",
+        "390 px anahtar formu ve geçmişinde yatay taşma yok",
+        "Ele geçirilmiş anahtarın belgesi cüzdanda kapandı; öğrenci idari sicile erişemedi",
+        "İstemci istisnası yok"
+      ]
+    }
+  },
+  "browser_total": 77,
+  "scope_matrix": {
+    "commands": 136,
+    "routes": 18,
+    "positive_samples": 9035,
+    "derived_negative_samples": 72280,
+    "scope": "SQLitecopy matrix; standalone test or native SQL RLS count değildir."
+  },
+  "sql": {
+    "actions": 28,
+    "academic_record_kinds": 28,
+    "candidate_tables": 16,
+    "unported_actions": 108,
+    "checkpoint_profile": "myys-sql-identity-academic-checkpoint/1",
+    "capacity": {
+      "rows": 10000,
+      "bytes": 16777216
+    },
+    "http_profile": "same-sql-academic/2",
+    "new_actions": [
+      "key-register",
+      "key-review",
+      "key-state"
+    ],
+    "new_record_kinds": [
+      "key",
+      "key-review",
+      "key-state"
+    ],
+    "signerAvailable": false
+  },
+  "static_files": 115,
+  "preserved": {
+    "programs": 6,
+    "modules": 22,
+    "lessons": 66,
+    "presentation_profiles": 11,
+    "core_roles": 9,
+    "menu_targets": 98,
+    "academic_panels": 288,
+    "navigation_last_verified_software_package": 71
+  },
+  "source_parent": {
+    "local": "7871c721a9ad5f0e6e1a67ad143f7e799d40c92c",
+    "remote": "d81a2698790b558ffa67067e2c3c72a8122c3838",
+    "tree": "984be13c30543d30cea5a91c1568118da7890800"
+  },
+  "live": {
+    "software_package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "state": "READY",
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "new_deployment": false,
+    "authenticated_smoke": false,
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "rollback_applied": false
+  },
+  "limits": [
+    "Yalnız yerel açık anahtar metadata/insan incelemesi; gerçek kurum anahtarı veya KMS kurulmadı.",
+    "SQL signingKey fabrikası, imza, durum listesi, güven dışa aktarma ve doğrulama paketi kapalı.",
+    "Üretim IdP/depo/checkpoint/nativeSSI/RLS/tamAT kabulü değildir.",
+    "Yeni kalıcı credential veya üretim migration yok; configuredCore kapalı.",
+    "Kalan108SQLkomut sürer; hiçbir Bpaketinin tüm kabulü kapanmadı."
+  ]
+}

@@ -1,3 +1,21 @@
+# Güncel devam — Paket75 yerel kabul tamam; kaynak eşitlemesi sırada
+
+Paket75:10yeni SQL/HTTPS testi;933sunucu+59portal+46regresyon=1038.66SQL+11mevcutanahtar=77tarayıcı.136komut/18HTTP için9035pozitif72280türetilmiş negatif SQLite kapsam örneği;115statik paket.
+
+Paket75: Anahtar ve belge durumunda SQL bilgi işlem kişisi açık JWK kaydeder; farklı yönetici inceler. Emeklilik/ele geçirilme ve önceki anahtar bağı silinmeden izlenir. Özel anahtar alanları reddedilir; imza sağlayıcısı açılmaz. Uygun inceleme imzalama bağlı değil açıklaması taşır; arama/boş sonuç ve320CSSpx uzun rozet sarımı çalışır.
+
+74ebeveyn yerel7871c721a9ad5f0e6e1a67ad143f7e799d40c92c/uzakd81a2698790b558ffa67067e2c3c72a8122c3838/tamağaç984be13c30543d30cea5a91c1568118da7890800.75henüzcommit yok. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;17–75dağıtılmadı. configuredCorekapalı;browserAuthiptaliniyenileme;tekeditör.
+
+Sonraki76 B13/B19: exportPublicTrust ortak safprojectionu typedSQLstore ile; guven-sicili POST endpointi aynı academic-write CSRF/permit, birimIT/admin/MFA,5dakikagüncelstateveyalnızpublicfields. KeyWorkspace SQLdeayrıaçıkgüvensiciliindirmekartı; statusLists veya imzalama bağlıymışgibigösterme. HTTPpolitikasürümü yeniendpointi pinlesin. status-list.mjs tamokundu; allocateStatus/publishStatusSnapshot/signingKey LocalAcceptanceStoreguardı şimdilikkapalı kalacak. GerçekSQLsigningiki aşama+statusallocation sonraki iş. Henüz76kod yok;108komut açık.
+
+75günlükleri /tmp/gazi-package75-{scope,new-final,browser-final,old-keys,portal,regression,build,package}.log.66SQL+11mevcutanahtar, mobilkeyrozetkutuları ve görüntü doğrulandı. İlkbaşarısızkoşular sayılmadı.
+
+# Paket75 başlangıcı — açık anahtar sicili aynıSQL
+
+74kaynak eşitliği doğrulandı: yerel7871c721a9ad5f0e6e1a67ad143f7e799d40c92c / uzakd81a2698790b558ffa67067e2c3c72a8122c3838 / tamağaç984be13c30543d30cea5a91c1568118da7890800.23blobSHA,133parça2144415bayt; expected-head force=false, uzakref/commit ve temiz ağaç doğrulandı. Soncanlı16aynı.
+
+75:3keykomutu/3kayıttürü aynıSQL; keyCommand yerelözelSQLguard, signingKeyhâlâLocalAcceptanceStoreguard. Anahtarlarsekmesi IT/admin/studentAffairs/quality kapsamı, HTTPsentetikITkişi; SQLimzahizmetiyoknotaçık. Anahtarstateuzunmetin320pxkesilmesin, aramaboşsonucuolsun. YeniSQLtest/tarayıcı/kabulkanıtı olmadan75bittideme.28SQLkomut28tür hedef;108kalan.12mevcutkeytesti ve key-registry/credentials tamokundu.
+
 # Güncel devam — Paket74 yerel kabul tamam; kaynak eşitlemesi sırada
 
 Paket74:11yeni SQL/HTTPS testi;923sunucu+59portal+46regresyon=1028.58SQL+11mevcutprofil=69tarayıcı.136komut/18HTTP için9035pozitif72280türetilmiş negatif SQLite kapsam örneği;115statik paket.

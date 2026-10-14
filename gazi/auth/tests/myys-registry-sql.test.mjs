@@ -16,7 +16,7 @@ const review=(f,r,patch={},who='registrar',id=randomUUID())=>f.run(who,'registry
 test('B02/B04/B05/B14/B20 same SQL stores all five registry schemas and distinct human reviews',async t=>{
  const f=await sqlAcademic(t);
  for(const type of Object.keys(registryFields)){const r=await f.run('admin','registry-draft',draft(type,{official:true}));assert.equal(r.official,false);assert.equal(r.createdBy,'admin');await assert.rejects(review(f,r,{},'admin'),err('separation'));const v=await review(f,r);assert.equal(v.createdBy,'registrar');assert.equal(v.official,false);assert.equal(v.recordId,r.id);}
- const v=await f.view('registrar');assert.equal(v.registry.length,5);assert.equal(v.registryReviews.length,5);assert(v.supportedTabs.includes('registry'));assert.equal(v.supportedActions.length,25);assert.deepEqual(await counts(f),{records:10,commands:10,audit:10});
+ const v=await f.view('registrar');assert.equal(v.registry.length,5);assert.equal(v.registryReviews.length,5);assert(v.supportedTabs.includes('registry'));assert.equal(v.supportedActions.length,28);assert.deepEqual(await counts(f),{records:10,commands:10,audit:10});
 });
 test('B08 learners, teachers and different units/tenants cannot read or review policy and rights records',async t=>{
  const f=await sqlAcademic(t),r=await f.run('admin','registry-draft',draft());

@@ -1,3 +1,4 @@
+import {isLocalSqlAcademicStore} from './academic-sql-store.mjs';
 import {createPublicKey} from 'node:crypto';
 import {LocalAcceptanceStore,requireThat,hash} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
@@ -19,7 +20,7 @@ function publicKey(j){
 }
 export function keyReplay(a,action,r){if(!actions.includes(action))return false;requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Yerel anahtar işlemi üretimde kapalı.',503);requireThat(role(a,r.unit,action==='key-review'?['admin']:['it']),'forbidden','Güncel anahtar görevi ve çok faktörlü doğrulama gerekli.',403);return true;}
 export function keyCommand({action,p,a,s,put,id,now}){
- if(!actions.includes(action))return null;local(s);
+ if(!actions.includes(action))return null;requireThat((s instanceof LocalAcceptanceStore||isLocalSqlAcademicStore(s))&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Anahtar sicili yalnız izole yerel kabulde çalışır.',503);
  if(action==='key-register'){
   requireThat(role(a,p.unit,['it']),'forbidden','Bu birimde anahtar hazırlama yetkisi gerekli.',403);
   requireThat(p.mode==='local-acceptance'&&p.issuer===localIssuer&&text(p.reason)&&text(p.custodyReference),'key_fields','Yerel düzenleyici, anahtar sorumluluğu dayanağı ve gerekçe gerekli.');
