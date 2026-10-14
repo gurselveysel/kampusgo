@@ -39,7 +39,7 @@
 | B33 · Beceri grafını uzmanla doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B34 · İşveren portfolyo pilotunu aç | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B35 · Pilot AI araçlarını ayrı dene | kısmi; sentetik öneri/kıyas/itiraz bağlı | 13 sunucu + 13 tarayıcı; tanımlı dilim geçti | Paket37 canlı değil | sağlayıcı/veri/içerik/pilot yetkisi açık | gerçek model-plan-Türkçe pilotu ve üretim depo açık |
-| B36 · İsteğe bağlı gelişmiş cüzdan ve zinciri değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
+| B36 · İsteğe bağlı gelişmiş cüzdan ve zinciri değerlendir | kısmi; bağımsız alternatif/erteleme dilimi hazır | 8 sunucu + 11 tarayıcı; tanımlı dilim geçti | Paket38 canlı değil | somut ihtiyaç/alternatif kararı açık | gerçek cüzdan/protokol ihraç-doğrulama-iptal açık |
 
 ## Sıradaki bağımsız işler
 
@@ -253,3 +253,9 @@ PORTFOLIO-CONTRACT.md ve B34-portfolio-20261014.json sınırları esastır. Yaz�
 Öneri ve uzman kıyası sekmesinde protokol/ayrı inceleme, sabit insan değerlendirmesine bağlı elle girilen sentetik öneri, atanmış uzman kıyası, öğrenen itirazı ve ayrı düzeltme/geri çekme bağlı. Akademik karar arşivi korunuyor. 13 yeni sunucu, 13 yeni tarayıcı; 524+48+46=618 otomatik ve 56 tarayıcı kontrolü. 108 komut/16 HTTP kapsam matrisi güncel. Sayılar ürün tamamlanma yüzdesi değildir.
 
 Gerçek model, sağlayıcı planı, Türkçe pilot başarısı ve kurum/veri-içerik hakkı doğrulanmadı. B35 kısmi; Paket37 canlı değil. `ADVICE-CONTRACT.md` ve `acceptance/B35-advice-20261014.json`.
+
+## 14.10.2026 — B36 bağımsız seçenek kıyası ve erteleme
+
+Cüzdan seçenekleri sekmesi özel cüzdanla bağlantılıdır. Mevcut özel cüzdan, açık protokollü dış cüzdan ve zincir için ihtiyaç/katkı/sınır/mahremiyet/kalan kabul kaydı; ayrı teknik ve kalite incelemesi, erteleme/zincirsiz keşif, yeni sürüm ve durdurma. Hiçbir onay gerçek cüzdan bağlantısı açmaz veya dış testleri başarılı yapmaz.
+
+8 yeni sunucu ve 11 yeni tarayıcı; toplam532+48+46=626 otomatik,51tarayıcı.111komut/16HTTP kapsamı güncel; ürün tamamlanma yüzdesi değildir. Kurum ihtiyacı onayı, B19/B28gerçek kabulü ve dış cüzdan ihraç/doğrulama/iptal testleri açık. `WALLET-STUDY-CONTRACT.md` ve B36JSON.

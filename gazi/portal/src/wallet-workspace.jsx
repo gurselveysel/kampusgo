@@ -10,6 +10,7 @@ export function WalletWorkspace({data,busy,command,downloadCredential,downloadBu
  async function download(r){setError('');try{const record=await downloadCredential(r.id);saveFile('MYYS_'+r.id+'.jwt',record.jwt);}catch(e){setError(e.message);}}
  async function bundle(r){setError('');try{saveFile('MYYS_dogrulama_'+r.id+'.json',JSON.stringify(await downloadBundle(r.id),null,2),'application/json');}catch(e){setError(e.message);}}
  return <Card><CardHead title="Kişisel belge cüzdanım" sub="Yalnız kişinize bağlı belgeler. Paylaşmadığınız kayıtlar özeldir."/><div className="academic-body form-stack">
+ <a className="button secondary" href="#/academic/walletStudy">Cüzdan seçeneklerini incele</a>
  <Notice>İzole yerel kabul belgeleri kurum adına düzenlenmiş resmî belgeler değildir. Hazırlık kaydı imzalı belge yerine geçmez.</Notice>
  {error&&<p role="alert">{error}</p>}
  {link&&<div role="status" className="academic-record"><strong>Paylaşım bağlantısı hazır</strong><p>Bağlantıyı bilen kişi yalnız program adı ve güncel belge durumunu görebilir. Özel kanıtlar ve kimliğiniz gösterilmez. Bu bağlantı yerel kabul ortamında çalışır.</p><Field label="Paylaşım bağlantısı"><input aria-label="Paylaşım bağlantısı" readOnly value={link} onFocus={e=>e.target.select()}/></Field><a className="button" href={link} target="_blank" rel="noreferrer">Paylaşılan özeti aç</a><p>Bağlantı yeniden gösterilmez. Yenisi gerekirse eski paylaşımı iptal edip yeni bağlantı oluşturun.</p></div>}

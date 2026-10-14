@@ -545,3 +545,17 @@ Yerel `4bea6ffb7e4ef56a9474069e815f2cb53c67a958`; uzak `d5a67fdde6cb372d65b06e6f
 - 14.10 güncel uzak dal ve canlı alias yeniden okundu; son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production. 17–37 dağıtımı/yeni oturumlu smoke yok; kullanıcı browserAuth iptali yeniden istenmedi; configuredCore kapalı.
 - Canlı geri dönüş hedefi15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
 - Model/sağlayıcı/plan/Türkçe gerçek pilotu, kurum/veri-içerik hakkı ve üretim kimlik/depo açık. Yeni servis, credential, migration veya gerçek kişiye otomatik karar yok. B35 ve tüm B01–B36 tamamlanmadı.
+
+### Paket37 kaynak kimlikleri
+
+Yerel `a5b1328da9bf170f77845dcbc02fbaaa4056c90b`; uzak `57740e1efc2d503ad1a405f07bb76e183fc6e91e`; ortak tam ağaç `f0627c3ed5c1a4cc8638a8cd4809d0b7dec5e95e`. 21 blob SHA ve tam ağaç eşleşti; expected-head `d5a67fdde6cb372d65b06e6f63c977fe8d9812a5`, force=false; uzak yeni baş doğrulandı. Yeni canlı yayın yok.
+
+## Paket38 — cüzdan seçenekleri ve gerekçeli erteleme; kaynak adayı
+
+14.10.2026. Cüzdan seçenekleri sekmesi ve özel cüzdanla karşılıklı bağlantı eklendi. Üç alternatifin somut ihtiyaç/kapsam/mahremiyet kıyası, ayrı teknik ve kalite incelemesi, erteleme veya zincirsiz keşif önerisi, yeni sürüm ve durdurma. Gerçek dış cüzdan testleri çalıştırılmadı olarak kalır; hiçbir bağlantı açılmaz. Akademik karar arşivi korunur.
+
+- 532sunucu+48portal+46regresyon=626otomatik;11cüzdankeşfi+19gezinme+8cüzdan+13itiraz=51tarayıcı.111komut/16HTTP5053örnek40424denetim;115korumalıstatikdosya.
+- Taban yerel `a5b1328da9bf170f77845dcbc02fbaaa4056c90b` / uzak `57740e1efc2d503ad1a405f07bb76e183fc6e91e` / ortak `f0627c3ed5c1a4cc8638a8cd4809d0b7dec5e95e`.
+- Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction;14.10saltokunur alias kontrolü.17–38dağıtımı/yeni oturumlu smoke yok;browserAuthiptaliniyenidenisteme;configuredCorekapalı.
+- Canlı geri dönüş hedefi15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`;uygulanmadı.
+- Gerçek kurum ihtiyacı/alternatif kararı,B19/B28veri-saklama-güven-durum ve gerçekcüzdan/protokol/biçim/profil kabulü açık. Yeni hesap/credential/ücretlisertifika/migration/zincirkişiselverisi yok. B36vebütünB01–B36tamamlanmadı;Paket38bir yazılım kaynak dilimidir.

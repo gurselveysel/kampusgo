@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-14",
+  "software_package": 38,
+  "work_packages": [
+    "B36"
+  ],
+  "production": false,
+  "source_parent": {
+    "local": "a5b1328da9bf170f77845dcbc02fbaaa4056c90b",
+    "remote": "57740e1efc2d503ad1a405f07bb76e183fc6e91e",
+    "tree": "f0627c3ed5c1a4cc8638a8cd4809d0b7dec5e95e"
+  },
+  "last_verified_live": {
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false
+  },
+  "automated": {
+    "server": 532,
+    "portal": 48,
+    "regression": 46,
+    "total": 626,
+    "new_wallet_study_tests": 8
+  },
+  "scope": {
+    "commands": 111,
+    "http_routes": 16,
+    "positive_samples": 5053,
+    "derived_negative_checks": 40424,
+    "not_test_count_or_product_percentage": true
+  },
+  "wallet_study_browser": {
+    "at": "2026-10-14T05:33:23.701Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Özel cüzdan ve seçenek kıyası arasında aynı akademik alan içinde gidip gelindi",
+      "Yönetici üç seçeneği ve gerekçeli ertelemeyi hazırladı; kendi incelemesi ve dış test başarısı kapalı",
+      "Tek teknik inceleme ile keşif önerisi öğrenene kabul edilmiş gösterilmedi",
+      "Ayrı mahremiyet incelemesiyle yerel öneri görünür oldu; beş gerçek cüzdan testi hâlâ çalıştırılmadı",
+      "Programda olmayan öğrenen ve keşif görevi olmayan eğitici hazırlık kaydını göremedi",
+      "Yeni sürüm eski öneriyi güncel kullanıma kapattı; zincirsiz keşif kabulü bağlantı açmadı ve akademik arşivi değiştirmedi",
+      "Kalite görevlisi keşif önerisini durdurdu; iki sürüm ve gerekçeler korundu",
+      "Arama, boş sonuç ve doğrudan sekme yenilemesi çalıştı",
+      "390 px seçenek/geçmiş ekranı taşmadı; kıyas ayrıntıları klavyeyle açıldı",
+      "Mobil yeni sürüm formu taşmadan açıldı",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "externalWalletAccepted": false,
+    "chainWriteEnabled": false,
+    "manualScreenReader": false
+  },
+  "regression_browser": {
+    "navigation": 19,
+    "wallet": 8,
+    "appeals": 13
+  },
+  "navigation": {
+    "menu_targets": 98,
+    "role_panels": 279,
+    "lessons": 66,
+    "manualScreenReader": false
+  },
+  "protected_static_files": 115,
+  "limits": [
+    "Kurumca doğrulanmış gerçek kullanıcı ihtiyacı ve tedarik/protokol kararı yok.",
+    "Yerel iki inceleme yalnız keşif/erteleme; institutionNeedApproved false.",
+    "B19/B28 gerçek cüzdan, kimlik bağı, durum/iptal, veri ve saklama kabulü açık.",
+    "OpenID4VCI/VP veya HAIP uygunluk testi çalıştırılmadı; sertifika veya ücretli hizmet yok.",
+    "Hiçbir zincir/transport/credential/gerçek ihraç veya iptal bağlantısı kurulmadı.",
+    "Paket17–38 canlı değil; configuredCore kapalı; bütün B01–B36 tamamlanmadı."
+  ]
+}

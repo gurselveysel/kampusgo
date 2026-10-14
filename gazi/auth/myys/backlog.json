@@ -2591,41 +2591,55 @@
       "planning_estimate": "Keşif 3–5 kişi-gün; geliştirme sonradan tahminlenir",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Özgün plandaki isteğe bağlı erteleme korunuyor; protokol/NFT açılmadı.",
-      "independent_remaining_work": [
-        "Zincirsiz alternatiflerin gerekçeli değerlendirmesi; isteğe bağlı erteleme."
+      "implementation_status": "kısmi",
+      "test_status": "8 cüzdan keşfi sunucu ve 11 tarayıcı senaryosu; tam alternatif kıyası, iki ayrı incelemeci, erteleme/sürüm/durdurma, kapalı zincir/dış test alanları ve korunmuş karar arşivi geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/wallet-study-model.mjs",
+        "gazi/auth/myys/wallet-study.mjs",
+        "gazi/auth/myys/WALLET-STUDY-CONTRACT.md",
+        "gazi/auth/tests/myys-wallet-study.test.mjs",
+        "gazi/portal/src/wallet-study-workspace.jsx",
+        "scripts/myys-wallet-study-browser.cjs",
+        "gazi/auth/myys/acceptance/B36-wallet-study-20261014.json"
       ],
+      "production_status": "Paket38 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı.",
+      "implementation_note": "Somut ihtiyaç ve üç seçenek için gerekçeli yerel kıyas; ayrı teknik/mahremiyet incelemesi, zincirsiz keşif veya erteleme ve sürüm/durdurma bağlı. Gerçek kurum ihtiyacı onayı ve dış cüzdan testleri açık; zincir yazımı yok.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Somut ihtiyaç/protokol seçimi; kişisel veri zincire yazılmaz.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "kısmi; tanımlı bağımsız alternatif/erteleme dilimi hazır",
+          "evidence": [
+            "gazi/auth/myys/wallet-study-model.mjs",
+            "gazi/auth/myys/wallet-study.mjs",
+            "gazi/auth/myys/WALLET-STUDY-CONTRACT.md",
+            "gazi/auth/tests/myys-wallet-study.test.mjs",
+            "gazi/portal/src/wallet-study-workspace.jsx",
+            "scripts/myys-wallet-study-browser.cjs",
+            "gazi/auth/myys/acceptance/B36-wallet-study-20261014.json"
+          ],
           "remaining": [
-            "Zincirsiz alternatiflerin gerekçeli değerlendirmesi; isteğe bağlı erteleme."
+            "Somut kurum ihtiyacı ve ürün/protokol/biçim/profil seçilirse onaylı kapsamda gerçek adaptör ve karşılıklı çalışma kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "tanımlı yerel dilim geçti; genel paket kısmi",
+          "evidence": "8 cüzdan keşfi sunucu ve 11 tarayıcı senaryosu; tam alternatif kıyası, iki ayrı incelemeci, erteleme/sürüm/durdurma, kapalı zincir/dış test alanları ve korunmuş karar arşivi geçti.",
+          "limits": "Sentetik ihtiyaç/sicil; gerçek kurum kararı, dış cüzdan ihraç/doğrulama/iptal veya tam standart uygunluk/ekran okuyucu kabulü değil."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "Paket38 yayımlanmadı",
+          "evidence": "Paket38 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
           "required": "Somut ihtiyaç/protokol seçimi; kişisel veri zincire yazılmaz."
         },
         "external_access": {
-          "status": "teyit/erişim bekleniyor",
-          "target": "İhtiyaç onaylanırsa seçilecek açık cüzdan protokolü",
-          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+          "status": "ihtiyaç onayı koşullu; gerçek kabul açık",
+          "target": "İhtiyaç onaylanırsa seçilecek gerçek dış cüzdan ve açık protokol/format/profil; B19/B28 gerçek güven-durum-veri-saklama kabulleri.",
+          "next_action": "ACCESS-ACTIONS.md madde 13; yeni erişim/abonelik/sertifika oluşturulmadı."
         }
       }
     }

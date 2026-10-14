@@ -36,6 +36,8 @@ Kaynaklar: [Gazi BIDB](https://bidb.gazi.edu.tr/) GUZEM ve OBS bağlantıların�
 
 12. **Koşullu yapay zekâ pilotu (B35):** ölçme/veri koruma sorumlusu, somut kullanım ihtiyacı, kurumca değerlendirilecek sağlayıcı-model-plan-sürüm, veri işleme ve içerik hakları, Türkçe çıktı değerlendirmesi için gerçek sentetik örneklem/uzman görevlendirmesi ve itiraz usulü. İlk adım belge, kullanım şartları ve protokol incelemesidir. Hedef, yerel elle girilen benzetim sözleşmesini onaylı sağlayıcının gerçek davranışıyla karşılaştırmaktır. Yerel protokol formu bu onayları vermez. Yeni API anahtarı, abonelik, gerçek öğrenci verisi gönderimi veya otomatik akademik karar yetkisi varsayılmaz.
 
+13. **İsteğe bağlı gelişmiş cüzdan kararı (B36):** somut ve kurumca doğrulanmış kullanıcı ihtiyacı, mevcut özel cüzdanla karşılanamayan kapsam, zincirsiz alternatif kıyası, veri/saklama ve tedarik sorumluları. İhtiyaç onaylanırsa gerçek cüzdan ürün/sürümü, açık protokol/biçim/profil, güven ve durum kaynağı, yalnız sentetik test kapsamı ile ihraç/doğrulama/iptal kabul sahibi gerekir. İlk adım belge ve ihtiyaç incelemesidir; yeni hesap/credential, ücretli sertifika, kişisel veri veya belge özetiyle zincir işlemi, gerçek ihraç/iptal yapılmaz. Gerekçeli erteleme geçerli seçenektir; yerel keşif onayı gerçek kurum kararını veya dış test başarısını üretmez.
+
 Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir. Şu aşamada bilinmeyen issuer, API yolu veya test veritabanı adı uydurulmadı. Bilgi eksikliği bağımsız yerel kod/test işlerini durdurmaz.
 
 ## Ayrı özel yetki gerektiren sonraki işlemler

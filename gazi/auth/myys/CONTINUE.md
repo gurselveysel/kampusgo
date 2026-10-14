@@ -1,3 +1,25 @@
+# Güncel ara nokta — Paket38 B36 yerel kabul; kaynak eşitlemesi sırada
+
+Cüzdan seçenekleri:8yeni sunucu+11tarayıcı;532+48+46=626otomatik;11keşif19gezinme8cüzdan13itiraz=51tarayıcı.111komut/16HTTP5053örnek40424denetim;98menü/279panel/66ders,115statik. WALLET-STUDY-CONTRACT/B36JSON/backlog5eksen/matrix/ACCESS13 hazır;36özgünkriter korundu. Gerçekkurum ihtiyacı onayı/protokolcüzdan/ihraçdoğrulamaiptaltestiyok.
+
+Önce diff/commit/expected-head57740e1efc2d503ad1a405f07bb76e183fc6e91eileeşitle. Taban37yerela5b1328da9bf170f77845dcbc02fbaaa4056c90b/ortakf0627c3ed5c1a4cc8638a8cd4809d0b7dec5e95e. Soncanlı16dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–38yayını yok. browserAuthiptaliniyenidenisteme;configuredCorekapalı;tekeditör/altajanyok.
+
+Sıradaki B07SQLrepo/HTTPatomikkeybarrier+CSRF/ratekeyrotation bağımsız sözleşmesi. Önceidentity-adapters/identity-store/http veIDENTITY-ADAPTER-CONTRACToku;gerçekDB/migration/credential açma. SonraB28tümyenikayıtenvanteri/saklama ve bütünB01–B36kalanbağımsızlar. Devamkomutubekleme.
+
+# Güncel ara nokta — Paket38 B36 kod ve yerel akış hazır; kanıt/eşitleme sürüyor
+
+wallet-study-model/mjs/core + Cüzdan seçenekleri sekmesi/özelcüzdan bağlantısı hazır.8sunucu+11tarayıcı geçti;tam532sunucu+48portal+46regresyon=626.111komut/16HTTP5053örnek40424denetim.11cüzdankeşfitest sonucu test-results/myys-wallet-study;mobilQAokundu. navigation/wallet/appealsregresyonuPTY52805sürüyor, /tmp/gazi-package38-*.log.115korumalıdosya. WALLET-STUDY-CONTRACT yazıldı;ACCESS13. Henüz B36JSON/backlog/matrix/RELEASE38vecommit yok.
+
+Taban37yerela5b1328da9bf170f77845dcbc02fbaaa4056c90b/uzak57740e1efc2d503ad1a405f07bb76e183fc6e91e/ortakf0627c3ed5c1a4cc8638a8cd4809d0b7dec5e95e. Soncanlı16;17–38yayını yok. BrowserAuthiptaliniyenidenisteme,configuredCorekapalı,tekeditör/altajanyok.
+
+Önce38regresyonkanıtı/3alternatif/ikiayrıinceleme/kurum-gerekçekapalıdurumdocs/backlog5eksen/orijinal36kriter/commitexpectedhead eşitle. ArdındanB07SQLrepoHTTPatomic-keybarrier/CSRF-ratekeyrotation,B28tümyenikayıtenvanterisaklama ve bütünbağımsızB01–B36kalanlar. Gerçekcüzdan/protokoluygunluk/kurumkararı/credential/ücretliservis yok;devamkomutubekleme.
+
+# Güncel devam — Paket37 kaynakta; B36 keşif/erteleme inceleniyor
+
+Yerel a5b1328da9bf170f77845dcbc02fbaaa4056c90b / uzak57740e1efc2d503ad1a405f07bb76e183fc6e91e / ortakf0627c3ed5c1a4cc8638a8cd4809d0b7dec5e95e.21blob/tamağaçeşleşti;618otomatik/56tarayıcı. Soncanlı16;17–37yayını yok. browserAuthiptaliniyenidenisteme;configuredCorekapalı.
+
+SıradakiB36özgünkriter/bağımsızalternatif-erteleme işi okundu. OpenID4VCI1.0nihai16Eyl2025veVP1.0nihai9Tem2025resmîkaynakları14Ekim2026açılıyor;gerçekprotokoladapteedilmeyecek/uyumlulukiddiayok. Hedefsomutihtiyaç+mevcutözelcüzdan+zincirsizaçıkprotokol+zinciralternatifkıyası;kurumyetsizyerelöneri/ayrıteknikmahremiyetinceleme/erteleme. Zincirekişiselveriyazımı,gerçekcüzdanihraçveiptalaçılmaz. SonraB07SQLrepoHTTPatomicbarrier/B28yenikayıtenvanteri ve tümdiğerbağımsızlar. Henüz38kod yok.
+
 # Güncel ara nokta — Paket37 B35 yerel kabul; kaynak eşitlemesi sırada
 
 Öneri ve uzman kıyası sekmesi/advice.mjs/core/privacy bağlı.13 yeni sunucu+13 tarayıcı;524+48+46=618 otomatik.108 komut/16 HTTP4918örnek39344denetim;13öneri19gezinme13itiraz11privacy=56tarayıcı.98menü/270panel/66ders,115statik. ADVICE-CONTRACT/B35kanıtı/backlog5eksen hazır;36özgünkimlik/başlık/deps/kriterkorundu. Gerçekmodel-plan-Türkçe pilotu yok; elle girilmiş sentetik çıktı, akademik arşiv aynı SHA.

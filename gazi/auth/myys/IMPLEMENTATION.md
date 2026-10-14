@@ -245,3 +245,7 @@ B26: `support-service.mjs` sürümlü yerel takvim/ayrı inceleme/hold; `support
 ## B35 · Paket37 bağımsız yerel öneri kıyası
 
 `advice.mjs` ve `advice-workspace.jsx`: yedi komutla sürümlü protokol, ayrı kalite incelemesi/durdurma, tam rubrikli sentetik öneri, atanmış bağımsız uzman kıyası, öğrenen itirazı ve ayrı düzeltme. Akademik puan/karar/belgeye yazma yolu yok. Kişisel özet dört yeni kayıt türünün dar alanlarını içerir. `ADVICE-CONTRACT.md` ve B35 kabul JSON'u geçerli sınır ve kanıtı açıklar. 618 otomatik/56 tarayıcı kontrolü; gerçek sağlayıcı-plan-dil kabulü ve canlı yayın açık.
+
+## B36 · Paket38 bağımsız cüzdan keşfi
+
+`wallet-study.mjs`, `wallet-study-model.mjs` ve `wallet-study-workspace.jsx`: mevcut özel cüzdan/açık protokol/zincir alternatiflerini kaydeden, iki ayrı disiplin incelemesiyle erteleme veya zincirsiz keşif önerisini sürdüren yerel modül. Üç komut, sürüm/durdurma; gerçek test sonuçlarını veya transportu açan alan yok.626otomatik/51tarayıcı geçti;kurum ihtiyacı ve gerçek dış cüzdan kabulü açık. Ayrıntı `WALLET-STUDY-CONTRACT.md` veB36JSON.

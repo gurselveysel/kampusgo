@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.37",
+  "version": "2026.10.14.38",
   "commands": [
     "advice-compare",
     "advice-contest",
@@ -108,7 +108,10 @@
     "unit-capacity",
     "unit-capacity-hold",
     "unit-capacity-review",
-    "unshare"
+    "unshare",
+    "wallet-study",
+    "wallet-study-hold",
+    "wallet-study-review"
   ],
   "httpRoutes": [
     "calisma",
