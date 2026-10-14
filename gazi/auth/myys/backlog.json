@@ -1973,7 +1973,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "14.10.2026 Paket31: 452 sunucu +46 portal +46 regresyon =544; 18 gezinme +13 itiraz +8 cüzdan tarayıcı. 98 menü hedefi/11 sunum profili, 234 panel/9 çekirdek rol, 66 ders; ekran okuyucu/altyazı tam kabulü değildir.",
+      "test_status": "14.10.2026 Paket56: 733 sunucu +48 portal +46 regresyon =827;14 kontrollü dosya arayüzü +14 yetki dosyası HTTP +12 tanıma teslimi HTTP =40 tarayıcı kontrolü. 390px/klavye/zorunlu renk ve seçili dosya/sonuç tutarlılığı geçti; tam AT kabulü değil.",
       "implementation_evidence": [
         "scripts/myys-local-acceptance.mjs",
         "gazi/auth/myys/NAVIGATION-ACCESSIBILITY.md",
@@ -1981,40 +1981,50 @@
         "gazi/portal/src/ui.jsx",
         "scripts/myys-navigation-browser.cjs",
         "gazi/auth/myys/acceptance/B01-B24-navigation-20261014.json",
-        "gazi/auth/myys/acceptance/B26-support-service-20261014.json"
+        "gazi/auth/myys/acceptance/B26-support-service-20261014.json",
+        "scripts/myys-file-input-browser.cjs",
+        "scripts/myys-authority-browser.cjs",
+        "scripts/myys-recognition-document-browser.cjs",
+        "gazi/auth/myys/acceptance/B24-file-input-20261014.json"
       ],
-      "production_status": "Yeni Paketi31 dağıtılmadı. Son canlı Paketi16 / dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; 14.10 alias salt okunur yeniden kontrol edildi, yeni girişli smoke yapılmadı.",
-      "implementation_note": "Mobil menü odak döngüsü/inert/geri dönüş, rota ve Radix pencere odağı, kaynak-matris-rozet sekmeleri, akademik panel odağı ve filtre/alan etiketleri düzeltildi. Katalogda öğrenciye yetkisiz öneri düğmesi gösterilmez. Yerel tarayıcı kabulü geçti; bütün ürün için kritik engel sıfır beyanı yok. Paket32: yeni içerikte kullanıcı odağını animasyonun çalması düzeltildi; 19 gezinme ve16 destek kontrolü,390px ve takvim alanları sınandı; genel AT kabulü açık.",
+      "production_status": "Paket56 dağıtılmadı. Son canlı16 / dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;14.10 alias yeniden okundu, yeni kimlikli smoke yapılmadı.",
+      "implementation_note": "Mobil menü odak döngüsü/inert/geri dönüş, rota ve Radix pencere odağı, kaynak-matris-rozet sekmeleri, akademik panel odağı ve filtre/alan etiketleri düzeltildi. Katalogda öğrenciye yetkisiz öneri düğmesi gösterilmez. Yerel tarayıcı kabulü geçti; bütün ürün için kritik engel sıfır beyanı yok. Paket32: yeni içerikte kullanıcı odağını animasyonun çalması düzeltildi; 19 gezinme ve16 destek kontrolü,390px ve takvim alanları sınandı; genel AT kabulü açık. Paket56: dört dosya alanı Türkçe/native kaldı; dosya-metni-sonucu sürüm bağı, boş/büyük dosya reddi, yetki eki okuma/kayıt kilidi ve seçimin temizlenmesi eklendi. Kontrollü rozet API yanıtları yalnız arayüz yarış kabulüdür.",
       "independent_remaining_work": [
-        "Başvuru/ders/ölçme/cüzdan/destek/belge akışlarında bütün form hataları ve modal işlemleri; tüm rollerin mobil/200–400% büyütme/yüksek karşıtlık taraması.",
-        "Gerçek ekran okuyucu ile okuma sırası ve duyurular; video Türkçe altyazı/döküm doğruluğu ve belge çıktısı erişilebilirliği."
+        "Bütün rol ve akışlarda 200–400% büyütme/yeniden akış, form hata bağları ve modal taraması sürüyor.",
+        "Gerçek ekran okuyucu, video Türkçe altyazı/döküm doğruluğu ve belge çıktısı erişilebilirliği açık."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Gerçek canlı rol/akış ve tam ekran okuyucu/altyazı/belge erişilebilirliği kabulü açık; önceki browserAuth iptali yeniden denenmedi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; gezinme ve dosya alanı dilimleri bağlı",
           "evidence": [
             "scripts/myys-local-acceptance.mjs",
             "gazi/auth/myys/NAVIGATION-ACCESSIBILITY.md",
             "gazi/portal/src/navigation-focus.jsx",
             "gazi/portal/src/ui.jsx",
             "scripts/myys-navigation-browser.cjs",
-            "gazi/auth/myys/acceptance/B01-B24-navigation-20261014.json"
+            "gazi/auth/myys/acceptance/B01-B24-navigation-20261014.json",
+            "gazi/auth/myys/acceptance/B26-support-service-20261014.json",
+            "scripts/myys-file-input-browser.cjs",
+            "scripts/myys-authority-browser.cjs",
+            "scripts/myys-recognition-document-browser.cjs",
+            "gazi/auth/myys/acceptance/B24-file-input-20261014.json"
           ],
           "remaining": [
-            "Başvuru/ders/ölçme/cüzdan/destek/belge akışlarında bütün form hataları ve modal işlemleri; tüm rollerin mobil/200–400% büyütme/yüksek karşıtlık taraması.",
-            "Gerçek ekran okuyucu ile okuma sırası ve duyurular; video Türkçe altyazı/döküm doğruluğu ve belge çıktısı erişilebilirliği."
+            "Bütün rol ve akışlarda 200–400% büyütme/yeniden akış, form hata bağları ve modal taraması sürüyor.",
+            "Gerçek ekran okuyucu, video Türkçe altyazı/döküm doğruluğu ve belge çıktısı erişilebilirliği açık.",
+            "Canlı kimlikli smoke ve kurumsal erişilebilirlik kabulü açık; B24 kritik engel sıfır koşulu bütün ürün için kapanmadı."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi; envanter ve gezinme dilimi geçti",
-          "evidence": "14.10.2026 Paket31: 452 sunucu +46 portal +46 regresyon =544; 18 gezinme +13 itiraz +8 cüzdan tarayıcı. 98 menü hedefi/11 sunum profili, 234 panel/9 çekirdek rol, 66 ders; ekran okuyucu/altyazı tam kabulü değildir.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "kısmi; Paket56 dosya alanı dilimi geçti",
+          "evidence": "14.10.2026 Paket56: 733 sunucu +48 portal +46 regresyon =827;14 kontrollü dosya arayüzü +14 yetki dosyası HTTP +12 tanıma teslimi HTTP =40 tarayıcı kontrolü. 390px/klavye/zorunlu renk ve seçili dosya/sonuç tutarlılığı geçti; tam AT kabulü değil.",
+          "limits": "Kontrollü rozet yanıtları kriptografik kanıt değil. Gerçek AT, bütün büyütme/altyazı/çıktı ve kritik engel sıfır kabulü açık."
         },
         "live": {
           "status": "kısmi pilot",
-          "evidence": "Yeni Paketi31 dağıtılmadı. Son canlı Paketi16 / dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; 14.10 alias salt okunur yeniden kontrol edildi, yeni girişli smoke yapılmadı."
+          "evidence": "Paket56 dağıtılmadı. Son canlı16 / dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;14.10 alias yeniden okundu, yeni kimlikli smoke yapılmadı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -2912,16 +2922,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 55,
+    "software_package": 56,
     "server_security_tests": "733/733",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
     "local_total": 827,
     "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
-    "browser_visual_acceptance": "Mevcut yerel kimlik akışı15;390px/klavye; yeni SQL flow bu HTTP akışına bağlı değildir.",
+    "browser_visual_acceptance": "14 kontrollü dosya UI +14 yetki HTTP +12 tanıma belge HTTP =40;390px/klavye/zorunlu renk; tam AT değil.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–55 dağıtılmadı;configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B06-B07-sql-flow-20261014.json"
+    "deployment": "Son canlı16 READY;17–56 dağıtılmadı;configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B24-file-input-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2943,12 +2953,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 55,
-    "source_parent_remote": "ccb42733000f5e25b67efcbbfb600cc224ee77bb",
-    "source_parent_tree": "269554739666fddc061635519852378ff1c291ad",
+    "software_package": 56,
+    "source_parent_remote": "8bbac52bad914fe315f3985e5476aae2b0fffd7c",
+    "source_parent_tree": "6f4be4962efc301d06ee06cd69a66a7df2209edf",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
     "local_tests": 827,
-    "note": "SQL kimlik/directory/session yerel kabul; kaynak eşitlemesi sırada. Güvenli SQL HTTP/rate/CSRF/akademik depo bağı, B28checkpoint ve tüm bağımsızlar açık."
+    "note": "Türkçe dosya alanları ve eski dosya/yanıt yarışları yerel kabulde geçti. Kaynak eşitlemesi sırada; B24 genişletilmiş yeniden akış/form kabulü ve SQL HTTP/akademik depo/B28 checkpoint bağımsız işleri sürer."
   },
   "verification_history": [
     {
@@ -3210,6 +3220,19 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16 READY;17–54 dağıtılmadı;configuredCore kapalı.",
       "evidence": "gazi/auth/myys/acceptance/B07-challenge-sql-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 55,
+      "server_security_tests": "733/733",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46 model/kaynak/demo",
+      "local_total": 827,
+      "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
+      "browser_visual_acceptance": "Mevcut yerel kimlik akışı15;390px/klavye; yeni SQL flow bu HTTP akışına bağlı değildir.",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16 READY;17–55 dağıtılmadı;configuredCore kapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B06-B07-sql-flow-20261014.json"
     }
   ]
 }

@@ -27,7 +27,7 @@
 | B21 · Dış belge ve tanıma akışını bağla | kısmi; imza/insan raporu/tekil kredi/karar sürümü bağlı | Paket52:6 yeni sunucu,68 tarayıcı; tanımlı dilim geçti | Paket52 canlı değil | gerçek teslim/usul/çıktı/önceki ders/kurul kabulü açık | gerçek issuer/status/schema ve üretim kabulü açık |
 | B22 · OBS aktarımını kontrollü kabul et | kısmi; kaynak güveni ve iptal düzeltmesi bağlı | Paket50 bağlı zincir ve11 OBS tarayıcı geçti | Paket50 canlı değil | operasyonel kabul açık | gerçek OBS şeması/transkript/diploma eki/işçi kabulü açık |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B24 · Erişilebilirlik açılış testini yap | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
+| B24 · Erişilebilirlik açılış testini yap | kısmi; gezinme ve dosya seçimi/sonuç bağı | Paket56:40 tarayıcı; dosya/klavye/390px dilimi geçti | Paket56 canlı değil | gerçek AT/altyazı/çıktı ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi | yerel dilim doğrulandı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
@@ -349,3 +349,7 @@ Paket54:18 yeni SQL giriş isteği testi;712 sunucu+48 portal+46 regresyon=806. 
 ## Paket55 — B06/B07 SQL kişi/üyelik/oturum
 
 Paket55:21 yeni imzalı SQL akış testi;733 sunucu+48 portal+46 regresyon=827. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. Yeni SQL flow henüz HTTP/React/akademik depo bağlantısı değildir; tek bağlantılı PGlite kabulüdür. Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque signed proof/MFA, challenge/keybarrier, session ve audit atomik zincirini bağladı. Strict+1 directory control; person ve membership revizyonu sessiona pinli, kapat/aç eski sessionı canlandırmaz. Rotate/parentfamilylogout, sub/sidANDJTI backchannel ve session öncesi iptal bariyeri, timeout ve belirsiz COMMIT kapalı.9 uygulanmamışPGadayı; aktifSQLite16tablo148tür aynı. YeniSQL HTTP/rate/CSRF/akademik sınırı ve güvenilirrestore checkpoint açıktır.136komut/18HTTP8924olumlu/71392negatif;115statik.36 özgün kimlik/bağımlılık/kabul değişmedi. IDENTITY-SQL-FLOW-CONTRACT.md ve B06-B07-sql-flow JSON ayrıntıdır.
+
+## Paket56 — dosya alanı kabulü
+
+ACCEPTANCE-MATRIX.md içindeki B24 satırı tam kapanmadı. 14 kontrollü dosya UI +14 yetki HTTP +12 tanıma belge HTTP =40;390px/klavye/zorunlu renk; tam AT değil. Ayrıntı: `acceptance/B24-file-input-20261014.json`. Özgün36 kimlik, başlık, bağımlılık ve kabul ölçütü başlangıç kaydıyla aynıdır.

@@ -22,5 +22,12 @@ export function Field({label,children,sub}){
  const control=native?React.cloneElement(children,{...(!children.props['aria-label']&&!children.props['aria-labelledby']?{'aria-labelledby':id}:{}),...(sub?{'aria-describedby':[children.props['aria-describedby'],id+'-help'].filter(Boolean).join(' ')}:{})}):children;
  return <label className="field"><span id={id}>{label}</span>{control}{sub&&<small id={id+'-help'}>{sub}</small>}</label>;
 }
+// Keep the native file control keyboard/form behavior; localize only its visible surface.
+export function FileInput({onChange,disabled=false,clearKey=0,...props}){
+ const input=React.useRef(null),id=React.useId(),[name,setName]=React.useState('');
+ React.useEffect(()=>{if(input.current)input.current.value='';setName('');},[clearKey]);
+ React.useEffect(()=>{const form=input.current?.form;if(!form)return;const reset=e=>queueMicrotask(()=>{if(!e.defaultPrevented)setName('');});form.addEventListener('reset',reset);return()=>form.removeEventListener('reset',reset);},[]);
+ return <span className={'file-picker'+(disabled?' disabled':'')}><input {...props} ref={input} className="file-picker-input" type="file" disabled={disabled} aria-describedby={[props['aria-describedby'],id+'-name'].filter(Boolean).join(' ')} onChange={e=>{setName([...e.target.files].map(f=>f.name).join(', '));onChange?.(e);}}/><span className="file-picker-action" aria-hidden="true">Dosya seç</span><span className="file-picker-name" id={id+'-name'} role="status">{name||'Dosya seçilmedi.'}</span></span>;
+}
 export const download=(name,data)=>{const a=document.createElement('a'),url=URL.createObjectURL(new Blob([typeof data==='string'?data:JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 export const empty=<div className="empty-state"><CheckCircle2 size={30}/><h3>Bu görünümde kayıt bulunamadı.</h3><p>Arama veya filtre seçiminizi değiştirebilirsiniz.</p></div>;

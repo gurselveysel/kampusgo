@@ -1,13 +1,23 @@
-import React,{useState} from 'react';
+import React,{useState,useRef} from 'react';
 import {authorityResponsibilities,authorityDocumentKinds,authorityFileLimit} from '../../auth/myys/authority-model.mjs';
-import {Card,CardHead,Field,Button,Notice,Pill} from './ui.jsx';
+import {Card,CardHead,Field,FileInput,Button,Notice,Pill} from './ui.jsx';
 const Reason=({label,name})=><Field label={label}><textarea aria-label={label} name={name} required minLength={20} maxLength={2000}/></Field>;
 const Text=({label,name})=><Field label={label}><input aria-label={label} name={name} required minLength={3} maxLength={200}/></Field>;
 function AttachmentForm({registries,busy,command,onSaved}){
- const [error,setError]=useState('');
- return <Card><CardHead title="Yetki belgesi eki ekle" sub="Dosya yerel kabulde saklanır. Dosyanın yüklenmesi kurumsal doğrulama değildir."/><form className="academic-body form-stack" onSubmit={async e=>{e.preventDefault();const f=new FormData(e.currentTarget),file=f.get('file');setError('');try{if(!file?.size||file.size>authorityFileLimit)throw Error('Ek dosya boş olamaz ve 32 KiB sınırını aşamaz.');const bytes=new Uint8Array(await file.arrayBuffer()),r=await command('authority-attachment',{authorityId:f.get('authorityId'),kind:f.get('kind'),title:f.get('title'),reference:f.get('reference'),version:f.get('version'),documentDate:f.get('documentDate'),readScope:f.get('readScope'),fileName:file.name,base64:btoa(String.fromCharCode(...bytes))});if(r)onSaved();}catch(e){setError(e.message);}}}>
+ const [error,setError]=useState(''),[preparing,setPreparing]=useState(false),pending=useRef(false);
+ async function submit(e){
+  e.preventDefault();if(pending.current||busy)return;
+  const f=new FormData(e.currentTarget),file=f.get('file');setError('');
+  if(!file?.size||file.size>authorityFileLimit){setError('Ek dosya boş olamaz ve 32 KiB sınırını aşamaz.');return;}
+  pending.current=true;setPreparing(true);
+  try{
+   let bytes;try{bytes=new Uint8Array(await file.arrayBuffer());}catch{setError('Dosya okunamadı. Dosyayı yeniden seçin.');return;}
+   const r=await command('authority-attachment',{authorityId:f.get('authorityId'),kind:f.get('kind'),title:f.get('title'),reference:f.get('reference'),version:f.get('version'),documentDate:f.get('documentDate'),readScope:f.get('readScope'),fileName:file.name,base64:btoa(String.fromCharCode(...bytes))});if(r)onSaved();
+  }catch(e){setError(e.message);}finally{pending.current=false;setPreparing(false);}
+ }
+ return <Card><CardHead title="Yetki belgesi eki ekle" sub="Dosya yerel kabulde saklanır. Dosyanın yüklenmesi kurumsal doğrulama değildir."/><form className="academic-body form-stack" aria-busy={preparing||busy} onSubmit={submit}><fieldset className="file-submit-fields form-stack" disabled={preparing||busy} aria-label="Yetki belgesi eki alanları">
  <Field label="Ekin yetki sicili"><select aria-label="Ekin yetki sicili" name="authorityId" required><option value="">Seçin</option>{registries.map(r=><option key={r.id} value={r.id}>{r.title}</option>)}</select></Field><Field label="Yetki eki türü"><select aria-label="Yetki eki türü" name="kind">{Object.entries(authorityDocumentKinds).map(([k,v])=><option key={k} value={k}>{v}</option>)}</select></Field>
- <Text label="Yetki eki başlığı" name="title"/><Text label="Yetki eki kaynak referansı" name="reference"/><Text label="Yetki eki sürümü" name="version"/><Field label="Yetki eki belge tarihi"><input aria-label="Yetki eki belge tarihi" name="documentDate" type="date" required max={new Date().toISOString().slice(0,10)}/></Field><Reason label="Yetki ekinde okunan kapsam" name="readScope"/><Field label="Yetki eki dosyası"><input aria-label="Yetki eki dosyası" type="file" name="file" accept=".pdf,.txt" required/></Field><p>PDF veya düz metin, en çok 32 KiB. Dosya bu ekranda açılmaz; yetkili yönetici indirebilir. Dosya imzası ve güvenliği otomatik doğrulanmaz.</p>{error&&<p role="alert">{error}</p>}<Button type="submit" disabled={busy||!registries.length}>Yetki ekini kaydet</Button></form></Card>;
+ <Text label="Yetki eki başlığı" name="title"/><Text label="Yetki eki kaynak referansı" name="reference"/><Text label="Yetki eki sürümü" name="version"/><Field label="Yetki eki belge tarihi"><input aria-label="Yetki eki belge tarihi" name="documentDate" type="date" required max={new Date().toISOString().slice(0,10)}/></Field><Reason label="Yetki ekinde okunan kapsam" name="readScope"/><Field label="Yetki eki dosyası"><FileInput aria-label="Yetki eki dosyası" name="file" accept=".pdf,.txt" required disabled={busy}/></Field><p>PDF veya düz metin, en çok 32 KiB. Dosya bu ekranda açılmaz; yetkili yönetici indirebilir. Dosya imzası ve güvenliği otomatik doğrulanmaz.</p>{error&&<p role="alert">{error}</p>}{preparing&&<p role="status">Dosya okunuyor ve ek kaydediliyor…</p>}<Button type="submit" disabled={preparing||busy||!registries.length}>Yetki ekini kaydet</Button></fieldset></form></Card>;
 }
 function DossierForm({v,registries,busy,command,previous,onSaved}){
  const [programId,setProgram]=useState(previous?.programId||''),[authorityId,setAuthority]=useState(previous?.authorityId||'');

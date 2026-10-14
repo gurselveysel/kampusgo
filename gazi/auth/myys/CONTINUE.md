@@ -1,3 +1,23 @@
+# Güncel devam — Paket56 yerel kabul; kaynak eşitlemesi sırada
+
+Panel: Tanıma ve kredi, Yetki dosyaları ve pilot Dosya doğrula. Türkçe native dosya seçimi, görünür odak/ad, geçersiz seçimin eski metin/SHA/sonucu kapatması ve yetki eki okuma/kayıt kilidi tamamlandı. Yeni dosya alanı dilimi yalnız yerel kabulde; B24 bütünü tamamlanmadı.
+
+827 otomatik test (733 sunucu,48 portal,46 regresyon) ve40 tarayıcı kontrolü (14 kontrollü dosya UI,14 gerçek yerel yetki HTTP,12 gerçek yerel tanıma belge HTTP) geçti. Rozet UI yanıtları kontrollüdür; kriptografik kanıt değildir.115 statik korumalı paket. Özgün36 kimlik/başlık/bağımlılık/kabul ölçütü korundu. Ayrıntı `acceptance/B24-file-input-20261014.json`.
+
+Önce diff/commit ve expected-head `8bbac52bad914fe315f3985e5476aae2b0fffd7c` / base-tree `6f4be4962efc301d06ee06cd69a66a7df2209edf` ile tam kaynak ağacını eşitle. Son canlı16 READY;17–56 dağıtılmadı. configuredCore kapalı; browserAuth iptalini yeniden isteme; tek editör.
+
+Sonraki bağımsız görünür iş: B24 seçili ana akışların 320 CSS px yeniden akış, metin büyütme ve form hata bağlantılarını genişlet; bütün ürün/AT kabulü diye sunma. SQL HTTP/rate/CSRF/akademik depo, B28 güvenlik checkpoint ve kalan B01–B36 bağımsız işler sürer. Kurum kararları ve gerçek dış bağlantılar açık.
+
+# Güncel devam — Paket55 kaynakta; B24 dosya seçimi inceleniyor
+
+Paket55 kaynak doğrulaması: yerel `963b5ad0f64a9b9206f7a551e2558c7cb5c40153`, uzak `8bbac52bad914fe315f3985e5476aae2b0fffd7c`, ortak tam ağaç `6f4be4962efc301d06ee06cd69a66a7df2209edf`.15blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+827otomatik15mevcutkimliktarayıcı;136/18 8924/71392;115statik;16aktifSQLite148tür+9uygulanmamışPGaday. Sonraki expectedremote8bbac52bad914fe315f3985e5476aae2b0fffd7c/base6f4be4962efc301d06ee06cd69a66a7df2209edf.
+
+Sıradaki görünürB24: recognition request/document, authority attachment ve badge file picker nativeEnglish/longfilename/keyboard; operations kendiTürkçebuttonuvar. ui.Field label içinde nativeinputyalnızidbağlar. Ortak nativefileinput korunan Türkçe yüzey/visiblefocus/44px/wrap component düşünülebilir. RecognitionDocument zaten sequenceRef ileasyncseçimyarışınıkoruyor; RequestForm tamokunmalı. Badge loadFile awaitfile.text guard/catchyok, invalid24KB seçimoldtokenıkoruyor; verify eskiresult yenimetnegelebiliyor. Bu somut stale UI hatasını düzelt; ayrıverification busy/sourcegeneration, gerçekserverkararınıclientuydurma. Badge pilot sentetik-lab sınırı korunur. Henüz56kod/testyok.
+
+SQL HTTP/rate/CSRF/akademik depo, directory/key gerçekcontrolplane,B28checkpoint ve bütün bağımsızlar sürer. Son canlı16;17–55dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tekeditör.
+
 # Güncel devam — Paket55 yerel kabul; kaynak eşitlemesi sırada
 
 Paket55:21 yeni imzalı SQL akış testi;733 sunucu+48 portal+46 regresyon=827. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. Yeni SQL flow henüz HTTP/React/akademik depo bağlantısı değildir; tek bağlantılı PGlite kabulüdür.136/18 8924/71392;115statik;16aktifSQLite148tür+9uygulanmamışPGaday. IDENTITY-SQL-FLOW-CONTRACT.md ayrıntıdır.

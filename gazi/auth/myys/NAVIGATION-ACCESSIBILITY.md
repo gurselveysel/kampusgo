@@ -31,3 +31,15 @@ Mevcut gateway testleri 66 sunum +22 vaka dosyasının oturumsuz reddini ve sent
 Tarayıcı otomasyonu; gerçek NVDA/JAWS/VoiceOver/TalkBack okuma deneyimi değildir. Bütün modal/form hataları, 200/400% büyütme, yüksek karşıtlık, belge çıktısı okuma sırası, bütün üçüncü taraf videoların Türkçe altyazı/döküm doğruluğu ve canlı oturum akışları tamamlanmış sayılmaz. Medya sağlayıcıları bu koşuda dış ağ kapalı olduğundan oynatılmadı. B24’ün “kritik engel sıfır” koşulu bütün ürün için kapanmadı. B01 kaynak/rota/regresyon eşlemesi yerelde hazır; özgün 27 yetenek kabulü ve dış servisler ayrıca izlenir.
 
 `configuredCore()` Vercel’de kapalı kalır. Son canlı Paketi16; 17–31 dağıtılmadı. BrowserAuth iptalinden sonra yeni giriş veya alternatif kimlik yolu denenmedi. Üniversite adına onay, atama veya belge üretilmedi.
+
+## Paket56 — Türkçe dosya alanı ve güncel sonuç bağı
+
+14 Ekim 2026. Tanıma ve kredi (talep ve arşive teslim), Politika ve hak sicili / Yetki dosyaları ve pilot rozet / Dosya doğrula güncellendi. Native file input form/required/klavye davranışı korunur; Türkçe görünen yüzey, seçili ad duyurusu, açıklama bağı, odak ve küçük ekran satırlaması eklenir. Yetki eki okuma/kayıt sırasında alanlar kilitlenir; native FormData gerçek dosya baytlarını taşır. Kayıt ardından seçim temizlenir.
+
+Dosya doğrulayıcıda her seçim/metin/sekme değişimi önceki okuma veya doğrulama sonucunu geçersiz kılar. Dosya okumak doğrulama sayılmaz. Tanıma talebindeki boş/büyük seçim eski SHA sonucunu kullanamaz; bekleme durumu takılı kalmaz.
+
+40 yerel tarayıcı kontrolü:14 kontrollü dosya UI,14 gerçek yerel yetki HTTP,12 gerçek yerel tanıma teslimi HTTP. Rozet yanıtları ve okuma zamanlaması yalnız UI yarışını sınamak için kontrollüdür; kriptografik veya canlı kabul değildir. İlk denemede Chromium native dosya seçicisi Enter ile açılmadı; native Boşluk tuşuyla açılış doğrulandı, özel klavye emülasyonu eklenmedi. 390px ve forced-colors görüntüleri incelendi. `test-results/myys-file-input` geçici görsel çıktıdır; kalıcı özet `acceptance/B24-file-input-20261014.json` içindedir.
+
+Kaynaklar14.10.2026 yeniden okundu: [WCAG2.2 /12.12.2024 Recommendation](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) 3.3.1–3.3.3 ve4.1.2–4.1.3; görünür hata/etiket ve programatik ad/durum ilişkisinin dayanağı. [WHATWG HTML Living Standard](https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)) §4.10.5.1.17, reset ve value/files IDL; seçili dosya/required korunur, accept ipucudur ve sunucu denetiminin yerine geçmez. Standartların tümüne uygunluk beyanı yapılmaz.
+
+Genel büyütme/yeniden akış, gerçek AT, altyazı ve erişilebilir çıktı kabulü açıktır. Son canlı16;17–56 dağıtılmadı; canlı giriş denemesi yenilenmedi.

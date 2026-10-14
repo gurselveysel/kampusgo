@@ -755,3 +755,13 @@ Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque
 Paket55:21 yeni imzalı SQL akış testi;733 sunucu+48 portal+46 regresyon=827. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. Yeni SQL flow henüz HTTP/React/akademik depo bağlantısı değildir; tek bağlantılı PGlite kabulüdür.136komut/18HTTP8924örnek71392kapsam denetimi;115statik.36 özgün iş/bağımlılık/kabul aynı. İlk20senaryo geçti; ikinci incelemede iki flow tekrar, logout opaqueproof ve kişi audit rollback eklendi; son21yeni ve tam733sunucu geçti.
 
 Paket55 dağıtılmadı. Alias yeniden okundu: dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu authenticated smoke değildir;17–55 canlı değil;configuredCore kapalı;browserAuth iptali tekrar denenmedi. Geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. Kaynak commit/tam ağaç ayrıca kaydedilir.
+
+Paket55 kaynak doğrulaması: yerel `963b5ad0f64a9b9206f7a551e2558c7cb5c40153`, uzak `8bbac52bad914fe315f3985e5476aae2b0fffd7c`, ortak tam ağaç `6f4be4962efc301d06ee06cd69a66a7df2209edf`.15blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+## Paket56 — Türkçe dosya seçimi ve güncel doğrulama sonucu (yalnız yerel kabul)
+
+Görünür değişiklik: Tanıma ve kredi talebi/belge teslimi, Yetki dosyaları eki, pilot Dosya doğrula. Kullanıcı dosya adını Türkçe yüzeyde görür, klavyeyle seçer; geçersiz yeni dosyada önceki metin veya gecikmiş sonuç kullanılamaz. Yetki eki okuma ve kaydı boyunca çift gönderim ve alan değişimi kapanır.
+
+Yerel kabul:733 sunucu +48 portal +46 regresyon =827. 14 kontrollü dosya UI +14 yetki HTTP +12 tanıma belge HTTP =40 tarayıcı; native required/FormData, gerçek dosya teslim/indirme,390px ve zorunlu renk görüntüsü geçti. Kontrollü rozet API yanıtları kriptografik kabul değildir.115 statik dosyalı mevcut korumalı paketleme başarılı. Yeni sunucu komutu/migration yok; B24 bütün AT/altyazı/çıktı şartları açık.
+
+Başlangıç uzak8bbac52bad914fe315f3985e5476aae2b0fffd7c / ortak6f4be4962efc301d06ee06cd69a66a7df2209edf yeniden doğrulandı. Kaynak commit/ağaç sonucu eşitlemeden sonra eklenir.14.10.2026 alias hâlâ `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY / production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu kontrol yeni kimlikli smoke değildir.17–56 yayımlanmadı; configuredCore kapalı. Son canlı geri dönüş hedefi `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Önceki browserAuth iptali tekrar denenmedi.

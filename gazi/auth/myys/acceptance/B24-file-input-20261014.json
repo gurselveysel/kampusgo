@@ -1,0 +1,114 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 56,
+  "work_ids": [
+    "B24"
+  ],
+  "scope": "isolated-local-file-ui-and-existing-authority-recognition-http",
+  "official": false,
+  "server_tests": 733,
+  "new_server_tests": 0,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 827,
+  "browser_checks": {
+    "controlled_file_ui": {
+      "count": 14,
+      "checks": [
+        "İngilizce tarayıcıda Türkçe dosya yüzeyi; görünür odak ve Boşluk tuşuyla gerçek dosya seçici",
+        "Geçersiz yeni seçim önceki belge metnini temizledi ve doğrulamayı kapattı",
+        "Boş dosya ve okuma hatası güvenli Türkçe sonuç verdi",
+        "Yavaş eski dosya okuması sonraki seçimin metnini ve adını değiştiremedi",
+        "Elle yapıştırılan metin bekleyen dosya okumasını geçersiz kıldı; dosya adı ve yerel seçim temizlendi",
+        "Dosya seçimini temizleme bekleyen okumayı da iptal etti",
+        "Gecikmiş doğrulama yanıtı yeni yapıştırılan metne bağlanmadı",
+        "Geçersiz yeni dosya eski doğrulama başarısını da geçersiz kıldı",
+        "İki isteğin ters sırada dönmesi güncel doğrulama sonucunu değiştirmedi",
+        "Sekmeden ayrılma gecikmiş yanıtla geri yönlendirilmedi",
+        "390 px uzun Türkçe dosya adı taşmadı; sınır ve seçili ad erişilebilir açıklamaya bağlı",
+        "Zorunlu renklerde dosya seçimi ve odak sınırı görünür kaldı",
+        "Sayfadan ayrılma bekleyen sonucu güvenli biçimde bıraktı",
+        "İstemci istisnası yok"
+      ],
+      "browser": "138.0.7204.0",
+      "at": "2026-10-14T11:39:11.852Z"
+    },
+    "authority_http": {
+      "count": 14,
+      "checks": [
+        "Öğrenen idari dosyaya ve ek yükleme formuna erişmedi",
+        "Yavaş dosya okumasında çift tıklama tek işlem kaldı; seçili ek ve kapsam alanları değiştirilemedi",
+        "İki gerçek yerel dosya tarayıcıdan yüklendi; kaynak, tarih ve sürüm saklandı",
+        "Dört sorumluluk ve belge bağları kaydedildi; hazırlayan kendi dosyasını inceleyemedi",
+        "İncelenmemiş yetki dosyası belge profili formunu açmadı",
+        "Ayrı yönetici ek dosyasını gerçek indirmeyle bayt bayt aynı aldı",
+        "Ayrı yönetici incelemesi dosyayı yerel kullanıma açtı",
+        "İncelenmiş dosya ve ayrı komisyon profili aynı başarı kararının hazırlığına bağlandı",
+        "Dosya durdurulunca yeni belge hazırlığı kapandı",
+        "Yeni yetki dosyası eski profilin bağını sessizce değiştirmedi",
+        "Yeni dosya ayrıca incelenmiş profil 2 üzerinden aynı karara bağlandı",
+        "Arama boş sonucu ve yenilemede ekler, incelemeler, iki sürüm korundu",
+        "390 px ek ve kapsam formları taşmadı; klavye sırası çalıştı",
+        "İstemci istisnası yok"
+      ],
+      "browser": "138.0.7204.0",
+      "at": "2026-10-14T11:39:21.031Z"
+    },
+    "recognition_document_http": {
+      "count": 12,
+      "checks": [
+        "Yavaş özetin ardından büyük veya boş seçim eski özeti açmadı; bekleme duyurusu takılı kalmadı",
+        "Öğrenci talebi dosya özetiyle oluştu; gerçek teslim ayrı gösterildi",
+        "Büyük dosya gönderimi istemcide kapalı",
+        "Başka dosya talebin özeti yerine geçemedi",
+        "Aynı gerçek baytlar teslim edildi; imza veya teknik kabul oluşmadı",
+        "Öğrenci yeniden yüklemeden sonra aynı baytları güvenli dosya adıyla indirdi",
+        "390 px teslim bölümünde taşma yok; indirme düğmesi klavye odağı alıyor",
+        "Yetkili teknik görevli aynı dosyayı indirdi; insan raporu ayrı kayıt oldu",
+        "Arşiv teslimi sonuçlanmamış teknik incelemeyi aşarak kredi açmadı",
+        "Koordinatör teslim bilgisini gördü; ham dosya indirme yetkisi verilmedi",
+        "Başka öğrenci teslimi veya belgenin içeriğini göremedi",
+        "İstemci istisnası yok"
+      ],
+      "browser": "138.0.7204.0",
+      "at": "2026-10-14T11:40:23.217Z"
+    }
+  },
+  "browser_total": 40,
+  "badge_api_responses": "controlled synthetic UI responses; not cryptographic acceptance",
+  "file_read_timing": "controlled synthetic deferred/error reads to exercise real React behavior",
+  "static_files": 115,
+  "source_parent_remote": "8bbac52bad914fe315f3985e5476aae2b0fffd7c",
+  "source_parent_tree": "6f4be4962efc301d06ee06cd69a66a7df2209edf",
+  "local_slice_closed": [
+    "Tanıma talebi, arşive belge teslimi, yetki eki ve pilot dosya doğrulayıcısında Türkçe dosya seçimi, seçili ad, native required/FormData ve görünür klavye odağı.",
+    "Yeni/geçersiz/boş dosya veya elle metin değişimi önceki dosya okumasını ve doğrulama sonucunu geçersiz kılar; ters sıradaki yanıtlar güncel sonucu değiştirmez.",
+    "Yetki eki okunurken çift tıklama tek işlem kalır; alanlar kayıt sonuna kadar kilitlenir, başarılı kayıt ardından seçim temizlenir.",
+    "Tanıma talebinde büyük/boş dosya reddi ve gecikmiş özetin temizlenmesi; gerçek aynı baytların teslimi/indirilmesi ve rol sınırları.",
+    "390 px uzun Türkçe ad, İngilizce tarayıcıda Türkçe yüzey, Boşluk tuşuyla native seçici ve zorunlu renk odak sınırı yerel tarayıcıda geçti."
+  ],
+  "open": [
+    "Bütün rol ve akışlarda 200–400% büyütme/yeniden akış, form hata bağları ve modal taraması sürüyor.",
+    "Gerçek ekran okuyucu, video Türkçe altyazı/döküm doğruluğu ve belge çıktısı erişilebilirliği açık.",
+    "Canlı kimlikli smoke ve kurumsal erişilebilirlik kabulü açık; B24 kritik engel sıfır koşulu bütün ürün için kapanmadı."
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "configured_core": "closed",
+  "production_migration": false,
+  "live_alias_read": "2026-10-14: READY, package16; not authenticated smoke",
+  "sources": [
+    {
+      "url": "https://www.w3.org/TR/2024/REC-WCAG22-20241212/",
+      "version": "W3C Recommendation 2024-12-12",
+      "read": "2026-10-14",
+      "scope": "3.3.1–3.3.3,4.1.2–4.1.3; error/name/status behavior; not full conformance"
+    },
+    {
+      "url": "https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)",
+      "version": "Living Standard, accessed 2026-10-14",
+      "read": "2026-10-14",
+      "scope": "4.10.5.1.17, input reset algorithm, value/files IDL; native selection and required; accept is a hint"
+    }
+  ]
+}
