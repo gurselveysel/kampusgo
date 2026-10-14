@@ -23,7 +23,8 @@ import {PrivacyWorkspace} from './privacy-workspace.jsx';
 import {RecognitionWorkspace} from './recognition-workspace.jsx';
 import {ProgramWorkspace} from './program-workspace.jsx';
 import {outcomeIds} from '../../auth/myys/program-model.mjs';
-import React,{useEffect,useState,useRef} from 'react';
+import {myysClient} from './myys-client.mjs';
+import React,{useEffect,useState,useRef,useSyncExternalStore} from 'react';
 import {ShieldCheck,RefreshCw,FileCheck2,BookOpen,Award,LockKeyhole} from 'lucide-react';
 import {WalletWorkspace} from './wallet-workspace.jsx';
 import {OperationsWorkspace} from './operations-workspace.jsx';
@@ -35,15 +36,13 @@ import {Heading,Card,CardHead,Button,Notice,Pill,Field} from './ui.jsx';
 const names={materials:'Ders ve materyal',walletStudy:'Cüzdan seçenekleri',advice:'Öneri ve uzman kıyası',portfolios:'Amaçlı portfolyo',capacities:'Birim kapasitesi',payments:'Mali prova ve mutabakat',sourceTrust:'Kaynak güven sicili',recovery:'Kurtarma tatbikatları',sem:'SEM dosyaları',appealPolicies:'İtiraz politikaları',keys:'Anahtar ve belge durumu',credentialProfiles:'Belge profilleri',membership:'Kişi ve üyelik',retention:'Akış ve saklama',cohorts:'Kontrollü grup kabulü',applications:'Başvurular',quality:'Kaynaklı göstergeler',privacy:'Veri talepleri',appeals:'İtiraz incelemeleri',support:'Destek kayıtları',programs:'Program sürümleri',enrollments:'Öğrenen kayıtları',evidence:'Öğrenme kanıtları',assessments:'Değerlendirmeler',decisions:'Akademik kararlar',issuances:'Belge hazırlığı',skills:'Beceri ilişkileri',registry:'Politika ve hak sicili',recognition:'Tanıma ve kredi',wallet:'Kişisel cüzdanım',operations:'Aktarım ve mutabakat',lmsEvents:'LMS kaynak olayları'};
 const requestedTab=()=>{const value=typeof location==='undefined'?'':location.hash.replace(/^#\/?/,'').split('/')[1];return Object.hasOwn(names,value)?value:null;};
 const roleNames={learner:'Öğrenen',instructor:'Eğitici',coordinator:'Koordinatör',commission:'Komisyon',studentAffairs:'Öğrenci işleri',quality:'Kalite',it:'Bilgi işlem',finance:'Mali işler',admin:'Yönetici'};
-let identityCsrf=null; // Per-page memory only; never an identity or session token.
-async function request(path,body,signal){
- const r=await fetch('/api/myys/'+path,{credentials:'same-origin',cache:'no-store',signal,...(body?{method:'POST',headers:{'Content-Type':'application/json',...(identityCsrf?{'X-MYYS-CSRF':identityCsrf}:{})},body:JSON.stringify(body)}:{})});
- const data=await r.json();if(['local-acceptance','isolated-sql-acceptance'].includes(data.identitySession?.scope))identityCsrf=data.identitySession.csrf;if(!r.ok){if(r.status===401||data.code==='identity_checkpoint')identityCsrf=null;const e=new Error(data.error||'İşlem tamamlanamadı.');e.code=data.code;if(data.code!=='identity_checkpoint'&&['local-acceptance','isolated-sql-acceptance'].includes(data.scope)&&data.loginPath==='/__identity/login')e.loginPath=data.loginPath;throw e;}return data;
-}
+const request=myysClient.request;
 export function AcademicWorkspace(){
  const checkpointAlert=useRef(null);
+ const institutionSession=useSyncExternalStore(myysClient.subscribe,myysClient.getSnapshot);
  const [tenant,setTenant]=useState('gazi'),[data,setData]=useState(null),[error,setError]=useState(null),[busy,setBusy]=useState(false),[tab,setTab]=useState(()=>requestedTab()||'evidence'),[message,setMessage]=useState('');
  async function refresh(signal){setBusy(true);setError(null);try{const next=await request('calisma?kurum='+encodeURIComponent(tenant),null,signal);setData(next);}catch(e){if(e.name!=='AbortError'){setData(null);setError(e);}}finally{if(!signal?.aborted)setBusy(false);}}
+ useEffect(()=>{if(data?.identitySession&&(institutionSession.status!=='active'||data.personId!==institutionSession.personId||data.identitySession.tenant!==institutionSession.tenant||data.identitySession.expires!==institutionSession.expires)){setData(null);setMessage('');const e=new Error(institutionSession.status==='blocked'?'Kayıtların güvenliği doğrulanamadı. Sorumlu birime başvurun.':'Kurum oturumu yeniden doğrulanmalı.');if(institutionSession.status==='blocked')e.code='identity_checkpoint';if(['closed','expired'].includes(institutionSession.status))e.loginPath='/__identity/login';setError(e);}},[institutionSession,data]);
  useEffect(()=>{if(error?.code==='identity_checkpoint'&&!busy)checkpointAlert.current?.focus();},[error,busy]);
  useEffect(()=>{const c=new AbortController();refresh(c.signal);return()=>c.abort();},[tenant]);
  useEffect(()=>{const align=()=>{const el=document.getElementById('academic-tab-'+tab),strip=el?.parentElement;if(el&&strip){const a=el.getBoundingClientRect(),b=strip.getBoundingClientRect();strip.scrollLeft+=a.left-b.left-(strip.clientWidth-a.width)/2;}};align();window.addEventListener('resize',align);return()=>window.removeEventListener('resize',align);},[tab,data]);
@@ -56,7 +55,7 @@ export function AcademicWorkspace(){
  async function publishStatus(unit){setBusy(true);setError(null);setMessage('');try{await request('durum-yayinla',{tenant,unit});setMessage('İmzalı yerel durum listeleri güncellendi.');await refresh();}catch(e){setError(e);}finally{setBusy(false);}}
  async function trust(unit){setBusy(true);setError(null);try{jsonDownload('MYYS_guven-sicili.json',await request('guven-sicili',{tenant,unit}));}catch(e){setError(e);}finally{setBusy(false);}}
  async function sign(issuanceId){setBusy(true);setError(null);setMessage('');try{await request('imzala',{tenant,issuanceId});setMessage('Yerel belge imzalandı; resmî kurum belgesi değildir.');await refresh();}catch(e){setError(e);}finally{setBusy(false);}}
- async function logout(){setBusy(true);setError(null);try{await request('kimlik/cikis',{tenant});identityCsrf=null;setData(null);window.location.assign('/__identity/login');}catch(e){setError(e);}finally{setBusy(false);}}
+ async function logout(){setBusy(true);setError(null);try{await request('kimlik/cikis',{tenant});setData(null);window.location.assign('/__identity/login');}catch(e){setError(e);}finally{setBusy(false);}}
  async function programPackage(programId){setBusy(true);setError(null);try{jsonDownload('MYYS_program-bilgi-paketi.json',await request('program-paketi',{tenant,programId}));}catch(e){await refresh();setError(e);}finally{setBusy(false);}}
  async function archive(decisionId){setBusy(true);setError(null);try{const data=await request('karar-arsivi',{tenant,decisionId});const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='MYYS_karar-dayanagi_'+decisionId+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(e){setError(e);}finally{setBusy(false);}}
  const can=roles=>data?.memberships.some(m=>m.roles.some(r=>roles.includes(r)));

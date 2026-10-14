@@ -45,7 +45,7 @@ export class LocalIdentityHttp {
   this.#check(req);const token=cookie(req),principal=this.#principal(token);requireThat(principal,'session_required','Kişiye bağlı giriş gerekli.',401);if(mutation)this.#mutation(req,token,req.headers['x-myys-csrf']);
   return {sessionHash:hash(token),principal};
  }
- sessionInfo(req){const {principal,sessionHash}=this.authorizeRequest(req);const row=this.#store.db.prepare('SELECT expires FROM bindings WHERE session_hash=?').get(sessionHash);return {personId:principal.id,tenant:principal.tenant,expires:row.expires,csrf:this.#csrf(cookie(req)),scope:'local-acceptance',official:false};}
+ sessionInfo(req){const {principal,sessionHash}=this.authorizeRequest(req);const row=this.#store.db.prepare('SELECT expires FROM bindings WHERE session_hash=?').get(sessionHash);return {personId:principal.id,tenant:principal.tenant,memberships:principal.memberships,expires:row.expires,csrf:this.#csrf(cookie(req)),scope:'local-acceptance',official:false};}
  async handle(req,res){
   const rawPath=typeof req.url==='string'?req.url.split('?')[0]:'';if(!Object.values(identityPaths).includes(rawPath))return false;
   try{

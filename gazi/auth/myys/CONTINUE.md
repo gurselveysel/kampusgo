@@ -1,3 +1,15 @@
+# Güncel devam — Paket70 yerel kabul; kaynak eşitlemesi sırada
+
+Üst panel kişi/sunum ayrımı, sıralı istek ve süre/iptal/kişi değişimi kapanışı. Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu. B06/B07/B24 alt kabulü; B23 SEM ölçütü kapanmadı; önceki çapraz üstpanel notu bu kayıtla düzeltildi.
+
+Önce70diff/commit/tam ağaç eşitle: beklenen uzak91e0996121747112cd75662f6ee806bd7e516529,taban dbe6748153cb0a1791e2605582d06b501bc8b163. Son canlı16;17–70dağıtılmadı;configuredCorekapalı;browserAuthiptaliniyenileme. Sonra71: aynıSQL registry-draft/registry-review ve rol kapsamlı Politika ve hak sicili ekranı; ayrı admin/inceleyen,5sicil türü, kurum yetki/hak dosyası bağımlılıkları.14SQLkomut/13tür mevcut;122taşınacak. Tekeditör; B01–B36 bağımsızları sürdür, raporla durma.
+
+# Güncel devam — Paket69 kaynakta;70 üst panel kimlik tutarlılığı
+
+69yerel8c9e743c6eb6d17f0ef6ad4ec34b37fd6e41eaae,uzak91e0996121747112cd75662f6ee806bd7e516529,ortak tam ağaçdbe6748153cb0a1791e2605582d06b501bc8b163.18blobSHA/tam ağaç/expected-headforce=false/uzakrefcommit doğrulandı.970otomatik41tarayıcı,136/18kapsam9035pozitif72280negatif. Soncanlı16;17–69dağıtılmadı.
+
+70başladı: main.jsx üstpanel mevcut11sunumprofilindeki örnek kişi adını gerçekSQL/yerelkimlik kişisinden ayır. Gerçekoturum kişi/rol/süre sunucudan gelsin; sunum seçimi yetki vermesin; akademik dışındaki yerel örnekler gerçekkişiye maledilmesin. CSRF/tokenlocalStoragea yazma. Ortakcheckpoint aynıtabda eşzamanlıAPIye503verebildiği için identitysessionfetch ile akademikcalismafetch yarışını önle; saltUIgösterimi yetki kaynağı değildir. Henüz70ürünkodu yok. Reactbecerisi/mainkaynak okunuyor. B01–B36bağımsızlarısürdür;122SQLkomut açık. configuredCorekapalı;browserAuthiptaliniyenileme;tekeditör;raporladurma.
+
 # Güncel devam — Paket69 yerel kabul; kaynak eşitlemesi sırada
 
 Alternatifölçme+ayrıkalite incelemesi aynıSQL14komut13tür zincirinde.10yeni/876sunucu+48portal+46regresyon=970;26SQL15mevcut=41tarayıcı;115statik.136/18kapsam9035pozitif72280negatif geçti. Eski rubric/karar/kanıt sürümü korunur.36özgünölçüt korundu;16PG/16SQLite149tür.

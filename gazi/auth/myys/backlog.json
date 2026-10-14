@@ -417,7 +417,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket59:29 yeni test (26 gerçek HTTPS+SQL,3 guard);784 sunucu+48 portal+46 regresyon=878. Yeni SQL giriş ekranında13, eski yerel girişte15 Chromium kontrolü geçti;320CSSpx/metin aralığı/odak/logolar incelendi.",
+      "test_status": "Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -447,10 +447,20 @@
         "gazi/auth/tests/myys-identity-sql-http.test.mjs",
         "gazi/auth/tests/myys-identity-sql-guard.test.mjs",
         "scripts/myys-identity-sql-local.mjs",
-        "scripts/myys-identity-sql-browser.cjs"
+        "scripts/myys-identity-sql-browser.cjs",
+        "gazi/portal/src/myys-client.mjs",
+        "gazi/portal/src/myys-client.test.mjs",
+        "gazi/portal/src/institution-session.jsx",
+        "gazi/portal/src/main.jsx",
+        "gazi/portal/src/academic-workspace.jsx",
+        "gazi/auth/myys/identity-http.mjs",
+        "scripts/myys-session-local.mjs",
+        "scripts/myys-session-browser.cjs",
+        "gazi/auth/myys/SESSION-DISPLAY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B06-B07-B24-session-display-20261014.json"
       ],
-      "production_status": "Son canlı Paket16. Paket59 yalnız kaynak/yerel kabul;17–59 dağıtılmadı;configuredCore kapalı.",
-      "implementation_note": "Mevcut kişide süreli rol önerisi, bağımsız inceleme, kaynak sürümüyle yarış reddi ve aynı kurum oturumlarının atomik iptali. Kapsamsız legacy oturum reddedilir; akademik geçmiş korunur. Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque signed proof/MFA, challenge/keybarrier, session ve audit atomik zincirini bağladı. Strict+1 directory control; person ve membership revizyonu sessiona pinli, kapat/aç eski sessionı canlandırmaz. Rotate/parentfamilylogout, sub/sidANDJTI backchannel ve session öncesi iptal bariyeri, timeout ve belirsiz COMMIT kapalı.9 uygulanmamışPGadayı; aktifSQLite16tablo148tür aynı. YeniSQL HTTP/rate/CSRF/akademik sınırı ve güvenilirrestore checkpoint açıktır. Paket59 LocalPostgresIdentityHttp ayrı loopback HTTPS ve Türkçe giriş/oturum ekranını SQL kişi/üyelik/sessiona bağladı. Aynı private güvenlik nesnesinin permit/epoch guardı begin/claim/finalsession/principal/logout/backchannel transactionlarının başı/sonunda; sağlayıcı beklerken üyelik veya epoch değişirse kabul yok. No-store/TLS/Host/Origin/CSRF/cookie/body/tek callback/timeout/unknownCOMMIT kapalı. Akademik SQL zinciri bağlı değil;academicAccessfalse,officialfalse;Vercelde kapalı.12 PGadayı/16aktifSQLite148tür aynı.",
+      "production_status": "Son canlı16;17–70dağıtılmadı;configuredCorekapalı.",
+      "implementation_note": "Mevcut kişide süreli rol önerisi, bağımsız inceleme, kaynak sürümüyle yarış reddi ve aynı kurum oturumlarının atomik iptali. Kapsamsız legacy oturum reddedilir; akademik geçmiş korunur. Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque signed proof/MFA, challenge/keybarrier, session ve audit atomik zincirini bağladı. Strict+1 directory control; person ve membership revizyonu sessiona pinli, kapat/aç eski sessionı canlandırmaz. Rotate/parentfamilylogout, sub/sidANDJTI backchannel ve session öncesi iptal bariyeri, timeout ve belirsiz COMMIT kapalı.9 uygulanmamışPGadayı; aktifSQLite16tablo148tür aynı. YeniSQL HTTP/rate/CSRF/akademik sınırı ve güvenilirrestore checkpoint açıktır. Paket59 LocalPostgresIdentityHttp ayrı loopback HTTPS ve Türkçe giriş/oturum ekranını SQL kişi/üyelik/sessiona bağladı. Aynı private güvenlik nesnesinin permit/epoch guardı begin/claim/finalsession/principal/logout/backchannel transactionlarının başı/sonunda; sağlayıcı beklerken üyelik veya epoch değişirse kabul yok. No-store/TLS/Host/Origin/CSRF/cookie/body/tek callback/timeout/unknownCOMMIT kapalı. Akademik SQL zinciri bağlı değil;academicAccessfalse,officialfalse;Vercelde kapalı.12 PGadayı/16aktifSQLite148tür aynı. Paket70: üst panelde sunucu kişi/kurum/rol/süre;11sunum profili ayrımı. Tek sekmede yanıt sonuna kadar sıralı istek, bellek içi CSRF, süre/iptal/kişi değişimi ve checkpoint hatasında eski kişi/form kapanışı. Örnek işlemler kurumsal kişi kaydı değildir.",
       "independent_remaining_work": [
         "Async akademik repository ve HTTP kimliği/komut yetkisini aynı scope/transaction zincirine bağla; iki ayrı depo gerçek tek işlem olarak sunulamaz.",
         "Directory/key/HTTP kontrol düzlemi yetkisi, bütün yazıcılar ve monoton iptal/anahtar geri yükleme checkpoint bağı açık.",
@@ -460,7 +470,7 @@
       "production_activation_blocker": "Mevcut üretim deposu için ayrı migration yetkisi ve gerçek kimlik eşlemesi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk14komut aynıSQLkimlik/checkpoint zincirinde; alternatifölçme yerel; kalan122işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynıSQLkimlik/checkpoint zincirinde; alternatifölçme yerel; kalan122işlem/kurum/üretim açık; Paket70 kişi/sunum ayrımı yerel kabulde",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -512,7 +522,16 @@
             "gazi/auth/myys/alternative-evidence.mjs",
             "gazi/auth/tests/myys-alternative-sql.test.mjs",
             "gazi/auth/myys/ALTERNATIVE-SQL-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
+            "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json",
+            "gazi/portal/src/myys-client.mjs",
+            "gazi/portal/src/myys-client.test.mjs",
+            "gazi/portal/src/institution-session.jsx",
+            "gazi/portal/src/main.jsx",
+            "gazi/auth/myys/identity-http.mjs",
+            "scripts/myys-session-local.mjs",
+            "scripts/myys-session-browser.cjs",
+            "gazi/auth/myys/SESSION-DISPLAY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B06-B07-B24-session-display-20261014.json"
           ],
           "remaining": [
             "Directory/key/HTTP kontrol düzlemi yetkisi, bütün yazıcılar ve monoton iptal/anahtar geri yükleme checkpoint bağı açık.",
@@ -522,13 +541,13 @@
           ]
         },
         "local_acceptance": {
-          "status": "yerel SQLalternatifölçme alt dilimi geçti",
-          "evidence": "Paket69:10yeni;876sunucu+48portal+46regresyon=970.26SQL+15mevcut=41tarayıcı;320CSSpx/metin aralığı;136/18kapsam9035pozitif72280negatif örnek.",
-          "limits": "TekexclusivePGlite;14komut. Gerçek kurum yöntemi/kanıtı/IdP/üretim/nativeSSI/RLS/AT kabulü değil."
+          "status": "yerel kişi/sunum ve oturum kapanışı alt dilimi geçti",
+          "evidence": "Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu.",
+          "limits": "Gerçek kurum/IdP/üretim/nativeSSI/RLS/tamAT kabulü değil.14SQLkomut;122işlem açık."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;17–69dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
+          "evidence": "Son canlı16;17–70dağıtılmadı. configuredCorekapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -562,7 +581,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket64:23 yeni senaryo;807 sunucu+48 portal+46 regresyon=901. Checkpoint bağlı SQL HTTPS ekranında13 tarayıcı kontrolü.",
+      "test_status": "Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -633,10 +652,18 @@
         "gazi/auth/tests/myys-identity-checkpoint.test.mjs",
         "gazi/auth/tests/myys-identity-checkpoint-http.test.mjs",
         "gazi/auth/myys/IDENTITY-CHECKPOINT-CONTRACT.md",
-        "gazi/auth/myys/acceptance/B07-B28-checkpoint-20261014.json"
+        "gazi/auth/myys/acceptance/B07-B28-checkpoint-20261014.json",
+        "gazi/portal/src/myys-client.mjs",
+        "gazi/portal/src/myys-client.test.mjs",
+        "gazi/portal/src/institution-session.jsx",
+        "gazi/portal/src/main.jsx",
+        "scripts/myys-session-local.mjs",
+        "scripts/myys-session-browser.cjs",
+        "gazi/auth/myys/SESSION-DISPLAY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B06-B07-B24-session-display-20261014.json"
       ],
-      "production_status": "Paket64 yerel kabul ve kaynak adayıdır. Son canlı16 READY;17–64 dağıtılmadı;configuredCore kapalı.",
-      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı. Paket39 yerel HTTP CSRF/oran anahtarının ardışık kalıcı revizyonunu ve bütçe sıfırlamasını engelleyen geçişi bağladı. Eski işçiler boşaltılmalı; yeni etkin sürüm eskilerini reddeder. Bu, PKCE/nonce anahtar revizyonunun session commit bariyeri değildir. Paket45 mevcut yerel HTTP/PKCE akışında anahtar revizyonunu challenge sözleşmesine ve aynı session-commit transaction’ına bağladı; paylaşılan anahtarı bütün namespace’lerde durduran güvenilen yerel operatör sınırı var. Gerçek KMS metadata köprüsü ve SQL repository ayrı açık. Paket53 IdentityKeyProvider genel metadata revizyonunu aynı SQL transaction öncesi/sonrası yeniden denetleyen PostgresIdentityKeyBridge ekledi. SQL değişiklik/denetim atomik; strict+1 ve terminal iptal, amaç/bağlam/scope, emekli devam, süre ve belirsiz COMMIT kapalı. İki aday tablo sadece PGlite testinde; LocalAcceptanceStore16tablo148tür değişmedi. Gerçek oturum repository ve HTTP bağlantısı hâlâ açık. Paket54 PostgresIdentityChallenges anahtar köprüsüyle begin/claim/finish/fail/cancel yaşam döngüsünü bağladı. Claim provider I/O öncesi commit, değişmez state/browser/scope/redirect/contract bağı, tek kullanımlık handle, terminal durumlar ve atomik audit. Belirsiz claim/final COMMIT yeniden kullanılmaz; saat geri giderse kapalıdır. İki yeni SQL adayıyla toplam4 uygulanmamış PGtablosu; aktifSQLite16tablo148tür değişmedi. Kişi/üyelik/session/iptal/HTTP bağlantısı açık. Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque signed proof/MFA, challenge/keybarrier, session ve audit atomik zincirini bağladı. Strict+1 directory control; person ve membership revizyonu sessiona pinli, kapat/aç eski sessionı canlandırmaz. Rotate/parentfamilylogout, sub/sidANDJTI backchannel ve session öncesi iptal bariyeri, timeout ve belirsiz COMMIT kapalı.9 uygulanmamışPGadayı; aktifSQLite16tablo148tür aynı. YeniSQL HTTP/rate/CSRF/akademik sınırı ve güvenilirrestore checkpoint açıktır. Paket58 SQL HTTP epoch/history/buckets üç adayını bağladı: strict+1 ve anahtar yeniden kullanım yasağı, tüm amaçların aktif bütçe sönmesini bekleyen atomik rotasyon/audit; kapsamlı per-purpose global/peer/browser bütçesi; COMMIT sonrası opak kısa ömürlü permit ve aynı tx sahipliği; cookie/contract/revision HMAC CSRF ve güncel SQL epoch. Yeni toplam12 uygulanmamış PGadayı; aktifSQLite16tablo148tür aynı. Gerçek HTTP claim/finalsession bağı bu pakette açık. Paket59 LocalPostgresIdentityHttp ayrı loopback HTTPS ve Türkçe giriş/oturum ekranını SQL kişi/üyelik/sessiona bağladı. Aynı private güvenlik nesnesinin permit/epoch guardı begin/claim/finalsession/principal/logout/backchannel transactionlarının başı/sonunda; sağlayıcı beklerken üyelik veya epoch değişirse kabul yok. No-store/TLS/Host/Origin/CSRF/cookie/body/tek callback/timeout/unknownCOMMIT kapalı. Akademik SQL zinciri bağlı değil;academicAccessfalse,officialfalse;Vercelde kapalı.12 PGadayı/16aktifSQLite148tür aynı. Paket64: SQL kimliğinin 12 tablosu ayrı kalıcı kontrol kaydına bağlandı; eski/değiştirilmiş kopya ve belirsiz COMMIT kapalı. Bütün SQL depo kapsamında fence/özet, kesin rollback/ayrı onay ve özel yerel SQLite referans sürücü. Gerçek dağıtık kontrol hizmeti veya tam silme/restore kabulü değildir.",
+      "production_status": "Son canlı16;17–70dağıtılmadı;configuredCorekapalı.",
+      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı. Paket39 yerel HTTP CSRF/oran anahtarının ardışık kalıcı revizyonunu ve bütçe sıfırlamasını engelleyen geçişi bağladı. Eski işçiler boşaltılmalı; yeni etkin sürüm eskilerini reddeder. Bu, PKCE/nonce anahtar revizyonunun session commit bariyeri değildir. Paket45 mevcut yerel HTTP/PKCE akışında anahtar revizyonunu challenge sözleşmesine ve aynı session-commit transaction’ına bağladı; paylaşılan anahtarı bütün namespace’lerde durduran güvenilen yerel operatör sınırı var. Gerçek KMS metadata köprüsü ve SQL repository ayrı açık. Paket53 IdentityKeyProvider genel metadata revizyonunu aynı SQL transaction öncesi/sonrası yeniden denetleyen PostgresIdentityKeyBridge ekledi. SQL değişiklik/denetim atomik; strict+1 ve terminal iptal, amaç/bağlam/scope, emekli devam, süre ve belirsiz COMMIT kapalı. İki aday tablo sadece PGlite testinde; LocalAcceptanceStore16tablo148tür değişmedi. Gerçek oturum repository ve HTTP bağlantısı hâlâ açık. Paket54 PostgresIdentityChallenges anahtar köprüsüyle begin/claim/finish/fail/cancel yaşam döngüsünü bağladı. Claim provider I/O öncesi commit, değişmez state/browser/scope/redirect/contract bağı, tek kullanımlık handle, terminal durumlar ve atomik audit. Belirsiz claim/final COMMIT yeniden kullanılmaz; saat geri giderse kapalıdır. İki yeni SQL adayıyla toplam4 uygulanmamış PGtablosu; aktifSQLite16tablo148tür değişmedi. Kişi/üyelik/session/iptal/HTTP bağlantısı açık. Paket55 PostgresIdentityFlow config+redirect tek özetiyle kişi/üyelik, opaque signed proof/MFA, challenge/keybarrier, session ve audit atomik zincirini bağladı. Strict+1 directory control; person ve membership revizyonu sessiona pinli, kapat/aç eski sessionı canlandırmaz. Rotate/parentfamilylogout, sub/sidANDJTI backchannel ve session öncesi iptal bariyeri, timeout ve belirsiz COMMIT kapalı.9 uygulanmamışPGadayı; aktifSQLite16tablo148tür aynı. YeniSQL HTTP/rate/CSRF/akademik sınırı ve güvenilirrestore checkpoint açıktır. Paket58 SQL HTTP epoch/history/buckets üç adayını bağladı: strict+1 ve anahtar yeniden kullanım yasağı, tüm amaçların aktif bütçe sönmesini bekleyen atomik rotasyon/audit; kapsamlı per-purpose global/peer/browser bütçesi; COMMIT sonrası opak kısa ömürlü permit ve aynı tx sahipliği; cookie/contract/revision HMAC CSRF ve güncel SQL epoch. Yeni toplam12 uygulanmamış PGadayı; aktifSQLite16tablo148tür aynı. Gerçek HTTP claim/finalsession bağı bu pakette açık. Paket59 LocalPostgresIdentityHttp ayrı loopback HTTPS ve Türkçe giriş/oturum ekranını SQL kişi/üyelik/sessiona bağladı. Aynı private güvenlik nesnesinin permit/epoch guardı begin/claim/finalsession/principal/logout/backchannel transactionlarının başı/sonunda; sağlayıcı beklerken üyelik veya epoch değişirse kabul yok. No-store/TLS/Host/Origin/CSRF/cookie/body/tek callback/timeout/unknownCOMMIT kapalı. Akademik SQL zinciri bağlı değil;academicAccessfalse,officialfalse;Vercelde kapalı.12 PGadayı/16aktifSQLite148tür aynı. Paket64: SQL kimliğinin 12 tablosu ayrı kalıcı kontrol kaydına bağlandı; eski/değiştirilmiş kopya ve belirsiz COMMIT kapalı. Bütün SQL depo kapsamında fence/özet, kesin rollback/ayrı onay ve özel yerel SQLite referans sürücü. Gerçek dağıtık kontrol hizmeti veya tam silme/restore kabulü değildir. Paket70: üst panelde sunucu kişi/kurum/rol/süre;11sunum profili ayrımı. Tek sekmede yanıt sonuna kadar sıralı istek, bellek içi CSRF, süre/iptal/kişi değişimi ve checkpoint hatasında eski kişi/form kapanışı. Örnek işlemler kurumsal kişi kaydı değildir.",
       "independent_remaining_work": [
         "Async akademik repository ve HTTP kimliği/komut yetkisini aynı scope/transaction zincirine bağla; iki ayrı depo gerçek tek işlem olarak sunulamaz.",
         "Directory/key/HTTP kontrol düzlemi yetkisi, bütün üretim yazarları ve bağımsız monoton kontrol hizmeti; Paket64 yerel checkpoint geçti. Belirsiz işlem uzlaştırma ve restore kuyruğu açık.",
@@ -646,7 +673,7 @@
       "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; ilk14komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan122işlem/kurum/üretim açık",
+          "status": "kısmi; ilk14komut aynı SQLkimlik/checkpoint zincirinde; itirazusulü yerel; kalan122işlem/kurum/üretim açık; Paket70 kişi/sunum ayrımı yerel kabulde",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -730,7 +757,15 @@
             "gazi/auth/tests/myys-appeal-sql.test.mjs",
             "scripts/myys-academic-sql-browser.cjs",
             "gazi/auth/myys/APPEAL-SQL-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+            "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json",
+            "gazi/portal/src/myys-client.mjs",
+            "gazi/portal/src/myys-client.test.mjs",
+            "gazi/portal/src/institution-session.jsx",
+            "gazi/portal/src/main.jsx",
+            "scripts/myys-session-local.mjs",
+            "scripts/myys-session-browser.cjs",
+            "gazi/auth/myys/SESSION-DISPLAY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B06-B07-B24-session-display-20261014.json"
           ],
           "remaining": [
             "Directory/key/HTTP kontrol düzlemi yetkisi, bütün üretim yazarları ve bağımsız monoton kontrol hizmeti; Paket64 yerel checkpoint geçti. Belirsiz işlem uzlaştırma ve restore kuyruğu açık.",
@@ -740,13 +775,13 @@
           ]
         },
         "local_acceptance": {
-          "status": "yerel SQLitiraz alt dilimi geçti",
-          "evidence": "Paket68:11yeni;866sunucu+48portal+46regresyon=960.21yeniSQL+13mevcutpolitika tarayıcı;320CSSpx/metin aralığı.136/18kapsam9035pozitif72280türetilmişnegatif örnek.",
-          "limits": "TekexclusivePGlite;12komut. Gerçekusul/resmîtebligat/imzalıbelge/nativeSSI/RLS/kurum/üretim kabulü değil."
+          "status": "yerel kişi/sunum ve oturum kapanışı alt dilimi geçti",
+          "evidence": "Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu.",
+          "limits": "Gerçek kurum/IdP/üretim/nativeSSI/RLS/tamAT kabulü değil.14SQLkomut;122işlem açık."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;17–68dağıtılmadı. configuredCore kapalı; browserAuth iptali yenilenmedi."
+          "evidence": "Son canlı16;17–70dağıtılmadı. configuredCorekapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2191,8 +2226,7 @@
             "gazi/auth/myys/acceptance/B23-sem-20261014.json"
           ],
           "remaining": [
-            "Güncel YÖK/Gazi usul ve teknik YÖKSİS şema/yetki kabulüyle gerçek başvuru/uygunluk/merkezi düzenleyici eşlemesi.",
-            "Üst panel kişi gösterimini gerçek yerel kurum oturumu ile tutarlı yap;11sunum profilini erişim yetkisi gibi sunma; örnek kayıtları gerçek kişiye mal etme."
+            "Güncel YÖK/Gazi usul ve teknik YÖKSİS şema/yetki kabulüyle gerçek başvuru/uygunluk/merkezi düzenleyici eşlemesi."
           ]
         },
         "local_acceptance": {
@@ -2231,7 +2265,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "106otomatik12gateway/envanter48portal46regresyon;19gezinme10yeni etkileşim7reflow kontrolü geçti.928geometri ölçümünde0taşma. Axe4.14.0ile69WCAGetiketli kural:1440ve320genişliklerde571er toplam1142frame taramasında0violation;8ve530incomplete ham olarak korunur. Son tam784sunucu Paketi59; sunucu çalışma kodu değişmedi.",
+      "test_status": "Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu.",
       "implementation_evidence": [
         "scripts/myys-local-acceptance.mjs",
         "gazi/auth/myys/NAVIGATION-ACCESSIBILITY.md",
@@ -2262,10 +2296,21 @@
         "scripts/myys-semantics-browser.cjs",
         "scripts/myys-semantic-interactions.cjs",
         "gazi/auth/myys/SEMANTIC-ACCESSIBILITY.md",
-        "gazi/auth/myys/acceptance/B24-semantics-20261014.json"
+        "gazi/auth/myys/acceptance/B24-semantics-20261014.json",
+        "gazi/portal/src/myys-client.mjs",
+        "gazi/portal/src/myys-client.test.mjs",
+        "gazi/portal/src/institution-session.jsx",
+        "gazi/portal/src/main.jsx",
+        "gazi/portal/src/academic-workspace.jsx",
+        "gazi/auth/myys/identity-http.mjs",
+        "gazi/auth/myys/identity-sql-http.mjs",
+        "scripts/myys-session-local.mjs",
+        "scripts/myys-session-browser.cjs",
+        "gazi/auth/myys/SESSION-DISPLAY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B06-B07-B24-session-display-20261014.json"
       ],
-      "production_status": "Son canlı16;Paket63yerel kabul;17–63dağıtılmadı;configuredCorekapalı.",
-      "implementation_note": "Mobil menü odak döngüsü/inert/geri dönüş, rota ve Radix pencere odağı, kaynak-matris-rozet sekmeleri, akademik panel odağı ve filtre/alan etiketleri düzeltildi. Katalogda öğrenciye yetkisiz öneri düğmesi gösterilmez. Yerel tarayıcı kabulü geçti; bütün ürün için kritik engel sıfır beyanı yok. Paket32: yeni içerikte kullanıcı odağını animasyonun çalması düzeltildi; 19 gezinme ve16 destek kontrolü,390px ve takvim alanları sınandı; genel AT kabulü açık. Paket56: dört dosya alanı Türkçe/native kaldı; dosya-metni-sonucu sürüm bağı, boş/büyük dosya reddi, yetki eki okuma/kayıt kilidi ve seçimin temizlenmesi eklendi. Kontrollü rozet API yanıtları yalnız arayüz yarış kabulüdür. Paket57: matris program seçimi, müfredat düğmeleri, bağlantı kartları, eski rol/form alanları ve22 vaka tablosu dar ekrana uyarlandı; sayfa taşması gizlenmedi. Paket60 8kaynakCSS içinde152metin foreground bildirimi ve2semantik muted değişkenini ölçüme göre düzeltti;137 ölçülen foreground rengi, hue korunarak açık zeminde koyulaştı, terminal yorumu açıklaştı, örnek damgası okunur oldu. Background/layout/logo değişmedi. 571 aynı kapsam taraması önce22824 yinelenen violation, sonra0; gradient/kısa sayaç/örtüşme gibi8809 inceleme bulgusu pass değildir. Tam1.4.3/WCAG/AT/nontext kabulü açık. Paket61: bildirim sayaçları, sunum sayfa düğmeleri ve rehber adım numaralarında beş renk çifti düzeltildi. Aynı 571 taramada tek karakterleri de değerlendiren profille 703 yinelenen ihlal 0 oldu; 8106 incomplete bulgusu açık. Eşikler 4.5:1/3:1 değişmedi. Tam B24/WCAG kabulü değildir. Paket62: öğrenme akışı, ders/sunum açıklamaları ve kaynak dipnotlarında7 foreground değeri düzeldi; koyu bilgi/rozet kartlarının2 başlık rengi tema seçicisi önceliğiyle korundu. Geçişli arka planlar/yerleşim/logolar aynı.88 ayrı ölçüm imzasından85i bu renderda karşıtlık hedefini geçti;3ü incelemede.3815 tekrar ayrı ölçülmedi. Axe571taramada0violation;8106incomplete hâlâ açık, pass olarak yeniden yazılmadı. Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun başlıkları,4grup/gezinme rolü ve rozet seçimi pressed durumu düzeldi.9React/9eski tablo ve takip tahtası adlandırılmış klavye kaydırma bölgesi; program özet/bağlantıları en az28CSSpx. İki Radix menüsünde arka plan inert, kapanış odağı korunur.",
+      "production_status": "Son canlı16;17–70dağıtılmadı;configuredCorekapalı.",
+      "implementation_note": "Mobil menü odak döngüsü/inert/geri dönüş, rota ve Radix pencere odağı, kaynak-matris-rozet sekmeleri, akademik panel odağı ve filtre/alan etiketleri düzeltildi. Katalogda öğrenciye yetkisiz öneri düğmesi gösterilmez. Yerel tarayıcı kabulü geçti; bütün ürün için kritik engel sıfır beyanı yok. Paket32: yeni içerikte kullanıcı odağını animasyonun çalması düzeltildi; 19 gezinme ve16 destek kontrolü,390px ve takvim alanları sınandı; genel AT kabulü açık. Paket56: dört dosya alanı Türkçe/native kaldı; dosya-metni-sonucu sürüm bağı, boş/büyük dosya reddi, yetki eki okuma/kayıt kilidi ve seçimin temizlenmesi eklendi. Kontrollü rozet API yanıtları yalnız arayüz yarış kabulüdür. Paket57: matris program seçimi, müfredat düğmeleri, bağlantı kartları, eski rol/form alanları ve22 vaka tablosu dar ekrana uyarlandı; sayfa taşması gizlenmedi. Paket60 8kaynakCSS içinde152metin foreground bildirimi ve2semantik muted değişkenini ölçüme göre düzeltti;137 ölçülen foreground rengi, hue korunarak açık zeminde koyulaştı, terminal yorumu açıklaştı, örnek damgası okunur oldu. Background/layout/logo değişmedi. 571 aynı kapsam taraması önce22824 yinelenen violation, sonra0; gradient/kısa sayaç/örtüşme gibi8809 inceleme bulgusu pass değildir. Tam1.4.3/WCAG/AT/nontext kabulü açık. Paket61: bildirim sayaçları, sunum sayfa düğmeleri ve rehber adım numaralarında beş renk çifti düzeltildi. Aynı 571 taramada tek karakterleri de değerlendiren profille 703 yinelenen ihlal 0 oldu; 8106 incomplete bulgusu açık. Eşikler 4.5:1/3:1 değişmedi. Tam B24/WCAG kabulü değildir. Paket62: öğrenme akışı, ders/sunum açıklamaları ve kaynak dipnotlarında7 foreground değeri düzeldi; koyu bilgi/rozet kartlarının2 başlık rengi tema seçicisi önceliğiyle korundu. Geçişli arka planlar/yerleşim/logolar aynı.88 ayrı ölçüm imzasından85i bu renderda karşıtlık hedefini geçti;3ü incelemede.3815 tekrar ayrı ölçülmedi. Axe571taramada0violation;8106incomplete hâlâ açık, pass olarak yeniden yazılmadı. Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun başlıkları,4grup/gezinme rolü ve rozet seçimi pressed durumu düzeldi.9React/9eski tablo ve takip tahtası adlandırılmış klavye kaydırma bölgesi; program özet/bağlantıları en az28CSSpx. İki Radix menüsünde arka plan inert, kapanış odağı korunur. Paket70: üst panelde sunucu kişi/kurum/rol/süre;11sunum profili ayrımı. Tek sekmede yanıt sonuna kadar sıralı istek, bellek içi CSRF, süre/iptal/kişi değişimi ve checkpoint hatasında eski kişi/form kapanışı. Örnek işlemler kurumsal kişi kaydı değildir.",
       "independent_remaining_work": [
         "1142tarama tam ekran okuyucu/sesli komut veya tüm dinamik form/modal durumlarının kabulü değildir. Media/altyazı ve indirilen belge okuma sırası açık.",
         "Axe semantik incelemeleri8masaüstü530dar ekran: p-as-heading açıklama paragrafı, Radix odak koruyucuları ve kapalı menü aria-controls bağı. Kaynak/DOM/klavye incelemesi kaydedildi; ham bulgular pass yapılmadı, gerçek AT kabulü açık.",
@@ -2275,7 +2320,7 @@
       "production_activation_blocker": "Gerçek canlı rol/akış ve tam ekran okuyucu/altyazı/belge erişilebilirliği kabulü açık; önceki browserAuth iptali yeniden denenmedi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; otomatik ad/tablo/odak/hedef dilimi geçti; gerçek AT/medya/belge/karşıtlık açık",
+          "status": "kısmi; otomatik ad/tablo/odak/hedef dilimi geçti; gerçek AT/medya/belge/karşıtlık açık; Paket70 kişi/sunum ayrımı yerel kabulde",
           "evidence": [
             "scripts/myys-local-acceptance.mjs",
             "gazi/auth/myys/NAVIGATION-ACCESSIBILITY.md",
@@ -2306,7 +2351,18 @@
             "scripts/myys-semantics-browser.cjs",
             "scripts/myys-semantic-interactions.cjs",
             "gazi/auth/myys/SEMANTIC-ACCESSIBILITY.md",
-            "gazi/auth/myys/acceptance/B24-semantics-20261014.json"
+            "gazi/auth/myys/acceptance/B24-semantics-20261014.json",
+            "gazi/portal/src/myys-client.mjs",
+            "gazi/portal/src/myys-client.test.mjs",
+            "gazi/portal/src/institution-session.jsx",
+            "gazi/portal/src/main.jsx",
+            "gazi/portal/src/academic-workspace.jsx",
+            "gazi/auth/myys/identity-http.mjs",
+            "gazi/auth/myys/identity-sql-http.mjs",
+            "scripts/myys-session-local.mjs",
+            "scripts/myys-session-browser.cjs",
+            "gazi/auth/myys/SESSION-DISPLAY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B06-B07-B24-session-display-20261014.json"
           ],
           "remaining": [
             "1142tarama tam ekran okuyucu/sesli komut veya tüm dinamik form/modal durumlarının kabulü değildir. Media/altyazı ve indirilen belge okuma sırası açık.",
@@ -2315,13 +2371,13 @@
           ]
         },
         "local_acceptance": {
-          "status": "yerel alt dilim geçti",
-          "evidence": "106otomatik12gateway/envanter48portal46regresyon;19gezinme10yeni etkileşim7reflow kontrolü geçti.928geometri ölçümünde0taşma. Axe4.14.0ile69WCAGetiketli kural:1440ve320genişliklerde571er toplam1142frame taramasında0violation;8ve530incomplete ham olarak korunur. Son tam784sunucu Paketi59; sunucu çalışma kodu değişmedi.",
-          "limits": "69kural, iki genişlik;8/530ham inceleme. Gerçek AT/voice/zoom/medya/belge/tüm dinamik durum kabulü değil."
+          "status": "yerel kişi/sunum ve oturum kapanışı alt dilimi geçti",
+          "evidence": "Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu.",
+          "limits": "Gerçek kurum/IdP/üretim/nativeSSI/RLS/tamAT kabulü değil.14SQLkomut;122işlem açık."
         },
         "live": {
           "status": "yeni dilim yayımlanmadı",
-          "evidence": "Son canlı16;Paket63yerel kabul;17–63dağıtılmadı;configuredCorekapalı."
+          "evidence": "Son canlı16;17–70dağıtılmadı. configuredCorekapalı; browserAuth iptali yenilenmedi."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -3287,23 +3343,23 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 69,
+    "software_package": 70,
     "server_security_tests": "876/876",
-    "portal_tests": "48/48",
+    "portal_tests": "59/59",
     "legacy_tests": "46/46",
-    "local_total": 970,
+    "local_total": 981,
     "last_full_suite": {
-      "software_package": 69,
+      "software_package": 70,
       "server": 876,
-      "portal": 48,
+      "portal": 59,
       "legacy": 46,
-      "total": 970
+      "total": 981
     },
-    "portal_build": "Mevcut derlenmişReact/115statik paket ve yeniSQLverisiyle tarayıcı geçti; portal kaynak değişmedi.",
-    "browser_visual_acceptance": "26SQL+15mevcut=41;320CSSpx/metin aralığı/390pxeski formlar;tamAT/zoomdeğil",
+    "portal_build": "Derlenmiş React ve mevcut korumalı115statik paket geçti.",
+    "browser_visual_acceptance": "83kontrol;13yeni oturum/26SQL/19gezinme/15mevcutkimlik/10etkileşim;320CSSpx ve artırılmış metin aralığı.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16;17–69yayımlanmadı;configuredCorekapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
+    "deployment": "Son canlı16;17–70yayımlanmadı;configuredCorekapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B06-B07-B24-session-display-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -3325,12 +3381,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 69,
-    "source_parent_remote": "fc380103385ba9a732956440c2e4c198fbc7fdcd",
-    "source_parent_tree": "18dd309db23b58ee53c13818987a984edf423008",
+    "software_package": 70,
+    "source_parent_remote": "91e0996121747112cd75662f6ee806bd7e516529",
+    "source_parent_tree": "dbe6748153cb0a1791e2605582d06b501bc8b163",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 970,
-    "note": "Alternatifölçme/ayrıinceleme aynıSQLyerelkabulde. Sıradaki70: üstpanel kimlik gösterimi/kurumoturumu tutarlılığı,11sunumprofili korunarak örnekler ayırt edilsin. Bütünbağımsızlar sürer."
+    "local_tests": 981,
+    "note": "Kişi/sunum ayrımı yerel kabulde. Sıradaki71: aynıSQL kurum yetki/hak sicili taslağı ve bağımsız incelemesi; belge profili/yetki dosyası bağımlılıklarına ilerle.122SQLkomut açık; bütün bağımsızlar sürer."
   },
   "verification_history": [
     {
@@ -3847,6 +3903,26 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16;17–68yayımlanmadı;configuredCorekapalı.",
       "evidence": "gazi/auth/myys/acceptance/B11-appeal-sql-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 69,
+      "server_security_tests": "876/876",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46",
+      "local_total": 970,
+      "last_full_suite": {
+        "software_package": 69,
+        "server": 876,
+        "portal": 48,
+        "legacy": 46,
+        "total": 970
+      },
+      "portal_build": "Mevcut derlenmişReact/115statik paket ve yeniSQLverisiyle tarayıcı geçti; portal kaynak değişmedi.",
+      "browser_visual_acceptance": "26SQL+15mevcut=41;320CSSpx/metin aralığı/390pxeski formlar;tamAT/zoomdeğil",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16;17–69yayımlanmadı;configuredCorekapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B09-B10-alternative-sql-20261014.json"
     }
   ]
 }

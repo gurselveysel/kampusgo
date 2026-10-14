@@ -384,3 +384,9 @@ Mevcut altı akademik sekme ilk8komutla PostgresIdentityFlow özel ön/son guard
 ## Paket69 — SQL alternatif kanıt ve moderasyon
 
 Mevcut alternative-evidence/evidence-moderate kuralları özelalan markalı açıkSQLçalışma kümesine bağlandı.14komut/13tür;16PGadayı/16SQLite149tür/115statik korunur.10yeni/970tamotomatik41tarayıcı;136/18kapsam9035pozitif72280negatif örnek. [Sözleşme](ALTERNATIVE-SQL-CONTRACT.md). Gerçekkurum/üretim/122SQLkomut ve üstpanel kişi tutarlılığı açık;soncanlı16.
+
+## Paket70: üst panel kişi/oturum tutarlılığı
+
+[Oturum gösterimi sözleşmesi](SESSION-DISPLAY-CONTRACT.md). İmzalı yerel kişi/kurum/rol/süre özeti; sunum ve örnek bildirim ayrımı; aynı sekmede tamamlanan yanıt sırası; otomatik yazma tekrarı yok. Başlatılmış istek iptal edilse de yanıt tüketilir. CSRF bellekte; geç başarısız yanıt süre/checkpoint kapanış gerekçesini düşürmez.
+
+Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu. Aynı SQL14komut13kayıt türü;122işlem açık. Yeni kurum kararı veya üretim yetkisi üretilmedi.

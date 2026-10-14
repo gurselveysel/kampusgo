@@ -99,3 +99,7 @@ Yerel itirazpolitikası ve kişiselteslim aynıSQLakışında. GerçekGaziusulü
 ### Paket69 kapsam notu
 
 Alternatifgözlem/ayrı kaliteincelemesi aynıSQL yerel zincirde. Gerçek kurumun yöntem ve kanıt kabulü, güncel eğitici/kalite/komisyon görevleri ve gerçek kaynak doğrulaması mevcut tek eylem listesinde açık. Fixturedaki yeni kişi sentetiktir; gerçek hesap/rol/yeni erişim oluşturulmadı.
+
+### Paket70 durum notu
+
+Üst panel kişi/sunum ayrımı bağımsız olarak tamamlandı; yeni erişim talebi yaratmadı. Gerçek IdP ve ad-soyad kaynağı, kurum görev yetkisi, üretim depo/checkpoint/nativeSSI/RLS ve kimlikli canlı smoke mevcut tek eylem listesindeki yetkilerle sınırlı kalır. browserAuth iptali yenilenmedi. Son canlı16;17–70yayımlanmadı. Kalan122SQLişlem geliştirmesi sürer.

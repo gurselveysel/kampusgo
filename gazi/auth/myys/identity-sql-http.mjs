@@ -53,7 +53,7 @@ export class LocalPostgresIdentityHttp {
     if(purpose==='academic-read'){
      requireThat([...url.searchParams.keys()].every(k=>k==='kurum')&&url.searchParams.getAll('kurum').length===1&&url.searchParams.get('kurum')===this.#config.tenant,'academic_scope','Bu kurum kapsamına erişilemiyor.',404);
      result=await this.#academic.view({sessionHash,tenant:this.#config.tenant,permit});
-     const csrf=await this.#security.csrf(permit,token);result.identitySession={scope:'isolated-sql-acceptance',personId:result.personId,expires:result.sessionExpires,csrf};
+     const csrf=await this.#security.csrf(permit,token);result.identitySession={scope:'isolated-sql-acceptance',tenant:this.#config.tenant,personId:result.personId,expires:result.sessionExpires,csrf};
     }else{
      requireThat(!url.search,'academic_body','Akademik işlem yolu geçersiz.',400);this.#mutation(req,token);const b=await jsonBody(req);
      requireThat(Object.keys(b).every(k=>['tenant','commandId','action','input'].includes(k))&&b.tenant===this.#config.tenant,'academic_scope','Akademik kurum kapsamı geçersiz.',400);

@@ -1,0 +1,195 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 70,
+  "work_ids": [
+    "B06",
+    "B07",
+    "B24"
+  ],
+  "visible_change": "Üst panel kişi/kurum/rol/süre gösterimi ve sunum profili ayrımı; örnek bildirimler, kişiye bağlı akademik alana geçiş.",
+  "code": [
+    "gazi/portal/src/myys-client.mjs",
+    "gazi/portal/src/myys-client.test.mjs",
+    "gazi/portal/src/institution-session.jsx",
+    "gazi/portal/src/main.jsx",
+    "gazi/portal/src/academic-workspace.jsx",
+    "gazi/auth/myys/identity-http.mjs",
+    "gazi/auth/myys/identity-sql-http.mjs",
+    "scripts/myys-session-local.mjs",
+    "scripts/myys-session-browser.cjs"
+  ],
+  "local_tests": {
+    "new": 11,
+    "server": 876,
+    "portal": 59,
+    "legacy": 46,
+    "total": 981,
+    "targeted_http_regression": 60,
+    "nativeSSI": false,
+    "nativeRLS": false
+  },
+  "browser": {
+    "myys-session": {
+      "count": 13,
+      "at": "2026-10-14T16:58:02.570Z",
+      "checks": [
+        "Girişsiz örnek profil kimlik gibi gösterilmedi; kapalı oturum açıklandı",
+        "Başlangıçta kapalı olan genel bakış, başka sekmedeki gerçek girişi odağa dönüşte öğrendi",
+        "İmzalı sağlayıcı girişi üst panel ve akademik kayıtta aynı SQL kişisini gösterdi",
+        "11 sunum profili korundu; hiçbiri gerçek SQL kişisini veya üyeliğini değiştirmedi",
+        "Bildirimler örnek olarak etiketlendi; klavye odağı tetikleyiciye döndü",
+        "Yönetici sunum profiliyle akademik alana dönüş ve yenileme öğrenen yetkisini korudu",
+        "CSRF ve HttpOnly oturum belirteci tarayıcı depolarına yazılmadı",
+        "320 CSS px ve artırılmış metin aralığında kişi/rol görünür kaldı; bağlantı klavyeyle erişildi",
+        "Gerçek SQL üyelik iptali yeniden kontrolde eski kişiyi ve akademik formları kapattı",
+        "Başka sekmede gerçek giriş kişisi değişince önceki kişinin kayıtları kapandı; yenileme yeni kişiyi getirdi",
+        "Sunucuda çıkış sonrası genel bakış eski kişiyi göstermedi",
+        "Süre sonunda kişi ve form kendiliğinden kapandı; sunucu da süresi geçmiş oturumu reddetti",
+        "Birleşik checkpoint üzerinde beklenmedik 503, istemci istisnası veya otomatik yazma tekrarı yok"
+      ]
+    },
+    "myys-alternative-sql": {
+      "count": 26,
+      "at": "2026-10-14T16:58:22.965Z",
+      "checks": [
+        "Kapalı oturum Türkçe giriş yolu sundu; kayıt veya sahte başarı göstermedi",
+        "Ayrı sentetik sağlayıcıdan imzalı giriş aynı SQL kişisine ve altı açık sekmeye bağlandı",
+        "Koordinatör mevcut formda çıktı–görev–rubrik bağlı programı SQL kaydetti",
+        "Farklı SQL kişisi program sürümünü gerekçesiyle inceledi",
+        "Yönetici program sürümüne kaynak ve süreli yerel politika bağladı; resmî onay üretilmedi",
+        "Hazırlayandan farklı SQL komisyon kişisi aynı politikayı inceledi",
+        "Mevcut SQL öğrenen üyeliği aynı program sürümüne kaydedildi; yeni hesap üretilmedi",
+        "Öğrenen kendi görevinin kanıtını sundu; yenilemede SQL kaydı korundu",
+        "Eğitici sözlü gözlem kaydetti; bağımsız inceleme öncesi alternatif kanıt rubriğe alınmadı",
+        "Ayrı SQL kalite kişisi gözlem ve yöntem dayanağını karşılaştırarak aynı kanıtı inceledi",
+        "Ayrı eğitici gerçek bağlı kanıtı mevcut rubrik formuyla değerlendirdi",
+        "Bağımsız komisyon kişisi aynı değerlendirmeye akademik karar kaydetti",
+        "Öğrenen kendi kararını gördüğünü teyit etti; kaynak sürümü ve yalnız yerel süre göründü",
+        "Yeni politika sürümü bağımsız incelemeden sonra gelecekteki kullanım için durduruldu",
+        "Yeni sürüm ve durdurma eski kararın politika dayanağını veya tekil teslim teyidini değiştirmedi",
+        "Aynı öğrenen kendi kararına itiraz etti; açık olmayan belge işlemi gösterilmedi",
+        "Bağımsız inceleyen ilk karar ve öğrenenin itirazını aynı SQL zincirinde sonuçlandırdı",
+        "İtiraz sonucu yeniden giriş ve yenilemede aynı öğrenene döndü",
+        "Eğitici gerekçeli portfolyo sürümünü önceki kanıta bağladı; ilk sürüm silinmedi",
+        "İncelenmiş yeni sürüm sonraki değerlendirmede seçildi; eski sürüm yeni rubrikte seçilemez oldu",
+        "Aynı öğrenen eski karar ve rubriğinin ilk kanıt sürümüyle korunduğunu gördü",
+        "320 CSS px, artırılmış metin aralığı ve altı sekmede klavye geçişi çalıştı",
+        "Kapalı sekmeye eski bağlantı erişilebilir açık sekmeye döndü",
+        "Aynı SQL oturumundan çıkış akademik okumayı kapattı",
+        "Güvenlik kaydı uyuşmazlığında yeni kanıt reddedildi; eski kayıtlar ve formlar kapandı, doğru Türkçe uyarı görüldü",
+        "İstemci istisnası veya beklenmedik sunucu hatası yok"
+      ]
+    },
+    "myys-navigation": {
+      "count": 19,
+      "at": "2026-10-14T16:53:48.162Z",
+      "checks": [
+        "Mobil kapalı menü odak/erişilebilirlik ağacından çıkar; içeriğe geç bağlantısı çalışır",
+        "Mobil menü adlandırılmış modal; ileri/geri odak döngüsü, Escape ve tetikleyiciye dönüş çalışır",
+        "Menü araması boş sonucu açıklar; seçilen sayfaya başlık ve ana içerik odağı taşınır",
+        "Menüden pilot penceresi tek modal olarak açılır; kapanınca mobil menü düğmesine dönülür",
+        "Masaüstüne geçince menü kilidi kalkar; pencere odağı özgün düğmeye döner",
+        "Çalışma alanı seçme penceresi hedef sayfayı açtı ve odağı yeni ana içeriğe taşıdı",
+        "Aynı sayfa seçimi ve dar ekrana dönüşte odak gizli menüde kalmaz; 390 px taşma yok",
+        "11 sunum profilinin tüm menü hedefleri içerikle açıldı; sunum yetkisi uyarısına veya boş sayfaya düşmedi",
+        "Öğrenen katalogdan dört örnek programı planına ekledi; yetkisiz program öneri düğmesi gösterilmedi",
+        "Altı programın 66 dersi doğru başlıkla açıldı; dört materyal sekmesi ve 66 sunum dosyası korundu",
+        "Sunum HTML ve vaka CSV dosyaları gerçek tarayıcı indirmesiyle alındı",
+        "Ders notu ve kişisel tamamlama yenilemede korundu; materyal sekmeleri klavyeyle kullanılabildi",
+        "Rehber ve destek özeti kullanıcı işlemiyle indirildi; dış sisteme gönderildiği iddia edilmedi",
+        "Sayfa geçişi sürerken kullanıcı hedef içerikte odağı taşıdıysa geçiş tamamlanınca odağı çalınmıyor",
+        "Kaynak, matris ve rozet sekmeleri adlandırılmış panele bağlı; ok/Home/End ve tek Tab durağı çalışır",
+        "Kalite ve paydaş kategori filtreleri doğru seçili düğme anlamıyla ve klavyeyle çalışır",
+        "Dokuz çekirdek rolün tüm akademik alt sayfaları boş olmayan adlandırılmış panellerle açıldı",
+        "Akademik sekmelerde End, sağ okla başa dönüş ve Tab ile panel odağı çalışır",
+        "Sunum ve çekirdek gezinmesinde istemci istisnası yok"
+      ]
+    },
+    "myys-identity": {
+      "count": 15,
+      "at": "2026-10-14T16:52:46.445Z",
+      "checks": [
+        "Kapalı oturum paneli güvenli yerel giriş ekranına yönlendiriyor",
+        "Kullanıcı iptali yeniden denenebilir, temiz hata ekranına döndü",
+        "Ayrı sitedeki sentetik IdP, state/PKCE/nonce ve HTTP callback ile aynı öğreneni açtı",
+        "Çerez yalnız uygulama sitesinde, Secure/HttpOnly/Lax; token alışverişi tarayıcıda yok",
+        "Gerçek panel komutu aynı kişiye bağlı oturum ve CSRF başlığıyla kaydoldu",
+        "Yenilemede oturum ve akademik başvuru korundu",
+        "CSRF kanıtı olmayan çıkış reddedildi; açık oturum korunuyor",
+        "390 px oturum/itiraz görünümü taşmıyor; çıkış düğmesi klavyeyle erişilebilir",
+        "Çıkış diğer sekmenin sonraki okumasını da kapattı; yeniden giriş yolu açık",
+        "Yeni giriş aynı kişiyi ve önceki akademik geçmişi korudu",
+        "Sağlayıcının imzalı sunucu bildirimi iki sekmeyi sonraki istekte kapattı; eski CSRF oturumu açamıyor",
+        "İmzalı çıkış belirteci tarayıcıya taşınmadan ayrı HTTPS sunucu çağrısıyla işlendi",
+        "Sağlayıcı iptalinden sonra yeni doğrulama aynı kişiyi ve önceki başvuruyu korudu",
+        "390 px giriş sınırı ekranı Türkçe uyarı, klavye bağlantısı ve taşmayan metin gösteriyor",
+        "İstemci istisnası yok"
+      ]
+    },
+    "myys-semantic-interactions": {
+      "count": 10,
+      "at": "2026-10-14",
+      "checks": [
+        "Öğrenme kartının görünen etiketi seçim değişince erişilebilir adın başında kalır",
+        "Profil menüsü arka plan odağını kapatır; Escape odağı tetikleyiciye döndürür",
+        "Bildirim menüsü arka plan odağını kapatır; Escape odağı tetikleyiciye döndürür",
+        "Eski bildirim sayısı okundu işleminden sonra hem görünür metinde hem erişilebilir adda güncellenir",
+        "Aktarım tablosu 320 CSS px genişlikte odaklanır ve sağ okla gerçekten kayar",
+        "Eski OBS eşleme tablosu aynı klavye kaydırmasını iframe içinde korur",
+        "Program dayanak özeti yerel klavye davranışıyla açılır; hedef ve odak göstergesi korunur",
+        "Mobil menü tetikleyicisinin aria-controls bağı gerçek açılan tek iletişim kutusuna gider",
+        "Pilot penceresinde arka plan ve Radix odak koruyucuları odağı pencereye geri taşır",
+        "Etkileşimlerde istemci istisnası oluşmadı"
+      ]
+    }
+  },
+  "browser_total": 83,
+  "packaged_static_files": 115,
+  "preserved": {
+    "programs": 6,
+    "modules": 22,
+    "lessons": 66,
+    "presentation_profiles": 11,
+    "core_roles": 9,
+    "navigation_targets": 98,
+    "academic_panels": 288
+  },
+  "scope_matrix": {
+    "last_verified_package": 69,
+    "commands": 136,
+    "http_routes": 18,
+    "positive_samples": 9035,
+    "derived_negative_samples": 72280,
+    "rerun_in_package70": false,
+    "note": "Sunucu yetki eylemleri değişmedi; eski SQLite örnek matrisi yeni yerel test sayısına eklenmedi."
+  },
+  "sql": {
+    "actions": 14,
+    "academic_kinds": 13,
+    "unported_actions": 122,
+    "checkpoint_profile": "myys-sql-identity-academic-checkpoint/1"
+  },
+  "source_parent": {
+    "local": "8c9e743c6eb6d17f0ef6ad4ec34b37fd6e41eaae",
+    "remote": "91e0996121747112cd75662f6ee806bd7e516529",
+    "tree": "dbe6748153cb0a1791e2605582d06b501bc8b163"
+  },
+  "live": {
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "software_package": 16,
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "status": "READY",
+    "new_deployment": false,
+    "authenticated_smoke": false,
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "rollback_applied": false
+  },
+  "limits": [
+    "Üretim IdP/rehber/kurum yetkisi bağlı değil; kişi adı uydurulmadı.",
+    "İstek sırası aynı sekmede; dağıtık iptal/kilit/üretim checkpoint kabulü değil.",
+    "Görünür aktif sekmede en çok60s kontrol; her gerçek işlem sunucuda güncel yetkiyle.",
+    "320CSSpx/metin aralığı ve klavye kabulü tamAT/WCAG kabulü değil.",
+    "B23 SEM koşulu kapanmadı; önceki üstpanel çapraz notu B06/B07 kapsamında ele alındı.",
+    "configuredCore Vercelde kapalı; yeni credential/migration/gerçek kişi işlemi yok."
+  ]
+}

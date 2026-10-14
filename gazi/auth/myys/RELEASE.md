@@ -893,3 +893,13 @@ Yerel `085f9cea6400725719f29f9fcc4e7d4a4db90afe`, uzak `fc380103385ba9a732956440
 Başlangıç yerel `085f9cea6400725719f29f9fcc4e7d4a4db90afe`, uzak `fc380103385ba9a732956440c2e4c198fbc7fdcd`, ortak tam ağaç `18dd309db23b58ee53c13818987a984edf423008`. Yeni kaynak eşitleme sonucu sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–69dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; browserAuthiptali yenilenmedi;kurum/üretim/122SQLişlem açık.
 
 14.10.2026 Paket69 eşitlemesi öncesi uzak dal/alias tekrar okundu:68kaynağı ve canlı16READY değişmedi; yeni kimlikli smoke yapılmadı.
+
+### Paket69 kaynak eşitleme sonucu
+
+Yerel `8c9e743c6eb6d17f0ef6ad4ec34b37fd6e41eaae`, uzak `91e0996121747112cd75662f6ee806bd7e516529`, ortak tam ağaç `dbe6748153cb0a1791e2605582d06b501bc8b163`.18blobSHA/tam ağaç eşitliği,expected-headforce=false,uzakref/commit teyidi geçti. Yeni canlı dağıtım yapılmadı.
+
+## Paket70 — üst panel kişi/sunum tutarlılığı; yayın değil
+
+Üst panel, bildirim menüsü ve akademik alan güncellendi. Sunucu kişisi/rol/süre görünür;11örnek profil yetki vermez; süre/iptal/kişi değişimi eski kayıtları kapatır. Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu. [Kanıt](acceptance/B06-B07-B24-session-display-20261014.json).
+
+Başlangıç yerel `8c9e743c6eb6d17f0ef6ad4ec34b37fd6e41eaae`, uzak `91e0996121747112cd75662f6ee806bd7e516529`, ortak tam ağaç `dbe6748153cb0a1791e2605582d06b501bc8b163`. Uzak dal ve canlı alias yeniden okundu; değişmedi. Yeni kaynak kimlikleri sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–70dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; browserAuthiptali yenilenmedi. B06/B07/B24 yerel alt dilim; B23 SEM ve diğer kurum/üretim/122SQLişlem şartları açık.

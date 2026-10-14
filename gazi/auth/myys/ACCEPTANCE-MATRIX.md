@@ -405,3 +405,9 @@ Dört mevcut işlem aynıSQLkimlik+checkpoint zincirinde. Sürüm/askı eski kar
 ## Paket69 — SQL alternatif ölçme ve kalite incelemesi
 
 İncelemesiz/reddedilmiş kanıt seçilemez; hazırlayan/moderatör karar ve itirazdan ayrıdır. Yeni sürüm eski karar/rubrik dayanağını değiştirmez.10yeni/970otomatik41tarayıcı. [Sözleşme](ALTERNATIVE-SQL-CONTRACT.md), [kanıt](acceptance/B09-B10-alternative-sql-20261014.json).36özgünölçüt korunur. B23üstpanel kimlik tutarlılığı sıradaki bağımsızdilimdir.
+
+## Paket70 — kişi ve sunum profili ayrımı
+
+Üst panel ve akademik kayıt aynı imzalı yerel SQL kişisini gösterir.11sunum profili yetki değiştirmez. İptal/süre/çıkış/başka sekmedeki kişi değişimi eski kişi ve formları kapatır. B06/B07/B24 alt kabulü; B23 SEM ölçütü kapanmadı.
+
+Paket70:11yeni istemci testi;876sunucu+59portal+46regresyon=981.13oturum+26SQL+19gezinme+15mevcutkimlik+10etkileşim=83tarayıcı.115statik;98menü288panel66ders11profil9rol korundu. [Kanıt](acceptance/B06-B07-B24-session-display-20261014.json). Son tamkapsam SQLite matrisi69; bu yayında tekrar çalıştırılmadı, test toplamına eklenmedi. Kod kısmi; yerel dilim geçti; canlı17–70yok; kurum/dış erişim/nativeSSI/RLS/tamAT açık.

@@ -70,3 +70,7 @@
 .academic-body summary{min-height:28px;padding-block:2px;cursor:pointer}
 .academic-body .form-stack>a{display:inline-flex;align-items:center;min-height:28px}
 .academic-body summary:focus-visible{outline:3px solid #438bef;outline-offset:3px}
+
+/* Canonical session metadata remains visible at narrow widths; presentation is separate. */
+.institution-session{margin:16px 36px 0;padding:14px 16px;border:1px solid #b8c9db;border-radius:12px;background:#f2f6fb;color:#294766;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.institution-session strong{display:block;font-size:13px;color:#163a5c}.institution-session p{margin:5px 0}.institution-session a{display:inline-block;min-height:28px;text-decoration:underline;color:#1d4ed8}.institution-session a:focus-visible{outline:3px solid #1d4ed8;outline-offset:3px;border-radius:3px}.profile-trigger{max-width:260px;overflow-wrap:anywhere}.profile-trigger>span:not(.avatar){min-width:0}
+@media(max-width:760px){.institution-session{margin:14px 20px 0;padding:12px}.institution-session strong{font-size:12px}}
