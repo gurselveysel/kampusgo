@@ -7,7 +7,7 @@
 | B01 · Mevcut pilot envanterini sabitle | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
 | B02 · Akademik ve SEM yetki yollarını ayır | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B03 · Program bilgi paketini onayla | kısmi | kısmi · sürüm/arşiv dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B04 · Veri akışını ve saklamayı onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B04 · Veri akışını ve saklamayı onayla | kısmi; 14 tablo/120 tür kaynak envanteri | yerel kapsam/özet geçti | Paket40 canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; yerel HTTP anahtar dönüşümü bağlı | 8 yeni test, 15 HTTPS +13 itiraz tarayıcı kontrolü | Paket39 canlı değil | IdP/MFA kabulü bekleniyor | SQL repository/atomik PKCE bariyeri ve gerçek depo/KMS/IdP açık |
@@ -31,7 +31,7 @@
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi | yerel dilim doğrulandı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
-| B28 · Silme saklama ve çıkış haklarını sına | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
+| B28 · Silme saklama ve çıkış haklarını sına | kısmi; envanter ve özne özeti bağlı | 9 yeni test, 52 tarayıcı kontrolü | Paket40 canlı değil | dayanak/süre/başvuru usulü bekleniyor | tam silme, yedek ve dış hesap kabulü açık |
 | B29 · Kalite göstergelerini gerçek veriye bağla | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B30 · Kontrollü kohortu aç ve değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B31 · Ücretli hizmeti koşullu aç | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
@@ -263,3 +263,7 @@ Cüzdan seçenekleri sekmesi özel cüzdanla bağlantılıdır. Mevcut özel cü
 ## Paket39 — yerel giriş anahtarı dönüşümü
 
 634 otomatik test; 28 tarayıcı regresyonu. Yerel CSRF/oran bütçesi yeni anahtarla sıfırlanmaz; etkin yeni sürüm eski işçiyi kapatır. Eski işçiler boşaltılmadan kesin geçiş süresi yoktur. HTTP başlangıç denetimi, atomik PKCE/nonce session-commit bariyeri değildir. `HTTP-KEY-ROTATION-CONTRACT.md` ve B07 kabul JSON’u ayrıntıdır. B07 beş eksende açık; yeni canlı yayın yok.
+
+## Paket40 — veri kapsamı ve özne özeti
+
+643 otomatik, 52 tarayıcı kontrolü. 14 teknik tablo/120 tür kaynak envanteri; 58 tür için izinli alan özeti, sekiz kategori. Destek/mali prova/tanıma/OBS ve alıcı ayrımı aynı kişi zincirinde. Kaynak envanteri tam kurum alan envanteri değildir; süre/dayanak veya tam hesap silmesi kabulü kapanmadı. `DATA-INVENTORY-CONTRACT.md` ve B04-B28 kabul JSON’u ayrıntıdır. Yeni canlı yayın yok.

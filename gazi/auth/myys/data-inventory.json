@@ -1,0 +1,268 @@
+{
+  "version": "2026.10.14.40",
+  "scope": "local-acceptance-source-inventory",
+  "generatedFrom": "schema declarations and reviewed explicit recordGroups/subjectFields",
+  "institutionApproved": false,
+  "productionInventoryComplete": false,
+  "tables": [
+    {
+      "table": "audit",
+      "source": "store.mjs",
+      "columns": [
+        "sequence",
+        "tenant",
+        "actor",
+        "action",
+        "record_id",
+        "at"
+      ],
+      "purpose": "İşlem sırası ve sorumluluğunu izlemek",
+      "scope": "tenant/actor/record_id",
+      "lifecycle": "Değişmez iz; dayanak/süre, özne talebi ve yedek imhası ayrı kabul gerektirir.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "bindings",
+      "source": "store.mjs",
+      "columns": [
+        "session_hash",
+        "person",
+        "expires",
+        "mfa"
+      ],
+      "purpose": "Süreli doğrulanmış oturumu kişiye bağlamak",
+      "scope": "identity_scopes tenant bağı",
+      "lifecycle": "Yalnız kapsamı kanıtlı süresi dolmuş satırlar; canlı/kapsamsız/diğer kurum korunur.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "commands",
+      "source": "store.mjs",
+      "columns": [
+        "tenant",
+        "person",
+        "id",
+        "digest",
+        "result"
+      ],
+      "purpose": "Aynı kişi/kurum komutunun tekrarını güvenle tanımak",
+      "scope": "tenant/person/id",
+      "lifecycle": "Sonuç içinde kişisel kayıt bulunabilir; idempotency süresi/yeniden oynatma kabulü olmadan silinmez.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_challenges",
+      "source": "identity-flow.mjs",
+      "columns": [
+        "id",
+        "state_hash",
+        "browser_hash",
+        "tenant",
+        "contract_digest",
+        "created",
+        "expires",
+        "status",
+        "finished"
+      ],
+      "purpose": "Giriş state/PKCE/nonce tek kullanımını denetlemek",
+      "scope": "tenant/browser_hash/contract_digest",
+      "lifecycle": "Süre ve durum otomatik fiziksel imha değildir; sahiplik kanıtı ve callback tekrar güvenliğiyle ayrıca değerlendirilir.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_http_key_epochs",
+      "source": "identity-rate-limit.mjs",
+      "columns": [
+        "tenant",
+        "namespace",
+        "revision",
+        "key_digest",
+        "limits_digest",
+        "activated"
+      ],
+      "purpose": "Güncel CSRF/oran anahtar revizyonunu tutmak",
+      "scope": "tenant/namespace",
+      "lifecycle": "Geri alınmış sürümü yeniden açmamak için aktif bariyer silinmez; checkpoint politikası açık.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_http_key_history",
+      "source": "identity-rate-limit.mjs",
+      "columns": [
+        "tenant",
+        "namespace",
+        "revision",
+        "key_digest",
+        "activated"
+      ],
+      "purpose": "Önceki anahtarın tekrar kullanımını engellemek",
+      "scope": "tenant/namespace/revision/key_digest",
+      "lifecycle": "Eski anahtar tekrarının ve geri yüklemenin engeli; süre uydurulmaz, otomatik temizlik yok.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_logout_receipts",
+      "source": "identity-revocation.mjs",
+      "columns": [
+        "tenant",
+        "issuer",
+        "audience",
+        "jti_hash",
+        "digest",
+        "subject_hash",
+        "sid_hash",
+        "issued",
+        "expires",
+        "received"
+      ],
+      "purpose": "Tek kullanımlık çıkış makbuzu ve gecikmiş giriş engeli",
+      "scope": "tenant/issuer/audience/jti_hash",
+      "lifecycle": "Belirteç süresi dolması tek başına silme gerekçesi değildir; geç giriş ve geri yükleme bariyeri korunur.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_provider_sessions",
+      "source": "identity-revocation.mjs",
+      "columns": [
+        "session_hash",
+        "tenant",
+        "issuer",
+        "audience",
+        "subject_hash",
+        "sid_hash",
+        "issued",
+        "authenticated"
+      ],
+      "purpose": "İmzalı sağlayıcı çıkışını mevcut oturumla eşlemek",
+      "scope": "tenant/issuer/audience + binding FK",
+      "lifecycle": "Binding silindiğinde cascade; subject/sid özeti kişisel bağ olmaktan çıkmış sayılmaz.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_rate_buckets",
+      "source": "identity-rate-limit.mjs",
+      "columns": [
+        "tenant",
+        "namespace",
+        "purpose",
+        "bucket",
+        "started",
+        "ends",
+        "used"
+      ],
+      "purpose": "Giriş amaçlarına göre ortak istek sınırını tutmak",
+      "scope": "tenant/namespace/purpose/bucket",
+      "lifecycle": "Süresi biten kova aynı namespace kontrolünde temizlenir; canlı bütçe korunur; HMAC anonimlik garantisi değildir.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_scopes",
+      "source": "store.mjs",
+      "columns": [
+        "session_hash",
+        "tenant",
+        "contract_version",
+        "created_at"
+      ],
+      "purpose": "Oturumun kuruma ve kimlik sözleşmesine bağını tutmak",
+      "scope": "session_hash FK",
+      "lifecycle": "Binding silindiğinde cascade; bağımsız silme uygulanmaz.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_session_links",
+      "source": "identity-flow.mjs",
+      "columns": [
+        "tenant",
+        "browser_hash",
+        "session_hash",
+        "expires"
+      ],
+      "purpose": "Tarayıcıdan türeyen oturumların çıkış ailesini tutmak",
+      "scope": "tenant/browser_hash/session_hash",
+      "lifecycle": "Ebeveynin süresi dolması yeterli değildir; yaşayan alt oturum/istek varken ilişki silinmez.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "memberships",
+      "source": "store.mjs",
+      "columns": [
+        "tenant",
+        "person",
+        "unit",
+        "roles",
+        "expires",
+        "active"
+      ],
+      "purpose": "Kurum/birim görevini ve geçerliliğini tutmak",
+      "scope": "tenant/person/unit",
+      "lifecycle": "İptal satırı silmez; kurum kararı ve akademik işlem izi ayrı incelenmeli.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "persons",
+      "source": "store.mjs",
+      "columns": [
+        "id",
+        "issuer",
+        "subject",
+        "active"
+      ],
+      "purpose": "Kişiyi issuer/subject çiftiyle eşlemek",
+      "scope": "active kişi durumu; kurumlar arasında ortak kişi",
+      "lifecycle": "Otomatik silme kapalı; çok kurum ve akademik bağlar için ayrı dayanak/süre gerekli.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "records",
+      "source": "store.mjs",
+      "columns": [
+        "tenant",
+        "kind",
+        "id",
+        "unit",
+        "owner",
+        "data"
+      ],
+      "purpose": "Sürümü değişmez iş kayıtlarını tutmak",
+      "scope": "tenant/kind/id/unit/owner",
+      "lifecycle": "Tür bazlı kurum dayanak/süre henüz onaylı değil; otomatik silme yok.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    }
+  ],
+  "recordCatalog": "privacy-inventory-model.mjs",
+  "limits": [
+    "Records data JSON fields are governed by positive subject export schemas; this is not a full institution field inventory.",
+    "No external IdP/LMS/OBS/PSP/KMS/backup inventory or legal retention period is inferred.",
+    "Structural hashes and pseudonyms can remain personal data; raw security records are not self-service exports.",
+    "Free-text authored by the subject may mention others; no semantic anonymization claim."
+  ]
+}

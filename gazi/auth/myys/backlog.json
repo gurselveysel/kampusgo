@@ -214,7 +214,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "10 yeni sunucu senaryosu ve 12 izole tarayıcı kontrolü geçti; güncel toplam 306 otomatik test.",
+      "test_status": "Paket40: 9 yeni envanter/özne testi; 549 sunucu +48 portal +46 regresyon =643. 9 kapsam +11 veri talebi +13 itiraz +19 gezinme =52 tarayıcı kontrolü.",
       "implementation_evidence": [
         "gazi/auth/myys/registry.mjs",
         "gazi/auth/tests/myys-lms.test.mjs",
@@ -225,18 +225,26 @@
         "gazi/auth/tests/myys-retention.test.mjs",
         "scripts/myys-retention-browser.cjs",
         "gazi/auth/myys/RETENTION-CONTRACT.md",
-        "gazi/auth/myys/acceptance/B04-20261010.json"
+        "gazi/auth/myys/acceptance/B04-20261010.json",
+        "gazi/auth/myys/data-inventory.json",
+        "gazi/auth/myys/privacy-inventory-model.mjs",
+        "gazi/auth/myys/privacy-inventory.mjs",
+        "gazi/auth/myys/DATA-INVENTORY-CONTRACT.md",
+        "gazi/auth/tests/myys-data-inventory.test.mjs",
+        "scripts/myys-data-inventory-browser.cjs",
+        "gazi/auth/myys/acceptance/B04-B28-inventory-20261014.json"
       ],
-      "production_status": "Paket 14 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kurumsal saklama/aktarım ve üretim temizleme kapalı.",
-      "implementation_note": "Sicile bağlı sürümlü ülke/rol/aşama/süre ve akademik saklama ayrımı; bağımsız inceleme, silmeden önizleme, ayrı BT ile sınırlı atomik yerel oturum temizliği. Hukuki veya üretim onayı değildir.",
+      "production_status": "Paket40 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–40 dağıtımı yok; kurumsal etkinleştirme kapalı.",
+      "implementation_note": "Sicile bağlı sürümlü ülke/rol/aşama/süre ve akademik saklama ayrımı; bağımsız inceleme, silmeden önizleme, ayrı BT ile sınırlı atomik yerel oturum temizliği. Hukuki veya üretim onayı değildir. Paket40: 14 teknik tablo/120 kayıt türü kaynak envanteri, sekiz kategorili kişi kapsamı ve 58 türde izinli alan özeti. Bu kurumun tam alan/hukuk/saklama envanteri değildir; OBS özne ve portfolyo alıcısı ayrı seçilir, ham güvenlik/başka kişinin verisi açılmaz.",
       "independent_remaining_work": [
-        "Üretim depo/işçi adaptörü, gerçek sağlayıcı ülke/rol belgeleri ve kurum saklama/aktarım kararlarının kabulü; fiziksel imha ve yedek politikası."
+        "Her gerçek iş alanı/akış için kurum amaç-dayanak-süre, taraf/sağlayıcı ülke ve alıcı kararının kabulü; kaynak envanteri hukuki kabul değildir.",
+        "Üretim depo/işçi adaptörü, güvenlik iptal checkpoint ve idempotency saklama bağı, fiziksel imha/yedek politikası."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Veri sorumlusunun amaç, aktarım ve saklama kararı.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; yerel kaynak envanteri ve kişi özeti dilimi bağlı",
           "evidence": [
             "gazi/auth/myys/registry.mjs",
             "gazi/auth/tests/myys-lms.test.mjs",
@@ -247,20 +255,28 @@
             "gazi/auth/tests/myys-retention.test.mjs",
             "scripts/myys-retention-browser.cjs",
             "gazi/auth/myys/RETENTION-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B04-20261010.json"
+            "gazi/auth/myys/acceptance/B04-20261010.json",
+            "gazi/auth/myys/data-inventory.json",
+            "gazi/auth/myys/privacy-inventory-model.mjs",
+            "gazi/auth/myys/privacy-inventory.mjs",
+            "gazi/auth/myys/DATA-INVENTORY-CONTRACT.md",
+            "gazi/auth/tests/myys-data-inventory.test.mjs",
+            "scripts/myys-data-inventory-browser.cjs",
+            "gazi/auth/myys/acceptance/B04-B28-inventory-20261014.json"
           ],
           "remaining": [
-            "Üretim depo/işçi adaptörü, gerçek sağlayıcı ülke/rol belgeleri ve kurum saklama/aktarım kararlarının kabulü; fiziksel imha ve yedek politikası."
+            "Her gerçek iş alanı/akış için kurum amaç-dayanak-süre, taraf/sağlayıcı ülke ve alıcı kararının kabulü; kaynak envanteri hukuki kabul değildir.",
+            "Üretim depo/işçi adaptörü, güvenlik iptal checkpoint ve idempotency saklama bağı, fiziksel imha/yedek politikası."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "10 yeni sunucu senaryosu ve 12 izole tarayıcı kontrolü geçti; güncel toplam 306 otomatik test.",
-          "limits": "Sadece sentetik yerel oturum temizliği; kurum kararları ve üretim/fiziksel imha kabulü yok."
+          "status": "kısmi; envanter/özne özeti dilimi geçti",
+          "evidence": "Paket40: 9 yeni envanter/özne testi; 549 sunucu +48 portal +46 regresyon =643. 9 kapsam +11 veri talebi +13 itiraz +19 gezinme =52 tarayıcı kontrolü.",
+          "limits": "Tam hesap silmesi, kurum alan envanteri, hukuki saklama veya üretim kabulü değildir."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 14 kaynak kodu READY yayımlandı; gerçek canlı kapalı kurum görünümü doğrulandı. Kurumsal saklama/aktarım ve üretim temizleme kapalı."
+          "status": "Paket40 canlı yayımlanmadı",
+          "evidence": "Paket40 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–40 dağıtımı yok; kurumsal etkinleştirme kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2044,47 +2060,63 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "11 sunucu senaryosu ve 11 izole tarayıcı kontrolü geçti; tam hesap silme kabulü değildir.",
+      "test_status": "Paket40: 9 yeni envanter/özne testi; 549 sunucu +48 portal +46 regresyon =643. 9 kapsam +11 veri talebi +13 itiraz +19 gezinme =52 tarayıcı kontrolü.",
       "implementation_evidence": [
         "gazi/auth/myys/privacy.mjs",
         "gazi/portal/src/privacy-workspace.jsx",
         "gazi/auth/tests/myys-privacy.test.mjs",
         "scripts/myys-privacy-browser.cjs",
         "gazi/auth/myys/PRIVACY-CONTRACT.md",
-        "gazi/auth/myys/acceptance/B28-20261010.json"
+        "gazi/auth/myys/acceptance/B28-20261010.json",
+        "gazi/auth/myys/data-inventory.json",
+        "gazi/auth/myys/privacy-inventory-model.mjs",
+        "gazi/auth/myys/privacy-inventory.mjs",
+        "gazi/auth/myys/DATA-INVENTORY-CONTRACT.md",
+        "gazi/auth/tests/myys-data-inventory.test.mjs",
+        "scripts/myys-data-inventory-browser.cjs",
+        "gazi/auth/myys/acceptance/B04-B28-inventory-20261014.json"
       ],
-      "production_status": "Paket 11 kaynak kodu READY yayımlandı ve canlı kapalı kurum görünümü doğrulandı; veri talepleri yalnız yerel kabulde.",
-      "implementation_note": "Kişiye özel özet indirme, talep, ayrı gerekçeli yanıt, yerel görüntüleme, paylaşım geri çekme ve yalnız süresi dolmuş kurum oturumu temizliği.",
+      "production_status": "Paket40 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–40 dağıtımı yok; kurumsal etkinleştirme kapalı.",
+      "implementation_note": "Kişiye özel özet indirme, talep, ayrı gerekçeli yanıt, yerel görüntüleme, paylaşım geri çekme ve yalnız süresi dolmuş kurum oturumu temizliği. Paket40: 14 teknik tablo/120 kayıt türü kaynak envanteri, sekiz kategorili kişi kapsamı ve 58 türde izinli alan özeti. Bu kurumun tam alan/hukuk/saklama envanteri değildir; OBS özne ve portfolyo alıcısı ayrı seçilir, ham güvenlik/başka kişinin verisi açılmaz.",
       "independent_remaining_work": [
-        "Tam gereksiz hesap verisi envanteri ve üretim silme/yeniden saklama adaptörü; yedeklerde imha doğrulaması.",
+        "Gereksiz hesap kayıtlarında kanıtlı sahiplik/sona erme, oturum ailesi/iptal/anahtar checkpoint güvenliğiyle sınırlı temizleme ve yeniden saklama sözleşmesi; tam üretim silme ve yedeklerde imha doğrulaması.",
+        "Kurumun bütün JSON iş alanları, dış hizmet/işleyen/ülke/alıcı ve dayanak/süre envanteri; 14 tablo/120 tür kaynak envanteri bunun tamamı değildir.",
         "Resmî başvuru/bildirim teslim kanıtı ve dış platform kapanışının belge doğrulamasına etkisi kabulü."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Hukuki saklama kararı; geri alınamaz üretim silme yetkisi verilmedi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; yerel kaynak envanteri ve kişi özeti dilimi bağlı",
           "evidence": [
             "gazi/auth/myys/privacy.mjs",
             "gazi/portal/src/privacy-workspace.jsx",
             "gazi/auth/tests/myys-privacy.test.mjs",
             "scripts/myys-privacy-browser.cjs",
             "gazi/auth/myys/PRIVACY-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B28-20261010.json"
+            "gazi/auth/myys/acceptance/B28-20261010.json",
+            "gazi/auth/myys/data-inventory.json",
+            "gazi/auth/myys/privacy-inventory-model.mjs",
+            "gazi/auth/myys/privacy-inventory.mjs",
+            "gazi/auth/myys/DATA-INVENTORY-CONTRACT.md",
+            "gazi/auth/tests/myys-data-inventory.test.mjs",
+            "scripts/myys-data-inventory-browser.cjs",
+            "gazi/auth/myys/acceptance/B04-B28-inventory-20261014.json"
           ],
           "remaining": [
-            "Tam gereksiz hesap verisi envanteri ve üretim silme/yeniden saklama adaptörü; yedeklerde imha doğrulaması.",
+            "Gereksiz hesap kayıtlarında kanıtlı sahiplik/sona erme, oturum ailesi/iptal/anahtar checkpoint güvenliğiyle sınırlı temizleme ve yeniden saklama sözleşmesi; tam üretim silme ve yedeklerde imha doğrulaması.",
+            "Kurumun bütün JSON iş alanları, dış hizmet/işleyen/ülke/alıcı ve dayanak/süre envanteri; 14 tablo/120 tür kaynak envanteri bunun tamamı değildir.",
             "Resmî başvuru/bildirim teslim kanıtı ve dış platform kapanışının belge doğrulamasına etkisi kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "11 sunucu senaryosu ve 11 izole tarayıcı kontrolü geçti; tam hesap silme kabulü değildir.",
-          "limits": "Sentetik yerel veri; fiziksel imha ve tüm hesap verisi silme kabulü değil."
+          "status": "kısmi; envanter/özne özeti dilimi geçti",
+          "evidence": "Paket40: 9 yeni envanter/özne testi; 549 sunucu +48 portal +46 regresyon =643. 9 kapsam +11 veri talebi +13 itiraz +19 gezinme =52 tarayıcı kontrolü.",
+          "limits": "Tam hesap silmesi, kurum alan envanteri, hukuki saklama veya üretim kabulü değildir."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 11 kaynak kodu READY yayımlandı ve canlı kapalı kurum görünümü doğrulandı; veri talepleri yalnız yerel kabulde."
+          "status": "Paket40 canlı yayımlanmadı",
+          "evidence": "Paket40 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–40 dağıtımı yok; kurumsal etkinleştirme kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",

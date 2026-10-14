@@ -573,3 +573,17 @@ Yerel `406adb9e5e5c996448cff7bb01dd2712e0cca232`; uzak `fce97922b80c8ff0123e43ce
 - 14.10 güncel uzak baş/alias okundu. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production. 17–39 dağıtımı/yeni oturumlu smoke yok. Kullanıcının browserAuth iptali yeniden istenmedi; configuredCore kapalı.
 - Canlı geri dönüş hedefi15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
 - PostgreSQL repository, atomik PKCE/nonce bariyeri, gerçek IdP/KMS/depo/RLS ve dağıtık kabul açık. Yeni servis/credential/üretim migration yok. B07 ve B01–B36 bütünü tamamlanmadı.
+
+### Paket39 kaynak kimlikleri
+
+Yerel `24d24eea531acf330a489ce5ea5df5c12caae7d8`; uzak `f9857e78a5da33450786350c3c197670dbec3e6c`; ortak tam ağaç `2fccc1756e0d4112063f50f732fab66f9e9a5d0b`. 13 blob SHA ve tam ağaç eşleşti; beklenen uzak baş `fce97922b80c8ff0123e43cef3d3585d58dfc1f1`, force=false. Uzak yeni baş doğrulandı; yeni canlı yayın yok.
+
+## Paket40 — veri kapsamı ve kişisel özet; kaynak adayı
+
+14.10.2026. Veri talepleri ekranında Kayıt kapsamım: sekiz kategori, kendi kayıt/indirilebilir özet/görev katkısı/alıcı sayıları, kurum oturum sayacı, filtre ve klavye ayrıntıları. Destek, mali prova, belge/tanıma/OBS ve alıcı geçmişi kişiye bağlı güvenli alanlarla indirilebilir. Yeni silme yetkisi açılmaz.
+
+- 549 sunucu +48 portal +46 regresyon =643 otomatik; 9 kapsam +11 veri talebi +13 itiraz +19 gezinme =52 tarayıcı. 111 komut/16 HTTP, 5174 örnek/41392 negatif kontrol; 115 korumalı statik dosya.
+- Taban yerel `24d24eea531acf330a489ce5ea5df5c12caae7d8` / uzak `f9857e78a5da33450786350c3c197670dbec3e6c` / ortak `2fccc1756e0d4112063f50f732fab66f9e9a5d0b`.
+- 14.10 uzak dal ve canlı alias yeniden okundu. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production. 17–40 dağıtımı/yeni oturumlu smoke yok. BrowserAuth kullanıcı iptali yeniden istenmedi; configuredCore kapalı.
+- Canlı geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
+- 14 tablo/120 tür kaynak envanteri kurumun bütün alan/süre/dayanak/işleyen/ülke envanteri değildir. Tam hesap silmesi, resmî bildirim, üretim/backup imhası ve dış hizmet kapanışı kabulü açık. B04/B28 ve bütün B01–B36 tamamlanmadı.

@@ -28,3 +28,7 @@ Saklama işçisi yalnız MYYS-local/session/expired-sessions hedefinde, süre do
 - Mantıksal oturum satırı temizliği fiziksel imha değildir. Akademik kayıt, kimlik, harici hesap ve yedekler değişmez.
 - Kanıt: acceptance/B04-20261010.json; 214 sunucu + 46 portal + 46 regresyon = 306 otomatik test. 390 px inceleme ve ülke seçimi formunda taşma yok; rol/yenileme/kalıcılık ve istemci hata kontrolleri geçti. Ekran okuyucuyla insan kabulü ayrıca gerekir.
 - Üretim depo/işçi, gerçek saklama kararları, sağlayıcı ülke/rol belgeleri ve fiziksel imha kabulü açıktır. configuredCore Vercel'de kapalıdır.
+
+## Paket40 izleme — 14.10.2026
+
+`DATA-INVENTORY-CONTRACT.md`: 14 teknik tablo ve 120 kayıt türü kaynak envanteri, 58 türde kişisel izinli alan özeti ve sekiz kategorili Veri talepleri görünümü eklendi. Önceki test sayıları tarihsel kanıttır. Sınırlı oturum temizliği korunur; tam hesap silmesi, hukuki saklama ve üretim/yedek kabulü açık kalır.

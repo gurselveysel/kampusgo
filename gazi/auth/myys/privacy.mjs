@@ -1,6 +1,7 @@
 import {randomUUID} from 'node:crypto';
 import {requireThat,hash,LocalAcceptanceStore} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
+import {subjectSnapshot,subjectInventory} from './privacy-inventory.mjs';
 const text=(v,min=20,max=2000)=>typeof v==='string'&&v.trim().length>=min&&v.length<=max;
 const member=(a,u)=>a.memberships.some(m=>m.unit===u);
 const reviewer=(a,u)=>a.mfa&&a.memberships.some(m=>m.unit===u&&m.roles.includes('admin'));
@@ -50,43 +51,13 @@ export function privacyCommand({action,p,a,s,put,id,now}){
  }
  return null;
 }
-export function privacyView(s,a){
+export function privacyView(s,a,now=new Date().toISOString()){
  const requests=s.list(a.tenant,'privacy-request').filter(r=>member(a,r.unit)&&(r.owner===a.id||reviewer(a,r.unit))).map(r=>({...r,responses:s.list(a.tenant,'privacy-response').filter(x=>x.requestId===r.id).map(x=>({...x,read:s.list(a.tenant,'privacy-read').find(v=>v.responseId===x.id)||null,cleanup:s.list(a.tenant,'privacy-cleanup').find(v=>v.responseId===x.id)||null})),canRespond:reviewer(a,r.unit)&&r.owner!==a.id}));
- return {requests,units:a.memberships.map(m=>m.unit),withdrawals:s.list(a.tenant,'privacy-withdrawal').filter(r=>r.owner===a.id&&member(a,r.unit))};
+ return {inventory:subjectInventory(s,a,now),requests,units:a.memberships.map(m=>m.unit),withdrawals:s.list(a.tenant,'privacy-withdrawal').filter(r=>r.owner===a.id&&member(a,r.unit))};
 }
-const exportFields={
- 'advice-sample':['id','unit','programId','enrollmentId','assessmentId','protocolId','protocolVersion','origin','language','suggestion','baselineScores','rubric','reason','createdAt'],
- 'advice-compare':['id','unit','sampleId','assessmentId','rows','metrics','reason','createdAt'],
- 'advice-contest':['id','unit','sampleId','comparisonId','reason','formalNotificationAt','createdAt'],
- 'advice-resolve':['id','unit','sampleId','contestId','comparisonId','outcome','correctedScores','reason','createdAt'],
- 'portfolio-grant':['id','unit','policyId','policyVersion','purpose','enrollmentId','issuanceId','skillLinks','evidenceIds','expires','createdAt'],
- 'portfolio-revocation':['id','unit','grantId','reason','createdAt'],
- 'portfolio-access':['id','unit','grantId','recipientPersonId','purpose','createdAt'],
- 'portfolio-feedback':['id','unit','grantId','recipientPersonId','purpose','kind','message','createdAt'],
- application:['id','unit','programId','reason','createdAt'],
- 'application-review':['id','unit','programId','applicationId','outcome','reason','enrollmentId','createdAt'],
- 'credential-receipt':['id','unit','programId','issuanceId','kind','externalAcceptance','createdAt'],
- enrollment:['id','unit','programId','createdAt'],
- evidence:['id','unit','programId','enrollmentId','taskId','content','sha256','source','alternative','createdAt'],
- 'evidence-moderation':['id','unit','evidenceId','enrollmentId','programId','evidenceDigest','outcome','reason','verificationReference','version','createdAt'],
- assessment:['id','unit','programId','enrollmentId','evidenceIds','evidenceDigests','scores','score','passed','reason','createdAt'],
- decision:['id','unit','programId','enrollmentId','assessmentId','outcome','reason','score','programVersion','createdAt'],
- appeal:['id','unit','decisionId','reason','createdAt'],resolution:['id','unit','appealId','decisionId','outcome','reason','createdAt'],
- issuance:['id','unit','programId','decisionId','state','issuer','createdAt'],
- share:['id','unit','issuanceId','purpose','expires','createdAt'],'share-revocation':['id','unit','shareId','createdAt'],
- support:['id','unit','subject','message','category','state','createdAt'],
- 'recognition-request':['id','unit','enrollmentId','policyId','sourceTitle','sourceIssuer','sourceCredentialId','sourceOutcomeKey','sourceDigest','targetProgramCode','targetCourseCode','requestedCredits','remoteCredits','mappingReason','createdAt'],
- 'recognition-decision':['id','unit','requestId','policyId','outcome','credits','remoteCredits','reason','authorityReference','createdAt'],
- 'recognition-credit':['id','unit','decisionId','requestId','targetProgramCode','targetCourseCode','credits','createdAt'],
- 'recognition-reversal':['id','unit','creditId','decisionId','reason','createdAt'],
- 'privacy-request':['id','unit','type','category','description','submission','createdAt'],
- 'privacy-response':['id','unit','requestId','outcome','response','basisReference','academicRetentionReference','reviewOn','createdAt'],
- 'privacy-cleanup':['id','unit','scope','deletedSessionRows','academicRecordsDeleted','requestFullyFulfilled','createdAt']
-};
 export function subjectExport(core,context){return core.store.transaction(()=>{
  const s=core.store,now=core.clock(),a=s.principal(context.sessionHash,context.tenant,now);requireThat(a.mfa,'mfa_required','Kişisel kayıt dışa aktarımı için çok faktörlü doğrulama gerekli.',403);
- const records=Object.fromEntries(Object.entries(exportFields).map(([kind,fields])=>[kind,s.list(a.tenant,kind).filter(r=>r.owner===a.id&&member(a,r.unit)).map(r=>Object.fromEntries(fields.filter(k=>r[k]!==undefined).map(k=>[k,r[k]])))]));
- const programIds=new Set(records.enrollment.map(r=>r.programId));const programs=s.list(a.tenant,'program').filter(p=>programIds.has(p.id)).map(p=>({id:p.id,code:p.code,title:p.title,version:p.version}));
- const payload={format:'myys-subject-export/1',tenant:a.tenant,personId:a.id,at:now,records,programs,scope:'local-acceptance',official:false,limits:['Yalnız MYYS yerel kabul kayıtları; kurum veya dış platformların tüm verileri değildir.','Gizli oturum ve paylaşım anahtarları dışa aktarılmaz.','Bu indirme hesabı veya akademik kaydı silmez.']};
- const exportId=randomUUID(),digest=hash(stableStringify(payload));s.put(a.tenant,'privacy-export',{id:exportId,unit:a.memberships[0].unit,owner:a.id,createdAt:now,sha256:digest,recordCount:Object.values(records).reduce((n,rs)=>n+rs.length,0)});s.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(a.tenant,a.id,'privacy-export',exportId,now);return {payload,sha256:digest};
+ const snapshot=subjectSnapshot(s,a,now);
+ const payload={format:'myys-subject-export/2',tenant:a.tenant,personId:a.id,at:now,...snapshot,scope:'local-acceptance',official:false,limits:['Yalnız bu kurumda etkin birim üyeliğiniz kapsamında, yerel MYYS kayıtlarının izinli alan özetleri.','Gizli oturum/paylaşım değerleri, imzalı belirteçler ve başka kişinin kayıtları dışa aktarılmaz.','Görevli katkıları yalnız sayıdır; alıcı işlemleri öğrencinin kanıtını yeniden açmaz.','Bilinmeyen kayıt türleri içerik olarak verilmez; ayrı inceleme gerekir.','Bu indirme hesabı veya akademik kaydı silmez; resmî başvuru yanıtı değildir.']};
+ const exportId=randomUUID(),digest=hash(stableStringify(payload)),ownRecordCount=Object.values(snapshot.records).reduce((n,rs)=>n+rs.length,0),recipientRecordCount=Object.values(snapshot.recipientRecords).reduce((n,rs)=>n+rs.length,0);s.put(a.tenant,'privacy-export',{id:exportId,unit:a.memberships[0].unit,owner:a.id,createdAt:now,sha256:digest,recordCount:ownRecordCount+recipientRecordCount,ownRecordCount,recipientRecordCount});s.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(a.tenant,a.id,'privacy-export',exportId,now);return {payload,sha256:digest};
  });}

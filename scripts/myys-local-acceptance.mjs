@@ -1,9 +1,9 @@
 import {localWalletStudySetup} from '../gazi/auth/tests/helpers/local-wallet-study.mjs';
 import {localAdviceSetup} from '../gazi/auth/tests/helpers/local-advice.mjs';
-import {localPortfolioSetup} from '../gazi/auth/tests/helpers/local-portfolio.mjs';
+import {localPortfolioSetup,portfolioPurpose,portfolioReason} from '../gazi/auth/tests/helpers/local-portfolio.mjs';
 import {localSkillMapSetup} from '../gazi/auth/tests/helpers/local-skill-map.mjs';
 import {localCapacitySetup,capacityActors} from '../gazi/auth/tests/helpers/local-capacity.mjs';
-import {localPaymentSetup} from '../gazi/auth/tests/helpers/local-payment.mjs';
+import {localPaymentSetup,localPaymentOrder,localPaymentRun} from '../gazi/auth/tests/helpers/local-payment.mjs';
 import {LocalRecoveryService} from '../gazi/auth/myys/recovery.mjs';
 import {runSyntheticRecoveryDrill} from '../gazi/auth/scripts/lib/integrated-recovery.mjs';
 import {sourcePacketFixture} from '../gazi/auth/tests/helpers/local-source-packet.mjs';
@@ -56,6 +56,11 @@ for(const [person,role] of [['independent','instructor'],['finance','finance']])
  f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(hash(person),person,'2099-01-01T00:00:00.000Z');
  f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(hash(person),'gazi','synthetic-fixture','2026-01-01T00:00:00.000Z');
 }
+if(process.argv.includes('--privacy-inventory')){
+ const x=localPaymentSetup(f,{initial}),o=localPaymentOrder(f,x);localPaymentRun(f,o,'captured');
+ const ticket=f.run('student','support',{unit:'engineering',category:'technical',subject:'Kayıt özeti denemesi',message:'Sentetik kayıt özetinde destek geçmişimi incelemek istiyorum.'});f.run('it','support-event',{ticketId:ticket.id,expectedRevision:0,type:'resolve',message:'Sentetik veri kapsamı incelemesi tamamlandı.'});
+ const p=await localPortfolioSetup(f,{initial}),access=f.run('employer','portfolio-access',{grantId:p.grant.id,purpose:portfolioPurpose,confirm:true});f.run('employer','portfolio-feedback',{grantId:p.grant.id,purpose:portfolioPurpose,accessId:access.id,kind:'strength',message:portfolioReason});f.run('student','portfolio-revoke',{grantId:p.grant.id,confirm:true});
+}
 if(process.argv.includes('--wallet-study'))localWalletStudySetup(f,{initial,prepared:false});
 if(process.argv.includes('--advice'))localAdviceSetup(f,{initial,prepared:false});
 if(process.argv.includes('--portfolios'))await localPortfolioSetup(f,{initial,prepared:false});
@@ -67,7 +72,7 @@ if(process.argv.includes('--keys')){const pair=generateKeyPairSync('rsa',{modulu
 const root=fileURLToPath(new URL('../gazi/',import.meta.url));
 const roles={author:'Program hazırlayan',publisher:'Program inceleyen',student:'Öğrenen',teacher:'İlk eğitici',independent:'Bağımsız eğitici',judge:'Akademik karar',issuer:'Belge yetkilisi',reviewer:'Kalite',admin:'Sicil yöneticisi',authority:'Bağımsız sicil yöneticisi',it:'Bilgi işlem',finance:'Mali işler',other:'Başka öğrenen'};
 if(process.argv.includes('--capacity'))Object.assign(roles,Object.fromEntries(Object.entries(capacityActors).map(([person,role])=>[person,'İkinci birim · '+role+' · '+person])));
-if(process.argv.includes('--portfolios'))Object.assign(roles,{employer:'Amaçlı portfolyo alıcısı',anotheremployer:'Başka portfolyo alıcısı'});
+if(process.argv.includes('--portfolios')||process.argv.includes('--privacy-inventory'))Object.assign(roles,{employer:'Amaçlı portfolyo alıcısı',anotheremployer:'Başka portfolyo alıcısı'});
 const json=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
 const server=createServer(async(req,res)=>{
  try{

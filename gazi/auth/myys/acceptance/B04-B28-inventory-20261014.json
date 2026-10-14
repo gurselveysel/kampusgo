@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-14",
+  "package": 40,
+  "work_ids": [
+    "B04",
+    "B28"
+  ],
+  "profile": "myys-subject-export/2",
+  "ui": "Veri talepleri / Kayıt kapsamım; genişletilmiş kişisel özet",
+  "production_enabled": false,
+  "inventory": {
+    "technical_tables": 14,
+    "record_types": 120,
+    "subject_export_types": 58,
+    "categories": 8,
+    "institution_inventory_complete": false,
+    "retention_approved": false
+  },
+  "new_tests": 9,
+  "automated": {
+    "server": 549,
+    "portal": 48,
+    "regression": 46,
+    "total": 643
+  },
+  "browser": {
+    "data_inventory": 9,
+    "privacy": 11,
+    "appeals": 13,
+    "navigation": 19,
+    "total": 52,
+    "viewport": 390,
+    "human_screen_reader_acceptance": false
+  },
+  "scope": {
+    "commands": 111,
+    "http_routes": 16,
+    "positive_samples": 5174,
+    "derived_negative_checks": 41392
+  },
+  "protected_static_files": 115,
+  "completed_slice": [
+    "same-person allowed-field export across support/payment/credentials/recognition/LMS",
+    "OBS subject selection through immutable own request",
+    "recipient own receipt/message without reopening withdrawn student content",
+    "positive nested field schemas and unknown-type closed state",
+    "scoped inventory counts and preserved expired-session cleanup"
+  ],
+  "open": [
+    "full account data cleanup and security checkpoint/restore invariants",
+    "institution field/purpose/basis/duration/recipient/country/backup inventory",
+    "official request and notification adapter",
+    "production deletion and external platform closure/verification acceptance"
+  ],
+  "live": {
+    "package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "new_deployment": null
+  }
+}

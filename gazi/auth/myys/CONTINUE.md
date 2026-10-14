@@ -1,3 +1,17 @@
+# Güncel devam — Paket40 yerel kabul; kaynak eşitlemesi sırada
+
+B04/B28 Veri talepleri/Kayıt kapsamım: 14 teknik tablo/120 kayıt türü kaynak envanteri, 58 tür izinli alan özeti, 8 kategori. OBS gerçek özne tanıma talebinden seçilir; alıcı kendi teyit/mesajını indirir fakat geri çekilen öğrenci içeriği açılmaz. İç içe pozitif alan şeması/bilinmeyen tür kapalı. Tam kurum alan envanteri veya tam hesap silme kabulü değildir.
+
+549+48+46=643 otomatik; 9 kapsam+11 veri talebi+13 itiraz+19 gezinme=52 tarayıcı.111/16 kapsam5174örnek41392denetim;115statik.390px görsel incelendi; yeni navigasyon yok,98menü/279panel/66ders korundu. Docs/backlog5eksen/matris hazır. Önce özgün36kriter+diff/commit, expected-headf9857e78a5da33450786350c3c197670dbec3e6c ileblob/tam ağaç eşitle.
+
+Sıradaki bağımsız B28: gereksiz hesap verilerinde güvenli, sahipliği kanıtlı sınırlı temizleme; challenge/session-link/iptal/anahtar/idempotency bağını bozmadan. identity_session_links yaşayan alt oturumlar için gerekli; logout_receipts expires tek başına silme gerekçesi değil. Gerekirse yeni açık kapsamlı yanıt/önizleme/kişi teyidiyle yalnız sona ermiş sahipli giriş isteklerini ayır. Mevcut dar session-cleanup sözünü sessizce genişletme. B07 SQL repository/HTTP PKCE atomik bariyer ve bütün B01–B36 diğer bağımsızlar açık.
+
+Son canlı16;17–40 yayını yok. BrowserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör, alt ajan yok. Devam komutu bekleme.
+
+# Güncel devam — Paket39 kaynakta; B28 envanter/özne özeti inceleniyor
+
+Yerel24d24eea531acf330a489ce5ea5df5c12caae7d8/uzakf9857e78a5da33450786350c3c197670dbec3e6c/ortak2fccc1756e0d4112063f50f732fab66f9e9a5d0b;13blob tam ağaç eşleşti.634otomatik/28tarayıcı. Son canlı16;17–39 dağıtımı yok. BrowserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör. B07 SQL repository/PKCE atomik bariyer bağımsız açık; önce B28 yeni modüllerin veri envanteri ve kişi özeti kapsamındaki boşlukları incele, ardından kalan B01–B36 bağımsız işleri sürdür.
+
 # Güncel devam — Paket39 yerel kabul; kaynak eşitlemesi sırada
 
 B07 yerel HTTP CSRF/rate anahtar dönüşümü: 8 yeni test, 540+48+46=634 otomatik; 15 kimlik +13 itiraz tarayıcı kontrolü geçti. 111 komut/16 HTTP, 5063 örnek/40504 negatif kontrol, 115 korumalı dosya. Sözleşme, B07 JSON/backlog beş eksen ve matris güncellendi. Eski işçiler drain edilmelidir; bu PKCE/KMS atomik session-commit bariyeri değildir.

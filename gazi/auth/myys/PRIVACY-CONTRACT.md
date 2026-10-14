@@ -26,3 +26,7 @@ Bu kaynaklar genel veri hakları kapsamındadır. Gazi'ye özgü akademik saklam
 ## Açık kabul
 
 B04 ülke/süre doğrulamalı sicil ve politika kaynaklı saklama işçisi; B28 gereksiz hesap verisinin tam envanteri, hukuki dayanak/süreyle akademik arşiv, fiziksel imha ve yedeklerde saklama, geçerli başvuru/bildirim adaptörleri, dış platform kapanış kabulü açık. Üretim silmesi, migration veya yeni erişim yapılmadı. UI/test bu eksiklerin kapandığı anlamına gelmez.
+
+## Paket40 izleme — 14.10.2026
+
+`DATA-INVENTORY-CONTRACT.md`: 14 teknik tablo ve 120 kayıt türü kaynak envanteri, 58 türde kişisel izinli alan özeti ve sekiz kategorili Veri talepleri görünümü eklendi. Önceki test sayıları tarihsel kanıttır. Sınırlı oturum temizliği korunur; tam hesap silmesi, hukuki saklama ve üretim/yedek kabulü açık kalır.
