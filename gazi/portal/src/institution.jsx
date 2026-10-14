@@ -9,7 +9,7 @@ export function InstitutionBrand({children}) {
 }
 
 export function PlatformSignature({version,mode}) {
-  return <div className="platform-signature" aria-label="Platform bilgisi">
+  return <div className="platform-signature" role="group" aria-label="Platform bilgisi">
     <img src="/assets/unigo-logo-tr.png" alt="ÜniGO" width="78" height="32"/>
     <div><strong>MYYS</strong><small>{version} · {mode}</small></div>
   </div>;

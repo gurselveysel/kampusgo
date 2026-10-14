@@ -355,3 +355,7 @@ Paket61: bildirim sayaçları, sunum sayfa düğmeleri ve rehber adım numaralar
 ## Paket62 — B24 geçişli zemin metinleri
 
 Paket62: öğrenme akışı, ders/sunum açıklamaları ve kaynak dipnotlarında7 foreground değeri düzeldi; koyu bilgi/rozet kartlarının2 başlık rengi tema seçicisi önceliğiyle korundu. Geçişli arka planlar/yerleşim/logolar aynı.88 ayrı ölçüm imzasından85i bu renderda karşıtlık hedefini geçti;3ü incelemede.3815 tekrar ayrı ölçülmedi. Axe571taramada0violation;8106incomplete hâlâ açık, pass olarak yeniden yazılmadı. 106otomatik (12gateway/envanter48portal46regresyon),19gezinme,8kısa metin ve16gradient ölçüm kontrolü geçti. Son tam784sunucu Paketi59; runtime JS değişmedi. Ayrıntı CONTRAST-ACCEPTANCE.md ve acceptance/B24-gradient-20261014.json.
+
+## Paket63 — B24 ad, tablo, hedef ve odak
+
+Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun başlıkları,4grup/gezinme rolü ve rozet seçimi pressed durumu düzeldi.9React/9eski tablo ve takip tahtası adlandırılmış klavye kaydırma bölgesi; program özet/bağlantıları en az28CSSpx. İki Radix menüsünde arka plan inert, kapanış odağı korunur. 106otomatik12gateway/envanter48portal46regresyon;19gezinme10yeni etkileşim7reflow kontrolü geçti.928geometri ölçümünde0taşma. Axe4.14.0ile69WCAGetiketli kural:1440ve320genişliklerde571er toplam1142frame taramasında0violation;8ve530incomplete ham olarak korunur. Son tam784sunucu Paketi59; sunucu çalışma kodu değişmedi. SEMANTIC-ACCESSIBILITY.md ve acceptance/B24-semantics-20261014.json sınırlamaları esastır; tam B24/canlı kabulü yok.

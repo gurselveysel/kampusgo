@@ -1,3 +1,23 @@
+# Güncel devam — Paket63 yerel kabul; kaynak eşitlemesi sırada
+
+Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun başlıkları,4grup/gezinme rolü ve rozet seçimi pressed durumu düzeldi.9React/9eski tablo ve takip tahtası adlandırılmış klavye kaydırma bölgesi; program özet/bağlantıları en az28CSSpx. İki Radix menüsünde arka plan inert, kapanış odağı korunur. 106otomatik12gateway/envanter48portal46regresyon;19gezinme10yeni etkileşim7reflow kontrolü geçti.928geometri ölçümünde0taşma. Axe4.14.0ile69WCAGetiketli kural:1440ve320genişliklerde571er toplam1142frame taramasında0violation;8ve530incomplete ham olarak korunur. Son tam784sunucu Paketi59; sunucu çalışma kodu değişmedi.115statik. Önce diff/commit ve expectedremote1c03d4b198dbd8e4b6be5284a0c3d2f094a31162/base54ea32d516f0c1ac3aeb7b75bdb105c6f9307003 ile tam ağacı eşitle. Son canlı16;17–63dağıtılmadı.
+
+Sıradaki64 B28/B07 güvenilir dış monoton restorecheckpoint. IdentityTransactions, key/SQLflow/Recovery sözleşmeleri okundu; henüzcheckpoint kodu yok. Eski snapshot sonrası iptal/kişi-üyelik/anahtar/CSRFhistory yeniden açılmamalı; ayrı güvenilir checkpoint/bütün yazarlar ve belirsiz COMMIT gereklidir. Aynı yedekte tutulan eskihash tekbaşınaçözümdeğil. Üretimadapter/credential/migrationoluşturma;yereldeprotocolfaultveSQLfixtureilebağımsızkanıt üret. Asyncacademicrepo ve bütün B01–B36 bağımsızlar sürer. Gerçek AT/medya/belge/karşıtlık da açık. Tekeditör,configuredCorekapalı,browserAuthiptaliniyenileme.
+
+# Güncel devam — Paket63 uygulanıyor; henüz commit/kabul kaydı yok
+
+Kaynak tabanı62:yerel661b675434c5343db4eed7eec58121a4f1833166/uzak1c03d4b198dbd8e4b6be5284a0c3d2f094a31162/tam ağaç54ea32d516f0c1ac3aeb7b75bdb105c6f9307003.63depo diffleri bize ait; tekeditör. Öğrenme düğme adı, eski bildirim güncel okunmamış adı, tablo İşlem başlıkları/scope; adlandırılmış odaklanabilir9React9legacy tablo+takip tahtası,4ARIAgrup/nav,rozetseçimpressed,Radix2menüaçıkkenappshellinert,programsummary/linkmin28/odak düzeldi. Henüzdağıtım yok.
+
+63ölçüm: scripts/myys-semantics-browser.cjs axe4.14.0 WCAG2/21/22A-AA69kural;color-contrastayrı. Masaüstü1440ve320iki571tarama tamamlandı,0violation;8ve530incomplete(hampassdeğil). Başlangıçmasaüstü204violation827incomplete tam571;320baseline568?partialdosyadaexactcountbak,sonscopebutonukapalımenüdeolduğundanbetikhatasıylabitti;harnessönce menüyüaçacakşekildedüzeldi,başarılıbaselineiddiasıyok. Final320tam571. 106otomatik12gateway48portal46regresyongeçti.19navigationgeçti.10semanticinteractionsfinalve7reflowşuandaizleniyor. Logs /tmp/gazi-package63-*.log; test-results/myys-semantics ve myys-semantic-interactions.
+
+EnhancementJSaynıpinnedReact19.2/lucide1.54/esbuild0.28.2portalnode_modulesnodePathilegazi/enhancements/build.mjsseçeneklerikullanılarakderlendi;CSSdeğişmedi,npm/yeni bağımlılıkyok. Portalbuild115packagegeçti. Sonfull784sunucu59;63sunucuJSdeğişmedisadeceUI. 63kalıcıkanıt/backlog/matris/RELEASEtamamla,diff/sourcevisualkontrol,commitvetamağaçremoteeşitle. BrowserAuthiptaliniyenileme,configuredCorekapalı. SonraB28monotonrestorecheckpoint/asyncacademicrepo dahilbağımsızişler. B01–B36tamamlanmadı.
+
+# Güncel devam — Paket62 kaynakta;63 semantik erişilebilirlik
+
+Paket62 yerel `661b675434c5343db4eed7eec58121a4f1833166`, uzak `1c03d4b198dbd8e4b6be5284a0c3d2f094a31162`, ortak tam ağaç `54ea32d516f0c1ac3aeb7b75bdb105c6f9307003`.14blob/tam ağaç ve expected-head force=false doğrulandı.106otomatik19gezinme8kısa metin16gradient ölçüm kontrolü;85sınırlı render örneği3review3815ölçülmeyen tekrar. Axe8106incomplete açık. Son canlı16;17–62yayımlanmadı.
+
+63 B24 WCAG2/2.1/2.2 A-AA etiketli semantik ve diğer otomatik kurallar; contrast62ayrı. Henüz63ürün kodu yok; gerçek derlenmiş sayfada baseline çıkar. Tam AT/medya/çıktı/nontext ve bütün B01–B36 açık. Sonra B28monoton checkpoint/asyncacademicrepo. configuredCorekapalı;browserAuthiptaliniyenileme;tekeditör.
+
 # Güncel devam — Paket62 yerel kabul; kaynak eşitlemesi sırada
 
 Paket62: öğrenme akışı, ders/sunum açıklamaları ve kaynak dipnotlarında7 foreground değeri düzeldi; koyu bilgi/rozet kartlarının2 başlık rengi tema seçicisi önceliğiyle korundu. Geçişli arka planlar/yerleşim/logolar aynı.88 ayrı ölçüm imzasından85i bu renderda karşıtlık hedefini geçti;3ü incelemede.3815 tekrar ayrı ölçülmedi. Axe571taramada0violation;8106incomplete hâlâ açık, pass olarak yeniden yazılmadı. 106otomatik (12gateway/envanter48portal46regresyon),19gezinme,8kısa metin ve16gradient ölçüm kontrolü geçti. Son tam784sunucu Paketi59; runtime JS değişmedi.115statik. Önce diff/commit ve expectedremote555ce3a3a52f520a4c2eeb24387d44064a82715d/base d583a36b046cd2e7b40e3697d9ffea2a267d4b49 ile tam ağacı eşitle. Son canlı16;17–62dağıtılmadı.

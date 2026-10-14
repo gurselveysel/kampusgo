@@ -27,7 +27,7 @@
 | B21 · Dış belge ve tanıma akışını bağla | kısmi; imza/insan raporu/tekil kredi/karar sürümü bağlı | Paket52:6 yeni sunucu,68 tarayıcı; tanımlı dilim geçti | Paket52 canlı değil | gerçek teslim/usul/çıktı/önceki ders/kurul kabulü açık | gerçek issuer/status/schema ve üretim kabulü açık |
 | B22 · OBS aktarımını kontrollü kabul et | kısmi; kaynak güveni ve iptal düzeltmesi bağlı | Paket50 bağlı zincir ve11 OBS tarayıcı geçti | Paket50 canlı değil | operasyonel kabul açık | gerçek OBS şeması/transkript/diploma eki/işçi kabulü açık |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B24 · Erişilebilirlik açılış testini yap | kısmi; gezinme/dosya/reflow ve ölçülebilir kısa metin bağlı | Paket62:106 otomatik,19 gezinme;85 gradient render örneği yeterli;8106 axe incelemesi açık | Son canlı16;17–62 yayımlanmadı | gerçek AT/altyazı/çıktı/karşıtlık ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
+| B24 · Erişilebilirlik açılış testini yap | kısmi; ad/tablo/odak ve dar hedefler bağlı | Paket63:69kural1142tarama0ihlal;8/530inceleme;36tarayıcı | Son canlı16;17–63 yayımlanmadı | gerçek AT/altyazı/çıktı/karşıtlık ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi | yerel dilim doğrulandı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
@@ -377,3 +377,7 @@ Paket61: bildirim sayaçları, sunum sayfa düğmeleri ve rehber adım numaralar
 ## Paket62 — B24 geçişli zemin metinleri
 
 Paket62: öğrenme akışı, ders/sunum açıklamaları ve kaynak dipnotlarında7 foreground değeri düzeldi; koyu bilgi/rozet kartlarının2 başlık rengi tema seçicisi önceliğiyle korundu. Geçişli arka planlar/yerleşim/logolar aynı.88 ayrı ölçüm imzasından85i bu renderda karşıtlık hedefini geçti;3ü incelemede.3815 tekrar ayrı ölçülmedi. Axe571taramada0violation;8106incomplete hâlâ açık, pass olarak yeniden yazılmadı. 106otomatik (12gateway/envanter48portal46regresyon),19gezinme,8kısa metin ve16gradient ölçüm kontrolü geçti. Son tam784sunucu Paketi59; runtime JS değişmedi. Ayrıntı CONTRAST-ACCEPTANCE.md ve acceptance/B24-gradient-20261014.json.
+
+## Paket63 — B24 ad, tablo, hedef ve odak
+
+Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun başlıkları,4grup/gezinme rolü ve rozet seçimi pressed durumu düzeldi.9React/9eski tablo ve takip tahtası adlandırılmış klavye kaydırma bölgesi; program özet/bağlantıları en az28CSSpx. İki Radix menüsünde arka plan inert, kapanış odağı korunur. 106otomatik12gateway/envanter48portal46regresyon;19gezinme10yeni etkileşim7reflow kontrolü geçti.928geometri ölçümünde0taşma. Axe4.14.0ile69WCAGetiketli kural:1440ve320genişliklerde571er toplam1142frame taramasında0violation;8ve530incomplete ham olarak korunur. Son tam784sunucu Paketi59; sunucu çalışma kodu değişmedi. SEMANTIC-ACCESSIBILITY.md ve acceptance/B24-semantics-20261014.json sınırlamaları esastır; tam B24/canlı kabulü yok.

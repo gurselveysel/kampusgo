@@ -1,0 +1,547 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 63,
+  "work_ids": [
+    "B24"
+  ],
+  "scope": "wcag-tagged-automated-semantics-and-native-interactions",
+  "deployed": false,
+  "official": false,
+  "engine": "axe-core4.14.0",
+  "browser": "138.0.7204.0",
+  "selected_tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa",
+    "wcag22a",
+    "wcag22aa"
+  ],
+  "selected_rules": [
+    "area-alt",
+    "aria-allowed-attr",
+    "aria-braille-equivalent",
+    "aria-command-name",
+    "aria-conditional-attr",
+    "aria-deprecated-role",
+    "aria-hidden-body",
+    "aria-hidden-focus",
+    "aria-input-field-name",
+    "aria-meter-name",
+    "aria-progressbar-name",
+    "aria-prohibited-attr",
+    "aria-required-attr",
+    "aria-required-children",
+    "aria-required-parent",
+    "aria-roledescription",
+    "aria-roles",
+    "aria-tab-name",
+    "aria-toggle-field-name",
+    "aria-tooltip-name",
+    "aria-valid-attr-value",
+    "aria-valid-attr",
+    "audio-caption",
+    "autocomplete-valid",
+    "avoid-inline-spacing",
+    "blink",
+    "button-name",
+    "bypass",
+    "css-orientation-lock",
+    "definition-list",
+    "dlitem",
+    "document-title",
+    "duplicate-id-aria",
+    "form-field-multiple-labels",
+    "frame-focusable-content",
+    "frame-title-unique",
+    "frame-title",
+    "html-has-lang",
+    "html-lang-valid",
+    "html-xml-lang-mismatch",
+    "image-alt",
+    "input-button-name",
+    "input-image-alt",
+    "label-content-name-mismatch",
+    "label",
+    "link-in-text-block",
+    "link-name",
+    "list",
+    "listitem",
+    "marquee",
+    "meta-refresh",
+    "meta-viewport",
+    "nested-interactive",
+    "no-autoplay-audio",
+    "object-alt",
+    "p-as-heading",
+    "role-img-alt",
+    "scrollable-region-focusable",
+    "select-name",
+    "server-side-image-map",
+    "summary-name",
+    "svg-img-alt",
+    "table-fake-caption",
+    "target-size",
+    "td-has-header",
+    "td-headers-attr",
+    "th-has-data-cells",
+    "valid-lang",
+    "video-caption"
+  ],
+  "excluded_rules": [
+    "color-contrast:separate Packages60–62 evidence"
+  ],
+  "no_dom_exclusions": true,
+  "reports": {
+    "baseline": {
+      "complete": true,
+      "frame_scans": 571,
+      "violations": {
+        "label-content-name-mismatch": 180,
+        "td-has-header": 10,
+        "target-size": 12,
+        "aria-hidden-focus": 1,
+        "scrollable-region-focusable": 1
+      },
+      "incomplete": {
+        "aria-prohibited-attr": 819,
+        "p-as-heading": 2,
+        "aria-hidden-focus": 5,
+        "aria-valid-attr-value": 1
+      },
+      "page_errors": []
+    },
+    "320-baseline.partial": {
+      "complete": false,
+      "frame_scans": 568,
+      "violations": {
+        "label-content-name-mismatch": 180,
+        "td-has-header": 10,
+        "scrollable-region-focusable": 15,
+        "target-size": 1,
+        "aria-hidden-focus": 1
+      },
+      "incomplete": {
+        "aria-valid-attr-value": 522,
+        "aria-prohibited-attr": 296,
+        "p-as-heading": 2,
+        "aria-hidden-focus": 2
+      },
+      "page_errors": []
+    },
+    "result": {
+      "complete": true,
+      "frame_scans": 571,
+      "violations": {},
+      "incomplete": {
+        "p-as-heading": 2,
+        "aria-hidden-focus": 5,
+        "aria-valid-attr-value": 1
+      },
+      "page_errors": []
+    },
+    "320-result": {
+      "complete": true,
+      "frame_scans": 571,
+      "violations": {},
+      "incomplete": {
+        "aria-valid-attr-value": 523,
+        "p-as-heading": 2,
+        "aria-hidden-focus": 5
+      },
+      "page_errors": []
+    }
+  },
+  "mobile_baseline_note": "568frame sonrası profil menüsü kapanınca kapalı mobil yan menüde Pilot kapsamı düğmesine erişilmeye çalışıldı; harness timeout. Menü önce açılacak şekilde düzeltildi. Bu baseline tam/başarılı kabul değildir; final320571tam tarama geçti.",
+  "baseline_examples": [
+    {
+      "label": "Öğrenci / learning",
+      "rule": "label-content-name-mismatch",
+      "impact": "serious",
+      "target": [
+        ".selected > .learn-program-link"
+      ],
+      "html": "<button class=\"learn-program-link\" aria-label=\"Veri okuryazarlığı ve yapay zekâ — dersleri gör\">",
+      "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name",
+      "checks": [
+        {
+          "id": "label-content-name-mismatch",
+          "message": "Text inside the element is not included in the accessible name",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "Öğrenci / catalog",
+      "rule": "label-content-name-mismatch",
+      "impact": "serious",
+      "target": [
+        ".notification"
+      ],
+      "html": "<a class=\"notification\" href=\"#/notifications\" aria-label=\"Bildirimler\"><svg viewBox=\"0 0 24 24\"><path d=\"M18 8a6 6 0 0 0-12 0c0 6-2 6-2 9h16c0-3-2-3-2-9M10 21h4\"></path></svg><i id=\"notification-count\">2</i></a>",
+      "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name",
+      "checks": [
+        {
+          "id": "label-content-name-mismatch",
+          "message": "Text inside the element is not included in the accessible name",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "Öğrenci / applications",
+      "rule": "td-has-header",
+      "impact": "critical",
+      "target": [
+        "table"
+      ],
+      "html": "<table>",
+      "summary": "Fix all of the following:\n  Some non-empty data cells do not have table headers",
+      "checks": [
+        {
+          "id": "td-has-header",
+          "message": "Some non-empty data cells do not have table headers",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "student / Program sürümleri (1)",
+      "rule": "target-size",
+      "impact": "serious",
+      "target": [
+        ".form-stack > details > summary"
+      ],
+      "html": "<summary>Bilgi paketi dayanaklarını göster</summary>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (1053px by 23.8px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 23.6px instead of at least 24px.",
+      "checks": [
+        {
+          "id": "target-size",
+          "message": "Target has insufficient size (1053px by 23.8px, should be at least 24px by 24px)",
+          "data": {
+            "minSize": 24,
+            "width": 1053,
+            "height": 23.8
+          }
+        },
+        {
+          "id": "target-offset",
+          "message": "Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 23.6px instead of at least 24px.",
+          "data": {
+            "closestOffset": 23.6,
+            "minOffset": 24
+          }
+        }
+      ]
+    },
+    {
+      "label": "student / Program sürümleri (1)",
+      "rule": "target-size",
+      "impact": "serious",
+      "target": [
+        "article > details > summary"
+      ],
+      "html": "<summary>Öğrenme Çıktıları, görev ve rubrik ilişkileri</summary>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (1053px by 23.8px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 23.6px instead of at least 24px.",
+      "checks": [
+        {
+          "id": "target-size",
+          "message": "Target has insufficient size (1053px by 23.8px, should be at least 24px by 24px)",
+          "data": {
+            "minSize": 24,
+            "width": 1053,
+            "height": 23.8
+          }
+        },
+        {
+          "id": "target-offset",
+          "message": "Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 23.6px instead of at least 24px.",
+          "data": {
+            "closestOffset": 23.6,
+            "minOffset": 24
+          }
+        }
+      ]
+    },
+    {
+      "label": "judge / Program sürümleri (1)",
+      "rule": "target-size",
+      "impact": "serious",
+      "target": [
+        "a[href=\"#/academic/credentialProfiles\"]"
+      ],
+      "html": "<a href=\"#/academic/credentialProfiles\">Belge profili incelemesini aç</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (1053px by 23.8px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 23.6px instead of at least 24px.",
+      "checks": [
+        {
+          "id": "target-size",
+          "message": "Target has insufficient size (1053px by 23.8px, should be at least 24px by 24px)",
+          "data": {
+            "minSize": 24,
+            "width": 1053,
+            "height": 23.8
+          }
+        },
+        {
+          "id": "target-offset",
+          "message": "Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 23.6px instead of at least 24px.",
+          "data": {
+            "closestOffset": 23.6,
+            "minOffset": 24
+          }
+        }
+      ]
+    },
+    {
+      "label": "profile dropdown",
+      "rule": "aria-hidden-focus",
+      "impact": "serious",
+      "target": [
+        "#root"
+      ],
+      "html": "<div id=\"root\" data-aria-hidden=\"true\" aria-hidden=\"true\">",
+      "summary": "Fix all of the following:\n  Focusable content should be disabled, be removed from the DOM, or not be hidden with aria-hidden\n  Focusable content should have tabindex=\"-1\", be removed from the DOM, or not be hidden with aria-hidden",
+      "checks": [
+        {
+          "id": "focusable-disabled",
+          "message": "Focusable content should be disabled, be removed from the DOM, or not be hidden with aria-hidden",
+          "data": null
+        },
+        {
+          "id": "focusable-not-tabbable",
+          "message": "Focusable content should have tabindex=\"-1\", be removed from the DOM, or not be hidden with aria-hidden",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "mobile connections",
+      "rule": "scrollable-region-focusable",
+      "impact": "serious",
+      "target": [
+        ".table-scroll"
+      ],
+      "html": "<div class=\"table-scroll\">",
+      "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable",
+      "checks": [
+        {
+          "id": "focusable-content",
+          "message": "Element should have focusable content",
+          "data": null
+        },
+        {
+          "id": "focusable-element",
+          "message": "Element should be focusable",
+          "data": null
+        }
+      ]
+    }
+  ],
+  "raw_desktop_review_examples": [
+    {
+      "label": "Saha Ekibi / demo",
+      "rule": "p-as-heading",
+      "impact": "serious",
+      "target": [
+        ".demo-narration"
+      ],
+      "html": "<p class=\"demo-narration\">Tek bir dosyayla karar desteğini, komisyon kontrolünü ve aktarım tekrar korumasını gösterin.</p>",
+      "summary": "Fix all of the following:\n  Unable to determine if <p> elements are styled as headings",
+      "checks": [
+        {
+          "id": "p-as-heading",
+          "message": "Unable to determine if <p> elements are styled as headings",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "Sistem Yöneticisi / demo",
+      "rule": "p-as-heading",
+      "impact": "serious",
+      "target": [
+        ".demo-narration"
+      ],
+      "html": "<p class=\"demo-narration\">Tek bir dosyayla karar desteğini, komisyon kontrolünü ve aktarım tekrar korumasını gösterin.</p>",
+      "summary": "Fix all of the following:\n  Unable to determine if <p> elements are styled as headings",
+      "checks": [
+        {
+          "id": "p-as-heading",
+          "message": "Unable to determine if <p> elements are styled as headings",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "profile dropdown",
+      "rule": "aria-hidden-focus",
+      "impact": "serious",
+      "target": [
+        "span[data-radix-focus-guard=\"\"][data-aria-hidden=\"true\"][aria-hidden=\"true\"]:nth-child(1)"
+      ],
+      "html": "<span data-radix-focus-guard=\"\" tabindex=\"0\" data-aria-hidden=\"true\" aria-hidden=\"true\" style=\"outline: none; opacity: 0; position: fixed; pointer-events: none;\"></span>",
+      "summary": "Fix all of the following:\n  Check if the focusable elements immediately move the focus indicator",
+      "checks": [
+        {
+          "id": "focusable-not-tabbable",
+          "message": "Check if the focusable elements immediately move the focus indicator",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "profile dropdown",
+      "rule": "aria-hidden-focus",
+      "impact": "serious",
+      "target": [
+        "span[data-radix-focus-guard=\"\"][data-aria-hidden=\"true\"][aria-hidden=\"true\"]:nth-child(6)"
+      ],
+      "html": "<span data-radix-focus-guard=\"\" tabindex=\"0\" data-aria-hidden=\"true\" aria-hidden=\"true\" style=\"outline: none; opacity: 0; position: fixed; pointer-events: none;\"></span>",
+      "summary": "Fix all of the following:\n  Check if the focusable elements immediately move the focus indicator",
+      "checks": [
+        {
+          "id": "focusable-not-tabbable",
+          "message": "Check if the focusable elements immediately move the focus indicator",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "pilot modal",
+      "rule": "aria-hidden-focus",
+      "impact": "serious",
+      "target": [
+        "span[data-radix-focus-guard=\"\"][data-aria-hidden=\"true\"][aria-hidden=\"true\"]:nth-child(1)"
+      ],
+      "html": "<span data-radix-focus-guard=\"\" tabindex=\"0\" data-aria-hidden=\"true\" aria-hidden=\"true\" style=\"outline: none; opacity: 0; position: fixed; pointer-events: none;\"></span>",
+      "summary": "Fix all of the following:\n  Check that focusable elements are not tabbable in the current state",
+      "checks": [
+        {
+          "id": "focusable-modal-open",
+          "message": "Check that focusable elements are not tabbable in the current state",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "pilot modal",
+      "rule": "aria-hidden-focus",
+      "impact": "serious",
+      "target": [
+        "#root"
+      ],
+      "html": "<div id=\"root\" data-aria-hidden=\"true\" aria-hidden=\"true\">",
+      "summary": "Fix all of the following:\n  Check that focusable elements are not tabbable in the current state",
+      "checks": [
+        {
+          "id": "focusable-modal-open",
+          "message": "Check that focusable elements are not tabbable in the current state",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "pilot modal",
+      "rule": "aria-hidden-focus",
+      "impact": "serious",
+      "target": [
+        "span[data-radix-focus-guard=\"\"][data-aria-hidden=\"true\"][aria-hidden=\"true\"]:nth-child(7)"
+      ],
+      "html": "<span data-radix-focus-guard=\"\" tabindex=\"0\" data-aria-hidden=\"true\" aria-hidden=\"true\" style=\"outline: none; opacity: 0; position: fixed; pointer-events: none;\"></span>",
+      "summary": "Fix all of the following:\n  Check that focusable elements are not tabbable in the current state",
+      "checks": [
+        {
+          "id": "focusable-modal-open",
+          "message": "Check that focusable elements are not tabbable in the current state",
+          "data": null
+        }
+      ]
+    },
+    {
+      "label": "mobile connections",
+      "rule": "aria-valid-attr-value",
+      "impact": "critical",
+      "target": [
+        ".menu-toggle"
+      ],
+      "html": "<button class=\"menu-toggle icon-button\" aria-controls=\"primary-navigation\" aria-haspopup=\"dialog\" aria-label=\"Ana menüyü aç\" aria-expanded=\"false\">",
+      "summary": "Fix all of the following:\n  Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"primary-navigation\"",
+      "checks": [
+        {
+          "id": "aria-valid-attr-value",
+          "message": "Unable to determine if aria-controls referenced ID exists on the page while using aria-haspopup: aria-controls=\"primary-navigation\"",
+          "data": {
+            "messageKey": "controlsWithinPopup",
+            "needsReview": "aria-controls=\"primary-navigation\""
+          }
+        }
+      ]
+    }
+  ],
+  "review_disposition": {
+    "p-as-heading": "demo-narration, mevcut h2 altındaki açıklama paragrafıdır; kaynak ve anlam incelendi, yeni başlık icat edilmedi.",
+    "aria-hidden-focus": "Radix menü/pencere koruyucularına ve arka plana gerçek focus denemesinde odak1s sınırı içinde menü/pencereye döndü; Tab/Escape/geri dönüş geçti. Bu gerçek AT testi değildir.",
+    "aria-valid-attr-value": "Kapalı yan menü DOMda tek id taşır; açılınca aynı idli adlandırılmış dialog görünür, aria-expanded güncellenir. Otomatik incomplete aynen saklanır."
+  },
+  "tests_rerun": {
+    "gateway_inventory": 12,
+    "portal": 48,
+    "legacy": 46,
+    "total": 106
+  },
+  "browser_checks": {
+    "navigation": 19,
+    "semantic_interactions": 10,
+    "reflow": 7,
+    "total": 36
+  },
+  "geometry_measurements": 928,
+  "geometry_overflow": 0,
+  "interaction_results": {
+    "checks": [
+      "Öğrenme kartının görünen etiketi seçim değişince erişilebilir adın başında kalır",
+      "Profil menüsü arka plan odağını kapatır; Escape odağı tetikleyiciye döndürür",
+      "Bildirim menüsü arka plan odağını kapatır; Escape odağı tetikleyiciye döndürür",
+      "Eski bildirim sayısı okundu işleminden sonra hem görünür metinde hem erişilebilir adda güncellenir",
+      "Aktarım tablosu 320 CSS px genişlikte odaklanır ve sağ okla gerçekten kayar",
+      "Eski OBS eşleme tablosu aynı klavye kaydırmasını iframe içinde korur",
+      "Program dayanak özeti yerel klavye davranışıyla açılır; hedef ve odak göstergesi korunur",
+      "Mobil menü tetikleyicisinin aria-controls bağı gerçek açılan tek iletişim kutusuna gider",
+      "Pilot penceresinde arka plan ve Radix odak koruyucuları odağı pencereye geri taşır",
+      "Etkileşimlerde istemci istisnası oluşmadı"
+    ],
+    "errors": [],
+    "browser": "138.0.7204.0",
+    "production": false,
+    "screenReader": false
+  },
+  "source_change_counts": {
+    "react_scroll_regions": 9,
+    "legacy_table_scroll_regions": 9,
+    "legacy_pipeline_regions": 1,
+    "named_groups_or_navigation": 4,
+    "legacy_empty_column_headers_named": 3,
+    "react_empty_column_headers_named": 1,
+    "modal_dropdowns_inert_background": 2
+  },
+  "static_files": 115,
+  "active_sqlite_tables": 16,
+  "record_kinds": 148,
+  "unapplied_pg_candidates": 12,
+  "last_full_suite": {
+    "software_package": 59,
+    "server": 784,
+    "portal": 48,
+    "legacy": 46,
+    "total": 878
+  },
+  "open": [
+    "1142tarama tam ekran okuyucu/sesli komut veya tüm dinamik form/modal durumlarının kabulü değildir. Media/altyazı ve indirilen belge okuma sırası açık.",
+    "Axe semantik incelemeleri8masaüstü530dar ekran: p-as-heading açıklama paragrafı, Radix odak koruyucuları ve kapalı menü aria-controls bağı. Kaynak/DOM/klavye incelemesi kaydedildi; ham bulgular pass yapılmadı, gerçek AT kabulü açık.",
+    "Önceki metin karşıtlığı8106incomplete, nontext/ikon/tüm odak karşıtlığı,200%metin zoom ve gerçek canlı rol/akış kabulü açık."
+  ],
+  "source_parent_remote": "1c03d4b198dbd8e4b6be5284a0c3d2f094a31162",
+  "source_parent_tree": "54ea32d516f0c1ac3aeb7b75bdb105c6f9307003",
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "contract": "SEMANTIC-ACCESSIBILITY.md"
+}

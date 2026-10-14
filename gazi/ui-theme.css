@@ -189,3 +189,5 @@
 /* Keep the dark card headings above the shared eyebrow theme rule. */
 .unigo-ui .ki-overview .eyebrow{color:#a9c7e5}
 .unigo-ui .badge-hero .eyebrow{color:#9db9df}
+
+:is(.table-scroll,.table-wrap,.pipeline):focus-visible{outline:3px solid #438bef;outline-offset:-3px}

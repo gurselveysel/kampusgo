@@ -66,3 +66,7 @@
 .heading-actions{min-width:0;max-width:100%;flex-wrap:wrap}
 @media(max-width:760px){.heading-actions{flex-shrink:1}.button{max-width:100%;min-width:0;white-space:normal}.button>span{min-width:0;overflow-wrap:anywhere}.button>svg{flex-shrink:0}}
 @media(max-width:480px){.architecture-node{display:flex;flex-direction:column;align-items:flex-start}.architecture-node>*{min-width:0;max-width:100%;overflow-wrap:anywhere}.architecture-node .arch-icon{margin-bottom:8px}.architecture-node .pill{white-space:normal}}
+
+.academic-body summary{min-height:28px;padding-block:2px;cursor:pointer}
+.academic-body .form-stack>a{display:inline-flex;align-items:center;min-height:28px}
+.academic-body summary:focus-visible{outline:3px solid #438bef;outline-offset:3px}
