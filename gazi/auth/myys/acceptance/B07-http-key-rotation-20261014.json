@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-14",
+  "package": 39,
+  "work_ids": [
+    "B07"
+  ],
+  "profile": "local-http-key-rotation/1",
+  "ui_change": "503 Türkçe giriş bekleme ekranı; yeni panel yok",
+  "production_enabled": false,
+  "real_postgres_tested": false,
+  "real_kms_tested": false,
+  "atomic_pkce_session_key_barrier": false,
+  "new_tests": 8,
+  "automated": {
+    "server": 540,
+    "portal": 48,
+    "regression": 46,
+    "total": 634
+  },
+  "browser": {
+    "existing_local_https": 15,
+    "appeals": 13,
+    "rotation_specific_visual_test": false
+  },
+  "scope": {
+    "commands": 111,
+    "http_routes": 16,
+    "positive_samples": 5063,
+    "derived_negative_checks": 40504
+  },
+  "protected_static_files": 115,
+  "source_evidence": [
+    "identity-rate-limit.mjs",
+    "identity-http.mjs",
+    "../tests/myys-http-key-rotation.test.mjs",
+    "../tests/myys-identity-http.test.mjs",
+    "HTTP-KEY-ROTATION-CONTRACT.md"
+  ],
+  "limits": [
+    "Old workers must be drained; no bounded activation time while they continue serving",
+    "Entry-time local HTTP fence, not atomic PKCE/nonce session commit barrier",
+    "Real PostgreSQL/RLS/KMS/IdP and distributed acceptance remain open",
+    "New identity epoch/history retention requires B28 inventory"
+  ],
+  "live": {
+    "package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "new_deployment": null
+  }
+}

@@ -21,7 +21,7 @@ export function httpsRequest(origin,cert,path,{method='GET',headers={},form,body
   const req=https.request(target,{method,ca:cert,checkServerIdentity:(_,certificate)=>checkServerIdentity(target.hostname,certificate),signal,headers:{...headers,...(raw!==null?{'Content-Type':form?'application/x-www-form-urlencoded':'application/json','Content-Length':Buffer.byteLength(raw)}:{})}},res=>{let data='';res.on('data',b=>data+=b);res.on('end',()=>resolve({status:res.statusCode,headers:res.headers,text:data,json:()=>JSON.parse(data)}));});req.on('error',reject);req.end(raw);
  });
 }
-export async function identityHttpFixture({tenant='test-gazi',sessionLifetimeSeconds=300,exchangeTimeoutMs=1000}={}){
+export async function identityHttpFixture({tenant='test-gazi',sessionLifetimeSeconds=300,exchangeTimeoutMs=1000,clock=()=>new Date()}={}){
  if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
  const f=fixture(tenant),initial=f.passed(),dir=mkdtempSync(join(tmpdir(),'myys-https-'));
  const result=spawnSync('openssl',['req','-x509','-newkey','rsa:2048','-noenc','-keyout',join(dir,'key.pem'),'-out',join(dir,'cert.pem'),'-sha256','-days','1','-subj','/CN=MYYS synthetic loopback','-addext','subjectAltName=IP:127.0.0.1,DNS:localhost'],{stdio:'ignore'});
@@ -70,7 +70,11 @@ export async function identityHttpFixture({tenant='test-gazi',sessionLifetimeSec
  await new Promise(resolve=>providerServer.listen(0,'127.0.0.1',resolve));providerOrigin='https://localhost:'+providerServer.address().port;
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));origin='https://127.0.0.1:'+server.address().port;
  const config={version:'local-http-2026.10.13.1',tenant,issuer:'https://test-idp.invalid',audience:'myys-http-test',algorithms:['ES256'],jwks:{keys:[jwk]},mfaProfiles:[{acr:'urn:test:strong',amr:['pwd','otp']}],maxTokenAgeSeconds:300,maxAuthAgeSeconds:900,clockToleranceSeconds:0};
- identity=new LocalIdentityHttp({store:f.s,identityConfig:config,origin,authorizationEndpoint:providerOrigin+'/__idp/authorize',derivationKey:randomBytes(32),csrfKey:randomBytes(32),sessionLifetimeSeconds,exchangeTimeoutMs,exchangeCode:async({code,codeVerifier,redirectUri,signal})=>{const r=await httpsRequest(providerOrigin,cert,'/__idp/token',{method:'POST',form:{grant_type:'authorization_code',code,code_verifier:codeVerifier,redirect_uri:redirectUri,client_id:config.audience},signal});requireThat(r.status===200,'test_provider','Sentetik sağlayıcı hatası.',403);return r.json().id_token;}});
+ const derivationKey=randomBytes(32),initialCsrfKey=randomBytes(32);
+ const makeIdentity=(csrfKey,csrfKeyRevision)=>new LocalIdentityHttp({store:f.s,identityConfig:config,origin,authorizationEndpoint:providerOrigin+'/__idp/authorize',derivationKey,csrfKey,csrfKeyRevision,clock,sessionLifetimeSeconds,exchangeTimeoutMs,exchangeCode:async({code,codeVerifier,redirectUri,signal})=>{const r=await httpsRequest(providerOrigin,cert,'/__idp/token',{method:'POST',form:{grant_type:'authorization_code',code,code_verifier:codeVerifier,redirect_uri:redirectUri,client_id:config.audience},signal});requireThat(r.status===200,'test_provider','Sentetik sağlayıcı hatası.',403);return r.json().id_token;}});
+ identity=makeIdentity(initialCsrfKey,1);
+ h.rotateCsrf=(csrfKey,revision)=>{identity=makeIdentity(csrfKey,revision);h.identity=identity;return identity;};
+ h.selectIdentity=value=>{identity=value;h.identity=value;};
  h.origin=origin;h.providerOrigin=providerOrigin;h.identity=identity;h.request=(path,options)=>{const target=new URL(path,origin);return httpsRequest(target.origin===providerOrigin?providerOrigin:origin,cert,target.href,options);};
  h.close=async()=>{server.closeAllConnections();providerServer.closeAllConnections();await Promise.all([new Promise(resolve=>server.close(resolve)),new Promise(resolve=>providerServer.close(resolve))]);f.close();};return h;
 }

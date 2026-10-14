@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {randomUUID} from 'node:crypto';
+import {randomUUID,randomBytes} from 'node:crypto';
 import {identityHttpFixture} from './helpers/local-identity-http.mjs';
 import {identityCookie,identityPaths as P} from '../myys/identity-http.mjs';
 const use=async fn=>{const h=await identityHttpFixture();try{await fn(h);}finally{await h.close();}};
@@ -107,3 +107,16 @@ test('B07 süresi bitmiş oturum cookie mevcut olsa da akademik kayda erişemez'
  const b=await login(h);h.f.s.db.prepare("UPDATE bindings SET expires='2020-01-01T00:00:00.000Z' WHERE session_hash IN (SELECT session_hash FROM identity_scopes WHERE contract_version='local-http-2026.10.13.1')").run();
  const r=await h.request('/api/myys/calisma?kurum=test-gazi',{headers:{Cookie:b.c}});assert.equal(r.status,401);assert.equal(r.json().loginPath,P.login);assert.equal(r.json().scope,'local-acceptance');assert.ok(!r.text.includes(h.initial.d.id));
 }));
+
+test('B07 HTTPS CSRF anahtarı dönerken canlı bütçe korunur; yeni form gerekir ve eski işçi kapalıdır',async()=>{
+ let now=Date.now();const h=await identityHttpFixture({clock:()=>new Date(now)});try{
+  const b=await login(h),oldWorker=h.identity,nextKey=randomBytes(32),next=h.rotateCsrf(nextKey,2),before=JSON.stringify(h.f.s.db.prepare('SELECT * FROM identity_rate_buckets').all());
+  const waiting=await h.request(P.login,{headers:{Cookie:b.c}});assert.equal(waiting.status,503);assert.equal(waiting.json().code,'identity_key_rotation_wait');assert.equal(waiting.headers['set-cookie'],undefined);assert.equal(waiting.headers['retry-after'],'60');const waitPage=await h.request(P.login,{headers:{Cookie:b.c,Accept:'text/html'}});assert.equal(waitPage.status,503);assert.match(waitPage.text,/<h1>Giriş güvenliği yenileniyor/);assert.match(waitPage.text,/role="alert"/);assert.equal(waitPage.headers['set-cookie'],undefined);assert.equal(JSON.stringify(h.f.s.db.prepare('SELECT * FROM identity_rate_buckets').all()),before);
+  now+=60000;const session=await h.request(P.session,{headers:{Cookie:b.c}});assert.equal(session.status,200);assert.notEqual(session.json().csrf,b.session.csrf);assert.equal(session.json().personId,'student');assert.equal(grants(h),1);
+  const input={tenant:'test-gazi',commandId:randomUUID(),action:'appeal',input:{decisionId:h.initial.d.id,reason:'Anahtar dönüşümünden sonra sentetik yeni form kabulü.'}};
+  assert.equal((await h.request('/api/myys/islem',{method:'POST',headers:headers(h,b.c,b.session.csrf),body:input})).status,403);assert.equal(h.f.s.list('test-gazi','appeal').length,0);
+  h.selectIdentity(oldWorker);assert.equal((await h.request(P.session,{headers:{Cookie:b.c}})).status,503);assert.equal((await h.request('/api/myys/islem',{method:'POST',headers:headers(h,b.c,b.session.csrf),body:input})).status,503);
+  h.selectIdentity(next);assert.equal((await h.request('/api/myys/islem',{method:'POST',headers:headers(h,b.c,session.json().csrf),body:input})).status,200);assert.equal(h.f.s.list('test-gazi','appeal').length,1);
+  h.rotateCsrf(nextKey,2);assert.equal((await h.request(P.session,{headers:{Cookie:b.c}})).status,200);assert.equal(h.f.s.db.prepare("SELECT count(*) n FROM audit WHERE action='identity.http-key-epoch'").get().n,2);
+ }finally{await h.close();}
+});

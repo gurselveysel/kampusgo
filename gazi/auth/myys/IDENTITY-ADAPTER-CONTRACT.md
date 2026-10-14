@@ -46,3 +46,7 @@ Hepsi 14.10.2026 tarihinde okundu. Teknik tasarım kaynaklarıdır; Gazi yetkile
 Güncel toplam: 438 sunucu +46 portal +46 regresyon =530. Kapsam matrisi 77 komut/16 HTTP ve 3337 olumlu örnekten 26696 türetilmiş negatif kontrol; yeni adaptörler HTTP/komut eklemedi. 115 statik dosya korumalı paketlendi. B07'nin yalnız bu bağımsız sınır dilimi geçti; B01–B36 genel tamamlığı veya yeni canlı yayın değildir.
 
 Sonraki bağımsız B07: kişi/üyelik/challenge/iptal/rate/audit SQL repository bağlaması, atomik anahtar revizyon bariyeri, kalıcı bucket anahtar rotasyonu ve bu yolların ortak kabul sürücüsü. Gerçek test deposu/migration/KMS/IdP ve dağıtık kapasite kabulü ACCESS-ACTIONS kapsamında ayrıca kapalıdır. Diğer bağımsız ekran işlerini bekletme; B15 kayıt/ilerleme senaryosu sıradaki görünür dilimdir.
+
+## 14.10.2026 Paket39 izleme
+
+Kalıcı CSRF/rate dönüşümünün **yerel HTTP** dilimi `HTTP-KEY-ROTATION-CONTRACT.md` ile bağlandı ve sınandı. Yukarıdaki Paket29 kaydı tarihsel kanıttır. PKCE/nonce anahtar revizyonunun atomik session-commit bariyeri ve PostgreSQL repository hâlâ açık; CSRF dönüşümü bunların yerine geçmez.

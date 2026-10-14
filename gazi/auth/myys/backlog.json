@@ -432,7 +432,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "20 yeni işlem/anahtar hata sürücüsü testi; 438 sunucu +46 portal +46 regresyon =530. Mevcut ayrı-site yerel HTTPS akışının 15 tarayıcı kontrolü tekrar geçti; yeni sınırlar bu HTTP akışına henüz bağlı değil.",
+      "test_status": "Paket39: 7 oran/anahtar +1 gerçek HTTPS yeni test; 540 sunucu +48 portal +46 regresyon =634. Mevcut HTTPS kimlik15 ve itiraz13 tarayıcı kontrolü geçti. Üretim PostgreSQL/KMS kabulü yok.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -460,20 +460,23 @@
         "gazi/auth/myys/identity-key-provider.mjs",
         "gazi/auth/tests/myys-identity-adapters.test.mjs",
         "gazi/auth/myys/IDENTITY-ADAPTER-CONTRACT.md",
-        "gazi/auth/myys/acceptance/B07-adapters-20261014.json"
+        "gazi/auth/myys/acceptance/B07-adapters-20261014.json",
+        "gazi/auth/myys/HTTP-KEY-ROTATION-CONTRACT.md",
+        "gazi/auth/tests/myys-http-key-rotation.test.mjs",
+        "gazi/auth/myys/acceptance/B07-http-key-rotation-20261014.json"
       ],
-      "production_status": "Paket29 yalnız bağımsız yerel sınır kabulünde; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–29 dağıtımı yok; kurumsal SSO kapalı.",
-      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı.",
+      "production_status": "Paket39 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–39 dağıtımı yok; kurumsal SSO kapalı.",
+      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı. Paket39 yerel HTTP CSRF/oran anahtarının ardışık kalıcı revizyonunu ve bütçe sıfırlamasını engelleyen geçişi bağladı. Eski işçiler boşaltılmalı; yeni etkin sürüm eskilerini reddeder. Bu, PKCE/nonce anahtar revizyonunun session commit bariyeri değildir.",
       "independent_remaining_work": [
         "Kişi/üyelik/challenge/session/iptal/rate/audit SQL repository ve HTTP bağlamasını bu işlem sınırıyla tamamla; PostgreSQL şema/driver gerçek kabulünü bağımsız fault-driver kabulüyle karıştırma.",
-        "Monoton anahtar revizyonu/iptal bariyerini session commit içinde atomik denetle; kalıcı CSRF/rate key rotasyonunda bütçe sıfırlanmasını önle; gerçek KMS driver kabulünü ayrı tut.",
+        "Monoton PKCE/nonce anahtar revizyonu/iptal bariyerini session commit içinde atomik denetle; yerel CSRF/rate dönüşümü Paket39 ile geçti, üretim kontrol düzlemi/drain ve gerçek KMS driver kabulü ayrı açık.",
         "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo/IdP erişimi, migration ve yeni credential özel yetki sınırında kapalı."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; üretim sınırları kodlandı, repository/anahtar-epoch köprüsü açık",
+          "status": "kısmi; yerel HTTP anahtar dönüşümü bağlı, SQL repository/PKCE atomik bariyer açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -501,22 +504,25 @@
             "gazi/auth/myys/identity-key-provider.mjs",
             "gazi/auth/tests/myys-identity-adapters.test.mjs",
             "gazi/auth/myys/IDENTITY-ADAPTER-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B07-adapters-20261014.json"
+            "gazi/auth/myys/acceptance/B07-adapters-20261014.json",
+            "gazi/auth/myys/HTTP-KEY-ROTATION-CONTRACT.md",
+            "gazi/auth/tests/myys-http-key-rotation.test.mjs",
+            "gazi/auth/myys/acceptance/B07-http-key-rotation-20261014.json"
           ],
           "remaining": [
             "Kişi/üyelik/challenge/session/iptal/rate/audit SQL repository ve HTTP bağlamasını bu işlem sınırıyla tamamla; PostgreSQL şema/driver gerçek kabulünü bağımsız fault-driver kabulüyle karıştırma.",
-            "Monoton anahtar revizyonu/iptal bariyerini session commit içinde atomik denetle; kalıcı CSRF/rate key rotasyonunda bütçe sıfırlanmasını önle; gerçek KMS driver kabulünü ayrı tut.",
+            "Monoton PKCE/nonce anahtar revizyonu/iptal bariyerini session commit içinde atomik denetle; yerel CSRF/rate dönüşümü Paket39 ile geçti, üretim kontrol düzlemi/drain ve gerçek KMS driver kabulü ayrı açık.",
             "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo/IdP erişimi, migration ve yeni credential özel yetki sınırında kapalı."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi; bağımsız hata sürücüsü sınır kabulü geçti",
-          "evidence": "20 yeni işlem/anahtar hata sürücüsü testi; 438 sunucu +46 portal +46 regresyon =530. Mevcut ayrı-site yerel HTTPS akışının 15 tarayıcı kontrolü tekrar geçti; yeni sınırlar bu HTTP akışına henüz bağlı değil.",
-          "limits": "Gerçek PostgreSQL/KMS testi yok; yeni sınırlar mevcut yerel HTTP akışına bağlı değil."
+          "status": "kısmi; yerel HTTP anahtar dönüşümü geçti",
+          "evidence": "Paket39: 7 oran/anahtar +1 gerçek HTTPS yeni test; 540 sunucu +48 portal +46 regresyon =634. Mevcut HTTPS kimlik15 ve itiraz13 tarayıcı kontrolü geçti. Üretim PostgreSQL/KMS kabulü yok.",
+          "limits": "Gerçek PostgreSQL/KMS yok. PKCE/nonce adaptörleri HTTP akışına bağlı değil; CSRF/rate denetimi yerel ve istek başında."
         },
         "live": {
-          "status": "Paket29 canlı yayımlanmadı",
-          "evidence": "Paket29 yalnız bağımsız yerel sınır kabulünde; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–29 dağıtımı yok; kurumsal SSO kapalı."
+          "status": "Paket39 canlı yayımlanmadı",
+          "evidence": "Paket39 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–39 dağıtımı yok; kurumsal SSO kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",

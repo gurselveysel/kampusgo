@@ -5,7 +5,7 @@ import {LocalIdentityFlow} from './identity-flow.mjs';
 import {LocalIdentityRateLimit} from './identity-rate-limit.mjs';
 export const identityPaths=Object.freeze({login:'/__identity/login',session:'/api/myys/kimlik/oturum',start:'/api/myys/kimlik/baslat',callback:'/api/myys/kimlik/donus',logout:'/api/myys/kimlik/cikis',backchannel:'/api/myys/kimlik/saglayici-cikis'});
 export const identityCookie='__Host-myys-session';
-export function localIdentityFailure(e){return {error:e.code==='identity_rate'?'Çok fazla giriş isteği. Bir dakika sonra yeniden deneyin.':'Yerel giriş isteği doğrulanamadı.',code:e.code,...(e.code==='session_required'?{scope:'local-acceptance',loginPath:identityPaths.login}:{})};}
+export function localIdentityFailure(e){return {error:e.code==='identity_key_rotation_wait'?'Giriş güvenliği yenileniyor. Bir dakika sonra yeniden deneyin.':e.code==='identity_rate'?'Çok fazla giriş isteği. Bir dakika sonra yeniden deneyin.':'Yerel giriş isteği doğrulanamadı.',code:e.code,...(e.code==='session_required'?{scope:'local-acceptance',loginPath:identityPaths.login}:{})};}
 const opaque=v=>typeof v==='string'&&/^[A-Za-z0-9_-]{43}$/.test(v);
 const escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const local=()=>requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Yerel giriş üretimde etkin değildir.',503);
@@ -23,16 +23,17 @@ async function body(req){
 }
 export class LocalIdentityHttp {
  #store;#config;#flow;#origin;#authorization;#key;#clock;#rate;
- constructor({store,identityConfig,origin,authorizationEndpoint,derivationKey,csrfKey,exchangeCode,clock=()=>new Date(),...limits}){
+ constructor({store,identityConfig,origin,authorizationEndpoint,derivationKey,csrfKey,csrfKeyRevision=1,exchangeCode,clock=()=>new Date(),...limits}){
   local();requireThat(store instanceof LocalAcceptanceStore&&Buffer.isBuffer(csrfKey)&&csrfKey.length===32,'identity_config','Yerel kimlik HTTP yapılandırması eksik.',503);
   const app=localUrl(origin),authorization=localUrl(authorizationEndpoint,['127.0.0.1','localhost']);requireThat(app.origin===origin&&app.pathname==='/'&&authorization.pathname!=='/','identity_config','Tam origin ve yetkilendirme yolu gerekli.',503);
   this.#store=store;this.#origin=origin;this.#authorization=authorization.href;this.#config=structuredClone(identityConfig);this.#key=Buffer.from(csrfKey);this.#clock=clock;
   this.#flow=new LocalIdentityFlow({store,identityConfig,derivationKey,redirectUri:origin+identityPaths.callback,exchangeCode,clock,...limits});
-  this.#rate=new LocalIdentityRateLimit({store,identityConfig,key:csrfKey,clock});
+  this.#rate=new LocalIdentityRateLimit({store,identityConfig,key:csrfKey,keyRevision:csrfKeyRevision,clock});
  }
  #check(req){
   local();requireThat(req.socket?.encrypted===true&&req.headers.host===new URL(this.#origin).host&&!req.headers['x-forwarded-host']&&!req.headers['x-forwarded-proto'],'identity_origin','Giriş kaynağı doğrulanamadı.',403);
   requireThat(typeof req.url==='string'&&req.url.startsWith('/')&&!req.url.startsWith('//')&&!req.url.includes('\\')&&req.url.length<=4096,'identity_url','Giriş yolu geçersiz.',400);
+  this.#rate.assertCurrent();
  }
  #csrf(token){return createHmac('sha256',this.#key).update(JSON.stringify(['csrf',this.#origin,this.#config.tenant,token])).digest('base64url');}
  #mutation(req,token,value){
@@ -82,6 +83,10 @@ export class LocalIdentityHttp {
    res.setHeader('Allow',[identityPaths.start,identityPaths.logout].includes(path)?'POST':'GET');json(res,405,{error:'Bu giriş yöntemi desteklenmiyor.'});return true;
   }catch(e){
    if(!(e instanceof CoreError))throw e;
+   if(e.code==='identity_key_rotation_wait'){
+    res.setHeader('Retry-After','60');
+    if(rawPath!==identityPaths.backchannel&&(req.headers.accept||'').includes('text/html')){headers(res);res.writeHead(503,{'Content-Type':'text/html; charset=utf-8'});res.end(`<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Giriş güvenliği yenileniyor</title><main><h1>Giriş güvenliği yenileniyor</h1><p role="alert">Giriş güvenliği yenilenirken mevcut istek sınırları korunur. Bir dakika sonra yeniden deneyebilirsiniz.</p><p>Akademik kayıtlarınız korunur.</p><a href="${identityPaths.login}">Giriş ekranına dön</a></main></html>`);return true;}
+   }
    if(e.status===429){
     res.setHeader('Retry-After','60');
     if(rawPath!==identityPaths.backchannel&&(req.headers.accept||'').includes('text/html')){headers(res);res.writeHead(429,{'Content-Type':'text/html; charset=utf-8'});res.end(`<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Giriş isteği sınırı</title><main><h1>Giriş isteği sınırına ulaşıldı</h1><p role="alert">Çok fazla giriş isteği alındı. Bir dakika sonra yeniden deneyebilirsiniz.</p><p>Akademik kayıtlarınız korunur.</p><a href="${identityPaths.login}">Giriş ekranına dön</a></main></html>`);return true;}

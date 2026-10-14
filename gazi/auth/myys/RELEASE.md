@@ -559,3 +559,17 @@ Yerel `a5b1328da9bf170f77845dcbc02fbaaa4056c90b`; uzak `57740e1efc2d503ad1a405f0
 - Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction;14.10saltokunur alias kontrolü.17–38dağıtımı/yeni oturumlu smoke yok;browserAuthiptaliniyenidenisteme;configuredCorekapalı.
 - Canlı geri dönüş hedefi15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`;uygulanmadı.
 - Gerçek kurum ihtiyacı/alternatif kararı,B19/B28veri-saklama-güven-durum ve gerçekcüzdan/protokol/biçim/profil kabulü açık. Yeni hesap/credential/ücretlisertifika/migration/zincirkişiselverisi yok. B36vebütünB01–B36tamamlanmadı;Paket38bir yazılım kaynak dilimidir.
+
+### Paket38 kaynak kimlikleri
+
+Yerel `406adb9e5e5c996448cff7bb01dd2712e0cca232`; uzak `fce97922b80c8ff0123e43cef3d3585d58dfc1f1`; ortak tam ağaç `9410cc3d82ebd619d60ace794cb52fdce2be05d7`. 20 blob SHA ve tam ağaç eşleşti; expected-head `57740e1efc2d503ad1a405f07bb76e183fc6e91e`, force=false; uzak yeni baş doğrulandı. Yeni canlı yayın yok.
+
+## Paket39 — yerel HTTP anahtar dönüşümü; kaynak adayı
+
+14.10.2026. Yeni panel menüsü yok; anahtar geçişinde Türkçe 503 bekleme ekranı. Mevcut oturum/kişi/akademik geçmiş korunur; eski CSRF ve etkinleşme sonrası eski işçi reddedilir. Canlı oran bütçesi anahtar değiştirerek sıfırlanamaz. Eski işçilerin boşaltılması gerekir; atomik PKCE/KMS commit bariyeri değildir.
+
+- 540 sunucu +48 portal +46 regresyon =634 otomatik; 15 kimlik +13 itiraz =28 tarayıcı. 111 komut/16 HTTP, 5063 olumlu örnek/40504 negatif kontrol; 115 korumalı statik dosya.
+- Taban yerel `406adb9e5e5c996448cff7bb01dd2712e0cca232` / uzak `fce97922b80c8ff0123e43cef3d3585d58dfc1f1` / ortak `9410cc3d82ebd619d60ace794cb52fdce2be05d7`.
+- 14.10 güncel uzak baş/alias okundu. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production. 17–39 dağıtımı/yeni oturumlu smoke yok. Kullanıcının browserAuth iptali yeniden istenmedi; configuredCore kapalı.
+- Canlı geri dönüş hedefi15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
+- PostgreSQL repository, atomik PKCE/nonce bariyeri, gerçek IdP/KMS/depo/RLS ve dağıtık kabul açık. Yeni servis/credential/üretim migration yok. B07 ve B01–B36 bütünü tamamlanmadı.

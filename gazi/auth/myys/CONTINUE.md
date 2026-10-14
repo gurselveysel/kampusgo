@@ -1,3 +1,19 @@
+# Güncel devam — Paket39 yerel kabul; kaynak eşitlemesi sırada
+
+B07 yerel HTTP CSRF/rate anahtar dönüşümü: 8 yeni test, 540+48+46=634 otomatik; 15 kimlik +13 itiraz tarayıcı kontrolü geçti. 111 komut/16 HTTP, 5063 örnek/40504 negatif kontrol, 115 korumalı dosya. Sözleşme, B07 JSON/backlog beş eksen ve matris güncellendi. Eski işçiler drain edilmelidir; bu PKCE/KMS atomik session-commit bariyeri değildir.
+
+Önce diff/özgün36kabul koruması, commit ve expected-head fce97922b80c8ff0123e43cef3d3585d58dfc1f1 ile SHA/tam ağaç eşitlemesi. Taban yerel406adb9e5e5c996448cff7bb01dd2712e0cca232/ortak9410cc3d82ebd619d60ace794cb52fdce2be05d7. Son canlı16;17–39 yayını yok. browserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör/alt ajan yok.
+
+Sıradaki bağımsızlar: B07 tam SQL repository/HTTP+PKCE/nonce atomik revizyon bariyeri, B28 bütün yeni kayıtların envanteri/saklama/özne hakları ve bütün B01–B36 kalan bağımsız işler. Gerçek depo/IdP/KMS erişimi olmadan üretim kabulü yazma; devam komutu bekleme.
+
+# Güncel devam — Paket38 kaynakta; B07 kimlik depo/anahtar sınırı yeniden incelendi
+
+Yerel406adb9e5e5c996448cff7bb01dd2712e0cca232/uzakfce97922b80c8ff0123e43cef3d3585d58dfc1f1/ortak9410cc3d82ebd619d60ace794cb52fdce2be05d7.20blobtam-ağaçeşleşti;626otomatik/51tarayıcı. Soncanlı16;17–38yayınıyok;browserAuthiptaliniyenidenisteme;configuredCorekapalı.
+
+B07 identity-transactions/key-provider/flow/http/rate-limit/revocation/contract ve20adaptertest yenidenokundu. PostgreSQLserver/psql ortamdayok. AsyncPGtransactionboundary+KeyProvider henüzHTTPye bağlıdeğil; localflow doğrudanSQLite/staticHMACkullanıyor. KeyProvider yalnızpkce/nonce,resumeretiredöncekiistekler;çıktıbindingrevizyoniçermiyor. GerçekmonotonicDBkeybarrier+tamSQLrepository+HTTPmapping açık. CSRF/rateaynıkeyşuankiLocalIdentityRateLimitkeydeğişirsebucketHMACdeğişiyor; bağımsızgüvenlirotasyondilimi gerekli. Henüz39kod yok.
+
+Tasarımdikkati: anahtarkapatmabarrier bütünüyazarlarınaynıtenant/purpose/version/revisionSQLkilidineuymasıveDBkapatmaönceKMSyaklaşımıgerektirir; provideriki metadataokumasınıatomikDBkabulüdiyeadlandırma. ProofWeakMapdamgası/tokençıktısınıbrowsergirdisineaçma. YeniDB/migration/credentialkurma. LocalHTTPS mevcut15testi koru. KalanB07/B28tümyenikayıtenvanterisaklama ve bütünB01–B36bağımsızlar sürer. Tekeditöraltajanyok;devamkomutubekleme.
+
 # Güncel ara nokta — Paket38 B36 yerel kabul; kaynak eşitlemesi sırada
 
 Cüzdan seçenekleri:8yeni sunucu+11tarayıcı;532+48+46=626otomatik;11keşif19gezinme8cüzdan13itiraz=51tarayıcı.111komut/16HTTP5053örnek40424denetim;98menü/279panel/66ders,115statik. WALLET-STUDY-CONTRACT/B36JSON/backlog5eksen/matrix/ACCESS13 hazır;36özgünkriter korundu. Gerçekkurum ihtiyacı onayı/protokolcüzdan/ihraçdoğrulamaiptaltestiyok.

@@ -10,7 +10,7 @@
 | B04 · Veri akışını ve saklamayı onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; yerel imzalı iptal/oran bağlı | 99 kimlik testi, 15 HTTPS tarayıcı kontrolü | Paket25 canlı değil | IdP/MFA kabulü bekleniyor | üretim depo/anahtar adaptörü, dağıtık kabul ve IdP açık |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; yerel HTTP anahtar dönüşümü bağlı | 8 yeni test, 15 HTTPS +13 itiraz tarayıcı kontrolü | Paket39 canlı değil | IdP/MFA kabulü bekleniyor | SQL repository/atomik PKCE bariyeri ve gerçek depo/KMS/IdP açık |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi; imzalı kaynak/arşiv bağlı | 19 yeni test, 14 kaynak tarayıcı; bağımsız doğrulama | Paket26 canlı değil | kaynak yetki/usul kabulü açık | güven yaşam döngüsü, gerçek sağlayıcı/depo açık |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
@@ -259,3 +259,7 @@ Gerçek model, sağlayıcı planı, Türkçe pilot başarısı ve kurum/veri-iç
 Cüzdan seçenekleri sekmesi özel cüzdanla bağlantılıdır. Mevcut özel cüzdan, açık protokollü dış cüzdan ve zincir için ihtiyaç/katkı/sınır/mahremiyet/kalan kabul kaydı; ayrı teknik ve kalite incelemesi, erteleme/zincirsiz keşif, yeni sürüm ve durdurma. Hiçbir onay gerçek cüzdan bağlantısı açmaz veya dış testleri başarılı yapmaz.
 
 8 yeni sunucu ve 11 yeni tarayıcı; toplam532+48+46=626 otomatik,51tarayıcı.111komut/16HTTP kapsamı güncel; ürün tamamlanma yüzdesi değildir. Kurum ihtiyacı onayı, B19/B28gerçek kabulü ve dış cüzdan ihraç/doğrulama/iptal testleri açık. `WALLET-STUDY-CONTRACT.md` ve B36JSON.
+
+## Paket39 — yerel giriş anahtarı dönüşümü
+
+634 otomatik test; 28 tarayıcı regresyonu. Yerel CSRF/oran bütçesi yeni anahtarla sıfırlanmaz; etkin yeni sürüm eski işçiyi kapatır. Eski işçiler boşaltılmadan kesin geçiş süresi yoktur. HTTP başlangıç denetimi, atomik PKCE/nonce session-commit bariyeri değildir. `HTTP-KEY-ROTATION-CONTRACT.md` ve B07 kabul JSON’u ayrıntıdır. B07 beş eksende açık; yeni canlı yayın yok.
