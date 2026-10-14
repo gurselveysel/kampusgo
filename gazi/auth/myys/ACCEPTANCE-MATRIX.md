@@ -12,7 +12,7 @@
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi | kısmi | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; yerel imzalı iptal/oran bağlı | 99 kimlik testi, 15 HTTPS tarayıcı kontrolü | Paket25 canlı değil | IdP/MFA kabulü bekleniyor | üretim depo/anahtar adaptörü, dağıtık kabul ve IdP açık |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B09 · Program rubrik ve kanıtı sürümle | kısmi | kısmi · sürüm/arşiv dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B09 · Program rubrik ve kanıtı sürümle | kısmi; imzalı kaynak/arşiv bağlı | 19 yeni test, 14 kaynak tarayıcı; bağımsız doğrulama | Paket26 canlı değil | kaynak yetki/usul kabulü açık | güven yaşam döngüsü, gerçek sağlayıcı/depo açık |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B11 · İtiraz ve moderasyon yolunu kur | kısmi; bağımsız yerel dilim bağlı | yerel politika/değiştirme geçti | son iki dilim kaynakta; canlı kabul açık | usul/tebliğ/takvim/yetki bekleniyor | üretim kimlik/depo kabulü bekleniyor |
 | B12 · Belgeyi akademik karara bağla | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
@@ -160,3 +160,7 @@ SEM dosyaları: iç kontrol listesi/kaynak kapsamı, eksik/düzeltme, sürüm, a
 ## Paket25 kaynak adayı — B07/B08 (14.10.2026)
 
 Akademik panelin kapalı oturum/yeniden giriş davranışı sağlayıcı çıkışına bağlandı; yerel girişte Türkçe oran sınırı ekranı eklendi. İmzalı sub/sid iptali, kurum/issuer/audience sınırı, aynı jti tekrarı/çakışması, audit geri alma, gecikmiş callback ve başka tenant tarayıcı bağı denetlendi. 372+46+46=464 otomatik; 15 gerçek yerel HTTPS tarayıcı kontrolü geçti. 72 akademik komut/12 HTTP matrisi: 2945 pozitif örnek, 23560 türetilmiş kontrol; ayrı test veya tamamlanma oranı değildir. `acceptance/B07-backchannel-20261014.json`. Üretim transaction/anahtar adaptörü ve dağıtık kabul hâlâ bağımsız açıktır; gerçek IdP/MFA/kurum saklama/erişim ayrıca gerekir. Son canlı Paket16; Paket17–25 dağıtımı yok. B01–B36 bütünü tamamlanmadı.
+
+## Paket26 kaynak adayı — B09/B15/B16/B08 (14.10.2026)
+
+Aktarım ve mutabakat ekranında Türkçe imzalı dosya seçimi, 202 kabulü, ayrı kuyruk işleme ve açık güven kaydı indirme eklendi. İşlenmiş kanıt eğiticiye açılır; insan rubriği/ayrı karar/öğrenci arşivi aynı zincirdedir. Kaynak düzeltmesi eski karar arşivini değiştirmez. Bağımsız Python/OpenSSL kaynak imzasını ve rubrik hesabını doğrular; karar zarfı imzasızdır, güncel uygunluk iddiası yoktur. 391+46+46=483 otomatik, 14 kaynak +13 itiraz tarayıcı; 72 komut/15 HTTP, 3086 örnek/24688 kontrol. `acceptance/B09-source-20261014.json`. Kaynak güven sicili/iptal yaşam döngüsü hâlâ bağımsız açık; gerçek sağlayıcı ve kurum kabulü ayrıca açık. Son canlı Paket16; Paket17–26 dağıtımı yok.

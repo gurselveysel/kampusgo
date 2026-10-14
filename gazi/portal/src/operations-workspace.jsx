@@ -1,5 +1,5 @@
 import {ObsWorkspace} from './obs-workspace.jsx';
-import React,{useState} from 'react';
+import React,{useState,useRef} from 'react';
 import {Card,CardHead,Button,Field,Notice,Pill} from './ui.jsx';
 import {transferCsv} from '../../auth/myys/transfer-csv.mjs';
 
@@ -8,16 +8,19 @@ const errors={invalid_row:'Satır eksik veya sütun sayısı hatalı.',not_found
 const status=value=>states[value]||'İnceleme gerekli';
 const issue=code=>errors[code]||'Satırın yetki ve kaynak bilgilerini inceleyin.';
 function download(name,rows){const url=URL.createObjectURL(new Blob([transferCsv(rows)],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-export function OperationsWorkspace({data,busy,command}){
+export function OperationsWorkspace({data,busy,command,sourceAction,sourceTrust}){
  const [search,setSearch]=useState(''),[filter,setFilter]=useState('all');
  const queue=(data.queue||[]).filter(e=>(filter==='all'||e.state===filter)&&[e.contractId,e.id,status(e.state)].join(' ').toLocaleLowerCase('tr').includes(search.toLocaleLowerCase('tr')));
  return <div className="operations-workspace"><ObsWorkspace data={data} busy={busy} command={command}/>
+ {!!data.sourceContracts?.length&&<SourcePacketForm contracts={data.sourceContracts} busy={busy} sourceAction={sourceAction} sourceTrust={sourceTrust}/>}
  <Notice>Kabul edilen olay henüz işlenmiş sayılmaz. İşlenmiş kaynak verisi de insan değerlendirmesi ve akademik karar yerine geçmez.</Notice>
  <Card><CardHead title="Olay kuyruğu ve karantina" sub="Yetkili olduğunuz birimlerdeki işleme durumları. Öğrenme kanıtının içeriği bu ekranda gösterilmez."/>
  <div className="academic-body form-stack"><Field label="Olay ara"><input aria-label="Olay ara" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Kaynak veya olay kimliği"/></Field>
  <Field label="İşleme durumu"><select aria-label="İşleme durumu" value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">Tüm durumlar</option>{['accepted','processing','retry-wait','quarantined','processed','stale'].map(s=><option key={s} value={s}>{status(s)}</option>)}</select></Field>
  <p role="status">{queue.length} olay gösteriliyor.</p>
- {queue.map(e=><article key={e.id} className="academic-record"><strong>{e.contractId} · Kaynak sürümü {e.revision}</strong><Pill tone={e.state==='processed'?'green':'amber'}>{status(e.state)}</Pill><small>Olay: {e.id}</small><p>İşleme denemesi: {e.attempt}</p>
+ {queue.map(e=><article key={e.id} className="academic-record"><strong>{data.sourceContracts?.find(c=>c.id===e.contractId)?.name||e.contractId} · Kaynak sürümü {e.revision}</strong><Pill tone={e.state==='processed'?'green':'amber'}>{status(e.state)}</Pill><small>Olay: {e.id}</small><p>İşleme denemesi: {e.attempt}</p>
+ {e.sourceSigned&&<p>İmzalı kaynak dosyası · Teslim sürümü {e.sourceSubmissionVersion}. {e.type==='grade'?'Program, rubrik ve görev':'Program ve rubrik'} bağı saklandı.</p>}
+ {e.sourceSigned&&data.sourceContracts?.some(c=>c.id===e.contractId)&&(['accepted'].includes(e.state)||e.leaseExpired||e.state==='retry-wait'&&e.nextAttemptAt<=new Date().toISOString())&&<Button disabled={busy} onClick={()=>sourceAction('kaynak-isle',{contractId:e.contractId,eventId:e.id})}>Kaynak olayını işle</Button>}
  {e.nextAttemptAt&&<p>Sonraki deneme: {new Date(e.nextAttemptAt).toLocaleString('tr-TR')}</p>}{e.leaseExpired&&<p>Önceki işçinin süresi doldu; sıradaki işçi kaydı yeniden alabilir.</p>}{e.errorCode&&<p>{issue(e.errorCode)}</p>}
  <details><summary>İşlem geçmişi</summary><ol>{e.history.map((h,i)=><li key={i}>{status(h.state)} · {new Date(h.at).toLocaleString('tr-TR')}{h.errorCode?' · '+issue(h.errorCode):''}</li>)}</ol></details>
  {e.review&&<p>İnceleme kaydı: {e.review.reason}</p>}
@@ -32,6 +35,31 @@ export function OperationsWorkspace({data,busy,command}){
  </div></Card>
  {!!data.batchUnits?.length&&<BatchForm data={data} busy={busy} command={command}/>}
  </div>;
+}
+function SourcePacketForm({contracts,busy,sourceAction,sourceTrust}){
+ const [contractId,setContractId]=useState(contracts[0].id),[file,setFile]=useState(null),[error,setError]=useState('');
+ const fileInput=useRef(null);
+ async function submit(e){
+  e.preventDefault();setError('');const form=e.currentTarget;
+  try{
+   if(!file||file.size>64000)throw Error('En fazla 64 KB boyutunda bir kaynak dosyası seçin.');
+   let value;try{value=JSON.parse(await file.text());}catch{throw Error('Kaynak dosyası geçerli JSON biçiminde olmalı.');}
+   if(!value||value.format!=='myys-source-upload/1'||typeof value.token!=='string'||Object.keys(value).some(k=>!['format','token'].includes(k)))throw Error('Bu dosya desteklenen imzalı kaynak paketi değil.');
+   const result=await sourceAction('kaynak-al',{contractId,token:value.token});if(result){form.reset();setFile(null);}
+  }catch(e){setError(e.message);}
+ }
+ return <Card><CardHead title="İmzalı kaynak dosyası al" sub="Dosya doğrulandıktan sonra mevcut olay kuyruğuna kabul edilir."/>
+ <form className="academic-body form-stack source-packet-form" onSubmit={submit}>
+ <Notice>Yalnız izole yerel kabul. Gerçek LMS hizmeti bağlı değildir. Kaynak imzası başarı veya belge kararı vermez; işlenen kanıtı eğitici rubrikle inceler.</Notice>
+ <Field label="İmzalı dosyanın kaynak sözleşmesi"><select aria-label="İmzalı dosyanın kaynak sözleşmesi" value={contractId} onChange={e=>setContractId(e.target.value)}>{contracts.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></Field>
+ <input ref={fileInput} className="sr-only" tabIndex={-1} aria-label="İmzalı kaynak dosyası" type="file" accept=".json,application/json" onChange={e=>{setFile(e.target.files?.[0]||null);setError('');}}/>
+ <Button type="button" disabled={busy} onClick={()=>fileInput.current?.click()}>İmzalı dosya seç</Button>
+ <p role="status">{file?'Seçilen dosya: '+file.name:'Henüz dosya seçilmedi.'}</p>
+ <p>Özel anahtar yüklemeyin. Yalnız kaynak tarafından imzalanmış, tek öğrenene ait aktarım dosyası kullanın.</p>
+ {error&&<p role="alert">{error}</p>}
+ <Button type="submit" disabled={busy||!file}>İmzayı doğrula ve kuyruğa al</Button>
+ <Button type="button" disabled={busy} onClick={()=>sourceTrust(contractId)}>Kaynak açık güven kaydını indir</Button>
+ </form></Card>;
 }
 function BatchForm({data,busy,command}){
  const [unit,setUnit]=useState(data.batchUnits[0]),[mode,setMode]=useState('select');

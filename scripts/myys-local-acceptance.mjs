@@ -1,3 +1,4 @@
+import {sourcePacketFixture} from '../gazi/auth/tests/helpers/local-source-packet.mjs';
 import {semSetup} from '../gazi/auth/tests/helpers/local-sem.mjs';
 import {generateKeyPairSync} from 'node:crypto';
 import {importJWK} from '../gazi/auth/node_modules/jose/dist/webapi/index.js';
@@ -19,6 +20,7 @@ if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only
 const f=fixture('gazi');
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
 const initial=process.argv.includes('--sem')?semSetup(f):process.argv.includes('--keys')?f.passed():process.argv.includes('--profiles')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--replacement')||process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+const sourceFixture=process.argv.includes('--source-packets')?await sourcePacketFixture(f,{initial}):null;
 if(process.argv.includes('--appeal-policies'))f.assess(initial);
 if(process.argv.includes('--profiles')){const reason='Sentetik düzenleme yetki kaydı, gerçek kurum kararı değildir.';const authority=f.run('admin','registry-draft',{unit:initial.p.unit,type:'institution-authority',title:'Sentetik düzenleme yetkisi',fields:{...initial.p.responsibilities,pathway:initial.p.pathway,authorityReference:reason}});f.run('authority','registry-review',{recordId:authority.id,outcome:'accepted',reason});}
 if(process.argv.includes('--quality')){
@@ -60,6 +62,7 @@ const server=createServer(async(req,res)=>{
    if(!Object.hasOwn(roles,b?.actor))return json(res,400,{error:'Sentetik rol yok.'});
    res.setHeader('Set-Cookie','myys_acceptance_actor='+b.actor+'; HttpOnly; SameSite=Strict; Path=/');return json(res,200,{ok:true});
   }
+  if(url.pathname==='/__acceptance/source-packet'&&req.method==='GET'&&sourceFixture){const revision=Number(url.searchParams.get('revision')||1);if(![1,2].includes(revision))return json(res,400,{error:'Sentetik sürüm yok.'});const payload=sourceFixture.payload({revision,submissionVersion:revision});return json(res,200,{format:'myys-source-upload/1',token:await sourceFixture.token(payload)});}
   if(url.pathname==='/__acceptance/public-key'&&req.method==='GET'&&localSigner)return json(res,200,localSigner.material.jwk);
   if(url.pathname==='/__acceptance'&&req.method==='GET'){
    res.setHeader('Content-Type','text/html; charset=utf-8');return res.end(`<!doctype html><html lang="tr"><meta charset="UTF-8"><title>MYYS izole yerel kabul</title><body><h1>İzole yerel kabul · Gerçek hesap değil</h1><p>Yalnız sentetik kişiler ve geçici yerel kayıtlar.</p><label>Test senaryosu <select id="actor">${Object.entries(roles).map(([v,t])=>`<option value="${v}">${t}</option>`).join('')}</select></label><button id="open">Senaryoyu aç</button><script>document.querySelector('#open').onclick=async()=>{const r=await fetch('/__acceptance/actor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({actor:document.querySelector('#actor').value})});if(r.ok)location.href='/#/academic';};</script></body></html>`);
@@ -68,7 +71,7 @@ const server=createServer(async(req,res)=>{
    const actor=(req.headers.cookie||'').match(/(?:^|; )myys_acceptance_actor=([a-z]+)(?:;|$)/)?.[1];
    if(url.pathname==='/api/myys/paylasim')return await myysRoute({req,path:url.pathname,b,sessionHash:null,json,res,core:f.core});
    if(!actor||!Object.hasOwn(roles,actor))return json(res,401,{error:'Yerel test senaryosunu seçin.'});
-   return await myysRoute({req,path:url.pathname,b,sessionHash:hash(actor),json,res,core:f.core,signer:localSigner});
+   return await myysRoute({req,path:url.pathname,b,sessionHash:hash(actor),json,res,core:f.core,signer:localSigner,sourceAdapter:sourceFixture?.adapter});
   }
   if(!['GET','HEAD'].includes(req.method))return json(res,405,{error:'Yöntem desteklenmiyor.'});
   const path=resolve(root,'.'+decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname));

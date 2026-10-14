@@ -1,0 +1,116 @@
+{
+  "work_ids": [
+    "B09",
+    "B15",
+    "B16",
+    "B08"
+  ],
+  "at": "2026-10-14T00:49:02.135Z",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "production": false,
+  "automated": {
+    "server": 391,
+    "portal": 46,
+    "regression": 46
+  },
+  "new_tests": {
+    "source_packet": 13,
+    "source_http": 6
+  },
+  "browser": {
+    "source": {
+      "at": "2026-10-14T00:49:02.135Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "Yanlış dosya türü açıklamalı reddedildi",
+        "Değiştirilmiş imzalı dosya kuyruğa girmedi",
+        "Geçerli dosya 202 kabulüyle kaydoldu; henüz işlenmedi",
+        "Aynı dosya yeniden yüklenince tek olay korundu",
+        "Ayrı açık güven dosyası indirildi; özel anahtar veya kişi eşleme listesi yok",
+        "İşlenmemiş dosya eğiticinin kanıt alma işlemine kapalı",
+        "İşleme kaydı ve geçmişi yenilemede korundu; aynı iş yeniden sunulmuyor",
+        "Eğitici aynı öğrenene bağlı imzalı teslimi ve sürümünü görüyor",
+        "Tam insan rubriği ve ayrı komisyon kararı kaynak olayından ayrı kaydedildi",
+        "İndirilen karar arşivindeki kaynak imzası ayrı Python/OpenSSL ile doğrulandı; insan puanı yeniden üretildi",
+        "Kaynak düzeltmesi yeni uygunluğu kapattı; eski kararın imzalı dayanağı aynı kaldı",
+        "Başka öğrenene kaynak kanıtı, karar arşivi veya dosya alımı açılmadı",
+        "390 px Türkçe dosya/olay ekranı taşmıyor; sözleşme ve dosya düğmesi klavyeyle erişilebilir",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false,
+      "independentVerifier": {
+        "validSourceSignatures": true,
+        "sourceSignatures": 1,
+        "unsignedEvidence": 0,
+        "historicalContentReproduced": true,
+        "score": 100,
+        "archiveSha256": "a907163ecfa701126d84f53bf491c98f08f87b5d32ce1f31bf09ed8de84011eb",
+        "academicDecisionSignature": false,
+        "currentEligibilityVerified": false,
+        "official": false,
+        "scope": "local-acceptance"
+      }
+    },
+    "appeals": {
+      "at": "2026-10-14T00:47:53.542Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+        "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+        "390 px mobil: taşma ve bozuk resim yok",
+        "Akademik sekmeler Home/End tuşları ve seçili durum",
+        "Yakalanmış istemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    }
+  },
+  "scope_matrix": {
+    "commands": 72,
+    "http_routes": 15,
+    "positive_samples": 3086,
+    "derived_checks": 24688,
+    "note": "Örnek/denetim sayısı ayrı test veya tamamlanma oranı değildir."
+  },
+  "criteria_closed_in_local_scope": [
+    "Asimetrik kaynak imzası program/rubrik/görev/teslim/kişi/hash/zaman bağıyla mevcut olay kuyruğuna yazıldı.",
+    "İşleme, eğitici kanıt alımı, tam insan rubriği ve bağımsız komisyon kararı aynı kayıt zincirinde tamamlandı.",
+    "Aynı dosyanın on tekrarı tek olay; çakışma, sırasız düzeltme, lisans iptali ve yanlış eşleme reddi sınandı.",
+    "İptal edilmiş yetki asenkron alım veya worker claim/finish/fail transaction üzerinden yazamaz.",
+    "Kaynak düzeltmesi eski karar dayanağını değiştirmedi; ayrı Python/OpenSSL kaynak imzasını ve rubrik hesabını yeniden doğruladı.",
+    "15 akademik HTTP yüzeyi ve 72 komut için kurum/birim sınırları doğrulandı."
+  ],
+  "limits": [
+    "İmzası doğrulanan kaynak dosyasıdır; kararın dış zarfı imzasız, resmî belge değildir.",
+    "Doğrulayıcı güncel itiraz/lisans/kurum uygunluğu veya komisyonun kimliğini imzayla doğrulamaz.",
+    "Kaynak güven sicilinin bağımsız onay/iptal yaşam döngüsü ve bunun akademik uygunluğa dağıtılması hâlâ bağımsız geliştirme işidir.",
+    "Statik sentetik sözleşme; gerçek LMS/LTI/OBS, kişi/ders eşlemesi, anahtar yetkisi ve üretim depo/worker kabulü yok.",
+    "Paket26 yalnız kaynak adayı; son canlı Paket16."
+  ],
+  "source_review": [
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc7515.html",
+      "version": "RFC7515 Mayıs2015",
+      "reviewed": "2026-10-14",
+      "scope": "§5.1–5.2 ve §6"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc8725.html",
+      "version": "BCP225 Şubat2020",
+      "reviewed": "2026-10-14",
+      "scope": "§3.12"
+    }
+  ]
+}

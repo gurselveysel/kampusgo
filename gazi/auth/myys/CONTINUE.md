@@ -1,3 +1,25 @@
+# Güncel devam — Paket26 yerel kabulü geçti; eşitleme sonra B27
+
+B09 kaynak paketi/HTTP/UI/bağımsız arşiv doğrulayıcı tamamlandı (yerel dilim). 391+46+46=483 otomatik; 14 kaynak/13 itiraz tarayıcı; 72 komut/15 HTTP, 3086 örnek/24688 kontrol. SOURCE-PACKET-CONTRACT.md ve B09-source-20261014.json sınırlar. Kaynak key/contract onay-iptal yaşam döngüsü bağımsız açık; bunu atlama.
+
+Önce diff/özgün36 kriter, commit ve uzak eşitleme: taban yerel c09c116eeb12ac783151b4af4e665cdf5345abd6 / uzak 000fe90fca77b13b897484807689f9d0b13909f6 / ağaç 9cae8895ea9726f98f504fa9a56a76416b476c51. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–26 dağıtımı yok. BrowserAuth kullanıcı iptalini yeniden isteme. configuredCore kapalı, tek editör, alt ajan yok.
+
+Sonraki bağımsız B27: mevcut olay kuyruğu, kimlik iptal makbuzu, kaynak/karar arşivi ve anahtar/yanlış ihraç olaylarını tutarlı yerel yedek geri yükleme tatbikatında birleştir; gerçek RPO/RTO hedefi uydurma, sentetik hedef ve ölçümü ayır. Kurum prod yedeği/migration/credential/geri alınamaz işlem yok. B07 üretim transaction/anahtar adaptörü, B09 kaynak güven sicili yaşam döngüsü ve bütün kalan B01–B36 bağımsız işler açık.
+
+# Güncel devam — B09 kaynak paketi geliştirmesi sürüyor (henüz kabul edilmedi)
+
+Paket25 kaynak kimlikleri aşağıda korunuyor. B09 için lms.mjs ortak atomik acceptLmsEvent/processLmsEventInTransaction sınırına ayrıldı; mevcut LMS/operations/programs testleri çalıştırıldı. Yeni source-packet.mjs LocalSignedSourceAdapter kodlandı; henüz test/HTTP/UI/arşiv bağlantısı yok, tamamlandı denmez. Yerel .invalid issuer, statik açık RS256 güven sözleşmesi, ayrı typ/audience, program/rubrik/görev digest, submissionID/sürüm/hash/zaman, grade/completion/license-revoked doğrulaması; mevcut kuyruğa atomik imzalı proof ekleme hedefi. Gerçek credential/migration yok.
+
+Devam: 1) sentetik source fixture/keypair/packet factory ve pozitif/negatif testler; 2) myysRoute sourceAdapter kapalı varsayılan ve imzalı dosya alma/işleme/açık güven indirme uçları; 3) Aktarım ve mutabakat dosya seçimi, sonuç, queue process UI; 4) import-lms-evidence + assessment.evidenceDigests ve decisionArchive içine değişmez sourceProof bağı, eski karar arşivinin kaynak düzeltmesinde aynı kaldığı kabul; 5) ayrı Python+OpenSSL doğrulayıcı (ayrı güven dosyası zorunlu; dış karar zarfı hâlâ imzasız, kaynak imzasıyla karıştırma), tarayıcı+çapraz tenant/HTTP matrisi+belgeler+commit/eşitleme.
+
+Kaynaklar RFC7515 https://www.rfc-editor.org/rfc/rfc7515.html (turn34view0, turn35view0/1: doğrulama §5.2 ve MAC/asimetrik farkı §10.5 metni tamamla); RFC8725 https://www.rfc-editor.org/rfc/rfc8725.html (turn34view1/turn35view2 §3.12 okundu). Yerel profil LTI/vendor standardı değildir; HMAC kabul kaynaklarını geriye dönük asimetrik imzalı gösterme. B07 üretim adaptörü ve diğer bütün B01–B36 bağımsız işler açık.
+
+# Güncel devam — Paket25 kaynakta; B09 imzalı kaynak paketi
+
+Yerel c09c116eeb12ac783151b4af4e665cdf5345abd6 / uzak 000fe90fca77b13b897484807689f9d0b13909f6 / ortak ağaç 9cae8895ea9726f98f504fa9a56a76416b476c51. 464 otomatik, 15 HTTPS tarayıcı; 72 komut/12 HTTP kapsam matrisi. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–25 dağıtımı yok.
+
+B09 mevcut lms.mjs, archive.mjs ve core import-lms-evidence inceleniyor; henüz yeni B09 kodu yok. Mevcut HMAC yerel LMS alımı ham imzalı kaynak paketi/arşiv imza zinciri sağlamıyor. Görev/program/rubrik/teslim sürümleri ve bağımsız doğrulama tasarla; mevcut kalıcı olay/kuyruk ve değerlendirme zincirine bağla. Gerçek hizmet/credential/migration açma. B07 üretim adaptörü ve B27 geri yükleme dahil diğer bütün bağımsız işler açık. Tek editör; alt ajan yok; iptal edilen browserAuth yeniden istenmez.
+
 # Güncel devam — Paket25 yerel kabulü geçti; kaynak eşitleme
 
 B07 imzalı sağlayıcı çıkışı/kalıcı oran/Türkçe bekleme ekranı: 372+46+46=464 otomatik, 15 gerçek yerel HTTPS tarayıcı; 72 komut/12 HTTP, 2945 örnek/23560 kontrol. Kayıtlar BACKCHANNEL-IDENTITY-CONTRACT.md ve B07-backchannel-20261014.json. Mevcut kaynak temel yerel 9ecf625e4873586e3425d5e542fc9de868b7778e / uzak d256623050f34c353a7f7eeaba1ea0494de66c43 / ağaç 3e29a1bc5bf457507a4800eeca687c2c451ec681. Önce diff/özgün 36 kriter kontrolü ve kaynak commitini aynı ağaca eşitle.

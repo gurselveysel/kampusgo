@@ -1,0 +1,53 @@
+// Tests the real built React portal and local HTTP core with disposable synthetic records.
+// This runner never contacts production, signs credentials, or changes gateway authentication.
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {spawn} = require('node:child_process');
+if(process.env.VERCEL || process.env.VERCEL_ENV)throw Error('Local acceptance only');
+const {chromium} = require(process.env.MYYS_PLAYWRIGHT_MODULE || path.join(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES || 'node_modules','playwright'));
+const root=path.resolve(__dirname,'..'),out=path.join(root,'test-results','myys-source');fs.mkdirSync(out,{recursive:true});
+const server=spawn(process.execPath,['scripts/myys-local-acceptance.mjs','--source-packets'],{cwd:root,stdio:['ignore','pipe','pipe']});
+let browser,page,base,current='startup';const checks=[],errors=[];
+const record=(name)=>{checks.push(name);console.log('PASS '+name);};
+async function start(){
+ let log='';return await new Promise((resolve,reject)=>{
+  const timer=setTimeout(()=>reject(Error('Local fixture did not start')),10000);
+  server.once('exit',code=>{clearTimeout(timer);reject(Error('Fixture exited: '+code));});
+  server.stdout.on('data',chunk=>{log+=chunk;const match=log.match(/MYYS_LOCAL_ACCEPTANCE=(http:\/\/127\.0\.0\.1:\d+)\/__acceptance/);if(match){clearTimeout(timer);resolve(match[1]);}});
+  server.stderr.on('data',chunk=>process.stderr.write(chunk));
+ });
+}
+async function role(actor){
+ current='role '+actor;await page.goto(base+'/__acceptance');await page.getByLabel('Test senaryosu').selectOption(actor);await page.getByRole('button',{name:'Senaryoyu aç',exact:true}).click();
+ await page.getByText('Kişi kaydı: '+actor,{exact:true}).waitFor();
+}
+const tab=async(name)=>{current='tab '+name;await page.getByRole('tab',{name:new RegExp('^'+name+' \\(')}).click();};
+async function submitted(click){await click();await page.getByText('Sunucu kaydı oluşturuldu.',{exact:true}).waitFor();await page.getByText('Kurum kaydı kontrol ediliyor…',{exact:true}).waitFor({state:'hidden'});}
+(async()=>{
+ try{
+  base=await start();const args=(process.env.MYYS_CHROMIUM_PACKAGE?require(process.env.MYYS_CHROMIUM_PACKAGE).args:[]).filter(a=>!a.includes('disable-web-security')&&!a.includes('disable-site-isolation')&&!a.includes('IsolateOrigins')&&!a.includes('allow-running-insecure-content'));
+  browser=await chromium.launch({headless:true,executablePath:process.env.MYYS_CHROMIUM_EXECUTABLE,args});page=await browser.newPage({viewport:{width:1440,height:1000},locale:'tr-TR'});page.setDefaultTimeout(9000);page.on('pageerror',e=>errors.push(e.message));await page.route('**/*',r=>new URL(r.request().url()).origin===base?r.continue():r.abort());
+  const open=async actor=>{await role(actor);await tab('Aktarım ve mutabakat');};
+  const file=value=>({name:'sentetik-kaynak.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(value))});
+  const upload=async value=>{await page.getByLabel('İmzalı kaynak dosyası',{exact:true}).setInputFiles(file(value));await page.getByRole('button',{name:'İmzayı doğrula ve kuyruğa al',exact:true}).click();};
+  await open('it');const packet=await page.evaluate(async()=>{const r=await fetch('/__acceptance/source-packet');return r.json();});
+  await upload({format:'wrong'});await page.getByText('Bu dosya desteklenen imzalı kaynak paketi değil.',{exact:true}).waitFor();record('Yanlış dosya türü açıklamalı reddedildi');
+  const parts=packet.token.split('.'),payload=JSON.parse(Buffer.from(parts[1],'base64url').toString());payload.event.grade=10;parts[1]=Buffer.from(JSON.stringify(payload)).toString('base64url');await upload({...packet,token:parts.join('.')});await page.getByText('Kaynak dosyasının imzası, süresi veya sözleşmesi doğrulanamadı.',{exact:true}).waitFor();assert.equal(await page.getByRole('button',{name:'Kaynak olayını işle',exact:true}).count(),0);record('Değiştirilmiş imzalı dosya kuyruğa girmedi');
+  await upload(packet);await page.getByText('İmzalı dosya kuyruğa kabul edildi. Henüz işlenmedi.',{exact:true}).waitFor();await page.getByRole('article').getByText('Kabul edildi · İşlenmedi',{exact:true}).waitFor();record('Geçerli dosya 202 kabulüyle kaydoldu; henüz işlenmedi');
+  await upload(packet);await page.getByText('Bu imzalı dosya daha önce kabul edilmiş; yeni olay oluşturulmadı.',{exact:true}).waitFor();assert.equal(await page.getByRole('button',{name:'Kaynak olayını işle',exact:true}).count(),1);record('Aynı dosya yeniden yüklenince tek olay korundu');
+  const trustDownload=page.waitForEvent('download');await page.getByRole('button',{name:'Kaynak açık güven kaydını indir',exact:true}).click();const trustPath=path.join(out,'trust.json');await (await trustDownload).saveAs(trustPath);const trust=JSON.parse(fs.readFileSync(trustPath,'utf8'));assert.equal(trust.format,'myys-source-trust/1');assert.equal(trust.subjects,undefined);assert.equal(trust.keys[0].jwk.d,undefined);record('Ayrı açık güven dosyası indirildi; özel anahtar veya kişi eşleme listesi yok');
+  await role('teacher');await tab('LMS kaynak olayları');assert.equal(await page.getByRole('button',{name:'Güncel kaynak kanıtını incelemeye al',exact:true}).count(),0);record('İşlenmemiş dosya eğiticinin kanıt alma işlemine kapalı');
+  await open('it');await page.getByRole('button',{name:'Kaynak olayını işle',exact:true}).click();await page.getByText('Kaynak olayı işlendi. Eğitici kanıtı incelemeye alabilir.',{exact:true}).waitFor();await page.reload();await tab('Aktarım ve mutabakat');await page.getByRole('article').getByText('İşlendi',{exact:true}).first().waitFor();assert.equal(await page.getByRole('button',{name:'Kaynak olayını işle',exact:true}).count(),0);record('İşleme kaydı ve geçmişi yenilemede korundu; aynı iş yeniden sunulmuyor');
+  await role('teacher');await tab('LMS kaynak olayları');await submitted(()=>page.getByRole('button',{name:'Güncel kaynak kanıtını incelemeye al',exact:true}).click());await tab('Öğrenme kanıtları');await page.getByText(/İmzalı kaynak teslimi: source-submission-1 · Sürüm 1/).waitFor();record('Eğitici aynı öğrenene bağlı imzalı teslimi ve sürümünü görüyor');
+  const reason='Sentetik imzalı kaynak dosyası ve rubrik insan tarafından bağımsız incelendi.';await tab('Değerlendirmeler');await page.getByLabel('Öğrenen kaydı',{exact:true}).selectOption({label:'student · Yerel Veri Okuryazarlığı'});await page.locator('input[name="evidence"]:enabled').check();await page.getByLabel('Ölçüt puanı R1',{exact:true}).fill('4');await page.getByLabel('Ölçüt gerekçesi R1',{exact:true}).fill(reason);await page.getByLabel('Değerlendirme gerekçesi',{exact:true}).fill(reason);await submitted(()=>page.getByRole('button',{name:'Değerlendirmeyi kaydet',exact:true}).click());
+  await role('judge');await tab('Değerlendirmeler');await page.getByLabel('Akademik karar gerekçesi',{exact:true}).fill(reason);await submitted(()=>page.getByRole('button',{name:'Gerekçeli kararı kaydet',exact:true}).click());record('Tam insan rubriği ve ayrı komisyon kararı kaynak olayından ayrı kaydedildi');
+  await role('student');await tab('Akademik kararlar');const firstDownload=page.waitForEvent('download');await page.getByRole('button',{name:'Kararın dayanaklarını indir',exact:true}).click();const archivePath=path.join(out,'archive.json');await (await firstDownload).saveAs(archivePath);const archive=JSON.parse(fs.readFileSync(archivePath,'utf8'));assert.equal(archive.sourceSignatures,1);assert.equal(archive.signed,false);assert.equal(archive.payload.assessment.evidenceDigests[0].source.proof.jwt,packet.token);
+  const result=require('node:child_process').spawnSync('python',['gazi/auth/scripts/verify-source-archive.py',archivePath,'--trust',trustPath],{cwd:root,encoding:'utf8'});assert.equal(result.status,0,result.stdout);const verified=JSON.parse(result.stdout);assert.equal(verified.validSourceSignatures,true);assert.equal(verified.score,100);assert.equal(verified.academicDecisionSignature,false);record('İndirilen karar arşivindeki kaynak imzası ayrı Python/OpenSSL ile doğrulandı; insan puanı yeniden üretildi');
+  await open('it');const correction=await page.evaluate(async()=>{const r=await fetch('/__acceptance/source-packet?revision=2');return r.json();});await upload(correction);await page.getByText('İmzalı dosya kuyruğa kabul edildi. Henüz işlenmedi.',{exact:true}).waitFor();await role('student');await tab('Akademik kararlar');const nextDownload=page.waitForEvent('download');await page.getByRole('button',{name:'Kararın dayanaklarını indir',exact:true}).click();const later=JSON.parse(fs.readFileSync(await (await nextDownload).path(),'utf8'));assert.equal(later.sha256,archive.sha256);assert.equal(later.currentUsable,false);record('Kaynak düzeltmesi yeni uygunluğu kapattı; eski kararın imzalı dayanağı aynı kaldı');
+  await role('other');await tab('Öğrenme kanıtları');assert.equal(await page.locator('.academic-record').count(),0);await tab('Akademik kararlar');assert.equal(await page.getByRole('button',{name:'Kararın dayanaklarını indir',exact:true}).count(),0);await tab('Aktarım ve mutabakat');assert.equal(await page.getByRole('button',{name:'İmzayı doğrula ve kuyruğa al',exact:true}).count(),0);record('Başka öğrenene kaynak kanıtı, karar arşivi veya dosya alımı açılmadı');
+  await page.setViewportSize({width:390,height:844});await open('it');await page.getByLabel('İmzalı dosyanın kaynak sözleşmesi',{exact:true}).focus();await page.keyboard.press('Tab');assert.equal(await page.getByRole('button',{name:'İmzalı dosya seç',exact:true}).evaluate(e=>e===document.activeElement),true);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.screenshot({path:path.join(out,'mobile.png'),fullPage:true,animations:'disabled'});await page.locator('.source-packet-form').screenshot({path:path.join(out,'mobile-upload.png'),animations:'disabled'});record('390 px Türkçe dosya/olay ekranı taşmıyor; sözleşme ve dosya düğmesi klavyeyle erişilebilir');
+  assert.deepEqual(errors,[]);record('İstemci istisnası yok');fs.writeFileSync(path.join(out,'result.json'),JSON.stringify({at:new Date().toISOString(),scope:'isolated-local-acceptance',browser:browser.version(),checks,errors,production:false,independentVerifier:verified},null,2));
+ }catch(e){if(page)await page.screenshot({path:path.join(out,'failure.png'),fullPage:true,animations:'disabled'}).catch(()=>{});console.error(current,e);process.exitCode=1;}
+ finally{try{if(browser?.isConnected())await browser.close();}finally{server.kill('SIGTERM');}}
+})();

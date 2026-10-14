@@ -397,3 +397,15 @@ SEM dosyaları menüsü ve mobil kaynak/kontrol formları eklendi. 440 otomatik;
 - Üretim transaction/anahtar adaptörü, çok işçi/region kabulü, gerçek IdP/MFA ve güvenlik kayıtlarının kurumsal saklama kabulü açık; B07 tamamlandı sayılmaz.
 - 14.10.2026 alias sorgusu: dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY, Paket16 değişmedi. Paket17–25 dağıtımı ve yeni korumalı canlı smoke yok; kullanıcı iptal ettiği browserAuth yeniden başlatılmadı. Rollback hedefi dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 değişmedi ve uygulanmadı.
 - Kaynak eşitleme öncesi başlık d256623050f34c353a7f7eeaba1ea0494de66c43; eski dal yayımlanmaz. Tam yeni commit/ağaç kimlikleri eşitleme sonrasında bir sonraki kayıtla eklenir.
+
+### Paket25 kaynak eşitlemesi
+
+Yerel c09c116eeb12ac783151b4af4e665cdf5345abd6 / uzak 000fe90fca77b13b897484807689f9d0b13909f6 / ortak kaynak ağacı 9cae8895ea9726f98f504fa9a56a76416b476c51. 19 dosya SHA eşitliği ve tam ağaç eşitliği denetlendi; beklenen d256623050f34c353a7f7eeaba1ea0494de66c43 üzerinden geçmiş korunarak eşitlendi. Bu bir canlı yazılım yayını değildir.
+
+## Paket26 kaynak adayı — B09/B15/B16/B08 (14.10.2026)
+
+- Ekran: Aktarım ve mutabakat imzalı JSON seçimi/alımı/ayrı işleme/güven ihracı; Öğrenme kanıtları teslim sürümü; Akademik kararlar özgün kaynak imzalı dayanağı indirme. Yerel akış gerçek insan değerlendirmesi ve ayrı karara bağlıdır.
+- 391 sunucu +46 portal +46 regresyon =483 otomatik; 14 kaynak ve 13 itiraz tarayıcı kontrolü. 72 komut/15 HTTP kapsam matrisi, 3086 pozitif örnek/24688 türetilmiş kontrol. Türkçe mobil dosya düğmesi incelendi; 115 dosyalı korumalı paket üretildi.
+- Asimetrik kaynak imzası doğrulanır; dış karar zarfı imzasızdır. Kaynak güven sicili/iptal yaşam döngüsü, gerçek sağlayıcı sözleşmesi ve üretim depo/worker/geri yükleme kabulü açık. B09/B15/B16 tamamlandı sayılmaz.
+- 14.10.2026 alias yine dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY / Paket16. Paket17–26 dağıtımı veya yeni korumalı canlı smoke yok; iptal edilmiş browserAuth yeniden istenmedi. Rollback dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı.
+- Eşitleme tabanı uzak 000fe90fca77b13b897484807689f9d0b13909f6, yerel c09c116eeb12ac783151b4af4e665cdf5345abd6, ortak ağaç 9cae8895ea9726f98f504fa9a56a76416b476c51. Yeni kimlikler kaynak eşitlemesi sonrası eklenir.

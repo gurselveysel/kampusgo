@@ -13,7 +13,7 @@ export function configuredCore(){
  if(process.env.VERCEL||process.env.VERCEL_ENV||!process.env.MYYS_LOCAL_ACCEPTANCE_PATH)return null;
  return singleton??=new MyysCore(new LocalAcceptanceStore(process.env.MYYS_LOCAL_ACCEPTANCE_PATH));
 }
-export async function myysRoute({req,path,b,sessionHash,json,res,core=configuredCore(),signer=null}){
+export async function myysRoute({req,path,b,sessionHash,json,res,core=configuredCore(),signer=null,sourceAdapter=null}){
  if(path==='/api/myys/paylasim'&&req.method==='POST'){
   if(!core)return json(res,503,{error:'Kamu paylaşım hizmeti bu ortamda etkin değil.',code:'institution_setup_required'});
   try{return json(res,200,core.shared({tenant:b?.tenant,token:b?.token}));}catch(e){if(e instanceof CoreError)return json(res,e.status,{error:e.message,code:e.code});throw e;}
@@ -24,7 +24,16 @@ export async function myysRoute({req,path,b,sessionHash,json,res,core=configured
   if(path==='/api/myys/calisma'&&req.method==='GET'){
    const tenant=new URL(req.url,'https://local.invalid').searchParams.get('kurum');
    const view=core.view({sessionHash,tenant});
-   return json(res,200,{...view,statusLists:statusView(core,core.store.principal(sessionHash,tenant,core.clock())),issuances:view.issuances.map(r=>({...r,canSign:!!signer&&canSignApproved(core,{sessionHash,tenant},r.id,signer.material)})),signerAvailable:!!signer,quality:qualityReport(view),metrics:qualityMetrics(view),skills:skillsProjection(view)});
+   const actor=core.store.principal(sessionHash,tenant,core.clock());
+   return json(res,200,{...view,sourceContracts:sourceAdapter?.view(actor)||[],statusLists:statusView(core,actor),issuances:view.issuances.map(r=>({...r,canSign:!!signer&&canSignApproved(core,{sessionHash,tenant},r.id,signer.material)})),signerAvailable:!!signer,quality:qualityReport(view),metrics:qualityMetrics(view),skills:skillsProjection(view)});
+  }
+  if(['/api/myys/kaynak-al','/api/myys/kaynak-isle','/api/myys/kaynak-guveni'].includes(path)&&req.method==='POST'){
+   if(!sourceAdapter)return json(res,503,{error:'İmzalı kaynak dosyası sözleşmesi bu ortamda bağlı değil.',code:'source_contract_required'});
+   if(b?.contractId!==sourceAdapter.contract.id)return json(res,403,{error:'Kaynak dosyası sözleşmesi doğrulanamadı.',code:'source_contract'});
+   const context={sessionHash,tenant:b?.tenant};
+   if(path==='/api/myys/kaynak-al')return json(res,202,await sourceAdapter.accept(context,b?.token));
+   if(path==='/api/myys/kaynak-isle')return json(res,200,sourceAdapter.process(context,b?.eventId));
+   return json(res,200,sourceAdapter.trust(context));
   }
   if(path==='/api/myys/islem'&&req.method==='POST')return json(res,200,core.run({sessionHash,tenant:b?.tenant,commandId:b?.commandId,action:b?.action,input:b?.input}));
   if(path==='/api/myys/veri-ozetim'&&req.method==='POST')return json(res,200,subjectExport(core,{sessionHash,tenant:b?.tenant}));
