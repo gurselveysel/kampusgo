@@ -1,0 +1,112 @@
+{
+  "date": "2026-10-14",
+  "software_package": 32,
+  "work_packages": [
+    "B26",
+    "B24"
+  ],
+  "production": false,
+  "source_parent": {
+    "local": "e4a1f826b4f381a71d1f9dd5fc732a66e01b07d3",
+    "remote": "15809e6a8e6b8008c03e547c50b8da9eae379cc4",
+    "tree": "1561ea06b71e5b06dbe74c7a60604a03c34a0338"
+  },
+  "last_verified_live": {
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "status": "READY",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false
+  },
+  "automated": {
+    "server": 465,
+    "portal": 48,
+    "regression": 46,
+    "total": 559,
+    "new_support_tests": 13,
+    "new_guide_tests": 2
+  },
+  "scope": {
+    "commands": 80,
+    "http_routes": 16,
+    "positive_samples": 3502,
+    "derived_negative_checks": 28016,
+    "not_test_count_or_product_percentage": true
+  },
+  "support": {
+    "at": "2026-10-14T03:44:38.287Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "İncelenmiş kural olmadan öğrenci destek kaydı açtı; süre taahhüdü gösterilmedi",
+      "Yönetici çalışma aralıkları ve hedefleri hazırladı; kendi onayı yerine ayrı kalite incelemesi tamamlandı",
+      "Yeni kayıt incelenmiş sürüme bağlandı; öğle arası hedefe eklendi ve kişisel kopya indirildi",
+      "Talep sahibinin ek açıklaması yetkili ilk yanıtı sayılmadı",
+      "Sunucu saatiyle aşan hedef görünür oldu; geciken kayıt filtresi aynı kaydı seçti",
+      "Yalnız izinli akademik kuyruğa yönlendirildi; bilgi işlem erişimi bitti ve süre sıfırlanmadı",
+      "Yetkili çözüm bildirdi; yalnız talep sahibi açık teyitle kapattı",
+      "Yeniden açma güncel kuralda yeni döngü oluşturdu; eski hedefler ve kapanış geçmişi yenilemede korundu",
+      "Durdurulan sürüm yeni kayda hedef vermedi; eski sürüme düşülmedi ve bağlı geçmiş değişmedi",
+      "Türkçe arama, kuyruk ve boş sonuç açıklaması çalıştı",
+      "Başka öğrenciye destek içeriği veya hizmet kuralı yönetimi açılmadı",
+      "Dokuz çekirdek rol kendi destek kaydını açıp indirdi; kayıtlar gerçek oturum kişisine bağlı kaldı",
+      "Güncel rehber önceki yanıtları korudu; destek bağlantısı doğru sekmede açıldı ve yenilemede kaldı",
+      "390 px destek arama, filtreler, olay ve süre geçmişi klavyeyle kullanıldı; yatay taşma yok",
+      "Mobil yönetici takvimi taşmadı; çalışma aralığı ekleme ve kaldırmada odak korundu",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "guideVersion": "2026.10.14.1",
+    "officialServiceLevel": false,
+    "manualScreenReader": false
+  },
+  "navigation": {
+    "at": "2026-10-14T03:44:56.499Z",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Mobil kapalı menü odak/erişilebilirlik ağacından çıkar; içeriğe geç bağlantısı çalışır",
+      "Mobil menü adlandırılmış modal; ileri/geri odak döngüsü, Escape ve tetikleyiciye dönüş çalışır",
+      "Menü araması boş sonucu açıklar; seçilen sayfaya başlık ve ana içerik odağı taşınır",
+      "Menüden pilot penceresi tek modal olarak açılır; kapanınca mobil menü düğmesine dönülür",
+      "Masaüstüne geçince menü kilidi kalkar; pencere odağı özgün düğmeye döner",
+      "Çalışma alanı seçme penceresi hedef sayfayı açtı ve odağı yeni ana içeriğe taşıdı",
+      "Aynı sayfa seçimi ve dar ekrana dönüşte odak gizli menüde kalmaz; 390 px taşma yok",
+      "11 sunum profilinin tüm menü hedefleri içerikle açıldı; sunum yetkisi uyarısına veya boş sayfaya düşmedi",
+      "Öğrenen katalogdan dört örnek programı planına ekledi; yetkisiz program öneri düğmesi gösterilmedi",
+      "Altı programın 66 dersi doğru başlıkla açıldı; dört materyal sekmesi ve 66 sunum dosyası korundu",
+      "Sunum HTML ve vaka CSV dosyaları gerçek tarayıcı indirmesiyle alındı",
+      "Ders notu ve kişisel tamamlama yenilemede korundu; materyal sekmeleri klavyeyle kullanılabildi",
+      "Rehber ve destek özeti kullanıcı işlemiyle indirildi; dış sisteme gönderildiği iddia edilmedi",
+      "Sayfa geçişi sürerken kullanıcı hedef içerikte odağı taşıdıysa geçiş tamamlanınca odağı çalınmıyor",
+      "Kaynak, matris ve rozet sekmeleri adlandırılmış panele bağlı; ok/Home/End ve tek Tab durağı çalışır",
+      "Kalite ve paydaş kategori filtreleri doğru seçili düğme anlamıyla ve klavyeyle çalışır",
+      "Dokuz çekirdek rolün tüm akademik alt sayfaları boş olmayan adlandırılmış panellerle açıldı",
+      "Akademik sekmelerde End, sağ okla başa dönüş ve Tab ile panel odağı çalışır",
+      "Sunum ve çekirdek gezinmesinde istemci istisnası yok"
+    ],
+    "menu_targets": 98,
+    "role_panels": 234,
+    "lessons": 66
+  },
+  "regression_browser": {
+    "appeals": 13,
+    "wallet": 8
+  },
+  "protected_static_files": 115,
+  "criterion_closure": {
+    "learner_instructor_admin_scenarios": "izole yerel kabul geçti",
+    "technical_support_cannot_change_grade": "değişmez akademik kayıt ve rol/kapsam negatifleri geçti",
+    "guide_matches_local_version": "2026.10.14.1; bilinen eski yanıtlar korundu",
+    "live": "yayımlanmadı",
+    "institution": "gerçek destek sahibi/takvim/hedef/eskalasyon/saklama ve eğitim kabulü bekleniyor",
+    "external": "kalıcı kurum deposu/kimlik ve gerçek kullanıcı işletim kabulü bekleniyor"
+  },
+  "limits": [
+    "Kurum SLA veya yasal süre çıkarılmadı; kaynak sentetik yerel kabul senaryosu.",
+    "Yeni hizmet, mesaj, credential veya migration yok; configuredCore Vercel’de kapalı.",
+    "İki SQLite bağlantısında tekrar kontrolü gerçek dağıtık üretim eşzamanlılık kabulü değildir.",
+    "Mobil/klavye kontrolü gerçek ekran okuyucu veya bütün form/içerik erişilebilirliği değildir.",
+    "Yerel kod kabulü B26 veya B01–B36 genel tamamlanması değildir."
+  ]
+}

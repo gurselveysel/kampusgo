@@ -24,6 +24,8 @@ Kaynaklar: [Gazi BIDB](https://bidb.gazi.edu.tr/) GUZEM ve OBS bağlantıların�
 
 6. **Geri dönüş işletim kararı (B27):** yetkili olay ve geri dönüş sorumlusu; sözleşmedeki RPO/RTO ve ölçüm başlangıç/bitiş tanımları; yedek kapsamı/bölgesi/saklama sahibi; son güvenlik/iptal noktasının ayrı güvenilir saklama yöntemi; onaylı ayrı geri dönüş hedefi ve sentetik prova yetkisi. İlk adım doküman ve topoloji incelemesidir; gerçek yedeği kopyalama, üretimi geri yükleme veya yeni credential oluşturma yetkisi varsayılmaz.
 
+7. **Destek işletim ve eğitim kararı (B26):** kurumsal destek sahibi; birimlere göre teknik/akademik/veri koruma görevlileri, gerçek çalışma aralıkları ve kapalı gün takvimi, ilk yanıt/çözüm hedefleri, izinli eskalasyon ve yeniden açma usulü; destek içeriği saklama/erişim kapsamı; öğrenen/eğitici/yönetici eğitim kabul sorumlusu. Hedef, yerel sürümlü kural ve rehberi kurumun yazılı kararıyla karşılaştırmaktır. Mevcut sentetik süreler hizmet taahhüdü değildir; yeni destek servisi, gerçek kişiye mesaj veya üretim kaydı oluşturma izni varsayılmaz.
+
 Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir. Şu aşamada bilinmeyen issuer, API yolu veya test veritabanı adı uydurulmadı. Bilgi eksikliği bağımsız yerel kod/test işlerini durdurmaz.
 
 ## Ayrı özel yetki gerektiren sonraki işlemler

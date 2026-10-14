@@ -20,6 +20,8 @@ import {myysRoute} from '../gazi/auth/myys/http.mjs';
 
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
+let supportClock=process.argv.includes('--support')?Date.parse('2026-10-14T06:00:00.000Z'):null;
+if(supportClock!==null)f.core.clock=()=>new Date(supportClock).toISOString();
 const recoveryService=process.argv.includes('--recovery')?new LocalRecoveryService(f.core,{rehearse:runSyntheticRecoveryDrill}):null;
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
 const initial=process.argv.includes('--sem')?semSetup(f):process.argv.includes('--keys')?f.passed():process.argv.includes('--profiles')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--replacement')||process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
@@ -61,6 +63,10 @@ const server=createServer(async(req,res)=>{
   if(req.method==='POST'&&req.headers.origin!==origin)return json(res,403,{error:'Kaynak doğrulanamadı.'});
   let raw='';for await(const chunk of req){raw+=chunk;if(Buffer.byteLength(raw)>64000)return json(res,413,{error:'İstek çok büyük.'});}
   const b=raw?JSON.parse(raw):undefined;
+  if(url.pathname==='/__acceptance/support-clock'&&req.method==='POST'&&supportClock!==null){
+   if(!Number.isInteger(b?.minutes)||b.minutes<1||b.minutes>10080)return json(res,400,{error:'Geçerli ileri zaman aralığı gerekli.'});
+   supportClock+=b.minutes*60000;return json(res,200,{now:new Date(supportClock).toISOString()});
+  }
   if(url.pathname==='/__acceptance/actor'&&req.method==='POST'){
    if(!Object.hasOwn(roles,b?.actor))return json(res,400,{error:'Sentetik rol yok.'});
    res.setHeader('Set-Cookie','myys_acceptance_actor='+b.actor+'; HttpOnly; SameSite=Strict; Path=/');return json(res,200,{ok:true});

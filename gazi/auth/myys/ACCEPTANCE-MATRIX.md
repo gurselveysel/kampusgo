@@ -197,3 +197,7 @@ Aktarım ve mutabakat içinde aynı kişi/program/kaynak kaydı, tamamlama ve g�
 | B24 | Menü/pencere/sekme/alan düzeltmeleri hazır | Sınırlı tarama geçti; ekran okuyucu/altyazı/belge ve bütün form/modal koşulları açık | Yeni dilim yok | Erişilebilirlik açılış kabulü açık | Gerçek sağlayıcı medya ve canlı oturum kabulü açık |
 
 PILOT-INVENTORY.md, NAVIGATION-ACCESSIBILITY.md ve acceptance/B01-B24-navigation-20261014.json esas kanıttır. Backlog üst metadata alanlarındaki eski5–7 paket özeti tarihçe korunarak güncellendi; en son canlı16 bilgisi yeni girişli smoke diye sunulmadı.
+
+## Paket32 — B26 destek hizmet kuralı ve rehber
+
+Destek kayıtları: arama/filtre, çalışma aralığı hedefleri, sürümlü yönetici hazırlığı/ayrı kalite incelemesi, sahip kapanış teyidi ve yeni döngüde yeniden açma. Dokuz rol kendi kaydını açıp indirdi; teknik destek akademik kaydı değiştirmedi. Rehber2026.10.14.1 bilinen önceki yanıtları korur ve doğru sekmelere bağlanır. 559 otomatik;16 destek+19 gezinme+13 itiraz+8 cüzdan,80 komut/16HTTP kapsam kabulü. Yeni içerikte seçilmiş odağı geçiş animasyonunun çalması düzeltildi. `SUPPORT-SERVICE-CONTRACT.md` ve `acceptance/B26-support-service-20261014.json` kapsamı esas. B26 yerel ölçütleri geçti; gerçek destek sahibi/hedef/takvim/eskalasyon/saklama/eğitim, kurumsal kimlik/depo ve canlı yayın açık. B24 gerçek ekran okuyucu/bütün içerik kabulü açık. Son canlı16;17–32 yayımlanmadı.

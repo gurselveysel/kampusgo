@@ -461,3 +461,17 @@ Yerel `c7fac3714f2f5f73a4a790d4e2818b3015fc8c30`; uzak `71b95557b0aa555e05f5e38e
 Ekranlar: mobil ana menü, ortak pencereler, Kaynak Merkezi, Matris, rozet sekmeleri, kalite/paydaş filtreleri, alan etiketleri ve öğrenci katalog düğmesi. Kullanıcı klavyeyle menü/sekme değiştirip mantıklı odağa dönebilir. Özgün27 Gazi satırı güncel davranış ve teste bağlandı.544otomatik+18gezinme+13itiraz+8cüzdan geçti; korumalı paket115statik dosya.
 
 Yeni commit/uzak kaynak kimliği eşitlemeden sonra devam kaydına yazılacak. Canlı alias14.10.2026salt okunur `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY; source16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu girişli canlı smoke değildir. Paketi17–31 dağıtılmadı. Geri dönüş hedefi `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı. Gerçek ekran okuyucu/altyazı/belge ve bütün modal/form kabulü, kurum kararı ve dış bağlantı açık; üniversite yetkisi/üretim migration’ı yok.
+
+### Paket31 kaynak eşitleme sonucu
+
+Yerel `e4a1f826b4f381a71d1f9dd5fc732a66e01b07d3`; uzak `15809e6a8e6b8008c03e547c50b8da9eae379cc4`; ortak kaynak ağacı `1561ea06b71e5b06dbe74c7a60604a03c34a0338`.26blob ve tam kaynak ağacı eşleşti. Beklenen baş `71b95557b0aa555e05f5e38e02098db19faa5344` ile force=false. Dağıtım yok; son canlı16/geri dönüş15 aynı.
+
+## Paket32 — destek takvimi, kapanış teyidi ve rehber; yalnız kaynak adayı
+
+14.10.2026. Destek kayıtları ekranında çalışma dakikası hedefleri, takvim/kaynak sürümü ve ayrı kalite incelemesi; yetkili kuyruk, kişi kapanış teyidi, yeniden açma/geçmiş, arama/filtre ve gerçek JSON indirme. Rehber2026.10.14.1 eski bilinen yanıtları korur. Yeni içerikte seçilen odağın animasyon sonunda çalınması düzeltildi.
+
+- 465 sunucu+48portal+46regresyon=559otomatik.16destek+19gezinme+13itiraz+8cüzdan tarayıcı;80komut/16HTTP3502örnek28016kapsam kontrolü. 115korumalı statik dosya.
+- Kaynak tabanı: yerel e4a1f826b4f381a71d1f9dd5fc732a66e01b07d3 / uzak15809e6a8e6b8008c03e547c50b8da9eae379cc4 / ortak1561ea06b71e5b06dbe74c7a60604a03c34a0338.14.10uzak başlık ve tam taban ağacı yeniden doğrulandı.
+- Canlı alias salt okunur yeniden kontrolünde Paket16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction.17–32dağıtımı ve yeni oturumlu canlı smoke yok. Kullanıcının önceki güvenli giriş iptali yeniden tetiklenmedi. configuredCore kapalı.
+- Geri dönüş hedefi canlıPaket15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı. Kaynak adayı dağıtım değildir.
+- Kurum SLA/tatil/eskalasyon/eğitim uydurulmadı; yeni credential/migration/servis/gerçek mesaj yok. B26/B24 ve bütün B01–B36 genel tamamlanmış değil.

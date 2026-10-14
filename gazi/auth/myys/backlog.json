@@ -1755,10 +1755,11 @@
         "gazi/portal/src/navigation-focus.jsx",
         "gazi/portal/src/ui.jsx",
         "scripts/myys-navigation-browser.cjs",
-        "gazi/auth/myys/acceptance/B01-B24-navigation-20261014.json"
+        "gazi/auth/myys/acceptance/B01-B24-navigation-20261014.json",
+        "gazi/auth/myys/acceptance/B26-support-service-20261014.json"
       ],
       "production_status": "Yeni Paketi31 dağıtılmadı. Son canlı Paketi16 / dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; 14.10 alias salt okunur yeniden kontrol edildi, yeni girişli smoke yapılmadı.",
-      "implementation_note": "Mobil menü odak döngüsü/inert/geri dönüş, rota ve Radix pencere odağı, kaynak-matris-rozet sekmeleri, akademik panel odağı ve filtre/alan etiketleri düzeltildi. Katalogda öğrenciye yetkisiz öneri düğmesi gösterilmez. Yerel tarayıcı kabulü geçti; bütün ürün için kritik engel sıfır beyanı yok.",
+      "implementation_note": "Mobil menü odak döngüsü/inert/geri dönüş, rota ve Radix pencere odağı, kaynak-matris-rozet sekmeleri, akademik panel odağı ve filtre/alan etiketleri düzeltildi. Katalogda öğrenciye yetkisiz öneri düğmesi gösterilmez. Yerel tarayıcı kabulü geçti; bütün ürün için kritik engel sıfır beyanı yok. Paket32: yeni içerikte kullanıcı odağını animasyonun çalması düzeltildi; 19 gezinme ve16 destek kontrolü,390px ve takvim alanları sınandı; genel AT kabulü açık.",
       "independent_remaining_work": [
         "Başvuru/ders/ölçme/cüzdan/destek/belge akışlarında bütün form hataları ve modal işlemleri; tüm rollerin mobil/200–400% büyütme/yüksek karşıtlık taraması.",
         "Gerçek ekran okuyucu ile okuma sırası ve duyurular; video Türkçe altyazı/döküm doğruluğu ve belge çıktısı erişilebilirliği."
@@ -1877,7 +1878,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket 3 yayın öncesi 140 test; canlıda seçenekler, kişisel verisiz JSON, klavye sırası ve bağlantı kapısı doğrulandı.",
+      "test_status": "Paket32: 465 sunucu +48 portal +46 regresyon =559; 16 destek,19 gezinme,13 itiraz,8 cüzdan tarayıcı. 80 komut/16 HTTP kapsamı; 3502 olumlu örnek ve28016 negatif kapsam denetimi.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -1888,18 +1889,23 @@
         "gazi/auth/tests/myys-support.test.mjs",
         "gazi/portal/src/support-brief.jsx",
         "gazi/portal/src/support-workspace.jsx",
-        "gazi/portal/src/support.test.mjs"
+        "gazi/portal/src/support.test.mjs",
+        "gazi/auth/myys/SUPPORT-SERVICE-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B26-support-service-20261014.json",
+        "gazi/auth/myys/support-service-model.mjs",
+        "gazi/auth/myys/support-service.mjs",
+        "gazi/auth/tests/myys-support-service.test.mjs",
+        "gazi/portal/src/support-policy-workspace.jsx",
+        "scripts/myys-support-browser.cjs"
       ],
-      "production_status": "Destek hazırlık özeti abf8b284 / dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z ile canlı; kurum destek kayıtları etkin değil.",
-      "implementation_note": "Sürümlemeli rehber ve kişisel verisiz destek özeti; yerel depoda kategoriye bağlı yanıt/çözüm/yeniden açma/eskalasyon, olay tarihçesi ve sürüm çakışması koruması. Kurumsal destek hizmeti kapalı.",
-      "independent_remaining_work": [
-        "Destek biletleri için tam rol arayüz kabulü, çalışma saati/SLA ve kurumca belirlenen eskalasyon politikası."
-      ],
+      "production_status": "Eski rehber/destek özeti son canlı Paket16 içinde korunuyor; Paket32 destek süreleri ve güncel rehber yayımlanmadı. Kurumsal kayıtlar etkin değil.",
+      "implementation_note": "Yerel destek kaydı/yanıt/çözüm/sahip teyidi/yeniden açma, değişmez takvim sürümü ve ayrı kalite incelemesi, çalışma dakikası hedefi, izinli kuyruk, arama/filtre/geçmiş/indirme; dokuz rol kabulü. Rehber2026.10.14.1 bilinen eski altı sorunun yanıtlarını korur. Teknik destek akademik kayıt değiştiremez. Gerçek hizmet açılmadı.",
+      "independent_remaining_work": [],
       "development_blocker": null,
-      "production_activation_blocker": "Kurumsal destek sahibi ve eğitim kabulü.",
+      "production_activation_blocker": "Kurum destek sahibi, çalışma takvimi/hedef/eskalasyon/saklama kararı, rol ve eğitim kabulü; kalıcı kurum kimliği/deposu ve doğrulanmış canlı yayın.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "bağımsız yerel dilim hazır; kurumsal etkinleştirme bekleniyor",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -1910,29 +1916,34 @@
             "gazi/auth/tests/myys-support.test.mjs",
             "gazi/portal/src/support-brief.jsx",
             "gazi/portal/src/support-workspace.jsx",
-            "gazi/portal/src/support.test.mjs"
+            "gazi/portal/src/support.test.mjs",
+            "gazi/auth/myys/SUPPORT-SERVICE-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B26-support-service-20261014.json",
+            "gazi/auth/myys/support-service-model.mjs",
+            "gazi/auth/myys/support-service.mjs",
+            "gazi/auth/tests/myys-support-service.test.mjs",
+            "gazi/portal/src/support-policy-workspace.jsx",
+            "scripts/myys-support-browser.cjs"
           ],
-          "remaining": [
-            "Destek biletleri için tam rol arayüz kabulü, çalışma saati/SLA ve kurumca belirlenen eskalasyon politikası."
-          ]
+          "remaining": []
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Paket 3 yayın öncesi 140 test; canlıda seçenekler, kişisel verisiz JSON, klavye sırası ve bağlantı kapısı doğrulandı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "tanımlı sentetik rol ve sürüm senaryoları geçti",
+          "evidence": "Paket32: 465 sunucu +48 portal +46 regresyon =559; 16 destek,19 gezinme,13 itiraz,8 cüzdan tarayıcı. 80 komut/16 HTTP kapsamı; 3502 olumlu örnek ve28016 negatif kapsam denetimi.",
+          "limits": "Kurum hizmet hedefleri, gerçek öğrenen eğitimi, kalıcı depo ve dış işletim kabulü değildir."
         },
         "live": {
-          "status": "kısmi pilot",
-          "evidence": "Destek hazırlık özeti abf8b284 / dpl_Z7TTNESTnkt4KnumMfi9hvBHGy3z ile canlı; kurum destek kayıtları etkin değil."
+          "status": "yeni dilim yayımlanmadı",
+          "evidence": "Eski rehber/destek özeti son canlı Paket16 içinde korunuyor; Paket32 destek süreleri ve güncel rehber yayımlanmadı. Kurumsal kayıtlar etkin değil."
         },
         "institution_decision": {
           "status": "bekleniyor",
-          "required": "Kurumsal destek sahibi ve eğitim kabulü."
+          "required": "Kurum destek sahibi, çalışma takvimi/hedef/eskalasyon/saklama kararı, rol ve eğitim kabulü; kalıcı kurum kimliği/deposu ve doğrulanmış canlı yayın."
         },
         "external_access": {
-          "status": "bağımsız kod için gerekli değil",
-          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
-          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+          "status": "bekleniyor",
+          "target": "Onaylı kurumsal kimlik/depo ve destek işletim kanalı; yerel test için dış erişim gerekmedi.",
+          "next_action": "ACCESS-ACTIONS.md madde7; yeni erişim oluşturulmadı."
         }
       }
     },
@@ -2564,16 +2575,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 31,
-    "server_security_tests": "452/452",
-    "portal_tests": "46/46",
+    "software_package": 32,
+    "server_security_tests": "465/465",
+    "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 544,
-    "portal_build": "Başarılı; 115 statik dosyalı mevcut korumalı paket",
-    "browser_visual_acceptance": "18 gezinme +13 itiraz +8 cüzdan; 98 menü hedefi, 234 rol-panel açılışı, 66 ders/indirme; gerçek ekran okuyucu ve bütün modal akışı değildir.",
+    "local_total": 559,
+    "portal_build": "Başarılı;115 statik dosyalı mevcut korumalı paket",
+    "browser_visual_acceptance": "16 destek +19 gezinme +13 itiraz +8 cüzdan;9 çekirdek rol,98 menü hedefi,234 panel,66 ders. Gerçek ekran okuyucu kabulü değildir.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı Paketi16 READY; Paketi17–31 dağıtılmadı. configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B01-B24-navigation-20261014.json"
+    "deployment": "Son canlı Paket16 READY;Paket17–32 dağıtılmadı.configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B26-support-service-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2595,12 +2606,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 31,
-    "source_parent_remote": "71b95557b0aa555e05f5e38e02098db19faa5344",
-    "source_parent_tree": "2ba271a78b0347ace49deb699234332cf140a73d",
+    "software_package": 32,
+    "source_parent_remote": "15809e6a8e6b8008c03e547c50b8da9eae379cc4",
+    "source_parent_tree": "1561ea06b71e5b06dbe74c7a60604a03c34a0338",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 544,
-    "note": "B01/B24 yerel kabul geçti; kaynak eşitlemesi sırada. Sonraki B26 destek çalışma takvimi/SLA/eskalasyon; tüm diğer B işleri açık."
+    "local_tests": 559,
+    "note": "B26 yerel rol/takvim/rehber kabulü geçti; kaynak eşitlemesi sırada. Sonraki B31 koşullu ödeme durum makinesi ve simülatör; gerçek tahsilat kapalı. B07 ve tüm bağımsız kalanlar açık."
   },
   "verification_history": [
     {
@@ -2629,6 +2640,31 @@
         "live_source": "e10989a9084c42f131a798d65da465f392bc8993",
         "local_tests": 230,
         "note": "B18 özel cüzdan ve paylaşım dilimi yerel kabulde; Paket 7 hazırlanıyor."
+      }
+    },
+    {
+      "superseded_at": "2026-10-14",
+      "verification": {
+        "as_of": "2026-10-14",
+        "software_package": 31,
+        "server_security_tests": "452/452",
+        "portal_tests": "46/46",
+        "legacy_tests": "46/46 model/kaynak/demo",
+        "local_total": 544,
+        "portal_build": "Başarılı; 115 statik dosyalı mevcut korumalı paket",
+        "browser_visual_acceptance": "18 gezinme +13 itiraz +8 cüzdan; 98 menü hedefi, 234 rol-panel açılışı, 66 ders/indirme; gerçek ekran okuyucu ve bütün modal akışı değildir.",
+        "production_migration": "uygulanmadı",
+        "deployment": "Son canlı Paketi16 READY; Paketi17–31 dağıtılmadı. configuredCore kapalı.",
+        "evidence": "gazi/auth/myys/acceptance/B01-B24-navigation-20261014.json"
+      },
+      "last_checkpoint": {
+        "date": "2026-10-14",
+        "software_package": 31,
+        "source_parent_remote": "71b95557b0aa555e05f5e38e02098db19faa5344",
+        "source_parent_tree": "2ba271a78b0347ace49deb699234332cf140a73d",
+        "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+        "local_tests": 544,
+        "note": "B01/B24 yerel kabul geçti; kaynak eşitlemesi sırada. Sonraki B26 destek çalışma takvimi/SLA/eskalasyon; tüm diğer B işleri açık."
       }
     }
   ]

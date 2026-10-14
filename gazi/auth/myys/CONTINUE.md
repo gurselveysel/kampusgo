@@ -1,3 +1,25 @@
+# Güncel devam — Paket32 yerel kabul; kaynak eşitlemesi sırada
+
+Destek kayıtları/rehber B26 hazır yerel dilim: 559otomatik(465+48+46),16destek+19gezinme+13itiraz+8cüzdan;80komut/16HTTP3502örnek28016kontrol. Takvim/ayrı inceleme/sabit hedef/izinli kuyruk/sahip teyidi/yeniden açma/arama/indir/dokuz rol. Rehber2026.10.14.1 eski bilinen yanıtları korur. Animasyon yeni içerik odağını çalmaz. Sözleşme/kanıt/backlog güncel;36özgünkriter korundu.
+
+Önce diff/commit ve expected-head15809e6a8e6b8008c03e547c50b8da9eae379cc4 ile eşitle; taban yerel e4a1f826b4f381a71d1f9dd5fc732a66e01b07d3 / ortak1561ea06b71e5b06dbe74c7a60604a03c34a0338. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–32yayın yok. browserAuth kullanıcı iptalini yeniden isteme; configuredCore kapalı,tek editör/alt ajan yok.
+
+Sonraki bağımsız B31: koşullu PSP token/durum makinesi ve sentetik sağlayıcı, başarılı/çift/bekleyen/iade/ters ibraz mutabakatı; gerçek kart/para/servis/credential yok. B02/B04/B05 kurum bağımlılıklarını kapalı tut; kaynaklı yetki/vergi/iade şartı uydurma. Önce mevcut finans pilotu ve backlog kabulünü incele; mevcut menüyü koruyup yeni sunucu kayıt akışını bağla. B07 SQLrepo/HTTP/atomikkeybarrier ve tümB01–B36kalanlar da açık. B26kurum destek/eğitimkararı ACCESS-ACTIONS7. Devam komutu bekleme.
+
+# Güncel ara nokta — B26 hizmet kuralı çekirdeği; arayüz devam ediyor
+
+Paket31 kaynakta: yerel e4a1f826b4f381a71d1f9dd5fc732a66e01b07d3 / uzak15809e6a8e6b8008c03e547c50b8da9eae379cc4 / ortak1561ea06b71e5b06dbe74c7a60604a03c34a0338. Son canlı16;17–31dağıtımı yok.
+
+B26 yeni support-service-model.mjs / support-service.mjs / support-service-labels.mjs ve core/support/quality bağlandı.13yeni sunucu testi ve14eski destek+kalite geçti; toplam/kapsam matrisi henüz çalışmadı. Takvim UTC+03,1–6aynıgün aralık,hafta günleri/kapalıgünler,371gün sınır; hedeftaşarsa bilinmez. Admin hazırlığı/ayrıqualityinceleme/hold; ticket/reopen serverpinnedid/hash/review; yeni taslak eskikabulü silmez,hold/expire eskiyefallbackyapmaz. İlk yanıt nonowner agent reply/resolve; escalate süreyi sıfırlamaz. Confirm owner+checkbox kapanır;reopen yeni cycle/güncelpolicy; immutable/audit/conflict/clockguard; quality resolved+closed sayar. Existingtargets geçmişte değişmez.
+
+Yeni support-policy-workspace.jsx hazır ama henüz ana destek arayüzüne bağlanmadı ve build edilmedi. UIyalnız purelabels modülünü import eder; model store.mjs içerir ve tarayıcıya alınmamalı. Sıradaki: support-workspace UIpolicy, süre/history, filtre/arama/indir/ownerconfirm;academic destek deeplink/sekme kalıcılığı;guide sürüm güncellemesi (bilinen eski6yanıt soruları değişmediği için korunacak, bilinmeyen sürüm yazılmayacak); yerel --support kontrollü monoton sanal saat ve9rol browser;3yeni komut scope-inventory;tamtest/docs/backlog/commit eşitleme. Henüz yeni yayın veya tamamlanmış B26 yok. Gerçek SLA/kurum yetkisi/mesaj/servis/migration yok; browserAuth iptalini isteme;tek editör alt ajan yok.
+
+# Güncel devam — Paket31 kaynakta; B26 destek takvimi
+
+Yerel e4a1f826b4f381a71d1f9dd5fc732a66e01b07d3 / uzak15809e6a8e6b8008c03e547c50b8da9eae379cc4 / ortak ağaç1561ea06b71e5b06dbe74c7a60604a03c34a0338.26blob ve tam ağaç eşleşti; expected-head71b95557b0aa555e05f5e38e02098db19faa5344, force=false.544otomatik,18gezinme+13itiraz+8cüzdan;98menü/234panel/66ders. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–31yayını yok. configuredCore kapalı; browserAuth iptali yeniden istenmez.
+
+B26 mevcut support.mjs ve SupportWorkspace okundu; henüz yeni destek kodu yok. Mevcut kategori→it/quality/admin, MFA/birim/kurum, immutable revision, reply/resolve/reopen/escalate ve akademik kayıtların değişmemesi korunacak. Çalışma takvimi, ilk insan yanıtı/çözüm hedefi, sabit politika sürümü, yetkili yönlendirme ve talep sahibi kapanış teyidi ile arama/filtre için bağımsız yerel dilim tasarla. Kurum SLA veya yetki uydurma; yeni servis/mesaj/gerçek veri/üretim migration yok. B07 SQLrepository/HTTP/anahtar atomik sürüm bariyeri ve tüm kalan B01–B36 bağımsız işlere devam. Tek editör; alt ajan yok.
+
 # Güncel devam — Paket31 yerel kabul; kaynak eşitlemesi sırada
 
 B01 özgün27 Gazi satırı/13kaynak; B24 mobil menü/pencere/sekme/filtre/alan odağı hazır.544otomatik(452+46+46);18gezinme+13itiraz+8cüzdan.98menü/11profil,234panel/9çekirdek rol,66ders; gerçek ekran okuyucu/altyazı/belge ve bütün modal/form kabulü değil. PILOT-INVENTORY.md/NAVIGATION-ACCESSIBILITY.md/B01-B24-navigation20261014 kanıtı.
