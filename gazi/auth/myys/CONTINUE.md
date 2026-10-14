@@ -1,3 +1,25 @@
+# Güncel ara nokta — Paket37 B35 yerel kabul; kaynak eşitlemesi sırada
+
+Öneri ve uzman kıyası sekmesi/advice.mjs/core/privacy bağlı.13 yeni sunucu+13 tarayıcı;524+48+46=618 otomatik.108 komut/16 HTTP4918örnek39344denetim;13öneri19gezinme13itiraz11privacy=56tarayıcı.98menü/270panel/66ders,115statik. ADVICE-CONTRACT/B35kanıtı/backlog5eksen hazır;36özgünkimlik/başlık/deps/kriterkorundu. Gerçekmodel-plan-Türkçe pilotu yok; elle girilmiş sentetik çıktı, akademik arşiv aynı SHA.
+
+Önce diff/commit ve expected-headd5a67fdde6cb372d65b06e6f63c977fe8d9812a5 ile eşitle. Taban yerel4bea6ffb7e4ef56a9474069e815f2cb53c67a958/ortak50c5c13756457bbf4d61bdc3bdab76186f58dfdb. Soncanlı16dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–37yayını yok. browserAuthiptaliniyenidenisteme;configuredCorekapalı;tekeditör/altajanyok.
+
+Sıradaki B36 zincirsiz alternatiflerin somut ihtiyaç/kıyas/erteleme sözleşmesi ve kullanıcı akışı; gerçekprotokol/NFT/zincirkişiselverisi yok. SonraB07SQLrepo/HTTPatomikkeybarrier,B28tümyenikayıtenvanterisaklama ve bütünB01–B36kalanbağımsız işler. Devamkomutubekleme.
+
+# B35 kaynak notu — kod başlamadan okunan kapsam
+
+NIST AI600-1 nihaiTemmuz2024PDF(https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf) ve NISTAIRCPlaybook(https://airc.nist.gov/airmf-resources/playbook/)14.10.2026açıldı. NISTAIframeworksayfası1.0revizyonhazırlığı diyor;güncelbağlayıcımevzuat/kurumkararı gibi kullanılmayacak. Tekniköneri/ölçme/insandenetimi kaynağı;tam uygunluk iddiası yok. Webrefs turn56view0/1. Taslak2024ipd sürümü searchgeldiama kullanılmadı. NihaiPDFinsan gözetimi/ölçmebölümleri findileinceleniyor.
+
+Mevcut UIgazi/portal/src/flow.jsx Proctoring ve core.jsx Requests okundu. İkisi de açık sentetik örnek; kamera/mikrofon açmıyor, dışYZservisibağlıdeğil. Korunacak; B35ayrı sunucu öneri/uzmankıyas ekranına bağlantı eklenebilir. Yalnız işaretleotomatikret yok; yeni biyometrik/duyguçıkarımı özelliği yok. HenüzPaket37kod/değişiklik yok;36kaynak kimlikleri biraltblokta.
+
+# Güncel devam — Paket36 kaynakta; B35 bağımsız sentetik öneri kıyası
+
+Yerel4bea6ffb7e4ef56a9474069e815f2cb53c67a958 / uzakd5a67fdde6cb372d65b06e6f63c977fe8d9812a5 / ortak50c5c13756457bbf4d61bdc3bdab76186f58dfdb.24blobtam ağaceşleşti;605otomatik/65tarayıcı. Soncanlı16;17–36yayını yok. KullanıcıbrowserAuthiptaliniyenidenisteme;configuredCorekapalı.
+
+B35 özgünölçüt ve B04/B05/B10 bağımlılıkları okundu. Henüz37kod yok. Hedefmodeldenbağımsızsentetiköneri/uzmankıyası/itiraz sözleşmesi ve gerçekyerelUI. Gerçeksağlayıcı/plan/dil kabulü veya model çağrısı uydurma; hiçbir otomatik yüksek etkili akademik karar yok. MevcutProctoring/AIpilot sayfasını bulup koru. Tasarımadayları: kaynak/veri hakkı sicili+ayrı protokol incelemesi; aynıprogram insan değerlendirmesine bağlı sentetikprova; elle girilmiş/simüle öneri ayrı; uzman kriter bazlı farkı sunucuda hesaplar;öğrenen itirazı/ayrıinceleme;puan/karar/kanıtimmutability ve negatiftestler. Gerçekmodelentegrasyonukoşullukapalı;yerelprova kurumonayıdeğil.
+
+SonraB36alternatif/erteleme;B07SQLrepoHTTPkeybarrier;B28tümyenikayıtenvanterisaklama ve bütünB01–B36kalan bağımsız işler sürer. Tekeditöraltajanyok,credential/migration/gerçekişverenöğrenciservis yok. Devamkomutubekleme.
+
 # Güncel devam — Paket36 yerel kabul; kaynak eşitlemesi sırada
 
 B34 Amaçlı portfolyo hazır yerel dilim:605otomatik(511+48+46),14portfolyo+19gezinme+11privacy+8wallet+13itiraz=65tarayıcı.101komut/16HTTP4674örnek37392denetim;98menü/261panel/66ders,115statik dosya. PORTFOLIO-CONTRACT/B34kanıtı/backlog5eksen güncel;36özgünkriter korundu.

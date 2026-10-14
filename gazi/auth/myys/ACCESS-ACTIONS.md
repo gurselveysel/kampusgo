@@ -34,6 +34,8 @@ Kaynaklar: [Gazi BIDB](https://bidb.gazi.edu.tr/) GUZEM ve OBS bağlantıların�
 
 11. **Amaçlı işveren pilotu (B34):** kurumun kariyer/veri sorumlusu; gerçek alıcının tüzel/kişisel kimliği ve görevi, tek açık işleme amacı, gerekli asgari portfolyo alanları, alıcı ülkesi/aktarım düzeni, saklama ve yeniden kullanım sınırı; öğrenen bilgilendirmesi ve uygun izin/geri çekme usulü. Hedef, sentetik dar izin modelini gerçek kurum kararı ve alıcı kimliğiyle karşılaştırmaktır. Genel geliştirme yetkisi gerçek öğrenci portfolyosunu işverene açmayı veya yeni dış hesap/credential oluşturmayı kapsamaz. Önce belge/kapsam incelemesi; mesaj veya gerçek veri aktarımı yapılmadı.
 
+12. **Koşullu yapay zekâ pilotu (B35):** ölçme/veri koruma sorumlusu, somut kullanım ihtiyacı, kurumca değerlendirilecek sağlayıcı-model-plan-sürüm, veri işleme ve içerik hakları, Türkçe çıktı değerlendirmesi için gerçek sentetik örneklem/uzman görevlendirmesi ve itiraz usulü. İlk adım belge, kullanım şartları ve protokol incelemesidir. Hedef, yerel elle girilen benzetim sözleşmesini onaylı sağlayıcının gerçek davranışıyla karşılaştırmaktır. Yerel protokol formu bu onayları vermez. Yeni API anahtarı, abonelik, gerçek öğrenci verisi gönderimi veya otomatik akademik karar yetkisi varsayılmaz.
+
 Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir. Şu aşamada bilinmeyen issuer, API yolu veya test veritabanı adı uydurulmadı. Bilgi eksikliği bağımsız yerel kod/test işlerini durdurmaz.
 
 ## Ayrı özel yetki gerektiren sonraki işlemler

@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-14",
+  "software_package": 37,
+  "work_packages": [
+    "B35"
+  ],
+  "production": false,
+  "source_parent": {
+    "local": "4bea6ffb7e4ef56a9474069e815f2cb53c67a958",
+    "remote": "d5a67fdde6cb372d65b06e6f63c977fe8d9812a5",
+    "tree": "50c5c13756457bbf4d61bdc3bdab76186f58dfdb"
+  },
+  "last_verified_live": {
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false
+  },
+  "automated": {
+    "server": 524,
+    "portal": 48,
+    "regression": 46,
+    "total": 618,
+    "new_advice_tests": 13
+  },
+  "scope": {
+    "commands": 108,
+    "http_routes": 16,
+    "positive_samples": 4918,
+    "derived_negative_checks": 39344,
+    "not_test_count_or_product_percentage": true
+  },
+  "advice_browser": {
+    "at": "2026-10-14T05:20:22.206Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "İncelenmemiş protokolle örnek açılamadı; yönetici kendi protokolünü onaylayamadı",
+      "Ayrı kalite kabulünden sonra eğitici insan değerlendirmesine bağlı sentetik öneri kaydetti",
+      "Yalnız atanmış uzman kıyas yapabildi; gerçek model başarısı iddia edilmeden fark 2/4 hesaplandı",
+      "Öneri puanı akademik arşivi değiştirmedi; başka öğrenen, teknik görev ve yönetici kişi kıyasını göremedi",
+      "Öğrenen kendi kıyasına itiraz etti; kıyas uzmanı kendi itiraz incelemesini yapamadı",
+      "Ayrı kalite incelemecisi düzeltmeyi yeni kayıtla yaptı; özgün kıyas ve akademik karar değişmedi",
+      "Yeni protokol taslağı eski kaydı korudu; kabul sürümü değişince yeni örnek kendi sürümüne bağlandı",
+      "Protokol durdurulunca yeni örnek kapandı; mevcut itirazın geri çekme incelemesi tamamlanabildi",
+      "Arama, boş sonuç ve doğrudan sekme yenilemesi çalıştı; karar arşivi aynı kaldı",
+      "390 px kıyas tablosu sayfayı taşırmadı; gerekçeler klavyeyle açıldı",
+      "Mobil protokol sürümü formu taşmadan açıldı",
+      "Gözetim örnek ekranından aynı öneri kıyas kaydına doğrudan geçildi",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "providerConnected": false,
+    "providerPlanLanguageVerified": false,
+    "manualScreenReader": false
+  },
+  "regression_browser": {
+    "navigation": 19,
+    "appeals": 13,
+    "privacy": 11
+  },
+  "navigation": {
+    "menu_targets": 98,
+    "role_panels": 270,
+    "lessons": 66,
+    "manualScreenReader": false
+  },
+  "protected_static_files": 115,
+  "limits": [
+    "Dış model/sağlayıcı bağlı değil; yalnız elle girilen sentetik öneri.",
+    "Gerçek sağlayıcı-plan-sürüm-Türkçe pilotu, içerik/veri hakkı ve kurum uzman görevi açık.",
+    "Kıyas kör veya temsilî model performansı kabulü değil; örnek ve ölçüt paydaları açık.",
+    "Öneri itirazı resmî akademik itiraz yerine geçmez; hiçbir akademik kayıt değiştirilmez.",
+    "B28 tüm kayıt tarafları/saklama/başvuru kanalı ve üretim depo kabulü ayrıca açık.",
+    "Paket17–37 canlı değil; configuredCore kapalı; bütün B01–B36 tamamlanmadı."
+  ]
+}

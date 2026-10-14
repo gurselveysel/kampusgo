@@ -38,7 +38,7 @@
 | B32 · Çoklu birim ölçeğini kabul et | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B33 · Beceri grafını uzmanla doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B34 · İşveren portfolyo pilotunu aç | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B35 · Pilot AI araçlarını ayrı dene | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
+| B35 · Pilot AI araçlarını ayrı dene | kısmi; sentetik öneri/kıyas/itiraz bağlı | 13 sunucu + 13 tarayıcı; tanımlı dilim geçti | Paket37 canlı değil | sağlayıcı/veri/içerik/pilot yetkisi açık | gerçek model-plan-Türkçe pilotu ve üretim depo açık |
 | B36 · İsteğe bağlı gelişmiş cüzdan ve zinciri değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 
 ## Sıradaki bağımsız işler
@@ -247,3 +247,9 @@ Amaçlı portfolyo: veri akışı/alıcı/amaç sürümü ve ayrı inceleme, se�
 | Dış erişim | Gerçek işveren kimliği ve pilotu; üretim kimlik/depo kabulü açık |
 
 PORTFOLIO-CONTRACT.md ve B34-portfolio-20261014.json sınırları esastır. Yazılım dilimi36, iş paketiB36'nın veya bütün36işin bittiği anlamına gelmez. Özgün kriterler değişmedi.
+
+## 14.10.2026 — B35 bağımsız öneri ve uzman kıyası dilimi
+
+Öneri ve uzman kıyası sekmesinde protokol/ayrı inceleme, sabit insan değerlendirmesine bağlı elle girilen sentetik öneri, atanmış uzman kıyası, öğrenen itirazı ve ayrı düzeltme/geri çekme bağlı. Akademik karar arşivi korunuyor. 13 yeni sunucu, 13 yeni tarayıcı; 524+48+46=618 otomatik ve 56 tarayıcı kontrolü. 108 komut/16 HTTP kapsam matrisi güncel. Sayılar ürün tamamlanma yüzdesi değildir.
+
+Gerçek model, sağlayıcı planı, Türkçe pilot başarısı ve kurum/veri-içerik hakkı doğrulanmadı. B35 kısmi; Paket37 canlı değil. `ADVICE-CONTRACT.md` ve `acceptance/B35-advice-20261014.json`.

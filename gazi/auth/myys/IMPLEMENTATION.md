@@ -241,3 +241,7 @@ B26: `support-service.mjs` sürümlü yerel takvim/ayrı inceleme/hold; `support
 ## Paket36 — Amaçlı portfolyo ve ayrı geri bildirim
 
 `portfolio-model.mjs/portfolio.mjs` aynı enrollment/imzalı belge/B33ilişki/karar kanıtlarını dar izinle bağlar; ayrı incelenmiş tamamaç/alıcıdataflow,issuer-subject özeti,MFA,süre,source ve replayguards. Yeni core rol yok; sentetik alıcı yalnız somut izinle okur. Erişim makbuzu içerik taşımaz;view güncelizin+teyit varsa seçili veri döndürür. Strictfeedback puan/başarı/ret yazmaz. Privacy-withdraw-shares portfolyoyu da kapatır; öğrenen exportallowlist sınırlı yeni kayıtları içerir. PortfolioWorkspace consentdefaultempty/arama/geçmiş/export/mobil/klavye.11yeni sunucu/14browser;605otomatik;101komut/16HTTP. Gerçek işveren ve tam B28saklama/başvuru kabulü ayrı açık.
+
+## B35 · Paket37 bağımsız yerel öneri kıyası
+
+`advice.mjs` ve `advice-workspace.jsx`: yedi komutla sürümlü protokol, ayrı kalite incelemesi/durdurma, tam rubrikli sentetik öneri, atanmış bağımsız uzman kıyası, öğrenen itirazı ve ayrı düzeltme. Akademik puan/karar/belgeye yazma yolu yok. Kişisel özet dört yeni kayıt türünün dar alanlarını içerir. `ADVICE-CONTRACT.md` ve B35 kabul JSON'u geçerli sınır ve kanıtı açıklar. 618 otomatik/56 tarayıcı kontrolü; gerçek sağlayıcı-plan-dil kabulü ve canlı yayın açık.

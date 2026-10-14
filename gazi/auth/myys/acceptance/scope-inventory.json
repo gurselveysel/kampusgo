@@ -1,6 +1,13 @@
 {
-  "version": "2026.10.14.36",
+  "version": "2026.10.14.37",
   "commands": [
+    "advice-compare",
+    "advice-contest",
+    "advice-protocol",
+    "advice-protocol-hold",
+    "advice-protocol-review",
+    "advice-resolve",
+    "advice-sample",
     "alternative-evidence",
     "appeal",
     "appeal-policy",

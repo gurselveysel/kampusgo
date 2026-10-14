@@ -55,6 +55,10 @@ export function privacyView(s,a){
  return {requests,units:a.memberships.map(m=>m.unit),withdrawals:s.list(a.tenant,'privacy-withdrawal').filter(r=>r.owner===a.id&&member(a,r.unit))};
 }
 const exportFields={
+ 'advice-sample':['id','unit','programId','enrollmentId','assessmentId','protocolId','protocolVersion','origin','language','suggestion','baselineScores','rubric','reason','createdAt'],
+ 'advice-compare':['id','unit','sampleId','assessmentId','rows','metrics','reason','createdAt'],
+ 'advice-contest':['id','unit','sampleId','comparisonId','reason','formalNotificationAt','createdAt'],
+ 'advice-resolve':['id','unit','sampleId','contestId','comparisonId','outcome','correctedScores','reason','createdAt'],
  'portfolio-grant':['id','unit','policyId','policyVersion','purpose','enrollmentId','issuanceId','skillLinks','evidenceIds','expires','createdAt'],
  'portfolio-revocation':['id','unit','grantId','reason','createdAt'],
  'portfolio-access':['id','unit','grantId','recipientPersonId','purpose','createdAt'],

@@ -2524,32 +2524,46 @@
       "planning_estimate": "5–10 kişi-gün; ihtiyaca bağlı",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Onaylı model/sağlayıcı/veri hakkı yok; otomatik akademik karar yok.",
-      "independent_remaining_work": [
-        "Modelden bağımsız öneri/uzman kıyası/itiraz test sözleşmesi."
+      "implementation_status": "kısmi",
+      "test_status": "13 öneri/kıyas sunucu ve 13 tarayıcı senaryosu; ayrı uzman, tam rubrik/fark paydası, öğrenen itirazı/düzeltme, protokol sürümü/durdurma ve değişmeyen karar arşivi geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/advice.mjs",
+        "gazi/auth/myys/privacy.mjs",
+        "gazi/auth/myys/ADVICE-CONTRACT.md",
+        "gazi/auth/tests/myys-advice.test.mjs",
+        "gazi/portal/src/advice-workspace.jsx",
+        "scripts/myys-advice-browser.cjs",
+        "gazi/auth/myys/acceptance/B35-advice-20261014.json"
       ],
+      "production_status": "Paket37 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı.",
+      "implementation_note": "Modelden bağımsız elle girilen sentetik öneri, ayrı uzman kıyası ve öğrenen itirazı aynı değerlendirme/kanıt sürümüne bağlı. Gerçek model/sağlayıcı/pilot-plan-dil doğrulanmadı; otomatik akademik karar yok.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Onaylı sağlayıcı, içerik/veri hakkı ve uzman pilotu.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "kısmi; tanımlı bağımsız öneri/kıyas/itiraz dilimi hazır",
+          "evidence": [
+            "gazi/auth/myys/advice.mjs",
+            "gazi/auth/myys/privacy.mjs",
+            "gazi/auth/myys/ADVICE-CONTRACT.md",
+            "gazi/auth/tests/myys-advice.test.mjs",
+            "gazi/portal/src/advice-workspace.jsx",
+            "scripts/myys-advice-browser.cjs",
+            "gazi/auth/myys/acceptance/B35-advice-20261014.json"
+          ],
           "remaining": [
-            "Modelden bağımsız öneri/uzman kıyası/itiraz test sözleşmesi."
+            "Kurumca seçilecek sağlayıcı/model/plan/sürüm ve veri-içerik haklarına göre gerçek adaptör ve pilot kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "tanımlı yerel dilim geçti; genel paket kısmi",
+          "evidence": "13 öneri/kıyas sunucu ve 13 tarayıcı senaryosu; ayrı uzman, tam rubrik/fark paydası, öğrenen itirazı/düzeltme, protokol sürümü/durdurma ve değişmeyen karar arşivi geçti.",
+          "limits": "Elle girilen sentetik örnek; model çıktısı, gerçek Türkçe yeterlik/plan/uzman evreni veya ekran okuyucu kabulü değil."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "Paket37 yayımlanmadı",
+          "evidence": "Paket37 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2557,8 +2571,8 @@
         },
         "external_access": {
           "status": "teyit/erişim bekleniyor",
-          "target": "Kurumca onaylanacak model/sağlayıcı",
-          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+          "target": "Onaylı model/sağlayıcı, plan/sürüm, gerçek Türkçe sentetik pilot örneklemi ve içerik/veri hakkı; üretim kimlik/depo.",
+          "next_action": "ACCESS-ACTIONS.md madde 12; yeni erişim veya abonelik oluşturulmadı."
         }
       }
     },

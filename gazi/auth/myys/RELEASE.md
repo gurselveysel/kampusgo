@@ -531,3 +531,17 @@ Yerel `ea478cefa7b4593f67ca6ef86e87ce14ecfe258f`; uzak `d4ad99eaf7dfa5a4496d7f8a
 - Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READYproduction;14.10saltokunur alias kontrolü.17–36dağıtımı/yeni oturumlu smoke yok; kullanıcı browserAuth iptali yeniden istenmedi;configuredCorekapalı.
 - Canlı geri dönüş hedefi15 dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1;uygulanmadı.
 - Gerçek işveren/amaç/veri işleme/saklama/aktarım ve öğrenen bilgilendirme-izin usulü, üretim kimlik/depo ve B18/B33/B28gerçek kabulleri açık. Yeni gerçekkişi/hesap/credential/servis/migrationyok. B34 ve tümB01–B36tamamlanmadı; yazılım36 işB36değildir.
+
+### Paket36 kaynak kimlikleri
+
+Yerel `4bea6ffb7e4ef56a9474069e815f2cb53c67a958`; uzak `d5a67fdde6cb372d65b06e6f63c977fe8d9812a5`; ortak tam ağaç `50c5c13756457bbf4d61bdc3bdab76186f58dfdb`.24blob SHA ve tam ağaç eşleşti; expected-headd4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b,force=false; uzak yeni baş doğrulandı. Yeni canlı yayın yok.
+
+## Paket37 — sentetik öneri, uzman kıyası ve itiraz; kaynak adayı
+
+14.10.2026. Öneri ve uzman kıyası sekmesi eklendi; gözetim/örnek başvuru ekranından bağlantı var. İncelenmiş yerel protokol, elle girilen sentetik öneri, atanmış ayrı uzman kıyası, öğrenen itirazı ve ayrı kalite düzeltmesi/geri çekmesi aynı kişi/değerlendirme/kanıt sürümüne bağlı. Karar arşivi değişmedi.
+
+- 524 sunucu + 48 portal + 46 regresyon = 618 otomatik; 13 öneri + 19 gezinme + 13 itiraz + 11 veri talebi = 56 tarayıcı. 108 komut/16 HTTP, 4918 örnek/39344 denetim; 115 korumalı statik dosya.
+- Taban yerel `4bea6ffb7e4ef56a9474069e815f2cb53c67a958` / uzak `d5a67fdde6cb372d65b06e6f63c977fe8d9812a5` / ortak `50c5c13756457bbf4d61bdc3bdab76186f58dfdb`.
+- 14.10 güncel uzak dal ve canlı alias yeniden okundu; son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production. 17–37 dağıtımı/yeni oturumlu smoke yok; kullanıcı browserAuth iptali yeniden istenmedi; configuredCore kapalı.
+- Canlı geri dönüş hedefi15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
+- Model/sağlayıcı/plan/Türkçe gerçek pilotu, kurum/veri-içerik hakkı ve üretim kimlik/depo açık. Yeni servis, credential, migration veya gerçek kişiye otomatik karar yok. B35 ve tüm B01–B36 tamamlanmadı.
