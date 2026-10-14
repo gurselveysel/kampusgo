@@ -1,3 +1,17 @@
+# Güncel devam — Paket41 yerel kabul; kaynak eşitlemesi sırada
+
+B28 tamamlanmış giriş isteği temizliği UI veçekirdek: ayrı local-login-cleanupyanıtı,privacy-login-preview/cleanup,ownedusedexpiredauditproof,max100,15dakika,digest,kişiMFAconfirm,atomicrollback/idempotency;diğer güvenliktabloları/akademik korunur.14tablo122tür60export.8yeni test;557+48+46=651otomatik.113komut/16HTTP5229örnek41832denetim.9temizlik+11privacy+15kimlik+13itiraz=48tarayıcı;390pxincelendi. İlk tam koşudaki39freezeclockIdPduvarsaati hatası fixtureprovider/logoutToken clock()ile düzeltildi;son tamkoşubaşarılı. Yeni kimlikbrowserregresyonu /tmp/gazi-package41-identity-browser.logsonucunu teyit et.
+
+Önce41docs/orijinal36kriter/diff/uzakbaş/aliasverifikasyon,commitveexpected-headb606baeb86dc8114dabea8754e8dc7f24ad02a43ileblob/tamağaçeşitle. Taban40yerel70ed4097299cf75106cccfe149a939938bdfe097/ortakc578d6376967fa46f78efc945e1b6d2bc97fa8d8. Soncanlı16;17–41yayınıyok;browserAuthiptaliniyenidenisteme;configuredCorekapalı;tekeditöraltajanyok.
+
+Sonraki bağımsızlar B07SQLrepository/HTTPPKCEatomikrevizyonbariyeri;B28güvenlikcheckpoint/idempotencykopyasaklaması;B02tamresmîYÖK/Gaziusul metnine erişim yeniden denemesi ve bütünB01–B36kalanlar. Kurum erişimi/kararı uydurma; üretim migration/credentialkurma; devamkomutubekleme.
+
+# Güncel devam — Paket40 kaynakta; B28 sona ermiş giriş isteği temizliği sırada
+
+Yerel70ed4097299cf75106cccfe149a939938bdfe097/uzakb606baeb86dc8114dabea8754e8dc7f24ad02a43/ortakc578d6376967fa46f78efc945e1b6d2bc97fa8d8;19blobtam ağaç eşleşti.643otomatik/52tarayıcı. Soncanlı16;17–40 dağıtımı yok. BrowserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör, alt ajan yok.
+
+B28 sonraki güvenli dilim: yeni ayrı yanıt sonucu ve kişi MFA ile tamamlanmış/süresi dolmuş giriş isteklerinin önizleme/temizliği. Sahiplik identity.accept denetim iziyle kesin olmalı, status=used ve expires/finished zamanı sona ermeli; pending/claimed/başka kişi/tenant, belirsiz kayıt ve logout/anahtar/session-link güvenlik bariyerleri korunmalı. Yeni açık kapsam ve teyit, aday SHA ve 15dakika/sürüm denetimi, audit rollback ve ençok100satır gerekir. Mevcut privacy-cleanup oturum sözünü sessizce genişletme. B07tamSQLrepository/HTTPPKCEatomikbariyer ve bütünB01–B36 diğer bağımsızlar açık. Devamkomutubekleme.
+
 # Güncel devam — Paket40 yerel kabul; kaynak eşitlemesi sırada
 
 B04/B28 Veri talepleri/Kayıt kapsamım: 14 teknik tablo/120 kayıt türü kaynak envanteri, 58 tür izinli alan özeti, 8 kategori. OBS gerçek özne tanıma talebinden seçilir; alıcı kendi teyit/mesajını indirir fakat geri çekilen öğrenci içeriği açılmaz. İç içe pozitif alan şeması/bilinmeyen tür kapalı. Tam kurum alan envanteri veya tam hesap silme kabulü değildir.

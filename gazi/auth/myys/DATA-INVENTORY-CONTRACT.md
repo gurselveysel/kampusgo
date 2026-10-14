@@ -36,3 +36,7 @@ Aynı tarihte [KVKK silme, yok etme ve anonimleştirme](https://www.kvkk.gov.tr/
 9 yeni test: 14 gerçek tablo/sütun ve 120 tür envanteri, destek/mali prova, talebe bağlı OBS, geri çekme sonrası alıcı ayrımı, iç içe alan reddi, bilinmeyen tür, kişi/birim/tenant sınırı, oturum sayacı/temizlik ve imzalı belge sırrının dışlanması. 549 sunucu +48 portal +46 regresyon =643 otomatik test. 9 yeni kapsam +11 veri talebi +13 itiraz +19 gezinme =52 tarayıcı kontrolü geçti; 390 px görüntü incelendi. 98 menü, 279 akademik panel ve 66 ders korunuyor. 111 komut/16 HTTP kapsam matrisinde 5174 olumlu örnekten 41392 negatif kontrol; 115 statik dosya korumalı paketlendi.
 
 B28'in yerel envanter/özne özeti dilimi geçti; tam gereksiz hesap verisi temizliği, resmî bildirim, üretim silme/yeniden saklama, yedek imhası ve dış hesap kapanışı kabulü açık. B04 kurum dayanak/süre/ülke/alıcı kabulü açık. Yeni canlı yayın yok; B01–B36 tamamlanmadı.
+
+## Paket41 izleme — 14.10.2026
+
+Yukarıdaki 120/58 sayıları Paket40 tarihsel kanıtıdır. İki yeni veri hakkı türüyle güncel katalog 122 tür/60 izinli alan özeti; teknik tablo sayısı14. `identity_challenges` için ayrı ve sınırlı used/expired sahipli temizlik sözleşmesi eklendi; ham güvenlik exportu/kurum süresi veya diğer bariyerlerin silinmesi açılmadı.

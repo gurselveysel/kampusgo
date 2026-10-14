@@ -1,5 +1,5 @@
 // Local data inventory and positive export schema. This is not a legal retention policy.
-export const inventoryVersion='2026.10.14.40';
+export const inventoryVersion='2026.10.14.41';
 export const privacyCategories={
   "learning": {
     "label": "Öğrenme ve değerlendirme",
@@ -106,6 +106,8 @@ export const recordGroups={
     "payment-reconciliation"
   ],
   "rights": [
+    "privacy-login-preview",
+    "privacy-login-cleanup",
     "privacy-request",
     "privacy-response",
     "privacy-read",
@@ -795,6 +797,36 @@ export const subjectFields={
     "outcome",
     "reason",
     "simulated",
+    "createdAt"
+  ],
+  "privacy-login-preview": [
+    "id",
+    "unit",
+    "requestId",
+    "responseId",
+    "scope",
+    "cutoff",
+    "candidateCount",
+    "eligibleCount",
+    "maxRows",
+    "createdAt"
+  ],
+  "privacy-login-cleanup": [
+    "id",
+    "unit",
+    "requestId",
+    "responseId",
+    "previewId",
+    "scope",
+    "removedRequestRows",
+    "remainingEligibleRows",
+    "academicRecordsDeleted",
+    "identityDeleted",
+    "sessionRowsDeleted",
+    "securityBarriersChanged",
+    "externalAccountsChanged",
+    "physicalDestructionVerified",
+    "requestFullyFulfilled",
     "createdAt"
   ]
 };

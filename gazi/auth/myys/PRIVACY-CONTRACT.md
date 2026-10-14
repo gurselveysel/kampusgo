@@ -30,3 +30,7 @@ B04 ülke/süre doğrulamalı sicil ve politika kaynaklı saklama işçisi; B28 
 ## Paket40 izleme — 14.10.2026
 
 `DATA-INVENTORY-CONTRACT.md`: 14 teknik tablo ve 120 kayıt türü kaynak envanteri, 58 türde kişisel izinli alan özeti ve sekiz kategorili Veri talepleri görünümü eklendi. Önceki test sayıları tarihsel kanıttır. Sınırlı oturum temizliği korunur; tam hesap silmesi, hukuki saklama ve üretim/yedek kabulü açık kalır.
+
+## Paket41 izleme — 14.10.2026
+
+`LOGIN-CLEANUP-CONTRACT.md` ayrı kapsamlı tamamlanmış giriş isteği önizleme/temizliğini ekler. Eski `privacy-cleanup` oturum kapsamı aynıdır. Yeni akış yalnız sahibi kesin, used ve süresi dolmuş challenge satırlarına uygulanır; iptal/aile/anahtar ve akademik kayıtlar korunur. Tam hesap/yedek imhası açık.

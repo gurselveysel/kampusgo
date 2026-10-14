@@ -2060,7 +2060,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket40: 9 yeni envanter/özne testi; 549 sunucu +48 portal +46 regresyon =643. 9 kapsam +11 veri talebi +13 itiraz +19 gezinme =52 tarayıcı kontrolü.",
+      "test_status": "Paket41: 8 yeni temizlik/güvenlik testi; 557 sunucu +48 portal +46 regresyon =651. 9 temizlik +11 veri talebi +15 kimlik +13 itiraz =48 tarayıcı.",
       "implementation_evidence": [
         "gazi/auth/myys/privacy.mjs",
         "gazi/portal/src/privacy-workspace.jsx",
@@ -2074,12 +2074,18 @@
         "gazi/auth/myys/DATA-INVENTORY-CONTRACT.md",
         "gazi/auth/tests/myys-data-inventory.test.mjs",
         "scripts/myys-data-inventory-browser.cjs",
-        "gazi/auth/myys/acceptance/B04-B28-inventory-20261014.json"
+        "gazi/auth/myys/acceptance/B04-B28-inventory-20261014.json",
+        "gazi/auth/myys/privacy-login-cleanup.mjs",
+        "gazi/auth/myys/LOGIN-CLEANUP-CONTRACT.md",
+        "gazi/auth/tests/helpers/local-login-cleanup.mjs",
+        "gazi/auth/tests/myys-login-cleanup.test.mjs",
+        "scripts/myys-login-cleanup-browser.cjs",
+        "gazi/auth/myys/acceptance/B28-login-cleanup-20261014.json"
       ],
-      "production_status": "Paket40 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–40 dağıtımı yok; kurumsal etkinleştirme kapalı.",
-      "implementation_note": "Kişiye özel özet indirme, talep, ayrı gerekçeli yanıt, yerel görüntüleme, paylaşım geri çekme ve yalnız süresi dolmuş kurum oturumu temizliği. Paket40: 14 teknik tablo/120 kayıt türü kaynak envanteri, sekiz kategorili kişi kapsamı ve 58 türde izinli alan özeti. Bu kurumun tam alan/hukuk/saklama envanteri değildir; OBS özne ve portfolyo alıcısı ayrı seçilir, ham güvenlik/başka kişinin verisi açılmaz.",
+      "production_status": "Paket41 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–41 dağıtımı yok.",
+      "implementation_note": "Kişiye özel özet indirme, talep, ayrı gerekçeli yanıt, yerel görüntüleme, paylaşım geri çekme ve yalnız süresi dolmuş kurum oturumu temizliği. Paket40: 14 teknik tablo/120 kayıt türü kaynak envanteri, sekiz kategorili kişi kapsamı ve 58 türde izinli alan özeti. Bu kurumun tam alan/hukuk/saklama envanteri değildir; OBS özne ve portfolyo alıcısı ayrı seçilir, ham güvenlik/başka kişinin verisi açılmaz. Paket41 ayrı gerekçeli yanıt/MFA/kişi teyidiyle, tek kişiye kabul izi bağlı used/süresi dolmuş giriş isteklerini 100 satırlık özetli önizleme üzerinden atomik temizler. Eski oturum temizliği değişmedi; iptal/aile/anahtar/akademik kayıtlar korunur. Tam hesap silmesi değildir.",
       "independent_remaining_work": [
-        "Gereksiz hesap kayıtlarında kanıtlı sahiplik/sona erme, oturum ailesi/iptal/anahtar checkpoint güvenliğiyle sınırlı temizleme ve yeniden saklama sözleşmesi; tam üretim silme ve yedeklerde imha doğrulaması.",
+        "Komut/audit sonuç kopyaları, kişiye atanmayan başarısız istekler ve güvenlik iptal/aile/anahtar checkpoint zincirleri için amaç/süre/yeniden oynatma/geri yükleme sözleşmesi; üretim silme ve yedeklerde imha doğrulaması. Sahipli used/expired giriş isteği yerel dilimi Paket41 ile geçti.",
         "Kurumun bütün JSON iş alanları, dış hizmet/işleyen/ülke/alıcı ve dayanak/süre envanteri; 14 tablo/120 tür kaynak envanteri bunun tamamı değildir.",
         "Resmî başvuru/bildirim teslim kanıtı ve dış platform kapanışının belge doğrulamasına etkisi kabulü."
       ],
@@ -2087,7 +2093,7 @@
       "production_activation_blocker": "Hukuki saklama kararı; geri alınamaz üretim silme yetkisi verilmedi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; yerel kaynak envanteri ve kişi özeti dilimi bağlı",
+          "status": "kısmi; envanter/özne özeti ve sahipli tamamlanmış giriş isteği temizliği bağlı",
           "evidence": [
             "gazi/auth/myys/privacy.mjs",
             "gazi/portal/src/privacy-workspace.jsx",
@@ -2101,22 +2107,28 @@
             "gazi/auth/myys/DATA-INVENTORY-CONTRACT.md",
             "gazi/auth/tests/myys-data-inventory.test.mjs",
             "scripts/myys-data-inventory-browser.cjs",
-            "gazi/auth/myys/acceptance/B04-B28-inventory-20261014.json"
+            "gazi/auth/myys/acceptance/B04-B28-inventory-20261014.json",
+            "gazi/auth/myys/privacy-login-cleanup.mjs",
+            "gazi/auth/myys/LOGIN-CLEANUP-CONTRACT.md",
+            "gazi/auth/tests/helpers/local-login-cleanup.mjs",
+            "gazi/auth/tests/myys-login-cleanup.test.mjs",
+            "scripts/myys-login-cleanup-browser.cjs",
+            "gazi/auth/myys/acceptance/B28-login-cleanup-20261014.json"
           ],
           "remaining": [
-            "Gereksiz hesap kayıtlarında kanıtlı sahiplik/sona erme, oturum ailesi/iptal/anahtar checkpoint güvenliğiyle sınırlı temizleme ve yeniden saklama sözleşmesi; tam üretim silme ve yedeklerde imha doğrulaması.",
+            "Komut/audit sonuç kopyaları, kişiye atanmayan başarısız istekler ve güvenlik iptal/aile/anahtar checkpoint zincirleri için amaç/süre/yeniden oynatma/geri yükleme sözleşmesi; üretim silme ve yedeklerde imha doğrulaması. Sahipli used/expired giriş isteği yerel dilimi Paket41 ile geçti.",
             "Kurumun bütün JSON iş alanları, dış hizmet/işleyen/ülke/alıcı ve dayanak/süre envanteri; 14 tablo/120 tür kaynak envanteri bunun tamamı değildir.",
             "Resmî başvuru/bildirim teslim kanıtı ve dış platform kapanışının belge doğrulamasına etkisi kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi; envanter/özne özeti dilimi geçti",
-          "evidence": "Paket40: 9 yeni envanter/özne testi; 549 sunucu +48 portal +46 regresyon =643. 9 kapsam +11 veri talebi +13 itiraz +19 gezinme =52 tarayıcı kontrolü.",
-          "limits": "Tam hesap silmesi, kurum alan envanteri, hukuki saklama veya üretim kabulü değildir."
+          "status": "kısmi; sınırlı giriş isteği temizliği geçti",
+          "evidence": "Paket41: 8 yeni temizlik/güvenlik testi; 557 sunucu +48 portal +46 regresyon =651. 9 temizlik +11 veri talebi +15 kimlik +13 itiraz =48 tarayıcı.",
+          "limits": "Tam hesap/yedek imhası, dağıtık geri yükleme checkpoint veya üretim kabulü değildir."
         },
         "live": {
-          "status": "Paket40 canlı yayımlanmadı",
-          "evidence": "Paket40 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–40 dağıtımı yok; kurumsal etkinleştirme kapalı."
+          "status": "Paket41 canlı yayımlanmadı",
+          "evidence": "Paket41 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–41 dağıtımı yok."
         },
         "institution_decision": {
           "status": "bekleniyor",

@@ -30,7 +30,7 @@ export async function identityHttpFixture({tenant='test-gazi',sessionLifetimeSec
  const pair=await generateKeyPair('ES256'),jwk={...await exportJWK(pair.publicKey),alg:'ES256',kid:'https-local-identity'},pending=new Map(),codes=new Map();
  let origin,providerOrigin,identity;
  const h={f,initial,cert,spki:createHash('sha256').update(new X509Certificate(cert).publicKey.export({type:'spki',format:'der'})).digest('base64'),tokenCalls:0,patch:{},beforeToken:async()=>{},lastToken:null};
- h.logoutToken=async(patch={})=>{const at=Math.floor(Date.now()/1000);return new SignJWT({iss:'https://test-idp.invalid',aud:'myys-http-test',iat:at,exp:at+120,jti:randomBytes(24).toString('hex'),events:{[logoutEvent]:{}},sub:'student',...patch}).setProtectedHeader({alg:'ES256',kid:jwk.kid,typ:'logout+jwt'}).sign(pair.privateKey);};
+ h.logoutToken=async(patch={})=>{const at=Math.floor(clock().getTime()/1000);return new SignJWT({iss:'https://test-idp.invalid',aud:'myys-http-test',iat:at,exp:at+120,jti:randomBytes(24).toString('hex'),events:{[logoutEvent]:{}},sub:'student',...patch}).setProtectedHeader({alg:'ES256',kid:jwk.kid,typ:'logout+jwt'}).sign(pair.privateKey);};
  const send=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
  async function form(req){let s='';for await(const c of req){s+=c;requireThat(s.length<=64000,'size','Test isteği çok büyük.',413);}return new URLSearchParams(s);}
  const root=fileURLToPath(new URL('../../../',import.meta.url));
@@ -54,7 +54,7 @@ export async function identityHttpFixture({tenant='test-gazi',sessionLifetimeSec
    }
    if(url.pathname==='/__idp/token'&&req.method==='POST'){
     const p=await form(req),r=codes.get(p.get('code'));h.tokenCalls++;requireThat(r&&p.get('grant_type')==='authorization_code'&&p.get('client_id')==='myys-http-test'&&p.get('redirect_uri')===origin+identityPaths.callback&&pkceS256(p.get('code_verifier'))===r.code_challenge,'test_provider','Sentetik kod doğrulanamadı.',403);codes.delete(p.get('code'));await h.beforeToken();
-    const at=Math.floor(Date.now()/1000);h.lastToken=await new SignJWT({iss:'https://test-idp.invalid',sub:'student',sid:randomBytes(24).toString('hex'),aud:'myys-http-test',iat:at,exp:at+300,auth_time:at,nonce:r.nonce,acr:'urn:test:strong',amr:['pwd','otp'],...h.patch}).setProtectedHeader({alg:'ES256',kid:jwk.kid,typ:'JWT'}).sign(pair.privateKey);send(res,200,{id_token:h.lastToken});return;
+    const at=Math.floor(clock().getTime()/1000);h.lastToken=await new SignJWT({iss:'https://test-idp.invalid',sub:'student',sid:randomBytes(24).toString('hex'),aud:'myys-http-test',iat:at,exp:at+300,auth_time:at,nonce:r.nonce,acr:'urn:test:strong',amr:['pwd','otp'],...h.patch}).setProtectedHeader({alg:'ES256',kid:jwk.kid,typ:'JWT'}).sign(pair.privateKey);send(res,200,{id_token:h.lastToken});return;
    }
    if(await identity.handle(req,res))return;
    if(url.pathname.startsWith('/api/myys/')){

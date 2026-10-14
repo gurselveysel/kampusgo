@@ -587,3 +587,17 @@ Yerel `24d24eea531acf330a489ce5ea5df5c12caae7d8`; uzak `f9857e78a5da33450786350c
 - 14.10 uzak dal ve canlı alias yeniden okundu. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY production. 17–40 dağıtımı/yeni oturumlu smoke yok. BrowserAuth kullanıcı iptali yeniden istenmedi; configuredCore kapalı.
 - Canlı geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
 - 14 tablo/120 tür kaynak envanteri kurumun bütün alan/süre/dayanak/işleyen/ülke envanteri değildir. Tam hesap silmesi, resmî bildirim, üretim/backup imhası ve dış hizmet kapanışı kabulü açık. B04/B28 ve bütün B01–B36 tamamlanmadı.
+
+### Paket40 kaynak kimlikleri
+
+Yerel `70ed4097299cf75106cccfe149a939938bdfe097`; uzak `b606baeb86dc8114dabea8754e8dc7f24ad02a43`; ortak tam ağaç `c578d6376967fa46f78efc945e1b6d2bc97fa8d8`. 19 blob SHA ve tam ağaç eşleşti; beklenen uzak baş `f9857e78a5da33450786350c3c197670dbec3e6c`, force=false. Uzak yeni baş doğrulandı; yeni canlı yayın yok.
+
+## Paket41 — tamamlanmış giriş isteği temizliği; kaynak adayı
+
+14.10.2026. Veri talepleri ekranında ayrı görevli yanıtı → sahibi/MFA → aday önizlemesi → açık teyit → sınırlı atomik temizlik ve kişisel özet makbuzu. Ençok100/süre15dakika; devam eden girişler, oturum/aile/iptal/anahtar ve akademik kayıtlar korunur. Tam hesap silmesi değildir.
+
+- 557 sunucu +48 portal +46 regresyon =651 otomatik; 9 temizlik +11 veri talebi +15 kimlik +13 itiraz =48 tarayıcı.113komut/16HTTP5229örnek41832negatifdenetim;115korumalıstatikdosya.
+- Taban yerel `70ed4097299cf75106cccfe149a939938bdfe097` / uzak `b606baeb86dc8114dabea8754e8dc7f24ad02a43` / ortak `c578d6376967fa46f78efc945e1b6d2bc97fa8d8`.
+- Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction.17–41dağıtımı/yeni oturumlu smoke yok;browserAuth kullanıcıiptaliniyenidenisteme;configuredCorekapalı.
+- Canlı geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı.
+- İlk toplu koşu sentetik IdP saati farkını yakaladı; fixture saati eşitlendi, üretim doğrulaması gevşetilmeden tam koşu yeniden geçti. Yeni servis/credential/migration/gerçek kişi verisi yok. Resmî kanal, kurum saklama, üretim/tam hesap/yedek imhası ve dış hesap kabulü açık. B28/tümB01–B36tamamlanmadı.

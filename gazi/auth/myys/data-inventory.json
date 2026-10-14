@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.40",
+  "version": "2026.10.14.41",
   "scope": "local-acceptance-source-inventory",
   "generatedFrom": "schema declarations and reviewed explicit recordGroups/subjectFields",
   "institutionApproved": false,
@@ -72,7 +72,7 @@
       ],
       "purpose": "Giriş state/PKCE/nonce tek kullanımını denetlemek",
       "scope": "tenant/browser_hash/contract_digest",
-      "lifecycle": "Süre ve durum otomatik fiziksel imha değildir; sahiplik kanıtı ve callback tekrar güvenliğiyle ayrıca değerlendirilir.",
+      "lifecycle": "Ayrı gerekçeli yanıt, MFA, kişi teyidi ve değişmez aday özetiyle yalnız tek kişiye kabul izi bağlı used/süresi bitmiş kayıtlar ençok100 satır temizlenebilir. Pending/claimed/belirsiz/diğer kişi/tenant ve güvenlik bariyerleri korunur; fiziksel imha değildir.",
       "approvedRetentionDays": null,
       "productionAccepted": false,
       "rawSubjectExport": false

@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.40",
+  "version": "2026.10.14.41",
   "commands": [
     "advice-compare",
     "advice-contest",
@@ -64,6 +64,8 @@
     "portfolio-revoke",
     "privacy-acknowledge",
     "privacy-cleanup",
+    "privacy-login-cleanup",
+    "privacy-login-preview",
     "privacy-request",
     "privacy-response",
     "privacy-withdraw-shares",

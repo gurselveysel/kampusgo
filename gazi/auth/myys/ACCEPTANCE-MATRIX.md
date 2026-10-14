@@ -31,7 +31,7 @@
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi | yerel dilim doğrulandı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
-| B28 · Silme saklama ve çıkış haklarını sına | kısmi; envanter ve özne özeti bağlı | 9 yeni test, 52 tarayıcı kontrolü | Paket40 canlı değil | dayanak/süre/başvuru usulü bekleniyor | tam silme, yedek ve dış hesap kabulü açık |
+| B28 · Silme saklama ve çıkış haklarını sına | kısmi; envanter, özne özeti ve sınırlı giriş isteği temizliği | 8 yeni test, 48 tarayıcı kontrolü | Paket41 canlı değil | dayanak/süre/başvuru usulü bekleniyor | tam silme, güvenlik checkpoint, yedek ve dış hesap kabulü açık |
 | B29 · Kalite göstergelerini gerçek veriye bağla | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B30 · Kontrollü kohortu aç ve değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B31 · Ücretli hizmeti koşullu aç | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
@@ -267,3 +267,7 @@ Cüzdan seçenekleri sekmesi özel cüzdanla bağlantılıdır. Mevcut özel cü
 ## Paket40 — veri kapsamı ve özne özeti
 
 643 otomatik, 52 tarayıcı kontrolü. 14 teknik tablo/120 tür kaynak envanteri; 58 tür için izinli alan özeti, sekiz kategori. Destek/mali prova/tanıma/OBS ve alıcı ayrımı aynı kişi zincirinde. Kaynak envanteri tam kurum alan envanteri değildir; süre/dayanak veya tam hesap silmesi kabulü kapanmadı. `DATA-INVENTORY-CONTRACT.md` ve B04-B28 kabul JSON’u ayrıntıdır. Yeni canlı yayın yok.
+
+## Paket41 — sahipli tamamlanmış giriş isteği temizliği
+
+651 otomatik ve 48 tarayıcı kontrolü. Ayrı kapsamlı yanıt, sahibi/MFA, ençok100 adayın özetli önizlemesi, 15dakika ve açık teyit. Giriş devamı/iptal/aile/anahtar/akademik kayıtlar korunur; fiziksel ve tam hesap imhası iddiası yok. `LOGIN-CLEANUP-CONTRACT.md` ve B28 JSON’u ayrıntıdır. Yeni canlı yayın yok.

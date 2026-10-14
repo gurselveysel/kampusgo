@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-14",
+  "package": 41,
+  "work_ids": [
+    "B28"
+  ],
+  "profile": "expired-completed-identity-requests/1",
+  "ui": "Veri talepleri / ayrı tamamlanmış giriş isteği yanıtı, önizleme ve kişi teyidi",
+  "production_enabled": false,
+  "new_tests": 8,
+  "automated": {
+    "server": 557,
+    "portal": 48,
+    "regression": 46,
+    "total": 651
+  },
+  "browser": {
+    "login_cleanup": 9,
+    "privacy": 11,
+    "identity": 15,
+    "appeals": 13,
+    "total": 48,
+    "viewport": 390
+  },
+  "scope": {
+    "commands": 113,
+    "http_routes": 16,
+    "positive_samples": 5229,
+    "derived_negative_checks": 41832
+  },
+  "protected_static_files": 115,
+  "inventory": {
+    "tables": 14,
+    "record_types": 122,
+    "subject_export_types": 60
+  },
+  "completed_slice": [
+    "exact owned used/expired identity request preview and bounded cleanup",
+    "separate scoped human response, owner MFA and explicit confirmation",
+    "atomic audit rollback, candidate digest/time/revision and duplicate guards",
+    "preserved identity/session/revocation/academic records and callback replay rejection"
+  ],
+  "limits": [
+    "Local SQLite only; genuine local HTTPS with synthetic request expiry injection",
+    "Not full account erasure, physical destruction or backup erasure",
+    "Distributed restore revocation checkpoints and unowned/failed request retention remain open",
+    "Official request/notice and institution purpose/basis/durations remain open"
+  ],
+  "live": {
+    "package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "new_deployment": null
+  }
+}

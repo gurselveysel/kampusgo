@@ -1,6 +1,7 @@
 import {randomUUID} from 'node:crypto';
 import {requireThat,hash,LocalAcceptanceStore} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
+import {privacyLoginCommand} from './privacy-login-cleanup.mjs';
 import {subjectSnapshot,subjectInventory} from './privacy-inventory.mjs';
 const text=(v,min=20,max=2000)=>typeof v==='string'&&v.trim().length>=min&&v.length<=max;
 const member=(a,u)=>a.memberships.some(m=>m.unit===u);
@@ -9,8 +10,9 @@ const get=(s,a,kind,id)=>{const r=s.get(a.tenant,kind,id);requireThat(r&&member(
 const lastResponse=(s,tenant,requestId)=>s.list(tenant,'privacy-response').filter(r=>r.requestId===requestId).at(-1);
 const kinds=['access','correction','deletion','restriction','account-exit'];
 const categories=['account','learning','sharing','support','all'];
-export function privacyReplay(a,action,r){if(!['privacy-request','privacy-response','privacy-acknowledge','privacy-withdraw-shares','privacy-cleanup'].includes(action))return false;requireThat(member(a,r.unit)&&(action==='privacy-response'?reviewer(a,r.unit)&&r.owner!==a.id:r.owner===a.id)&&(action!=='privacy-cleanup'||a.mfa),'forbidden','Bu veri talebinde işlem yetkiniz yok.',403);if(action==='privacy-cleanup')requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Temizleme yalnız izole yerel kabulde çalışır.',503);return true;}
+export function privacyReplay(a,action,r){if(!['privacy-request','privacy-response','privacy-acknowledge','privacy-withdraw-shares','privacy-cleanup','privacy-login-preview','privacy-login-cleanup'].includes(action))return false;requireThat(member(a,r.unit)&&(action==='privacy-response'?reviewer(a,r.unit)&&r.owner!==a.id:r.owner===a.id)&&(!['privacy-cleanup','privacy-login-preview','privacy-login-cleanup'].includes(action)||a.mfa),'forbidden','Bu veri talebinde işlem yetkiniz yok.',403);if(['privacy-cleanup','privacy-login-preview','privacy-login-cleanup'].includes(action))requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Temizleme yalnız izole yerel kabulde çalışır.',503);return true;}
 export function privacyCommand({action,p,a,s,put,id,now}){
+ const loginCleanup=privacyLoginCommand({action,p,a,s,put,id,now});if(loginCleanup)return loginCleanup;
  if(action==='privacy-request'){
   requireThat(member(a,p.unit),'forbidden','Bu birimde veri talebi açma yetkiniz yok.',403);
   requireThat(kinds.includes(p.type)&&categories.includes(p.category)&&text(p.description),'privacy_request','Birim, talep türü, kapsam ve açıklama gerekli.');
@@ -19,9 +21,9 @@ export function privacyCommand({action,p,a,s,put,id,now}){
  if(action==='privacy-response'){
   const r=get(s,a,'privacy-request',p.requestId);requireThat(reviewer(a,r.unit)&&r.owner!==a.id,'forbidden','Veri talebini ayrı ve yetkili bir kişi incelemeli.',403);
   const previous=lastResponse(s,a.tenant,r.id);requireThat((previous?.id||null)===(p.previousResponseId||null),'privacy_changed','Talebin yanıtı değişti; kaydı yenileyin.',409);
-  requireThat(['information','source-correction-required','retained-with-basis','local-session-cleanup','institution-action-required','rejected'].includes(p.outcome)&&text(p.response)&&text(p.basisReference,12)&&text(p.academicRetentionReference,12),'privacy_response','Yazılı yanıt, dayanak ve akademik saklama ayrımı gerekli.');
+  requireThat(['information','source-correction-required','retained-with-basis','local-session-cleanup','local-login-cleanup','institution-action-required','rejected'].includes(p.outcome)&&text(p.response)&&text(p.basisReference,12)&&text(p.academicRetentionReference,12),'privacy_response','Yazılı yanıt, dayanak ve akademik saklama ayrımı gerekli.');
   requireThat(/^\d{4}-\d{2}-\d{2}$/.test(p.reviewOn)&&Number.isFinite(Date.parse(p.reviewOn))&&new Date(p.reviewOn).toISOString().slice(0,10)===p.reviewOn&&p.reviewOn>=now.slice(0,10),'privacy_response','Geçerli sonraki inceleme tarihi gerekli.');
-  requireThat(p.outcome!=='local-session-cleanup'||['account','all'].includes(r.category),'privacy_scope','Oturum temizliği yalnız hesap kapsamı için hazırlanabilir.');
+  requireThat(!['local-session-cleanup','local-login-cleanup'].includes(p.outcome)||['account','all'].includes(r.category),'privacy_scope','Giriş ve oturum temizliği yalnız hesap kapsamı için hazırlanabilir.');
   return put('privacy-response',{id:id(),unit:r.unit,owner:r.owner,requestId:r.id,previousResponseId:previous?.id||null,outcome:p.outcome,response:p.response,basisReference:p.basisReference,academicRetentionReference:p.academicRetentionReference,reviewOn:p.reviewOn,notification:'available-in-local-portal',official:false});
  }
  if(action==='privacy-acknowledge'){
@@ -52,7 +54,7 @@ export function privacyCommand({action,p,a,s,put,id,now}){
  return null;
 }
 export function privacyView(s,a,now=new Date().toISOString()){
- const requests=s.list(a.tenant,'privacy-request').filter(r=>member(a,r.unit)&&(r.owner===a.id||reviewer(a,r.unit))).map(r=>({...r,responses:s.list(a.tenant,'privacy-response').filter(x=>x.requestId===r.id).map(x=>({...x,read:s.list(a.tenant,'privacy-read').find(v=>v.responseId===x.id)||null,cleanup:s.list(a.tenant,'privacy-cleanup').find(v=>v.responseId===x.id)||null})),canRespond:reviewer(a,r.unit)&&r.owner!==a.id}));
+ const requests=s.list(a.tenant,'privacy-request').filter(r=>member(a,r.unit)&&(r.owner===a.id||reviewer(a,r.unit))).map(r=>({...r,responses:s.list(a.tenant,'privacy-response').filter(x=>x.requestId===r.id).map(x=>({...x,read:s.list(a.tenant,'privacy-read').find(v=>v.responseId===x.id)||null,cleanup:s.list(a.tenant,'privacy-cleanup').find(v=>v.responseId===x.id)||null,loginPreviews:s.list(a.tenant,'privacy-login-preview').filter(v=>v.responseId===x.id).map(v=>({...v,result:s.list(a.tenant,'privacy-login-cleanup').find(z=>z.previewId===v.id)||null,withinWindow:Date.parse(now)-Date.parse(v.createdAt)>=0&&Date.parse(now)-Date.parse(v.createdAt)<=900000}))})),canRespond:reviewer(a,r.unit)&&r.owner!==a.id}));
  return {inventory:subjectInventory(s,a,now),requests,units:a.memberships.map(m=>m.unit),withdrawals:s.list(a.tenant,'privacy-withdrawal').filter(r=>r.owner===a.id&&member(a,r.unit))};
 }
 export function subjectExport(core,context){return core.store.transaction(()=>{
