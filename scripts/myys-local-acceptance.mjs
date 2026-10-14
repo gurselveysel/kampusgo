@@ -1,3 +1,4 @@
+import {localExternalCredential} from '../gazi/auth/tests/helpers/local-external-credential.mjs';
 import {localMaterialSetup} from '../gazi/auth/tests/helpers/local-material.mjs';
 import {localAuthorityDossier} from '../gazi/auth/tests/helpers/local-authority.mjs';
 import {seedLoginRequest} from '../gazi/auth/tests/helpers/local-login-cleanup.mjs';
@@ -34,6 +35,7 @@ if(supportClock!==null)f.core.clock=()=>new Date(supportClock).toISOString();
 const recoveryService=process.argv.includes('--recovery')?new LocalRecoveryService(f.core,{rehearse:runSyntheticRecoveryDrill}):null;
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
 const initial=process.argv.includes('--sem')?semSetup(f):process.argv.includes('--keys')?f.passed():process.argv.includes('--profiles')||process.argv.includes('--authority')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--replacement')||process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')||process.argv.includes('--capacity')||process.argv.includes('--portfolios')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')||process.argv.includes('--skill-maps')||process.argv.includes('--advice')||process.argv.includes('--wallet-study')?f.passed():f.setup();
+const externalFixture=process.argv.includes('--external-credentials')?await localExternalCredential(f,{initial,prepared:false}):null;
 const sourceFixture=process.argv.includes('--source-packets')||process.argv.includes('--source-trust')?await sourcePacketFixture(f,{initial,registered:!process.argv.includes('--source-trust')}):null;
 if(process.argv.includes('--appeal-policies'))f.assess(initial);
 if(process.argv.includes('--profiles')||process.argv.includes('--authority')){const reason='Sentetik düzenleme yetki kaydı, gerçek kurum kararı değildir.';const authority=f.run('admin','registry-draft',{unit:initial.p.unit,type:'institution-authority',title:'Sentetik düzenleme yetkisi',fields:{...initial.p.responsibilities,pathway:initial.p.pathway,authorityReference:reason}});f.run('authority','registry-review',{recordId:authority.id,outcome:'accepted',reason});if(!process.argv.includes('--authority'))localAuthorityDossier(f,initial.p,authority);}
@@ -104,7 +106,7 @@ const server=createServer(async(req,res)=>{
    const actor=(req.headers.cookie||'').match(/(?:^|; )myys_acceptance_actor=([a-z]+)(?:;|$)/)?.[1];
    if(url.pathname==='/api/myys/paylasim')return await myysRoute({req,path:url.pathname,b,sessionHash:null,json,res,core:f.core});
    if(!actor||!Object.hasOwn(roles,actor))return json(res,401,{error:'Yerel test senaryosunu seçin.'});
-   return await myysRoute({req,path:url.pathname,b,sessionHash:hash(actor),json,res,core:f.core,signer:localSigner,sourceAdapter:sourceFixture?.adapter,recoveryService});
+   return await myysRoute({req,path:url.pathname,b,sessionHash:hash(actor),json,res,core:f.core,signer:localSigner,sourceAdapter:sourceFixture?.adapter,recoveryService,recognitionVerifier:externalFixture?.verifier});
   }
   if(!['GET','HEAD'].includes(req.method))return json(res,405,{error:'Yöntem desteklenmiyor.'});
   const path=resolve(root,'.'+decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname));

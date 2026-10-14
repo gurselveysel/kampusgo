@@ -1,3 +1,17 @@
+# Güncel devam — Paket49 yerel kabul; kaynak eşitlemesi sırada
+
+B21 Dış belge düzenleyicileri + Belge imzasını denetle:743otomatik47tarayıcı;136komut18HTTP8145örnek65160denetim;115statik16tablo148tür. EXTERNAL-CREDENTIAL-CONTRACT ve B21-external JSON ayrıntıdır. İmza/kişi doğrulaması insan teknik raporuna henüz zorunlu bağlanmaz; durum/akademik kabul üretmez.
+
+Önce diff/commit ve expected-head `139766d090c5c4b2b412b82aad666f416ffa7cbd`,base-tree `2714a4f10d0cfb5e02a741fb29920dcc2e9e3fe8` ile tam ağaç eşitle. Son canlı16;17–49 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok.
+
+Sırada B21 makbuz-insan teknik raporu ve durum inceleme dayanağı bağı; güven kapanışının yeni karar/OBS kullanımına etkisi ve bağımsız yeniden inceleme. Eski manuel rapor geçmişini otomatik imzalı sayma; kredi/kararları silme veya kendiliğinden geri alma. Gerçek issuer/status/kurum kabulü ayrı açık;B07 repository/KMS,B28checkpoint ve tüm diğer bağımsızlar sürer.
+
+# Güncel devam — Paket48 kaynakta; B21 kriptografik doğrulama sürüyor
+
+Paket48 kaynak doğrulaması: yerel `779d434a4c81ff449bd53e277c5c9709de08cbe9`, uzak `139766d090c5c4b2b412b82aad666f416ffa7cbd`, ortak tam ağaç `2714a4f10d0cfb5e02a741fb29920dcc2e9e3fe8`.21blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+731otomatik45tarayıcı;133komut17HTTP7843örnek62744denetim;115statik16tablo144tür. Dış belge arşivi bağlı, imza doğrulaması henüz yok. Dış belgeye özel issuer/key/subject güven sözleşmesi ve JOSE adaptörünü incele. RFC8725 §3.4–3.12 tam okundu; header URL/JWK güven kaynağı değil. Gerçek kurumsal credential/production migration yok;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör. B07/B28 ve tüm bağımsızlar sürer.
+
 # Güncel devam — Paket48 yerel kabul; kaynak eşitlemesi sırada
 
 Tanıma ve kredi → Belge teslimi:731 otomatik/45tarayıcı;133komut17HTTP7843örnek62744denetim;115statik16tablo144tür. Gerçek32KiBJWT baytları/aynı talepSHA/güncel yetkili indirme/atomik audit; imza doğrulanmış sayılmaz. RECOGNITION-DOCUMENT-CONTRACT ve B21-documentJSON ayrıntıdır.

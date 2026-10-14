@@ -19,6 +19,8 @@ export function recognitionDocumentFileResult(s,a,receipt){
  local(s);const d=s.get(a.tenant,'recognition-document',receipt.documentId);requireThat(d&&reader(a,d)&&receipt.owner===a.id&&receipt.requestId===d.requestId&&receipt.sha256===d.sha256,'not_found','Belge bulunamadı veya erişilemiyor.',404);
  const f=storedFile(s,a,d);return {...receipt,file:{name:'MYYS_dis-belge_'+d.id+'.jwt',base64:f.base64,bytes:d.bytes,sha256:d.sha256,mediaType:'application/octet-stream'}};
 }
+// Internal adapter access; never exposed as an unaudited HTTP download.
+export function readRecognitionDocument(s,a,id){local(s);const d=s.get(a.tenant,'recognition-document',id);requireThat(d&&reader(a,d),'not_found','Belge bulunamadı veya erişilemiyor.',404);return {document:d,request:request(s,a,d.requestId),base64:storedFile(s,a,d).base64};}
 export function recognitionDocumentCommand({action,p,a,s,put,id}){
  if(!actions.includes(action))return null;local(s);
  if(action==='recognition-document-download'){

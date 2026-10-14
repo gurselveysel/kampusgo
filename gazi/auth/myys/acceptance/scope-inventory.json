@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.48",
+  "version": "2026.10.14.49",
   "commands": [
     "advice-compare",
     "advice-contest",
@@ -88,6 +88,9 @@
     "recognition-decide",
     "recognition-document",
     "recognition-document-download",
+    "recognition-issuer",
+    "recognition-issuer-review",
+    "recognition-issuer-state",
     "recognition-offer",
     "recognition-offer-appeal",
     "recognition-offer-decide",
@@ -138,6 +141,7 @@
   "httpRoutes": [
     "calisma",
     "cuzdan-indir",
+    "dis-belge-dogrula",
     "dogrula",
     "dogrulama-paketi",
     "durum-yayinla",

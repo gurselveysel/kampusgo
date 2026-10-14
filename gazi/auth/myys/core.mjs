@@ -1,3 +1,4 @@
+import {recognitionIssuerCommand,recognitionIssuerReplay} from './recognition-issuer.mjs';
 import {recognitionDocumentCommand,recognitionDocumentReplay,recognitionDocumentFileResult} from './recognition-document.mjs';
 import {recognitionBasisCommand,recognitionBasisReplay} from './recognition-basis.mjs';
 import {materialCommand,materialReplay,materialView,materialFileResult,bindMaterial,materialSnapshotValid} from './material.mjs';
@@ -98,6 +99,7 @@ export class MyysCore {
   });
  }
  authorizeReplay(a,action,r){
+  if(recognitionIssuerReplay(a,action,r))return;
   if(recognitionDocumentReplay(a,action,r))return;
   if(materialReplay(a,action,r))return;
   if(authorityReplay(a,action,r))return;
@@ -131,6 +133,7 @@ export class MyysCore {
  }
  execute(a,action,p,now){
   const s=this.store,get=(kind,id)=>fetchRecord(s,a,kind,id),put=(kind,r)=>s.put(a.tenant,kind,{...r,createdAt:now,createdBy:a.id}),id=()=>randomUUID();
+  const issuer=recognitionIssuerCommand({action,p,a,s,put,id,now});if(issuer)return issuer;
   const document=recognitionDocumentCommand({action,p,a,s,put,id,now});if(document)return document;
   const material=materialCommand({action,p,a,s,put,id,now});if(material)return material;
   const authority=authorityCommand({action,p,a,s,put,id,now});if(authority)return authority;

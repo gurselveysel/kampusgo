@@ -1,5 +1,5 @@
 // Local data inventory and positive export schema. This is not a legal retention policy.
-export const inventoryVersion='2026.10.14.48';
+export const inventoryVersion='2026.10.14.49';
 export const privacyCategories={
   "learning": {
     "label": "Öğrenme ve değerlendirme",
@@ -66,6 +66,7 @@ export const recordGroups={
     "skill-map-issue"
   ],
   "credentials": [
+    "recognition-verification",
     "recognition-document",
     "recognition-document-file",
     "recognition-document-download",
@@ -129,6 +130,9 @@ export const recordGroups={
     "membership-review"
   ],
   "governance": [
+    "recognition-issuer",
+    "recognition-issuer-review",
+    "recognition-issuer-state",
     "advice-protocol",
     "advice-protocol-hold",
     "advice-protocol-review",
@@ -205,6 +209,7 @@ export const recordGroups={
   ]
 };
 export const subjectFields={
+  "recognition-verification": ["id","unit","requestId","documentId","profile","signatureValid","subjectMatched","statusChecked","academicAccepted","validFrom","validUntil","signatureIssuedAt","signatureExpiresAt","createdAt","official"],
   "recognition-document": ["id","unit","requestId","fileName","bytes","format","authenticityVerified","subjectVerified","malwareScanned","official","createdAt"],
   "recognition-document-download": ["id","unit","documentId","requestId","official","createdAt"],
  "recognition-offer":['id','unit','enrollmentId','policyId','targetProgramCode','title','reason','rows','createdAt','official'],

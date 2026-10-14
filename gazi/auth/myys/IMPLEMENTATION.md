@@ -295,3 +295,7 @@ Ayrıntı RECOGNITION-BASIS-CONTRACT.md ve B20-basis kabul JSON.36 özgün iş/k
 ## Paket48 — B21 gerçek belge teslimi
 
 Paket48: gerçek 32 KiB JWT baytları aynı talep/kişi/kurum/birim ve sunucu SHA ile değişmez özel arşive teslim edilir; güncel yetkili indirme ve audit/idempotency atomiktir. İnceleme sonrası değiştirme kapalı; ham dosya çalışma ekranı/kişi özeti/commands sonucuna girmez. İmza/düzenleyici/subject doğrulaması yapılmadı, teslim kredi üretmez. 11 yeni sunucu,11 teslim+34 mevcut tanıma/OBS tarayıcı kontrolü geçti; toplam731 otomatik. 16 teknik tablo144 kayıt türü. Sözleşme `RECOGNITION-DOCUMENT-CONTRACT.md`. Kriptografik doğrulama ve kurumsal/üretim kabulü sıradadır.
+
+## Paket49 — B21 dış belge doğrulayıcısı
+
+Paket49: dış belgeye özel sunucu issuer/anahtar/kişi eşleme sözleşmesi, IT hazırlığı/ayrı yönetici incelemesi, sürüm/süre/anahtar kapanışı; arşiv baytlarından gerçek JOSE RS256, typ/issuer/audience/subject/id/süre denetimi ve asenkron işlem sonrası atomik yeniden yetkilendirme. Makbuz yalnız imza/kişi eşlemesidir; durum/insan teknik kabulü ve kredi üretmez. Mevcut insan raporuna ve karar/OBS güven zincirine zorunlu bağ sonraki bağımsız dilimdir. Sözleşme `EXTERNAL-CREDENTIAL-CONTRACT.md`;743otomatik/47tarayıcı;16tablo148tür.

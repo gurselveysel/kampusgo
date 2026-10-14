@@ -1,0 +1,88 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 49,
+  "work_id": "B21",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "server_tests": 649,
+  "new_server_tests": 12,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 743,
+  "browser_checks": {
+    "external-credential": 13,
+    "recognition-document": 11,
+    "recognition": 12,
+    "obs": 11
+  },
+  "browser_total": 47,
+  "external_browser_checks": [
+    "Teslim edilmiş belge güven kaynağı incelenmeden imza denetimini açmadı",
+    "Bilgi işlem kaynak ve kişi eşleme dayanağını hazırladı; kendi incelemesini yapamadı",
+    "Ayrı yönetici üç kapsam teyidiyle kaynak incelemesini kaydetti",
+    "Gerçek RSA imza denetimi teslim arşivinden yapıldı; insan raporu ayrı kaldı",
+    "İmza ve kişi eşlemesi tek başına kredi üretmedi",
+    "Akademik rol doğrulama makbuzunu gördü; teknik kabul olmadan tam tanıma açılmadı",
+    "Öğrenci kendi imza makbuzunu sayfa yenilemesinden sonra gördü",
+    "390 px imza makbuzu taşmadan okunuyor; görünüm seçimi klavye odağı alıyor",
+    "Öğrenci idari güven dosyasını veya kişi eşleme listesini görmedi",
+    "Bilgi işlem anahtar riskini gerekçeli ve geri alınamaz güven kapanışı olarak kaydetti",
+    "Anahtar kapanışı eski açık doğrulama yolunu ve makbuzun güncel kullanımını kapattı",
+    "Başka öğrenci belge veya imza makbuzunu göremedi",
+    "İstemci istisnası yok"
+  ],
+  "command_count": 136,
+  "http_routes": 18,
+  "positive_samples": 8145,
+  "derived_scope_checks": 65160,
+  "static_files": 115,
+  "technical_tables": 16,
+  "record_kinds": 148,
+  "local_slice_closed": [
+    "independently reviewed dedicated issuer/key/subject descriptor",
+    "actual JOSE RS256 verification of archived bytes",
+    "scope, identity, purpose, type and time validation",
+    "post-async current-authorization/trust/file/expiry transaction barrier",
+    "atomic proof/audit, duplicate prevention, current-state UI",
+    "no automatic technical acceptance, status claim or credit"
+  ],
+  "open": [
+    "binding verification receipt to selected human technical review and status evidence",
+    "downstream decision/OBS trust closure and re-review lifecycle",
+    "actual institutional issuer/key/person/prior-course acceptance",
+    "general VC/OB/JSON-LD/status/schema and external interoperability",
+    "production storage/scan/retention and live authenticated verification"
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "139766d090c5c4b2b412b82aad666f416ffa7cbd",
+  "source_parent_tree": "2714a4f10d0cfb5e02a741fb29920dcc2e9e3fe8",
+  "contract": "EXTERNAL-CREDENTIAL-CONTRACT.md",
+  "sources": [
+    {
+      "authority": "IETF",
+      "document": "RFC8725 / BCP225",
+      "version": "2020-02",
+      "url": "https://www.rfc-editor.org/rfc/rfc8725.html",
+      "read_sections": [
+        "3.1-3.12"
+      ],
+      "accessed": "2026-10-14"
+    },
+    {
+      "authority": "W3C",
+      "document": "Securing Verifiable Credentials using JOSE and COSE",
+      "version": "Recommendation 2026-10-13",
+      "url": "https://www.w3.org/TR/2026/REC-vc-jose-cose-20261013/",
+      "read_sections": [
+        "1.1.2.1",
+        "3.1.1",
+        "3.1.3",
+        "5.1",
+        "5.4"
+      ],
+      "accessed": "2026-10-14",
+      "conformance_claimed": false
+    }
+  ]
+}

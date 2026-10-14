@@ -24,7 +24,7 @@
 | B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B20 · Tanıma politika setini onayla | kısmi | kısmi · tanıma dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B21 · Dış belge ve tanıma akışını bağla | kısmi; gerçek bayt teslim/arşiv bağlı | 11 yeni sunucu, 11 teslim +34 tanıma/OBS tarayıcı | Paket48 canlı değil | gerçek teslim/usul/önceki ders/kurul kabulü açık | issuer/anahtar/subject doğrulama ve üretim arşiv/tarama/saklama açık |
+| B21 · Dış belge ve tanıma akışını bağla | kısmi; arşiv + sınırlı imza/güven adaptörü bağlı | 12 yeni sunucu, 47 tarayıcı; insan raporu/karar bağı açık | Paket49 canlı değil | gerçek teslim/usul/önceki ders/kurul kabulü açık | gerçek issuer/kişi, genel VC/status/schema ve üretim arşiv kabulü açık |
 | B22 · OBS aktarımını kontrollü kabul et | kısmi | kısmi · outbox dilimi geçti | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B24 · Erişilebilirlik açılış testini yap | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
@@ -309,3 +309,7 @@ Ayrıntı RECOGNITION-BASIS-CONTRACT.md ve B20-basis kabul JSON.36 özgün iş/k
 ## Paket48 — B21 belge teslimi
 
 Paket48: gerçek 32 KiB JWT baytları aynı talep/kişi/kurum/birim ve sunucu SHA ile değişmez özel arşive teslim edilir; güncel yetkili indirme ve audit/idempotency atomiktir. İnceleme sonrası değiştirme kapalı; ham dosya çalışma ekranı/kişi özeti/commands sonucuna girmez. İmza/düzenleyici/subject doğrulaması yapılmadı, teslim kredi üretmez. 731 otomatik/45 tarayıcı;133 komut/17 HTTP;7843 pozitif örnek/62744 türetilmiş kapsam denetimi. Ayrıntı `acceptance/B21-document-20261014.json`. Son canlı16;17–48 dağıtılmadı. B21 tam kabulü açık.
+
+## Paket49 — B21 dış belge imzası
+
+Paket49: dış belgeye özel sunucu issuer/anahtar/kişi eşleme sözleşmesi, IT hazırlığı/ayrı yönetici incelemesi, sürüm/süre/anahtar kapanışı; arşiv baytlarından gerçek JOSE RS256, typ/issuer/audience/subject/id/süre denetimi ve asenkron işlem sonrası atomik yeniden yetkilendirme. Makbuz yalnız imza/kişi eşlemesidir; durum/insan teknik kabulü ve kredi üretmez. Mevcut insan raporuna ve karar/OBS güven zincirine zorunlu bağ sonraki bağımsız dilimdir. 743 otomatik/47 tarayıcı;136komut/18HTTP8145örnek65160denetim. Ayrıntı `acceptance/B21-external-20261014.json`. B21 ve bütün36 işin tam kabulü açık; son canlı16,17–49 dağıtılmadı.
