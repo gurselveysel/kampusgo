@@ -17,7 +17,7 @@ export class PostgresIdentityHttpSecurity {
   requireThat(transactions instanceof PostgresIdentityTransactions&&atom(tenant)&&typeof audience==='string'&&audience.length>0&&audience.length<=512&&!/[\x00-\x1f]/.test(audience)&&app?.protocol==='https:'&&app.origin===origin&&idp?.protocol==='https:'&&!idp.username&&!idp.password&&!idp.search&&!idp.hash&&hex(contractDigest)&&Buffer.isBuffer(key)&&key.length===32&&Number.isSafeInteger(keyRevision)&&keyRevision>=1&&typeof clock==='function','identity_http_config','SQL giriş güvenliği yapılandırması geçersiz.',500);
   requireThat(limits&&Object.keys(limits).length===4&&['global','network','browser','seconds'].every(k=>Number.isSafeInteger(limits[k])&&limits[k]>=1&&limits[k]<=3600)&&Number.isSafeInteger(requestLifetimeSeconds)&&requestLifetimeSeconds>=1&&requestLifetimeSeconds<=60,'identity_http_config','Giriş sınırları geçersiz.',500);
   this.#transactions=transactions;this.#scope=Object.freeze({tenant,issuer,audience});this.#origin=origin;this.#contract=contractDigest;this.#key=Buffer.from(key);this.#revision=keyRevision;this.#clock=clock;this.#limits=Object.freeze({...limits});this.#lifetime=requestLifetimeSeconds*1000;
-  this.#fingerprint=this.#mac(['myys-sql-http-key-check/1']);this.#policy=hash(stableStringify({limits:this.#limits,requestLifetimeSeconds,...(allowAcademic?{academicProfile:'same-sql-academic/1'}:{})}));
+  this.#fingerprint=this.#mac(['myys-sql-http-key-check/1']);this.#policy=hash(stableStringify({limits:this.#limits,requestLifetimeSeconds,...(allowAcademic?{academicProfile:'same-sql-academic/2'}:{})}));
  }
  #mac(value){return createHmac('sha256',this.#key).update(JSON.stringify(value)).digest('hex');}
  #now(){const date=this.#clock(),n=date instanceof Date?date.getTime():NaN;if(!Number.isSafeInteger(n)||n<0)throw failure('identity_clock');return n;}
@@ -35,7 +35,7 @@ export class PostgresIdentityHttpSecurity {
    const fields=[...this.#values(),this.#revision,this.#fingerprint,this.#policy,this.#origin,this.#contract,now];
    if(old)await tx.query('UPDATE myys_identity_http_epochs SET revision=$4,key_digest=$5,policy_digest=$6,origin=$7,contract_digest=$8,activated=$9 WHERE tenant=$1 AND issuer=$2 AND audience=$3',fields);
    else await tx.query('INSERT INTO myys_identity_http_epochs (tenant,issuer,audience,revision,key_digest,policy_digest,origin,contract_digest,activated) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)',fields);
-   const id=randomUUID();await tx.query('INSERT INTO myys_identity_http_history (id,tenant,issuer,audience,revision,key_digest,policy_digest,origin,contract_digest,activated,limits,operator_ref,authority_digest) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12,$13)',[id,...fields,JSON.stringify({...this.#limits,requestLifetimeSeconds:this.#lifetime/1000,...(this.#academic?{academicProfile:'same-sql-academic/1'}:{})}),operatorRef,authorityDigest]);
+   const id=randomUUID();await tx.query('INSERT INTO myys_identity_http_history (id,tenant,issuer,audience,revision,key_digest,policy_digest,origin,contract_digest,activated,limits,operator_ref,authority_digest) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12,$13)',[id,...fields,JSON.stringify({...this.#limits,requestLifetimeSeconds:this.#lifetime/1000,...(this.#academic?{academicProfile:'same-sql-academic/2'}:{})}),operatorRef,authorityDigest]);
    if(this.#now()<now)throw failure('identity_clock');return Object.freeze({id,revision:this.#revision});
   },{retrySafe:true});
  }

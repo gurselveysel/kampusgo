@@ -1,3 +1,21 @@
+# Güncel devam — Paket73 yerel kabul tamam; kaynak eşitlemesi sırada
+
+Paket73:9yeni SQL+4yeni HTTPS testi;912sunucu+59portal+46regresyon=1017.51SQL+9mevcut program paketi=60tarayıcı.136komut/18HTTP için9035pozitif72280türetilmiş negatif SQLite kapsam örneği;115statik paket.
+
+Paket73: program bilgi paketi aynı SQL kişi/program/yayın/profil/yetki zincirinden imzasız indirilir. Güncel kaynak, kişi/üyelik/CSRF, işlem ve checkpoint kapıları korunur; özel ek baytları ve görevli listesi dışarı çıkmaz. Ayrı oturum dosyayı durdurunca eski ekrandaki indirme reddedilir. Uzun program durumu320CSSpx/metin aralığında kesilmez.
+
+Kaynak ebeveyni yerelc3e0eef74c06e004251e6db7c7a4c256d346f4e9/uzake23103f4f3b60b2e119057ce5af10a35a4b8436f/tamağaç1fa5c2c1507eae3b30a8ad8267681a71fa52b24c.73kaynakcommit henüz yok. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;17–73dağıtılmadı. configuredCorekapalı; browserAuthiptaliniyenileme;tekeditör.
+
+Sonraki74: B12 imzasız belge hazırlığı aynıSQL. core.issue mevcutprogram/karar bağımsızlığı, karar kullanılabilirliği, tekilenrollment ve issuanceProfile kontrolü; issuanceProfile hâlâ yalnızLocalAcceptanceStore guard. Salt hazırlık kaydı gerçek imzalı belge değildir; canSign/gerçeksign kapalı kalmalı. Önce core/key-registry/credential-profile/lifecycle/UI ve testlerin tüm bağlarını oku. Henüz74kod yok.112komut aktarımı açık; B01–B36 tümü bitmedi.
+
+73günlükleri /tmp/gazi-package73-{scope,new-final,browser-wrapped,old-final,portal-after,regression,build,package}.log. İlkHTTPtesthataları ve kesilenrozet ilkkoşusu kabul sayılmadı; son51SQL/9eskitarayıcıyla kapandı.
+
+# Paket73 başlangıcı — aynı SQL program bilgi paketi
+
+Paket72 kaynak eşitliği doğrulandı: yerel c3e0eef74c06e004251e6db7c7a4c256d346f4e9 / uzak e23103f4f3b60b2e119057ce5af10a35a4b8436f / tam ağaç 1fa5c2c1507eae3b30a8ad8267681a71fa52b24c.22blob SHA,127parça,2061810bayt; expected-head/force=false ve uzak commit/ref doğrulandı; temiz çalışma ağacı. Son canlı16 değişmedi.
+
+73 planı: program-package mevcut işkuralını aktif özel SQL çalışma kümesiyle yeniden kullan; POST program-paketi aynı academic-write permit/CSRF/kurum ve güncel SQL oturumu üzerinden; dışarı yalnız mevcut süzülmüş imzasız payload; kapasite ve birleşik checkpoint korunur. İlk SQL/HTTP/tarayıcı kabulü, eski SQLite paket akışı ve iki ayrı Chromium durdurma yarışı.112komut sayısı değişmez; ayrı okuma endpointi eklenir. Henüz73kabul yok.
+
 # Güncel devam — Paket72 yerel kabul tamam; kaynak eşitlemesi sırada
 
 Paket72:15yeni SQL testi;899sunucu+59portal+46regresyon=1004.44SQL+14mevcut yetki dosyası=58tarayıcı.136komut/18HTTP kapsamında9035pozitif72280türetilmiş negatif örnek;115statik paket.

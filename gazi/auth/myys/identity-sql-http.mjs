@@ -42,7 +42,7 @@ export class LocalPostgresIdentityHttp {
  #mutation(req,token){requireThat(token&&req.headers.origin===this.#origin&&(!req.headers['sec-fetch-site']||req.headers['sec-fetch-site']==='same-origin'),'identity_origin','Giriş kaynağı doğrulanamadı.',403);}
  async #principal(token,permit,purpose){if(!token)return null;try{return await this.#flow.principal({sessionHash:hash(token),permit,purpose});}catch(e){if(e instanceof CoreError&&['identity_required','identity_member','membership_required'].includes(e.code))return null;throw e;}}
  async handle(req,res){
-  const rawPath=typeof req.url==='string'?req.url.split('?')[0]:'',purpose=Object.keys(identityPaths).find(k=>identityPaths[k]===rawPath)||(this.#academic?({'/api/myys/calisma':'academic-read','/api/myys/islem':'academic-write'}[rawPath]):null);if(!purpose)return false;let permit;
+  const rawPath=typeof req.url==='string'?req.url.split('?')[0]:'',purpose=Object.keys(identityPaths).find(k=>identityPaths[k]===rawPath)||(this.#academic?({'/api/myys/calisma':'academic-read','/api/myys/islem':'academic-write','/api/myys/program-paketi':'academic-write'}[rawPath]):null);if(!purpose)return false;let permit;
   try{
    this.#check(req);const url=new URL(req.url,this.#origin);requireThat(url.pathname===rawPath,'identity_url','Giriş yolu geçersiz.',400);
    let token=purpose==='backchannel'?null:cookie(req);permit=await this.#security.check({purpose,network:req.socket.remoteAddress,browserHash:token?hash(token):null});
@@ -56,9 +56,10 @@ export class LocalPostgresIdentityHttp {
      const csrf=await this.#security.csrf(permit,token);result.identitySession={scope:'isolated-sql-acceptance',tenant:this.#config.tenant,personId:result.personId,expires:result.sessionExpires,csrf};
     }else{
      requireThat(!url.search,'academic_body','Akademik işlem yolu geçersiz.',400);this.#mutation(req,token);const b=await jsonBody(req);
-     requireThat(Object.keys(b).every(k=>['tenant','commandId','action','input'].includes(k))&&b.tenant===this.#config.tenant,'academic_scope','Akademik kurum kapsamı geçersiz.',400);
+     const programExport=rawPath==='/api/myys/program-paketi',fields=programExport?['tenant','programId']:['tenant','commandId','action','input'];
+     requireThat(Object.keys(b).every(k=>fields.includes(k))&&b.tenant===this.#config.tenant,'academic_scope','Akademik kurum kapsamı geçersiz.',400);
      await this.#security.verifyCsrf(permit,token,req.headers['x-myys-csrf']);
-     result=await this.#academic.run({sessionHash,permit,...b});
+     result=programExport?await this.#academic.programPackage({sessionHash,permit,...b}):await this.#academic.run({sessionHash,permit,...b});
     }
     json(res,200,result);return true;
    }

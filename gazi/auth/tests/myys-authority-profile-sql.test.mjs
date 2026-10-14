@@ -79,7 +79,7 @@ test('B02 a previously cached private download rechecks actual SQL file integrit
  await f.sql.db.exec('ALTER TABLE myys_academic_records DISABLE TRIGGER USER');await f.sql.db.query("UPDATE myys_academic_records SET data=jsonb_set(data,'{base64}',$1::jsonb) WHERE kind='authority-file' AND id=$2",[JSON.stringify(Buffer.from('changed synthetic bytes').toString('base64')),input.attachmentId]);await f.sql.db.exec('ALTER TABLE myys_academic_records ENABLE TRIGGER USER');
  await assert.rejects(f.run('admin','authority-download',input,id),err('authority_file_changed'));await assert.rejects(sqlCredentialProfile(f,x),err('authority_required'));
 });
-test('B12 reviewed authority and profile do not expose unsupported SQL issuance, signing or package export',async t=>{
+test('B12 reviewed authority and profile do not expose unsupported SQL issuance/signing or grant an issuer academic package export',async t=>{
  const f=await sqlAcademic(t),passed=await f.passed(),x=await sqlAuthority(f,{program:passed.p});await sqlCredentialProfile(f,x);const v=await f.view('issuer');assert.equal(v.decisions.find(d=>d.id===passed.d.id).canIssue,false);assert(v.programs.every(p=>!p.packageStatus?.canDownload));assert(!v.supportedTabs.includes('issuances'));await assert.rejects(f.run('issuer','issue',{decisionId:passed.d.id}),err('academic_action'));
 });
 test('B28 combined checkpoint rejects an old SQL backup that would erase an authority hold and restore profile usability',async t=>{

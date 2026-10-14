@@ -111,3 +111,7 @@ Sicil taslağı ve ayrı yönetici incelemesi bağımsız geliştirildi; yeni er
 ### Paket72 durum notu
 
 Yetki eki/dosyası ve profil aynı SQL zincirinde yerel olarak doğrulandı. Gerçek Senato/SEM dayanakları, görev/süre, belge deposu/tarama/e-imza ve üretim kabulü mevcut tek eylem listesinde açık. Yeni credential/migration/gerçek belge işlemi yok. Son canlı16; browserAuth iptali yenilenmedi.112SQLkomut ve B03 aynı SQL program paketi bağımsız olarak sürer.
+
+### Paket73 durum notu
+
+Program paketi aynı SQL yerel kaynaklardan indirildi; gerçek kurum yayını, program/lisans/yetki onayı ve dış aktarım yetkisi yaratmaz. HTTPprofil2 için gerçek kalıcı epoch geçişi mevcut ayrı yetkili rotasyon koşullarına bağlıdır; otomatik anahtar/erişim oluşturulmadı. configuredCorekapalı, son canlı16, browserAuthiptali yenilenmedi. Mevcut tek eylem listesi korunur; bağımsız112komut geliştirmesi sürer.

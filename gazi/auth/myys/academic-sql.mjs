@@ -1,3 +1,4 @@
+import {programPackageForPrincipal} from './program-package.mjs';
 import {authorityView,authorityFileResult} from './authority.mjs';
 import {profileView} from './credential-profile.mjs';
 // Isolated SQL academic unit of work. No connection, DDL, seed, production route or second persistent store.
@@ -54,9 +55,16 @@ export class LocalPostgresAcademicCore {
    }finally{set.close();}
   });
  }
+ async programPackage({sessionHash,tenant,programId,permit}){
+  local();requireThat(field(tenant,80)&&field(programId),'command','Kurum ve program sürümü gerekli.');
+  return this.#identity.withPrincipal({sessionHash,permit,purpose:'academic-write'},async(tx,actor)=>{
+   requireThat(actor.tenant===tenant,'not_found','Bu kurum kaydına erişilemiyor.',404);const set=await this.#snapshot(tx,actor);
+   try{return programPackageForPrincipal(set.store,actor,programId,this.#now());}finally{set.close();}
+  });
+ }
  async view({sessionHash,tenant,permit}){
   local();requireThat(field(tenant,80),'command','Kurum kapsamı gerekli.');return this.#identity.withPrincipal({sessionHash,permit,purpose:'academic-read'},async(tx,actor)=>{
-   requireThat(actor.tenant===tenant,'not_found','Bu kurum kaydına erişilemiyor.',404);const set=await this.#snapshot(tx,actor);try{const now=this.#now(),core=new MyysCore(set.store,{clock:()=>now}),view=core.academicView(actor),adminUnits=new Set(actor.mfa?actor.memberships.filter(m=>m.roles.includes('admin')).map(m=>m.unit):[]),registry=set.list(actor.tenant,'registry').filter(r=>adminUnits.has(r.unit)),registryIds=new Set(registry.map(r=>r.id));return {...view,programs:view.programs.map(p=>({...p,packageStatus:p.packageStatus?{...p.packageStatus,canDownload:false}:p.packageStatus})),authority:authorityView(set.store,actor,now),credentialProfiles:profileView(set.store,actor,now),registry,registryReviews:set.list(actor.tenant,'registry-review').filter(r=>registryIds.has(r.recordId)&&adminUnits.has(r.unit)),mode:'isolated-sql-acceptance',official:false,personId:actor.id,sessionExpires:actor.expires,memberships:copy(actor.memberships),supportedActions:[...academicSqlActions],appealPolicies:appealPolicyView(set.store,actor),decisions:view.decisions.map(d=>({...d,canIssue:false})),supportedTabs:[...(actor.memberships.some(m=>m.roles.some(r=>['admin','commission','studentAffairs'].includes(r)))?['credentialProfiles']:[]),...(adminUnits.size?['registry']:[]),...(actor.memberships.some(m=>m.roles.some(r=>['admin','commission','quality'].includes(r)))?['appealPolicies']:[]),'programs','enrollments','evidence','assessments','decisions','appeals'],scope:'same-sql-identity-academic-transaction'};}finally{set.close();}
+   requireThat(actor.tenant===tenant,'not_found','Bu kurum kaydına erişilemiyor.',404);const set=await this.#snapshot(tx,actor);try{const now=this.#now(),core=new MyysCore(set.store,{clock:()=>now}),view=core.academicView(actor),adminUnits=new Set(actor.mfa?actor.memberships.filter(m=>m.roles.includes('admin')).map(m=>m.unit):[]),registry=set.list(actor.tenant,'registry').filter(r=>adminUnits.has(r.unit)),registryIds=new Set(registry.map(r=>r.id));return {...view,authority:authorityView(set.store,actor,now),credentialProfiles:profileView(set.store,actor,now),registry,registryReviews:set.list(actor.tenant,'registry-review').filter(r=>registryIds.has(r.recordId)&&adminUnits.has(r.unit)),mode:'isolated-sql-acceptance',official:false,personId:actor.id,sessionExpires:actor.expires,memberships:copy(actor.memberships),supportedActions:[...academicSqlActions],appealPolicies:appealPolicyView(set.store,actor),decisions:view.decisions.map(d=>({...d,canIssue:false})),supportedTabs:[...(actor.memberships.some(m=>m.roles.some(r=>['admin','commission','studentAffairs'].includes(r)))?['credentialProfiles']:[]),...(adminUnits.size?['registry']:[]),...(actor.memberships.some(m=>m.roles.some(r=>['admin','commission','quality'].includes(r)))?['appealPolicies']:[]),'programs','enrollments','evidence','assessments','decisions','appeals'],scope:'same-sql-identity-academic-transaction'};}finally{set.close();}
   });
  }
 }

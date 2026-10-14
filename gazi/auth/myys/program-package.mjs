@@ -1,3 +1,4 @@
+import {isLocalSqlAcademicStore} from './academic-sql-store.mjs';
 import {LocalAcceptanceStore,requireThat,hash} from './store.mjs';
 import {programBaseline,stableStringify} from './program-model.mjs';
 import {programProfileBinding} from './credential-profile.mjs';
@@ -22,10 +23,9 @@ export function programPackageSummary(s,a,p,now){
  const ready=p.pathway==='micro'&&checks.every(c=>c.ready);
  return {state:p.pathway==='sem-central'?'central-path':ready?'local-ready':'needs-review',asOf:now,checks,canDownload:ready&&staff(a,p.unit),institutionApproved:false,licenseRightsVerified:false,official:false};
 }
-export function exportProgramPackage(core,context,programId){
- requireThat(core.store instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Program bilgi paketi yalnız izole yerel kabulde hazırlanabilir.',503);
- return core.store.transaction(()=>{
-  const s=core.store,now=core.clock(),a=s.principal(context.sessionHash,context.tenant,now),p=s.get(a.tenant,'program',programId);
+export function programPackageForPrincipal(s,a,programId,now){
+ requireThat((s instanceof LocalAcceptanceStore||isLocalSqlAcademicStore(s))&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Program bilgi paketi yalnız izole yerel kabulde hazırlanabilir.',503);
+ const p=s.get(a.tenant,'program',programId);
   requireThat(p&&staff(a,p.unit),'not_found','Program bilgi paketi bulunamadı veya erişilemiyor.',404);
   const state=programPackageSummary(s,a,p,now);requireThat(state.canDownload,'program_package_blocked','Güncel program incelemesi, belge profili ve yetki dosyası gerekli. Merkezi SEM yolu bu paketten düzenlenemez.',409);
   const publication=currentPublication(s,a.tenant,p,now),profile=programProfileBinding(s,a.tenant,p,now);
@@ -33,5 +33,8 @@ export function exportProgramPackage(core,context,programId){
   // Administrative actors, issuer assignments and attachment bytes are not exported.
   // Source digests are references to private records, not self-contained signatures.
   return {payload,sha256:hash(stableStringify(payload)),checkedAt:now,scope:'local-acceptance',signed:false,official:false,institutionApproved:false,licenseRightsVerified:false,externalSubmitted:false};
- });
+}
+export function exportProgramPackage(core,context,programId){
+ requireThat(core.store instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Program bilgi paketi yalnız izole yerel kabulde hazırlanabilir.',503);
+ return core.store.transaction(()=>{const now=core.clock(),a=core.store.principal(context.sessionHash,context.tenant,now);return programPackageForPrincipal(core.store,a,programId,now);});
 }

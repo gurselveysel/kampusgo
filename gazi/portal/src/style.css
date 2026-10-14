@@ -76,3 +76,6 @@
 @media(max-width:760px){.institution-session{margin:14px 20px 0;padding:12px}.institution-session strong{font-size:12px}}
 
 .registry-fields dt{color:#41556d}.registry-fields dd{color:#334e68}
+
+/* Long information-package states must remain readable at narrow widths. */
+.program-package-status>.pill{white-space:normal;overflow-wrap:anywhere;max-width:100%;text-align:left;justify-content:flex-start}
