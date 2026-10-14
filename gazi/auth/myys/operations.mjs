@@ -1,3 +1,4 @@
+import {guardUnitCapacity} from './capacity.mjs';
 import {sourceEventTrusted} from './source-trust.mjs';
 import {requireThat,CoreError} from './store.mjs';
 import {queueState} from './lms.mjs';
@@ -16,6 +17,7 @@ export function operationsCommand({action,p,a,s,put,id,now,execute}){
   requireThat(typeof p.title==='string'&&p.title.trim().length>=3&&p.title.length<=200,'batch','Toplu işlem adı 3–200 karakter olmalı.');
   let rows=p.rows;if(p.csv!==undefined){try{rows=parseTransferCsv(p.csv);}catch(e){throw new CoreError('batch_csv',e.message);}}
   requireThat(Array.isArray(rows)&&rows.length>0&&rows.length<=100,'batch','Toplu işlem 1–100 satır olmalı.');
+  const capacityBinding=guardUnitCapacity(s,a.tenant,p.unit,'batchRows',rows.length,{now});
   const seen=new Set();
   const normalized=rows.map((row,index)=>{
    const decisionId=typeof row?.decisionId==='string'&&row.decisionId.length<=100?row.decisionId.trim():'';
@@ -27,7 +29,7 @@ export function operationsCommand({action,p,a,s,put,id,now,execute}){
    if(!code&&seen.has(key))code='duplicate_learner';if(key)seen.add(key);
    return {row:index+1,label,decisionId:scoped?decisionId:null,owner:scoped?d.owner:null,code};
   });
-  return put('batch',{id:id(),unit:p.unit,owner:a.id,title:p.title,rows:normalized,scope:'local-acceptance',official:false});
+  return put('batch',{id:id(),unit:p.unit,owner:a.id,title:p.title,rows:normalized,...(capacityBinding?{capacityBinding}:{}),scope:'local-acceptance',official:false});
  }
  if(action==='batch-process'){
   const batch=s.get(a.tenant,'batch',p.batchId);

@@ -229,3 +229,7 @@ B26: `support-service.mjs` sürümlü yerel takvim/ayrı inceleme/hold; `support
 ## Paket33 — Koşullu mali akış
 
 `payment.mjs` yedi yerel komut, aynı öğrenen/program/sicil bağı ve görev ayrılığı; `payment-model.mjs` kuruş bazlı durum/iadeler/ters ibraz/toplam/dayanak; olay kimliği ve semantik tekrar için atomik makbuz. Mali durum akademik kayıt değiştirmez. Yeni Mali prova ve mutabakat sekmesi Finans menüsüne bağlıdır; arama/filtre/geçmiş/indir ve mobil form kabulü var. 478+48+46=572otomatik;16mali+19gezinme+13itiraz;87komut/16HTTP3752örnek30016kontrol. Gerçek tokenizasyon/PSP/muhasebe veya kurum mali yetkisi yok; PAYMENT-CONTRACT/ACCESS-ACTIONS8 sınırları. B31koşullu genel kabul açık.
+
+## Paket34 — İkinci birim kapasitesi
+
+`capacity.mjs` iki birimde yönetici hazırlığı/ayrı kalite incelemesi, ilk kohort revizyon özeti, sürüm/son gün/durdurma ve kayıt-kuyruk-satır kotasını bağlar. Core enrollment, LMS intake ve batch-create aynı işlemde kapasiteyi doğrular ve kabul sürümünü sabitler. Eski iş bitirilebilir; kaynak iptali güvenlik muafiyetiyle gelir. CapacityWorkspace mevcut akademik kişi/rol/kurum verisini kullanır.11yeni sunucu ve14tarayıcı;583otomatik;90komut/16HTTPkapsam matrisi. B32 genel kabul kısmi; gerçek kurum ve dağıtık depo/yük açık. CAPACITY-CONTRACT.md esas ayrıntıdır.

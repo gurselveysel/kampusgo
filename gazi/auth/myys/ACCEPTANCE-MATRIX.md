@@ -205,3 +205,17 @@ Destek kayıtları: arama/filtre, çalışma aralığı hedefleri, sürümlü y�
 ## Paket33 — B31 koşullu mali prova
 
 Finans menüsünden Mali prova ve mutabakat: aynı kişi/program/sicil bağlı koşul ve ayrı mali inceleme; tekil belirteç, bekleyen/başarılı/başarısız/çift olay, kısmi/tam iade ve sonradan düzeltme, ters ibraz ve tam dayanaklı mutabakat. 572otomatik,16mali+19gezinme+13itiraz;87komut/16HTTP3752örnek30016kapsam kontrolü. Gerçek kart/para/PSP yok; belirteç yerel referans. B31 teknik simülatör kabulü geçti, tahsilat/vergi/iade ve B02/B04/B05 kurum kararları, gerçek PSP/adaptör/settlement/sandbox ve canlı kabul açık. `PAYMENT-CONTRACT.md` ve `acceptance/B31-payment-20261014.json` esas. Son canlı16;17–33yayın yok.
+
+## Paket34 — B32 yerel kapasite kabulü (14.10.2026)
+
+Birim kapasitesi sekmesi: iki birimde ayrı görev/MFA, ilk grubun sabit program/sürüm dayanağı, kayıt/kuyruk/satır kotası, eski işin korunması, güvenlik iptali muafiyeti, yetkili özet/arama/sürüm.11sunucu+14kapasite tarayıcı;489+48+46=583otomatik.19gezinme/12grup/15ders kaydı/13itiraz regresyonu;90komut/16HTTP4194örnek33552türetilmiş denetim. Bunlar paket tamamlanma yüzdesi değildir.
+
+| B32 ekseni | Durum |
+|---|---|
+| Kod | Tanımlı bağımsız yerel kapasite dilimi hazır; üretim bağlama kısmi |
+| Yerel işlev/güvenlik | İkinci birim/başka kurum, issuer/rapor/rol negatifleri; ilk kayıt/imzalı belge özeti korundu |
+| Canlı | Paket34 yayımlanmadı; son canlı16 |
+| Kurum kararı | Gerçek ilk kohort ve ikinci birim katılım/issuer/kota kararı açık |
+| Dış erişim | Üretim depo/RLS/işçi/dağıtık yük ve gerçek rapor kabulü açık |
+
+`CAPACITY-CONTRACT.md` ve `acceptance/B32-capacity-20261014.json` ayrıntılı kanıttır. Özgün36işin kimlik, bağımlılık ve kabul ölçütleri değişmedi.

@@ -489,3 +489,17 @@ Yerel `8ef05ad82483ca702eff2389faae59b3b661081b`; uzak `36a81a550060a66a4cb26a9f
 - Son doğrulanmış canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READYproduction;14.10saltokunur alias kontrolü.17–33dağıtımı ve yeni oturumlu smoke yok; browserAuth kullanıcı iptali yeniden istenmedi.configuredCorekapalı.
 - Geri dönüş hedefi15 dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı. Kaynak adayı canlı yayın değildir.
 - B31gerçek tahsilat/vergi/iade ve B02/B04/B05 kararları, PSP sözleşmesi/adaptörü/settlement/sandbox kabulü açık. Başvuru/hesap/credential/ücretli hizmet/üretim migration yok. B01–B36tamamlanmadı.
+
+### Paket33 kaynak kimlikleri
+
+Yerel `990b620fba9c7877e96768aa82bb1d6c8f6afc8d`; uzak `432a4ad9927121958d4eb5676af78b907b1b4f25`; ortak tam ağaç `f8f622b6d164fdda16e3f6facdac7977210a8720`. 23 dosyanın blob özeti ve tam kaynak ağacı eşleşti; beklenen uzak başlık36a81a550060a66a4cb26a9f97933c376ea26b24, force=false. Yeni yayın yok; son canlı16.
+
+## Paket34 — ikinci birim kapasitesi; kaynak adayı
+
+14.10.2026. Akademik çalışma alanına Birim kapasitesi eklendi. İki birimde yönetici hazırlığı ve ayrı kalite incelemesi; üç kota, mevcut kullanım, durdurma/sürüm artırma, arama/indirme. Önceden kabul edilen satırlar tamamlanır; ilk grubun kayıt ve imzalı belge özeti korunur.
+
+- 489sunucu+48portal+46regresyon=583otomatik;14kapasite+19gezinme+12grup+15ders kaydı+13itiraz=73tarayıcı kontrolü.90komut/16HTTP4194örnek33552denetim;115korumalı statik dosya.
+- Taban yerel990b620fba9c7877e96768aa82bb1d6c8f6afc8d / uzak432a4ad9927121958d4eb5676af78b907b1b4f25 / ortak f8f622b6d164fdda16e3f6facdac7977210a8720.
+- 14.10uzakdal/alias saltokunur yeniden doğrulandı. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READYproduction.17–34dağıtımı/yeni oturumlu smoke yok; browserAuth kullanıcı iptali yeniden istenmedi; configuredCorekapalı.
+- Canlı geri dönüş hedefi15 dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı.
+- Gerçek ikinci birim/kurum/issuer/kota kararı, ilk gerçek kohort, üretim RLS/dağıtık yük ve rapor kabulü açık. Yeni servis/credential/migration/gerçek öğrenci yok. B32 ve tümB01–B36tamamlanmadı.

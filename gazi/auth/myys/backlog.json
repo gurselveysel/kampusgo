@@ -2323,37 +2323,43 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Yetki birimi değişince önceki birimin dosyası reddedilir.",
+      "test_status": "11 kapasite sunucu ve 14 kapasite tarayıcı senaryosu geçti; ilk grup/issuer/rapor/kurum sınırları yerelde korundu.",
       "implementation_evidence": [
-        "gazi/auth/myys/IMPLEMENTATION.md",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/myys/capacity.mjs",
+        "gazi/auth/myys/CAPACITY-CONTRACT.md",
+        "gazi/auth/tests/myys-capacity.test.mjs",
+        "gazi/portal/src/capacity-workspace.jsx",
+        "scripts/myys-capacity-browser.cjs",
+        "gazi/auth/myys/acceptance/B32-capacity-20261014.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Birim sınırı yerel çekirdekte; ikinci gerçek birim açılışı yapılmadı.",
-      "independent_remaining_work": [
-        "İkinci birim ve kurum için kapsamlı negatif test ve kaynak kotası."
-      ],
+      "production_status": "Paket34 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı.",
+      "implementation_note": "Sürümlü, ayrı incelenmiş ikinci birim kayıt/kuyruk/satır kotası; kabul edilmiş işin bitmesi ve ilk grup/anahtar/rapor korunması yerelde bağlı. Gerçek ikinci birim açılmadı.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "İkinci birimin yetkili katılım kararı.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; tanımlı bağımsız kapasite dilimi hazır",
           "evidence": [
-            "gazi/auth/myys/IMPLEMENTATION.md",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/myys/capacity.mjs",
+            "gazi/auth/myys/CAPACITY-CONTRACT.md",
+            "gazi/auth/tests/myys-capacity.test.mjs",
+            "gazi/portal/src/capacity-workspace.jsx",
+            "scripts/myys-capacity-browser.cjs",
+            "gazi/auth/myys/acceptance/B32-capacity-20261014.json"
           ],
           "remaining": [
-            "İkinci birim ve kurum için kapsamlı negatif test ve kaynak kotası."
+            "Üretim depo/RLS/dağıtık kota ve gerçek kurum açılışı bağlamında yeniden kabul."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Yetki birimi değişince önceki birimin dosyası reddedilir.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "tanımlı yerel dilim geçti; genel paket kısmi",
+          "evidence": "11 kapasite sunucu ve 14 kapasite tarayıcı senaryosu geçti; ilk grup/issuer/rapor/kurum sınırları yerelde korundu.",
+          "limits": "İki SQLite bağlantısı gerçek dağıtık yük değildir; gerçek B30 kohortu/ikinci birim ve yetki kabulü açık."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "Paket34 yayımlanmadı",
+          "evidence": "Paket34 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2361,7 +2367,7 @@
         },
         "external_access": {
           "status": "bağımsız kod için gerekli değil",
-          "target": "Paketin bağımsız kod/test işleri yerelde sürebilir.",
+          "target": "Üretim depo/RLS/dağıtık işçi ve gerçek ikinci birim rapor/issuer kabulü; bağımsız yerel kod için erişim gerekmedi.",
           "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
         }
       }
@@ -2589,16 +2595,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 33,
-    "server_security_tests": "478/478",
+    "software_package": 34,
+    "server_security_tests": "489/489",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 572,
+    "local_total": 583,
     "portal_build": "Başarılı;115statik dosyalı mevcut korumalı paket",
-    "browser_visual_acceptance": "16mali prova+19gezinme+13itiraz;98menü/243rol-panel/66ders. Gerçek ekran okuyucu/PSP kabulü değildir.",
+    "browser_visual_acceptance": "14kapasite+19gezinme+12grup+15ders kaydı+13itiraz;98menü/252rol-panel/66ders. Gerçek ekran okuyucu veya dağıtık yük kabulü değil.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–33dağıtılmadı.configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B31-payment-20261014.json"
+    "deployment": "Son canlı16 READY;17–34dağıtılmadı.configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B32-capacity-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {

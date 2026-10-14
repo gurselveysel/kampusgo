@@ -1,3 +1,4 @@
+import {guardUnitCapacity} from './capacity.mjs';
 import {sourceRegistrationState,sourceRegistrationAllows} from './lms-registration.mjs';
 import {sourceEventTrusted} from './source-trust.mjs';
 import {createHmac,timingSafeEqual,randomUUID} from 'node:crypto';
@@ -55,7 +56,8 @@ export function acceptLmsEvent(s,c,event,{digest,sourceProof=null,authorize=null
    const stream=c.id+':'+person+':'+(event.type==='grade'?'grade:'+event.taskId:event.type);
    requireThat(!s.list(c.tenant,'lms-event').some(e=>e.stream===stream&&e.revision===event.revision),'lms_revision_conflict','Bu kaynak sürümü başka bir olayla kayıtlı.',409);
    const record={id:eventId,unit:c.unit,owner:person,contractId:c.id,programId:c.programId,enrollmentId:enrollment.id,stream,revision:event.revision,type:event.type,completed:event.type==='completion'&&typeof event.completed==='boolean'?event.completed:null,taskId:event.type==='grade'?event.taskId:null,content:event.type==='grade'?event.content:null,grade:event.type==='grade'?event.grade:null,occurredAt:event.occurredAt,receivedAt:clock(),digest,state:'accepted',...(event.type==='registration'?{registered:event.registered,registrationId:event.registrationId}:{}),...(['grade','completion'].includes(event.type)&&registration.event?{registrationEventId:registration.event.id}:{}),...(sourceProof?{sourceProof:structuredClone(sourceProof)}:{})};
-   s.put(c.tenant,'lms-event',record);
+   const capacityBinding=guardUnitCapacity(s,c.tenant,c.unit,'queuedEvents',1,{now:clock(),safetyClosure:event.type==='license-revoked'||event.type==='registration'&&event.registered===false});
+   s.put(c.tenant,'lms-event',{...record,...(capacityBinding?{capacityBinding}:{})});
    s.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(c.tenant,'adapter:'+c.id,'lms.accept',record.id,clock());
    return {id:eventId,status:'accepted',duplicate:false,processed:false};
   });

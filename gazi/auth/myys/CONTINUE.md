@@ -1,3 +1,25 @@
+# Güncel devam — Paket34 yerel kabul; kaynak eşitlemesi sırada
+
+B32 Birim kapasitesi hazır yerel dilim:583otomatik(489+48+46),14kapasite+19gezinme+12grup+15ders kaydı+13itiraz=73tarayıcı.90komut/16HTTP4194örnek33552denetim;98menü/252panel/66ders,115statik dosya. CAPACITY-CONTRACT/B32kanıtı/backlog güncel;36özgünkriter korundu.
+
+Önce diff/commit ve expected-head432a4ad9927121958d4eb5676af78b907b1b4f25 ile eşitle. Taban yerel990b620fba9c7877e96768aa82bb1d6c8f6afc8d / ortak f8f622b6d164fdda16e3f6facdac7977210a8720. Soncanlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–34yayını yok. browserAuthiptaliniyenidenisteme;configuredCorekapalı,tekeditör/altajanyok.
+
+Sıradaki B33 uzman eşleme/lisans/düzeltme sicili; B34 amaçla sınırlı portfolyo; B35 modelden bağımsız uzman kıyası; B36 alternatif/erteleme. B07 SQLrepo/HTTP/atomikkeybarrier ve B28 yeni kayıt envanteri/saklama dahil bütünB01–B36kalanbağımsız işler sürer. Devam komutu bekleme.
+
+# Güncel ara nokta — Paket34 B32 birim kapasitesi; tarayıcı kabulü sürüyor
+
+Paket33 kaynakta: yerel 990b620fba9c7877e96768aa82bb1d6c8f6afc8d / uzak 432a4ad9927121958d4eb5676af78b907b1b4f25 / ortak f8f622b6d164fdda16e3f6facdac7977210a8720. 14 Ekim uzak baş değişmedi; canlı alias hâlâ Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY. Yeni oturumlu smoke yok; browserAuth kullanıcı iptalini yeniden isteme.
+
+B32 capacity.mjs, core/LMS/batch admission ve CapacityWorkspace bağlı.11 yeni test geçti;90komut/16HTTP 4194örnek33552denetim ön koşusu geçti; capacityBinding eklemesinden sonra tam kabul yeniden yapılacak. Kapasite kayıt/review/hash sürümü kabul edilen enrollment/batch/lms-event üzerine sabitlenir. İmzalı/yetkili lisans ve ders kaydı iptali normal kuyruğa güvenlik muafiyetiyle kabul edilir. İlk kohort SHA/issuer/rol/rapor korunur. Yerel iki bağlantı gerçek dağıtık yük kabulü değildir. --capacity tarayıcı fixture yeni bağlandı; tarayıcı/QA/docs/backlog/commit henüz bitmedi.
+
+Sonraki B33 uzman eşleme/lisans/düzeltme sicili, B34 amaçla sınırlı portfolyo, B35 modelden bağımsız uzman kıyası, B36 gerekçeli alternatif/erteleme; B07 SQLrepository/HTTP/atomik key bariyeri ve B28 tam kayıt envanteri/saklama dahil bütün bağımsız B01–B36 işleri sürer. Tek editör, alt ajan yok, configuredCore kapalı. Gerçek kişi/kurum kararı, yeni credential/migration/ücretli servis yok. Devam komutu bekleme.
+
+# Güncel devam — Paket33 kaynakta; B32 ölçekleme dilimi inceleniyor
+
+Paket33 yerel `990b620fba9c7877e96768aa82bb1d6c8f6afc8d`, uzak `432a4ad9927121958d4eb5676af78b907b1b4f25`, ortak ağaç `f8f622b6d164fdda16e3f6facdac7977210a8720`. 23 blob/tam ağaç eşleşti; 572 otomatik ve 48 tarayıcı kontrolü. Son canlı Paket16; Paket17–33 yayımlanmadı. Kullanıcının güvenli giriş iptalini yeniden isteme; configuredCore kapalı.
+
+B32 mevcut cohort.mjs, lms.mjs ve kapsam matrisi okunuyor; henüz yeni ölçekleme kodu yok. Hedef: ikinci birim/kurumda sürümlü ve ayrı incelenmiş yerel kapasite sınırı; yeni kayıt/kaynak kuyruğu/toplu satır kontrolü; kabul edilmiş eski işler işlenmeye devam eder; ilk grubun kişi/program/issuer/hak/sürüm ve rapor ayrımı korunur. Gerçek kurum açılışı, yeni servis veya üretim kota kararı uydurma. B30 mevcut yerel grup kabul kapıları korunmalı. Önce gerçek yardımcı/test sözleşmelerini oku, sonra uygulanabilir atomik sınırları kodla. B07 ve B28 yeni kayıt envanteri/saklama ile tüm diğer B01–B36 bağımsız işler açık. Tek editör; alt ajan yok. Devam komutu bekleme.
+
 # Güncel devam — Paket33 yerel kabul; kaynak eşitlemesi sırada
 
 B31 Mali prova ve mutabakat:572otomatik(478+48+46),16mali+19gezinme+13itiraz;87komut/16HTTP3752örnek30016kontrol;98menü/243panel/66ders. PAYMENT-CONTRACT/kabul/backlog/ACCESS8güncel. Tekil yerel tokenref ve kişi/program/sicil bağı, ayrı maliinceleme, olay/semantik tekrarmakbuzu, iade/tersibraz/mutabakat. Gerçek PSP/kart/para/settlementyok; kurum kararları açık.36özgünkriterkorundu.

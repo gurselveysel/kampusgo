@@ -28,6 +28,8 @@ Kaynaklar: [Gazi BIDB](https://bidb.gazi.edu.tr/) GUZEM ve OBS bağlantıların�
 
 8. **Koşullu ücretli hizmet kararı (B31):** önce ücretli hizmetin gerçekten açılacağına ilişkin kurum kararı; program/ücret/tahsilat sahibinin yetki dayanağı, vergi-fatura ve iade/itiraz usulünün güncel belge/sürümü; B02/B04/B05 veri ve içerik hakları incelemesi; kurumca seçilmiş PSP'nin sözleşmesi, ayrı sentetik sandbox ve kamuya açık token/checkout/imzalı bildirim/settlement dokümanı. İlk adım belge incelemesidir; gerçek para, kart, banka hesabı veya yeni PSP credential'ı istenmiyor. Hedef, `local-simulator/1` provası ile gerçek sağlayıcı davranışını karşılaştırmaktır. Genel geliştirme onayı gerçek tahsilat veya ücretli hizmet açmaz.
 
+9. **İkinci birim katılımı ve kapasitesi (B32):** gerçek ilk kohortun B30 kabul sahibi ile ikinci birimin katılım/issuer/rol/veri/rapor sorumluları; program ve korunacak ilk kohort sürümü; gerçek kayıt/kuyruk/toplu satır kapasitesi, izleme ve durdurma yetkisi. Hedef, yerel kapasite planını onaylı birim kararına ve üretim depo/RLS/işçi yük kabulüne bağlamaktır. İlk adım yazılı karar ve kapsam incelemesidir; yeni gerçek üyelik, kurum veya ücretli kaynak açma yetkisi varsayılmaz.
+
 Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir. Şu aşamada bilinmeyen issuer, API yolu veya test veritabanı adı uydurulmadı. Bilgi eksikliği bağımsız yerel kod/test işlerini durdurmaz.
 
 ## Ayrı özel yetki gerektiren sonraki işlemler

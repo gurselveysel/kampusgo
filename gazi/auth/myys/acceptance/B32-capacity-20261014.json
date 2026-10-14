@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-14",
+  "software_package": 34,
+  "work_packages": [
+    "B32"
+  ],
+  "production": false,
+  "source_parent": {
+    "local": "990b620fba9c7877e96768aa82bb1d6c8f6afc8d",
+    "remote": "432a4ad9927121958d4eb5676af78b907b1b4f25",
+    "tree": "f8f622b6d164fdda16e3f6facdac7977210a8720"
+  },
+  "last_verified_live": {
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false
+  },
+  "automated": {
+    "server": 489,
+    "portal": 48,
+    "regression": 46,
+    "total": 583,
+    "new_capacity_tests": 11
+  },
+  "scope": {
+    "commands": 90,
+    "http_routes": 16,
+    "positive_samples": 4194,
+    "derived_negative_checks": 33552,
+    "not_test_count_or_product_percentage": true
+  },
+  "capacity_browser": {
+    "at": "2026-10-14T04:23:38.510Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Yönetici ikinci birim planını ilk grubun sürümüne bağladı; kendi onayı verilmedi",
+      "Kapasite incelemesi beklenirken ikinci birime yeni program kaydı alınmadı",
+      "Ayrı kalite incelemesinden sonra tek boş yer doldu; üçüncü öğrenen sunucuda reddedildi",
+      "İkinci birim bilgi işlem görevlisi kendi kullanımını gördü; ilk grubun kişi ve dayanakları indirilemedi",
+      "Belge yetkilisi kota içindeki tek satırlı işi kabul ettirdi",
+      "Durdurmadan önceki satır tamamlandı; sonraki toplu iş kabul edilmedi",
+      "Dolu kayıt sınırının altına indirme reddedildi; sürüm ve kayıt kaybı oluşmadı",
+      "Gerekçeli yeni kapasite sürümü bağımsız incelendi; ilk grup dayanağı korunarak üçüncü kayıt alındı",
+      "İlk birimde grup kabulü, tek öğrenen ve mevcut işlem zinciri değişmedi",
+      "Öğrenen ve ikinci birimin akademik görevlilerine kapasite idaresi açılmadı",
+      "Arama, boş sonuç, doğrudan sekme ve yenilemede kapasite sürümleri korundu",
+      "390 px kapasite ve ilk grup ayrıntıları klavyeyle açıldı; yatay taşma yok",
+      "Mobil kapasite sürüm formu taşmadan kullanılabiliyor",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "realUnitActivation": false,
+    "realDistributedLoad": false,
+    "manualScreenReader": false
+  },
+  "regression_browser": {
+    "navigation": 19,
+    "cohort": 12,
+    "registration": 15,
+    "appeals": 13
+  },
+  "navigation": {
+    "menu_targets": 98,
+    "role_panels": 252,
+    "lessons": 66,
+    "manual_screen_reader": false
+  },
+  "protected_static_files": 115,
+  "limits": [
+    "B32 gerçek kurum kabulü tamamlanmadı; B08/B30 ve ilk gerçek kohort kararı açık.",
+    "Kotalar yerel doğrulama sınırıdır; gerçek kapasite veya performans taahhüdü değil.",
+    "İki SQLite bağlantısı gerçek dağıtık eşzamanlı/yük kabulü değildir.",
+    "Gerçek ikinci birim/kurum/issuer/RLS/rapor kabulü ve üretim depo/işçi açık.",
+    "Yeni migration/credential/servis/gerçek öğrenci veya kurum belgesi işlemi yapılmadı.",
+    "Paket17–34 canlıda değil; configuredCore kapalı; bütün B01–B36 tamamlanmadı."
+  ]
+}
