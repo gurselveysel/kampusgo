@@ -1,3 +1,23 @@
+# Güncel devam — Paket 24 yerel kabul; kaynak eşitlemesi sırada
+
+B23 SEM hazırlık ekranı tamamlandı: 440 otomatik (348+46+46), 13 SEM +13 itiraz tarayıcı; 72 komut/12 HTTP, 2.875 olumlu örnek/23.000 kapsam denetimi. 390 px form iyileştirildi ve incelendi; 115 dosyalı paket. Kabul/sözleşme/kaynak boşluğu/backlog güncel. Önce 36 özgün koşul ve diff denetimi; commit ve uzak expected-head ile aynı ağacı eşitle. Temel Paket23 yerel 42748e05904c05f5e3d5b1447181b4c17e86fd15 / uzak a2032738b05ec46bbe60d488cbae55fd1427c780 / ağaç 51f4c03507bbb684bd2ac50bec90950bd304a05c. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–24 dağıtımı yok. Auth iptalini yeniden isteme; configuredCore kapalı.
+
+Sonraki bağımsız B07: sağlayıcıdan bağımsız imzalı back-channel logout, oturum eşleme/tek kullanım/kurum kapsamı ve kalıcı oran sınırı/depo/anahtar saklama sözleşmesi. Gerçek IdP, üretim adaptörü veya credential oluşturma yok; önce OIDC resmî kaynağını incele. B09 imzalı dış kaynak arşivi ve B27 geri yükleme/yeniden oynatma da açık; ardından diğer bütün B01–B36 bağımsız işleri. Tek kod sahibi; alt ajan yok.
+
+# Güncel ara nokta — B23 SEM çekirdeği bağlandı; test/arayüz henüz yok
+
+Yeni sem-dossier-model.mjs ve sem-dossier.mjs: yerel 8 satırlı hazırlık kontrol listesi, merkez/kurum kaynak kapsamı, değişmez program/dosya sürümü, ayrı komisyon incelemesi, ayrı öğrenci işleriyle imzasız yerel aktarım dosyası ve geri çekme. sem-dossier / sem-review / sem-package / sem-withdraw core execute/replay/view içine bağlandı; B08 envanteri 72 komut. Yalnız syntax kontrolü var; henüz işlevsel test veya kullanıcı arayüzü yazılmadı. Tamamlanmış sayma.
+
+Sonraki: myys-sem.test.mjs ile olumlu/eksik/sürüm/kapsam/görev/tekrar/atomik/ihraç kapısı testleri; sem-workspace.jsx gerçek dosya ve inceleme formları; local fixture --sem; tarayıcı tam zincir/indirilen dosya/390px/klavye; bütün kapsam matrisi ve gerekli regresyon; kabul/backlog/RELEASE/source sync. SEM-SOURCE-REVIEW.md kısmi resmi kaynak incelemesini kaydediyor. YÖK tam yazı/ek/Gazi güncel yönerge/teknik YÖKSİS sözleşmesi okunamadı: bu boşluklar kapalı. Otomatik gönderim ve yerel resmî SEM ihraç kesinlikle yok; her paketin payloadı externalSubmitted=false, externalApproval=null, centralIssuerVerified=false, localIssuanceAllowed=false. İç kontrol listesini YÖKSİS zorunlu teknik şeması diye sunma.
+
+Son tamamlanan kaynak Paket 23: yerel 42748e05904c05f5e3d5b1447181b4c17e86fd15 / uzak a2032738b05ec46bbe60d488cbae55fd1427c780 / aynı ağaç 51f4c03507bbb684bd2ac50bec90950bd304a05c. 428 otomatik, 15 alternatif ölçme +13 itiraz tarayıcı, 68 komut/12 HTTP matrisi. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–23 dağıtımı yok; auth iptalini yeniden isteme. Tek kod sahibi; alt ajan yok. Tüm B01–B36 işi bitmedi; bağımsız çalışmaya devam.
+
+# Güncel devam — Paket 23 kaynakta; B23 SEM hazırlık dosyası
+
+Yerel 42748e05904c05f5e3d5b1447181b4c17e86fd15 / uzak a2032738b05ec46bbe60d488cbae55fd1427c780 / aynı ağaç 51f4c03507bbb684bd2ac50bec90950bd304a05c. 428 otomatik (336+46+46), 15 alternatif ölçme + 13 itiraz tarayıcı; 68 komut/12 HTTP kapsam matrisi. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–23 dağıtımı yok. Auth iptalini yeniden isteme.
+
+B23 merkezi SEM kaynak incelemesi başladı; henüz yeni kod yok. GAZİSEM resmi sitesinin yönetmelik/yönerge bağlantılarını ve YÖK 6 Temmuz 2026 haberini yeniden oku. YÖK haberinin doğrudan open isteği erişilemedi, arama kaydı var; tam metin okunmuş sayma. YÖKSİS teknik şeması veya gerçek yetki olmadan dış gönderim/merkez adına belge üretimi yok. Bağımsız dosya hazırlama, kontrol listesi, ayrı inceleme, sürüm/geri çekme ve aktarım dosyası planını kullanıcı ekranına bağla. Mikro ile merkezi SEM programlarını karıştırma. Sonraki B07/B09/B27 ve diğer B01–B36 bağımsız işleri de açık.
+
 # Güncel devam — Paket 23 yerel kabul; kaynak eşitlemesi sırada
 
 B10 alternatif ölçme kanıtı/moderasyon/sürüm akışı tamamlandı: 428 otomatik (336+46+46), 15 yeni + 13 itiraz tarayıcı; 68 komut/12 HTTP, 2.800 olumlu örnek/22.400 kapsam denetimi. 390 px incelendi; 115 dosyalı paket. Sözleşme/kabul/backlog güncel. Önce 36 özgün koşulu ve diff kontrol et; commit ve uzak expected-head üzerinden aynı kaynak ağacını eşitle. Temel Paket 22 yerel 63a0fcfec1c14b50481f537def921ef06b236dcd / uzak dee6e4b8d68a166958b2c5c48f86df9c50a9a610 / ağaç 1b6d46e6114280ce10c19de61ea79ec428006940. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; 17–23 dağıtımı yok. Auth iptalini yeniden isteme; configuredCore kapalı.

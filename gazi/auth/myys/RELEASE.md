@@ -372,3 +372,13 @@ Paket 22 ek yerel kanıt: 12 saklama + 11 veri talebi tarayıcı kontrolü geçt
 ## Paket 23 kaynak adayı — B10/B08 (2026-10-13)
 
 Öğrenme kanıtları, Değerlendirmeler ve karar sürüm açıklaması güncellendi. 428 otomatik, 15 alternatif ölçme + 13 itiraz tarayıcı kontrolü; 390 px incelendi. 68 komut / 12 HTTP kapsam matrisi ve 115 dosyalı korumalı paket. Kaynak temel yerel 63a0fcfec1c14b50481f537def921ef06b236dcd / uzak dee6e4b8d68a166958b2c5c48f86df9c50a9a610 / ortak ağaç 1b6d46e6114280ce10c19de61ea79ec428006940. Yeni canlı dağıtımı yok. Son canlı Paket 16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 / 16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Auth kullanıcı iptali nedeniyle yeni smoke açık. Sonraki yayımın geri dönüş hedefi Paket 16; uygulanmadı.
+
+### Paket 23 — kaynak eşitlendi, canlı yayımlanmadı (2026-10-13)
+
+- Yerel `42748e05904c05f5e3d5b1447181b4c17e86fd15`; uzak `a2032738b05ec46bbe60d488cbae55fd1427c780`; ortak ağaç `51f4c03507bbb684bd2ac50bec90950bd304a05c`. Beklenen uzak kaynak üzerinden geçmiş korunarak eşitlendi.
+- 428 otomatik, 15 alternatif ölçme + 13 itiraz tarayıcı kontrolü; 68 komut/12 HTTP matrisi geçti. 36 özgün iş kimliği/bağımlılık/kabul ölçütü korundu.
+- Yeni dağıtım yok; son canlı Paket 16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, alias READY yeniden doğrulandı. Auth kullanıcı iptali nedeniyle yeni smoke açık. Gerçek kurum alternatif ölçme/yetki ve üretim kabulü açık.
+
+## Paket 24 kaynak adayı — B23/B08 (2026-10-14)
+
+SEM dosyaları menüsü ve mobil kaynak/kontrol formları eklendi. 440 otomatik; 13 SEM +13 itiraz tarayıcı; 72 komut/12 HTTP kapsam matrisi. 115 dosyalı korumalı paket üretildi. Temel yerel 42748e05904c05f5e3d5b1447181b4c17e86fd15 / uzak a2032738b05ec46bbe60d488cbae55fd1427c780 / ağaç 51f4c03507bbb684bd2ac50bec90950bd304a05c. Yeni dağıtım yok. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 / 16bd55eefed251ce5d23e1791f87ed3871c6a8c6; auth kullanıcı iptali ve yeni smoke açık. Sonraki yayımın geri dönüş hedefi Paket16; uygulanmadı. SEM resmi usul/merkezi düzenleyici/teknik şema ve kurum kabulü açık.

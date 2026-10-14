@@ -181,3 +181,7 @@ SCOPE-ACCEPTANCE-CONTRACT.md, scope-inventory.json ve myys-scope-acceptance.mjs:
 ## B10 alternatif ölçme — 2026-10-13
 
 ALTERNATIVE-EVIDENCE-CONTRACT.md: eğitici kaydı → ayrı kalite incelemesi → tam rubrik → ayrı komisyon → mevcut belge profili/ihraç. Değişmez kanıt/moderasyon snapshotı ve kişisel arşiv; yeni sürüm geçmişi değiştirmez, ekranda etkisi görünür. Hazırlayan/moderatör bağımsız karar ve kendi itirazında görev alamaz. Kaynak doğrulaması yerel insan incelemesidir; kurum usulü veya gerçek dış dosya kabulü diye sunulmaz.
+
+## B23 yerel SEM dosyası — 2026-10-14
+
+SEM-DOSSIER-CONTRACT.md ve SEM-SOURCE-REVIEW.md: kaynakların okunan/kalan kapsamı, program snapshotı, iç kontrol listesi ve ayrı görevlerle hazırlık paketi. Tarihsel duyuru/genel haber teknik şema veya otomatik karar yapılmadı. Güncel sürüm/geri çekme ve tekrar/atomiklik denetlendi. Merkezi düzenleyici yetkisi yerel kullanıcıya verilmedi; dış gönderim/resmî ihraç kapalı.

@@ -20,6 +20,8 @@ Kaynaklar: [Gazi BIDB](https://bidb.gazi.edu.tr/) GUZEM ve OBS bağlantıların�
 3. **Depo kararı:** yukarıdaki mevcut projenin kurumsal akademik veri için kullanılmasına ilişkin yetkili uygunluk yanıtı veya kurumun mevcut alternatif hizmeti; veri bölgesi, saklama/yedek sahibi ve ayrı test veritabanı adı. İlk teknik erişim yalnız şema/indeks/RLS tanımlarını okumak içindir; kişisel tablo satırları, service-role anahtarı, DDL ve üretim yazma yetkisi istenmiyor.
 4. **GUZEM bilgi paketi:** LMS ürün/sürümü ve API belgesi, bir sentetik ders/kohort, maskelenmiş kayıt/not/tamamlama/düzeltme örnekleri, değişiklik sürümü ve hata/kota kuralları. İlk erişim yalnız bu sentetik kohortun kayıt/not/tamamlama okuması; tüm kullanıcılar, içerik indirme, not yazma veya belge düzenleme izni istenmiyor.
 
+5. **GAZİSEM / merkezi SEM belge paketi (14.10.2026 ek inceleme):** güncel YÖK SEM başvuru yazısı ve ekleri, Gazi/GAZİSEM güncel eğitim-sertifika usulü, program açma/görev kararı ve merkezî düzenleyici teyidi; yetkili YÖKSİS başvuru sahibince sağlanacak teknik alan/şema ve maskelenmiş örnek kabul yanıtı. İlk adım belge incelemesidir; kurum hesabı, parola, kod veya resmî belge üretme yetkisi istenmiyor. Hedef, yerel hazırlık dosyasını gerçek usulle karşılaştırmaktır; otomatik gönderim kapalı kalır.
+
 Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir. Şu aşamada bilinmeyen issuer, API yolu veya test veritabanı adı uydurulmadı. Bilgi eksikliği bağımsız yerel kod/test işlerini durdurmaz.
 
 ## Ayrı özel yetki gerektiren sonraki işlemler

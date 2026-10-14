@@ -506,7 +506,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket 23 ile 68 komut / 12 HTTP yolu, 2.800 olumlu örnekten 22.400 kapsam kontrolü; 428 otomatik test geçti.",
+      "test_status": "Paket 24 ile 72 komut / 12 HTTP yolu, 2.875 olumlu örnekten 23.000 kapsam denetimi; 440 otomatik test geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -524,7 +524,7 @@
         "scripts/myys-scope-acceptance.mjs",
         "gazi/auth/myys/acceptance/B08-scope-20261013.json"
       ],
-      "production_status": "Paket 23 kaynak adayı; 17–23 için yeni canlı dağıtımı yok. Son doğrulanmış canlı Paket 16; configuredCore Vercel kapalı.",
+      "production_status": "Paket 24 kaynak adayı; 17–24 yeni canlı dağıtımı yok. Son canlı Paket16; configuredCore Vercel kapalı.",
       "implementation_note": "Kurum/birim okuma, yeni yazma, idempotent tekrar ve ihraç matrisi mevcut yerel çekirdekte geçti. Destek/veri talebi yetki hataları ayrıldı; yabancı saklama önizlemesi kontrollü 404. Hazırlayanın tek başına nihai yayın yapmasını engelleyen kontroller korundu.",
       "independent_remaining_work": [],
       "development_blocker": null,
@@ -555,12 +555,12 @@
         },
         "local_acceptance": {
           "status": "mevcut yerel dilim geçti",
-          "evidence": "Paket 23 ile 68 komut / 12 HTTP yolu, 2.800 olumlu örnekten 22.400 kapsam kontrolü; 428 otomatik test geçti.",
-          "limits": "Mevcut 68 komut ve 12 HTTP yolu; gerçek kurum/üretim kabulü değildir."
+          "evidence": "Paket 24 ile 72 komut / 12 HTTP yolu, 2.875 olumlu örnekten 23.000 kapsam denetimi; 440 otomatik test geçti.",
+          "limits": "Mevcut 72 komut ve 12 HTTP yolu; gerçek kurum/üretim kabulü değildir."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 23 kaynak adayı; 17–23 için yeni canlı dağıtımı yok. Son doğrulanmış canlı Paket 16; configuredCore Vercel kapalı."
+          "evidence": "Paket 24 kaynak adayı; 17–24 yeni canlı dağıtımı yok. Son canlı Paket16; configuredCore Vercel kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1577,17 +1577,23 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
+      "test_status": "12 SEM sunucu senaryosu; 440 otomatik; 13 SEM +13 itiraz tarayıcı kontrolü. 72 komut/12 HTTP kapsamında 2.875 olumlu örnekten 23.000 denetim geçti.",
       "implementation_evidence": [
         "gazi/auth/myys/registry.mjs",
         "gazi/auth/tests/myys-lms.test.mjs",
-        "gazi/portal/src/academic-forms.jsx"
+        "gazi/portal/src/academic-forms.jsx",
+        "gazi/auth/myys/sem-dossier-model.mjs",
+        "gazi/auth/myys/sem-dossier.mjs",
+        "gazi/portal/src/sem-workspace.jsx",
+        "gazi/auth/tests/myys-sem.test.mjs",
+        "scripts/myys-sem-browser.cjs",
+        "gazi/auth/myys/SEM-DOSSIER-CONTRACT.md",
+        "gazi/auth/myys/SEM-SOURCE-REVIEW.md",
+        "gazi/auth/myys/acceptance/B23-sem-20261014.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Zorunlu alanlı değişmez sicil ve bağımsız yerel inceleme kodlandı; kurum/sağlayıcı onayı veya uygulama etkinleştirmesi değildir.",
-      "independent_remaining_work": [
-        "Merkezi SEM dosya kontrol listesi ve durum makinesi."
-      ],
+      "production_status": "Paket 24 kaynak adayı; yeni canlı dağıtımı yok. Son canlı Paket 16, configuredCore kapalı. SEM yalnız izole yerel dosya hazırlığıdır.",
+      "implementation_note": "SEM dosyaları: program/sürüm ve kaynak kapsamına bağlı iç kontrol listesi, eksik/düzeltme, ayrı komisyon incelemesi, ayrı öğrenci işleriyle imzasız hazırlık paketi, arama, yeni sürüm ve geri çekme. YÖKSİS gönderimi, merkezi onay/düzenleyici teyidi ve yerel resmî ihraç kapalı.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Yetkili merkez, güncel YÖKSİS usulü ve teknik erişim.",
       "acceptance_axes": {
@@ -1596,28 +1602,36 @@
           "evidence": [
             "gazi/auth/myys/registry.mjs",
             "gazi/auth/tests/myys-lms.test.mjs",
-            "gazi/portal/src/academic-forms.jsx"
+            "gazi/portal/src/academic-forms.jsx",
+            "gazi/auth/myys/sem-dossier-model.mjs",
+            "gazi/auth/myys/sem-dossier.mjs",
+            "gazi/portal/src/sem-workspace.jsx",
+            "gazi/auth/tests/myys-sem.test.mjs",
+            "scripts/myys-sem-browser.cjs",
+            "gazi/auth/myys/SEM-DOSSIER-CONTRACT.md",
+            "gazi/auth/myys/SEM-SOURCE-REVIEW.md",
+            "gazi/auth/myys/acceptance/B23-sem-20261014.json"
           ],
           "remaining": [
-            "Merkezi SEM dosya kontrol listesi ve durum makinesi."
+            "Güncel YÖK/Gazi usul ve teknik YÖKSİS şema/yetki kabulüyle gerçek başvuru/uygunluk/merkezi düzenleyici eşlemesi."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Sicil zorunlu alan, görevler ayrılığı ve kurum/birim görünürlüğü geçti.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "yerel dosya hazırlığı dilimi geçti",
+          "evidence": "12 SEM sunucu senaryosu; 440 otomatik; 13 SEM +13 itiraz tarayıcı kontrolü. 72 komut/12 HTTP kapsamında 2.875 olumlu örnekten 23.000 denetim geçti.",
+          "limits": "İç kontrol listesi YÖKSİS teknik şeması değildir. Gerçek merkezi başvuru/onay/düzenleyici kabulü yok."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "evidence": "Paket 24 kaynak adayı; yeni canlı dağıtımı yok. Son canlı Paket 16, configuredCore kapalı. SEM yalnız izole yerel dosya hazırlığıdır."
         },
         "institution_decision": {
           "status": "bekleniyor",
-          "required": "Yetkili merkez, güncel YÖKSİS usulü ve teknik erişim."
+          "required": "GAZİSEM yetkili usul/program/görev kararları; güncel YÖK asıl yazı/ek ve merkezi düzenleyici teyidi."
         },
         "external_access": {
           "status": "teyit/erişim bekleniyor",
-          "target": "Yetkili SEM merkezi üzerinden YÖKSİS teknik sözleşmesi",
+          "target": "YÖKSİS yetkili test rolü/şema/kabul sözleşmesi; önce belge incelemesi, yeni kalıcı erişim oluşturulmadı.",
           "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
         }
       }

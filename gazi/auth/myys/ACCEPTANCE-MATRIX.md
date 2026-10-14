@@ -152,3 +152,7 @@ Paket 22 ek yerel kanıt: 12 saklama + 11 veri talebi tarayıcı kontrolü geçt
 ## Paket 23 kaynak adayı — B10/B08 (2026-10-13)
 
 Öğrenme kanıtları ve Değerlendirmeler: alternatif ürün/yöntem kaydı, ayrı kalite incelemesi, gerekçeli ret/kabul, yeni sürüm, arama/filtre ve tarihsel dayanak etkisi. 428 otomatik, 15 yeni + 13 itiraz tarayıcı kontrolü; 390 px incelendi. 68 komut/12 HTTP kapsam matrisi geçti. Eksik/null/başarısız sonuç belgeye ilerlemez. Gerçek kurum yöntemi/yetki ve üretim kabulü açık; kaynak adayı canlı yayın değildir.
+
+## Paket 24 kaynak adayı — B23/B08 (2026-10-14)
+
+SEM dosyaları: iç kontrol listesi/kaynak kapsamı, eksik/düzeltme, sürüm, ayrı inceleme/aktarım hazırlığı, JSON indirme ve geri çekme. 440 otomatik; 13 SEM +13 itiraz tarayıcı, 390 px form incelendi. 72 komut/12 HTTP matrisi geçti. Merkezi onay, gönderim, düzenleyici teyidi ve yerel resmî SEM ihraç kapalı. Güncel YÖK/Gazi usul ve gerçek YÖKSİS kabulü açık; kaynak adayı canlı yayın değildir.

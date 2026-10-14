@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.13.23",
+  "version": "2026.10.14.24",
   "commands": [
     "alternative-evidence",
     "appeal",
@@ -65,6 +65,10 @@
     "retention-preview",
     "retention-run",
     "revoke",
+    "sem-dossier",
+    "sem-package",
+    "sem-review",
+    "sem-withdraw",
     "share",
     "support",
     "support-event",

@@ -1,0 +1,42 @@
+import React,{useState,useRef,useEffect} from 'react';
+import {Card,CardHead,Field,Button,Notice,Pill} from './ui.jsx';
+import {semChecklist,semStates} from '../../auth/myys/sem-dossier-model.mjs';
+const download=p=>{const url=URL.createObjectURL(new Blob([JSON.stringify(p,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='MYYS_SEM_yerel-hazirlik_'+p.id+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+export function SemWorkspace({data,busy,command}){
+ const sem=data.sem||{programs:[],dossiers:[]},[revision,setRevision]=useState(null),[search,setSearch]=useState('');
+ const visible=sem.dossiers.filter(d=>[d.programSnapshot.title,semStates[d.state],d.reason].join(' ').toLocaleLowerCase('tr').includes(search.toLocaleLowerCase('tr')));
+ return <><Notice>Merkezî SEM yolu için yerel dosya hazırlığıdır. YÖKSİS'e gönderim, merkezî onay veya resmî sertifika düzenleme yapılmaz. Güncel kurum usulü ve merkezî düzenleyici yetkisi ayrıca doğrulanmalıdır.</Notice>
+ <Card><CardHead title="SEM hazırlık dosyaları" sub="Program sürümü, kaynak kapsamı ve ayrı kişi incelemesi birlikte korunur."/><div className="academic-body form-stack"><Field label="SEM dosyalarında ara"><input aria-label="SEM dosyalarında ara" value={search} onChange={e=>setSearch(e.target.value)}/></Field>
+ {!visible.length&&<p>Bu kapsamda SEM hazırlık dosyası bulunmuyor.</p>}
+ {visible.map(d=><article className="academic-record" key={d.id}><h3>{d.programSnapshot.title} · Dosya sürümü {d.version}</h3><Pill tone={d.state==='prepared'?'green':'amber'}>{semStates[d.state]}</Pill><p>Program sürümü {d.programSnapshot.version} · {d.unit}</p><p>{d.reason}</p><p>Hazırlayan: {d.createdBy}</p>{d.changeReason&&<p>Sürüm değişikliği: {d.changeReason}</p>}
+ <p>Merkezî düzenleyici yetkisi teyit edilmedi. Dış gönderim yok; yerel resmî ihraç kapalı.</p>
+ <details><summary>Kaynaklar ve kontrol listesi</summary>{Object.entries(d.sources).map(([key,s])=><div key={key}><h4>{key==='central'?'Merkezî usul dayanağı':'Kurum usulü dayanağı'}</h4><p>{s.title} · {s.version} · {s.date}</p><p>{s.reference}</p><p>Okunan kapsam: {s.readScope}</p></div>)}{d.checklist.map(r=><div key={r.key}><h4>{semChecklist[r.key]}</h4><p>{r.state==='documented'?'Yerel dayanak kaydedildi':'Eksik / Bekleniyor'}</p><p>{r.reference}</p><p>{r.note}</p></div>)}</details>
+ {d.missing.length>0&&<p>Eksik kontrol: {d.missing.map(r=>r.label).join('; ')}</p>}
+ {d.review&&<p>İnceleyen: {d.review.createdBy} · {d.review.reason}</p>}
+ {d.withdrawal&&<p>Geri çekme gerekçesi: {d.withdrawal.reason} · Dış sisteme iptal gönderilmedi.</p>}
+ {d.canReview&&<ReviewForm dossier={d} busy={busy} command={command}/>}
+ {d.canPreparePacket&&<Button disabled={busy} onClick={()=>command('sem-package',{dossierId:d.id,basedOn:d.digest})}>Yerel aktarım dosyasını hazırla</Button>}
+ {d.packet&&<p>Dosya bütünlük özeti: <code>{d.packet.sha256}</code> · İmzasız yerel hazırlık</p>}
+ {d.canDownload&&<Button disabled={busy} onClick={()=>download(d.packet)}>SEM hazırlık dosyasını indir</Button>}
+ {d.canRevise&&<Button disabled={busy} onClick={()=>setRevision(d)}>SEM dosyasının yeni sürümünü hazırla</Button>}
+ {d.canWithdraw&&<details><summary>Dosya hazırlığını geri çek</summary><form className="form-stack" onSubmit={e=>{e.preventDefault();command('sem-withdraw',{dossierId:d.id,basedOn:d.digest,reason:new FormData(e.currentTarget).get('reason')});}}><Field label="SEM geri çekme gerekçesi"><textarea aria-label="SEM geri çekme gerekçesi" required minLength={20} maxLength={2000} name="reason"/></Field><Button type="submit" disabled={busy}>SEM hazırlığını geri çek</Button></form></details>}
+ </article>)}
+ </div></Card>
+ {sem.programs.some(p=>p.canPrepare)&&<DossierForm key={revision?.id||'new'} programs={sem.programs.filter(p=>p.canPrepare)} revision={revision} onDone={()=>setRevision(null)} busy={busy} command={command}/>}
+ </>;
+}
+function ReviewForm({dossier:d,busy,command}){return <form className="form-stack" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);command('sem-review',{dossierId:d.id,basedOn:d.digest,outcome:f.get('outcome'),reason:f.get('reason')});}}><Field label="SEM dosya inceleme sonucu"><select aria-label="SEM dosya inceleme sonucu" required name="outcome" defaultValue=""><option value="">Seçin</option><option value="correction">Düzeltme gerekli</option><option value="ready" disabled={d.missing.length>0}>Yerel dosya incelemesi uygun</option></select></Field><Field label="SEM dosya inceleme gerekçesi"><textarea aria-label="SEM dosya inceleme gerekçesi" name="reason" required minLength={20} maxLength={2000}/></Field><Button type="submit" disabled={busy}>SEM dosya incelemesini kaydet</Button></form>;}
+function SourceFields({prefix,label,source:s={}}){return <fieldset><legend>{label}</legend>{[['title','Kaynak başlığı',3,200],['reference','Kaynak veya belge referansı',12,2000],['version','Kaynak sürümü',1,80]].map(([key,title,min,max])=><Field key={key} label={label+' · '+title}><input aria-label={label+' · '+title} required minLength={min} maxLength={max} name={prefix+'-'+key} defaultValue={s[key]||''}/></Field>)}<Field label={label+' · Kaynak tarihi'}><input aria-label={label+' · Kaynak tarihi'} type="date" name={prefix+'-date'} required defaultValue={s.date||''}/></Field><Field label={label+' · Okunan kapsam'}><textarea aria-label={label+' · Okunan kapsam'} name={prefix+'-readScope'} required minLength={20} maxLength={2000} defaultValue={s.readScope||''}/></Field></fieldset>;}
+function DossierForm({programs,revision,busy,command,onDone}){
+ const ref=useRef(null);useEffect(()=>{if(revision)ref.current?.querySelector('input')?.focus();},[revision]);
+ async function submit(e){e.preventDefault();const form=e.currentTarget,f=new FormData(form),source=prefix=>Object.fromEntries(['title','reference','version','date','readScope'].map(k=>[k,f.get(prefix+'-'+k)]));const result=await command('sem-dossier',{programId:revision?.programId||f.get('program'),localOnly:true,reason:f.get('reason'),sources:{central:source('central'),institution:source('institution')},checklist:Object.keys(semChecklist).map(key=>({key,state:f.get('state-'+key),reference:f.get('reference-'+key),note:f.get('note-'+key)})),...(revision?{previousDossierId:revision.id,changeReason:f.get('changeReason')}:{})});if(result){form.reset();onDone();}}
+ return <Card><CardHead title={revision?'SEM dosyası · Yeni sürüm':'SEM hazırlık dosyası oluştur'} sub="İç kontrol listesi YÖKSİS teknik şeması veya merkezî onay değildir."/><form ref={ref} className="academic-body form-stack sem-form" onSubmit={submit}>
+ {revision&&<><p>Önceki dosya sürümü {revision.version}. Yeni sürüm ayrı inceleme gerektirir.</p><Button type="button" disabled={busy} onClick={onDone}>SEM yeni sürüm hazırlığını kapat</Button></>}
+ <Field label="SEM dosyasının programı"><select aria-label="SEM dosyasının programı" name="program" required disabled={!!revision} defaultValue={revision?.programId||''}><option value="">Seçin</option>{programs.map(p=><option key={p.id} value={p.id}>{p.title} · Program sürümü {p.version}</option>)}</select></Field>
+ <SourceFields prefix="central" label="Merkezî usul" source={revision?.sources.central}/><SourceFields prefix="institution" label="Kurum usulü" source={revision?.sources.institution}/>
+ {Object.entries(semChecklist).map(([key,label])=>{const r=revision?.checklist.find(r=>r.key===key);return <fieldset key={key}><legend>{label}</legend><Field label={label+' · Durum'}><select aria-label={label+' · Durum'} name={'state-'+key} defaultValue={r?.state||'pending'}><option value="pending">Eksik / Bekleniyor</option><option value="documented">Yerel dayanak kaydedildi</option></select></Field><Field label={label+' · Dayanak'}><input aria-label={label+' · Dayanak'} name={'reference-'+key} required minLength={12} maxLength={2000} defaultValue={r?.reference||''}/></Field><Field label={label+' · Açıklama'}><textarea aria-label={label+' · Açıklama'} name={'note-'+key} required minLength={12} maxLength={2000} defaultValue={r?.note||''}/></Field></fieldset>;})}
+ <Field label="SEM hazırlık gerekçesi"><textarea aria-label="SEM hazırlık gerekçesi" name="reason" required minLength={20} maxLength={2000}/></Field>
+ {revision&&<Field label="SEM dosya değişiklik gerekçesi"><textarea aria-label="SEM dosya değişiklik gerekçesi" name="changeReason" required minLength={20} maxLength={2000}/></Field>}
+ <Button type="submit" disabled={busy}>SEM hazırlık dosyasını kaydet</Button>
+ </form></Card>;
+}

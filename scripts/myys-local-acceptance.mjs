@@ -1,3 +1,4 @@
+import {semSetup} from '../gazi/auth/tests/helpers/local-sem.mjs';
 import {generateKeyPairSync} from 'node:crypto';
 import {importJWK} from '../gazi/auth/node_modules/jose/dist/webapi/index.js';
 import {registryFields} from '../gazi/auth/myys/registry.mjs';
@@ -17,7 +18,7 @@ import {myysRoute} from '../gazi/auth/myys/http.mjs';
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
-const initial=process.argv.includes('--keys')?f.passed():process.argv.includes('--profiles')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--replacement')||process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+const initial=process.argv.includes('--sem')?semSetup(f):process.argv.includes('--keys')?f.passed():process.argv.includes('--profiles')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--replacement')||process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
 if(process.argv.includes('--appeal-policies'))f.assess(initial);
 if(process.argv.includes('--profiles')){const reason='Sentetik düzenleme yetki kaydı, gerçek kurum kararı değildir.';const authority=f.run('admin','registry-draft',{unit:initial.p.unit,type:'institution-authority',title:'Sentetik düzenleme yetkisi',fields:{...initial.p.responsibilities,pathway:initial.p.pathway,authorityReference:reason}});f.run('authority','registry-review',{recordId:authority.id,outcome:'accepted',reason});}
 if(process.argv.includes('--quality')){

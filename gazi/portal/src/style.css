@@ -39,3 +39,6 @@
 .shared-summary{max-width:780px;margin:48px auto;padding:24px;overflow-wrap:anywhere}
 
 .program-diff{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;padding:12px;background:var(--bg);border-radius:8px;max-width:100%}
+
+/* SEM field groups retain full-width labelled controls on narrow screens. */
+.academic-body.sem-form fieldset{min-width:0}.academic-body.sem-form fieldset .field{display:flex}.academic-body.sem-form fieldset input,.academic-body.sem-form fieldset select,.academic-body.sem-form fieldset textarea{width:100%;min-width:0}

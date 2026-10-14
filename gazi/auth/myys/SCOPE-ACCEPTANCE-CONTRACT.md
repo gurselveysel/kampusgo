@@ -42,3 +42,7 @@ Destek ve veri talebi oluşturma/paylaşım geri çekme işlemlerinde birim üye
 ## Paket 23 genişlemesi
 
 2026.10.13.23 envanteri alternatif kanıt ve moderasyon komutlarıyla 68 komuta çıktı; 12 HTTP yolu korundu. 2.800 olumlu örnekten 22.400 denetim ve 428 otomatik test geçti. Tarihsel Paket 22 kanıtı değiştirilmedi; yeni sonuç B10-alternative-20261013.json içindedir.
+
+## Paket 24 genişlemesi
+
+2026.10.14.24 envanteri SEM hazırlık/inceleme/paket/geri çekme ile 72 komut ve 12 HTTP yolunu kapsar. 2.875 olumlu örnekten 23.000 denetim, 440 otomatik test geçti. Tarihsel kanıtlar korunur; yeni sonuç B23-sem-20261014.json içindedir.

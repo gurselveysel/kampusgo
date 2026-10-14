@@ -1,0 +1,129 @@
+{
+  "work_id": "B23",
+  "scope": "isolated-local-preparation",
+  "production": false,
+  "official": false,
+  "automated": {
+    "server": 348,
+    "portal": 46,
+    "regression": 46
+  },
+  "browser": {
+    "sem": {
+      "at": "2026-10-14T00:02:27.606Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "Koordinatör kaynak ve eksik kontrolüyle yerel dosyayı kaydetti; kendi inceleyemedi",
+        "Eksik dosyanın uygun seçeneği kapalı; ayrı komisyon düzeltme istedi",
+        "Düzeltme bekleyen dosya aktarım hazırlığına veya indirmeye ilerlemedi",
+        "Düzeltme yeni sürümde yapıldı; önceki kaynak ve inceleme korundu",
+        "Yeni sürüm ayrı kişiyle incelendi; form etiketleri ve klavye sırası çalışıyor",
+        "Ayrı öğrenci işleri imzasız hazırlık dosyasını indirdi; merkezi onay/gönderim/ihraç bayrakları kapalı",
+        "Arama eşleşen sürümleri buluyor; boş sonuç açıklaması var",
+        "Üçüncü dosya sürümü eski incelemeyle hazırlanamadı; önceki paket tarihsel kaldı",
+        "Geri çekme ve üç sürüm yenilemede korundu; dış sisteme iptal gönderilmedi",
+        "Öğrenen ve BT idari dosya içeriğine erişemedi",
+        "390 px dosya geçmişi ve kaynak/kontrol formunda taşma yok",
+        "Yeni sürüm hazırlığı kayda dönüşmeden kapatılabildi",
+        "İstemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    },
+    "appeals": {
+      "at": "2026-10-14T00:01:19.305Z",
+      "scope": "isolated-local-acceptance",
+      "browser": "138.0.7204.0",
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+        "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+        "390 px mobil: taşma ve bozuk resim yok",
+        "Akademik sekmeler Home/End tuşları ve seçili durum",
+        "Yakalanmış istemci istisnası yok"
+      ],
+      "errors": [],
+      "production": false
+    }
+  },
+  "scope_matrix": {
+    "at": "2026-10-13T23:57:15.121Z",
+    "commands": 72,
+    "httpRoutes": 12,
+    "positiveSamples": 2875,
+    "totalChecks": 23000,
+    "newActions": {
+      "sem-dossier": {
+        "positiveSamples": 11,
+        "checks": {
+          "other-unit-fresh:404": 11,
+          "other-unit-replay:403": 11,
+          "other-tenant-fresh:403": 11,
+          "other-tenant-replay:403": 11,
+          "other-unit-read:no-private-record": 11,
+          "other-tenant-read:403": 11,
+          "valid-other-tenant-reference:404": 11,
+          "valid-other-tenant-read:no-tenant-A-record": 11
+        }
+      },
+      "sem-review": {
+        "positiveSamples": 11,
+        "checks": {
+          "other-unit-fresh:404": 11,
+          "other-unit-replay:403": 11,
+          "other-tenant-fresh:403": 11,
+          "other-tenant-replay:403": 11,
+          "other-unit-read:no-private-record": 11,
+          "other-tenant-read:403": 11,
+          "valid-other-tenant-reference:404": 11,
+          "valid-other-tenant-read:no-tenant-A-record": 11
+        }
+      },
+      "sem-package": {
+        "positiveSamples": 7,
+        "checks": {
+          "other-unit-fresh:404": 7,
+          "other-unit-replay:403": 7,
+          "other-tenant-fresh:403": 7,
+          "other-tenant-replay:403": 7,
+          "other-unit-read:no-private-record": 7,
+          "other-tenant-read:403": 7,
+          "valid-other-tenant-reference:404": 7,
+          "valid-other-tenant-read:no-tenant-A-record": 7
+        }
+      },
+      "sem-withdraw": {
+        "positiveSamples": 1,
+        "checks": {
+          "other-unit-fresh:404": 1,
+          "other-unit-replay:403": 1,
+          "other-tenant-fresh:403": 1,
+          "other-tenant-replay:403": 1,
+          "other-unit-read:no-private-record": 1,
+          "other-tenant-read:403": 1,
+          "valid-other-tenant-reference:404": 1,
+          "valid-other-tenant-read:no-tenant-A-record": 1
+        }
+      }
+    }
+  },
+  "criteria_closed_in_local_scope": [
+    "Merkezî SEM dosya kontrol listesi, kaynak kapsamı, ayrı inceleme, sürüm, geri çekme ve imzasız aktarım hazırlığı.",
+    "Eksik dosya veya aynı hazırlayanla uygunluk/aktarım hazırlığı reddedilir; başka kurum/birim ve rol sınırı.",
+    "İndirilen gerçek yerel dosyada merkezî onay, gönderim, düzenleyici teyidi ve resmî ihraç kapalıdır.",
+    "Merkezî SEM başarı kararı ve hazırlık dosyası yerel belge ihraç yolunu açmaz."
+  ],
+  "remaining": [
+    "Güncel YÖK asıl yazısı ve eklerinin tam okuması; Gazi/GAZİSEM güncel usul, program ve görev kararı.",
+    "YÖKSİS teknik şeması/yetkili test erişimi, gerçek başvuru/uygunluk ve merkezî düzenleyici kabulü.",
+    "Paket 17–24 canlı yayım ve korumalı smoke açık."
+  ]
+}
