@@ -2,7 +2,7 @@ import {sourceDescriptor} from '../../myys/source-contract.mjs';
 import {sourceTrustDigest} from '../../myys/source-trust.mjs';
 import {randomUUID} from 'node:crypto';
 import {generateKeyPair,exportJWK,SignJWT,CompactSign} from 'jose';
-import {LocalSignedSourceAdapter,sourceBinding,sourcePacketFormat,sourcePacketType} from '../../myys/source-packet.mjs';
+import {LocalSignedSourceAdapter,sourceBinding,sourcePacketFormat,sourcePacketType,sourceRegistrationFormat} from '../../myys/source-packet.mjs';
 import {hash} from '../../myys/store.mjs';
 
 export async function sourcePacketFixture(f,{initial=f.setup(),registered=true}={}){
@@ -14,7 +14,8 @@ export async function sourcePacketFixture(f,{initial=f.setup(),registered=true}=
   const at=Math.floor(Date.parse(clock())/1000),id=randomUUID(),content='Sentetik dış kaynak çalışması: veri temizleme yöntemi ve sonuçları gerekçeleriyle açıklandı.';
   const event={id,revision:1,type:'grade',occurredAt:new Date(at*1000).toISOString(),taskId:'T1',submissionId:'source-submission-1',submissionVersion:1,content,contentSha256:hash(content),grade:90,completed:null,...changes};
   if(event.type!=='grade')Object.assign(event,{taskId:null,content:null,contentSha256:null,grade:null,completed:event.type==='completion'?changes.completed??true:null});
-  const c=config;return {iss:c.issuer,aud:c.audience,iat:at,exp:at+3600,jti:event.id,sub:'source-student',personId:'student',format:sourcePacketFormat,scope:{tenant:c.tenant,unit:c.unit,contractId:c.id,contractVersion:c.version,courseId:c.courseId,sourceProgramVersion:c.sourceProgramVersion,sourceRubricVersion:c.sourceRubricVersion},binding:sourceBinding(initial.p,event.type==='grade'?event.taskId:null),event};
+  if(event.type==='registration')Object.assign(event,{registered:changes.registered??true,registrationId:changes.registrationId??'source-registration-1'});
+  const c=config;return {iss:c.issuer,aud:c.audience,iat:at,exp:at+3600,jti:event.id,sub:'source-student',personId:'student',format:event.type==='registration'?sourceRegistrationFormat:sourcePacketFormat,scope:{tenant:c.tenant,unit:c.unit,contractId:c.id,contractVersion:c.version,courseId:c.courseId,sourceProgramVersion:c.sourceProgramVersion,sourceRubricVersion:c.sourceRubricVersion},binding:sourceBinding(initial.p,event.type==='grade'?event.taskId:null),event};
  };
  const token=(p=payload(),header={})=>new SignJWT(p).setProtectedHeader({alg:'RS256',kid:jwk.kid,typ:sourcePacketType,...header}).sign(pair.privateKey);
  const rawToken=raw=>new CompactSign(Buffer.from(raw)).setProtectedHeader({alg:'RS256',kid:jwk.kid,typ:sourcePacketType}).sign(pair.privateKey);

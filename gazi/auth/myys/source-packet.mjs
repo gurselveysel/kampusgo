@@ -8,6 +8,7 @@ import {programBaseline,stableStringify} from './program-model.mjs';
 import {acceptLmsEvent,processLmsEventInTransaction,LocalLmsWorker} from './lms.mjs';
 
 export const sourcePacketFormat='myys-source-packet/1';
+export const sourceRegistrationFormat='myys-source-registration/1';
 export const sourcePacketType='myys-source+jwt';
 const iso=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
 const text=v=>typeof v==='string'&&v.trim().length>0&&v.length<=255;
@@ -58,18 +59,19 @@ export class LocalSignedSourceAdapter {
    ({payload:p}=await jwtVerify(token,this.#keys,{issuer:c.issuer,audience:c.audience,algorithms:['RS256'],currentDate:new Date(receivedAt),maxTokenAge:86400,requiredClaims:['iss','aud','iat','exp','jti','sub','format','scope','binding','event']}));
    // Narrow local transport profile: compact JSON without duplicate members or alternate encodings.
    if(Buffer.from(parts[0],'base64url').toString('utf8')!==JSON.stringify(header)||Buffer.from(parts[1],'base64url').toString('utf8')!==JSON.stringify(p))throw Error();
-   if(!object(p,['iss','aud','iat','exp','jti','sub','personId','format','scope','binding','event'])||p.aud!==c.audience||p.format!==sourcePacketFormat||!text(p.sub)||!text(p.jti)||![p.iat,p.exp].every(Number.isSafeInteger)||p.exp<=p.iat||p.exp-p.iat>86400)throw Error();
+   if(!object(p,['iss','aud','iat','exp','jti','sub','personId','format','scope','binding','event'])||p.aud!==c.audience||![sourcePacketFormat,sourceRegistrationFormat].includes(p.format)||!text(p.sub)||!text(p.jti)||![p.iat,p.exp].every(Number.isSafeInteger)||p.exp<=p.iat||p.exp-p.iat>86400)throw Error();
    if(!Object.hasOwn(c.subjects,p.sub)||p.personId!==c.subjects[p.sub])throw Error();
    const issued=p.iat*1000;if(issued<Date.parse(key.notBefore)||issued>=Date.parse(key.notAfter)||(key.state==='retired'&&issued>=Date.parse(key.retiredAt)))throw Error();
    const expectedScope={tenant:c.tenant,unit:c.unit,contractId:c.id,contractVersion:c.version,courseId:c.courseId,sourceProgramVersion:c.sourceProgramVersion,sourceRubricVersion:c.sourceRubricVersion};
    if(stableStringify(p.scope)!==stableStringify(expectedScope))throw Error();
-   const e=p.event;if(!object(e,['id','revision','type','occurredAt','taskId','submissionId','submissionVersion','content','contentSha256','grade','completed'])||e.id!==p.jti||!text(e.submissionId)||e.submissionVersion!==e.revision||!Number.isSafeInteger(e.revision)||e.revision<1||!['grade','completion','license-revoked'].includes(e.type))throw Error();
+   const e=p.event;if(!object(e,['id','revision','type','occurredAt','taskId','submissionId','submissionVersion','content','contentSha256','grade','completed',...(p.format===sourceRegistrationFormat?['registered','registrationId']:[])])||e.id!==p.jti||!text(e.submissionId)||e.submissionVersion!==e.revision||!Number.isSafeInteger(e.revision)||e.revision<1||!(p.format===sourceRegistrationFormat?e.type==='registration':['grade','completion','license-revoked'].includes(e.type)))throw Error();
+   if(e.type==='registration'&&(typeof e.registered!=='boolean'||typeof e.registrationId!=='string'||!/^[A-Za-z0-9._:-]{1,160}$/.test(e.registrationId)))throw Error();
    if(!iso(e.occurredAt)||Date.parse(e.occurredAt)>issued+999)throw Error();
    if(e.type==='grade'){if(!text(e.taskId)||typeof e.content!=='string'||e.contentSha256!==hash(e.content)||e.completed!==null)throw Error();}
    else if(e.taskId!==null||e.content!==null||e.contentSha256!==null||e.grade!==null||(e.type==='completion'?typeof e.completed!=='boolean':e.completed!==null))throw Error();
   }catch{throw new CoreError('source_signature','Kaynak dosyasının imzası, süresi veya sözleşmesi doğrulanamadı.',422);}
   const trust=sourceAcceptTrust(this.#store,c,header.kid,this.#clock());
-  const digest=hash(token),proof={format:sourcePacketFormat,trustRecordId:trust.id,trustDigest:sourceTrustDigest(trust),jwt:token,sha256:digest,kid:header.kid,issuer:c.issuer,contractVersion:c.version,receivedAt,binding:structuredClone(p.binding),submissionId:p.event.submissionId,submissionVersion:p.event.submissionVersion,sourceProgramVersion:c.sourceProgramVersion,sourceRubricVersion:c.sourceRubricVersion,official:false};
+  const digest=hash(token),proof={format:p.format,trustRecordId:trust.id,trustDigest:sourceTrustDigest(trust),jwt:token,sha256:digest,kid:header.kid,issuer:c.issuer,contractVersion:c.version,receivedAt,binding:structuredClone(p.binding),submissionId:p.event.submissionId,submissionVersion:p.event.submissionVersion,sourceProgramVersion:c.sourceProgramVersion,sourceRubricVersion:c.sourceRubricVersion,official:false};
   return acceptLmsEvent(this.#store,c,{...p.event,contractId:c.id,tenant:c.tenant,programId:c.programId,subject:p.sub},{digest,sourceProof:proof,clock:this.#clock,authorize:()=>{this.#actor(context);requireThat(sourceAcceptTrust(this.#store,c,header.kid,this.#clock()).id===trust.id,'source_trust','Kaynak güven sürümü değişti.',409);requireThat(Date.parse(this.#clock())<p.exp*1000,'source_expired','Kaynak dosyasının işleme süresi doldu.',409);this.#binding(p);}});
  }
  processInTransaction(eventId){requireThat(sourceEventTrusted(this.#store,this.#contract.tenant,this.#store.get(this.#contract.tenant,'lms-event',eventId)),'source_trust','Kaynak kanıtının güveni kullanıma kapalı.',409);return processLmsEventInTransaction(this.#store,this.#contract,eventId,this.#clock);}

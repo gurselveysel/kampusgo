@@ -1,3 +1,4 @@
+import {sourceRegistrationState,sourceRegistrationAllows} from './lms-registration.mjs';
 import {sourceEventTrusted} from './source-trust.mjs';
 import {createHmac,timingSafeEqual,randomUUID} from 'node:crypto';
 import {hash,requireThat,LocalAcceptanceStore} from './store.mjs';
@@ -32,8 +33,9 @@ export function acceptLmsEvent(s,c,event,{digest,sourceProof=null,authorize=null
  requireThat(s instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Kaynak alımı yalnız izole yerel kabulde çalışır.',503);
   requireThat(event&&event.contractId===c.id&&event.tenant===c.tenant&&event.programId===c.programId,'lms_scope','Olay kurum veya program kapsamı dışında.',403);
   requireThat(typeof event.id==='string'&&/^[a-zA-Z0-9_-]{8,100}$/.test(event.id)&&Number.isSafeInteger(event.revision)&&event.revision>0,'lms_event','Olay kimliği ve artan kaynak sürümü gerekli.');
-  requireThat(['grade','completion','license-revoked'].includes(event.type)&&typeof event.subject==='string','lms_event','Olay türü veya kaynak kişi kimliği geçersiz.');
+  requireThat(['registration','grade','completion','license-revoked'].includes(event.type)&&typeof event.subject==='string','lms_event','Olay türü veya kaynak kişi kimliği geçersiz.');
   requireThat(event.type!=='completion'||event.completed===undefined||typeof event.completed==='boolean','lms_completion','Tamamlama bildirimi doğru/yanlış biçiminde olmalı.');
+  requireThat(event.type!=='registration'||typeof event.registered==='boolean'&&typeof event.registrationId==='string'&&/^[A-Za-z0-9._:-]{1,160}$/.test(event.registrationId),'lms_registration','Kaynak kayıt kimliği ve doğru/yanlış durumu gerekli.');
   const person=Object.hasOwn(c.subjects,event.subject)?c.subjects[event.subject]:null;
   requireThat(person,'lms_identity','Kaynak kişi güvenilir eşlemede yok.',403);
   requireThat(Number.isFinite(Date.parse(event.occurredAt))&&Date.parse(event.occurredAt)<=Date.parse(clock())+300000,'lms_time','Olay zamanı geçersiz.');
@@ -45,10 +47,14 @@ export function acceptLmsEvent(s,c,event,{digest,sourceProof=null,authorize=null
    requireThat(member&&JSON.parse(member.roles).includes('learner'),'lms_identity','Etkin öğrenen üyeliği bulunamadı.',403);
    const program=s.get(c.tenant,'program',c.programId),enrollment=s.list(c.tenant,'enrollment').find(e=>e.programId===c.programId&&e.owner===person&&e.unit===c.unit);
    requireThat(program&&enrollment,'lms_enrollment','Önceden yetkilendirilmiş program kaydı gerekli.');
+   const registration=sourceRegistrationState(s,c.tenant,c.id,person,c);
+   requireThat(!['grade','completion'].includes(event.type)||['unreported','active'].includes(registration.state),'lms_registration','Kaynak ders kaydı etkin ve işlenmiş olmalı.',409);
+   if(event.type==='registration')requireThat(!s.list(c.tenant,'lms-event').some(e=>e.type==='registration'&&e.contractId===c.id&&e.registrationId===event.registrationId&&e.owner!==person),'lms_registration','Kaynak kayıt kimliği başka bir kişiye bağlı.',409);
+   if(event.type==='registration'&&registration.event)requireThat(event.registrationId===registration.event.registrationId,'lms_registration','Kaynak kayıt kimliği aynı kişi ve ders için değiştirilemez.',409);
    if(event.type==='grade')requireThat(program.tasks.some(t=>t.id===event.taskId)&&typeof event.content==='string'&&event.content.trim().length>=20&&event.content.length<=20000&&typeof event.grade==='number'&&Number.isFinite(event.grade)&&event.grade>=0&&event.grade<=100,'lms_evidence','Görev, çalışma ve 0–100 kaynak notu gerekli.');
    const stream=c.id+':'+person+':'+(event.type==='grade'?'grade:'+event.taskId:event.type);
    requireThat(!s.list(c.tenant,'lms-event').some(e=>e.stream===stream&&e.revision===event.revision),'lms_revision_conflict','Bu kaynak sürümü başka bir olayla kayıtlı.',409);
-   const record={id:eventId,unit:c.unit,owner:person,contractId:c.id,programId:c.programId,enrollmentId:enrollment.id,stream,revision:event.revision,type:event.type,completed:event.type==='completion'&&typeof event.completed==='boolean'?event.completed:null,taskId:event.type==='grade'?event.taskId:null,content:event.type==='grade'?event.content:null,grade:event.type==='grade'?event.grade:null,occurredAt:event.occurredAt,receivedAt:clock(),digest,state:'accepted',...(sourceProof?{sourceProof:structuredClone(sourceProof)}:{})};
+   const record={id:eventId,unit:c.unit,owner:person,contractId:c.id,programId:c.programId,enrollmentId:enrollment.id,stream,revision:event.revision,type:event.type,completed:event.type==='completion'&&typeof event.completed==='boolean'?event.completed:null,taskId:event.type==='grade'?event.taskId:null,content:event.type==='grade'?event.content:null,grade:event.type==='grade'?event.grade:null,occurredAt:event.occurredAt,receivedAt:clock(),digest,state:'accepted',...(event.type==='registration'?{registered:event.registered,registrationId:event.registrationId}:{}),...(['grade','completion'].includes(event.type)&&registration.event?{registrationEventId:registration.event.id}:{}),...(sourceProof?{sourceProof:structuredClone(sourceProof)}:{})};
    s.put(c.tenant,'lms-event',record);
    s.db.prepare('INSERT INTO audit(tenant,actor,action,record_id,at) VALUES(?,?,?,?,?)').run(c.tenant,'adapter:'+c.id,'lms.accept',record.id,clock());
    return {id:eventId,status:'accepted',duplicate:false,processed:false};
@@ -61,6 +67,7 @@ export function processLmsEventInTransaction(s,c,eventId,clock){
    const member=s.db.prepare('SELECT roles FROM memberships m JOIN persons p ON p.id=m.person WHERE m.tenant=? AND m.person=? AND m.unit=? AND m.active=1 AND p.active=1 AND m.expires>?').get(c.tenant,e.owner,e.unit,clock());
    requireThat(member&&JSON.parse(member.roles).includes('learner'),'lms_identity','İşleme sırasında etkin öğrenen üyeliği bulunamadı.',403);
    requireThat(e.unit===c.unit&&e.programId===c.programId,'lms_scope','İşleme sözleşmesi olay kapsamıyla eşleşmiyor.',403);
+   requireThat(!['grade','completion'].includes(e.type)||sourceRegistrationAllows(s,c.tenant,e),'lms_registration','Kaynak ders kaydı bu olaya artık izin vermiyor.',409);
    const later=s.list(c.tenant,'lms-event').some(x=>x.stream===e.stream&&x.revision>e.revision);
    return s.put(c.tenant,'lms-receipt',{id:eventId,unit:e.unit,owner:e.owner,eventId:e.id,contractId:c.id,state:later?'stale':'processed',processedAt:clock(),academicDecision:false,issued:false});
 }
@@ -106,7 +113,7 @@ export class LocalLmsWorker {
   const transient=['source_temporarily_unavailable','SQLITE_BUSY','ETIMEDOUT'].includes(error?.code);
   const retryable=transient&&q.attempt<this.maxAttempts;
   // Never persist provider messages, stack traces, credentials or raw payloads.
-  const errorCode=transient?'temporary_failure':['lms_identity','lms_scope','source_trust','idempotency_conflict','lms_revision_conflict'].includes(error?.code)?error.code:'processing_failed';
+  const errorCode=transient?'temporary_failure':['lms_identity','lms_scope','lms_registration','source_trust','idempotency_conflict','lms_revision_conflict'].includes(error?.code)?error.code:'processing_failed';
   return this.append(e,retryable?'retry-wait':'quarantined',{claimId:claim.id,errorCode,retryable,nextAttemptAt:retryable?new Date(Date.parse(this.clock())+this.retryMs*2**(q.attempt-1)).toISOString():null});
  });}
  run(eventId){const claim=this.claim(eventId);if(!claim)return {claimed:false};try{return {claimed:true,receipt:this.finish(claim)};}catch(e){if(e.code==='lease_lost')return {claimed:true,leaseLost:true};return {claimed:true,failure:this.fail(claim,e)};}}
@@ -117,7 +124,7 @@ export class LocalLmsWorker {
 export function currentLmsEvidence(store,tenant,evidence){
  if(evidence.source!=='signed-lms-local')return true;
  const e=store.get(tenant,'lms-event',evidence.sourceEventId),r=e&&store.get(tenant,'lms-receipt',e.id);
- if(!e||r?.state!=='processed'||e.digest!==evidence.sourceDigest||!sourceEventTrusted(store,tenant,e))return false;
+ if(!e||r?.state!=='processed'||e.digest!==evidence.sourceDigest||!sourceEventTrusted(store,tenant,e)||!sourceRegistrationAllows(store,tenant,e))return false;
  if(e.sourceProof?evidence.sourceProofDigest!==hash(stableStringify(e.sourceProof)):!!evidence.sourceProofDigest)return false;
  return !store.list(tenant,'lms-event').some(x=>x.contractId===e.contractId&&x.owner===e.owner&&(x.type==='license-revoked'||x.stream===e.stream&&x.revision>e.revision));
 }

@@ -181,3 +181,8 @@ Kaynak güven sicili: sürüm/tarih/dayanak, ayrı ret-kabul, açık güven dosy
 ## Paket29 — B07 işlem/anahtar sınırı, yerel ve kısmi
 
 Görünür ekran değişikliği yok; yeni SQL/KMS/HTTP bağlantısı yok. 20 hata sürücüsü testi; 530 otomatik, mevcut HTTPS akışında 15 tarayıcı. 77 komut/16 HTTP kapsam sayıları değişmedi. Tek-client transaction, rollback/COMMIT belirsizliği ve sürümlü PKCE/nonce MAC doğrulandı. Gerçek PostgreSQL/RLS/KMS, SQL repository/HTTP ve atomik anahtar revizyon bariyeri açık. Kanıt: IDENTITY-ADAPTER-CONTRACT.md / acceptance/B07-adapters-20261014.json. B07 ve bütün B01–B36 tamamlandı denmez.
+
+
+## Paket30 — B15 kaynak ders kaydı/ilerleme yerel dilimi
+
+Aktarım ve mutabakat içinde aynı kişi/program/kaynak kaydı, tamamlama ve görev notu gösterilir; kayıt iptali eski kanıtı kapatır, yeniden kayıt eski notu canlandırmaz.11yeni sunucu +15yeni kayıt/ilerleme tarayıcı;14kaynak/14güven regresyonu.541otomatik;77komut/16HTTP3441örnek27528türetilmiş kontrol. B15 sağlayıcı bağımsız senaryolar kapandı; gerçek vendor şeması, kohort/worker/depo/dış kabul açık. B16/B29 aynı kayıt/güven uygunluğunu kullanır. B24 manuel ekran okuyucu kabulü açık. Kanıt LMS-REGISTRATION-CONTRACT.md ve acceptance/B15-registration-20261014.json.

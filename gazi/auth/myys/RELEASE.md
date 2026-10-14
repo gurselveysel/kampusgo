@@ -440,3 +440,14 @@ Yerel eddd7de825e0924c3e3304d4077d152b584ac46c; uzak 8d74c9ce928ef199a5ea05d2b1a
 Görünür ekran değişikliği yok. 20 yeni bağımsız hata sürücüsü testi; 438+46+46=530 ve mevcut yerel HTTPS akışında15 tarayıcı kontrolü. 77komut/16HTTP kapsam matrisi, 115dosyalı korumalı paket. Gerçek PostgreSQL/KMS veya yeni adaptörlerin HTTP kabulü değildir. SQL repository/anahtar revizyon köprüsü açık; B07 kısmi.
 
 Canlı dağıtım yok: son doğrulanan Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production; kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. Paket17–29 yayımlanmadı. İptal edilen browserAuth yeniden istenmedi; canlı smoke yapılmış sayılmaz. configuredCore kapalı.
+
+
+## Paket29 kaynak kimlikleri — 14.10.2026
+
+Yerel9d737a8c230f5ef3c8f612d321898e5414c4829f; uzak6ac2a5a69e29763a31a48b61b40f4ef1ab759f8c; ortak kaynak ağacı620a2a88d02100b585502e0c3d33570c31e963fa.11blob SHA birebir doğrulandı; expected-head8d74c9ce928ef199a5ea05d2b1acf082bf9f029a force=false. Canlı alias read-only yeniden sorgulandı: Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY. Yeni deployment/auth/smoke yapılmadı.
+
+## Paket30 aday — 14.10.2026, B15 kaynak ders kaydı/ilerleme
+
+Aktarım ve mutabakat ekranında aynı program/öğrenen için kaynak ders kaydı, tamamlama ve görev notu; iptal/yeniden kayıt ve lisans kapanışı mevcut kanıt/karar zincirine bağlı.11yeni sunucu,15yeni kayıt/ilerleme+14kaynak+14güven tarayıcı;449+46+46=541.77komut/16HTTP3441örnek27528kontrol;115korumalı statik dosya. Mobil390px ve gerçek klavye akışı incelendi; manuel ekran okuyucu değil.
+
+Yalnız yerel kabul; gerçek LMS/vendor/kurum kararı/üretim depo yok. Paket17–30 dağıtılmadı. Son doğrulanan canlı kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6, deploymentdpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production. Geri dönüşdpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. İptal edilmiş browserAuth yeniden istenmedi; yeni canlısmoke iddiası yok. configuredCore kapalı.

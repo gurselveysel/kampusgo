@@ -532,7 +532,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Güncel Paket29: 438 sunucu +46 portal +46 regresyon =530; 77 komut/16 HTTP,3337 olumlu örnek/26696 türetilmiş kapsam kontrolü. PostgreSQL/RLS üretim kabulü değildir.",
+      "test_status": "Paket30 güncel:449+46+46=541;77komut/16HTTP,3441olumlu örnek/27528türetilmiş kapsam kontrolü. Gerçek productionRLS/dağıtık kabul değildir.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -1102,39 +1102,55 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket26: 391 sunucu +46 portal +46 regresyon =483 otomatik; 14 kaynak aktarımı ve 13 itiraz tarayıcı kontrolü. 13 yeni kaynak paketi +6 HTTP testi, bağımsız doğrulama ve 72 komut/15 HTTP kapsam matrisi geçti.",
+      "test_status": "Paket30: 11 yeni sunucu senaryosu;449+46+46=541 otomatik.15 kayıt/ilerleme +14 kaynak +14 güven tarayıcı kontrolü.77komut/16HTTP3441örnek27528türetilmiş kapsam kontrolü.",
       "implementation_evidence": [
         "gazi/auth/myys/lms.mjs",
         "gazi/auth/tests/myys-lms.test.mjs",
-        "gazi/auth/myys/acceptance/B09-source-20261014.json"
+        "gazi/auth/myys/acceptance/B09-source-20261014.json",
+        "gazi/auth/myys/lms-registration.mjs",
+        "gazi/auth/myys/source-packet.mjs",
+        "gazi/auth/myys/quality-report.mjs",
+        "gazi/portal/src/source-progress-workspace.jsx",
+        "gazi/auth/tests/myys-lms-registration.test.mjs",
+        "scripts/myys-registration-browser.cjs",
+        "gazi/auth/myys/LMS-REGISTRATION-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B15-registration-20261014.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir. Paket26: imzalı kaynak JSON taşıması, 202/kuyruk/işleme ayrımı ve işlem içinde worker yetki denetimi mevcut zincire eklendi; gerçek sağlayıcı kabulü değildir. Paket28: sürümlü ayrı kaynak güven incelemesi, anahtar/kontrat kapanışı ve eski kaynak/arşiv bağı mevcut zincire yayıldı; gerçek sağlayıcı kabulü açık.",
+      "production_status": "Paket30 kaynak dilimi yalnız yerel kabulde. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–30 dağıtımı yok. Gerçek LMS bağlı değil.",
+      "implementation_note": "İzole iç LMS sözleşmesi, imzalı olay kabulü/işleme, kişi eşlemesi, artan sürüm, tekrar/çakışma ve düzeltme/lisans iptali kapıları. Gerçek sağlayıcı adaptörü değildir. Paket26: imzalı kaynak JSON taşıması, 202/kuyruk/işleme ayrımı ve işlem içinde worker yetki denetimi mevcut zincire eklendi; gerçek sağlayıcı kabulü değildir. Paket28: sürümlü ayrı kaynak güven incelemesi, anahtar/kontrat kapanışı ve eski kaynak/arşiv bağı mevcut zincire yayıldı; gerçek sağlayıcı kabulü açık. Paket30: kaynak registration ayrı profil; önceden yetkili program kaydı şartı, kalıcı kabul/işleme, iptal ve yeniden kayıtla eski kanıtı canlandırmama, aynı kaynak ilerleme ekranı ve gösterge uygunluğu eklendi.",
       "independent_remaining_work": [
-        "İç adaptörü sağlayıcı bağımsız kayıt/not/tamamlama senaryolarıyla genişlet."
+        "Sağlayıcıdan bağımsız kayıt/not/tamamlama/düzeltme/lisans iptali/yanlış kişi senaryoları kapandı. Seçilen gerçek LMS ürün/sürüm şeması ve yetkili sentetik kohortla eşleme, gerçek taşıma/üretim worker/depo ve dış kabul açık; sağlayıcı sözleşmesi olmadan endpoint uydurma."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Seçilen LMS için yetkili test ortamı ve kimlik/veri eşlemesi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; sağlayıcı bağımsız senaryo dilimi tamam",
           "evidence": [
             "gazi/auth/myys/lms.mjs",
             "gazi/auth/tests/myys-lms.test.mjs",
-            "gazi/auth/myys/acceptance/B09-source-20261014.json"
+            "gazi/auth/myys/acceptance/B09-source-20261014.json",
+            "gazi/auth/myys/lms-registration.mjs",
+            "gazi/auth/myys/source-packet.mjs",
+            "gazi/auth/myys/quality-report.mjs",
+            "gazi/portal/src/source-progress-workspace.jsx",
+            "gazi/auth/tests/myys-lms-registration.test.mjs",
+            "scripts/myys-registration-browser.cjs",
+            "gazi/auth/myys/LMS-REGISTRATION-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B15-registration-20261014.json"
           ],
           "remaining": [
-            "İç adaptörü sağlayıcı bağımsız kayıt/not/tamamlama senaryolarıyla genişlet."
+            "Sağlayıcıdan bağımsız kayıt/not/tamamlama/düzeltme/lisans iptali/yanlış kişi senaryoları kapandı. Seçilen gerçek LMS ürün/sürüm şeması ve yetkili sentetik kohortla eşleme, gerçek taşıma/üretim worker/depo ve dış kabul açık; sağlayıcı sözleşmesi olmadan endpoint uydurma."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "Paket26: 391 sunucu +46 portal +46 regresyon =483 otomatik; 14 kaynak aktarımı ve 13 itiraz tarayıcı kontrolü. 13 yeni kaynak paketi +6 HTTP testi, bağımsız doğrulama ve 72 komut/15 HTTP kapsam matrisi geçti.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "sağlayıcı bağımsız sentetik senaryolar geçti; gerçek LMS kabulü açık",
+          "evidence": "Paket30: 11 yeni sunucu senaryosu;449+46+46=541 otomatik.15 kayıt/ilerleme +14 kaynak +14 güven tarayıcı kontrolü.77komut/16HTTP3441örnek27528türetilmiş kapsam kontrolü.",
+          "limits": "İlk gerçek vendor adaptörü ve B10/B14 dış bağımlılık kapanışı değildir."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "Paket30 canlı yayımlanmadı",
+          "evidence": "Paket30 kaynak dilimi yalnız yerel kabulde. Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877; Paket17–30 dağıtımı yok. Gerçek LMS bağlı değil."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1174,10 +1190,12 @@
         "gazi/auth/tests/myys-operations.test.mjs",
         "scripts/myys-operations-browser.cjs",
         "gazi/auth/myys/acceptance/B16-B17-20261010.json",
-        "gazi/auth/myys/acceptance/B09-source-20261014.json"
+        "gazi/auth/myys/acceptance/B09-source-20261014.json",
+        "gazi/auth/myys/LMS-REGISTRATION-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B15-registration-20261014.json"
       ],
       "production_status": "Paket 6: e10989a9084c42f131a798d65da465f392bc8993 / dpl_3QxBAAEiFAEoESH86QRaggCyjBj3 READY / production. Kod dağıtıldı; kurumsal etkinleştirme kapalı.",
-      "implementation_note": "Kalıcı yerel işçi claim/süre/yeniden deneme/karantina; yetkili inceleme ve kalıcı toplu satır mutabakatı, CSV arayüzü. Akademik karar/ihraç kendiliğinden üretilmez. Paket26: imzalı kaynak JSON taşıması, 202/kuyruk/işleme ayrımı ve işlem içinde worker yetki denetimi mevcut zincire eklendi; gerçek sağlayıcı kabulü değildir. Paket28: sürümlü ayrı kaynak güven incelemesi, anahtar/kontrat kapanışı ve eski kaynak/arşiv bağı mevcut zincire yayıldı; gerçek sağlayıcı kabulü açık.",
+      "implementation_note": "Kalıcı yerel işçi claim/süre/yeniden deneme/karantina; yetkili inceleme ve kalıcı toplu satır mutabakatı, CSV arayüzü. Akademik karar/ihraç kendiliğinden üretilmez. Paket26: imzalı kaynak JSON taşıması, 202/kuyruk/işleme ayrımı ve işlem içinde worker yetki denetimi mevcut zincire eklendi; gerçek sağlayıcı kabulü değildir. Paket28: sürümlü ayrı kaynak güven incelemesi, anahtar/kontrat kapanışı ve eski kaynak/arşiv bağı mevcut zincire yayıldı; gerçek sağlayıcı kabulü açık. Paket30 kaynak ders kayıt iptali/yeniden kayıt mevcut uygunluk ve worker zincirine bağlandı; tamamlamada güncel kaynak güveni/kayıt durumu aynı veriden denetleniyor. Gerçek LMS/üretim kabulü ayrı açık.",
       "independent_remaining_work": [
         "Gerçek LMS sözleşmesine bağlı üretim depo/işçi adaptörü ve dağıtık kuyruk kabulü; yeni HTTP alım sözleşmesi."
       ],
@@ -1197,7 +1215,9 @@
             "gazi/auth/tests/myys-operations.test.mjs",
             "scripts/myys-operations-browser.cjs",
             "gazi/auth/myys/acceptance/B16-B17-20261010.json",
-            "gazi/auth/myys/acceptance/B09-source-20261014.json"
+            "gazi/auth/myys/acceptance/B09-source-20261014.json",
+            "gazi/auth/myys/LMS-REGISTRATION-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B15-registration-20261014.json"
           ],
           "remaining": [
             "Gerçek LMS sözleşmesine bağlı üretim depo/işçi adaptörü ve dağıtık kuyruk kabulü; yeni HTTP alım sözleşmesi."
@@ -2059,10 +2079,12 @@
         "gazi/auth/tests/myys-quality.test.mjs",
         "scripts/myys-quality-browser.cjs",
         "gazi/auth/myys/QUALITY-CONTRACT.md",
-        "gazi/auth/myys/acceptance/B29-20261010.json"
+        "gazi/auth/myys/acceptance/B29-20261010.json",
+        "gazi/auth/myys/LMS-REGISTRATION-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B15-registration-20261014.json"
       ],
       "production_status": "Paket 12 kaynak kodu READY yayımlandı; canlı kapalı akademik görünüm ve rehber doğrulandı. Yeni kayıt akışları yalnız yerel kabulde.",
-      "implementation_note": "Aynı kalıcı kayıtlara bağlı başvuru-kabul-program kaydı, açık LMS tamamlama, kişisel teslim teyidi, kaynak kimlikli filtre/CSV mutabakatı.",
+      "implementation_note": "Aynı kalıcı kayıtlara bağlı başvuru-kabul-program kaydı, açık LMS tamamlama, kişisel teslim teyidi, kaynak kimlikli filtre/CSV mutabakatı. Paket30 kaynak ders kayıt iptali/yeniden kayıt mevcut uygunluk ve worker zincirine bağlandı; tamamlamada güncel kaynak güveni/kayıt durumu aynı veriden denetleniyor. Gerçek LMS/üretim kabulü ayrı açık.",
       "independent_remaining_work": [
         "Yetkili dış belge kabul/teslim kaynağı adaptörü ve gerçek LMS/kohort kaynak sayıları mutabakatı."
       ],
@@ -2078,7 +2100,9 @@
             "gazi/auth/tests/myys-quality.test.mjs",
             "scripts/myys-quality-browser.cjs",
             "gazi/auth/myys/QUALITY-CONTRACT.md",
-            "gazi/auth/myys/acceptance/B29-20261010.json"
+            "gazi/auth/myys/acceptance/B29-20261010.json",
+            "gazi/auth/myys/LMS-REGISTRATION-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B15-registration-20261014.json"
           ],
           "remaining": [
             "Yetkili dış belge kabul/teslim kaynağı adaptörü ve gerçek LMS/kohort kaynak sayıları mutabakatı."

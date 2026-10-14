@@ -1,17 +1,18 @@
+import {SourceProgressWorkspace} from './source-progress-workspace.jsx';
 import {ObsWorkspace} from './obs-workspace.jsx';
 import React,{useState,useRef} from 'react';
 import {Card,CardHead,Button,Field,Notice,Pill} from './ui.jsx';
 import {transferCsv} from '../../auth/myys/transfer-csv.mjs';
 
 const states={accepted:'Kabul edildi · İşlenmedi',processing:'İşleniyor','retry-wait':'Yeniden deneme bekliyor',quarantined:'Karantinada',processed:'İşlendi',stale:'Eski sürüm · Kullanılmadı',prepared:'Belge hazırlığı kaydedildi',rejected:'Satır reddedildi'};
-const errors={source_trust:'Kaynak sözleşmesi veya anahtarı kullanıma kapalı.',invalid_row:'Satır eksik veya sütun sayısı hatalı.',not_found:'Karar bulunamadı veya bu birimden erişilemiyor.',duplicate_learner:'Bu kişi ve program aynı listede tekrar ediyor.',duplicate:'Bu kayıt için belge hazırlığı zaten var.',decision_blocked:'Karar güncel değil veya açık itiraz var.',separation:'Görevler ayrılığı sağlanmıyor.',issuer_pathway:'Bu belge yolu yerel hazırlığa kapalı.',temporary_failure:'Geçici işleme sorunu.',attempt_limit:'Deneme sınırına ulaşıldı.',lms_identity:'Öğrenen üyeliği yeniden doğrulanmalı.',lms_scope:'Kaynak sözleşmesi ve olay kapsamı uyuşmuyor.',processing_failed:'İşleme hatası inceleme gerektiriyor.',idempotency_conflict:'Aynı olay kimliği farklı içerikle geldi.',lms_revision_conflict:'Aynı kaynak sürümü başka olayla kayıtlı.'};
+const errors={lms_registration:'Kaynak ders kaydı etkin değil veya kayıt sürümü değişti.',source_trust:'Kaynak sözleşmesi veya anahtarı kullanıma kapalı.',invalid_row:'Satır eksik veya sütun sayısı hatalı.',not_found:'Karar bulunamadı veya bu birimden erişilemiyor.',duplicate_learner:'Bu kişi ve program aynı listede tekrar ediyor.',duplicate:'Bu kayıt için belge hazırlığı zaten var.',decision_blocked:'Karar güncel değil veya açık itiraz var.',separation:'Görevler ayrılığı sağlanmıyor.',issuer_pathway:'Bu belge yolu yerel hazırlığa kapalı.',temporary_failure:'Geçici işleme sorunu.',attempt_limit:'Deneme sınırına ulaşıldı.',lms_identity:'Öğrenen üyeliği yeniden doğrulanmalı.',lms_scope:'Kaynak sözleşmesi ve olay kapsamı uyuşmuyor.',processing_failed:'İşleme hatası inceleme gerektiriyor.',idempotency_conflict:'Aynı olay kimliği farklı içerikle geldi.',lms_revision_conflict:'Aynı kaynak sürümü başka olayla kayıtlı.'};
 const status=value=>states[value]||'İnceleme gerekli';
 const issue=code=>errors[code]||'Satırın yetki ve kaynak bilgilerini inceleyin.';
 function download(name,rows){const url=URL.createObjectURL(new Blob([transferCsv(rows)],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 export function OperationsWorkspace({data,busy,command,sourceAction,sourceTrust}){
  const [search,setSearch]=useState(''),[filter,setFilter]=useState('all');
  const queue=(data.queue||[]).filter(e=>(filter==='all'||e.state===filter)&&[e.contractId,e.id,status(e.state)].join(' ').toLocaleLowerCase('tr').includes(search.toLocaleLowerCase('tr')));
- return <div className="operations-workspace"><ObsWorkspace data={data} busy={busy} command={command}/>
+ return <div className="operations-workspace"><SourceProgressWorkspace rows={data.lmsProgress||[]}/><ObsWorkspace data={data} busy={busy} command={command}/>
  {!!data.sourceContracts?.length&&<SourcePacketForm contracts={data.sourceContracts} busy={busy} sourceAction={sourceAction} sourceTrust={sourceTrust}/>}
  <Notice>Kabul edilen olay henüz işlenmiş sayılmaz. İşlenmiş kaynak verisi de insan değerlendirmesi ve akademik karar yerine geçmez.</Notice>
  <Card><CardHead title="Olay kuyruğu ve karantina" sub="Yetkili olduğunuz birimlerdeki işleme durumları. Öğrenme kanıtının içeriği bu ekranda gösterilmez."/>
@@ -19,6 +20,7 @@ export function OperationsWorkspace({data,busy,command,sourceAction,sourceTrust}
  <Field label="İşleme durumu"><select aria-label="İşleme durumu" value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">Tüm durumlar</option>{['accepted','processing','retry-wait','quarantined','processed','stale'].map(s=><option key={s} value={s}>{status(s)}</option>)}</select></Field>
  <p role="status">{queue.length} olay gösteriliyor.</p>
  {queue.map(e=><article key={e.id} className="academic-record"><strong>{data.sourceContracts?.find(c=>c.id===e.contractId)?.name||e.contractId} · Kaynak sürümü {e.revision}</strong><Pill tone={e.state==='processed'?'green':'amber'}>{status(e.state)}</Pill><small>Olay: {e.id}</small><p>İşleme denemesi: {e.attempt}</p>
+ <p>Olay türü: {{registration:'Ders kaydı',grade:'Görev notu',completion:'Tamamlama bildirimi','license-revoked':'Kaynak lisansı iptali'}[e.type]||'Kaynak bildirimi'}</p>
  {e.sourceSigned&&<p>İmzalı kaynak dosyası · Teslim sürümü {e.sourceSubmissionVersion}. {e.type==='grade'?'Program, rubrik ve görev':'Program ve rubrik'} bağı saklandı.</p>}
  {e.sourceSigned&&!e.sourceTrusted&&<p>Kaynak güveni doğrulanmadı veya kapatıldı. Bu olay işlenemez; güven sicilini inceleyin.</p>}
  {e.sourceSigned&&e.sourceTrusted&&data.sourceContracts?.some(c=>c.id===e.contractId)&&(['accepted'].includes(e.state)||e.leaseExpired||e.state==='retry-wait'&&e.nextAttemptAt<=new Date().toISOString())&&<Button disabled={busy} onClick={()=>sourceAction('kaynak-isle',{contractId:e.contractId,eventId:e.id})}>Kaynak olayını işle</Button>}

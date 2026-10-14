@@ -7,7 +7,7 @@ export function qualityReport(view,{programId='',unit=''}={}){
  const latest=new Map();for(const d of decisions)latest.set(d.enrollmentId,d);
  const events=(view.lmsEvents||[]).filter(r=>scoped(r)&&enrollmentIds.has(r.enrollmentId)),streams=new Map();for(const e of events.filter(e=>e.type==='completion'))if(!streams.has(e.stream)||streams.get(e.stream).revision<e.revision)streams.set(e.stream,e);
  const latestEvents=[...streams.values()],receipts=new Map((view.lmsReceipts||[]).map(r=>[r.eventId,r]));
- const valid=e=>typeof e.completed==='boolean'&&receipts.get(e.id)?.state==='processed'&&!events.some(r=>r.type==='license-revoked'&&r.contractId===e.contractId&&r.owner===e.owner);
+ const valid=e=>e.currentSource!==false&&typeof e.completed==='boolean'&&receipts.get(e.id)?.state==='processed'&&!events.some(r=>r.type==='license-revoked'&&r.contractId===e.contractId&&r.owner===e.owner);
  const completed=[],uncertain=[];for(const e of enrollments){const sources=latestEvents.filter(r=>r.enrollmentId===e.id);if(!sources.length||sources.some(r=>!valid(r))||new Set(sources.map(r=>r.completed)).size!==1)uncertain.push(e);else if(sources[0].completed)completed.push(e);}
  const issuances=(view.issuances||[]).filter(r=>scoped(r)&&r.signed&&!r.blocked),delivery=(view.credentialReceipts||[]).filter(r=>issuances.some(i=>i.id===r.issuanceId));
  // A support ticket has no program link: program-filtered support is explicitly unavailable.

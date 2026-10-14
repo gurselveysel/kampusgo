@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-14",
+  "package": 30,
+  "work_ids": [
+    "B15",
+    "B16",
+    "B29"
+  ],
+  "scope": "provider-neutral-isolated-local-acceptance",
+  "ui": [
+    "Aktarım ve mutabakat / Kaynak ders kaydı ve ilerleme"
+  ],
+  "new_profile": "myys-source-registration/1",
+  "new_tests": 11,
+  "automated": {
+    "server": 449,
+    "portal": 46,
+    "regression": 46,
+    "total": 541
+  },
+  "browser": {
+    "registration": 15,
+    "source": 14,
+    "source_trust": 14
+  },
+  "scope_matrix": {
+    "commands": 77,
+    "http_routes": 16,
+    "positive_samples": 3441,
+    "derived_checks": 27528
+  },
+  "production": false,
+  "live_package": 16,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "manual_screen_reader_tested": false,
+  "independent_verifier_checks_current_registration": false,
+  "criteria_slice_closed": [
+    "provider-neutral registration/completion/grade correction/license revocation/wrong person synthetic scenarios"
+  ],
+  "open": [
+    "actual LMS vendor schema and authorized synthetic cohort",
+    "production store/worker and external interoperability",
+    "institutional cohort authorization and manual accessibility acceptance"
+  ]
+}

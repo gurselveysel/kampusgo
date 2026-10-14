@@ -210,3 +210,8 @@ Kaynak güven sicili: sürüm/tarih/dayanak, ayrı ret-kabul, açık güven dosy
 ## Paket29 · B07 bağımsız adaptör sınırları
 
 Ekran değişikliği yok. PostgresIdentityTransactions yalnız enjekte edilen tek client ile serializable transaction, sıralı xact kilidi, başarısız audit rollback, opt-in 40001/40P01 bütün işlem tekrarı ve belirsiz COMMIT için sonuç vermeme/bağlantıyı atma uygular. IdentityKeyProvider yalnız PKCE/nonce için version/purpose/tenant/contract bağı, zamanlı MAC ve öncesi/sonrası metadata denetimi yapar; sır çıkmaz. Yeni bağımlılık, driver bağlantısı, migration veya credential yok. 20 yeni hata sürücüsü testi ve 15 mevcut HTTPS tarayıcı kontrolü; toplam530. SQL repository/HTTP bağlaması, atomik key revision bariyeri ve gerçek PostgreSQL/KMS kabulü açık. IDENTITY-ADAPTER-CONTRACT.md sınırları belirler.
+
+
+## Paket30 · B15 kaynak ders kaydı ve ilerleme
+
+Aktarım ve mutabakat ekranına kişi/program/ders kayıt ve ilerleme kartı, arama/filtre/kayıt geçmişi eklendi. Yeni imzalı myys-source-registration/1 bildirimi mevcut kaynak güveni, kuyruğu ve yerel program kaydına bağlanır; kendi başına enrollment/karar üretmez. İptal kabul anında uygunluğu kapatır; yeni etkin kayıt ve yeni görev bildirimi gerekir, eski insan kararı ve arşiv aynı kalır. Worker geç sonucu karantinaya alır. Güncel kaynak güveni/registrationFalse veya lisans iptali completion göstergesine de yansır.11sunucu,15yeni+28regresyon tarayıcı;449+46+46=541. Sağlayıcı bağımsız B15 dilimi geçti, gerçek vendor/kurum/üretim kabulü açık. LMS-REGISTRATION-CONTRACT.md ayrıntıları.

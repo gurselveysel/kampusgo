@@ -1,3 +1,11 @@
+# Güncel devam — Paket30 yerel kabul; kaynak eşitlemesi sırada
+
+B15 Aktarım ve mutabakat / Kaynak ders kaydı ve ilerleme hazır.11yeni sunucu;449+46+46=541otomatik;15kayıt/ilerleme+14kaynak+14güven tarayıcı.77komut/16HTTP3441örnek27528kontrol. Mobil390px ve klavye incelendi;115dosya korumalı paket. LMS-REGISTRATION-CONTRACT.md ve B15-registration20261014 kanıtı. Gerçek LMS/depo/kurum kabulü açık; B15 geneli kısmi.
+
+Önce diff/özgün36kriter, commit ve expected-head eşitle. Taban Paket29: yerel9d737a8c230f5ef3c8f612d321898e5414c4829f / uzak6ac2a5a69e29763a31a48b61b40f4ef1ab759f8c / ortak ağaç620a2a88d02100b585502e0c3d33570c31e963fa. Son canlıPaket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–30dağıtımı yok. BrowserAuth iptalini yeniden isteme; configuredCore kapalı; tek editör, alt ajan yok.
+
+Sonraki görünür bağımsız B01/B24: tüm mevcut menü/alt sayfa/modal ve dokuz rol için envanter/kabul matrisini gerçek kod ve tarayıcıyla genişlet; boş/etkisiz/kopuk işlemleri düzelt. B07 SQL repository/HTTP ve atomik key-revision köprüsü halen bağımsız açık: IDENTITY-ADAPTER-CONTRACT. B01–B36 bütün kalan işler sürer; kullanıcıdan devam bekleme. Gerçek credential/migration/ücretli hizmet/kurumsal belge/öğrenci işlemi yok.
+
 # Güncel devam — Paket29 yerel sınır kabulü; kaynak eşitlemesi sırada
 
 Görünür ekran değişikliği yok. B07 işlem/PKCE-nonce sağlayıcı sınırı20 yeni fault-driver testiyle hazır;438+46+46=530,15 mevcut HTTPS tarayıcı,77komut/16HTTP3337örnek26696kontrol. IDENTITY-ADAPTER-CONTRACT.md sınırlamaları oku: gerçek PostgreSQL/KMS yok; yeni sınırlar yerel HTTP'ye bağlı değil, SQL repository/atomik key revision bariyeri bağımsız açık. Bunları bitmiş gösterme.

@@ -58,3 +58,8 @@ Doğrulayıcı Python standart kitaplığı ve OpenSSL kullanır; uygulama/JOSE/
 14.10.2026 incelemesi: [IETF RFC 7515](https://www.rfc-editor.org/rfc/rfc7515.html), Mayıs 2015, §5.1–5.2 ve §6: imza girdisi, doğrulama ve güvenilen anahtar seçimi. [IETF RFC 8725](https://www.rfc-editor.org/rfc/rfc8725.html), BCP 225, Şubat 2020, §3.12: amaçlar arasında farklı tür/alıcı/doğrulama koşulları. Bunlar teknik kaynaklardır; yerel paket şeması ekip tasarımıdır, resmî LMS veya Gazi usulü değildir.
 
 Gerçek sağlayıcı örnek dosyası, kişi/ders/program/rubrik sürüm eşlemesi, lisans sözleşmesi, anahtar yetkisi ve taşıma protokolü dış kabule bağlıdır. Paket26 statik güven sınırından sonra Paket28 kaynak sicili/ayrı inceleme/iptal yayılımı yerel dilimi tamamlandı; bkz. SOURCE-TRUST-CONTRACT.md. Gerçek üretim depo/worker adaptörü ve onaylı sağlayıcı kabulü açık. B09/B15/B16 genel kabulü kapanmış sayılmaz. Yeni canlı yayın ve smoke ayrıca açık kalır.
+
+
+## Paket30 — ayrı kayıt bildirimi profili
+
+LMS-REGISTRATION-CONTRACT.md yeni myys-source-registration/1 biçimini, kayıt iptali/yeniden kayıt ve ilerleme görünümünü tanımlar. Önceki myys-source-packet/1 grade/completion/license-revoked alanları değişmedi. Yeni kayıt biçimi gerçek LMS standardı değildir. Bağımsız arşiv doğrulayıcısı tarihsel grade imzasını doğrular; güncel registration uygunluğunu doğruladığı iddia edilmez.
