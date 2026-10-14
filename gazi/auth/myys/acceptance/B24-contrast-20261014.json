@@ -1,0 +1,68 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 60,
+  "work_ids": [
+    "B24"
+  ],
+  "scope": "isolated-text-contrast-solid-results",
+  "deployed": false,
+  "official": false,
+  "tests_rerun": {
+    "gateway_inventory": 12,
+    "portal": 48,
+    "legacy": 46,
+    "total": 106
+  },
+  "last_full_suite": {
+    "software_package": 59,
+    "server": 784,
+    "portal": 48,
+    "legacy": 46,
+    "total": 878
+  },
+  "browser_checks": {
+    "navigation": 19,
+    "reflow": 7
+  },
+  "contrast": {
+    "engine": "axe-core4.14.0",
+    "rule": "color-contrast",
+    "profiles": 11,
+    "routes": 98,
+    "roles": 9,
+    "panels": 288,
+    "lessons": 66,
+    "modules": 22,
+    "frame_scans": 571,
+    "baseline_repeated_violation_nodes": 22824,
+    "final_repeated_violation_nodes": 0,
+    "final_repeated_review_nodes": 8809,
+    "review_reasons": {
+      "bgGradient": 3482,
+      "shortTextContent": 1124,
+      "elmPartiallyObscured": 4173,
+      "pseudoContent": 20,
+      "nonBmp": 6,
+      "elmPartiallyObscuring": 4
+    },
+    "full_wcag_acceptance": false,
+    "nontext_acceptance": false
+  },
+  "source_foreground_declarations": 152,
+  "semantic_foreground_variables": 2,
+  "computed_foreground_colors": 137,
+  "source_css_only_foreground_diff_checked": true,
+  "static_files": 115,
+  "active_sqlite_tables": 16,
+  "record_kinds": 148,
+  "unapplied_postgresql_candidate_table_count": 12,
+  "open": [
+    "Axe incomplete bulgularını ayrı çöz: geçişli zeminler, kısa sayaç/metinler, pseudo öğeler, kırpılmış/örtüşen alanlar; 8809 yinelenen bulgu geçmiş kabul değildir. Metin dışı kontrol/odak/ikon karşıtlığı ayrıca açık.",
+    "Gerçek ekran okuyucu, tüm dinamik içerikler/form hataları ve200% metin büyütme kabulü açık;320 CSS px ölçümü gerçek tarayıcı zoom koşusu değildir.",
+    "Video Türkçe altyazı/döküm doğruluğu, indirilen belge çıktısı okuma sırası ve gerçek canlı rol/akış kabulü açık."
+  ],
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "4aa001033000e727d02028bd4e53bc7a27cfb019",
+  "source_parent_tree": "5d055928bf64ec06d983c150521ac5997b59480b",
+  "contract": "CONTRAST-ACCEPTANCE.md"
+}

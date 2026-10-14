@@ -1,0 +1,1130 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 60,
+  "measured_colors": {
+    "#7d8fa5": {
+      "to": "#5c6a7a",
+      "backgrounds": [
+        "#f5f7fb",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.721096605265916
+    },
+    "#617690": {
+      "to": "#586b83",
+      "backgrounds": [
+        "#f5f8fd"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6621048272161145
+    },
+    "#8b9bac": {
+      "to": "#5f6975",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.763269284642017
+    },
+    "#788a9d": {
+      "to": "#5c6a79",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.727236912271907
+    },
+    "#677b94": {
+      "to": "#5a6b81",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.651162466718239
+    },
+    "#8493a6": {
+      "to": "#5f6a78",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.694271138427832
+    },
+    "#6487ae": {
+      "to": "#4f6b89",
+      "backgrounds": [
+        "#f0f5fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.722271082001485
+    },
+    "#7187a0": {
+      "to": "#596b7e",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.682363579496626
+    },
+    "#96a3b3": {
+      "to": "#626a74",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.677453560840964
+    },
+    "#9aabbd": {
+      "to": "#5f6a75",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.711965126087735
+    },
+    "#71849d": {
+      "to": "#5a6a7e",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.721204626393839
+    },
+    "#7b8fa5": {
+      "to": "#5c6b7c",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.657951234705452
+    },
+    "#86a0ba": {
+      "to": "#5a6b7d",
+      "backgrounds": [
+        "#edf3fb",
+        "#f5f7fb",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.676471443557709
+    },
+    "#6a8098": {
+      "to": "#586a7e",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.745937036667342
+    },
+    "#7b8ba0": {
+      "to": "#5d6a7a",
+      "backgrounds": [
+        "#eff3f7"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.708241582862165
+    },
+    "#6d89a6": {
+      "to": "#556b81",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.710394097942417
+    },
+    "#71839a": {
+      "to": "#5c6a7d",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.702392615241742
+    },
+    "#6c8097": {
+      "to": "#5a6a7d",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.72760078287875
+    },
+    "#6e849b": {
+      "to": "#596b7e",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.682363579496626
+    },
+    "#71869f": {
+      "to": "#5a6b7f",
+      "backgrounds": [
+        "#f1f6fd"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.663908244021217
+    },
+    "#7a8ea4": {
+      "to": "#5c6a7b",
+      "backgrounds": [
+        "#f8fafd"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.71490895302789
+    },
+    "#8296ab": {
+      "to": "#5c6a79",
+      "backgrounds": [
+        "#edf5ff",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.727236912271907
+    },
+    "#607c98": {
+      "to": "#546c84",
+      "backgrounds": [
+        "#f8fafd"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.650714485720344
+    },
+    "#728aa1": {
+      "to": "#586a7c",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.758816423229728
+    },
+    "#637f99": {
+      "to": "#546c82",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.663837303947321
+    },
+    "#6b8096": {
+      "to": "#596a7c",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.746435092912794
+    },
+    "#7d8da0": {
+      "to": "#5e6a78",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.707387968587795
+    },
+    "#8091a3": {
+      "to": "#5d6a77",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.726419898178604
+    },
+    "#8295a9": {
+      "to": "#5c6a78",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7333296288379785
+    },
+    "#6b839b": {
+      "to": "#586b7f",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.688042459169875
+    },
+    "#7c8fa4": {
+      "to": "#5d6b7b",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.651505633398774
+    },
+    "#a0adbc": {
+      "to": "#626a73",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.683110110382996
+    },
+    "#417bd3": {
+      "to": "#3769b3",
+      "backgrounds": [
+        "#edf3ff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.676390684379904
+    },
+    "#5a758b": {
+      "to": "#536c80",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6879851826469405
+    },
+    "#297da8": {
+      "to": "#257097",
+      "backgrounds": [
+        "#e9f3fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6652028959251295
+    },
+    "#8ba0af": {
+      "to": "#5d6b75",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.686940170118233
+    },
+    "#238a7c": {
+      "to": "#1e7569",
+      "backgrounds": [
+        "#e7f5f2"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.713649600389224
+    },
+    "#6b9451": {
+      "to": "#52723e",
+      "backgrounds": [
+        "#edf5e8"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.674874474196485
+    },
+    "#7c69b0": {
+      "to": "#705e9e",
+      "backgrounds": [
+        "#f0edfa"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.738501468921382
+    },
+    "#b56482": {
+      "to": "#98546d",
+      "backgrounds": [
+        "#f9edf0"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6885889283435285
+    },
+    "#a88643": {
+      "to": "#7e6432",
+      "backgrounds": [
+        "#faf2e5"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7734523152175665
+    },
+    "#a68147": {
+      "to": "#816537",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.656889975139946
+    },
+    "#8390a1": {
+      "to": "#606976",
+      "backgrounds": [
+        "#f8fafc"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.743722180845485
+    },
+    "#8a9ba9": {
+      "to": "#5f6b75",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.661171612157623
+    },
+    "#b18933": {
+      "to": "#836526",
+      "backgrounds": [
+        "#fff7e7"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.65150819861053
+    },
+    "#219d78": {
+      "to": "#19775b",
+      "backgrounds": [
+        "#eaf7f1"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.679904429821745
+    },
+    "#8aa0b0": {
+      "to": "#5c6b76",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.693858984645462
+    },
+    "#cfdbe5": {
+      "to": "#63696e",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.74783347892907
+    },
+    "#7993a6": {
+      "to": "#586b79",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.725562944088417
+    },
+    "#859dac": {
+      "to": "#5a6b75",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.72485798289859
+    },
+    "#6f899c": {
+      "to": "#586c7b",
+      "backgrounds": [
+        "#f4f7fa",
+        "#f5f7fb",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.661837912858546
+    },
+    "#66849a": {
+      "to": "#546c7e",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.689539154912597
+    },
+    "#8195a5": {
+      "to": "#5d6b77",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.67531596031735
+    },
+    "#687c8f": {
+      "to": "#596b7b",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.701098073624802
+    },
+    "#7a8da5": {
+      "to": "#5c6a7c",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.708674205088215
+    },
+    "#7f92a8": {
+      "to": "#5d6b7b",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.651505633398774
+    },
+    "#8a9caf": {
+      "to": "#5e6a77",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.71336673397082
+    },
+    "#9eacbd": {
+      "to": "#606973",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.76140960853061
+    },
+    "#8c739f": {
+      "to": "#745f84",
+      "backgrounds": [
+        "#eee7f6"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.685723315672797
+    },
+    "#688991": {
+      "to": "#536e74",
+      "backgrounds": [
+        "#e5f1f4"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.656529220017796
+    },
+    "#95a4b6": {
+      "to": "#5f6974",
+      "backgrounds": [
+        "#f8fbff",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.769199008281622
+    },
+    "#94a3b5": {
+      "to": "#606a76",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.69283598450195
+    },
+    "#9caabd": {
+      "to": "#616975",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.735968609906787
+    },
+    "#7f96b4": {
+      "to": "#5a6a80",
+      "backgrounds": [
+        "#f5f8fd"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7082724062871355
+    },
+    "#7096b5": {
+      "to": "#516c82",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.696944604138983
+    },
+    "#8494a8": {
+      "to": "#5e6977",
+      "backgrounds": [
+        "#f5f7fb",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7647015849055245
+    },
+    "#6984a2": {
+      "to": "#556b83",
+      "backgrounds": [
+        "#f5f7fb",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.697137027695792
+    },
+    "#8ca0b7": {
+      "to": "#5c6a79",
+      "backgrounds": [
+        "#f5f7fb",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.727236912271907
+    },
+    "#3777ce": {
+      "to": "#3069b5",
+      "backgrounds": [
+        "#edf4ff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.701485826041144
+    },
+    "#99abc0": {
+      "to": "#5f6a77",
+      "backgrounds": [
+        "#edf4ff",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.70021661030915
+    },
+    "#7c94ae": {
+      "to": "#596b7d",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.68865485723272
+    },
+    "#99adc6": {
+      "to": "#5d6a79",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.714348475016284
+    },
+    "#839bb5": {
+      "to": "#5a6b7d",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.676471443557709
+    },
+    "#82a0c5": {
+      "to": "#576b84",
+      "backgrounds": [
+        "#f1f5fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6672555674097955
+    },
+    "#a0aec1": {
+      "to": "#626a76",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6659985797815935
+    },
+    "#8668c1": {
+      "to": "#755aa8",
+      "backgrounds": [
+        "#f3effb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.737846378939901
+    },
+    "#d45a6b": {
+      "to": "#ac4957",
+      "backgrounds": [
+        "#fff0f2"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.663299876802583
+    },
+    "#a3afc1": {
+      "to": "#626974",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7280049122946215
+    },
+    "#9bacc4": {
+      "to": "#5f6978",
+      "backgrounds": [
+        "#f9fbff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.745188632212181
+    },
+    "#a2b1c5": {
+      "to": "#616a76",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.679463406104053
+    },
+    "#9cacbf": {
+      "to": "#5f6975",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.763269284642017
+    },
+    "#92abd1": {
+      "to": "#5b6a82",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.682773196416752
+    },
+    "#7c91ab": {
+      "to": "#5b6a7d",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.715047013201654
+    },
+    "#a6b3c4": {
+      "to": "#626a74",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.677453560840964
+    },
+    "#9aabb8": {
+      "to": "#5f6a72",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.729228520629157
+    },
+    "#8a9db4": {
+      "to": "#5c6979",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.778875992283462
+    },
+    "#6e829e": {
+      "to": "#596980",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.772116183091373
+    },
+    "#8fa0b4": {
+      "to": "#5e6a77",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.71336673397082
+    },
+    "#697f9a": {
+      "to": "#586b81",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.675164612141699
+    },
+    "#8e9fb5": {
+      "to": "#5e6977",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7647015849055245
+    },
+    "#adb9c7": {
+      "to": "#636971",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.731179180754977
+    },
+    "#608674": {
+      "to": "#506f60",
+      "backgrounds": [
+        "#f0f8f5"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.738474766478542
+    },
+    "#8ca699": {
+      "to": "#5b6c63",
+      "backgrounds": [
+        "#f0f8f5"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.755758745003211
+    },
+    "#687990": {
+      "to": "#5c6a7f",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.689689945978645
+    },
+    "#718197": {
+      "to": "#5d6a7c",
+      "backgrounds": [
+        "#f5f9ff",
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.695886651700612
+    },
+    "#6f8197": {
+      "to": "#5c6b7d",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.651804161189955
+    },
+    "#667c96": {
+      "to": "#586b81",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.675164612141699
+    },
+    "#8491a1": {
+      "to": "#606a76",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.69283598450195
+    },
+    "#95a3ae": {
+      "to": "#616a71",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7079090891007125
+    },
+    "#8b9aa7": {
+      "to": "#606a73",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7101452869332245
+    },
+    "#9aaabd": {
+      "to": "#5f6975",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.763269284642017
+    },
+    "#a8b5c5": {
+      "to": "#616972",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.753408662773488
+    },
+    "#849ab4": {
+      "to": "#5b6a7c",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.721362479450438
+    },
+    "#638198": {
+      "to": "#7690a4",
+      "backgrounds": [
+        "#142536"
+      ],
+      "direction": "lighten",
+      "min_ratio": 4.671634209143116
+    },
+    "#7c91a0": {
+      "to": "#5c6b76",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.693858984645462
+    },
+    "#6f8393": {
+      "to": "#5b6b79",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.688628578739024
+    },
+    "#6b7f90": {
+      "to": "#5a6b79",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.701041879662314
+    },
+    "#8798a6": {
+      "to": "#5e6a74",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.731016377632502
+    },
+    "#8396a6": {
+      "to": "#5d6a76",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7323839565691115
+    },
+    "#8a9daa": {
+      "to": "#5e6b74",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.679813531903885
+    },
+    "#557dab": {
+      "to": "#496c93",
+      "backgrounds": [
+        "#eaf2ff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.657409580304017
+    },
+    "#7a8c9b": {
+      "to": "#5d6a76",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7323839565691115
+    },
+    "#658195": {
+      "to": "#556c7d",
+      "backgrounds": [
+        "#edf3fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.684445234066317
+    },
+    "#8a9fac": {
+      "to": "#5c6b73",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.711175848397744
+    },
+    "#6b8192": {
+      "to": "#596b79",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.713353822829784
+    },
+    "#638096": {
+      "to": "#536c7e",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.700806045213126
+    },
+    "#657c8d": {
+      "to": "#586c7b",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.661837912858546
+    },
+    "#8395a2": {
+      "to": "#5e6b75",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.674103864885867
+    },
+    "#647d8f": {
+      "to": "#566c7b",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.685294596009143
+    },
+    "#60758a": {
+      "to": "#576a7e",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7581466281409694
+    },
+    "#6d7c8a": {
+      "to": "#5e6b77",
+      "backgrounds": [
+        "#f7f9fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.662543160720666
+    },
+    "#6b8094": {
+      "to": "#596a7b",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.75277030734926
+    },
+    "#78909f": {
+      "to": "#5a6c77",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6616436842983315
+    },
+    "#8397a5": {
+      "to": "#5d6b75",
+      "backgrounds": [
+        "#f5f7fb"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.686940170118233
+    },
+    "#728da5": {
+      "to": "#576b7d",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.7127140274681265
+    },
+    "#8395a7": {
+      "to": "#5e6b78",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6566925565424135
+    },
+    "#7c93a9": {
+      "to": "#5b6b7b",
+      "backgrounds": [
+        "#fcfdff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.676500908921241
+    },
+    "#6a829b": {
+      "to": "#576b7f",
+      "backgrounds": [
+        "#fcfdff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.699955609771009
+    },
+    "#8193a4": {
+      "to": "#5e6b78",
+      "backgrounds": [
+        "#fcfdff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.6566925565424135
+    },
+    "#778fa9": {
+      "to": "#596b7f",
+      "backgrounds": [
+        "#f8fbff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.676026200065452
+    },
+    "#73849b": {
+      "to": "#5c6a7c",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.708674205088215
+    },
+    "#8899ac": {
+      "to": "#5e6a77",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.71336673397082
+    },
+    "#64809e": {
+      "to": "#536a83",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.772052343301013
+    },
+    "#97aac1": {
+      "to": "#5e6978",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.758591961260633
+    },
+    "#a0b0c4": {
+      "to": "#606a76",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.69283598450195
+    },
+    "#889cb3": {
+      "to": "#5c6a7a",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.721096605265916
+    },
+    "#7c94b0": {
+      "to": "#596b7f",
+      "backgrounds": [
+        "#ffffff"
+      ],
+      "direction": "darken",
+      "min_ratio": 4.676026200065452
+    }
+  },
+  "source_declarations": {
+    "gazi/portal/src/style.css": 65,
+    "gazi/portal/src/knowledge.css": 4,
+    "gazi/ui-theme.css": 22,
+    "gazi/learning.css": 21,
+    "gazi/workspace.css": 7,
+    "gazi/styles.css": 23,
+    "gazi/demo-app/src/style.css": 1,
+    "gazi/enhancements/src/tailwind.css": 9
+  },
+  "semantic_variables": {
+    "gazi/ui-theme.css": [
+      "--ui-muted",
+      "--muted"
+    ]
+  }
+}

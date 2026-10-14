@@ -1,0 +1,230 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 60,
+  "status": "open-review-not-pass",
+  "repeated_nodes": 8809,
+  "reasons": {
+    "bgGradient": 3482,
+    "shortTextContent": 1124,
+    "elmPartiallyObscured": 4173,
+    "pseudoContent": 20,
+    "nonBmp": 6,
+    "elmPartiallyObscuring": 4
+  },
+  "bounded_examples_only": true,
+  "examples": {
+    "bgGradient": [
+      {
+        "example_screen": "Öğrenci / learning",
+        "frame": "portal",
+        "target": [
+          ".pilot-tile > strong"
+        ],
+        "html": "<strong>Kontrol sizde.</strong>"
+      },
+      {
+        "example_screen": "Öğrenci / learning",
+        "frame": "portal",
+        "target": [
+          ".pilot-tile > p"
+        ],
+        "html": "<p>İnsan denetimi, gerekçeli karar,<br>izlenebilir süreç.</p>"
+      },
+      {
+        "example_screen": "Öğrenci / learning",
+        "frame": "portal",
+        "target": [
+          ".pilot-tile > button"
+        ],
+        "html": "<button>"
+      },
+      {
+        "example_screen": "Öğrenci / learning",
+        "frame": "portal",
+        "target": [
+          ".learn-chip"
+        ],
+        "html": "<span class=\"learn-chip\">ÖĞREN · UYGULA · GELİŞ</span>"
+      },
+      {
+        "example_screen": "Öğrenci / learning",
+        "frame": "portal",
+        "target": [
+          ".learn-hero-copy > h2"
+        ],
+        "html": "<h2>Bir sonraki adımın,<br>yeni bir öğrenme çıktısı.</h2>"
+      }
+    ],
+    "shortTextContent": [
+      {
+        "example_screen": "Öğrenci / learning",
+        "frame": "portal",
+        "target": [
+          ".learn-hero-stats > div:nth-child(1) > strong"
+        ],
+        "html": "<strong>2</strong>"
+      },
+      {
+        "example_screen": "Öğrenci / learning",
+        "frame": "portal",
+        "target": [
+          ".learn-hero-stats > div:nth-child(2) > strong"
+        ],
+        "html": "<strong>8</strong>"
+      },
+      {
+        "example_screen": "Öğrenci / learning",
+        "frame": "portal",
+        "target": [
+          "div:nth-child(3) > strong"
+        ],
+        "html": "<strong>0<small> / 24</small></strong>"
+      },
+      {
+        "example_screen": "Öğrenci / catalog",
+        "frame": "legacy",
+        "target": [
+          "#notification-count"
+        ],
+        "html": "<i id=\"notification-count\">2</i>"
+      },
+      {
+        "example_screen": "Öğrenci / knowledge",
+        "frame": "portal",
+        "target": [
+          "button:nth-child(4) > strong"
+        ],
+        "html": "<strong>0</strong>"
+      }
+    ],
+    "elmPartiallyObscured": [
+      {
+        "example_screen": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "target": [
+          "#academic-tab-quality"
+        ],
+        "html": "<button id=\"academic-tab-quality\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-quality\" tabindex=\"-1\">Kaynaklı göstergeler (6)</button>"
+      },
+      {
+        "example_screen": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "target": [
+          "#academic-tab-registry"
+        ],
+        "html": "<button id=\"academic-tab-registry\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-registry\" tabindex=\"-1\">Politika ve hak sicili (0)</button>"
+      },
+      {
+        "example_screen": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "target": [
+          "#academic-tab-recognition"
+        ],
+        "html": "<button id=\"academic-tab-recognition\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-recognition\" tabindex=\"-1\">Tanıma ve kredi (0)</button>"
+      },
+      {
+        "example_screen": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "target": [
+          "#academic-tab-wallet"
+        ],
+        "html": "<button id=\"academic-tab-wallet\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-wallet\" tabindex=\"-1\">Kişisel cüzdanım (0)</button>"
+      },
+      {
+        "example_screen": "Kalite Komisyonu / academic",
+        "frame": "portal",
+        "target": [
+          "#academic-tab-operations"
+        ],
+        "html": "<button id=\"academic-tab-operations\" role=\"tab\" aria-selected=\"false\" aria-controls=\"academic-panel-operations\" tabindex=\"-1\">Aktarım ve mutabakat (0)</button>"
+      }
+    ],
+    "pseudoContent": [
+      {
+        "example_screen": "Kalite Komisyonu / requests",
+        "frame": "portal",
+        "target": [
+          "b"
+        ],
+        "html": "<b>3</b>"
+      },
+      {
+        "example_screen": "Kalite Komisyonu / proctoring",
+        "frame": "portal",
+        "target": [
+          ".room-0 > .sample-watermark"
+        ],
+        "html": "<div class=\"sample-watermark\">ÖRNEK GÖRÜNTÜ</div>"
+      },
+      {
+        "example_screen": "Kalite Komisyonu / proctoring",
+        "frame": "portal",
+        "target": [
+          ".room-0 > .feed-alert"
+        ],
+        "html": "<div class=\"feed-alert\">"
+      },
+      {
+        "example_screen": "Kalite Komisyonu / proctoring",
+        "frame": "portal",
+        "target": [
+          ".room-1 > .sample-watermark"
+        ],
+        "html": "<div class=\"sample-watermark\">ÖRNEK GÖRÜNTÜ</div>"
+      },
+      {
+        "example_screen": "Kalite Komisyonu / proctoring",
+        "frame": "portal",
+        "target": [
+          ".room-2 > .sample-watermark"
+        ],
+        "html": "<div class=\"sample-watermark\">ÖRNEK GÖRÜNTÜ</div>"
+      }
+    ],
+    "nonBmp": [
+      {
+        "example_screen": "Bilgi İşlem / connections",
+        "frame": "portal",
+        "target": [
+          ".terminal-prompt"
+        ],
+        "html": "<div class=\"terminal-prompt\">❯ <span class=\"cursor\"></span></div>"
+      }
+    ],
+    "elmPartiallyObscuring": [
+      {
+        "example_screen": "pilot modal",
+        "frame": "portal",
+        "target": [
+          "li:nth-child(5)"
+        ],
+        "html": "<li>Pilot rozetler sunucuda imzalanır; standart sertifikasyonu veya kurum onayı içermez.</li>"
+      },
+      {
+        "example_screen": "mobile drawer",
+        "frame": "portal",
+        "target": [
+          ".institution-brand > div > strong"
+        ],
+        "html": "<strong>Gazi Üniversitesi</strong>"
+      },
+      {
+        "example_screen": "mobile drawer",
+        "frame": "portal",
+        "target": [
+          ".institution-brand > div > span"
+        ],
+        "html": "<span>Mikro Yeterlilik<br>Yönetişim Sistemi</span>"
+      },
+      {
+        "example_screen": "mobile drawer",
+        "frame": "portal",
+        "target": [
+          ".pilot-tile > p"
+        ],
+        "html": "<p>İnsan denetimi, gerekçeli karar,<br>izlenebilir süreç.</p>"
+      }
+    ]
+  },
+  "reproduce": "scripts/myys-contrast-browser.cjs"
+}

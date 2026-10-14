@@ -1,3 +1,17 @@
+# Güncel devam — Paket60 yerel kabul; kaynak eşitlemesi sırada
+
+Paket60:106 yeniden koşulan test (12 gateway/envanter48portal46regresyon),19 gezinme+7reflow;928 geometri ölçümünde0 taşma. Axe-core4.14.0 yalnız color-contrast:98menü/288panel/66ders,571frame taramasında0 belirlenmiş violation;8809 yinelenen incomplete açık. Son tam784sunucu Paketi59dur; bu dilimde runtime JS değişmedi.Görünür ortakmetin renkleri düzeldi;137renk152bildirim+2semanticvar. CONTRAST-ACCEPTANCE.md detaylıdır. TamB24değil.
+
+Önce diff/commit ve expectedremote4aa001033000e727d02028bd4e53bc7a27cfb019/base5d055928bf64ec06d983c150521ac5997b59480b ile tam ağaç eşitle. Soncanlı16;17–60dağıtılmadı.
+
+Sıradaki61 B24 incomplete/gradient/kısa sayaç metni. Finalreview8809yinelenen:4173obscured3482gradient1124short20pseudo6nonBmp4obscuring. Bunlar passdeğil. acceptance/B24-contrast-review-20261014.json örnekler; test-results/myys-contrast/result.json tam kanıt. Axe4.14.0 /tmp/gazi-contrast-runtime ilepinli;573değil571scan. AktifroleclipboardAPI değilDOM gerçekfixture. Mantıklı dedup/scroll/açık arka plan ölçümü ve gradient renk incelemesi yap; sayısal rozeti dekoratif diye atlama. TamWCAG/AT/zoom/nontext açık. B28checkpoint/asyncacademicrepo ve kalan B01–B36 bağımsızları da sürdür. Tekeditör,configuredCorekapalı,browserAuthiptaliniyenileme.
+
+# Güncel devam — Paket59 kaynakta;60 B24 karşıtlık taraması
+
+Paket59 yerel `0a49cf774db3e6040803b67428138fd7df0c7f71`, uzak `4aa001033000e727d02028bd4e53bc7a27cfb019`, ortak tam ağaç `5d055928bf64ec06d983c150521ac5997b59480b`.19blob/tam ağaç/expected-head force=false doğrulandı;878otomatik28tarayıcı;115statik. Son canlı16;17–59dağıtılmadı.
+
+60 henüz ürün kodu değişmedi. B24 98menü/288panel textcontrast taraması için axe-core kurulumu değerlendiriliyor. npm registry4.14.0 bildiriyor;API/runOnly/incomplete kaynakları okundu, WCAG1.4.3/1.4.11 kapsamı tamamlanacak. Repo bağımlılığı değil geçici test runtime olabilir; pin/version/integrity kaydı zorunlu. Gradient/resim belirsizleri pass sayma. B28checkpoint/asyncacademicrepo ve diğer bağımsızlar açık.
+
 # Güncel devam — Paket59 yerel kabul; kaynak eşitlemesi sırada
 
 Paket59:29 yeni test (26 gerçek HTTPS+SQL,3 guard);784 sunucu+48 portal+46 regresyon=878. Yeni SQL giriş ekranında13, eski yerel girişte15 Chromium kontrolü geçti;320CSSpx/metin aralığı/odak/logolar incelendi.Yeni Kurum girişi/oturumu denemesi yalnız loopback SQLde; akademik depoya bağlı değil.115statik/16SQLite148tür/12uygulanmamışPGaday.

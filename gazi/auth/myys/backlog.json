@@ -2015,7 +2015,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "14.10.2026 Paket57:12 gateway/envanter +48 portal +46 regresyon =106 yeniden koşulan test;66 tarayıcı kontrolü. 98 menü/288 panel/22 vaka,320 CSS px ve metin aralığı928 ölçümde0 taşma kaydı. Son tam sunucu733 Paketi56; sunucu kodu değişmedi. Gerçek AT/zoom ve bütün ürün kabulü değil.",
+      "test_status": "Paket60:106 yeniden koşulan test (12 gateway/envanter48portal46regresyon),19 gezinme+7reflow;928 geometri ölçümünde0 taşma. Axe-core4.14.0 yalnız color-contrast:98menü/288panel/66ders,571frame taramasında0 belirlenmiş violation;8809 yinelenen incomplete açık. Son tam784sunucu Paketi59dur; bu dilimde runtime JS değişmedi.",
       "implementation_evidence": [
         "scripts/myys-local-acceptance.mjs",
         "gazi/auth/myys/NAVIGATION-ACCESSIBILITY.md",
@@ -2031,19 +2031,25 @@
         "scripts/myys-reflow-browser.cjs",
         "gazi/learning.css",
         "gazi/ui-theme.css",
-        "gazi/auth/myys/acceptance/B24-reflow-20261014.json"
+        "gazi/auth/myys/acceptance/B24-reflow-20261014.json",
+        "gazi/auth/myys/CONTRAST-ACCEPTANCE.md",
+        "gazi/auth/myys/acceptance/B24-contrast-20261014.json",
+        "gazi/auth/myys/acceptance/B24-contrast-colors-20261014.json",
+        "gazi/auth/myys/acceptance/B24-contrast-review-20261014.json",
+        "scripts/myys-contrast-browser.cjs"
       ],
-      "production_status": "Paket57 dağıtılmadı. Son canlı16 / dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;14.10 alias yeniden okundu, yeni kimlikli smoke yapılmadı.",
-      "implementation_note": "Mobil menü odak döngüsü/inert/geri dönüş, rota ve Radix pencere odağı, kaynak-matris-rozet sekmeleri, akademik panel odağı ve filtre/alan etiketleri düzeltildi. Katalogda öğrenciye yetkisiz öneri düğmesi gösterilmez. Yerel tarayıcı kabulü geçti; bütün ürün için kritik engel sıfır beyanı yok. Paket32: yeni içerikte kullanıcı odağını animasyonun çalması düzeltildi; 19 gezinme ve16 destek kontrolü,390px ve takvim alanları sınandı; genel AT kabulü açık. Paket56: dört dosya alanı Türkçe/native kaldı; dosya-metni-sonucu sürüm bağı, boş/büyük dosya reddi, yetki eki okuma/kayıt kilidi ve seçimin temizlenmesi eklendi. Kontrollü rozet API yanıtları yalnız arayüz yarış kabulüdür. Paket57: matris program seçimi, müfredat düğmeleri, bağlantı kartları, eski rol/form alanları ve22 vaka tablosu dar ekrana uyarlandı; sayfa taşması gizlenmedi.",
+      "production_status": "Son canlı16;Paket60yerel kabul;17–60dağıtılmadı;configuredCore kapalı.",
+      "implementation_note": "Mobil menü odak döngüsü/inert/geri dönüş, rota ve Radix pencere odağı, kaynak-matris-rozet sekmeleri, akademik panel odağı ve filtre/alan etiketleri düzeltildi. Katalogda öğrenciye yetkisiz öneri düğmesi gösterilmez. Yerel tarayıcı kabulü geçti; bütün ürün için kritik engel sıfır beyanı yok. Paket32: yeni içerikte kullanıcı odağını animasyonun çalması düzeltildi; 19 gezinme ve16 destek kontrolü,390px ve takvim alanları sınandı; genel AT kabulü açık. Paket56: dört dosya alanı Türkçe/native kaldı; dosya-metni-sonucu sürüm bağı, boş/büyük dosya reddi, yetki eki okuma/kayıt kilidi ve seçimin temizlenmesi eklendi. Kontrollü rozet API yanıtları yalnız arayüz yarış kabulüdür. Paket57: matris program seçimi, müfredat düğmeleri, bağlantı kartları, eski rol/form alanları ve22 vaka tablosu dar ekrana uyarlandı; sayfa taşması gizlenmedi. Paket60 8kaynakCSS içinde152metin foreground bildirimi ve2semantik muted değişkenini ölçüme göre düzeltti;137 ölçülen foreground rengi, hue korunarak açık zeminde koyulaştı, terminal yorumu açıklaştı, örnek damgası okunur oldu. Background/layout/logo değişmedi. 571 aynı kapsam taraması önce22824 yinelenen violation, sonra0; gradient/kısa sayaç/örtüşme gibi8809 inceleme bulgusu pass değildir. Tam1.4.3/WCAG/AT/nontext kabulü açık.",
       "independent_remaining_work": [
+        "Axe incomplete bulgularını ayrı çöz: geçişli zeminler, kısa sayaç/metinler, pseudo öğeler, kırpılmış/örtüşen alanlar; 8809 yinelenen bulgu geçmiş kabul değildir. Metin dışı kontrol/odak/ikon karşıtlığı ayrıca açık.",
         "Gerçek ekran okuyucu, tüm dinamik içerikler/form hataları ve200% metin büyütme kabulü açık;320 CSS px ölçümü gerçek tarayıcı zoom koşusu değildir.",
-        "Video Türkçe altyazı/döküm doğruluğu, indirilen belge çıktısı okuma sırası ve metin/etkileşim karşıtlığı taraması sürüyor."
+        "Video Türkçe altyazı/döküm doğruluğu, indirilen belge çıktısı okuma sırası ve gerçek canlı rol/akış kabulü açık."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Gerçek canlı rol/akış ve tam ekran okuyucu/altyazı/belge erişilebilirliği kabulü açık; önceki browserAuth iptali yeniden denenmedi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; gezinme, dosya ve yeniden akış dilimleri bağlı",
+          "status": "kısmi; ölçülebilir textcontrast düzeltildi; incomplete/nontext/AT/zoom/medya/belge açık",
           "evidence": [
             "scripts/myys-local-acceptance.mjs",
             "gazi/auth/myys/NAVIGATION-ACCESSIBILITY.md",
@@ -2059,22 +2065,27 @@
             "scripts/myys-reflow-browser.cjs",
             "gazi/learning.css",
             "gazi/ui-theme.css",
-            "gazi/auth/myys/acceptance/B24-reflow-20261014.json"
+            "gazi/auth/myys/acceptance/B24-reflow-20261014.json",
+            "gazi/auth/myys/CONTRAST-ACCEPTANCE.md",
+            "gazi/auth/myys/acceptance/B24-contrast-20261014.json",
+            "gazi/auth/myys/acceptance/B24-contrast-colors-20261014.json",
+            "gazi/auth/myys/acceptance/B24-contrast-review-20261014.json",
+            "scripts/myys-contrast-browser.cjs"
           ],
           "remaining": [
+            "Axe incomplete bulgularını ayrı çöz: geçişli zeminler, kısa sayaç/metinler, pseudo öğeler, kırpılmış/örtüşen alanlar; 8809 yinelenen bulgu geçmiş kabul değildir. Metin dışı kontrol/odak/ikon karşıtlığı ayrıca açık.",
             "Gerçek ekran okuyucu, tüm dinamik içerikler/form hataları ve200% metin büyütme kabulü açık;320 CSS px ölçümü gerçek tarayıcı zoom koşusu değildir.",
-            "Video Türkçe altyazı/döküm doğruluğu, indirilen belge çıktısı okuma sırası ve metin/etkileşim karşıtlığı taraması sürüyor.",
-            "Canlı kimlikli rol kabulü ve B24 bütün ürün için kritik engel sıfır şartı açık."
+            "Video Türkçe altyazı/döküm doğruluğu, indirilen belge çıktısı okuma sırası ve gerçek canlı rol/akış kabulü açık."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi; Paket57 yeniden akış dilimi geçti",
-          "evidence": "14.10.2026 Paket57:12 gateway/envanter +48 portal +46 regresyon =106 yeniden koşulan test;66 tarayıcı kontrolü. 98 menü/288 panel/22 vaka,320 CSS px ve metin aralığı928 ölçümde0 taşma kaydı. Son tam sunucu733 Paketi56; sunucu kodu değişmedi. Gerçek AT/zoom ve bütün ürün kabulü değil.",
-          "limits": "928 geometri ölçümü bir tamamlanma yüzdesi veya tüm erişilebilirlik uygunluğu değildir. Gerçek AT/zoom ve tam içerik kabulü açık."
+          "status": "yerel alt dilim geçti",
+          "evidence": "Paket60:106 yeniden koşulan test (12 gateway/envanter48portal46regresyon),19 gezinme+7reflow;928 geometri ölçümünde0 taşma. Axe-core4.14.0 yalnız color-contrast:98menü/288panel/66ders,571frame taramasında0 belirlenmiş violation;8809 yinelenen incomplete açık. Son tam784sunucu Paketi59dur; bu dilimde runtime JS değişmedi.",
+          "limits": "Yalnız color-contrast kuralı;8809 yinelenen inceleme bulgusu geçmedi. Tam WCAG/AT/zoom/nontext/medya/belge kabulü değil."
         },
         "live": {
-          "status": "kısmi pilot",
-          "evidence": "Paket57 dağıtılmadı. Son canlı16 / dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;14.10 alias yeniden okundu, yeni kimlikli smoke yapılmadı."
+          "status": "yeni dilim yayımlanmadı",
+          "evidence": "Son canlı16;Paket60yerel kabul;17–60dağıtılmadı;configuredCore kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
@@ -2972,16 +2983,23 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 59,
-    "server_security_tests": "784/784",
+    "software_package": 60,
+    "server_security_tests": "12/12 gateway/envanter; son tam784sunucu59da geçti;runtimeJS değişmedi",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 878,
-    "portal_build": "Başarılı;115 statik korumalı paket",
-    "browser_visual_acceptance": "13 yeni SQL HTTPS +15 mevcut yerel HTTPS=28;320CSSpx/metin aralığı/klavye/logolar; tam AT/zoom değil",
+    "local_total": 106,
+    "last_full_suite": {
+      "software_package": 59,
+      "server": 784,
+      "portal": 48,
+      "legacy": 46,
+      "total": 878
+    },
+    "portal_build": "Başarılı;115statik;enhancement CSS mevcutTailwind3.4.17 ile üretildi",
+    "browser_visual_acceptance": "19navigation7reflow928geometri0taşma;571contrasttarama0violation8809reviewaçık",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–59 dağıtılmadı;configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B06-B07-sql-http-20261014.json"
+    "deployment": "Son canlı16READY;17–60dağıtılmadı;configuredCorekapalı",
+    "evidence": "gazi/auth/myys/acceptance/B24-contrast-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -3003,12 +3021,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 59,
-    "source_parent_remote": "0e27338722d70f7f8e3a1c811e0a798a4f4f393b",
-    "source_parent_tree": "0f7a07c8bc1cdceab8a9445c39ccddf047f5a6ed",
+    "software_package": 60,
+    "source_parent_remote": "4aa001033000e727d02028bd4e53bc7a27cfb019",
+    "source_parent_tree": "5d055928bf64ec06d983c150521ac5997b59480b",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 878,
-    "note": "SQL yerel HTTPS kimlik kabulü geçti; B24 karşıtlık, async akademik depo ve B28 restorecheckpoint dahil bağımsızlar sürer."
+    "local_tests": 106,
+    "note": "B24 ölçülen textcontrast dilimi geçti;61incomplete/gradient/kısa sayaç incelemesi sırada. B28checkpoint/asyncacademicrepo ve bütün bağımsızlar sürer."
   },
   "verification_history": [
     {
@@ -3329,6 +3347,19 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16 READY;17–58 dağıtılmadı;configuredCore kapalı.",
       "evidence": "gazi/auth/myys/acceptance/B07-http-security-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 59,
+      "server_security_tests": "784/784",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46 model/kaynak/demo",
+      "local_total": 878,
+      "portal_build": "Başarılı;115 statik korumalı paket",
+      "browser_visual_acceptance": "13 yeni SQL HTTPS +15 mevcut yerel HTTPS=28;320CSSpx/metin aralığı/klavye/logolar; tam AT/zoom değil",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16 READY;17–59 dağıtılmadı;configuredCore kapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B06-B07-sql-http-20261014.json"
     }
   ]
 }
