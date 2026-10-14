@@ -1,3 +1,49 @@
+# Güncel devam — Paket36 yerel kabul; kaynak eşitlemesi sırada
+
+B34 Amaçlı portfolyo hazır yerel dilim:605otomatik(511+48+46),14portfolyo+19gezinme+11privacy+8wallet+13itiraz=65tarayıcı.101komut/16HTTP4674örnek37392denetim;98menü/261panel/66ders,115statik dosya. PORTFOLIO-CONTRACT/B34kanıtı/backlog5eksen güncel;36özgünkriter korundu.
+
+Önce diff/commit ve expected-head d4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b ile eşitle. Taban yerel ea478cefa7b4593f67ca6ef86e87ce14ecfe258f / ortak e5f92496939caa4261ae52395c6a6971c80594d2. Soncanlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–36yayını yok. browserAuthiptaliniyenidenisteme;configuredCorekapalı,tekeditör/altajanyok.
+
+Sıradaki B35 modelden bağımsız sentetik öneri/uzman kıyası/itiraz sözleşmesi ve ekranı; B04/B05/B10bağımlılıklarınıkoru,gerçek model/veri/sağlayıcı/hizmet/credentialuydurma,otomatikakademik karar yok. Sonra B36gerekçeli zincirsizalternatif/erteleme; B07 SQLrepoHTTPkeybarrier; B28tümyenikayıtenvanteri/saklama ve bütünB01–B36kalanbağımsız işler sürer. Devam komutu bekleme.
+
+# Güncel ara nokta — Paket36 B34 portfolyo arayüzü bağlı; tarayıcı kabulü sırada
+
+PortfolioWorkspace+academic portfolios ilksekme/Amaçlı portfolyo bağlı;adminpolicy/qualityreview-hold/ownerconsent selectedskills/evidence/revoke/export/recipientpurposeack-feedback. --portfolios localfixture signed+B33ready+roles=[]employer/anotheremployer+dataflow hazır;policy henüzpreparefalse. Privacycheckbox portfolyoyudaaçık kapsıyor,privacybrowserseçicisi güncel. Academiccommand portfolio-errorolunca refresh ederekeskiveriyigünceller. İlkbuildgeçti;sonradansekmesayıcı düzeltildi yenidenbuildgerekiyor. Henüz B34browser dosyası/yeni portal-regresyon koşusu/docs/backlog/commit yok.
+
+11portfolio+11privacy=22geçti; tam511server/101komut16HTTP4674pozitif37392denetimgeçti. testtitleikiiddaa(demoanahtarşüphesi/itiraz) gerçektestkapsamınadaraltıldı, koddeğişmedi. /tmp/gazi-package36-*.log;scopekanıtıtest-results/myys-scope. Model/çekirdek ayrıntısı aşağıdaki birönceki blokta.
+
+Sıradaki browser:studentno grant/recipientno content;adminprepare+reviewerapprove;studentselectedone skill+selectedevidencecheckbox+expiry7d+explicitconsent;receiverstillnocontentuntilpurposeack;wrongreceiverempty;feedbackownerread/academicarchiveSHAunchanged;ownerrevoke closescontent andfeedback;newconsentnoevidence notext;privacywithdraw closesnewgrant;policynewdraftpreserveold/newacceptedrequiresfreshconsent;mobilekeyboard/search/deeplink/refresh. OwnJSONexportrecords no rawJWT;receiverdownload UIyok. Gerekli servercase identityunit/MFA/sourcecheck/oldreplay zaten11test var; gerçekkeycompveağservisi sınanmadı. Regresyonprivacy/wallet/appeals/nav+portal48/legacy46/build/package115. SonraB34contract/kanıt/backlog5eksen/36özgünkriter/RELEASE36/commitexpectedhead eşitle.
+
+Taban35 yerel ea478cefa7b4593f67ca6ef86e87ce14ecfe258f / uzak d4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b / ortak e5f92496939caa4261ae52395c6a6971c80594d2. Soncanlı16;17–35yayını yok. BrowserAuthiptaliniyenidenisteme,configuredCorekapalı,tekeditöraltajanyok. B35/B36/B07/B28vebütünB01–B36bağımsız işler sürer;devamkomutubekleme.
+
+# Güncel ara nokta — Paket36 B34 çekirdek bağlı; arayüz sırada
+
+portfolio-model.mjs + portfolio.mjs/core/privacy bağlandı;7yeni komut(portfolio-policy/review/hold,grant/revoke/access/feedback),101komut/16HTTPenvanter.11portfolyo+11privacytest=22geçti. Tam scope PTY9633 çalışıyor (/tmp/gazi-package36-server.log,test-results/myys-scope). Henüz portal/UI/browser/build/docs/backlog36 yok. Helpers/local-portfolio.mjs signedFixture+B33map+ikiroles=[]alıcı+tamamaç/alıcıdataflowsicili kurar;localserver --portfolios bayrağı henüz yok. signed.createdAt testte doğrulandı.
+
+Çekirdek:adminpolicy tamdataflowrecipient/purpose + ayrıqualityreview/hold,issuer/subjecthash;newdrafteskikabulkorur,newacceptedeskigrantsclosedyeniconsentister. OwnerMFAgrant kendi enrollment/signedcredential+B33usable1–30link+kararın0–10seçilikanıtı,30günmaxpolicyiçi,snapshotSHA. ReceiverMFA+aynıunitregisteredroles=[] yalnıztamamacteyidimetadata-only accessreceipt;viewpersonalcontentancakactive+opened;noJWT/not/itiraz. Geri bildirim üçtürstrength/development/question,strictpayloadno score,ownernotunadeğmez. Replaycurrentactivesources yenidencheck;withdraw/expiry/mapissue/academicappeal/personsubjectchange shutscontent. Privacy-withdraw-shares portfolyorevocationekler;revokedCounttoplam+ayrılink/portfolio;subjectexportdörtallowlist kayıtadded. Bunlarproductionadapterdeğil;corekapalı.
+
+Sıradaki PortfolioWorkspace:policyformadminaccepteddataflowpurpose/alıcıreadonly+expiry/retention/noReuse;qualityreview/hold;studentgrantformownsignedwallet/skills/evidencecheckboxes(explicitpurpose+recipientconsentdefaultprivate),revoke,history;recipientonlyminsummarythenpurposecheckboxopen/feedback,seçiliveri/noothers. Tab portfolios:Amaçlı portfolyo;deeplink#/academic/portfolios. Privacycheckboxmetninibütünportfolyoizinlerini de açık kapsayacak düzelt ve testseçicisinibirlikte güncelle. Lokalfixtureflag+recipientselect,11testgenişliği tamam;tarayıcıgerçekUI+privacy/wallet/appeals/navregresyon;docs/kriter/commit devam.
+
+Taban35 yerel ea478cefa7b4593f67ca6ef86e87ce14ecfe258f / uzak d4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b / ağaç e5f92496939caa4261ae52395c6a6971c80594d2.594öncekitoplam/46tarayıcı. Son canlı16;17–35dağıtılmadı. browserAuthiptaliniyenidenisteme,configuredCorekapalı,tekeditöraltajanyok. Gerçekişveren/öğrenci/credential/migration/kurumkararı yok. B35/B36/B07/B28vebütünB01–B36bağımsız işler sürer;devamkomutubekleme.
+
+# Güncel ara nokta — Paket36 B34 portfolyo modeli başladı; henüz bağlı değil
+
+Taban Paket35: yerel ea478cefa7b4593f67ca6ef86e87ce14ecfe258f / uzak d4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b / ortak e5f92496939caa4261ae52395c6a6971c80594d2.594otomatik/46tarayıcı;21blobtam ağaceşitlendi. Soncanlı16;17–35dağıtılmadı.
+
+Yeni portfolio-model.mjs yazıldı; yalnız module-import geçti, işlev testi/core/UI bağı henüz yok. Modül portfolioPolicyReady/portfolioSelection/portfolioActive: geçerli alıcı issuer+subject özeti ve üyelik, son kabul politika/hold/expiry/sicil hash; kendi enrollment ve güncel signed/credentialBlocked; B33aynıprogram incelenmiş linkler1–30 ve kararın seçili kanıtı0–10; scopeyalnızseçili içerik, rawJWT/puan/itiraz yok; grantselectionDigest tutmayan yeni eşleme/kanıt durumu erişimi kapatır. Sahipprojeksiyonu dar iç fonksiyondur, alternatif kimlik oturumu değil. signed.createdAt alanını fixturetestinde doğrula.
+
+Sıradaki portfolio.mjs/core/replay/view: adminpolicy+ayrıqualityreview/hold (data-flow tamrecipientID/purpose), ownergrant/revoke (explicitconfirm/MFA/expiry≤policy), receipientaccess amacı teyit eden metadata-only makbuz, recipientfeedback nottan ayrı; gerekirseownerresponse. Alıcı kayıtlısentetik kişi/unitmembership roles=[]; yeniçekirdekrol ekleme. Görünüm erişim makbuzu+aktifizin olmadıkça kişisel içerik vermemeli; her okumada alıcı/MFA/üye/purpose/kaynak/expiry yeniden doğrulanmalı. Yetkisiz replayeski kişisel payload döndürmemeli; makbuzda içerik saklama. Privacy-withdraw-shares portfolyoizinlerinidekapatmalı;gerekenkişisel exportallowlist ekle. UI/B34browser/sunucutest/94komutmatrisgenişletme/kanıt/backlogdocs/commit devam.
+
+Gerçekişveren/kişiverisi/kurumkararı/credential/migration/ücretliservis yok. configuredCorekapalı/browserAuthiptaliniyenidenisteme/tekeditöraltajanyok. B35modelkıyası/B36alternatif/B07SQLrepoHTTPkeybarrier/B28tümyenikayıtsaklama ve bütünB01–B36kalanbağımsızlar sürer. Devam komutu bekleme.
+
+# Güncel devam — Paket35 kaynakta; B34 amaçlı portfolyo inceleniyor
+
+Yerel ea478cefa7b4593f67ca6ef86e87ce14ecfe258f / uzak d4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b / ortak e5f92496939caa4261ae52395c6a6971c80594d2.21blob/tam ağaç eşleşti;594otomatik/46tarayıcı. Son canlı16;17–35yayını yok. browserAuth kullanıcı iptalini yeniden isteme; configuredCore kapalı.
+
+B34 wallet/privacy/http/skill-map mevcut kodu okundu. Henüz yeni portfolyo kodu yok. Hedef: aynı kişi/enrollment, B18yerel imzalı belge ve B33incelenmiş ilişki; admin/ayrıqualityincelenmiş amaç-alıcı veri akışı sözleşmesi; öğrenenin seçili dar içerik izni/son gün/geri çekme; alıcının tam amacı teyit ederek metadata-only erişim makbuzu; aktif izin ve güncel kaynak yeniden denetlenerek içerik; amaç dışı alan/başkaalıcı/başkakişi/expiry/replayreddi; puandan ayrı geri bildirim. Yeni çekirdek rol ekleme; kayıtlı alıcıya yalnız somut izin yetkisi, dokuzrol korunsun. Gerçek alıcı/işveren sözleşmesi/kimlik/yeni erişim oluşturma yok. Privacy-withdraw-shares yeni portfolyo izinlerini de kapatmalı;exportallowlist sınırlı kapsamla güncellenmeli.
+
+B35modelkıyası/B36alternatif/B07SQLrepoHTTPkeybarrier/B28tümyenikayıtsaklama ve bütünB01–B36kalanbağımsız işler sürer. Tekeditör,altajanyok,credential/migration/ücretliservis/gerçek öğrenci yok. Devam komutu bekleme.
+
 # Güncel devam — Paket35 yerel kabul; kaynak eşitlemesi sırada
 
 B33 Beceri ilişkileri hazır yerel dilim:594otomatik(500+48+46),14eşleme+19gezinme+13itiraz=46tarayıcı.94komut/16HTTP4386örnek35088denetim;98menü/252panel/66ders,115statik dosya. SKILL-MAP-CONTRACT/B33kanıtı/backlog/beşeksen güncel;36özgünkriter korundu.

@@ -237,3 +237,7 @@ B26: `support-service.mjs` sürümlü yerel takvim/ayrı inceleme/hold; `support
 ## Paket35 — Uzman eşleme ve düzeltme
 
 `skill-map.mjs` program/kaynak/sicil sürümlerini, tam kaynak adresi ve görev dayanağını sabitler. Atanmış bağımsız komisyon görevlisi her ilişkiyi inceler. Kendi programındaki öğrenen hata bildirir; düzeltme yeni sürüm ve aynı bildirim referanslarıyla ayrı kabul edilir. Eski akademik kayıt/SHA değişmez. `projections.mjs` aynı kişinin güncel karar/kanıtından ayrı taksonomi durumunu çıkarır; kurumsal expertTaxonomyApproved=false. `SkillMapWorkspace` mevcut Beceri ilişkileri sekmesini kullanır; yeni rol veya kopya öğrenci deposu yok.11yeni sunucu/14tarayıcı;594otomatik,94komut/16HTTP. SKILL-MAP-CONTRACT.md kaynak ve gerçeklik sınırını kaydeder.
+
+## Paket36 — Amaçlı portfolyo ve ayrı geri bildirim
+
+`portfolio-model.mjs/portfolio.mjs` aynı enrollment/imzalı belge/B33ilişki/karar kanıtlarını dar izinle bağlar; ayrı incelenmiş tamamaç/alıcıdataflow,issuer-subject özeti,MFA,süre,source ve replayguards. Yeni core rol yok; sentetik alıcı yalnız somut izinle okur. Erişim makbuzu içerik taşımaz;view güncelizin+teyit varsa seçili veri döndürür. Strictfeedback puan/başarı/ret yazmaz. Privacy-withdraw-shares portfolyoyu da kapatır; öğrenen exportallowlist sınırlı yeni kayıtları içerir. PortfolioWorkspace consentdefaultempty/arama/geçmiş/export/mobil/klavye.11yeni sunucu/14browser;605otomatik;101komut/16HTTP. Gerçek işveren ve tam B28saklama/başvuru kabulü ayrı açık.

@@ -2454,32 +2454,48 @@
       "planning_estimate": "4–7 kişi-gün",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "B18/B33 ve kariyer veri amacı/izinleri tamamlanmadı.",
-      "independent_remaining_work": [
-        "Amaçla sınırlı portfolyo izinleri ve nottan ayrı geri bildirim."
+      "implementation_status": "kısmi",
+      "test_status": "11 portfolyo sunucu ve 14 tarayıcı senaryosu; açık izin/tam amaç/alıcı, seçili içerik, geri çekme/sürüm, nottan ayrı geri bildirim ve karar arşivi SHA korunması geçti.",
+      "implementation_evidence": [
+        "gazi/auth/myys/portfolio-model.mjs",
+        "gazi/auth/myys/portfolio.mjs",
+        "gazi/auth/myys/privacy.mjs",
+        "gazi/auth/myys/PORTFOLIO-CONTRACT.md",
+        "gazi/auth/tests/myys-portfolio.test.mjs",
+        "gazi/portal/src/portfolio-workspace.jsx",
+        "scripts/myys-portfolio-browser.cjs",
+        "gazi/auth/myys/acceptance/B34-portfolio-20261014.json"
       ],
+      "production_status": "Paket36 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı.",
+      "implementation_note": "Aynı öğrenci/enrollment/B18 imzalı belge/B33 ilişki zincirinde amaçlı portfolyo. Ayrı veri akışı/amaç incelemesi, açık seçili veri izni, alıcı amaç teyidi ve geri çekme bağlı. Gerçek işveren/veri aktarımı yok.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Öğrenen izinleri ve işveren veri işleme amacı.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "kısmi; tanımlı bağımsız amaçlı portfolyo dilimi hazır",
+          "evidence": [
+            "gazi/auth/myys/portfolio-model.mjs",
+            "gazi/auth/myys/portfolio.mjs",
+            "gazi/auth/myys/privacy.mjs",
+            "gazi/auth/myys/PORTFOLIO-CONTRACT.md",
+            "gazi/auth/tests/myys-portfolio.test.mjs",
+            "gazi/portal/src/portfolio-workspace.jsx",
+            "scripts/myys-portfolio-browser.cjs",
+            "gazi/auth/myys/acceptance/B34-portfolio-20261014.json"
+          ],
           "remaining": [
-            "Amaçla sınırlı portfolyo izinleri ve nottan ayrı geri bildirim."
+            "Gerçek kurum/alıcı sözleşmesi ve kimlik/veri işleme modeline göre üretim/depo bağlama kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "tanımlı yerel dilim geçti; genel paket kısmi",
+          "evidence": "11 portfolyo sunucu ve 14 tarayıcı senaryosu; açık izin/tam amaç/alıcı, seçili içerik, geri çekme/sürüm, nottan ayrı geri bildirim ve karar arşivi SHA korunması geçti.",
+          "limits": "Sentetik alıcı ve veri; gerçek işveren kimliği/izin hukuku/veri aktarımı veya ekran okuyucu kabulü değil."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "Paket36 yayımlanmadı",
+          "evidence": "Paket36 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2487,7 +2503,7 @@
         },
         "external_access": {
           "status": "teyit/erişim bekleniyor",
-          "target": "Amaç ve izinleri tanımlanmış işveren pilotu",
+          "target": "Kurumca tanımlanmış işveren kimliği/amaç/kapsam/saklama/aktarımı; üretim kimlik/depo ve gerçek pilot kabulü.",
           "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
         }
       }
@@ -2603,16 +2619,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 35,
-    "server_security_tests": "500/500",
+    "software_package": 36,
+    "server_security_tests": "511/511",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 594,
+    "local_total": 605,
     "portal_build": "Başarılı;115statik dosyalı mevcut korumalı paket",
-    "browser_visual_acceptance": "14beceri eşleme+19gezinme+13itiraz;98menü/252rol-panel/66ders. Gerçek uzman/taksonomi/ekran okuyucu kabulü değildir.",
+    "browser_visual_acceptance": "14portfolyo+19gezinme+11veri talebi+8cüzdan+13itiraz;98menü/261rol-panel/66ders. Gerçek işveren veya ekran okuyucu kabulü değil.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–35dağıtılmadı.configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B33-skill-map-20261014.json"
+    "deployment": "Son canlı16 READY;17–36dağıtılmadı.configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B34-portfolio-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {

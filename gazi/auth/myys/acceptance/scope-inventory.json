@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.35",
+  "version": "2026.10.14.36",
   "commands": [
     "alternative-evidence",
     "appeal",
@@ -48,6 +48,13 @@
     "payment-reconcile",
     "payment-refund",
     "payment-simulate",
+    "portfolio-access",
+    "portfolio-feedback",
+    "portfolio-grant",
+    "portfolio-policy",
+    "portfolio-policy-hold",
+    "portfolio-policy-review",
+    "portfolio-revoke",
     "privacy-acknowledge",
     "privacy-cleanup",
     "privacy-request",

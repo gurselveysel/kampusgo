@@ -233,3 +233,17 @@ Beceri ilişkileri: program/kaynak/lisans/görevlendirme sicili, atanmış ayrı
 | Dış erişim | Seçili gerçek taksonomi paketi, B29 gerçek kaynak, üretim depo/kimlik kabulü açık |
 
 SKILL-MAP-CONTRACT.md ve B33-skill-map-20261014.json sınırları esastır. Gerçek kurumsal taksonomi onayı false kalır; özgün36işin kriterleri değiştirilmedi.
+
+## Paket36 — B34 amaçlı portfolyo (14.10.2026)
+
+Amaçlı portfolyo: veri akışı/alıcı/amaç sürümü ve ayrı inceleme, seçili içerik için açık öğrenen izni, alıcı amaç teyidi, nottan ayrı geri bildirim, bireysel/toplu geri çekme.11yeni sunucu/14portfolyo tarayıcı;511+48+46=605otomatik;19gezinme/11veri talebi/8cüzdan/13itiraz;101komut/16HTTP4674örnek37392türetilmiş denetim.
+
+| B34 ekseni | Durum |
+|---|---|
+| Kod | Tanımlı bağımsız izin/amaç/alıcı/geri bildirim dilimi hazır; üretim bağlama kısmi |
+| Yerel işlev/güvenlik | İzin yokken içerik kapalı; amaç/kişi/birim/kurum/MFA/süre/sürüm/geri çekme ve arşiv SHA korundu |
+| Canlı | Paket36 yayımlanmadı; son canlı16 |
+| Kurum kararı | Gerçek alıcı/amaç/veri işleme-saklama/aktarım ve öğrenen bilgilendirme-izin usulü açık |
+| Dış erişim | Gerçek işveren kimliği ve pilotu; üretim kimlik/depo kabulü açık |
+
+PORTFOLIO-CONTRACT.md ve B34-portfolio-20261014.json sınırları esastır. Yazılım dilimi36, iş paketiB36'nın veya bütün36işin bittiği anlamına gelmez. Özgün kriterler değişmedi.

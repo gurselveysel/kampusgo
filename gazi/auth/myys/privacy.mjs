@@ -33,7 +33,9 @@ export function privacyCommand({action,p,a,s,put,id,now}){
   requireThat(p.confirm===true,'privacy_scope','Paylaşımı geri çekme kapsamını açıkça onaylayın.');
   const shares=s.list(a.tenant,'share').filter(r=>r.owner===a.id&&r.unit===p.unit&&!s.list(a.tenant,'share-revocation').some(x=>x.shareId===r.id));
   for(const share of shares)put('share-revocation',{id:id(),unit:p.unit,owner:a.id,shareId:share.id});
-  return put('privacy-withdrawal',{id:id(),unit:p.unit,owner:a.id,revokedCount:shares.length,academicRecordsDeleted:0,externalAccountsChanged:false});
+  const portfolios=s.list(a.tenant,'portfolio-grant').filter(r=>r.owner===a.id&&r.unit===p.unit&&!s.list(a.tenant,'portfolio-revocation').some(x=>x.grantId===r.id));
+  for(const grant of portfolios)put('portfolio-revocation',{id:id(),unit:p.unit,owner:a.id,grantId:grant.id,reason:'privacy-withdrawal',academicRecordsChanged:false,externalCopiesDeleted:false,official:false});
+  return put('privacy-withdrawal',{id:id(),unit:p.unit,owner:a.id,revokedCount:shares.length+portfolios.length,revokedLinkCount:shares.length,revokedPortfolioCount:portfolios.length,academicRecordsDeleted:0,externalAccountsChanged:false});
  }
  if(action==='privacy-cleanup'){
   const request=get(s,a,'privacy-request',p.requestId),response=lastResponse(s,a.tenant,request.id);
@@ -53,6 +55,10 @@ export function privacyView(s,a){
  return {requests,units:a.memberships.map(m=>m.unit),withdrawals:s.list(a.tenant,'privacy-withdrawal').filter(r=>r.owner===a.id&&member(a,r.unit))};
 }
 const exportFields={
+ 'portfolio-grant':['id','unit','policyId','policyVersion','purpose','enrollmentId','issuanceId','skillLinks','evidenceIds','expires','createdAt'],
+ 'portfolio-revocation':['id','unit','grantId','reason','createdAt'],
+ 'portfolio-access':['id','unit','grantId','recipientPersonId','purpose','createdAt'],
+ 'portfolio-feedback':['id','unit','grantId','recipientPersonId','purpose','kind','message','createdAt'],
  application:['id','unit','programId','reason','createdAt'],
  'application-review':['id','unit','programId','applicationId','outcome','reason','enrollmentId','createdAt'],
  'credential-receipt':['id','unit','programId','issuanceId','kind','externalAcceptance','createdAt'],

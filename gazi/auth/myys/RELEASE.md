@@ -517,3 +517,17 @@ Yerel `4f389bb75119a24f2e3f1889788ad7452adbf937`; uzak `b1e4ae3aab4e1dc43ee41f5a
 - Son doğrulanmış canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READYproduction;14.10saltokunur alias kontrolü.17–35dağıtımı/yeni oturumlu smoke yok; kullanıcı browserAuth iptali yeniden istenmedi;configuredCorekapalı.
 - Canlı geri dönüş hedefi15 dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1;uygulanmadı.
 - Gerçek taksonomi/atıf-çeviri hakkı, kurum uzman görevi/örneklem, B29/üretim kimlik/depo ve canlı kabul açık. ESCO resmî sayfaları teknik model/sınır için okundu; veri seti alınmadı, kurum eşlemesi onaylanmadı. B33/tümB01–B36tamamlanmadı.
+
+### Paket35 kaynak kimlikleri
+
+Yerel `ea478cefa7b4593f67ca6ef86e87ce14ecfe258f`; uzak `d4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b`; ortak tam ağaç `e5f92496939caa4261ae52395c6a6971c80594d2`.21blob SHA ve tam ağaç eşleşti; expected-headb1e4ae3aab4e1dc43ee41f5aab3fd67187a505a4,force=false; uzak yeni baş doğrulandı. Yeni canlı yayın yok.
+
+## Paket36 — amaçlı portfolyo; kaynak adayı
+
+14.10.2026. Amaçlı portfolyo sekmesi eklendi: admin veri akışı/amaç hazırlığı, ayrı kalite incelemesi, öğrenenin seçili beceri/kanıt izni, alıcı amaç teyidi ve nottan ayrı geri bildirim. Veri taleplerindeki toplu geri çekme portfolyoyu da kapatır. Arama/geçmiş/öğrenen özet indirmesi/mobil/klavye; karar arşivi aynı SHA ile korundu.
+
+- 511sunucu+48portal+46regresyon=605otomatik;14portfolyo+19gezinme+11veri talebi+8cüzdan+13itiraz=65tarayıcı.101komut/16HTTP4674örnek37392denetim;115korumalı statik dosya.
+- Taban yerel ea478cefa7b4593f67ca6ef86e87ce14ecfe258f / uzak d4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b / ortak e5f92496939caa4261ae52395c6a6971c80594d2.
+- Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READYproduction;14.10saltokunur alias kontrolü.17–36dağıtımı/yeni oturumlu smoke yok; kullanıcı browserAuth iptali yeniden istenmedi;configuredCorekapalı.
+- Canlı geri dönüş hedefi15 dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1;uygulanmadı.
+- Gerçek işveren/amaç/veri işleme/saklama/aktarım ve öğrenen bilgilendirme-izin usulü, üretim kimlik/depo ve B18/B33/B28gerçek kabulleri açık. Yeni gerçekkişi/hesap/credential/servis/migrationyok. B34 ve tümB01–B36tamamlanmadı; yazılım36 işB36değildir.

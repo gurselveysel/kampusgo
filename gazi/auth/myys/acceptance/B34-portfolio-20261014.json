@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-14",
+  "software_package": 36,
+  "work_packages": [
+    "B34"
+  ],
+  "production": false,
+  "source_parent": {
+    "local": "ea478cefa7b4593f67ca6ef86e87ce14ecfe258f",
+    "remote": "d4ad99eaf7dfa5a4496d7f8afe3d6702c78a420b",
+    "tree": "e5f92496939caa4261ae52395c6a6971c80594d2"
+  },
+  "last_verified_live": {
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false
+  },
+  "automated": {
+    "server": 511,
+    "portal": 48,
+    "regression": 46,
+    "total": 605,
+    "new_portfolio_tests": 11
+  },
+  "scope": {
+    "commands": 101,
+    "http_routes": 16,
+    "positive_samples": 4674,
+    "derived_negative_checks": 37392,
+    "not_test_count_or_product_percentage": true
+  },
+  "portfolio_browser": {
+    "at": "2026-10-14T04:57:08.349Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Öğrenen izni olmadan alıcıya portfolyo veya kişi içeriği verilmedi",
+      "Yönetici tam alıcı/amaç veri akışından koşul hazırladı; kendi onayı ve incelenmemiş öğrenci izni kapalı",
+      "Ayrı amaç incelemesinden sonra öğrenen açık teyitle bir beceri ve bir çalışma metnine süreli izin verdi",
+      "Alıcı tam amacı teyit ederek yalnız seçili beceri/kanıtı açtı; puan veya ham belge verilmedi",
+      "Alıcı gelişim önerisi kaydetti; öğrenen aynı izinde gördü ve akademik karar arşivi değişmedi",
+      "Başka alıcı, başka öğrenen ve genel yönetici rolüne kişi portfolyosu açılmadı",
+      "Öğrenen iznini geri çekince alıcıya yeni içerik ve geri bildirim erişimi kapandı",
+      "Yeni izinde çalışma metni seçilmedi; önceki izin kapsamı kendiliğinden taşınmadı",
+      "Veri taleplerindeki toplu geri çekme aynı portfolyo iznini kapattı",
+      "Yeni amaç taslağı eski izni genişletmedi; yeni kabul eski erişimi kapattı ve öğrenen yeniden izin verdi",
+      "İzin/geçmiş araması, boş sonuç ve doğrudan sekme yenilemesi çalıştı; arşiv aynı kaldı",
+      "390 px izin/geçmiş ekranı taşmadı; geri bildirim geçmişi klavyeyle açıldı",
+      "Mobil alıcı/amaç koşulu formu yatay taşmadan açıldı",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "realEmployerVerified": false,
+    "externalSubmitted": false,
+    "manualScreenReader": false
+  },
+  "regression_browser": {
+    "navigation": 19,
+    "privacy": 11,
+    "wallet": 8,
+    "appeals": 13
+  },
+  "navigation": {
+    "menu_targets": 98,
+    "role_panels": 261,
+    "lessons": 66,
+    "manualScreenReader": false
+  },
+  "protected_static_files": 115,
+  "limits": [
+    "Gerçek işveren kimliği/kurum görevlendirmesi/veri işleme veya aktarım kararı yok.",
+    "Yalnız synthetic-recipient.invalid alıcıları; yeni çekirdek rol, gerçek hesap veya credential oluşturulmadı.",
+    "Yerel izin hukuki açık rıza yeterliliği veya işe alım kararı değildir.",
+    "Alıcıya önceki yetkili görüntüleme/kopyaların cihazından silinebildiği iddia edilmez.",
+    "B18/B33 gerçek kaynak, üretim kimlik/depo ve gerçek işveren pilotu açık.",
+    "B28 bütün tarafların tam veri envanteri/saklama/başvuru kabulü ayrıca açık.",
+    "Paket17–36 canlı değil; configuredCore kapalı; bütünB01–B36tamamlanmadı."
+  ]
+}
