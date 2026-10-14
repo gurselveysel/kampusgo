@@ -21,7 +21,7 @@ export function programProfileBinding(s,t,program,now){
  return p&&p.programVersion===program.version&&p.programDigest===hash(stableStringify(program))&&usable(s,t,p,now)&&p.issuerPeople.some(person=>active(s,t,person,p.unit,'studentAffairs',now))?p:null;
 }
 export function issuanceProfile(s,a,program,now,profileId=null){
- requireThat(s instanceof LocalAcceptanceStore&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Yerel belge profili üretim ihracını etkinleştiremez.',503);
+ requireThat((s instanceof LocalAcceptanceStore||isLocalSqlAcademicStore(s))&&!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Yerel belge profili üretim ihracını etkinleştiremez.',503);
  const p=profileId?s.get(a.tenant,'credential-profile',profileId):versions(s,a.tenant,program).at(-1);
  requireThat(p&&p.programId===program.id&&p.programVersion===program.version&&p.programDigest===hash(stableStringify(program)),'profile_required','Bu program sürümüne bağlı belge profili gerekli.',409);
  requireThat(usable(s,a.tenant,p,now),'profile_blocked','Güncel yetki incelemesi, geçerli süre ve açık belge profili gerekli.',409);

@@ -16,7 +16,7 @@ const review=(f,r,patch={},who='registrar',id=randomUUID())=>f.run(who,'registry
 test('B02/B04/B05/B14/B20 same SQL stores all five registry schemas and distinct human reviews',async t=>{
  const f=await sqlAcademic(t);
  for(const type of Object.keys(registryFields)){const r=await f.run('admin','registry-draft',draft(type,{official:true}));assert.equal(r.official,false);assert.equal(r.createdBy,'admin');await assert.rejects(review(f,r,{},'admin'),err('separation'));const v=await review(f,r);assert.equal(v.createdBy,'registrar');assert.equal(v.official,false);assert.equal(v.recordId,r.id);}
- const v=await f.view('registrar');assert.equal(v.registry.length,5);assert.equal(v.registryReviews.length,5);assert(v.supportedTabs.includes('registry'));assert.equal(v.supportedActions.length,24);assert.deepEqual(await counts(f),{records:10,commands:10,audit:10});
+ const v=await f.view('registrar');assert.equal(v.registry.length,5);assert.equal(v.registryReviews.length,5);assert(v.supportedTabs.includes('registry'));assert.equal(v.supportedActions.length,25);assert.deepEqual(await counts(f),{records:10,commands:10,audit:10});
 });
 test('B08 learners, teachers and different units/tenants cannot read or review policy and rights records',async t=>{
  const f=await sqlAcademic(t),r=await f.run('admin','registry-draft',draft());
@@ -42,7 +42,7 @@ test('B08/B16 audit failure rolls back registry, receipt and audit together',asy
  const f=await sqlAcademic(t);await f.actor('admin');let fired=false;f.sql.fault=({text})=>{if(!fired&&text.startsWith('INSERT INTO public.myys_academic_audit')){fired=true;throw Error('synthetic registry audit failure');}};await assert.rejects(f.run('admin','registry-draft',draft()));f.sql.fault=null;assert.equal(fired,true);assert.deepEqual(await counts(f),{records:0,commands:0,audit:0});
 });
 test('B02/B12 locally accepted responsibility registry cannot enable official issuance or unbound profile actions',async t=>{
- const f=await sqlAcademic(t),r=await f.run('admin','registry-draft',draft());await review(f,r);const x=await f.passed(),v=await f.view('student');assert.equal(v.decisions.find(d=>d.id===x.d.id).canIssue,false);assert(!v.supportedTabs.includes('issuances'));await assert.rejects(f.run('admin','credential-profile',{}),err('not_found'));await assert.rejects(f.run('admin','issue',{decisionId:x.d.id}),err('academic_action'));assert.equal((await f.view('admin')).registry[0].official,false);
+ const f=await sqlAcademic(t),r=await f.run('admin','registry-draft',draft());await review(f,r);const x=await f.passed(),v=await f.view('student');assert.equal(v.decisions.find(d=>d.id===x.d.id).canIssue,false);assert.deepEqual(v.issuances,[]);await assert.rejects(f.run('admin','credential-profile',{}),err('not_found'));await assert.rejects(f.run('admin','issue',{decisionId:x.d.id}),err('not_found'));assert.equal((await f.view('admin')).registry[0].official,false);
 });
 test('B28 combined checkpoint rejects an older SQL backup that would discard a registry review',async t=>{
  const directory=mkdtempSync(join(tmpdir(),'myys-registry-sql-'));t.after(()=>rmSync(directory,{recursive:true,force:true}));const f=await sqlAcademic(t,{checkpointDirectory:join(directory,'journal')}),r=await f.run('admin','registry-draft',draft());await f.actor('registrar');const context=await f.context('admin'),old=await f.sql.db.dumpDataDir('none');await review(f,r);

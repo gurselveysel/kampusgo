@@ -1,3 +1,21 @@
+# Güncel devam — Paket74 yerel kabul tamam; kaynak eşitlemesi sırada
+
+Paket74:11yeni SQL/HTTPS testi;923sunucu+59portal+46regresyon=1028.58SQL+11mevcutprofil=69tarayıcı.136komut/18HTTP için9035pozitif72280türetilmiş negatif SQLite kapsam örneği;115statik paket.
+
+Paket74: Akademik kararlar üzerinden aynı SQL kişi/karar/profil/yetki dosyasına tekil imzasız hazırlık bağlandı. Belge hazırlığında öğrenen aynı özel kaydı görür. Açık itiraz kullanım göstergesini kapatır; yeni profil geçmiş bağı değiştirmez. canSign/signerAvailablefalse; imza, paylaşım ve değiştirme kapalı. Yedi çekirdek sekme ve320CSSpx/metin aralığı kontrol edildi.
+
+73ebeveyn yerel79cd47bf0119254281c0ad3b98fd5b03f4dea293/uzaka15d977baec2c26fb86e369d26d5b1fa5f255813/tamağaç14e27e8f1ff6f3fe874077ebae8fd99a17a71ce3.74henüzcommit yok. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY;17–74dağıtılmadı. configuredCorekapalı;browserAuthiptaliniyenileme;tekeditör.
+
+Sonraki75B13: key-register/key-review/key-state aynı SQL; sadece açık JWKmetadata. keyCommand özelaktifSQLworkseti kabul etsin, signingKey localguardı kapalı kalsın. keyView+keyssekmesi rolkapsamı, HTTPsentetikitkişisi, SQLsignerAvailablefalse ve imzalamaya açık rozeti gerçekbağlıhizmetmiş gibi görünmesin. Şema28komut/28tür hedef,108kalan. Özelanahtar alanı/yanlışissuer/kid/boyut/kanonikn reddi; farklıadmininceleme, beklenenstateyarışı, retired→compromised ve tekraraçma yasağı, eskiyedekcheckpoint. credits/credentials.mjs değil credentials.mjs ve key-registry.mjs tamokundu; signApproved iki aşama+statusallocation sonraki iş, gerçekKMSyok. Henüz75kod yok.
+
+74günlükleri /tmp/gazi-package74-{scope,new-final,browser-final,old-profile,portal,regression,build,package}.log.58SQL ve11mevcutprofil; ilkbaşarısızkoşular sayılmadı. Mobilimzasızyerel kapsamnotu veDOMkayıtları doğrulandı.
+
+# Paket74 başlangıcı — imzasız hazırlık kaydı aynıSQL
+
+73kaynak eşitliği doğrulandı: yerel79cd47bf0119254281c0ad3b98fd5b03f4dea293 / uzaka15d977baec2c26fb86e369d26d5b1fa5f255813 / tamağaç14e27e8f1ff6f3fe874077ebae8fd99a17a71ce3.21blob SHA,136parça2225981bayt; expected-head force=false, uzakref/commit teyidi ve temiz ağaç. Son canlı16 aynı.
+
+74kod planı: issue25.komut/issuance25.tür; mevcut işkuralı ve typedSQLissuanceProfile; core.issuanceView ortakokuma; SQLcanSignfalse/imza kapalı ve preparationözelanlatım. Akademik karar uygunluk düğmesi ve belge hazırlığı sekmesi aynıkarara bağlanacak; yeniSQL test+tarayıcı olmadan kabul yazma. Gerçek kişi/ihraç/imza/credential/üretimDDL yok.
+
 # Güncel devam — Paket73 yerel kabul tamam; kaynak eşitlemesi sırada
 
 Paket73:9yeni SQL+4yeni HTTPS testi;912sunucu+59portal+46regresyon=1017.51SQL+9mevcut program paketi=60tarayıcı.136komut/18HTTP için9035pozitif72280türetilmiş negatif SQLite kapsam örneği;115statik paket.

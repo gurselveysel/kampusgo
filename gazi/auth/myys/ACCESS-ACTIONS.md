@@ -115,3 +115,7 @@ Yetki eki/dosyası ve profil aynı SQL zincirinde yerel olarak doğrulandı. Ger
 ### Paket73 durum notu
 
 Program paketi aynı SQL yerel kaynaklardan indirildi; gerçek kurum yayını, program/lisans/yetki onayı ve dış aktarım yetkisi yaratmaz. HTTPprofil2 için gerçek kalıcı epoch geçişi mevcut ayrı yetkili rotasyon koşullarına bağlıdır; otomatik anahtar/erişim oluşturulmadı. configuredCorekapalı, son canlı16, browserAuthiptali yenilenmedi. Mevcut tek eylem listesi korunur; bağımsız112komut geliştirmesi sürer.
+
+### Paket74 durum notu
+
+SQL hazırlık kaydı imza veya resmî belge değildir. Gerçek görevli ataması/kurum belgesi/KMS/imza hizmeti/üretim durum hizmeti ve dış doğrulama mevcut tek eylem listesinde açık. Yeni credential, üretim migration veya gerçek kişiye belge işlemi yok. Son canlı16; browserAuthiptali yenilenmedi.111SQLkomut bağımsız geliştirmesi sürer.

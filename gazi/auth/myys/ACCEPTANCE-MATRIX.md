@@ -9,17 +9,17 @@
 | B03 · Program bilgi paketini onayla | kısmi; aynı SQL program paketi bağlı | Paket73:13yeni/1017toplam;60tarayıcı | Son canlı16;73yayımlanmadı | gerçek program/lisans/kurum yayını kabulü açık | bağımsız kod için gerekli değil |
 | B04 · Veri akışını ve saklamayı onayla | kısmi; güncel kaynak envanteri16tablo/149tür | yerel kapsam/özne özeti geçti; kurum alan kabulü değil | yeni envanter dilimleri canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
-| B06 · Kalıcı kişi ve üyelik modelini kur | kısmi; aynı SQL program paketi bağlı | Paket73:13yeni/1017toplam;60tarayıcı | Son canlı16;73yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; aynı SQL program paketi bağlı | Paket73:13yeni/1017toplam;60tarayıcı | Son canlı16;73yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
-| B08 · Tenant ve görevler ayrılığını sınırla | kısmi; aynı SQL program paketi bağlı | Paket73:13yeni/1017toplam;60tarayıcı | Son canlı16;73yayımlanmadı | bekleniyor | bağımsız kod için gerekli değil |
+| B06 · Kalıcı kişi ve üyelik modelini kur | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | gerçek Gaziusulü/tebligat/yetki açık | kalan124SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
+| B08 · Tenant ve görevler ayrılığını sınırla | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi; ilk14SQLkomut/15tablo checkpoint; alternatifölçme yerel | Paket69:10yeni/970toplam;41tarayıcı | Son canlı16;69yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi; ilk14SQLkomut/15tablo checkpoint; alternatifölçme yerel | Paket69:10yeni/970toplam;41tarayıcı | Son canlı16;69yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
-| B11 · İtiraz ve moderasyon yolunu kur | kısmi; ilk14SQLkomut/15tablo checkpoint; alternatifölçme yerel | Paket69:10yeni/970toplam;41tarayıcı | Son canlı16;69yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
-| B12 · Belgeyi akademik karara bağla | kısmi; aynı SQL program paketi bağlı | Paket73:13yeni/1017toplam;60tarayıcı | Son canlı16;73yayımlanmadı | bekleniyor | bağımsız kod için gerekli değil |
+| B11 · İtiraz ve moderasyon yolunu kur | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | gerçek yöntem/kanıt/usul/yetki açık | kalan122SQLişlem;nativeSSI/RLS/KMS/kurum/entegrasyon açık |
+| B12 · Belgeyi akademik karara bağla | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | bekleniyor | bağımsız kod için gerekli değil |
 | B13 · Anahtar ve durum güvenilirliğini doğrula | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B14 · LMS veri sözleşmesini onayla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B15 · İlk LMS adaptörünü kabul et | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B16 · Olay kuyruğu ve idempotency kur | kısmi;24SQLkomut, yetki dosyası/profil bağlı | Paket72:15yeni/1004toplam;58tarayıcı | Son canlı16;72yayımlanmadı | operasyonel kabul açık | teyit/erişim bekleniyor |
+| B16 · Olay kuyruğu ve idempotency kur | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B17 · Toplu ihraç ve mutabakat ekle | kısmi | kısmi · işçi/satır dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
 | B18 · Kişisel cüzdan ve paylaşım ekle | kısmi | kısmi · cüzdan dilimi geçti | kod yayımlandı; kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B19 · Bağımsız belge taşımayı sınat | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
@@ -27,11 +27,11 @@
 | B21 · Dış belge ve tanıma akışını bağla | kısmi; imza/insan raporu/tekil kredi/karar sürümü bağlı | Paket52:6 yeni sunucu,68 tarayıcı; tanımlı dilim geçti | Paket52 canlı değil | gerçek teslim/usul/çıktı/önceki ders/kurul kabulü açık | gerçek issuer/status/schema ve üretim kabulü açık |
 | B22 · OBS aktarımını kontrollü kabul et | kısmi; kaynak güveni ve iptal düzeltmesi bağlı | Paket50 bağlı zincir ve11 OBS tarayıcı geçti | Paket50 canlı değil | operasyonel kabul açık | gerçek OBS şeması/transkript/diploma eki/işçi kabulü açık |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B24 · Erişilebilirlik açılış testini yap | kısmi; aynı SQL program paketi bağlı | Paket73:13yeni/1017toplam;60tarayıcı | Son canlı16;73yayımlanmadı | gerçek AT/altyazı/çıktı/karşıtlık ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
+| B24 · Erişilebilirlik açılış testini yap | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | gerçek AT/altyazı/çıktı/karşıtlık ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi; ilk8SQLkomut/15tablo birleşikcheckpoint | Paket67:13yeni/949toplam;29tarayıcı; yerel dilim | Son canlı16;67yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
-| B28 · Silme saklama ve çıkış haklarını sına | kısmi; aynı SQL program paketi bağlı | Paket73:13yeni/1017toplam;60tarayıcı | Son canlı16;73yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
+| B28 · Silme saklama ve çıkış haklarını sına | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | gerçek kurum/usul/RPO-RTO/saklama kararı açık | kalanSQLişlemleri;nativeSSI/RLS/KMS/gerçekcheckpoint ve entegrasyon açık |
 | B29 · Kalite göstergelerini gerçek veriye bağla | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B30 · Kontrollü kohortu aç ve değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B31 · Ücretli hizmeti koşullu aç | kısmi; Paket33 yerel mali simülatör hazır |16mali tarayıcı; yerel iade/itiraz/mutabakat geçti | Paket33 canlı değil | ücret/tahsilat/iade yetkisi ve uygulanabilirlik açık | gerçek PSP/settlement/vergi-fatura kabulü koşullu açık |
@@ -194,7 +194,7 @@ Aktarım ve mutabakat içinde aynı kişi/program/kaynak kaydı, tamamlama ve g�
 | Paket | Kod | Yerel kabul | Canlı | Kurum | Dış erişim |
 |---|---|---|---|---|---|
 | B01 | 27 satır envanteri/regresyon listesi hazır | Eşleme, korunacak sayılar ve gezinme geçti; bütün özellik kriterleri değil | Paketi31 yok; son canlı16 | Gerçek operasyonel kabul açık | Ayrı site/LMS/OBS/IdP kabulü açık |
-| B24 | kısmi; aynı SQL program paketi bağlı | Paket73:13yeni/1017toplam;60tarayıcı | Son canlı16;73yayımlanmadı | Erişilebilirlik açılış kabulü açık | Gerçek sağlayıcı medya ve canlı oturum kabulü açık |
+| B24 | kısmi; aynı SQL imzasız hazırlık bağlı | Paket74:11yeni/1028toplam;69tarayıcı | Son canlı16;74yayımlanmadı | Erişilebilirlik açılış kabulü açık | Gerçek sağlayıcı medya ve canlı oturum kabulü açık |
 
 PILOT-INVENTORY.md, NAVIGATION-ACCESSIBILITY.md ve acceptance/B01-B24-navigation-20261014.json esas kanıttır. Backlog üst metadata alanlarındaki eski5–7 paket özeti tarihçe korunarak güncellendi; en son canlı16 bilgisi yeni girişli smoke diye sunulmadı.
 
@@ -423,3 +423,7 @@ Paket72: yetki eki/dosyası/ayrı inceleme/durdurma/indirme ve belge profili/inc
 ## Paket73 — aynı SQL program bilgi paketi; yayın değil
 
 Paket73: program bilgi paketi aynı SQL kişi/program/yayın/profil/yetki zincirinden imzasız indirilir. Güncel kaynak, kişi/üyelik/CSRF, işlem ve checkpoint kapıları korunur; özel ek baytları ve görevli listesi dışarı çıkmaz. Ayrı oturum dosyayı durdurunca eski ekrandaki indirme reddedilir. Uzun program durumu320CSSpx/metin aralığında kesilmez. Paket73:9yeni SQL+4yeni HTTPS testi;912sunucu+59portal+46regresyon=1017.51SQL+9mevcut program paketi=60tarayıcı.136komut/18HTTP için9035pozitif72280türetilmiş negatif SQLite kapsam örneği;115statik paket. [Sözleşme](PROGRAM-PACKAGE-SQL-CONTRACT.md), [kanıt](acceptance/B03-program-package-sql-20261014.json). B03/B06/B07/B08/B12/B24/B28 alt kabulüdür; kurum ve dış erişim şartları kapanmadı.24SQLkomut/24tür,112komutun aktarımı açık. Son canlı16;17–73dağıtılmadı.
+
+## Paket74 — aynı SQL imzasız belge hazırlığı; yayın değil
+
+Paket74: Akademik kararlar üzerinden aynı SQL kişi/karar/profil/yetki dosyasına tekil imzasız hazırlık bağlandı. Belge hazırlığında öğrenen aynı özel kaydı görür. Açık itiraz kullanım göstergesini kapatır; yeni profil geçmiş bağı değiştirmez. canSign/signerAvailablefalse; imza, paylaşım ve değiştirme kapalı. Yedi çekirdek sekme ve320CSSpx/metin aralığı kontrol edildi. Paket74:11yeni SQL/HTTPS testi;923sunucu+59portal+46regresyon=1028.58SQL+11mevcutprofil=69tarayıcı.136komut/18HTTP için9035pozitif72280türetilmiş negatif SQLite kapsam örneği;115statik paket. [Sözleşme](ISSUANCE-SQL-CONTRACT.md), [kanıt](acceptance/B12-issuance-sql-20261014.json). Kurum/dış erişim kabulü kapanmadı.25SQLkomut/25tür,111komutun aktarımı açık. Son canlı16;17–74dağıtılmadı.

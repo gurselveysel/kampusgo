@@ -2,7 +2,7 @@
 // SQL runtime constructs this after identity/tenant checks; no client or production factory exposes it.
 import {requireThat} from './store.mjs';
 export const academicSqlCapacity=Object.freeze({maxRows:10000,maxBytes:16*1024*1024});
-export const academicSqlKinds=Object.freeze(['program','publication','enrollment','evidence','assessment','decision','appeal','resolution','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receipt','evidence-moderation','registry','registry-review','authority-attachment','authority-file','authority-dossier','authority-review','authority-hold','authority-download','credential-profile','credential-profile-review','credential-profile-hold']);
+export const academicSqlKinds=Object.freeze(['program','publication','enrollment','evidence','assessment','decision','appeal','resolution','appeal-policy','appeal-policy-review','appeal-policy-hold','decision-receipt','evidence-moderation','registry','registry-review','authority-attachment','authority-file','authority-dossier','authority-review','authority-hold','authority-download','credential-profile','credential-profile-review','credential-profile-hold','issuance']);
 const kinds=new Set(academicSqlKinds);
 const local=()=>requireThat(!process.env.VERCEL&&!process.env.VERCEL_ENV,'local_only','Akademik SQL denemesi yalnız izole yerel kabulde çalışır.',503);
 const copy=v=>JSON.parse(JSON.stringify(v));
