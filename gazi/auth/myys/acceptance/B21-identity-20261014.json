@@ -1,0 +1,57 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 51,
+  "work_id": "B21",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "server_tests": 672,
+  "new_server_tests": 11,
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "total_tests": 766,
+  "browser_checks": {
+    "recognition-identity": 12,
+    "recognition-review": 12,
+    "recognition": 12,
+    "recognition-offers": 11,
+    "obs": 11
+  },
+  "browser_total": 58,
+  "identity_browser_checks": [
+    "İki farklı imzalı dosya ve ayrı teknik rapor kredi öncesinde birlikte görüldü",
+    "İlk insan kararı tek etkin kredi oluşturdu",
+    "Farklı ders ve dosya özeti aynı belge çıktısına ikinci pozitif karar açmadı",
+    "Öğrenci ikinci talebin neden kredi alamadığını aynı ekranda gördü",
+    "İtirazla bekletilen eski kredi ikinci talebe boş yer açmadı",
+    "Bağımsız olumsuz karar ve ters kayıt yeni talebin incelemesini açtı",
+    "Yeni nüsha kararı sonrası yalnız bir etkin kredi kaldı",
+    "Sayfa yenilenince eski karar/ters kayıt ve yeni karar birlikte korundu",
+    "390 px çift kredi açıklaması ve geçmiş taşmıyor; görünüm seçimi klavye odağı alıyor",
+    "Teknik rol ikinci kredi veya akademik karar bilgisini görmedi",
+    "Başka öğrenci belge ve kredi zincirini göremedi",
+    "İstemci istisnası yok"
+  ],
+  "command_count": 136,
+  "http_routes": 18,
+  "positive_samples": 8761,
+  "derived_scope_checks": 70088,
+  "static_files": 115,
+  "technical_tables": 16,
+  "record_kinds": 148,
+  "local_slice_closed": [
+    "verified issuer/credential/outcome identity survives new signature/file digest/key",
+    "historical decision-pinned proof counts held active credit until explicit reversal",
+    "whole-offer atomic duplicate rejection and two SQLite connection stale submission",
+    "scoped conflict explanation, positive-option closure, preserved history and role privacy"
+  ],
+  "open": [
+    "decision form must explicitly pin the technical version reviewed by the human",
+    "real signed achievement/outcome and institutional prior-course mapping; different manually selected output keys are not automatically semantically resolved",
+    "general VC/status/schema/interoperability and real production/OBS acceptance"
+  ],
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "source_parent_remote": "950d0700ec28f6ce8ce1905abd1392b56bc59ea0",
+  "source_parent_tree": "a21a64f92b8cdb29270df6a7421592188d0668d7",
+  "contract": "RECOGNITION-IDENTITY-CONTRACT.md"
+}

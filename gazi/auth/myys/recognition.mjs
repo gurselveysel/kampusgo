@@ -1,3 +1,4 @@
+import {recognitionSourceIdentity,creditSourceIdentity} from './recognition-source-identity.mjs';
 import {recordRecognitionTechnical,latestRecognitionTechnical,recognitionTechnicalReady} from './recognition-review.mjs';
 import {recognitionIssuerView,externalVerificationSummary} from './recognition-issuer.mjs';
 import {recognitionDocumentView} from './recognition-document.mjs';
@@ -96,6 +97,8 @@ function executeRecognition(ctx,batch){
    requireThat(policy.validFrom<=now.slice(0,10)&&policy.validUntil>=now.slice(0,10),'recognition_policy','Politikanın geçerliliği dolmuş.',409);
    const existing=recognitionLedger(s,tenant).filter(x=>x.owner===r.owner&&x.targetProgramCode===r.targetProgramCode&&x.decisionId!==prior?.id&&!batch?.priorDecisionIds.includes(x.decisionId));
    requireThat(!existing.some(x=>x.gainKey===p.gainKey||x.targetCourseCode===r.targetCourseCode||x.sourceDigest===r.sourceDigest&&x.sourceOutcomeKey===r.sourceOutcomeKey),'double_counting','Aynı kazanım, ders veya belge çıktısı ikinci kredi oluşturamaz.',409);
+   const sourceIdentity=recognitionSourceIdentity(s,tenant,r,technical);
+   requireThat(!sourceIdentity||!existing.some(c=>creditSourceIdentity(s,tenant,c)?.key===sourceIdentity.key),'double_counting','Aynı doğrulanmış belgenin aynı Öğrenme Çıktısı için etkin kredi var. Yeniden imzalanmış dosya ikinci kredi oluşturamaz.',409);
    limits=batch?.limits||recognitionLimits(policy,{credit:p.credits,remoteCredit:p.remoteCredits,existing:existing.filter(x=>x.pathway===policy.pathway).reduce((n,x)=>n+creditUnits(x.credits),0)/100});
   }
   const decision=put('recognition-decision',{id:id(),basis,...(batch?{offerId:batch.offer.id,offerDecisionId:batch.decisionId}:{}),unit:r.unit,owner:r.owner,requestId:r.id,policyId:policy.id,technicalId:technical?.id||null,outcome:p.outcome,credits:p.credits,remoteCredits:p.remoteCredits,reason:p.reason,authorityReference:p.authorityReference,gainKey:units?p.gainKey:null,priorCourseReference:units?p.priorCourseReference:null,limits,...(res?{resolutionId:res.id,supersedesDecisionId:prior.id}:{}),official:false});
@@ -119,6 +122,10 @@ function executeRecognition(ctx,batch){
  }
  return null;
 }
+function sourceConflict(s,t,r){
+ const identity=recognitionSourceIdentity(s,t,r,latestRecognitionTechnical(s,t,r.id));
+ return !!identity&&recognitionLedger(s,t).some(c=>c.owner===r.owner&&c.targetProgramCode===r.targetProgramCode&&c.requestId!==r.id&&creditSourceIdentity(s,t,c)?.key===identity.key);
+}
 export function recognitionView(s,a,now=new Date().toISOString()){
  const scoped=kind=>s.list(a.tenant,kind).filter(r=>canRead(a,r));
  const policies=s.list(a.tenant,'recognition-policy').filter(r=>a.memberships.some(m=>m.unit===r.unit));
@@ -126,7 +133,7 @@ export function recognitionView(s,a,now=new Date().toISOString()){
  const ds=scoped('recognition-decision').filter(r=>academicRead(a,r));
  const credits=recognitionLedger(s,a.tenant).filter(r=>academicRead(a,r)).map(c=>({...c,held:!recognitionRequestUsable(s,a.tenant,c.requestId,now),heldReason:recognitionBlockReason(s,a.tenant,c.requestId,now)}));
  const offers=scoped('recognition-offer').filter(r=>academicRead(a,r));
- return {issuers:recognitionIssuerView(s,a,now),basis:recognitionBasisView(s,a,now),offers,offerWithdrawals:scoped('recognition-offer-withdrawal').filter(r=>academicRead(a,r)),offerDecisions:scoped('recognition-offer-decision').filter(r=>academicRead(a,r)),offerAppeals:scoped('recognition-offer-appeal').filter(r=>academicRead(a,r)),offerResolutions:scoped('recognition-offer-resolution').filter(r=>academicRead(a,r)),policies:policies.map(p=>({...p,basisStatus:recognitionBasisState(s,a.tenant,p,now),review:reviews.find(x=>x.policyId===p.id)||null})),requests:recognitionDocumentView(s,a,scoped('recognition-request')).map(r=>({...r,programId:s.get(a.tenant,'enrollment',r.enrollmentId)?.programId,verification:externalVerificationSummary(s,a.tenant,s.get(a.tenant,'recognition-request',r.id),now)})).map(r=>academicRead(a,r)?r:{...Object.fromEntries(['id','unit','owner','enrollmentId','policyId','targetProgramCode','targetCourseCode','sourceTitle','sourceIssuer','sourceCredentialId','sourceOutcomeKey','sourceDigest','document','canDeliverDocument','verification','programId'].map(k=>[k,r[k]])),technicalOnly:true}),technical:scoped('recognition-technical').filter(r=>latestRecognitionTechnical(s,a.tenant,r.requestId)?.id===r.id).map(r=>({...r,ready:recognitionTechnicalReady(s,a.tenant,s.get(a.tenant,'recognition-request',r.requestId),r,now)})),technicalHistory:scoped('recognition-technical'),decisions:ds,appeals:scoped('recognition-appeal').filter(r=>academicRead(a,r)),resolutions:scoped('recognition-resolution').filter(r=>academicRead(a,r)),credits};
+ return {issuers:recognitionIssuerView(s,a,now),basis:recognitionBasisView(s,a,now),offers,offerWithdrawals:scoped('recognition-offer-withdrawal').filter(r=>academicRead(a,r)),offerDecisions:scoped('recognition-offer-decision').filter(r=>academicRead(a,r)),offerAppeals:scoped('recognition-offer-appeal').filter(r=>academicRead(a,r)),offerResolutions:scoped('recognition-offer-resolution').filter(r=>academicRead(a,r)),policies:policies.map(p=>({...p,basisStatus:recognitionBasisState(s,a.tenant,p,now),review:reviews.find(x=>x.policyId===p.id)||null})),requests:recognitionDocumentView(s,a,scoped('recognition-request')).map(r=>({...r,programId:s.get(a.tenant,'enrollment',r.enrollmentId)?.programId,verification:externalVerificationSummary(s,a.tenant,s.get(a.tenant,'recognition-request',r.id),now)})).map(r=>academicRead(a,r)?{...r,sourceConflict:sourceConflict(s,a.tenant,s.get(a.tenant,'recognition-request',r.id))}:{...Object.fromEntries(['id','unit','owner','enrollmentId','policyId','targetProgramCode','targetCourseCode','sourceTitle','sourceIssuer','sourceCredentialId','sourceOutcomeKey','sourceDigest','document','canDeliverDocument','verification','programId'].map(k=>[k,r[k]])),technicalOnly:true}),technical:scoped('recognition-technical').filter(r=>latestRecognitionTechnical(s,a.tenant,r.requestId)?.id===r.id).map(r=>({...r,ready:recognitionTechnicalReady(s,a.tenant,s.get(a.tenant,'recognition-request',r.requestId),r,now)})),technicalHistory:scoped('recognition-technical'),decisions:ds,appeals:scoped('recognition-appeal').filter(r=>academicRead(a,r)),resolutions:scoped('recognition-resolution').filter(r=>academicRead(a,r)),credits};
 }
 
 // Batch context is constructed only here, never read from a browser field.

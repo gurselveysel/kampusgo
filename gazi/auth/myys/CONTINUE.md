@@ -1,3 +1,19 @@
+# Güncel devam — Paket51 yerel kabul; kaynak eşitlemesi sırada
+
+14.10.2026 Paket51:672+48+46=766 otomatik;11 yeni sunucu;12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=58 tarayıcı;136komut/18HTTP8761örnek70088kapsam denetimi.115statik16tablo148tür. RECOGNITION-IDENTITY-CONTRACT.md ve B21-identity JSON ayrıntıdır.
+
+Önce diff/commit ve expected-head950d0700ec28f6ce8ce1905abd1392b56bc59ea0,base-tree a21a64f92b8cdb29270df6a7421592188d0668d7 ile tam ağaç eşitle. Son canlı16;17–51 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok.
+
+Sırada insanın gördüğü teknik rapor sürümünü karar formuna/komutuna bağla: eski form daha sonra eklenmiş olumlu teknik raporu sessizce seçmemeli. Arşivli yol zorunlu sürüm pimi; eski arşivsiz manuel API uyumu ve negatif karar/cancel güvenliği birlikte düşünülmeli. İki ayrı tarayıcı süreci ve iki SQLite eski form testi gerekir. B07 repository/KMS,B28checkpoint ve tüm diğer bağımsızlar sürer.
+
+# Güncel devam — Paket50 kaynakta; B21 kanonik çift kredi koruması sürüyor
+
+Paket50 kaynak doğrulaması: yerel `0c98a1b407182a16b2ef3b2c8616ee351069e870`, uzak `950d0700ec28f6ce8ce1905abd1392b56bc59ea0`, ortak tam ağaç `a21a64f92b8cdb29270df6a7421592188d0668d7`.23blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+755otomatik70tarayıcı;136komut18HTTP8453örnek67624denetim;115statik16tablo148tür. Önce recognition-verifier makbuzunun issuer/credentialId/full requestDigest alanlarından tarihsel kimliği bağla; eski kredi kararının pinli teknik makbuzu, kaynak şimdi kapalı olsa da çift kredi korumasında sayılmalı. Yeni kimliği istemci giremez; manuel kayıt gerçek issuer diye varsayılmaz.
+
+Son canlı16;17–50 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok. B07 repository/KMS,B28checkpoint ve tüm diğer bağımsızlar sürer.
+
 # Güncel devam — Paket50 yerel kabul; kaynak eşitlemesi sırada
 
 14.10.2026 Paket50:661+48+46=755 otomatik;12 yeni sunucu;12 bağlı inceleme+12 tanıma+11 teklif+11 OBS+13 kriptografik+11 teslim=70 tarayıcı;136komut/18HTTP8453örnek67624kapsam denetimi.115statik;16tablo148tür. RECOGNITION-REVIEW-CONTRACT.md ve B21-review JSON ayrıntıdır. Yeni rapor eski kararı canlandırmaz; sıfır kredili bağımsız karar OBS iptaline izin verir.

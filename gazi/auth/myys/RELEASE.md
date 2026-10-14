@@ -703,3 +703,13 @@ Paket50: arşivli olumlu insan raporu güncel imza makbuzuna ve ayrıca insanın
 14.10.2026 Paket50:661+48+46=755 otomatik;12 yeni sunucu;12 bağlı inceleme+12 tanıma+11 teklif+11 OBS+13 kriptografik+11 teslim=70 tarayıcı;136komut/18HTTP8453örnek67624kapsam denetimi. 390px geçmiş görüntüsü incelendi; yeni tarayıcıda sekme ve aynı adlı option/Pill seçicileri düzeltildi. Son altı akış tam geçti.16tablo148tür/115statik. Sözleşme RECOGNITION-REVIEW-CONTRACT.md; kanıt acceptance/B21-review-20261014.json.36 özgün iş/bağımlılık/kabul aynı. Yeniden imzalanan belge için kanonik çift kredi koruması, gerçek durum kaynağı/kurul/OBS/üretim kabulü açık.
 
 Paket50 dağıtılmadı; son canlı16 alias dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY yeniden okundu. Yeni authenticated smoke yok; configuredCore kapalı. 17–50 dağıtılmadı. Canlı kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. BrowserAuth iptali tekrar denenmedi. Kaynak commit ve tam ağaç eşitlemesi ayrı kaydedilecek.
+
+Paket50 kaynak doğrulaması: yerel `0c98a1b407182a16b2ef3b2c8616ee351069e870`, uzak `950d0700ec28f6ce8ce1905abd1392b56bc59ea0`, ortak tam ağaç `a21a64f92b8cdb29270df6a7421592188d0668d7`.23blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+## Paket51 — B21 yeniden imzalı belge ve çift kredi (14.10.2026)
+
+Paket51: aynı doğrulanmış issuer/belge/kanonik çıktı kimliği, yeniden imzalanmış farklı dosya veya ders/gain anahtarıyla ikinci kredi oluşturamaz. Eski kredi kararının sabitlediği makbuz, anahtar kapansa veya son rapor değişse de ters kayda kadar sayılır. Tüm teklif rollback ve iki bağlantıda eski form sınandı. Öğrenci/akademik ekranda neden görünür, pozitif seçenek kapalı; yalnız teknik role kredi ayrıntısı açılmaz. Manuel çıktı etiketleri arasındaki anlamsal eşdeğerlik gerçek uzman/kaynak incelemesine bağlıdır.
+
+14.10.2026 Paket51:672+48+46=766 otomatik;11 yeni sunucu;12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=58 tarayıcı;136komut/18HTTP8761örnek70088kapsam denetimi. 390px görsel incelendi. İlk yeni testte ekran için zenginleştirilmiş talep yerine değişmez kaynak talebinin özeti kullanılarak uyarı bağı düzeltildi; son tam koşular geçti.16tablo148tür/115statik. Sözleşme RECOGNITION-IDENTITY-CONTRACT.md ve B21-identity JSON ayrıntıdır.36 özgün iş/bağımlılık/kabul değişmedi.
+
+Paket51 dağıtılmadı; son doğrulanan canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Yeni authenticated smoke yok;configuredCore kapalı. 17–51 dağıtılmadı; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı;browserAuth iptali tekrar denenmedi. Kaynak kimliği ve tam ağaç eşitlemesi ayrıca kaydedilir.

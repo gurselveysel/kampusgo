@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.50",
+  "version": "2026.10.14.51",
   "scope": "local-acceptance-source-inventory",
   "generatedFrom": "schema declarations and reviewed explicit recordGroups/subjectFields",
   "institutionApproved": false,
