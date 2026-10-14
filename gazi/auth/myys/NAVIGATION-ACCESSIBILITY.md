@@ -43,3 +43,13 @@ Dosya doğrulayıcıda her seçim/metin/sekme değişimi önceki okuma veya doğ
 Kaynaklar14.10.2026 yeniden okundu: [WCAG2.2 /12.12.2024 Recommendation](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) 3.3.1–3.3.3 ve4.1.2–4.1.3; görünür hata/etiket ve programatik ad/durum ilişkisinin dayanağı. [WHATWG HTML Living Standard](https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)) §4.10.5.1.17, reset ve value/files IDL; seçili dosya/required korunur, accept ipucudur ve sunucu denetiminin yerine geçmez. Standartların tümüne uygunluk beyanı yapılmaz.
 
 Genel büyütme/yeniden akış, gerçek AT, altyazı ve erişilebilir çıktı kabulü açıktır. Son canlı16;17–56 dağıtılmadı; canlı giriş denemesi yenilenmedi.
+
+## Paket57 — yeniden akış ve metin aralığı
+
+14 Ekim2026. Matris program seçimleri, müfredat başlık düğmeleri, bağlantı kartları, eski ekranların rol/alım formu ve22 vaka tablosu düzeltildi. Seçimlerin doğal genişliği sayfayı büyütmez; düğmeler ve hücre metinleri satıra geçer. Yatay sayfa taşması overflow-hidden eklenerek gizlenmedi; mevcut iki boyutlu veri tabloları kendi kaydırma alanında kalır.
+
+`scripts/myys-reflow-browser.cjs`:11 sunum profili98 menü,9 çekirdek rol288 panel,22 vaka; gerçek iframe içeriği dahil320 CSS px normal/metin aralığı928 geometri ölçümü. İlk taramada68 sorunlu ölçüm (tekrarlanan ortak kusurlar), ek ders kontrolünde1 vaka taşması görüldü; son koşuda0. Boş panel kabuğuna bakmakla yetinilmez. Matris program seçimi/gerçek JSON indirmesi, ders öz değerlendirmesi, mobil menü/pencere/profil kontrolü yapıldı. Bunlar sentetik çalışma taslaklarıdır.66 tarayıcı kontrolü toplamı7 yeniden akış +19 gezinme +14 dosya UI +14 yetki HTTP +12 tanıma teslimi HTTPdir.
+
+[WCAG2.2 /12.12.2024](https://www.w3.org/TR/2024/REC-WCAG22-20241212/) §1.4.10 ve1.4.12, not/istisnalarıyla14.10.2026 okundu. Test320 CSS px kullanır; gerçek tarayıcı yakınlaştırması veya AT koşusu değildir. Metin aralığı yalnız dört özellik değiştirilerek artırılır: satır1.5, paragraf sonrası2em, harf.12em, sözcük.16em. Ekran okuyucu,200% metin büyütme, karşıtlık, altyazı ve belge çıktısı kabulü açık. Geometri denetimi tek başına uygunluk belgesi değildir.
+
+106 otomatik test yeniden çalıştı:12 gateway/envanter,48 portal,46 regresyon. Son tam733 sunucu koşusu Paketi56dır; sunucu kodu değişmedi. İlk seçili gateway denemesi depo kökünde yapıldığı için göreli statik dosya yolu ENOENT verdi; doğru `gazi/auth` çalışma dizinindeki12/12 tekrar geçti, kapı davranışı değiştirilmedi.115 dosyalı korumalı paketleme başarılı. Son canlı16;17–57 dağıtılmadı.

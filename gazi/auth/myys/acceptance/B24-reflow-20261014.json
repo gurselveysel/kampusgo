@@ -1,0 +1,174 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 57,
+  "work_ids": [
+    "B24"
+  ],
+  "scope": "isolated-local-reflow-text-spacing-and-functional-regression",
+  "official": false,
+  "server_gate_tests": 12,
+  "server_gate_scope": [
+    "gateway",
+    "pilot-inventory"
+  ],
+  "portal_tests": 48,
+  "regression_tests": 46,
+  "rerun_total": 106,
+  "last_full_server_suite": {
+    "software_package": 56,
+    "passed": 733,
+    "runtime_server_code_changed_since": false
+  },
+  "last_full_total": 827,
+  "browser_checks": {
+    "reflow": {
+      "count": 7,
+      "at": "2026-10-14T11:58:01.482Z",
+      "checks": [
+        "11 sunum profili / 98 menü hedefinin gerçek içeriği, iframe dahil320 CSS px normal/metin aralığı ile tarandı",
+        "9 çekirdek rol / 288 panel320 CSS px normal/metin aralığı ile tarandı",
+        "320px/metin aralığında program seçimi klavyeyle değişti; imzasız matris dosyası aynı seçimlerle indirildi",
+        "Matris3, rozet dosya doğrulayıcı ve dersin4 materyal sekmesi320px normal/metin aralığında tarandı",
+        "22 modülün vaka tabloları320px normal/metin aralığında gerçek içerikle tarandı",
+        "Dar ders uygulamasında seçim ve klavyeyle öz değerlendirme geri bildirimi çalıştı; resmî değerlendirme değildir",
+        "Mobil menü, kapsam penceresi ve11 sunum profili seçicisi normal/metin aralığında tarandı"
+      ]
+    },
+    "navigation": {
+      "count": 19,
+      "at": "2026-10-14T11:54:09.723Z",
+      "checks": [
+        "Mobil kapalı menü odak/erişilebilirlik ağacından çıkar; içeriğe geç bağlantısı çalışır",
+        "Mobil menü adlandırılmış modal; ileri/geri odak döngüsü, Escape ve tetikleyiciye dönüş çalışır",
+        "Menü araması boş sonucu açıklar; seçilen sayfaya başlık ve ana içerik odağı taşınır",
+        "Menüden pilot penceresi tek modal olarak açılır; kapanınca mobil menü düğmesine dönülür",
+        "Masaüstüne geçince menü kilidi kalkar; pencere odağı özgün düğmeye döner",
+        "Çalışma alanı seçme penceresi hedef sayfayı açtı ve odağı yeni ana içeriğe taşıdı",
+        "Aynı sayfa seçimi ve dar ekrana dönüşte odak gizli menüde kalmaz; 390 px taşma yok",
+        "11 sunum profilinin tüm menü hedefleri içerikle açıldı; sunum yetkisi uyarısına veya boş sayfaya düşmedi",
+        "Öğrenen katalogdan dört örnek programı planına ekledi; yetkisiz program öneri düğmesi gösterilmedi",
+        "Altı programın 66 dersi doğru başlıkla açıldı; dört materyal sekmesi ve 66 sunum dosyası korundu",
+        "Sunum HTML ve vaka CSV dosyaları gerçek tarayıcı indirmesiyle alındı",
+        "Ders notu ve kişisel tamamlama yenilemede korundu; materyal sekmeleri klavyeyle kullanılabildi",
+        "Rehber ve destek özeti kullanıcı işlemiyle indirildi; dış sisteme gönderildiği iddia edilmedi",
+        "Sayfa geçişi sürerken kullanıcı hedef içerikte odağı taşıdıysa geçiş tamamlanınca odağı çalınmıyor",
+        "Kaynak, matris ve rozet sekmeleri adlandırılmış panele bağlı; ok/Home/End ve tek Tab durağı çalışır",
+        "Kalite ve paydaş kategori filtreleri doğru seçili düğme anlamıyla ve klavyeyle çalışır",
+        "Dokuz çekirdek rolün tüm akademik alt sayfaları boş olmayan adlandırılmış panellerle açıldı",
+        "Akademik sekmelerde End, sağ okla başa dönüş ve Tab ile panel odağı çalışır",
+        "Sunum ve çekirdek gezinmesinde istemci istisnası yok"
+      ]
+    },
+    "file-input": {
+      "count": 14,
+      "at": "2026-10-14T11:54:09.035Z",
+      "checks": [
+        "İngilizce tarayıcıda Türkçe dosya yüzeyi; görünür odak ve Boşluk tuşuyla gerçek dosya seçici",
+        "Geçersiz yeni seçim önceki belge metnini temizledi ve doğrulamayı kapattı",
+        "Boş dosya ve okuma hatası güvenli Türkçe sonuç verdi",
+        "Yavaş eski dosya okuması sonraki seçimin metnini ve adını değiştiremedi",
+        "Elle yapıştırılan metin bekleyen dosya okumasını geçersiz kıldı; dosya adı ve yerel seçim temizlendi",
+        "Dosya seçimini temizleme bekleyen okumayı da iptal etti",
+        "Gecikmiş doğrulama yanıtı yeni yapıştırılan metne bağlanmadı",
+        "Geçersiz yeni dosya eski doğrulama başarısını da geçersiz kıldı",
+        "İki isteğin ters sırada dönmesi güncel doğrulama sonucunu değiştirmedi",
+        "Sekmeden ayrılma gecikmiş yanıtla geri yönlendirilmedi",
+        "390 px uzun Türkçe dosya adı taşmadı; sınır ve seçili ad erişilebilir açıklamaya bağlı",
+        "Zorunlu renklerde dosya seçimi ve odak sınırı görünür kaldı",
+        "Sayfadan ayrılma bekleyen sonucu güvenli biçimde bıraktı",
+        "İstemci istisnası yok"
+      ]
+    },
+    "authority": {
+      "count": 14,
+      "at": "2026-10-14T11:54:15.680Z",
+      "checks": [
+        "Öğrenen idari dosyaya ve ek yükleme formuna erişmedi",
+        "Yavaş dosya okumasında çift tıklama tek işlem kaldı; seçili ek ve kapsam alanları değiştirilemedi",
+        "İki gerçek yerel dosya tarayıcıdan yüklendi; kaynak, tarih ve sürüm saklandı",
+        "Dört sorumluluk ve belge bağları kaydedildi; hazırlayan kendi dosyasını inceleyemedi",
+        "İncelenmemiş yetki dosyası belge profili formunu açmadı",
+        "Ayrı yönetici ek dosyasını gerçek indirmeyle bayt bayt aynı aldı",
+        "Ayrı yönetici incelemesi dosyayı yerel kullanıma açtı",
+        "İncelenmiş dosya ve ayrı komisyon profili aynı başarı kararının hazırlığına bağlandı",
+        "Dosya durdurulunca yeni belge hazırlığı kapandı",
+        "Yeni yetki dosyası eski profilin bağını sessizce değiştirmedi",
+        "Yeni dosya ayrıca incelenmiş profil 2 üzerinden aynı karara bağlandı",
+        "Arama boş sonucu ve yenilemede ekler, incelemeler, iki sürüm korundu",
+        "390 px ek ve kapsam formları taşmadı; klavye sırası çalıştı",
+        "İstemci istisnası yok"
+      ]
+    },
+    "recognition-document": {
+      "count": 12,
+      "at": "2026-10-14T11:54:08.719Z",
+      "checks": [
+        "Yavaş özetin ardından büyük veya boş seçim eski özeti açmadı; bekleme duyurusu takılı kalmadı",
+        "Öğrenci talebi dosya özetiyle oluştu; gerçek teslim ayrı gösterildi",
+        "Büyük dosya gönderimi istemcide kapalı",
+        "Başka dosya talebin özeti yerine geçemedi",
+        "Aynı gerçek baytlar teslim edildi; imza veya teknik kabul oluşmadı",
+        "Öğrenci yeniden yüklemeden sonra aynı baytları güvenli dosya adıyla indirdi",
+        "390 px teslim bölümünde taşma yok; indirme düğmesi klavye odağı alıyor",
+        "Yetkili teknik görevli aynı dosyayı indirdi; insan raporu ayrı kayıt oldu",
+        "Arşiv teslimi sonuçlanmamış teknik incelemeyi aşarak kredi açmadı",
+        "Koordinatör teslim bilgisini gördü; ham dosya indirme yetkisi verilmedi",
+        "Başka öğrenci teslimi veya belgenin içeriğini göremedi",
+        "İstemci istisnası yok"
+      ]
+    }
+  },
+  "browser_total": 66,
+  "reflow": {
+    "css_width": 320,
+    "presentation_profiles": 11,
+    "routes": 98,
+    "core_roles": 9,
+    "panels": 288,
+    "case_modules": 22,
+    "measurements": 928,
+    "failed_measurements": 0,
+    "first_scan_failed_measurements": 68,
+    "additional_case_failure_fixed": 1,
+    "text_spacing": {
+      "line_height": 1.5,
+      "paragraph_spacing_em": 2,
+      "letter_spacing_em": 0.12,
+      "word_spacing_em": 0.16
+    },
+    "two_dimensional_scroll_regions": "existing scoped tables/tab lists remain; page overflow not hidden to pass",
+    "manual_screen_reader": false,
+    "real_browser_zoom": false,
+    "last_result_sha256": "6d4aa9023faafd3497293159cb0cdc3eb909ec1519c9ddd38d38d0de1a06f6c0"
+  },
+  "static_files": 115,
+  "new_server_command": false,
+  "production_migration": false,
+  "deployed": false,
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "live_alias_read": "2026-10-14 READY package16; not authenticated smoke",
+  "source_parent_remote": "b64461873dd94b119605f7ede7a0e733bf0b670d",
+  "source_parent_tree": "c084369a87c235726d6984963afab8cd4328138f",
+  "local_slice_closed": [
+    "Matrix selection intrinsic widths and curriculum action wrapping",
+    "Connection card text remains inside the narrow card",
+    "Legacy role selector and procurement form fields remain inside the frame",
+    "All22 case tables wrap labels/values under increased text spacing",
+    "Keyboard matrix selection/export, lesson self-check, drawer/modal/profile and previous file/HTTP workflows passed"
+  ],
+  "open": [
+    "Gerçek ekran okuyucu, tüm dinamik içerikler/form hataları ve200% metin büyütme kabulü açık;320 CSS px ölçümü gerçek tarayıcı zoom koşusu değildir.",
+    "Video Türkçe altyazı/döküm doğruluğu, indirilen belge çıktısı okuma sırası ve metin/etkileşim karşıtlığı taraması sürüyor.",
+    "Canlı kimlikli rol kabulü ve B24 bütün ürün için kritik engel sıfır şartı açık."
+  ],
+  "source": {
+    "url": "https://www.w3.org/TR/2024/REC-WCAG22-20241212/",
+    "version": "W3C Recommendation2024-12-12",
+    "read": "2026-10-14",
+    "sections": [
+      "1.4.10 incl notes",
+      "1.4.12 incl exceptions/notes"
+    ],
+    "application": "bounded reflow/text spacing checks; not complete WCAG conformance"
+  }
+}

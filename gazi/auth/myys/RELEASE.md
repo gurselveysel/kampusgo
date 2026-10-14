@@ -765,3 +765,13 @@ Görünür değişiklik: Tanıma ve kredi talebi/belge teslimi, Yetki dosyaları
 Yerel kabul:733 sunucu +48 portal +46 regresyon =827. 14 kontrollü dosya UI +14 yetki HTTP +12 tanıma belge HTTP =40 tarayıcı; native required/FormData, gerçek dosya teslim/indirme,390px ve zorunlu renk görüntüsü geçti. Kontrollü rozet API yanıtları kriptografik kabul değildir.115 statik dosyalı mevcut korumalı paketleme başarılı. Yeni sunucu komutu/migration yok; B24 bütün AT/altyazı/çıktı şartları açık.
 
 Başlangıç uzak8bbac52bad914fe315f3985e5476aae2b0fffd7c / ortak6f4be4962efc301d06ee06cd69a66a7df2209edf yeniden doğrulandı. Kaynak commit/ağaç sonucu eşitlemeden sonra eklenir.14.10.2026 alias hâlâ `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY / production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu kontrol yeni kimlikli smoke değildir.17–56 yayımlanmadı; configuredCore kapalı. Son canlı geri dönüş hedefi `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Önceki browserAuth iptali tekrar denenmedi.
+
+Paket56 kaynak eşitlemesi doğrulandı: yerel `ca1ed7e2f0280e027b49f961336b0fe52753e63f`, uzak `b64461873dd94b119605f7ede7a0e733bf0b670d`, ortak tam ağaç `c084369a87c235726d6984963afab8cd4328138f`.17 blob SHA ve tam ağaç birebir; expected-head/force=false, uzak ref ve commit ağacı tekrar okundu. Yeni dağıtım yok.
+
+## Paket57 — dar ekran ve metin aralığı (yalnız yerel kabul)
+
+Panel: Matris ve Rubrik Stüdyosu, Müfredat, Bağlantılar, eski rol/alım formu ve22 ders uygulama tablosu. Kullanıcı dar ekranda seçim/düğme/metinleri sayfa dışına taşmadan kullanabilir; matris seçimi klavyeyle değişip aynı içerikli imzasız JSON indirildi. Yerel taslak/kurum kararı ayrımı korunur.
+
+Kabul:106 otomatik test yeniden geçti (12 gateway/envanter,48 portal,46 regresyon); son tam733 sunucu koşusu Paketi56dır, sunucu kodu değişmedi.66 tarayıcı;98 menü,288 rol paneli,22 vaka ve ek sekme/pencereler320 CSS px/metin aralığı928 ölçümde0 taşma. Gerçek ekran okuyucu/zoom/altyazı/karşıtlık ve tüm B24 kabulü açık.115 dosyalı korumalı paket hazır; üretim migration yok.
+
+Başlangıç uzak `b64461873dd94b119605f7ede7a0e733bf0b670d` / ortak `c084369a87c235726d6984963afab8cd4328138f`. Kaynak eşitlemesi sonucu ayrıca eklenecek.14.10.2026 canlı alias `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6` olarak yeniden okundu; bu yeni kimlikli smoke değildir.17–57 yayımlanmadı; configuredCore kapalı. Son canlı geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. BrowserAuth iptali tekrar denenmedi.

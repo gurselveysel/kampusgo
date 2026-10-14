@@ -27,7 +27,7 @@
 | B21 · Dış belge ve tanıma akışını bağla | kısmi; imza/insan raporu/tekil kredi/karar sürümü bağlı | Paket52:6 yeni sunucu,68 tarayıcı; tanımlı dilim geçti | Paket52 canlı değil | gerçek teslim/usul/çıktı/önceki ders/kurul kabulü açık | gerçek issuer/status/schema ve üretim kabulü açık |
 | B22 · OBS aktarımını kontrollü kabul et | kısmi; kaynak güveni ve iptal düzeltmesi bağlı | Paket50 bağlı zincir ve11 OBS tarayıcı geçti | Paket50 canlı değil | operasyonel kabul açık | gerçek OBS şeması/transkript/diploma eki/işçi kabulü açık |
 | B23 · SEM merkezi sürecini doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | teyit/erişim bekleniyor |
-| B24 · Erişilebilirlik açılış testini yap | kısmi; gezinme ve dosya seçimi/sonuç bağı | Paket56:40 tarayıcı; dosya/klavye/390px dilimi geçti | Paket56 canlı değil | gerçek AT/altyazı/çıktı ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
+| B24 · Erişilebilirlik açılış testini yap | kısmi; gezinme/dosya/yeniden akış bağlı | Paket57:66 tarayıcı;320px/metin aralığı dilimi geçti | Paket57 canlı değil | gerçek AT/altyazı/çıktı/karşıtlık ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi | yerel dilim doğrulandı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
@@ -353,3 +353,7 @@ Paket55:21 yeni imzalı SQL akış testi;733 sunucu+48 portal+46 regresyon=827. 
 ## Paket56 — dosya alanı kabulü
 
 ACCEPTANCE-MATRIX.md içindeki B24 satırı tam kapanmadı. 14 kontrollü dosya UI +14 yetki HTTP +12 tanıma belge HTTP =40;390px/klavye/zorunlu renk; tam AT değil. Ayrıntı: `acceptance/B24-file-input-20261014.json`. Özgün36 kimlik, başlık, bağımlılık ve kabul ölçütü başlangıç kaydıyla aynıdır.
+
+## Paket57 — dar ekran ve metin aralığı
+
+98 menü,288 panel ve22 vaka;320 CSS px normal/artırılmış metin aralığı928 ölçümde0 taşma kaydı.66 tarayıcı kontrolü ve106 yeniden koşulan otomatik test; tam sunucu733 Paketi56dan kalır, sunucu kodu değişmedi. Bu sayılar tam B24/AT/zoom/altyazı/karşıtlık kabulü değildir. `acceptance/B24-reflow-20261014.json`. Özgün36 ölçüt korunur.

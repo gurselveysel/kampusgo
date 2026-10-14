@@ -1,3 +1,17 @@
+# Güncel devam — Paket57 yerel kabul; kaynak eşitlemesi sırada
+
+Görünür: Matris/Müfredat/Bağlantılar/eski rol ve alım formu/22 vaka tablosunda dar ekran taşmaları giderildi. B24 dilimi; tam AT/zoom/altyazı/karşıtlık kabulü değil.106 yeniden koşulan otomatik test (12 gateway/envanter48 portal46 regresyon) +66 tarayıcı. Son tam733 sunucu Paketi56; sunucu kodu değişmedi.98 menü/288 panel/22 vaka320 CSS px ve metin aralığı928 ölçümde0 taşma.115 statik korumalı paket. Özgün36 ölçüt korunuyor.
+
+Önce diff/commit ve expected-head `b64461873dd94b119605f7ede7a0e733bf0b670d` / base `c084369a87c235726d6984963afab8cd4328138f` ile tam ağaç eşitle. Son canlı16 READY;17–57 dağıtılmadı. configuredCore kapalı, browserAuth iptalini yeniden isteme; tek editör.
+
+Sonraki bağımsız iş B07 SQL kimlik HTTP/rate/CSRF: mevcut LocalIdentityHttp yerel SQLite gateini değiştirme; yeni SQL flow async principal/challenge/session biriminin güvenli HTTP köprüsünü ve dağıtık oran sınırı/CSRF revizyonunu ayrı kabul et. SQL kimliğini mevcut senkron LocalAcceptanceStore akademik çekirdeğe bağlıymış gibi sunma. Güvenilen directory/key kontrol düzlemi, B28 checkpoint, gerçek IdP/KMS/PG çok bağlantı/RLS ve bütün bağımsız işler açık. B24 metin karşıtlığı ve gerçek AT/altyazı/çıktı işleri de sürer. Bugün bağımsız kod bitmeden devam komutu beklenmez.
+
+# Güncel devam — Paket56 kaynakta; B24 dar ekran taraması sırada
+
+Paket56 yerel `ca1ed7e2f0280e027b49f961336b0fe52753e63f`, uzak `b64461873dd94b119605f7ede7a0e733bf0b670d`, ortak tam ağaç `c084369a87c235726d6984963afab8cd4328138f`.17 blob ve tam ağaç eşleşti; expected-head/force=false doğrulandı.827 otomatik +40 tarayıcı;115 statik. Son canlı16;17–56 dağıtılmadı.
+
+Sıradaki57 bağımsız görünür iş: B24 320 CSS px yeniden akış ve metin aralığı taraması. 1280px ekranın400% büyütmesindeki genişliğe eşdeğer320 CSS px testi, gerçek tarayıcı zoom/AT kabulü diye sunulmayacak. 11 sunum profili98 menü,9 çekirdek rolün güncel tüm panelleri; iframe gerçek içeriğini de incele. İlk tarama kusurları kaydet, görünür taşmaları düzelt; scoped tablo kaydırmasını sayfa taşmasıyla karıştırma. SQL HTTP/rate/CSRF/akademik depo ve B28checkpoint dahil tüm bağımsızlar sürer. configuredCore kapalı, browserAuth iptalini yeniden isteme, tek editör.
+
 # Güncel devam — Paket56 yerel kabul; kaynak eşitlemesi sırada
 
 Panel: Tanıma ve kredi, Yetki dosyaları ve pilot Dosya doğrula. Türkçe native dosya seçimi, görünür odak/ad, geçersiz seçimin eski metin/SHA/sonucu kapatması ve yetki eki okuma/kayıt kilidi tamamlandı. Yeni dosya alanı dilimi yalnız yerel kabulde; B24 bütünü tamamlanmadı.
