@@ -475,3 +475,17 @@ Yerel `e4a1f826b4f381a71d1f9dd5fc732a66e01b07d3`; uzak `15809e6a8e6b8008c03e547c
 - Canlı alias salt okunur yeniden kontrolünde Paket16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction.17–32dağıtımı ve yeni oturumlu canlı smoke yok. Kullanıcının önceki güvenli giriş iptali yeniden tetiklenmedi. configuredCore kapalı.
 - Geri dönüş hedefi canlıPaket15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı. Kaynak adayı dağıtım değildir.
 - Kurum SLA/tatil/eskalasyon/eğitim uydurulmadı; yeni credential/migration/servis/gerçek mesaj yok. B26/B24 ve bütün B01–B36 genel tamamlanmış değil.
+
+### Paket32 kaynak kimlikleri
+
+Yerel `8ef05ad82483ca702eff2389faae59b3b661081b`; uzak `36a81a550060a66a4cb26a9f97933c376ea26b24`; ortak tam ağaç `e617d524b9c1ece5ce409da496f120a67b13e0c6`.31blob SHA eşleşti; expected-head15809e6a8e6b8008c03e547c50b8da9eae379cc4,force=false ve uzak yeni başlık doğrulandı. Yeni yayın yok; son canlı16.
+
+## Paket33 — mali prova ve mutabakat; yalnız kaynak adayı
+
+14.10.2026. Finans menüsü korunarak kişi/programa bağlı mali çalışma alanına bağlandı. Koşul hazırlığı/ayrı mali inceleme, tekil belirteçli kayıt, sağlayıcı simülatörü, iade/ters ibraz ve dayanaklı mutabakat, arama/filtre/geçmiş/indirme. Gerçek kart, para, PSP, fatura/vergi hesabı veya akademik otomatik karar yok.
+
+- 478sunucu+48portal+46regresyon=572otomatik;16mali+19gezinme+13itiraz tarayıcı.87komut/16HTTP3752örnek30016kapsam denetimi;115korumalı statik dosya.
+- Taban yerel8ef05ad82483ca702eff2389faae59b3b661081b / uzak36a81a550060a66a4cb26a9f97933c376ea26b24 / ortak e617d524b9c1ece5ce409da496f120a67b13e0c6.
+- Son doğrulanmış canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READYproduction;14.10saltokunur alias kontrolü.17–33dağıtımı ve yeni oturumlu smoke yok; browserAuth kullanıcı iptali yeniden istenmedi.configuredCorekapalı.
+- Geri dönüş hedefi15 dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı. Kaynak adayı canlı yayın değildir.
+- B31gerçek tahsilat/vergi/iade ve B02/B04/B05 kararları, PSP sözleşmesi/adaptörü/settlement/sandbox kabulü açık. Başvuru/hesap/credential/ücretli hizmet/üretim migration yok. B01–B36tamamlanmadı.

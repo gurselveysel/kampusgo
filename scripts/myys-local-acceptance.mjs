@@ -1,3 +1,4 @@
+import {localPaymentSetup} from '../gazi/auth/tests/helpers/local-payment.mjs';
 import {LocalRecoveryService} from '../gazi/auth/myys/recovery.mjs';
 import {runSyntheticRecoveryDrill} from '../gazi/auth/scripts/lib/integrated-recovery.mjs';
 import {sourcePacketFixture} from '../gazi/auth/tests/helpers/local-source-packet.mjs';
@@ -50,6 +51,7 @@ for(const [person,role] of [['independent','instructor'],['finance','finance']])
  f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(hash(person),person,'2099-01-01T00:00:00.000Z');
  f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(hash(person),'gazi','synthetic-fixture','2026-01-01T00:00:00.000Z');
 }
+if(process.argv.includes('--payments'))localPaymentSetup(f,{initial,seedOnly:true});
 let localSigner=process.argv.includes('--replacement')?{base:initial.base,material:initial.material,keyring:[{state:'active',material:initial.material}]}:null;
 if(process.argv.includes('--keys')){const pair=generateKeyPairSync('rsa',{modulusLength:2048}),jwk={...pair.publicKey.export({format:'jwk'}),kid:'https://local-acceptance.invalid/api/rozet/anahtarlar#synthetic-browser'};localSigner={base:'https://local-acceptance.invalid',material:{privateKey:await importJWK(pair.privateKey.export({format:'jwk'}),'RS256'),jwk}};localSigner.keyring=[{state:'active',material:localSigner.material}];f.run('issuer','issue',{decisionId:initial.d.id});}
 const root=fileURLToPath(new URL('../gazi/',import.meta.url));

@@ -1,0 +1,106 @@
+{
+  "date": "2026-10-14",
+  "software_package": 33,
+  "work_packages": [
+    "B31"
+  ],
+  "production": false,
+  "source_parent": {
+    "local": "8ef05ad82483ca702eff2389faae59b3b661081b",
+    "remote": "36a81a550060a66a4cb26a9f97933c376ea26b24",
+    "tree": "e617d524b9c1ece5ce409da496f120a67b13e0c6"
+  },
+  "last_verified_live": {
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false
+  },
+  "automated": {
+    "server": 478,
+    "portal": 48,
+    "regression": 46,
+    "total": 572,
+    "new_payment_tests": 13
+  },
+  "scope": {
+    "commands": 87,
+    "http_routes": 16,
+    "positive_samples": 3752,
+    "derived_negative_checks": 30016,
+    "not_test_count_or_product_percentage": true
+  },
+  "payment_browser": {
+    "at": "2026-10-14T03:59:13.326Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Mali koşul incelenmeden öğrenci ödeme provası seçemedi; gerçek ödeme kapalı kaldı",
+      "Yönetici programı üç incelenmiş sicile ve açık tahsilat/vergi/iade dayanağına bağladı; kendi onayı kapalı",
+      "Ayrı mali işler kişisi koşulu yerel prova için inceledi",
+      "Öğrenci kendi programında tek belirteçli kayıt açtı; kart alınmadı ve sonuç gelmeden ödeme başarılı sayılmadı",
+      "Bekleyen sağlayıcı sonucu mali işler ekranında ayrı bekleyen mutabakat olarak kaydedildi",
+      "Başarılı sonuç iki kez iletildi; tek mali tutar ve aynı sağlayıcı olayı korundu",
+      "Kısmi iade talebi tutarı ayırdı; bekleyen ve başarılı sonuçlar aynı program ödemesinde izlendi",
+      "Ters ibraz bekletme ve kayıp sonucu iade ile ortak bakiyede mutabık kaldı",
+      "Tutar farkı açık kaydedildi ve filtrelenebildi; düzeltme önceki incelemeyi silmedi",
+      "İade geri dönüşü bakiyeyi düzeltti; eski mutabakat güncel sayılmadı ve yeni inceleme yenilemede korundu",
+      "Başka öğrenci ve akademik rollere mali kişi kaydı veya sağlayıcı işlemi açılmadı",
+      "Kişi araması ve boş sonuç çalıştı; koşul durdurulunca eski mali kayıt değişmedi",
+      "390 px mali kayıt, arama/filtre ve olay geçmişi klavyeyle kullanıldı; yatay taşma yok",
+      "Mobil mali koşul ve kaynak formunda yatay taşma yok",
+      "Mevcut Finans menüsü korundu; yeni mali çalışma alanına doğrudan bağlantı ve yenileme çalıştı",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "providerConnected": false,
+    "realMoneyMoved": false,
+    "manualScreenReader": false
+  },
+  "regression_browser": {
+    "navigation": 19,
+    "appeals": 13,
+    "menu_targets": 98,
+    "role_panels": 243,
+    "lessons": 66,
+    "browser": "138.0.7204.0"
+  },
+  "protected_static_files": 115,
+  "conditional_status": {
+    "applicability": "Kurum ücretli hizmet açma kararı vermedi; yalnız bağımsız sentetik koşullu dilim.",
+    "authority_tax_refund": "Yerel hazırlık alanları ve üç incelenmiş sicil bağı var; gerçek mali karar yok.",
+    "token_flow": "Tekil yerel belirteç/işlem referansı; gerçek PSP tokenizasyonu veya ödeme yetkisi değil.",
+    "local_outcomes": "Başarılı/çift/bekleyen/başarısız ödeme; kısmi/tam/bekleyen/başarısız/geri dönmüş iade; ters ibraz bekleme/kazanım/kayıp/geri dönüş; tam dayanaklı mutabakat geçti.",
+    "live": "Paket17–33 yayımlanmadı;son canlı16.",
+    "external": "Gerçek PSP sözleşmesi/adaptörü/token/webhook/settlement/sandbox kabulü yok."
+  },
+  "sources": [
+    {
+      "url": "https://docs.stripe.com/webhooks",
+      "read_at": "2026-10-14",
+      "scope": "İmza/ham gövde, sıra, olay ve işlem/tür tekrarları",
+      "used_as": "teknik örnek; sağlayıcı seçimi değil"
+    },
+    {
+      "url": "https://docs.adyen.com/development-resources/webhooks/handle-webhook-events",
+      "read_at": "2026-10-14",
+      "scope": "PSP referansı/olay kodu bazlı tekrar; değişebilen bildirim alanları",
+      "used_as": "sağlayıcıya özgü normalizasyon gerektiği"
+    },
+    {
+      "url": "https://docs.adyen.com/online-payments/refund",
+      "read_at": "2026-10-14",
+      "scope": "Sonradan iade hatası/geri dönüş; iade/ters ibraz ortak kalan bakiye",
+      "used_as": "yerel düzeltme senaryosu; yasal iade kuralı değil"
+    }
+  ],
+  "limits": [
+    "Gerçek tahsilat veya yasal vergi/iade kararı yok;B02/B04/B05 kurumsal kabulleri açık.",
+    "ProviderSequence yerel simülatör sırası; gerçek PSP teslim garantisi değildir.",
+    "Gerçek PSP imzalı bildirim/normalizer/dağıtık sıra/settlement/komisyon/kur/istisna adaptörü kurulmadı.",
+    "Kayıt işlemleri atomik; iki SQLite bağlantısından tekrar gerçek dağıtık eşzamanlılık kabulü değildir.",
+    "BankSettlementVerified/collectionAuthorized/providerConnected/externalSubmitted false; hiçbir gerçek kart/para/credential/servis/migration yok.",
+    "B31 ve bütün B01–B36 tamamlanmış değildir."
+  ]
+}

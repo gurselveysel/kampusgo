@@ -26,6 +26,8 @@ Kaynaklar: [Gazi BIDB](https://bidb.gazi.edu.tr/) GUZEM ve OBS bağlantıların�
 
 7. **Destek işletim ve eğitim kararı (B26):** kurumsal destek sahibi; birimlere göre teknik/akademik/veri koruma görevlileri, gerçek çalışma aralıkları ve kapalı gün takvimi, ilk yanıt/çözüm hedefleri, izinli eskalasyon ve yeniden açma usulü; destek içeriği saklama/erişim kapsamı; öğrenen/eğitici/yönetici eğitim kabul sorumlusu. Hedef, yerel sürümlü kural ve rehberi kurumun yazılı kararıyla karşılaştırmaktır. Mevcut sentetik süreler hizmet taahhüdü değildir; yeni destek servisi, gerçek kişiye mesaj veya üretim kaydı oluşturma izni varsayılmaz.
 
+8. **Koşullu ücretli hizmet kararı (B31):** önce ücretli hizmetin gerçekten açılacağına ilişkin kurum kararı; program/ücret/tahsilat sahibinin yetki dayanağı, vergi-fatura ve iade/itiraz usulünün güncel belge/sürümü; B02/B04/B05 veri ve içerik hakları incelemesi; kurumca seçilmiş PSP'nin sözleşmesi, ayrı sentetik sandbox ve kamuya açık token/checkout/imzalı bildirim/settlement dokümanı. İlk adım belge incelemesidir; gerçek para, kart, banka hesabı veya yeni PSP credential'ı istenmiyor. Hedef, `local-simulator/1` provası ile gerçek sağlayıcı davranışını karşılaştırmaktır. Genel geliştirme onayı gerçek tahsilat veya ücretli hizmet açmaz.
+
 Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir. Şu aşamada bilinmeyen issuer, API yolu veya test veritabanı adı uydurulmadı. Bilgi eksikliği bağımsız yerel kod/test işlerini durdurmaz.
 
 ## Ayrı özel yetki gerektiren sonraki işlemler

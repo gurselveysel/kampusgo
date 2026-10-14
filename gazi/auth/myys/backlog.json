@@ -2255,41 +2255,55 @@
       "planning_estimate": "6–10 kişi-gün; ilk pilot için isteğe bağlı",
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
-      "implementation_status": "engelli",
-      "test_status": "Bu paket için yeni kabul testi çalıştırılmadı.",
-      "implementation_evidence": [],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Tahsilat yetkisi/sözleşme yok; PSP bağlantısı açılmadı.",
-      "independent_remaining_work": [
-        "Koşullu ödeme durum makinesi ve sağlayıcı simülatörü; kart verisi saklama yok."
+      "implementation_status": "kısmi",
+      "test_status": "Paket33:478sunucu+48portal+46regresyon=572otomatik;16mali prova+19gezinme+13itiraz tarayıcı;87komut/16HTTP3752örnek30016kapsam denetimi.",
+      "implementation_evidence": [
+        "gazi/auth/myys/PAYMENT-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B31-payment-20261014.json",
+        "gazi/auth/myys/payment-model.mjs",
+        "gazi/auth/myys/payment.mjs",
+        "gazi/auth/tests/myys-payment.test.mjs",
+        "gazi/portal/src/payment-workspace.jsx",
+        "scripts/myys-payment-browser.cjs"
       ],
+      "production_status": "Paket33 kaynak adayı; yayımlanmadı. Son canlı16daki eski Finans örneği korunuyor. Gerçek tahsilat kapalı.",
+      "implementation_note": "Kurum ücretli hizmet kararı olmadığı için gerçek tahsilat kapalı. Yerel kişi/program/sicil bağlı koşul, ayrı mali inceleme, tekil belirteçli sipariş, olay/semantik tekrar makbuzu, iade/ters ibraz ve kaynak özetli mutabakat; kart verisi yok. Finans menüsü korunup yeni mali çalışma alanına bağlandı. Gerçek PSP tokenizasyonu/adaptörü ve banka/kurum kabulü değildir.",
+      "independent_remaining_work": [],
       "development_blocker": null,
-      "production_activation_blocker": "Tahsilat/vergi/iade yetkisi ve PSP sözleşmesi; ücretli bağlantı yetkisi yok.",
+      "production_activation_blocker": "Ücretli hizmet kararı; tahsilat/vergi/iade yetkisi, B02/B04/B05 kabulleri ve seçilmiş PSP sözleşmesi, güvenli ayrı test erişimi/adaptörü ve kurum mali kabulü.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "engelli",
-          "evidence": [],
+          "status": "bağımsız yerel simülatör dilimi hazır; gerçek PSP adaptörü koşullu açık",
+          "evidence": [
+            "gazi/auth/myys/PAYMENT-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B31-payment-20261014.json",
+            "gazi/auth/myys/payment-model.mjs",
+            "gazi/auth/myys/payment.mjs",
+            "gazi/auth/tests/myys-payment.test.mjs",
+            "gazi/portal/src/payment-workspace.jsx",
+            "scripts/myys-payment-browser.cjs"
+          ],
           "remaining": [
-            "Koşullu ödeme durum makinesi ve sağlayıcı simülatörü; kart verisi saklama yok."
+            "Seçilecek PSP sözleşmesine bağlı token/webhook/settlement/istisna ve dağıtık kalıcı adaptör."
           ]
         },
         "local_acceptance": {
-          "status": "başlamadı",
-          "evidence": "Bu paket için yeni kabul testi çalıştırılmadı.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "tanımlı sentetik mali senaryolar geçti",
+          "evidence": "Paket33:478sunucu+48portal+46regresyon=572otomatik;16mali prova+19gezinme+13itiraz tarayıcı;87komut/16HTTP3752örnek30016kapsam denetimi.",
+          "limits": "Gerçek PSP, tokenizasyon, banka settlement veya kurumsal mali kabulü değildir."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "yeni dilim yayımlanmadı",
+          "evidence": "Paket33 kaynak adayı; yayımlanmadı. Son canlı16daki eski Finans örneği korunuyor. Gerçek tahsilat kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
-          "required": "Tahsilat/vergi/iade yetkisi ve PSP sözleşmesi; ücretli bağlantı yetkisi yok."
+          "required": "Ücretli hizmet kararı; tahsilat/vergi/iade yetkisi, B02/B04/B05 kabulleri ve seçilmiş PSP sözleşmesi, güvenli ayrı test erişimi/adaptörü ve kurum mali kabulü."
         },
         "external_access": {
-          "status": "teyit/erişim bekleniyor",
-          "target": "Kurumca yetkilendirilecek PSP; seçim/ücretli bağlantı yok",
-          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+          "status": "koşullu; seçilmiş PSP yok",
+          "target": "Yetkili kurumun seçtiği PSP sözleşmesi/kamu teknik belgesi ve ayrı sentetik test hizmeti.",
+          "next_action": "ACCESS-ACTIONS.md8; gerçek para/kart veya yeni credential oluşturulmadı."
         }
       }
     },
@@ -2575,16 +2589,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 32,
-    "server_security_tests": "465/465",
+    "software_package": 33,
+    "server_security_tests": "478/478",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 559,
-    "portal_build": "Başarılı;115 statik dosyalı mevcut korumalı paket",
-    "browser_visual_acceptance": "16 destek +19 gezinme +13 itiraz +8 cüzdan;9 çekirdek rol,98 menü hedefi,234 panel,66 ders. Gerçek ekran okuyucu kabulü değildir.",
+    "local_total": 572,
+    "portal_build": "Başarılı;115statik dosyalı mevcut korumalı paket",
+    "browser_visual_acceptance": "16mali prova+19gezinme+13itiraz;98menü/243rol-panel/66ders. Gerçek ekran okuyucu/PSP kabulü değildir.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı Paket16 READY;Paket17–32 dağıtılmadı.configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B26-support-service-20261014.json"
+    "deployment": "Son canlı16 READY;17–33dağıtılmadı.configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B31-payment-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2606,12 +2620,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 32,
-    "source_parent_remote": "15809e6a8e6b8008c03e547c50b8da9eae379cc4",
-    "source_parent_tree": "1561ea06b71e5b06dbe74c7a60604a03c34a0338",
+    "software_package": 33,
+    "source_parent_remote": "36a81a550060a66a4cb26a9f97933c376ea26b24",
+    "source_parent_tree": "e617d524b9c1ece5ce409da496f120a67b13e0c6",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 559,
-    "note": "B26 yerel rol/takvim/rehber kabulü geçti; kaynak eşitlemesi sırada. Sonraki B31 koşullu ödeme durum makinesi ve simülatör; gerçek tahsilat kapalı. B07 ve tüm bağımsız kalanlar açık."
+    "local_tests": 572,
+    "note": "B31 yerel ödeme/iade/ters ibraz mutabakatı geçti; kaynak eşitlemesi sırada. Sonraki B32 ikinci birim/kurum ve kota; B07/B28 ve tüm kalan bağımsız işler açık."
   },
   "verification_history": [
     {
@@ -2665,6 +2679,31 @@
         "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
         "local_tests": 544,
         "note": "B01/B24 yerel kabul geçti; kaynak eşitlemesi sırada. Sonraki B26 destek çalışma takvimi/SLA/eskalasyon; tüm diğer B işleri açık."
+      }
+    },
+    {
+      "superseded_at": "2026-10-14",
+      "verification": {
+        "as_of": "2026-10-14",
+        "software_package": 32,
+        "server_security_tests": "465/465",
+        "portal_tests": "48/48",
+        "legacy_tests": "46/46 model/kaynak/demo",
+        "local_total": 559,
+        "portal_build": "Başarılı;115 statik dosyalı mevcut korumalı paket",
+        "browser_visual_acceptance": "16 destek +19 gezinme +13 itiraz +8 cüzdan;9 çekirdek rol,98 menü hedefi,234 panel,66 ders. Gerçek ekran okuyucu kabulü değildir.",
+        "production_migration": "uygulanmadı",
+        "deployment": "Son canlı Paket16 READY;Paket17–32 dağıtılmadı.configuredCore kapalı.",
+        "evidence": "gazi/auth/myys/acceptance/B26-support-service-20261014.json"
+      },
+      "last_checkpoint": {
+        "date": "2026-10-14",
+        "software_package": 32,
+        "source_parent_remote": "15809e6a8e6b8008c03e547c50b8da9eae379cc4",
+        "source_parent_tree": "1561ea06b71e5b06dbe74c7a60604a03c34a0338",
+        "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+        "local_tests": 559,
+        "note": "B26 yerel rol/takvim/rehber kabulü geçti; kaynak eşitlemesi sırada. Sonraki B31 koşullu ödeme durum makinesi ve simülatör; gerçek tahsilat kapalı. B07 ve tüm bağımsız kalanlar açık."
       }
     }
   ]

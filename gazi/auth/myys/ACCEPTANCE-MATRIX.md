@@ -201,3 +201,7 @@ PILOT-INVENTORY.md, NAVIGATION-ACCESSIBILITY.md ve acceptance/B01-B24-navigation
 ## Paket32 — B26 destek hizmet kuralı ve rehber
 
 Destek kayıtları: arama/filtre, çalışma aralığı hedefleri, sürümlü yönetici hazırlığı/ayrı kalite incelemesi, sahip kapanış teyidi ve yeni döngüde yeniden açma. Dokuz rol kendi kaydını açıp indirdi; teknik destek akademik kaydı değiştirmedi. Rehber2026.10.14.1 bilinen önceki yanıtları korur ve doğru sekmelere bağlanır. 559 otomatik;16 destek+19 gezinme+13 itiraz+8 cüzdan,80 komut/16HTTP kapsam kabulü. Yeni içerikte seçilmiş odağı geçiş animasyonunun çalması düzeltildi. `SUPPORT-SERVICE-CONTRACT.md` ve `acceptance/B26-support-service-20261014.json` kapsamı esas. B26 yerel ölçütleri geçti; gerçek destek sahibi/hedef/takvim/eskalasyon/saklama/eğitim, kurumsal kimlik/depo ve canlı yayın açık. B24 gerçek ekran okuyucu/bütün içerik kabulü açık. Son canlı16;17–32 yayımlanmadı.
+
+## Paket33 — B31 koşullu mali prova
+
+Finans menüsünden Mali prova ve mutabakat: aynı kişi/program/sicil bağlı koşul ve ayrı mali inceleme; tekil belirteç, bekleyen/başarılı/başarısız/çift olay, kısmi/tam iade ve sonradan düzeltme, ters ibraz ve tam dayanaklı mutabakat. 572otomatik,16mali+19gezinme+13itiraz;87komut/16HTTP3752örnek30016kapsam kontrolü. Gerçek kart/para/PSP yok; belirteç yerel referans. B31 teknik simülatör kabulü geçti, tahsilat/vergi/iade ve B02/B04/B05 kurum kararları, gerçek PSP/adaptör/settlement/sandbox ve canlı kabul açık. `PAYMENT-CONTRACT.md` ve `acceptance/B31-payment-20261014.json` esas. Son canlı16;17–33yayın yok.

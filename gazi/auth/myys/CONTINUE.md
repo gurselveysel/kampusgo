@@ -1,3 +1,17 @@
+# Güncel devam — Paket33 yerel kabul; kaynak eşitlemesi sırada
+
+B31 Mali prova ve mutabakat:572otomatik(478+48+46),16mali+19gezinme+13itiraz;87komut/16HTTP3752örnek30016kontrol;98menü/243panel/66ders. PAYMENT-CONTRACT/kabul/backlog/ACCESS8güncel. Tekil yerel tokenref ve kişi/program/sicil bağı, ayrı maliinceleme, olay/semantik tekrarmakbuzu, iade/tersibraz/mutabakat. Gerçek PSP/kart/para/settlementyok; kurum kararları açık.36özgünkriterkorundu.
+
+Önce diff/commit ve expected-head36a81a550060a66a4cb26a9f97933c376ea26b24ileeşitle;taban yerel8ef05ad82483ca702eff2389faae59b3b661081b/ortak e617d524b9c1ece5ce409da496f120a67b13e0c6. Soncanlı16dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–33yayınıyok. browserAuthiptaliniyenidenisteme;configuredCorekapalı,tekeditör/altajanyok.
+
+Sonraki bağımsız B32: mevcut ikinci birim/kurum kapsam testlerini ve B30kohortkapılarını okuyup kaynak kotası/sınırlı ikinci birim açılışı/ilk kohortun hak ve sürüm korunması dilimini tamamla. B08kapsammatrisini genişlet; gerçek kurum/kohort açma kararı yok. B07SQLrepo/HTTP/atomikkeybarrier,B28yeni kimlik/kaynak/destek/mali kayıt envanteri-saklama ve tümB01–B36kalan bağımsız işler devam. Devamkomutubekleme.
+
+# Güncel devam — Paket32 kaynakta; B31 koşullu mali prova inceleniyor
+
+Yerel8ef05ad82483ca702eff2389faae59b3b661081b / uzak36a81a550060a66a4cb26a9f97933c376ea26b24 / ortak e617d524b9c1ece5ce409da496f120a67b13e0c6.31blob/tam ağaç eşleşti,559otomatik/56tarayıcı. Son canlı16;17–32yayını yok. Kullanıcının güvenli giriş iptalini yeniden isteme; configuredCore kapalı.
+
+B31 mevcut eski Finance menüsü yalnız tarayıcı örneği; korunacak. Yeni sunucu kişi/program bağı, PSP token prova/durum makinesi, bekleyen/başarılı/çift/iade/ters ibraz/mutabakat tasarlanıyor; henüz kod yok. Kurum tahsilat/vergi/iade kararı veya sağlayıcı seçimi uydurma. Resmî sağlayıcı teknik belgeleri yalnız tekrar/sıra/iade davranışı örnekleri; gerçek entegrasyon/PSP sözleşmesi kabulü değil. B02/B04/B05 kapıları ve üretim tahsilat kapalı. Devamında B07 ve tümB01–B36kalanbağımsızlar. Tek editör,alt ajan yok, gerçekkart/para/yeni servis/credential/migrationyok.
+
 # Güncel devam — Paket32 yerel kabul; kaynak eşitlemesi sırada
 
 Destek kayıtları/rehber B26 hazır yerel dilim: 559otomatik(465+48+46),16destek+19gezinme+13itiraz+8cüzdan;80komut/16HTTP3502örnek28016kontrol. Takvim/ayrı inceleme/sabit hedef/izinli kuyruk/sahip teyidi/yeniden açma/arama/indir/dokuz rol. Rehber2026.10.14.1 eski bilinen yanıtları korur. Animasyon yeni içerik odağını çalmaz. Sözleşme/kanıt/backlog güncel;36özgünkriter korundu.

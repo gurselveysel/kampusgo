@@ -225,3 +225,7 @@ PILOT-INVENTORY.md: özgün ZIP’te27 Gazi satırı ve13 kaynak kaydı; gazi-ba
 ## Paket32 — Destek kayıtları ve güncel rehber
 
 B26: `support-service.mjs` sürümlü yerel takvim/ayrı inceleme/hold; `support-service-model.mjs` açık çalışma dakikası ve sabit hedef döngüsü. `support.mjs` çözüm/sahip teyidi/yeniden açma ve mevcut kuyruk sınırı; kalite payı teyitli kapanışı korur. Yeni rol arayüzü arama/filtre/geçmiş/indirme ve mobil takvim içerir. Rehber2026.10.14.1 eski bilinen soruları ve yanıtları korur; akademik derin bağlantılar/yenileme çalışır. Kullanıcının yeni sayfada seçtiği odak animasyon tamamlanınca değiştirilmez. 559 otomatik,16 destek/19 gezinme/13 itiraz/8 cüzdan;80komut/16HTTP,3502örnek/28016kontrol. Gerçek hizmet taahhüdü veya kurum eğitimi kabulü değildir; `SUPPORT-SERVICE-CONTRACT.md` sınırları ve ACCESS-ACTIONS madde7 geçerlidir. Dağıtım yok.
+
+## Paket33 — Koşullu mali akış
+
+`payment.mjs` yedi yerel komut, aynı öğrenen/program/sicil bağı ve görev ayrılığı; `payment-model.mjs` kuruş bazlı durum/iadeler/ters ibraz/toplam/dayanak; olay kimliği ve semantik tekrar için atomik makbuz. Mali durum akademik kayıt değiştirmez. Yeni Mali prova ve mutabakat sekmesi Finans menüsüne bağlıdır; arama/filtre/geçmiş/indir ve mobil form kabulü var. 478+48+46=572otomatik;16mali+19gezinme+13itiraz;87komut/16HTTP3752örnek30016kontrol. Gerçek tokenizasyon/PSP/muhasebe veya kurum mali yetkisi yok; PAYMENT-CONTRACT/ACCESS-ACTIONS8 sınırları. B31koşullu genel kabul açık.

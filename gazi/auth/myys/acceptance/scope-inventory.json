@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.32",
+  "version": "2026.10.14.33",
   "commands": [
     "alternative-evidence",
     "appeal",
@@ -41,6 +41,13 @@
     "obs-prepare",
     "obs-reconcile",
     "obs-simulate",
+    "payment-checkout",
+    "payment-plan",
+    "payment-plan-hold",
+    "payment-plan-review",
+    "payment-reconcile",
+    "payment-refund",
+    "payment-simulate",
     "privacy-acknowledge",
     "privacy-cleanup",
     "privacy-request",
