@@ -1,5 +1,5 @@
 import {sqlIdentityHttpFixture} from '../gazi/auth/tests/helpers/sql-identity-http.mjs';
-const fixture=await sqlIdentityHttpFixture();
+const fixture=await sqlIdentityHttpFixture({checkpoint:process.env.MYYS_SQL_CHECKPOINT==='1'});
 console.log('MYYS_SQL_ORIGIN='+fixture.origin);
 console.log('MYYS_SQL_PROVIDER='+fixture.providerOrigin);
 console.log('MYYS_SQL_SPKI='+fixture.spki);

@@ -1,3 +1,11 @@
+# Güncel devam — Paket64 yerel kabul; kaynak eşitlemesi sırada
+
+Yeni ekran yok; SQL kurum girişi ayrı kalıcı checkpoint bağlıyken13tarayıcı kontrolü geçti.23yeni güvenlik/SQL/TLS testi;807sunucu+48portal+46regresyon=901;115statik. 12kimlik tablosunun tam özeti, ayrı journal rezervasyonu, atomik SQL başlığı ve COMMIT sonrası kalıcı onay. Eski/bozuk kopya ve belirsiz sonuç kapalı. Gerçek kurum/dış kontrol hizmeti/nativeSSI-RLS/RPO-RTO veya tam silme kabulü değil. 13PGadayı uygulanmadı;16SQLite148tür korundu.
+
+Önce diff/commit ve expectedremote8abb2bac450407af850af8ed3f49e38f7a13aea3/base3b1258f853a300879f40debe87b58d578c6f17fd ile tam ağacı eşitle.63yerel34948086c65fef7683e4ac77826d172298952ca4,uzak8abb2bac450407af850af8ed3f49e38f7a13aea3,tam ağaç3b1258f853a300879f40debe87b58d578c6f17fd doğrulandı. Son canlı16dpl_Coaq5KN2VcNpPjwyXke4neroq877READY;17–64dağıtılmadı. Geri dönüş15dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1uygulanmadı.
+
+Sıradaki65 B28 kalan veri/saklama dilimi: kişiye atanmayan tamamlanmış/başarısız giriş isteklerinde amaç/süre ve geri oynatma sınırını incele; kurum süresi uydurmadan güvenli önizleme/işlem ve kullanıcı akışını tamamla. Async akademik repository/aynı kimlik-komut SQL bağı ve tüm B01–B36 bağımsızlar açık; durma. İlk36kriter korunur. Yerel checkpoint bağı tekbaşına tümrestore veya üretim garantisi değildir; belirsiz rezervasyonda reset/autounlock ekleme. Tekeditör,configuredCorekapalı,browserAuthiptaliniyenileme.
+
 # Güncel devam — Paket63 yerel kabul; kaynak eşitlemesi sırada
 
 Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun başlıkları,4grup/gezinme rolü ve rozet seçimi pressed durumu düzeldi.9React/9eski tablo ve takip tahtası adlandırılmış klavye kaydırma bölgesi; program özet/bağlantıları en az28CSSpx. İki Radix menüsünde arka plan inert, kapanış odağı korunur. 106otomatik12gateway/envanter48portal46regresyon;19gezinme10yeni etkileşim7reflow kontrolü geçti.928geometri ölçümünde0taşma. Axe4.14.0ile69WCAGetiketli kural:1440ve320genişliklerde571er toplam1142frame taramasında0violation;8ve530incomplete ham olarak korunur. Son tam784sunucu Paketi59; sunucu çalışma kodu değişmedi.115statik. Önce diff/commit ve expectedremote1c03d4b198dbd8e4b6be5284a0c3d2f094a31162/base54ea32d516f0c1ac3aeb7b75bdb105c6f9307003 ile tam ağacı eşitle. Son canlı16;17–63dağıtılmadı.

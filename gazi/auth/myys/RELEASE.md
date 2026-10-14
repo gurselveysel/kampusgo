@@ -819,3 +819,14 @@ Paket62 kaynak eşitlemesi: yerel `661b675434c5343db4eed7eec58121a4f1833166`, uz
 ## Paket63 — erişilebilir ad/tablo/odak (yalnız yerel kabul)
 
 Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun başlıkları,4grup/gezinme rolü ve rozet seçimi pressed durumu düzeldi.9React/9eski tablo ve takip tahtası adlandırılmış klavye kaydırma bölgesi; program özet/bağlantıları en az28CSSpx. İki Radix menüsünde arka plan inert, kapanış odağı korunur. 106otomatik12gateway/envanter48portal46regresyon;19gezinme10yeni etkileşim7reflow kontrolü geçti.928geometri ölçümünde0taşma. Axe4.14.0ile69WCAGetiketli kural:1440ve320genişliklerde571er toplam1142frame taramasında0violation;8ve530incomplete ham olarak korunur. Son tam784sunucu Paketi59; sunucu çalışma kodu değişmedi.115statik/16SQLite148tür/12uygulanmamışPGadayı; yeni migration yok. Başlangıç uzak `1c03d4b198dbd8e4b6be5284a0c3d2f094a31162`, ortak ağaç `54ea32d516f0c1ac3aeb7b75bdb105c6f9307003`; kaynak eşitlemesi ayrıca kaydedilir. Son doğrulanan canlı `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY/kaynak`16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; yeni kimlikli smoke yok.17–63dağıtılmadı;configuredCorekapalı;browserAuthiptaliyinelenmedi. Geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı.
+
+
+## Paket63 kaynak eşitleme kaydı · 14.10.2026
+
+Yerel34948086c65fef7683e4ac77826d172298952ca4; uzak8abb2bac450407af850af8ed3f49e38f7a13aea3; ortak tam ağaç3b1258f853a300879f40debe87b58d578c6f17fd.28blob/tam ağaç ve expected-head force=false doğrulandı. Bu kaynak kaydıdır; canlı yayın değildir.
+
+## Paket64 yerel kabul · 14.10.2026 — henüz canlı yayın yok
+
+Yeni menü/ekran yok. Yerel Kurum girişi/oturumu denemesi ayrı kalıcı checkpoint ile çalıştı; güncellik veya commit belirsizliğinde erişim kapalı.23yeni güvenlik/SQL/TLS senaryosu;807sunucu+48portal+46regresyon=901.13tarayıcı,320CSSpx/metin aralığı/odak/logolar;115statik korumalı paket. Yeni1PGadayıyla toplam13, üretim migration yok.16SQLite148kayıt türü korunur. IDENTITY-CHECKPOINT-CONTRACT.md ve acceptance/B07-B28-checkpoint-20261014.json sınırları içerir. B07/B27/B28 bütünü tamamlanmadı.
+
+Kaynak tabanı63:yerel34948086c65fef7683e4ac77826d172298952ca4/uzak8abb2bac450407af850af8ed3f49e38f7a13aea3/tam ağaç3b1258f853a300879f40debe87b58d578c6f17fd;64commit sonrası tam ağaç yeniden eşitlenecek. 14.10.2026 saltokunur alias kontrolü dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Yeni authenticated smoke/deploy yok;17–64dağıtılmadı. browserAuth iptali yeniden denenmedi. Korunan geri dönüş hedefi dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı.

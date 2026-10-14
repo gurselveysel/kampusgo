@@ -76,3 +76,8 @@ Beş yeni SQL adayı yalnız PGlite sentetik testine kuruldu; toplam9PGadayı ü
 ## Paket59 yerel HTTPS sınırı
 
 Yeni SQL giriş ekranı yalnız loopback; Vercelde reddedilir. Gerçek IdP, production proxy/TLS, KMS/credential, şema veya kişi kaydı kurulmadı. Tek bağlantılı PGlite/HTTPS kabulü, native DB/kurum erişimi onayı sağlamaz. Mevcut tek eylem listesi geçerli; bağımsız async akademik depo ve restore checkpoint geliştirmesi sürer.
+
+
+## Paket64 · mevcut 3 ve 6 numaralı eylemlerin somut kapsamı
+
+SQL kimlik deposundan ayrı, geri yüklemede birlikte geri alınmayacak kontrol hizmetinin mevcut kurumsal hedefi/sahibi; bütün okuyucu-yazıcıların aynı depo kapsamına bağlanması; kesin olmayan işlemlerde eski yazıcıları durdurma/uzlaştırma yetkisi; güvenlik kuyruğu, saklama ve yedek imha usulü gerekir. Yerel özel SQLite dosyası bu hizmetin üretim kabulü değildir. Yeni servis/credential/ücretli kaynak veya13PGadayını üretime kurma işlemi yapılmadı. Önce mevcut hedef ve yazılı işletim sözleşmesi incelemesi; bağımsız kod devam eder.

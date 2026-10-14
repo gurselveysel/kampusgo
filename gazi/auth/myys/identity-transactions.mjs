@@ -2,26 +2,49 @@
 import {createHash} from 'node:crypto';
 import {AsyncLocalStorage} from 'node:async_hooks';
 import {CoreError,requireThat} from './store.mjs';
+import {PostgresIdentityCheckpoint} from './identity-checkpoint.mjs';
 const nesting=new AsyncLocalStorage();
 const safeText=v=>typeof v==='string'&&v.length>0&&v.length<=512&&!/[\x00-\x1f]/.test(v);
 const failure=(uncertain=false)=>new CoreError(uncertain?'identity_commit_unknown':'identity_store',uncertain?'Giriş işleminin sonucu doğrulanamadı. Yeni bir giriş isteği başlatın.':'Kimlik deposuna güvenli erişim sağlanamadı.',503);
 const lockKey=value=>BigInt.asIntN(64,BigInt('0x'+createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0,16))).toString();
 const retryable=e=>['40001','40P01'].includes(e?.code);
 export class PostgresIdentityTransactions {
- #pool;#timeout;#retries;#scope;#lock;#activeTransactions=new WeakSet();
- constructor({pool,tenant,issuer,audience,statementTimeoutMs=3000,maxRetries=2}){
+ #pool;#timeout;#retries;#scope;#lock;#checkpoint;#activeTransactions=new WeakSet();
+ constructor({pool,tenant,issuer,audience,statementTimeoutMs=3000,maxRetries=2,checkpoint=null}){
   requireThat(pool&&typeof pool.connect==='function'&&[tenant,issuer,audience].every(safeText)&&Number.isInteger(statementTimeoutMs)&&statementTimeoutMs>=50&&statementTimeoutMs<=10000&&Number.isInteger(maxRetries)&&maxRetries>=0&&maxRetries<=3,'identity_store_config','Kimlik işlem adaptörü yapılandırması geçersiz.',500);
   let url;try{url=new URL(issuer);}catch{}requireThat(url?.protocol==='https:'&&!url.username&&!url.password&&!url.search&&!url.hash,'identity_store_config','Kimlik işlem kapsamı geçersiz.',500);
-  this.#pool=pool;this.#timeout=statementTimeoutMs;this.#retries=maxRetries;this.#scope=Object.freeze({tenant,issuer,audience});this.#lock=lockKey(['myys-identity-scope-v1',tenant,issuer,audience]);
+  requireThat(checkpoint===null||checkpoint instanceof PostgresIdentityCheckpoint,'identity_checkpoint_config','Güvenlik kontrol kaydı yapılandırması geçersiz.',500);
+  this.#checkpoint=checkpoint;this.#pool=pool;this.#timeout=statementTimeoutMs;this.#retries=maxRetries;this.#scope=Object.freeze({tenant,issuer,audience});this.#lock=lockKey(['myys-identity-scope-v1',tenant,issuer,audience]);
  }
  // Repository guards can require this exact active transaction, not a forged/cross-pool scope object.
  owns(tx){return this.#activeTransactions.has(tx);}
  // The callback is SERVER-OWNED database work only. No IdP/KMS/HTTP call belongs here.
  // Retries are opt-in and apply only to complete, side-effect-free SQL callbacks.
- async run(work,{retrySafe=false,browserHash=null}={}){
+ run(work,options={}){return this.#run(work,options);}
+ // Trusted empty-database commissioning only. Not an HTTP operation or an automatic constructor action.
+ initializeCheckpoint(control){requireThat(this.#checkpoint&&control,'identity_checkpoint_control','Açık ilk güvenlik kaydı ve yetkili dayanak gerekli.',400);return this.#run(()=>null,{},control);}
+ async #run(work,{retrySafe=false,browserHash=null}={},control=null){
   requireThat(typeof work==='function'&&typeof retrySafe==='boolean'&&(browserHash===null||/^[a-f0-9]{64}$/.test(browserHash))&&!nesting.getStore(),'identity_transaction','Kimlik işlemi iç içe veya belirsiz çalıştırılamaz.',500);
   return nesting.run(true,async()=>{
+   const ticket=this.#checkpoint?await this.#checkpoint.reserve(control):null;
+   const outcome={rolledBack:false,committed:false};
+   try{
+    const value=await this.#sql(work,{retrySafe,browserHash,ticket,outcome});
+    outcome.committed=true;
+    if(ticket)await this.#checkpoint.committed(ticket);
+    return value;
+   }catch(error){
+    if(ticket){
+     if(!outcome.committed&&outcome.rolledBack)await this.#checkpoint.rolledBack(ticket);
+     else this.#checkpoint.abandon(ticket);
+    }
+    throw error;
+   }
+  });
+ }
+ async #sql(work,{retrySafe,browserHash,ticket,outcome}){
    for(let attempt=0;;attempt++){
+    outcome.rolledBack=false;
     let client,phase='connect',open=false,destroy=false,escaped,pendingQuery=false,driverError=null;
     try{
      client=await this.#pool.connect();
@@ -46,7 +69,11 @@ export class PostgresIdentityTransactions {
      this.#activeTransactions.add(tx);
      escaped=()=>{active=false;this.#activeTransactions.delete(tx);};
      let value;
-     try{value=await work(tx);requireThat(!busy&&!poison,'identity_transaction','Bütün kimlik sorguları tamamlanmalı.',500);}finally{active=false;this.#activeTransactions.delete(tx);}
+     try{
+      if(ticket)await this.#checkpoint.before(tx,ticket);
+      value=await work(tx);requireThat(!busy&&!poison,'identity_transaction','Bütün kimlik sorguları tamamlanmalı.',500);
+      if(ticket)await this.#checkpoint.prepare(tx,ticket);
+     }finally{active=false;this.#activeTransactions.delete(tx);}
      phase='commit';await client.query('COMMIT');open=false;phase='done';
      return value;
     }catch(e){
@@ -56,6 +83,7 @@ export class PostgresIdentityTransactions {
      let rolledBack=false;
      if(pendingQuery)destroy=true;
      if(open&&!uncertain&&!pendingQuery){try{await client.query('ROLLBACK');rolledBack=true;open=false;}catch{destroy=true;}}
+     outcome.rolledBack=rolledBack;
      if(uncertain||phase==='begin'||phase==='connect')destroy=true;
      if(retrySafe&&retryable(e)&&rolledBack&&attempt<this.#retries)continue;
      // Do not leak SQL, values, host, connection string or provider error details.
@@ -66,6 +94,5 @@ export class PostgresIdentityTransactions {
      if(client&&typeof client.release==='function'){try{client.release(destroy||open);}catch{/* successful COMMIT is not undone by pool cleanup */}}
     }
    }
-  });
  }
 }

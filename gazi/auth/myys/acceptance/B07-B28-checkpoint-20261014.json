@@ -1,0 +1,159 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 64,
+  "work_ids": [
+    "B07",
+    "B27",
+    "B28"
+  ],
+  "version": "myys-sql-identity-checkpoint/1",
+  "visible_change": "Yeni menü/ekran yok. Yerel Kurum girişi/oturumu denemesi ayrı checkpoint ile; uyumsuz/belirsiz durumda mevcut 503/kapalı yanıt.",
+  "code": "kısmi; opsiyonel transaction sınırı ve ayrı yerel kalıcı sürücü",
+  "local_tests": {
+    "server": 807,
+    "portal": 48,
+    "legacy": 46,
+    "total": 901,
+    "new_cases": [
+      "B07/B28 checkpoint runtime creates no SQL schema and requires explicit empty initialization",
+      "B07/B28 explicit initialization cannot adopt existing identity data or replace an accepted journal",
+      "B07/B28 actual SQL commit is accepted only after durable journal seal, with no provider IO in SQL",
+      "B07/B28 confirmed rollback burns the fence, preserves accepted head, and permits safe subsequent work",
+      "B07/B28 serialization retry keeps one reservation and commits the full callback once",
+      "B07/B28 unknown COMMIT after real commit returns no result and blocks all subsequent instances",
+      "B07/B28 failed SQL rollback leaves reservation pending and never retries",
+      "B07/B28 post-COMMIT journal failure returns no value and does not roll back or reopen the reservation",
+      "B07/B28 lost journal acknowledgement after durable seal loses the result but preserves verified progress",
+      "B07/B28 two journal connections share a global reservation across tenant/issuer/audience",
+      "B07/B28 checkpoint and all identity state commit atomically when head update fails",
+      "B07/B28 complete SQL datadir restore rejects stale authority, logout, keys and HTTP history together",
+      "B07/B28 an old data snapshot with a copied newest head is rejected by complete state digest",
+      "B07/B28 changes to audit, request, session, rate and key records are all fingerprinted",
+      "B07/B28 unknown extra identity table fails closed instead of silently omitting security data",
+      "B07/B28 foreign journal and copied ticket cannot authorize SQL work",
+      "B07/B28 journal paths and immutable receipts are private, persistent and non-replacing",
+      "B07/B28 reservation survives an abruptly killed second process and has no timeout reopening",
+      "B07/B28 journal timeout aborts signal and never enters SQL or returns a fabricated acceptance",
+      "B07/B28 local journal rejects production construction and later environment changes",
+      "B07/B28 TLS session and Turkish login fail closed when SQL state diverges from independent journal",
+      "B07/B28 TLS final commit uncertainty issues no cookie and blocks subsequent login before provider",
+      "B07/B28 provider gap releases journal; current membership revision still denies final TLS acceptance"
+    ],
+    "test_log_sha256": "3ce25f222437f2a6412b24c4e0c8b1cd37559f0108a3ded878566f2ce26f6d64"
+  },
+  "browser": {
+    "as_of": "2026-10-14T14:33:19.343Z",
+    "scope": "isolated-sql-https-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Türkçe deneme girişi, kapalı oturum ve özgün logolar",
+      "Klavye ile ayrı sitedeki sentetik sağlayıcıya güvenli yönlendirme",
+      "Gerçek HTTPS callback aynı SQL kişisini ve güncel üyeliğini gösterdi",
+      "Yeni Secure HttpOnly Lax cookie; verifier ve token tarayıcıya taşınmadı",
+      "Yenileme SQL oturumunu aynı kişiyle korudu",
+      "Yanlış CSRF çıkış yapamadı; geçerli oturum korundu",
+      "320 CSS px metin aralığı ve görünür klavye odağı; tam AT/zoom kabulü değil",
+      "Çıkış sonraki sekme okumasını kapattı",
+      "Sağlayıcı iptali temiz Türkçe hata ve yeni giriş yolu verdi",
+      "İmzalı sunucu çıkışı SQL oturumunu kapattı; logout JWT tarayıcıya taşınmadı",
+      "Yeni sağlayıcı doğrulaması aynı SQL kişisine döndü",
+      "Kalıcı SQL bütçesi Türkçe 429 ve klavye dönüşüyle sınırlandı",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "academicStoreConnected": false,
+    "externalCheckpoint": "separate local durable SQLite reference; no production service",
+    "nativeMultisession": false,
+    "engine": "PGlite0.5.9 PG18.6 exclusive single connection",
+    "tls": "disposable SPKI pin; node CA and hostname validation"
+  },
+  "protocol": {
+    "snapshot_tables": 12,
+    "postgres_candidate_tables_total": 13,
+    "reference_external_sqlite_tables": [
+      "state",
+      "events"
+    ],
+    "local_acceptance_store_tables": 16,
+    "local_acceptance_record_types": 148,
+    "initialization": "explicit trusted control and empty identity database only; no runtime DDL",
+    "order": [
+      "reserve outside SQL",
+      "compare accepted SQL head and complete 12-table digest",
+      "trusted SQL work and new head in same transaction",
+      "confirmed SQL COMMIT and client release",
+      "durable external seal",
+      "return result"
+    ],
+    "unknown_commit": "no result; reservation stays pending; no automatic release/retry/reconcile",
+    "rollback": "confirmed rollback permits abort; fence never reused",
+    "lost_external_ack": "no result; pending if not sealed; subsequent exact accepted state can proceed if seal actually committed",
+    "coverage": "whole SQL identity database across tenant/issuer/audience; every configured read/write; unconfigured writers not covered",
+    "digest": "PG to_jsonb(row)::text + C order + table/row count + UTF-8 length; exact profile; not signature",
+    "bounds": {
+      "max_rows_per_table": 10000,
+      "max_total_bytes": 16777216
+    },
+    "durability": "separate private SQLite file, DELETE journal+synchronous EXTRA; ordinary restart, two connections, killed child process; not power-loss certification"
+  },
+  "restored_scenarios": [
+    "PGlite complete old datadir rejected against independently reopened journal",
+    "current datadir accepted with revoked person/membership/logout/key/HTTP epochs preserved",
+    "newest head alone cannot hide altered identity data",
+    "each of 12 table families separately altered and rejected"
+  ],
+  "source_parent": {
+    "local": "34948086c65fef7683e4ac77826d172298952ca4",
+    "remote": "8abb2bac450407af850af8ed3f49e38f7a13aea3",
+    "tree": "3b1258f853a300879f40debe87b58d578c6f17fd"
+  },
+  "live": {
+    "new_deployment": false,
+    "last_software_package": 16,
+    "id": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "state": "READY",
+    "target": "production",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false,
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "rollback_applied": false
+  },
+  "not_accepted": [
+    "production/durable independent monotonic authority",
+    "all-writer enforcement and native multi-session SSI/RLS",
+    "both journal and SQL being rolled back together",
+    "privileged administrator tampering",
+    "safe uncertain-operation reconciliation and restore-tail replay",
+    "academic SQL identity/command chain",
+    "production capacity/RPO/RTO",
+    "legal retention/erasure and external account deletion",
+    "real institution IdP/MFA/KMS/control-plane authority"
+  ],
+  "sources": [
+    {
+      "url": "https://www.postgresql.org/docs/18/applevel-consistency.html",
+      "version": "18 §13.4",
+      "read_at": "2026-10-14",
+      "scope": "all writers/readers; snapshot/lock/replica limitations"
+    },
+    {
+      "url": "https://sqlite.org/pragma.html#pragma_synchronous",
+      "version": "living reference",
+      "read_at": "2026-10-14",
+      "scope": "EXTRA/DELETE and FULL/NORMAL durability"
+    },
+    {
+      "url": "https://nodejs.org/download/release/v24.19.0/docs/api/sqlite.html",
+      "version": "24.19.0",
+      "read_at": "2026-10-14",
+      "scope": "DatabaseSync options, synchronous calls and private file use"
+    },
+    {
+      "url": "https://pglite.dev/docs/api",
+      "version": "living docs; implementation0.5.9 PG18.6",
+      "read_at": "2026-10-14",
+      "scope": "dumpDataDir/loadDataDir for PGlite only"
+    }
+  ]
+}

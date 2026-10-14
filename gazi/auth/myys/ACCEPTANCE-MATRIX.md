@@ -10,7 +10,7 @@
 | B04 · Veri akışını ve saklamayı onayla | kısmi; güncel kaynak envanteri16tablo/148tür | yerel kapsam/özne özeti geçti; kurum alan kabulü değil | yeni envanter dilimleri canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi; Paket55 SQL kişi/üyelik/oturum/iptal bağlı |21 yeni imzalı SQL testi;15 mevcut kimlik tarayıcı; tek bağlantı | Paket55 canlı değil | gerçek kaynak/IdP/MFA/control-plane açık | HTTP/akademik SQL, çok bağlantı/RLS/KMS/checkpoint açık |
-| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; Paket55 SQL kişi/üyelik/oturum/iptal bağlı |21 yeni imzalı SQL testi;15 mevcut kimlik tarayıcı; tek bağlantı | Paket55 canlı değil | gerçek kaynak/IdP/MFA/control-plane açık | HTTP/akademik SQL, çok bağlantı/RLS/KMS/checkpoint açık |
+| B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; SQL HTTPS ve ayrı checkpoint bağlı | Paket64:23yeni/901toplam;13tarayıcı; yerel dilim | Son canlı16;64canlı değil | gerçek IdP/MFA/control-plane yetkisi açık | akademik SQL, bütün yazarlar, native SSI/RLS ve gerçek checkpoint hizmeti açık |
 | B08 · Tenant ve görevler ayrılığını sınırla | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B09 · Program rubrik ve kanıtı sürümle | kısmi; imzalı kaynak/arşiv bağlı | 19 yeni test, 14 kaynak tarayıcı; bağımsız doğrulama | Paket26 canlı değil | kaynak yetki/usul kabulü açık | güven yaşam döngüsü, gerçek sağlayıcı/depo açık |
 | B10 · Yetkili başarı kararını kalıcı yap | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
@@ -30,8 +30,8 @@
 | B24 · Erişilebilirlik açılış testini yap | kısmi; ad/tablo/odak ve dar hedefler bağlı | Paket63:69kural1142tarama0ihlal;8/530inceleme;36tarayıcı | Son canlı16;17–63 yayımlanmadı | gerçek AT/altyazı/çıktı/karşıtlık ve kritik engel sıfır kabulü açık | canlı kimlikli kabul açık |
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
-| B27 · Olay ve geri yükleme provası yap | kısmi | yerel dilim doğrulandı | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
-| B28 · Silme saklama ve çıkış haklarını sına | kısmi; envanter, özne özeti ve sınırlı giriş isteği temizliği | 8 yeni test, 48 tarayıcı kontrolü | Paket41 canlı değil | dayanak/süre/başvuru usulü bekleniyor | tam silme, güvenlik checkpoint, yedek ve dış hesap kabulü açık |
+| B27 · Olay ve geri yükleme provası yap | kısmi; önceki tatbikat ve SQL güncellik kapısı | Paket64 eski/yeni tam datadir ve ayrı kalıcı kayıt geçti | Son canlı16;64canlı değil | gerçek RPO/RTO ve geri dönüş yetkisi açık | üretim restore kuyruğu/işçi/KMS ve belirsiz işlem uzlaştırma açık |
+| B28 · Silme saklama ve çıkış haklarını sına | kısmi; önceki temizlik ve SQL checkpoint bağlı | Paket64:23yeni/901toplam;13tarayıcı; tam silme değil | Son canlı16;64canlı değil | dayanak/süre/başvuru usulü bekleniyor | audit/başarısız istek temizliği, dış kontrol hizmeti, yedek ve dış hesap kabulü açık |
 | B29 · Kalite göstergelerini gerçek veriye bağla | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B30 · Kontrollü kohortu aç ve değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B31 · Ücretli hizmeti koşullu aç | kısmi; Paket33 yerel mali simülatör hazır |16mali tarayıcı; yerel iade/itiraz/mutabakat geçti | Paket33 canlı değil | ücret/tahsilat/iade yetkisi ve uygulanabilirlik açık | gerçek PSP/settlement/vergi-fatura kabulü koşullu açık |
@@ -381,3 +381,7 @@ Paket62: öğrenme akışı, ders/sunum açıklamaları ve kaynak dipnotlarında
 ## Paket63 — B24 ad, tablo, hedef ve odak
 
 Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun başlıkları,4grup/gezinme rolü ve rozet seçimi pressed durumu düzeldi.9React/9eski tablo ve takip tahtası adlandırılmış klavye kaydırma bölgesi; program özet/bağlantıları en az28CSSpx. İki Radix menüsünde arka plan inert, kapanış odağı korunur. 106otomatik12gateway/envanter48portal46regresyon;19gezinme10yeni etkileşim7reflow kontrolü geçti.928geometri ölçümünde0taşma. Axe4.14.0ile69WCAGetiketli kural:1440ve320genişliklerde571er toplam1142frame taramasında0violation;8ve530incomplete ham olarak korunur. Son tam784sunucu Paketi59; sunucu çalışma kodu değişmedi. SEMANTIC-ACCESSIBILITY.md ve acceptance/B24-semantics-20261014.json sınırlamaları esastır; tam B24/canlı kabulü yok.
+
+## Paket64 — ayrı kimlik güncellik kaydı
+
+Yeni ekran yok. Yerel SQL giriş ekranında güncel kontrol kaydı eşleşmeden oturum açılamaz; 12kimlik tablosu ve yeni SQL başlığı/ayrı kalıcı SQLite makbuzu bağlı.23yeni senaryo;807+48+46=901,13tarayıcı geçti. Eski tam datadir ve güncel başlık kopyalanmış bozuk durum reddedildi; belirsiz COMMIT sonuç vermedi. B07/B27/B28 sınırlı yerel dilimdir; bütün kriterler değişmedi.13PGadayı üretime uygulanmadı,16SQLite/148tür korundu. Ayrıntı IDENTITY-CHECKPOINT-CONTRACT.md. Soncanlı16;17–64yayımlanmadı.

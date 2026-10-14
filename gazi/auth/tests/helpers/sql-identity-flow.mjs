@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {createHmac,randomBytes} from 'node:crypto';
+import {createHmac,randomBytes,randomUUID} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {exportJWK,generateKeyPair,SignJWT} from 'jose';
 import {pgliteIdentity} from './pglite-identity.mjs';
@@ -8,17 +8,26 @@ import {PostgresIdentityFlow} from '../../myys/identity-sql-flow.mjs';
 import {logoutEvent} from '../../myys/identity-contract.mjs';
 import {hash} from '../../myys/store.mjs';
 import {pkceS256} from '../../myys/identity-flow.mjs';
-export async function sqlIdentityFlow(t,{configPatch={},redirectUri='https://portal.invalid/callback',clock=null}={}){
+import {PostgresIdentityCheckpoint} from '../../myys/identity-checkpoint.mjs';
+import {LocalIdentityCheckpointJournal} from '../../scripts/lib/local-identity-checkpoint.mjs';
+export async function sqlIdentityFlow(t,{configPatch={},redirectUri='https://portal.invalid/callback',clock=null,checkpointDirectory=null}={}){
  const sql=await pgliteIdentity();t.after(()=>sql.close());await sql.install();
  for(const name of ['identity-challenge-schema.sql','identity-session-schema.sql'])await sql.db.exec(await readFile(new URL('../../myys/'+name,import.meta.url),'utf8'));
  let time=clock?0:Date.parse('2026-10-14T10:00:00Z');const now=()=>clock?clock().getTime()+time:time;const signing=await generateKeyPair('ES256'),publicKey={...await exportJWK(signing.publicKey),kid:'test-key',alg:'ES256',use:'sig'};
  const config={version:'test-sql-v1',issuer:'https://idp.invalid',tenant:'test-gazi',audience:'test-myys',algorithms:['ES256'],jwks:{keys:[publicKey]},maxTokenAgeSeconds:300,maxAuthAgeSeconds:900,clockToleranceSeconds:0,mfaProfiles:[{acr:'urn:test:strong',amr:['pwd','otp']}],...configPatch};
  const h={sql,config,clock:()=>new Date(now()),advance:n=>{time+=n;},redirectUri,browser:hash('synthetic-browser'),exchanges:0,exchangeHook:async()=>{},keyRows:new Map(),control:{operatorRef:'test-operator',authorityDigest:hash('test-control')}};
+ if(checkpointDirectory){
+  for(const name of ['identity-http-schema.sql','identity-checkpoint-schema.sql'])await sql.db.exec(await readFile(new URL('../../myys/'+name,import.meta.url),'utf8'));
+  h.journalId=randomUUID();h.journal=LocalIdentityCheckpointJournal.create({directory:checkpointDirectory,journalId:h.journalId});t.after(()=>h.journal.close());
+  h.checkpoint=new PostgresIdentityCheckpoint({journalDriver:h.journal,journalId:h.journalId});
+ }
+ h.newTransactions=(cfg=config)=>new PostgresIdentityTransactions({pool:sql.pool,tenant:cfg.tenant,issuer:cfg.issuer,audience:cfg.audience,checkpoint:h.checkpoint||null});
+ if(h.checkpoint)await h.newTransactions().initializeCheckpoint(h.control);
  const secrets=new Map(),pending=new Map();for(const purpose of ['pkce','nonce']){secrets.set(purpose,randomBytes(32));h.keyRows.set(purpose,{tenant:config.tenant,purpose,version:'v1',algorithm:'HMAC-SHA-256',state:'active',notBefore:new Date(now()-3600000).toISOString(),notAfter:new Date(now()+3600000).toISOString(),retiredAt:null,revision:1});}
  h.driver={describe:async ref=>structuredClone(h.keyRows.get(ref.purpose)),mac:async ref=>({tenant:ref.tenant,purpose:ref.purpose,version:ref.version,revision:ref.revision,mac:createHmac('sha256',secrets.get(ref.purpose)).update(ref.message).digest('base64url')})};
  h.sign=async(patch,nonce)=>{const at=Math.floor(now()/1000);return new SignJWT({iss:config.issuer,sub:'student',aud:config.audience,iat:at,exp:at+300,auth_time:at,nonce,acr:'urn:test:strong',amr:['pwd','otp'],sid:'sid-student',...patch}).setProtectedHeader({alg:'ES256',kid:'test-key',typ:'JWT'}).sign(signing.privateKey);};
  h.exchange=async ref=>{h.exchanges++;assert.equal(sql.active,0);const p=pending.get(ref.code);assert.ok(p);assert.equal(pkceS256(ref.codeVerifier),p.start.code_challenge);await h.exchangeHook(ref,p);return h.sign(p.patch,p.start.nonce);};
- h.newFlow=(patch={})=>{const cfg=patch.identityConfig||config;return new PostgresIdentityFlow({transactions:new PostgresIdentityTransactions({pool:sql.pool,tenant:cfg.tenant,issuer:cfg.issuer,audience:cfg.audience}),identityConfig:cfg,keyDriver:h.driver,redirectUri:h.redirectUri,exchangeCode:h.exchange,clock:h.clock,...patch});};h.flow=h.newFlow();
+ h.newFlow=(patch={})=>{const cfg=patch.identityConfig||config;return new PostgresIdentityFlow({transactions:h.newTransactions(cfg),identityConfig:cfg,keyDriver:h.driver,redirectUri:h.redirectUri,exchangeCode:h.exchange,clock:h.clock,...patch});};h.flow=h.newFlow();
  for(const row of h.keyRows.values())await h.flow.recordKeyMetadata(row,{...h.control,expectedRevision:0});
  h.person=(id='student',patch={})=>({id,issuer:config.issuer,subject:id,active:true,revision:1,...patch});
  h.membership=(personId='student',patch={})=>({personId,unit:'engineering',roles:['learner'],active:true,notBefore:new Date(now()-3600000).toISOString(),expires:new Date(now()+3600000).toISOString(),revision:1,...patch});
