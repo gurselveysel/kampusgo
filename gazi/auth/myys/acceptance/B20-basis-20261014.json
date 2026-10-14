@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-14",
+  "software_package": 47,
+  "work_ids": [
+    "B20"
+  ],
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "production": false,
+  "screen": "Tanıma ve kredi → Kaynak ve istisna incelemesi; Politika ve hak sicili",
+  "closed_local_subcriteria": [
+    "Yeni politika için zorunlu aynı birim/yol kaynak sicili ve ayrı kaynak incelemesi",
+    "Ölçü birimi ve özel istisna yollarının açık ayrımı; desteklenmeyen hesaplar kapalı",
+    "Her yeni başvuru/pozitif kararda güncel sürüm/süre/üyelik kontrolü",
+    "Durdurma ve yeni taslak eski karar/kredi tarihçesini değiştirmez",
+    "Eski yerel politika korunur; yeni istemci legacy biçimi oluşturamaz"
+  ],
+  "automated": {
+    "server": 626,
+    "portal": 48,
+    "regression": 46,
+    "total": 720,
+    "new_server_tests": 11,
+    "scope_commands": 131,
+    "http_routes": 17,
+    "positive_samples": 7625,
+    "derived_negative_checks": 61000
+  },
+  "browser": {
+    "basis": [
+      "Yönetici yeni kaynak sürümü hazırladı; kendi dosyasını inceleyemedi",
+      "Yeni kaynak taslağı yeni talebin politika seçimini bekletti",
+      "Ayrı komisyon dört kapsam teyidiyle inceledi; belirsiz ölçü birimi kredi hesabını açmadı",
+      "İncelenmiş fakat hesap yolu kapalı politika öğrenci talebini inceleme için kaydetti",
+      "Uygun teknik rapor belirsiz kaynağın tam/kısmi kredi düğmelerini açmadı",
+      "Yeni bağımsız kaynak incelemesi açık yerel kredi birimini bağladı; insan kararı ayrı kaydedildi",
+      "Kalite rolü yeni kaynak kullanımını durdurdu; önceki akademik kredi otomatik değiştirilmedi",
+      "390 px kaynak dosyasında taşma yok; ölçü birimi seçimi klavyeyle çalışıyor",
+      "Öğrenen ve yalnız teknik rol idari kaynak dosyasının ayrıntılarını göremedi",
+      "İstemci istisnası yok"
+    ],
+    "single_course": 12,
+    "multi_course": 11,
+    "obs": 11,
+    "total": 44,
+    "mobile_width": 390,
+    "real_assistive_technology": false
+  },
+  "packaging": {
+    "protected_files": 115,
+    "technical_tables": 16,
+    "record_kinds": 141
+  },
+  "axes": {
+    "code_completeness": "kısmi; kaynak/istisna kapalı sözleşmesi yerelde geçti",
+    "local_functional_security": "belirtilen dilim geçti",
+    "live": "dağıtılmadı; son canlı16",
+    "institution": "Senato/kurul kararı, yürürlük, ölçü birimi yorumu, istisna şartları ve müfredat/önceki ders kaynağı açık",
+    "external": "Gerçek diploma/OBS kaynakları, belge arşivi/özgünlüğü ve üretim kabulü yok"
+  },
+  "limits": [
+    "Kaynak özeti kullanıcının bildirimidir; dosya yüklenmedi veya özgünlüğü doğrulanmadı.",
+    "Kaynak incelemesi gerçek kurum yetki kararını veya YÖK10/3 ölçü birimi kabulünü kanıtlamaz.",
+    "Özel istisna ve kredi dışı ölçü birimleri pozitif kredi oluşturmaz.",
+    "Paket47 öncesi yerel kayıtlar açıkça legacy-local-test; eski/yeni yazılım birlikte yazım kabulü yok.",
+    "B01–B36 tümü tamamlanmadı."
+  ],
+  "deployment": {
+    "last_live": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "new_deployment": null,
+    "authenticated_smoke": false,
+    "configuredCore": "closed"
+  }
+}

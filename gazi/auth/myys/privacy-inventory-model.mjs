@@ -1,5 +1,5 @@
 // Local data inventory and positive export schema. This is not a legal retention policy.
-export const inventoryVersion='2026.10.14.46';
+export const inventoryVersion='2026.10.14.47';
 export const privacyCategories={
   "learning": {
     "label": "Öğrenme ve değerlendirme",
@@ -157,6 +157,9 @@ export const recordGroups={
     "portfolio-policy-review",
     "program",
     "publication",
+    "recognition-basis",
+    "recognition-basis-review",
+    "recognition-basis-hold",
     "recognition-policy",
     "recognition-policy-review",
     "recovery-attempt",

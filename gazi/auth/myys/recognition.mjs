@@ -1,3 +1,4 @@
+import {recognitionBasisState,requireRecognitionBasis,recognitionBasisView} from './recognition-basis.mjs';
 import {hash,requireThat} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
 const digest=r=>hash(stableStringify(r));
@@ -48,21 +49,23 @@ function executeRecognition(ctx,batch){
   requireThat(!previous||p.previousPolicyId===previous.id&&previous.targetProgramCode===p.targetProgramCode&&previous.pathway===p.pathway&&text(p.changeReason,20),'version_conflict','Güncel politika sürümü ve değişiklik gerekçesi gerekli.',409);
   requireThat(previous||!p.previousPolicyId,'version_conflict','Önceki politika aynı kapsamda olmalı.',409);
   const keys=['transferScope','unit','code','title','targetProgramCode','targetProgramTitle','sourceReference','sourceArticle','sourceVersion','sourceDate','scope','priorCourseRule','doubleCountingRule','appealRule','pathway','validFrom','validUntil','degreeCredits','creditCapPercent','remoteCapPercent','creditDenominator','remoteDenominator'];
-  return put('recognition-policy',{...Object.fromEntries(keys.map(k=>[k,p[k]])),id:id(),owner:a.id,version:(previous?.version||0)+1,...(previous?{previousPolicyId:previous.id,changeReason:p.changeReason}:{}),official:false});
+  return put('recognition-policy',{...Object.fromEntries(keys.map(k=>[k,p[k]])),id:id(),owner:a.id,basisRequired:true,version:(previous?.version||0)+1,...(previous?{previousPolicyId:previous.id,changeReason:p.changeReason}:{}),official:false});
  }
  if(action==='recognition-policy-review'){
   const r=get(s,a,'recognition-policy',p.policyId);need(a,r,['commission']);requireThat(r.createdBy!==a.id,'separation','Politikayı hazırlayan inceleme yapamaz.',403);
   requireThat(['accepted','rejected'].includes(p.outcome)&&text(p.reason,20),'recognition_policy','İnceleme sonucu ve gerekçe gerekli.');requireThat(!s.list(tenant,'recognition-policy-review').some(x=>x.policyId===r.id),'duplicate','Politika sürümü zaten incelendi.',409);
+  if(p.outcome==='accepted')requireRecognitionBasis(s,a,r,now);
   return put('recognition-policy-review',{id:id(),unit:r.unit,owner:r.owner,policyId:r.id,outcome:p.outcome,reason:p.reason,official:false});
  }
  if(action==='recognition-request'){
   const e=get(s,a,'enrollment',p.enrollmentId);requireThat(student(a,e),'forbidden','Yalnız kendi program kaydınız için talep hazırlayabilirsiniz.',403);
   const policy=s.get(tenant,'recognition-policy',p.policyId);requireThat(policy&&policy.unit===e.unit&&policy.validFrom<=now.slice(0,10)&&policy.validUntil>=now.slice(0,10)&&s.list(tenant,'recognition-policy-review').some(x=>x.policyId===policy.id&&x.outcome==='accepted'),'recognition_policy','Geçerli ve yerelde incelenmiş politika gerekli.');
+  const basis=requireRecognitionBasis(s,a,policy,now);
   for(const key of ['sourceTitle','sourceIssuer','sourceCredentialId','sourceOutcomeKey','targetCourseCode','mappingReason'])requireThat(text(p[key],key==='mappingReason'?20:3),'recognition_request','Belge, ders ve öğrenme çıktısı eşlemesi açıklanmalı.');
   requireThat(/^[a-f0-9]{64}$/.test(p.sourceDigest),'recognition_request','Dosyanın SHA-256 özeti gerekli.');
   requireThat(creditUnits(p.requestedCredits)>0&&creditUnits(p.remoteCredits)<=creditUnits(p.requestedCredits),'credits','Talep kredisi ve uzaktan kredi tutarlı olmalı.');
   requireThat(!s.list(tenant,'recognition-request').some(x=>x.owner===a.id&&x.targetProgramCode===policy.targetProgramCode&&x.targetCourseCode===p.targetCourseCode&&x.sourceDigest===p.sourceDigest),'duplicate','Bu belge ve ders için talep zaten var.',409);
-  return put('recognition-request',{id:id(),unit:e.unit,owner:a.id,enrollmentId:e.id,policyId:policy.id,targetProgramCode:policy.targetProgramCode,sourceTitle:p.sourceTitle,sourceIssuer:p.sourceIssuer,sourceCredentialId:p.sourceCredentialId,sourceOutcomeKey:p.sourceOutcomeKey,sourceDigest:p.sourceDigest,targetCourseCode:p.targetCourseCode,mappingReason:p.mappingReason,requestedCredits:p.requestedCredits,remoteCredits:p.remoteCredits,official:false});
+  return put('recognition-request',{id:id(),basis,unit:e.unit,owner:a.id,enrollmentId:e.id,policyId:policy.id,targetProgramCode:policy.targetProgramCode,sourceTitle:p.sourceTitle,sourceIssuer:p.sourceIssuer,sourceCredentialId:p.sourceCredentialId,sourceOutcomeKey:p.sourceOutcomeKey,sourceDigest:p.sourceDigest,targetCourseCode:p.targetCourseCode,mappingReason:p.mappingReason,requestedCredits:p.requestedCredits,remoteCredits:p.remoteCredits,official:false});
  }
  if(action==='recognition-technical'){
   const r=get(s,a,'recognition-request',p.requestId);need(a,r,['it']);requireThat(a.id!==r.owner,'separation','Kendi belgenizi teknik incelemeden geçiremezsiniz.',403);
@@ -84,8 +87,9 @@ function executeRecognition(ctx,batch){
   requireThat(p.outcome==='rejected'?units===0&&remote===0:p.outcome==='full'?units===requested:units>0&&units<requested,'credits','Tam, kısmi ve red kredileri taleple tutarlı olmalı.');
   requireThat(remote<=creditUnits(r.remoteCredits),'remote_credit','Talepte bulunmayan uzaktan kredi eklenemez.');
   requireThat(remote<=units&&units-remote<=requested-creditUnits(r.remoteCredits),'remote_credit','Kabul edilen uzaktan ve yüz yüze kredi, talebin ilgili paylarını aşamaz.');
-  let limits=null;
+  let limits=null,basis=null;
   if(units){
+   basis=requireRecognitionBasis(s,a,policy,now,{credit:true});
    requireThat(technical?.outcome==='accepted'&&technical.sourceDigest===r.sourceDigest,'technical_review','Kabul edilmiş, aynı belgeye bağlı teknik inceleme gerekli.',409);
    requireThat(text(p.gainKey,3,100)&&p.priorCourseChecked===true&&text(p.priorCourseReference,12),'double_counting','Önceki ders ve kanonik kazanım inceleme kaydı gerekli.');
    requireThat(policy.validFrom<=now.slice(0,10)&&policy.validUntil>=now.slice(0,10),'recognition_policy','Politikanın geçerliliği dolmuş.',409);
@@ -93,7 +97,7 @@ function executeRecognition(ctx,batch){
    requireThat(!existing.some(x=>x.gainKey===p.gainKey||x.targetCourseCode===r.targetCourseCode||x.sourceDigest===r.sourceDigest&&x.sourceOutcomeKey===r.sourceOutcomeKey),'double_counting','Aynı kazanım, ders veya belge çıktısı ikinci kredi oluşturamaz.',409);
    limits=batch?.limits||recognitionLimits(policy,{credit:p.credits,remoteCredit:p.remoteCredits,existing:existing.filter(x=>x.pathway===policy.pathway).reduce((n,x)=>n+creditUnits(x.credits),0)/100});
   }
-  const decision=put('recognition-decision',{id:id(),...(batch?{offerId:batch.offer.id,offerDecisionId:batch.decisionId}:{}),unit:r.unit,owner:r.owner,requestId:r.id,policyId:policy.id,technicalId:technical?.id||null,outcome:p.outcome,credits:p.credits,remoteCredits:p.remoteCredits,reason:p.reason,authorityReference:p.authorityReference,gainKey:units?p.gainKey:null,priorCourseReference:units?p.priorCourseReference:null,limits,...(res?{resolutionId:res.id,supersedesDecisionId:prior.id}:{}),official:false});
+  const decision=put('recognition-decision',{id:id(),basis,...(batch?{offerId:batch.offer.id,offerDecisionId:batch.decisionId}:{}),unit:r.unit,owner:r.owner,requestId:r.id,policyId:policy.id,technicalId:technical?.id||null,outcome:p.outcome,credits:p.credits,remoteCredits:p.remoteCredits,reason:p.reason,authorityReference:p.authorityReference,gainKey:units?p.gainKey:null,priorCourseReference:units?p.priorCourseReference:null,limits,...(res?{resolutionId:res.id,supersedesDecisionId:prior.id}:{}),official:false});
   if(prior)for(const c of recognitionLedger(s,tenant).filter(x=>x.decisionId===prior.id))put('recognition-reversal',{id:id(),unit:c.unit,owner:c.owner,creditId:c.id,decisionId:decision.id,reason:'Bağımsız yeniden inceleme kararı'});
   if(units)put('recognition-credit',{id:id(),...(batch?{offerId:batch.offer.id,offerDecisionId:batch.decisionId}:{}),unit:r.unit,owner:r.owner,decisionId:decision.id,requestId:r.id,policyId:policy.id,pathway:policy.pathway,targetProgramCode:r.targetProgramCode,targetCourseCode:r.targetCourseCode,gainKey:p.gainKey,sourceDigest:r.sourceDigest,sourceOutcomeKey:r.sourceOutcomeKey,credits:p.credits,remoteCredits:p.remoteCredits,official:false});
   return decision;
@@ -114,14 +118,14 @@ function executeRecognition(ctx,batch){
  }
  return null;
 }
-export function recognitionView(s,a){
+export function recognitionView(s,a,now=new Date().toISOString()){
  const scoped=kind=>s.list(a.tenant,kind).filter(r=>canRead(a,r));
  const policies=s.list(a.tenant,'recognition-policy').filter(r=>a.memberships.some(m=>m.unit===r.unit));
  const reviews=s.list(a.tenant,'recognition-policy-review').filter(r=>policies.some(p=>p.id===r.policyId));
  const ds=scoped('recognition-decision').filter(r=>academicRead(a,r));
  const credits=recognitionLedger(s,a.tenant).filter(r=>academicRead(a,r)).map(c=>({...c,held:!recognitionRequestUsable(s,a.tenant,c.requestId)}));
  const offers=scoped('recognition-offer').filter(r=>academicRead(a,r));
- return {offers,offerWithdrawals:scoped('recognition-offer-withdrawal').filter(r=>academicRead(a,r)),offerDecisions:scoped('recognition-offer-decision').filter(r=>academicRead(a,r)),offerAppeals:scoped('recognition-offer-appeal').filter(r=>academicRead(a,r)),offerResolutions:scoped('recognition-offer-resolution').filter(r=>academicRead(a,r)),policies:policies.map(p=>({...p,review:reviews.find(x=>x.policyId===p.id)||null})),requests:scoped('recognition-request').map(r=>academicRead(a,r)?r:{...Object.fromEntries(['id','unit','owner','enrollmentId','policyId','targetProgramCode','targetCourseCode','sourceTitle','sourceIssuer','sourceCredentialId','sourceOutcomeKey','sourceDigest'].map(k=>[k,r[k]])),technicalOnly:true}),technical:scoped('recognition-technical'),decisions:ds,appeals:scoped('recognition-appeal').filter(r=>academicRead(a,r)),resolutions:scoped('recognition-resolution').filter(r=>academicRead(a,r)),credits};
+ return {basis:recognitionBasisView(s,a,now),offers,offerWithdrawals:scoped('recognition-offer-withdrawal').filter(r=>academicRead(a,r)),offerDecisions:scoped('recognition-offer-decision').filter(r=>academicRead(a,r)),offerAppeals:scoped('recognition-offer-appeal').filter(r=>academicRead(a,r)),offerResolutions:scoped('recognition-offer-resolution').filter(r=>academicRead(a,r)),policies:policies.map(p=>({...p,basisStatus:recognitionBasisState(s,a.tenant,p,now),review:reviews.find(x=>x.policyId===p.id)||null})),requests:scoped('recognition-request').map(r=>academicRead(a,r)?r:{...Object.fromEntries(['id','unit','owner','enrollmentId','policyId','targetProgramCode','targetCourseCode','sourceTitle','sourceIssuer','sourceCredentialId','sourceOutcomeKey','sourceDigest'].map(k=>[k,r[k]])),technicalOnly:true}),technical:scoped('recognition-technical'),decisions:ds,appeals:scoped('recognition-appeal').filter(r=>academicRead(a,r)),resolutions:scoped('recognition-resolution').filter(r=>academicRead(a,r)),credits};
 }
 
 // Batch context is constructed only here, never read from a browser field.

@@ -1,3 +1,17 @@
+# Güncel devam — Paket47 yerel kabul; kaynak eşitlemesi sırada
+
+B20 Kaynak ve istisna incelemesi:626+48+46=720 otomatik;44tarayıcı;131komut17HTTP7625örnek61000denetim;115statik16tablo141tür. Yeni politika kaynak dosyası zorunlu; özel yollar ve kredi dışı/belirsiz ölçü birimi pozitif kredi hesaplamaz. Eski yerel politika ve kararlar korunur. RECOGNITION-BASIS-CONTRACT.md ve B20-basis JSON ayrıntıdır.
+
+Önce diff,commit ve beklenen uzak baş `45ac0282a98a9c3b5ec43d3791d470cf1b6f2e87`,base-tree `39877672364f2a72c2a55b7aa52b27d15f0102fb` ile tam ağaç eşitlemesi. Son canlı16;17–47 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok.
+
+Sırada B21 dış belge kriptografik doğrulama ve yetkili teslim/arşiv dilimi: mevcut credential/trust/key ve recognition kaynaklarını incele; gerçek issuer/kimlik/üretim bağlantısı uydurma. B07 üretim SQL repository/KMS,B28 güvenilir checkpoint/saklama ve bütün diğer bağımsızlar açık. Devam komutu bekleme.
+
+# Güncel devam — Paket46 kaynakta; B20 kaynak/istisna sözleşmesi sürüyor
+
+Paket46 kaynak doğrulaması: yerel `35933850407fb589351598158bdeb7852bd6d7af`, uzak `45ac0282a98a9c3b5ec43d3791d470cf1b6f2e87`, ortak tam ağaç `39877672364f2a72c2a55b7aa52b27d15f0102fb`.23blob SHA ve tam ağaç eşleşti;expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+709otomatik/34tarayıcı;128komut17HTTP7321örnek58568denetim;16tablo138tür;115statik. B20 typed ölçü birimi/istisna, kurum kaynak sicili ve bağımsız incelemeyi incele; hesapta desteklenmeyen veya belirsiz yorum kapalı kalmalı. B21 belge doğrulama/teslim-arşiv,B07 repository/KMS,B28checkpoint ve diğer bağımsızlar açık. BrowserAuth iptalini yeniden isteme;configuredCore kapalı;tek editör/alt ajan yok.
+
 # Güncel devam — Paket46 yerel kabul; kaynak eşitlemesi sırada
 
 Tanıma ve kredi → Çok dersli teklifler:615+48+46=709 otomatik;34tarayıcı;128komut/17HTTP7321örnek58568denetim;115statik;16tablo138tür. Kaynaklar YÖK5sayfa/Gazi kredi transferi4sayfa/RPL5sayfa okundu; YÖK10/3 birimi kurumsal onay olmadan varsayılmaz. Sözleşme/kaynak/kanıt dosyaları RECOGNITION-OFFER-CONTRACT.md, RECOGNITION-SOURCE-REVIEW-20261014.md, B20-B21-offers JSON.

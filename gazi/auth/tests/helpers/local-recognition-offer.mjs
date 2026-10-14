@@ -1,8 +1,9 @@
 import {hash} from '../../myys/store.mjs';
-import {localRecognitionPolicy} from './local-recognition.mjs';
+import {localRecognitionPolicy,localRecognitionBasis} from './local-recognition.mjs';
 export const offerReason='Sentetik çok dersli teklif bağımsız insan incelemesine sunuldu.';
 export function localRecognitionOffer(f,{count=2,create=true,requestPatch={},technicalOutcomes=[]}={}){
  const {e}=f.setup(),policy=f.run('admin','recognition-policy',{...localRecognitionPolicy,transferScope:'multi-course-offer',scope:'Yalnız sentetik çok dersli transfer teklifi; kurum kararı değildir.'});
+ localRecognitionBasis(f,policy);
  f.run('publisher','recognition-policy-review',{policyId:policy.id,outcome:'accepted',reason:offerReason});
  const requests=Array.from({length:count},(_,i)=>f.run('student','recognition-request',{enrollmentId:e.id,policyId:policy.id,sourceTitle:'Sentetik teklif belgesi '+i,sourceIssuer:'Sentetik düzenleyici',sourceCredentialId:'LOCAL-OFFER-SOURCE',sourceDigest:hash('local-offer'),sourceOutcomeKey:'SOURCE-'+i,targetCourseCode:'COURSE-'+i,mappingReason:offerReason,requestedCredits:4,remoteCredits:i===0?4:0,...requestPatch}));
  for(const [i,r] of requests.entries())f.run('it','recognition-technical',{requestId:r.id,outcome:technicalOutcomes[i]||'accepted',method:'issuer-record-reviewed',reportReference:'Sentetik teklif teknik incelemesi',reason:offerReason});

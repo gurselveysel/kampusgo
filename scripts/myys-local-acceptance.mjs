@@ -14,7 +14,7 @@ import {semSetup} from '../gazi/auth/tests/helpers/local-sem.mjs';
 import {generateKeyPairSync} from 'node:crypto';
 import {importJWK} from '../gazi/auth/node_modules/jose/dist/webapi/index.js';
 import {registryFields} from '../gazi/auth/myys/registry.mjs';
-import {localRecognitionPolicy,localRecognitionCase} from '../gazi/auth/tests/helpers/local-recognition.mjs';
+import {localRecognitionPolicy,localRecognitionCase,localRecognitionBasis} from '../gazi/auth/tests/helpers/local-recognition.mjs';
 // Disposable loopback-only UI acceptance fixture; never part of the deployed gateway.
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
@@ -45,7 +45,7 @@ if(process.argv.includes('--quality')){
 if(process.argv.includes('--privacy')||process.argv.includes('--retention')){const h=hash('privacy-expired-session');f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(h,'student','2020-01-01T00:00:00.000Z');f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(h,'gazi','local-test','2019-01-01T00:00:00.000Z');}
 if(process.argv.includes('--membership'))f.s.db.prepare('UPDATE memberships SET roles=? WHERE person=?').run('["admin","quality"]','reviewer');
 if(process.argv.includes('--retention')){f.s.db.prepare('UPDATE memberships SET roles=? WHERE person=?').run('["admin","quality"]','reviewer');f.run('admin','registry-draft',{type:'data-flow',unit:'engineering',title:'Yerel oturum saklama sicili',fields:Object.fromEntries(registryFields['data-flow'].map(k=>[k,'Sentetik yerel sicil; gerçek kurum kararı değildir.']))});}
-if(process.argv.includes('--recognition')){const p=f.run('admin','recognition-policy',{...localRecognitionPolicy,...(process.argv.includes('--recognition-offers')?{transferScope:'multi-course-offer',scope:'Sentetik çok dersli teklif; kurum kuralı değildir.'}:{})});f.run('publisher','recognition-policy-review',{policyId:p.id,outcome:'accepted',reason:'Sentetik politika yalnız izole yerel kabul için incelendi.'});}
+if(process.argv.includes('--recognition')){const p=f.run('admin','recognition-policy',{...localRecognitionPolicy,...(process.argv.includes('--recognition-offers')?{transferScope:'multi-course-offer',scope:'Sentetik çok dersli teklif; kurum kuralı değildir.'}:{})});localRecognitionBasis(f,p);f.run('publisher','recognition-policy-review',{policyId:p.id,outcome:'accepted',reason:'Sentetik politika yalnız izole yerel kabul için incelendi.'});}
 if(process.argv.includes('--operations')){
  const key=randomBytes(32),contract={id:'Yerel kabul kaynağı',tenant:'gazi',unit:'engineering',programId:initial.p.id,mode:'local-acceptance',subjects:{source:'student'},key};
  const adapter=new LocalLmsAdapter(f.s,contract);

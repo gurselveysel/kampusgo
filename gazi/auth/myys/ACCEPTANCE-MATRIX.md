@@ -297,3 +297,11 @@ Tanıma ve kredi → Çok dersli teklifler güncellendi. Öğrenen aynı kayıt/
 YÖK5sayfa ve Gazi kredi transferi4sayfa önceki erişim/okuma engeli giderildi; Gazi RPL5sayfa yeniden okundu. Kaynak SHA/kapsam/tarih ve yorum sınırları RECOGNITION-SOURCE-REVIEW-20261014.md içinde. YÖK10/3 ölçü birimi otomatik AKTS oranı olarak atanmadı. Ayrıntı RECOGNITION-OFFER-CONTRACT.md ve B20-B21-offers kabul JSON’unda.36 özgün kimlik/başlık/bağımlılık/kabul değişmedi.
 
 Yeni canlı yayın yok:17–46 dağıtılmadı; alias16 READY. Son canlı kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, deploy `dpl_Coaq5KN2VcNpPjwyXke4neroq877`; geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Authenticated canlı smoke yenilenmedi; browserAuth13Ekim iptali yeniden denenmedi;configuredCore kapalı.
+
+## Paket47 — B20 kaynak ve istisna incelemesi (14.10.2026)
+
+Tanıma ve kredi → Kaynak ve istisna incelemesi eklendi; Politika ve hak sicili tanıma yolunu Türkçe seçimle kaydeder. Yeni politikada zorunlu kaynak/sicil bağı, bağımsız dört teyitli inceleme, sürüm/süre/görev/hold kontrolleri vardır. Eğitim adedi, saat, belirsiz birim ve özel RPL/önceki ders yolları inceleme kaydı alabilir ancak pozitif kredi hesaplamaz. Yeni başvuru ve pozitif karar sunucuda güncel kaynağa bağlıdır; eski karar/kredi/OBS otomatik değiştirilmez. Önceki yerel politika korunur; yeni istemci legacy biçimi üretemez.
+
+626+48+46=720 otomatik;11 yeni sunucu;10kaynak+12tekders+11çokdersli+11OBS=44tarayıcı;131komut/17HTTP7625örnek61000türetilmiş kapsam denetimi;115statik;16tablo141tür.390px görsel inceleme/klavye ve iki SQLite bağlantısında eski karar formu/durdurma geçti. İlk browser option kontrolü DOM disabled özelliğiyle kesinleştirildi; son akış geçti. Kaynak dosyasının baytları veya özgünlüğü doğrulanmış sayılmaz; kaynak/istisna kapalı sözleşmesi B20 kurum kabulü değildir. Gerçek ölçü birimi/istisna/müfredat ve önceki kayıt kaynağı ile buna bağlı koşullu hesap adaptörleri açık.
+
+Ayrıntı RECOGNITION-BASIS-CONTRACT.md ve B20-basis kabul JSON.36 özgün iş/kabul/bağımlılık değişmedi. Yeni canlı yayın yok;17–47 dağıtılmadı. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`; geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Yeni authenticated smoke yok;browserAuth iptali tekrar denenmedi;configuredCore kapalı.
