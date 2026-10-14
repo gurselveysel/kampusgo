@@ -364,3 +364,7 @@ Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun
 ## Paket64 · SQL kimliği ve ayrı kalıcı kontrol kaydı
 
 Görünür yeni menü/ekran yok. Opsiyonel PostgresIdentityCheckpoint, 12kimlik tablosunun tam özetini ve depo genelindeki fence başlığını ayrı makbuza bağlar. SQL öncesi rezervasyon; aynı transactionda iş/yeni başlık; kesin COMMIT sonrası ayrı kalıcı onay olmadan sonuç dönmez. Sürüm/iptal/aile/bütçe ve audit eski yedekten geri açılamaz; aynı yedekteki özetle yetinilmez. Yerel sürücü yeni0700/0600SQLite DELETE/EXTRA; eski kayıt veya üretim kurulumu otomatik kabul edilmez. Belirsiz işlemde otomatik kilit açma/uzlaştırma yok.23yeni senaryo,807sunucu+48portal+46regresyon=901;13SQL HTTPS tarayıcı. Bütün yazarlar, gerçek dış kontrol hizmeti, async akademik repository, restore kuyruğu ve kurum saklama/işletim kabulü açık. configuredCore kapalı; son canlı16.
+
+## Paket65 — kurum kapsamlı giriş saklama
+
+Akış ve saklama aynı dört komutla yeni dar hedefe bağlandı. Açık kontrol düzlemi görevlendirmesi ve üç kişi ayrımı; tek kurum kural zinciri; grant revizyon pinleri;100aday/15dközet; atomik silme/denetim; gerçek TLS callback tekrarının reddi. Ham güvenlik satırları görünümde yok. Yeni149.kayıt türü;16SQLite ve13PostgreSQLadayı korunur.13yeni/914tamotomatik,14yeni12mevcuttarayıcı;136komut72280negatif örnek. [Sözleşme](UNASSIGNED-LOGIN-RETENTION.md) ve [kanıt](acceptance/B28-unassigned-retention-20261014.json). Gerçek kurum yetkisi/üretim/yedek imhası açık. Son canlı16;65dağıtılmadı.

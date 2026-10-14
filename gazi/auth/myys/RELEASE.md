@@ -830,3 +830,18 @@ Yerel34948086c65fef7683e4ac77826d172298952ca4; uzak8abb2bac450407af850af8ed3f49e
 Yeni menü/ekran yok. Yerel Kurum girişi/oturumu denemesi ayrı kalıcı checkpoint ile çalıştı; güncellik veya commit belirsizliğinde erişim kapalı.23yeni güvenlik/SQL/TLS senaryosu;807sunucu+48portal+46regresyon=901.13tarayıcı,320CSSpx/metin aralığı/odak/logolar;115statik korumalı paket. Yeni1PGadayıyla toplam13, üretim migration yok.16SQLite148kayıt türü korunur. IDENTITY-CHECKPOINT-CONTRACT.md ve acceptance/B07-B28-checkpoint-20261014.json sınırları içerir. B07/B27/B28 bütünü tamamlanmadı.
 
 Kaynak tabanı63:yerel34948086c65fef7683e4ac77826d172298952ca4/uzak8abb2bac450407af850af8ed3f49e38f7a13aea3/tam ağaç3b1258f853a300879f40debe87b58d578c6f17fd;64commit sonrası tam ağaç yeniden eşitlenecek. 14.10.2026 saltokunur alias kontrolü dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Yeni authenticated smoke/deploy yok;17–64dağıtılmadı. browserAuth iptali yeniden denenmedi. Korunan geri dönüş hedefi dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı.
+
+
+## Paket64 kaynak eşitleme ·14.10.2026
+
+Yerel aa746c5e3cd9ebe9dbd486f52c3dd87bd4634d44, uzak7fe42883197d1a059fce6fe54e8732f0e9fc93f6, ortak tam ağaç79eaddab25e1b2573812fde4fbb775481465ef92.18blob ve tam ağaç eşleşti;expected-head force=false/uzak commit teyitli.901otomatik13tarayıcı;canlı dağıtım değildir.
+
+## Paket65 — 14.10.2026 yerel kabul ve kaynak adayı; yayın değil
+
+Panel: Akademik Kayıt ve Karar → Akış ve saklama. Açık kurum kapsamlı üç ayrı görevin hazırlama/inceleme/önizleme/temizlik yolu; başarısız ve iptal edilmiş kişiye bağlanmamış eski istekler için sınırlı100satır. Güncel yetki/özet/süre, onay kutusu, klavye ve kalıcı makbuz; eski oturum temizliği korundu.
+
+820sunucu+48portal+46regresyon=914;13yeni test,14yeni12mevcut tarayıcı.136komut/18HTTP9035pozitif72280negatif kapsam örneği;115statik korumalı paket. İlk36işin kimliği/bağımlılığı/ölçütü özgün kaynakla aynı. Kanıt: `acceptance/B28-unassigned-retention-20261014.json`. Tam B28 veya yasal imha kabulü değildir.
+
+Başlangıç kaynak: yerel `aa746c5e3cd9ebe9dbd486f52c3dd87bd4634d44`, uzak `7fe42883197d1a059fce6fe54e8732f0e9fc93f6`, ortak tam ağaç `79eaddab25e1b2573812fde4fbb775481465ef92`; uzak dal/commit yeniden doğrulandı. Yeni kaynak commit ve tam ağaç eşitlemesi sonraki devam kaydına yazılacak.
+
+14.10.2026salt-okunur canlıalias hâlâ kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, dağıtım `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction.17–65dağıtılmadı; yeni kimlikli canlısmoke yapılmadı. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Önceki browserAuthiptali yenilenmedi; configuredCorekapalı. Üretim migration/gerçek veri silme/yeni credential yok.

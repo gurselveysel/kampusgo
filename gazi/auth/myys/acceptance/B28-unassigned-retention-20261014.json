@@ -1,0 +1,155 @@
+{
+  "as_of": "2026-10-14",
+  "software_package": 65,
+  "work_ids": [
+    "B04",
+    "B08",
+    "B28"
+  ],
+  "visible_change": "Akademik Kayıt ve Karar → Akış ve saklama: ayrıca kurum kapsamında görevlendirilmiş hazırlayan/ayrı inceleyen/ayrı BT ile kişiye bağlanmamış sona ermiş giriş isteği önizleme ve temizlik; sonuç ve sürümler kalıcı.",
+  "code": "kısmi; yalnız LocalAcceptanceStore hedefi",
+  "local_tests": {
+    "server": 820,
+    "portal": 48,
+    "legacy": 46,
+    "total": 914,
+    "new_cases": [
+      "normal admin/IT cannot infer tenant-wide authority from a unit role",
+      "trusted grants require exact next revision, source digest, bounded scope, dates and existing membership",
+      "grant write and audit are atomic; no Vercel fallback or out-of-transaction deletion",
+      "policy separates preparation, review, execution and reserves one institution-wide chain",
+      "only old completed unlinked failed/cancelled rows are selected; academic and security records remain",
+      "100-row bound, remaining count, empty rejection and idempotent receipt do not repeat deletion",
+      "changed candidates, links, time, policy version and missing confirmation invalidate old preview",
+      "preparer revocation/renewal blocks stale review; reviewer grant renewal requires a new policy",
+      "current execute grant, original executor, MFA, role, membership and person activity are checked at run/replay",
+      "audit failure rolls back all deleted requests, receipt and command; second store cannot reuse stale candidates",
+      "grant and policy authority stay tenant/unit bound; no missing-schema mutation or raw request view",
+      "real HTTPS failed signed-token callback remains unusable after policy-bound cleanup; current session and barriers survive",
+      "real HTTPS cancelled callback remains unusable after policy-bound cleanup; current session and barriers survive"
+    ],
+    "server_log_sha256": "b4155bac6aa8258605b27fb84670bee7e79a436a0460f2fdaa078d31b1b1f02b"
+  },
+  "browser": {
+    "at": "2026-10-14T15:03:33.061Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "İnceleme görevi hazırlama yetkisine dönüşmedi; kurum kapsamlı hedef kapalı kaldı",
+      "Sicile bağlı ülke/rol/süre/yöntem ayrıntısı kaydedildi; hazırlayan inceleyemedi",
+      "Ayrı inceleme olmadan BT önizleme işlemi açılmadı",
+      "Ayrı görevli gerekçeli yerel saklama incelemesi yaptı",
+      "Silme yapmayan önizleme iki sona ermiş aday buldu ve bir bağlı isteği korudu",
+      "İşaretlenmemiş açık onay silme isteği göndermedi",
+      "Ayrı BT görevlisi klavyeyle yalnız iki önizlenen giriş isteğini temizledi",
+      "Tekrarlanan önizleme temizlenmiş giriş isteklerini tekrar saymadı",
+      "Yeni sürüm eski süreyi korudu ve inceleme bitene kadar işçiyi kapattı",
+      "Yeniden yüklemede sicil sürümleri ve temizlik kanıtı korundu",
+      "320 px ve artırılmış metin aralığında sonuç ekranı yatay taşmadı",
+      "320 px ülke seçimi ve saklama formunda yatay taşma yok",
+      "Öğrenen idari sicile erişemedi; kendi akademik kaydı korundu",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false
+  },
+  "existing_session_browser": {
+    "at": "2026-10-14T15:04:09.030Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Sicile bağlı ülke/rol/süre/yöntem ayrıntısı kaydedildi; hazırlayan inceleyemedi",
+      "Ayrı inceleme olmadan BT önizleme işlemi açılmadı",
+      "Ayrı görevli gerekçeli yerel saklama incelemesi yaptı",
+      "Silme yapmayan önizleme bir süresi dolmuş aday buldu",
+      "Ayrı BT görevlisi yalnız önizlenen yerel oturumu temizledi",
+      "Tekrarlanan önizleme temizlenmiş oturumu tekrar saymadı",
+      "Yeni sürüm eski süreyi korudu ve inceleme bitene kadar işçiyi kapattı",
+      "Yeniden yüklemede sicil sürümleri ve temizlik kanıtı korundu",
+      "390 px saklama ekranında yatay taşma yok",
+      "390 px ülke seçimi ve saklama formunda yatay taşma yok",
+      "Öğrenen idari sicile erişemedi; kendi akademik kaydı korundu",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false
+  },
+  "scope_matrix": {
+    "commandCount": 136,
+    "httpRoutes": 18,
+    "positiveSamples": 9035,
+    "negativeChecks": 72280,
+    "allNegativeChecksPreservedDatabase": true,
+    "limits": "Yerel SQLite kopyasında sekiz türetilmiş karşı kontrol; sayı test veya tamamlanma yüzdesi değildir. Native SQL RLS/SSI kabulü değil."
+  },
+  "contract": {
+    "requestStatuses": [
+      "failed",
+      "cancelled"
+    ],
+    "scope": "tenant-unassigned-identity-requests/1",
+    "roles": "explicit trusted prepare/review/execute grants + current admin/admin/it + MFA + three distinct people",
+    "globalChain": true,
+    "grantEndpoint": null,
+    "maxRows": 100,
+    "previewSeconds": 900,
+    "rawRequestDataInView": false,
+    "approvedRetentionDays": null,
+    "recordTypes": 149,
+    "localStoreTables": 16,
+    "postgresCandidateTablesUnchanged": 13,
+    "deletes": "only old completed unlinked requests; atomic with audit/receipt/idempotency",
+    "protected": [
+      "accept/audit",
+      "person/membership",
+      "session/scope/provider-session",
+      "family/logout receipt",
+      "key/rate barriers",
+      "academic records"
+    ],
+    "sameStoreRealHttpsReplayRejected": true,
+    "physicalDestructionVerified": false,
+    "requestFullyFulfilled": false,
+    "productionMigration": false,
+    "sqlCheckpoint64ConnectedToThisStore": false
+  },
+  "source_parent": {
+    "local": "aa746c5e3cd9ebe9dbd486f52c3dd87bd4634d44",
+    "remote": "7fe42883197d1a059fce6fe54e8732f0e9fc93f6",
+    "tree": "79eaddab25e1b2573812fde4fbb775481465ef92"
+  },
+  "live": {
+    "new_deployment": false,
+    "last_software_package": 16,
+    "id": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "state": "READY",
+    "target": "production",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false,
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "rollback_applied": false
+  },
+  "not_accepted": [
+    "real institutional retention/authority/hold policy",
+    "production deletion or physical/backup destruction",
+    "command/audit copy lifecycle",
+    "external account lifecycle",
+    "complete institution field inventory",
+    "native SQL scale/RLS/SSI and shared academic identity chain"
+  ],
+  "sources": [
+    {
+      "url": "https://www.kvkk.gov.tr/Icerik/2038/kisisel-verilerin-silinmesi-yok-edilmesi-veya-anonim-hale-getirilmesi",
+      "read_at": "2026-10-14",
+      "scope": "processing grounds and distinctions between erasure/destruction/anonymization; not Gazi-specific days"
+    },
+    {
+      "url": "https://www.kvkk.gov.tr/Icerik/5441/KISISEL-VERILERIN-SILINMESI-YOK-EDILMESI-VEYA-ANONIM-HALE-GETIRILMESI-HAKKINDA-YONETMELIK",
+      "version": "RG28.10.2017/30224; official consolidated text with28.04.2019/30758 references",
+      "read_at": "2026-10-14",
+      "scope": "articles5–12; no universal security-record retention period derived",
+      "limitation": "Original RG URL timed out; official KVKK consolidated text was read."
+    }
+  ]
+}

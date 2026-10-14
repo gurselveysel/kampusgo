@@ -1,3 +1,17 @@
+# Güncel devam — Paket65 yerel kabul; kaynak eşitlemesi sırada
+
+Akış ve saklama: açık kurum kapsamlı üç görevle kişiye bağlanmamış sona ermiş failed/cancelled giriş isteği temizliği.13yeni;820sunucu+48portal+46regresyon=914.14yeni12mevcut tarayıcı;136komut18HTTP9035pozitif72280negatif karşı örnek.115statik;16SQLite149tür13PGadayı. Tam B28/hukuk/üretim/yedek imhası değil. Doküman/proof/backlog5eksen ve özgün36ölçüt korundu.
+
+Önce diff/source, yerel commit ve expectedremote7fe42883197d1a059fce6fe54e8732f0e9fc93f6/base79eaddab25e1b2573812fde4fbb775481465ef92 ile tam ağaç eşitle. Başlangıçyerel aa746c5e3cd9ebe9dbd486f52c3dd87bd4634d44. Son canlı16dpl_Coaq5KN2VcNpPjwyXke4neroq877READY;17–65dağıtılmadı. Geri dönüş15dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1uygulanmadı. BrowserAuthiptaliniyenileme;configuredCorekapalı,tekeditör.
+
+Sıradaki66: async akademik SQL repository ve aynı gerçek kimlik/komut atomik sınırı. Mevcut SQLiteişkuralları veSQLkimlik privateguardlarını koruyarak ilk bağımsız uçtan uca dilimi incele/uygula; üretim şeması/credential/RLS kabulü uydurma. B28komut/auditkopyaları ve bütün bağımsızB01–B36 sürer. Raporla durma.
+
+# Güncel devam — Paket64 kaynakta;65 başarısız giriş saklama dilimi
+
+64yerel aa746c5e3cd9ebe9dbd486f52c3dd87bd4634d44, uzak7fe42883197d1a059fce6fe54e8732f0e9fc93f6, ortak tam ağaç79eaddab25e1b2573812fde4fbb775481465ef92.18blob/tam ağaç/expected-head force=false ve uzak commit doğrulandı.901otomatik13SQLcheckpointtarayıcı;115statik. Son canlı16;17–64dağıtılmadı.
+
+65 ürün kodu uygulanıyor; henüz kabul/commit yok. Akış ve saklama hedefi kişiye bağlanmamış failed/cancelled girişler: explicit local tenant/person/unit/capability/süre/revizyon görevlendirmesi; ayrı hazırlayan/inceleyen/IT; global tek politika zinciri; grant pinleri,100satır15dkSHAönizleme, auditrollback. Ham request verisi UIya yok; kabul/oturum/aile/iptal kayıtları korunur. Yeni149.kayıt türü retention-authority;16SQLite tablo korunur. Eski27saklama/veri envanteri testi ve portalbuild geçti; yeni testler/tarayıcı henüz yok. YerelSQLite; SQLcheckpoint64 ile aynı depo değildir. Gerçek yetki/migration/silme kapalı. Sonra güvenlik/TLS/tarayıcı+tamkapsam kabul,kanıt/backlog/matris,commit/tamağaçeşitleme; bağımsız66işlerinegeç.
+
 # Güncel devam — Paket64 yerel kabul; kaynak eşitlemesi sırada
 
 Yeni ekran yok; SQL kurum girişi ayrı kalıcı checkpoint bağlıyken13tarayıcı kontrolü geçti.23yeni güvenlik/SQL/TLS testi;807sunucu+48portal+46regresyon=901;115statik. 12kimlik tablosunun tam özeti, ayrı journal rezervasyonu, atomik SQL başlığı ve COMMIT sonrası kalıcı onay. Eski/bozuk kopya ve belirsiz sonuç kapalı. Gerçek kurum/dış kontrol hizmeti/nativeSSI-RLS/RPO-RTO veya tam silme kabulü değil. 13PGadayı uygulanmadı;16SQLite148tür korundu.

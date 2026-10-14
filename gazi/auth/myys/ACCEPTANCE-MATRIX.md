@@ -7,7 +7,7 @@
 | B01 · Mevcut pilot envanterini sabitle | kısmi | kısmi | kısmi pilot | operasyonel kabul açık | bağımsız kod için gerekli değil |
 | B02 · Akademik ve SEM yetki yollarını ayır | kısmi; belge ekli yerel dosya bağlı | 13 yeni test ve 13 yeni tarayıcı; profil bağı geçti | Paket42 canlı değil | gerçek Senato/SEM/görev/süre kabulü açık | tam usul, dosya deposu/tarama/e-imza kabulü açık |
 | B03 · Program bilgi paketini onayla | kısmi; program/profil/yetki paketi bağlı | 8 yeni test, 9 yeni tarayıcı; güncel indirme geçti | Paket43 canlı değil | gerçek program/lisans/kurum yayını kabulü açık | bağımsız kod için gerekli değil |
-| B04 · Veri akışını ve saklamayı onayla | kısmi; güncel kaynak envanteri16tablo/148tür | yerel kapsam/özne özeti geçti; kurum alan kabulü değil | yeni envanter dilimleri canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
+| B04 · Veri akışını ve saklamayı onayla | kısmi; güncel kaynak envanteri16tablo/149tür | yerel kapsam/özne özeti geçti; kurum alan kabulü değil | yeni envanter dilimleri canlı değil | kurum alan/dayanak/süre/ülke/alıcı kararı açık | üretim saklama/işçi ve yedek imhası açık |
 | B05 · İçerik ve sağlayıcı haklarını doğrula | kısmi | kısmi | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B06 · Kalıcı kişi ve üyelik modelini kur | kısmi; Paket55 SQL kişi/üyelik/oturum/iptal bağlı |21 yeni imzalı SQL testi;15 mevcut kimlik tarayıcı; tek bağlantı | Paket55 canlı değil | gerçek kaynak/IdP/MFA/control-plane açık | HTTP/akademik SQL, çok bağlantı/RLS/KMS/checkpoint açık |
 | B07 · SSO ve yönetici MFA bağlantısını kur | kısmi; SQL HTTPS ve ayrı checkpoint bağlı | Paket64:23yeni/901toplam;13tarayıcı; yerel dilim | Son canlı16;64canlı değil | gerçek IdP/MFA/control-plane yetkisi açık | akademik SQL, bütün yazarlar, native SSI/RLS ve gerçek checkpoint hizmeti açık |
@@ -31,7 +31,7 @@
 | B25 · İçeriği akademik ve lisans yönünden gözden geçir | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B26 · Destek kılavuzu ve eğitimi güncelle | kısmi | kısmi | kısmi pilot | bekleniyor | bağımsız kod için gerekli değil |
 | B27 · Olay ve geri yükleme provası yap | kısmi; önceki tatbikat ve SQL güncellik kapısı | Paket64 eski/yeni tam datadir ve ayrı kalıcı kayıt geçti | Son canlı16;64canlı değil | gerçek RPO/RTO ve geri dönüş yetkisi açık | üretim restore kuyruğu/işçi/KMS ve belirsiz işlem uzlaştırma açık |
-| B28 · Silme saklama ve çıkış haklarını sına | kısmi; önceki temizlik ve SQL checkpoint bağlı | Paket64:23yeni/901toplam;13tarayıcı; tam silme değil | Son canlı16;64canlı değil | dayanak/süre/başvuru usulü bekleniyor | audit/başarısız istek temizliği, dış kontrol hizmeti, yedek ve dış hesap kabulü açık |
+| B28 · Silme saklama ve çıkış haklarını sına | kısmi; ayrıca kurum kapsamlı başarısız giriş temizliği | Paket65:13yeni/914toplam;14yeni12mevcut tarayıcı | Son canlı16;65canlı değil | gerçek üç görev/dayanak/süre/başvuru usulü açık | komut/audit kopyaları, üretim/yedek ve dış hesap kabulü açık |
 | B29 · Kalite göstergelerini gerçek veriye bağla | kısmi | kısmi | kurumsal etkinleştirme kapalı | operasyonel kabul açık | teyit/erişim bekleniyor |
 | B30 · Kontrollü kohortu aç ve değerlendir | engelli | başlamadı | kurumsal etkinleştirme kapalı | bekleniyor | bağımsız kod için gerekli değil |
 | B31 · Ücretli hizmeti koşullu aç | kısmi; Paket33 yerel mali simülatör hazır |16mali tarayıcı; yerel iade/itiraz/mutabakat geçti | Paket33 canlı değil | ücret/tahsilat/iade yetkisi ve uygulanabilirlik açık | gerçek PSP/settlement/vergi-fatura kabulü koşullu açık |
@@ -385,3 +385,7 @@ Paket63: öğrenme kartı/dinamik bildirim erişilebilir adları, İşlem sütun
 ## Paket64 — ayrı kimlik güncellik kaydı
 
 Yeni ekran yok. Yerel SQL giriş ekranında güncel kontrol kaydı eşleşmeden oturum açılamaz; 12kimlik tablosu ve yeni SQL başlığı/ayrı kalıcı SQLite makbuzu bağlı.23yeni senaryo;807+48+46=901,13tarayıcı geçti. Eski tam datadir ve güncel başlık kopyalanmış bozuk durum reddedildi; belirsiz COMMIT sonuç vermedi. B07/B27/B28 sınırlı yerel dilimdir; bütün kriterler değişmedi.13PGadayı üretime uygulanmadı,16SQLite/148tür korundu. Ayrıntı IDENTITY-CHECKPOINT-CONTRACT.md. Soncanlı16;17–64yayımlanmadı.
+
+## Paket65 — 14.10.2026
+
+Akış ve saklama ekranında kurum kapsamında açık üç ayrı göreve bağlı başarısız/iptal giriş isteği temizliği yerel kabul edildi.16tablo/149tür;136komut/18HTTP;9035pozitif ve72280 türetilmiş negatif kontrol. Bunlar ayrı otomatik test veya ürün tamamlanma yüzdesi değildir.820sunucu+48portal+46regresyon=914;14yeni12mevcut saklama tarayıcı. [Kanıt](acceptance/B28-unassigned-retention-20261014.json), [sözleşme](UNASSIGNED-LOGIN-RETENTION.md). Üretim/hukuk/fiziksel imha veya tüm B28 kapanmadı; ilk36ölçüt değişmedi. Sonraki bağımsız iş async akademik SQL/kimlik işlem bağıdır.

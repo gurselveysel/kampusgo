@@ -1,0 +1,17 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {identityHttpFixture} from './helpers/local-identity-http.mjs';
+import {identityPaths as P} from '../myys/identity-http.mjs';
+import {unassignedCase,runRetention,requestRows} from './helpers/local-unassigned-retention.mjs';
+const cookie=r=>r.headers['set-cookie']?.[0].split(';')[0];
+async function authorization(h,choice){const page=await h.request(P.login),c=cookie(page),csrf=page.text.match(/name="csrf" value="([A-Za-z0-9_-]{43})"/)[1];const start=await h.request(P.start,{method:'POST',headers:{Cookie:c,Origin:h.origin},form:{csrf}});assert.equal(start.status,303);const login=await h.request(start.headers.location),id=login.text.match(/name="request" value="([a-f0-9]+)"/)[1],consent=await h.request(h.providerOrigin+'/__idp/authorize',{method:'POST',headers:{Origin:h.providerOrigin},form:{request:id,choice}});assert.equal(consent.status,303);return {c,callback:consent.headers.location};}
+for(const choice of ['accept','deny'])test('real HTTPS '+(choice==='accept'?'failed signed-token':'cancelled')+' callback remains unusable after policy-bound cleanup; current session and barriers survive',async()=>{
+ let offset=0;const clock=()=>new Date(Date.now()+offset),h=await identityHttpFixture({clock});h.f.core.clock=()=>clock().toISOString();try{
+  if(choice==='accept')h.patch={nonce:'synthetic-invalid-nonce'};
+  const old=await authorization(h,choice),response=await h.request(old.callback,{headers:{Cookie:old.c}});assert.equal(response.headers.location,P.login+'?result=failed');assert.equal(response.headers['set-cookie'],undefined);assert.equal(requestRows(h.f)[0].status,choice==='accept'?'failed':'cancelled');
+  offset=31*86400000;h.patch={};const fresh=await authorization(h,'accept'),accepted=await h.request(fresh.callback,{headers:{Cookie:fresh.c}}),currentCookie=cookie(accepted);assert.equal(accepted.headers.location,'/#/academic');assert.equal((await h.request(P.session,{headers:{Cookie:currentCookie}})).json().personId,'student');
+  const tables=['persons','memberships','bindings','identity_scopes','identity_session_links','identity_provider_sessions','identity_logout_receipts','identity_derivation_epochs','identity_derivation_blocks','identity_http_key_epochs','identity_http_key_history','identity_rate_buckets'];const snapshot=()=>Object.fromEntries(tables.map(t=>[t,h.f.s.db.prepare('SELECT * FROM '+t+' ORDER BY rowid').all()]));
+  const x=unassignedCase(h.f),before=snapshot(),audit=h.f.s.db.prepare('SELECT * FROM audit').all(),v=x.preview();assert.equal(v.candidateCount,1);const r=runRetention(h.f,v);assert.equal(r.removedRequestRows,1);assert.deepEqual(snapshot(),before);assert.deepEqual(h.f.s.db.prepare('SELECT * FROM audit WHERE sequence<=?').all(audit.at(-1).sequence),audit);assert.equal(requestRows(h.f).length,1);assert.equal(requestRows(h.f)[0].status,'used');
+  const calls=h.tokenCalls;for(const callback of [old.callback,old.callback.replace('access_denied','temporarily_unavailable')]){const replay=await h.request(callback,{headers:{Cookie:old.c}});assert.equal(replay.headers.location,P.login+'?result=failed');assert.equal(replay.headers['set-cookie'],undefined);}assert.equal(h.tokenCalls,calls);assert.equal((await h.request(P.session,{headers:{Cookie:currentCookie}})).json().personId,'student');assert.ok(h.f.s.get('test-gazi','decision',h.initial.d.id));
+ }finally{await h.close();}
+});

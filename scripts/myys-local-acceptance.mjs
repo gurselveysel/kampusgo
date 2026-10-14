@@ -1,3 +1,4 @@
+import {grantRetentionTeam,retentionRegistry,seedUnassignedLogin} from '../gazi/auth/tests/helpers/local-unassigned-retention.mjs';
 import {localExternalCredential} from '../gazi/auth/tests/helpers/local-external-credential.mjs';
 import {localMaterialSetup} from '../gazi/auth/tests/helpers/local-material.mjs';
 import {localAuthorityDossier} from '../gazi/auth/tests/helpers/local-authority.mjs';
@@ -51,6 +52,7 @@ if(process.argv.includes('--quality')){
 }
 if(process.argv.includes('--privacy')||process.argv.includes('--retention')){const h=hash('privacy-expired-session');f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(h,'student','2020-01-01T00:00:00.000Z');f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(h,'gazi','local-test','2019-01-01T00:00:00.000Z');}
 if(process.argv.includes('--membership'))f.s.db.prepare('UPDATE memberships SET roles=? WHERE person=?').run('["admin","quality"]','reviewer');
+if(process.argv.includes('--unassigned-retention')){grantRetentionTeam(f);retentionRegistry(f);seedUnassignedLogin(f);seedUnassignedLogin(f,{status:'cancelled'});seedUnassignedLogin(f,{status:'pending'});seedUnassignedLogin(f,{browserHash:hash('student')});}
 if(process.argv.includes('--retention')){f.s.db.prepare('UPDATE memberships SET roles=? WHERE person=?').run('["admin","quality"]','reviewer');f.run('admin','registry-draft',{type:'data-flow',unit:'engineering',title:'Yerel oturum saklama sicili',fields:Object.fromEntries(registryFields['data-flow'].map(k=>[k,'Sentetik yerel sicil; gerçek kurum kararı değildir.']))});}
 if(process.argv.includes('--recognition')){const p=f.run('admin','recognition-policy',{...localRecognitionPolicy,...(process.argv.includes('--recognition-offers')?{transferScope:'multi-course-offer',scope:'Sentetik çok dersli teklif; kurum kuralı değildir.'}:{})});localRecognitionBasis(f,p);f.run('publisher','recognition-policy-review',{policyId:p.id,outcome:'accepted',reason:'Sentetik politika yalnız izole yerel kabul için incelendi.'});}
 if(process.argv.includes('--operations')){

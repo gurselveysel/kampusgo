@@ -119,7 +119,7 @@ export class MyysCore {
   if(keyReplay(a,action,r))return;
   if(profileReplay(a,action,r))return;
   if(membershipReplay(a,action,r))return;
-  if(retentionReplay(a,action,r))return;
+  if(retentionReplay(a,action,r,this.store,this.clock()))return;
   if(cohortReplay(a,action,r))return;
   if(admissionsReplay(a,action,r))return;
   if(privacyReplay(a,action,r))return;

@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.52",
+  "version": "2026.10.14.65",
   "scope": "local-acceptance-source-inventory",
   "generatedFrom": "schema declarations and reviewed explicit recordGroups/subjectFields",
   "institutionApproved": false,
@@ -72,7 +72,7 @@
       ],
       "purpose": "Giriş state/PKCE/nonce tek kullanımını denetlemek",
       "scope": "tenant/browser_hash/contract_digest",
-      "lifecycle": "Ayrı gerekçeli yanıt, MFA, kişi teyidi ve değişmez aday özetiyle yalnız tek kişiye kabul izi bağlı used/süresi bitmiş kayıtlar ençok100 satır temizlenebilir. Pending/claimed/belirsiz/diğer kişi/tenant ve güvenlik bariyerleri korunur; fiziksel imha değildir.",
+      "lifecycle": "Ayrı gerekçeli yanıt, MFA, kişi teyidi ve değişmez aday özetiyle yalnız tek kişiye kabul izi bağlı used/süresi bitmiş kayıtlar ençok100 satır temizlenebilir. Pending/claimed/belirsiz/diğer kişi/tenant ve güvenlik bariyerleri korunur; fiziksel imha değildir. Paket65: ayrıca açık kurum kapsamlı üç görev ve kaynaklı kural altında kişiye/kabul/oturum/aileye bağlanmamış sona ermiş failed/cancelled satırlar 100 aday/15dk önizleme ile temizlenebilir. Gerçek üretim ve fiziksel/yedek imhası değil.",
       "approvedRetentionDays": null,
       "productionAccepted": false,
       "rawSubjectExport": false
@@ -298,6 +298,7 @@
     "Authority files are untrusted local attachments, admin-only downloads; no automatic malware, signature or institutional authenticity validation. Raw bytes stay out of workspace and command results, but the immutable local file record needs an approved retention policy.",
     "Material deliveries export only receipt metadata for the owner; source files and rights-review actor details are not copied into self-service summaries.",
     "Recognition compact-JWT deliveries retain actual untrusted bytes only in private local file records. Workspace, subject export and idempotency results contain no raw file. Exact-byte downloads require current person/unit/role/MFA and audit; production storage, scanner, retention, signature and issuer/subject validation remain separate.",
-    "External issuer public descriptor excludes the private subject mapping. Signature receipts contain no JWT or raw claims; positive self-service export excludes issuer/subject/key digests and reviewer details. Cryptographic verification is separate from status checking and academic credit."
+    "External issuer public descriptor excludes the private subject mapping. Signature receipts contain no JWT or raw claims; positive self-service export excludes issuer/subject/key digests and reviewer details. Cryptographic verification is separate from status checking and academic credit.",
+    "retention-authority is an explicit trusted local control record with tenant/person/unit/capability/time/revision; ordinary unit roles cannot grant tenant-wide unassigned-request cleanup. No HTTP grant, default authority, legal retention duration or raw self-service grant export."
   ]
 }
