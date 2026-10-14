@@ -185,3 +185,7 @@
 /* Embedded legacy forms keep their actual controls within the available frame. */
 .ui-legacy .field{min-width:0;max-width:100%}.ui-legacy .field input:not([type="checkbox"]):not([type="radio"]),.ui-legacy .field select,.ui-legacy .field textarea{min-width:0;max-width:100%;width:100%}
 @media(max-width:480px){.ui-legacy.embedded-workspace .top-actions{min-width:0;max-width:100%;flex-wrap:wrap;justify-content:flex-end}.ui-legacy.embedded-workspace .role-box{flex-direction:column;align-items:stretch;min-width:0}.ui-legacy.embedded-workspace .role-box label{white-space:normal}.ui-legacy.embedded-workspace .role-box select{min-width:0;width:100%;max-width:100%}}
+
+/* Keep the dark card headings above the shared eyebrow theme rule. */
+.unigo-ui .ki-overview .eyebrow{color:#a9c7e5}
+.unigo-ui .badge-hero .eyebrow{color:#9db9df}

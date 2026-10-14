@@ -1,3 +1,15 @@
+# Güncel devam — Paket62 yerel kabul; kaynak eşitlemesi sırada
+
+Paket62: öğrenme akışı, ders/sunum açıklamaları ve kaynak dipnotlarında7 foreground değeri düzeldi; koyu bilgi/rozet kartlarının2 başlık rengi tema seçicisi önceliğiyle korundu. Geçişli arka planlar/yerleşim/logolar aynı.88 ayrı ölçüm imzasından85i bu renderda karşıtlık hedefini geçti;3ü incelemede.3815 tekrar ayrı ölçülmedi. Axe571taramada0violation;8106incomplete hâlâ açık, pass olarak yeniden yazılmadı. 106otomatik (12gateway/envanter48portal46regresyon),19gezinme,8kısa metin ve16gradient ölçüm kontrolü geçti. Son tam784sunucu Paketi59; runtime JS değişmedi.115statik. Önce diff/commit ve expectedremote555ce3a3a52f520a4c2eeb24387d44064a82715d/base d583a36b046cd2e7b40e3697d9ffea2a267d4b49 ile tam ağacı eşitle. Son canlı16;17–62dağıtılmadı.
+
+Sıradaki63 B24: bütün menü/rol panellerinde WCAG2/2.1/2.2A-AA semantik/ARIA kuralları (contrast ayrı kapsamda). Gerçek derlenmiş sayfa, hiçbir öğeyi dışlamadan; araçtan geçen tam AT değildir. Sonra B28 güvenilir monoton restore checkpoint ve asyncacademicrepo dahil bütün bağımsızlar sürer. IdentityTransactions ve key/flow sözleşmeleri okundu; henüzcheckpoint kodu yok. Tekeditör;configuredCorekapalı;browserAuthiptaliniyenileme.
+
+# Güncel devam — Paket61 kaynakta;62 geçişli metin zeminleri
+
+Paket61 yerel `e4e5cb1bef2288b3e1068d624d0541ec82102d27`, uzak `555ce3a3a52f520a4c2eeb24387d44064a82715d`, ortak tam ağaç `d583a36b046cd2e7b40e3697d9ffea2a267d4b49`.16blob/tam ağaç ve expected-head force=false doğrulandı.106otomatik19gezinme8ölçüm profil kontrolü;571tarama0violation8106incomplete. Son canlı16;17–61dağıtılmadı.
+
+62 B24 gradient metin incelemesi başlıyor; henüz ürün değişikliği yok. Kontrast için gerçek render arka plan ölçümü değerlendirilecek; belirsiz öğeleri geçer sayma. B28checkpoint/asyncacademicrepo ve bütün bağımsızlar sürer. ConfiguredCore kapalı,browserAuth iptaliniyenileme,tekeditör.
+
 # Güncel devam — Paket61 yerel kabul; kaynak eşitlemesi sırada
 
 Paket61: bildirim sayaçları, sunum sayfa düğmeleri ve rehber adım numaralarında beş renk çifti düzeltildi. Aynı 571 taramada tek karakterleri de değerlendiren profille 703 yinelenen ihlal 0 oldu; 8106 incomplete bulgusu açık. Eşikler 4.5:1/3:1 değişmedi. Tam B24/WCAG kabulü değildir. 106 otomatik test (12 gateway/envanter,48 portal,46 regresyon) ve19 gezinme kontrolü yeniden geçti; ölçüm profilinin8 karşı örnek kontrolü geçti. Son tam784 sunucu testi Paket59dadır; bu dilimde runtime JS değişmedi.115statik. Önce diff/commit ve expectedremote36e09a3e17c748471e762298b6d567c4787ffe36/base4ca6a740e8c6d5bdbb8e04e5bc1944ef71a68548 ile tam ağacı eşitle. Son canlı16;17–61dağıtılmadı.

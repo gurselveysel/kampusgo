@@ -54,3 +54,23 @@ Kalan8106 inceleme bulgusu:3903gradient,4173kısmen örtülme,20pseudo,6nonBmp,4
 106otomatik ve19gezinme kontrolü geçti; 8profil kontrolü ayrıca kaydedildi. Son tam784sunucu testi Paket59; yeniden akış Paketi60ın928ölçümüdür, bu dilimde yeniden koşulmuş gibi sunulmaz. Sunum ve mobil bağlantı ekranları görsel incelendi.115dosyalı korumalı paket hazır. Tam B24, gerçek AT, zoom, nontext, medya/belge ve canlı kabulü açık.
 
 Yeniden üretim: `scripts/myys-contrast-browser.cjs` artık varsayılan olarak tek karakter profilini kullanır. Eski ölçüm karşılaştırması için `MYYS_CONTRAST_SINGLE_CHAR=0`; değişiklik öncesi kayıt için `MYYS_CONTRAST_BASELINE=1`. Axe exact4.14.0/integrity önceki araç kaydıyla aynıdır. `single-char-result.json` ve `single-char-baseline.json` ayrı tutulur; Paket60ın raporları korunur. Kamu kaynak [Deque API axe.configure](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md),14.10.2026: checks.options, rules.any ve her frame için ayrı yapılandırma bölümleri okundu. Kurulu4.14.0 axe.js ve axe.d.ts ile karşılaştırıldı.
+
+## Paket62 — gerçek render üzerinde geçişli zemin örnekleri
+
+14.10.2026; yalnız yerel kabul. Öğrenme akışı, ders tanıtımı, sunum etiketi/açıklaması ve kaynak dipnotlarının7 metin rengi düzeldi. Koyu Kaynak ve Mevzuat Merkezi/rozet başlıklarında ortak `.unigo-ui :is(...)` kuralının yüksek seçici önceliği özgün açık rengi bastırıyordu;2dar kapsamlı renk kuralı bu önceliği düzeltti. Arka plan, ölçü, yerleşim, geçiş ve logo değiştirilmedi.
+
+Axe hâlâ gradient'i incomplete bildirir. Ayrı ölçüm, tarayıcının gerçek8bitPNG görüntüsündeki arka planı kullanır. Doğrudan metin satırlarının dikdörtgenleri bir piksel dışa yuvarlanır; her pikselin sRGB luminansı ve ön planın alfa bileşimi hesaplanır. En düşük oran saklanır. Normal/büyük metin4.5/3 sınırlarına yerel yakalama için0.15iç marj eklenir; bu ek marj WCAG hükmü değildir. Aynı renk/stil/arka plan geometrisi ve HTML imzası tekrarında yalnız ilk örnek ölçülür; diğerleri `not-sampled-repeat` referansıdır ve ayrı pass değildir.
+
+Arka plan görüntüsünü elde etmek için yalnız ölçüm sırasında `-webkit-text-fill-color:transparent` uygulanır; `color`/currentColor/sınır/zemin/yerleşim korunur. Asıl axe kontrolü bundan önce özgün DOM'da yapılır. Sonra tam inline style ve bütün üst kaydırma konumları, iframe üst sayfası dahil, geri yüklenir ve doğrulanır. Ürün CSS'sine şeffaf metin eklenmez. Bu yöntem öğe gizleyerek axe kabulünü yükseltmez; axe incomplete sonuçları aynen kalır.
+
+Tam görünmeyen, noktalarla örtüşme kontrolünü geçmeyen, saydam üst katmanı/dönüşümü/filtre-karışımı olan, pseudo içeriği veya metin gölgesi/stroke taşıyan, resmi/animasyonu bulunan ya da desteklenmeyen renk kullanan öğe `review` kalır. Bu konservatif örnek ölçümü tam glyph/örtüşme kanıtı değildir: dokuz nokta kontrolü her olası katmanı ispatlamaz. Gerçek cihaz, renk profili, farklı görünüm/etkileşim, ekran okuyucu ve bütün metinlerin kabulü türetilmez.
+
+Bağımsız16kontrol:21:1siyah-beyaz hesabı; alfa bileşimi; eşik altı gri; gerçek gradientte uygun/düşük/alfa metin; opacity/gölge/pseudo/örtü reddi; inline style/null/currentColor/scroll geri dönüşü; ekran dışı metni görünür kılıp kaydırmayı geri alma. Kullanılan PNG ayrıştırıcı mevcut test runtime'ındaki pngjs7.0.0dır; uygulamaya bağımlılık eklenmez.
+
+571axe taramasındaki3903gradient görünümünden88ayrı ölçüm imzası örneklendi;3815tekrar ayrıca ölçülmedi. Başlangıçta10örnek iç hedef altındaydı;9u4.5/3sayısal eşiğinin de altındaydı, biri4.648:1ile yalnız iç marj altındaydı. Düzeltme sonrası85örnek bu renderda yeterli,3örnek review: masaüstü giriş başlığındaki em metni örtüşme kontrolü; mobil menüde iki pilot metni transform kontrolü. Bu3örnek geçmedi; ilk75örneğin zaten hedefi geçtiği de saklanır.
+
+Axe toplam0violation/8106incomplete olarak kalır; bu8106bulgu silinmedi veya topluca kapatılmadı.106otomatik ve19gezinme yeniden geçti;8kısa metin/16gradient kontrolü ayrı kaydedildi.115statik paket hazır. Kaynak merkezi ve ders sunumu görüntüleri incelendi. Son tam784sunucu Paketi59; tüm sunucu yeniden koşulmadı.
+
+Kaynak: [W3C G18](https://www.w3.org/WAI/WCAG22/Techniques/general/G18.html),6Eylül2026güncellemesi,14Ekim2026okundu; değişen zemin üzerinde harf arkasının ölçümü, sRGB/0.04045luminans ve oran hesabı. G18 bilgilendirici yeterli teknik örneğidir; tek zorunlu yöntem veya sertifikasyon değildir. WCAG2.2 Recommendation12.12.2024 ve1.4.3ölçütü esas kalır.
+
+Yeniden üretim: `MYYS_CONTRAST_GRADIENT=1` ile aynı `myys-contrast-browser.cjs`; başlangıç için ayrıca `MYYS_CONTRAST_BASELINE=1`. Son rapor `test-results/myys-contrast/gradient-result.json`; kalıcı örnek/kanıt `acceptance/B24-gradient-20261014.json`. Varsayılan kısa metin koşusu PNG yardımcılarını yüklemez.

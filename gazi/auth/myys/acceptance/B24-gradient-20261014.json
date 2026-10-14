@@ -1,0 +1,3112 @@
+{
+  "as_of": "2026-10-14T13:47:53.092Z",
+  "software_package": 62,
+  "work_ids": [
+    "B24"
+  ],
+  "scope": "bounded-rendered-gradient-background-samples",
+  "deployed": false,
+  "official": false,
+  "tests_rerun": {
+    "gateway_inventory": 12,
+    "portal": 48,
+    "legacy": 46,
+    "total": 106
+  },
+  "browser_checks": {
+    "navigation": 19,
+    "single_character_profile": 8,
+    "gradient_profile": 16
+  },
+  "contrast": {
+    "axe_version": "4.14.0",
+    "png_decoder": "pngjs7.0.0 (existing primary test runtime)",
+    "browser": "138.0.7204.0",
+    "frame_scans": 571,
+    "repeated_violations": 0,
+    "repeated_incomplete": 8106,
+    "gradient_candidates": 3903,
+    "distinct_measurement_signatures": 88,
+    "sufficient_this_render": 85,
+    "review_samples": 3,
+    "not_separately_measured_repeat_references": 3815,
+    "baseline_below_internal_target": 10,
+    "baseline_below_wcag_numeric_threshold": 9,
+    "final_below_internal_target": 0,
+    "thresholds": [
+      4.5,
+      3
+    ],
+    "internal_capture_margin": 0.15,
+    "axe_incomplete_rewritten_to_pass": false,
+    "full_wcag_acceptance": false
+  },
+  "source_color_changes": {
+    "gazi/learning.css": {
+      "#6d869a": "#566a79",
+      "#7f94aa": "#5a6979",
+      "#3479b7": "#2e6ba1",
+      "#5d7389": "#55697e",
+      "#8a9bac": "#5d6874"
+    },
+    "gazi/portal/src/style.css": {
+      "#90a2b8": "#5d6877",
+      "#86b5cf": "#a1c5da"
+    }
+  },
+  "theme_overrides": {
+    ".unigo-ui .ki-overview .eyebrow": "#a9c7e5",
+    ".unigo-ui .badge-hero .eyebrow": "#9db9df"
+  },
+  "baseline_below_target": [
+    {
+      "label": "Öğrenci / learning",
+      "target": [
+        "div:nth-child(2) > p:nth-child(3)"
+      ],
+      "sampleId": 16,
+      "status": "sample-below-target",
+      "ratio": 3.609572523519921,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 5910,
+      "worstBackground": [
+        245,
+        250,
+        251
+      ],
+      "text": "Canlı ders, kayıt tekrarı, çalışma planı ve gelişim takibi aynı yolculukta.",
+      "foreground": [
+        109,
+        134,
+        154,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "target": [
+        ".ki-overview > div:nth-child(1) > .eyebrow"
+      ],
+      "sampleId": 21,
+      "status": "sample-below-target",
+      "ratio": 2.411358959732169,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1837,
+      "worstBackground": [
+        18,
+        49,
+        83
+      ],
+      "text": "KAYNAĞINDAN KARARINA",
+      "foreground": [
+        90,
+        107,
+        125,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "target": [
+        ".orbit-note"
+      ],
+      "sampleId": 43,
+      "status": "sample-below-target",
+      "ratio": 4.482593852737483,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1298,
+      "worstBackground": [
+        26,
+        69,
+        111
+      ],
+      "text": "İnsan denetiminde yönetişim",
+      "foreground": [
+        134,
+        181,
+        207,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / curriculum",
+      "target": [
+        ".course-intro > div:nth-child(1) > p"
+      ],
+      "sampleId": 45,
+      "status": "sample-below-target",
+      "ratio": 2.4687548221156255,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2436,
+      "worstBackground": [
+        245,
+        249,
+        254
+      ],
+      "text": "Mühendislik FakültesiBilgisayar Mühendisliği",
+      "foreground": [
+        144,
+        162,
+        184,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / badges",
+      "target": [
+        ".badge-hero > div:nth-child(1) > .eyebrow"
+      ],
+      "sampleId": 46,
+      "status": "sample-below-target",
+      "ratio": 2.9458701239783616,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1512,
+      "worstBackground": [
+        14,
+        33,
+        60
+      ],
+      "text": "BİLGİDEN BELGEYE",
+      "foreground": [
+        90,
+        107,
+        125,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "target": [
+        ".lc-slide-label > span:nth-child(1)"
+      ],
+      "sampleId": 56,
+      "status": "sample-below-target",
+      "ratio": 2.907296863709507,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1507,
+      "worstBackground": [
+        243,
+        247,
+        253
+      ],
+      "text": "UNIGO · ÇALIŞMA SUNUMU",
+      "foreground": [
+        127,
+        148,
+        170,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "target": [
+        ".lc-slide-label > span:nth-child(2)"
+      ],
+      "sampleId": 57,
+      "status": "sample-below-target",
+      "ratio": 3.0934592878139453,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 451,
+      "worstBackground": [
+        253,
+        254,
+        254
+      ],
+      "text": "01 / 06",
+      "foreground": [
+        127,
+        148,
+        170,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "target": [
+        ".lc-slide-category"
+      ],
+      "sampleId": 58,
+      "status": "sample-below-target",
+      "ratio": 4.306107804471314,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 455,
+      "worstBackground": [
+        243,
+        248,
+        253
+      ],
+      "text": "Hedef",
+      "foreground": [
+        52,
+        121,
+        183,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "target": [
+        "li:nth-child(1)"
+      ],
+      "sampleId": 61,
+      "status": "sample-below-target",
+      "ratio": 4.647680713037801,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 6384,
+      "worstBackground": [
+        246,
+        249,
+        253
+      ],
+      "text": "Bu dersin sonunda üreteceğiniz kanıt: gerekçeli bir çalışma yanıtı.",
+      "foreground": [
+        93,
+        115,
+        137,
+        1
+      ],
+      "fontSize": 12,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "target": [
+        ".lc-slide > small"
+      ],
+      "sampleId": 63,
+      "status": "sample-below-target",
+      "ratio": 2.726974301116571,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1991,
+      "worstBackground": [
+        248,
+        250,
+        253
+      ],
+      "text": "Özgün Türkçe rehber · Vaka verileri kurgudur",
+      "foreground": [
+        138,
+        155,
+        172,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    }
+  ],
+  "final_samples": [
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".pilot-tile > strong"
+      ],
+      "sampleId": 1,
+      "status": "sample-sufficient",
+      "ratio": 12.896804428470347,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1316,
+      "worstBackground": [
+        241,
+        246,
+        252
+      ],
+      "text": "Kontrol sizde.",
+      "foreground": [
+        20,
+        45,
+        72,
+        1
+      ],
+      "fontSize": 12,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".pilot-tile > p"
+      ],
+      "sampleId": 2,
+      "status": "sample-sufficient",
+      "ratio": 5.021992642044527,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 3159,
+      "worstBackground": [
+        239,
+        245,
+        251
+      ],
+      "text": "İnsan denetimi, gerekçeli karar,izlenebilir süreç.",
+      "foreground": [
+        93,
+        106,
+        122,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".pilot-tile > button"
+      ],
+      "sampleId": 3,
+      "status": "sample-sufficient",
+      "ratio": 4.93854014236164,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1625,
+      "worstBackground": [
+        240,
+        245,
+        252
+      ],
+      "text": "Pilot kapsamını incele",
+      "foreground": [
+        38,
+        105,
+        194,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".learn-chip"
+      ],
+      "sampleId": 4,
+      "status": "sample-sufficient",
+      "ratio": 8.648635249635804,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1980,
+      "worstBackground": [
+        19,
+        50,
+        83
+      ],
+      "text": "ÖĞREN · UYGULA · GELİŞ",
+      "foreground": [
+        183,
+        214,
+        242,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".learn-hero-copy > h2"
+      ],
+      "sampleId": 5,
+      "status": "sample-sufficient",
+      "ratio": 12.291646454323798,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 25045,
+      "worstBackground": [
+        20,
+        54,
+        91
+      ],
+      "text": "Bir sonraki adımın,yeni bir öğrenme çıktısı.",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 29,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".learn-hero-copy > p"
+      ],
+      "sampleId": 6,
+      "status": "sample-sufficient",
+      "ratio": 7.697233445550322,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 8596,
+      "worstBackground": [
+        20,
+        55,
+        91
+      ],
+      "text": "Programlarını modüller halinde keşfet. Tüm dersleri incele, çalışmalarını kaydet ve kendi hızında ilerle.",
+      "foreground": [
+        189,
+        208,
+        227,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".learn-hero-stats > div:nth-child(1) > strong"
+      ],
+      "sampleId": 7,
+      "status": "sample-sufficient",
+      "ratio": 10.49292520003062,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 1000,
+      "worstBackground": [
+        28,
+        65,
+        103
+      ],
+      "text": "2",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 32,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".learn-hero-stats > div:nth-child(1) > span"
+      ],
+      "sampleId": 8,
+      "status": "sample-sufficient",
+      "ratio": 6.052427482891353,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1339,
+      "worstBackground": [
+        28,
+        66,
+        105
+      ],
+      "text": "Planımdaki program",
+      "foreground": [
+        178,
+        201,
+        222,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".learn-hero-stats > div:nth-child(2) > strong"
+      ],
+      "sampleId": 9,
+      "status": "sample-sufficient",
+      "ratio": 9.898892800057192,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 1000,
+      "worstBackground": [
+        28,
+        69,
+        109
+      ],
+      "text": "8",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 32,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".learn-hero-stats > div:nth-child(2) > span"
+      ],
+      "sampleId": 10,
+      "status": "sample-sufficient",
+      "ratio": 5.720476936240287,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1183,
+      "worstBackground": [
+        28,
+        70,
+        110
+      ],
+      "text": "Öğrenme modülü",
+      "foreground": [
+        178,
+        201,
+        222,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        "div:nth-child(3) > strong"
+      ],
+      "sampleId": 11,
+      "status": "sample-sufficient",
+      "ratio": 9.469530586212782,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 1000,
+      "worstBackground": [
+        29,
+        72,
+        113
+      ],
+      "text": "0",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 32,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        "strong > small"
+      ],
+      "sampleId": 12,
+      "status": "sample-sufficient",
+      "ratio": 5.141515621464014,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 860,
+      "worstBackground": [
+        29,
+        73,
+        115
+      ],
+      "text": "/ 24",
+      "foreground": [
+        166,
+        196,
+        223,
+        1
+      ],
+      "fontSize": 16,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".learn-hero-stats > div:nth-child(3) > span"
+      ],
+      "sampleId": 13,
+      "status": "sample-sufficient",
+      "ratio": 5.397428325651671,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1196,
+      "worstBackground": [
+        29,
+        74,
+        115
+      ],
+      "text": "Tamamlanan ders",
+      "foreground": [
+        178,
+        201,
+        222,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        "div:nth-child(2) > .lc-kicker"
+      ],
+      "sampleId": 14,
+      "status": "sample-sufficient",
+      "ratio": 5.247104247605514,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 3528,
+      "worstBackground": [
+        245,
+        250,
+        252
+      ],
+      "text": "UZEMGO İLE ÖĞRENME · UNIGO İLE YÖNETİŞİM",
+      "foreground": [
+        87,
+        107,
+        125,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".lms-intro > div:nth-child(2) > h2"
+      ],
+      "sampleId": 15,
+      "status": "sample-sufficient",
+      "ratio": 8.453932293339635,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 10450,
+      "worstBackground": [
+        245,
+        250,
+        251
+      ],
+      "text": "Bir dersten, değerlendirilebilir öğrenme kanıtına.",
+      "foreground": [
+        41,
+        77,
+        105,
+        1
+      ],
+      "fontSize": 17,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        "div:nth-child(2) > p:nth-child(3)"
+      ],
+      "sampleId": 16,
+      "status": "sample-sufficient",
+      "ratio": 5.343592659570628,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 5910,
+      "worstBackground": [
+        245,
+        250,
+        251
+      ],
+      "text": "Canlı ders, kayıt tekrarı, çalışma planı ve gelişim takibi aynı yolculukta.",
+      "foreground": [
+        86,
+        106,
+        121,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > .lc-kicker"
+      ],
+      "sampleId": 17,
+      "status": "sample-sufficient",
+      "ratio": 5.501001901687551,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2256,
+      "worstBackground": [
+        36,
+        72,
+        100
+      ],
+      "text": "MODÜLÜ DESTEKLEYEN VİDEO",
+      "foreground": [
+        169,
+        200,
+        224,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > strong"
+      ],
+      "sampleId": 18,
+      "status": "sample-sufficient",
+      "ratio": 11.300325931308683,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 5460,
+      "worstBackground": [
+        27,
+        61,
+        89
+      ],
+      "text": "Veri bilimine giriş",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 21,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        "span:nth-child(4)"
+      ],
+      "sampleId": 19,
+      "status": "sample-sufficient",
+      "ratio": 7.5863282455064835,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 3165,
+      "worstBackground": [
+        23,
+        54,
+        82
+      ],
+      "text": "Microsoft müfredatında önerilen video",
+      "foreground": [
+        183,
+        205,
+        221,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / learning",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > small"
+      ],
+      "sampleId": 20,
+      "status": "sample-sufficient",
+      "ratio": 7.583253264487385,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1547,
+      "worstBackground": [
+        18,
+        48,
+        76
+      ],
+      "text": "İngilizce · Oynatıcıyı aç",
+      "foreground": [
+        173,
+        197,
+        218,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        ".ki-overview > div:nth-child(1) > .eyebrow"
+      ],
+      "sampleId": 21,
+      "status": "sample-sufficient",
+      "ratio": 7.539728157647828,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1837,
+      "worstBackground": [
+        18,
+        49,
+        83
+      ],
+      "text": "KAYNAĞINDAN KARARINA",
+      "foreground": [
+        169,
+        199,
+        229,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        "h2"
+      ],
+      "sampleId": 22,
+      "status": "sample-sufficient",
+      "ratio": 12.13338979969351,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 13080,
+      "worstBackground": [
+        20,
+        55,
+        92
+      ],
+      "text": "Kurumsal hafıza artık işlemin içinde.",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 24,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        ".ki-overview > div:nth-child(1) > p"
+      ],
+      "sampleId": 23,
+      "status": "sample-sufficient",
+      "ratio": 8.999597096723855,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 6936,
+      "worstBackground": [
+        20,
+        55,
+        91
+      ],
+      "text": "Mevzuat, program çıktısı ve kalite kanıtı aynı dosyada buluşur.",
+      "foreground": [
+        206,
+        224,
+        240,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        ".ki-db-status > span"
+      ],
+      "sampleId": 24,
+      "status": "sample-sufficient",
+      "ratio": 10.386403672568065,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2160,
+      "worstBackground": [
+        19,
+        50,
+        85
+      ],
+      "text": "Paketlenmiş kaynak verisi",
+      "foreground": [
+        215,
+        232,
+        247,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        ".ki-db-status > span > small"
+      ],
+      "sampleId": 25,
+      "status": "sample-sufficient",
+      "ratio": 7.25544704140828,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 3185,
+      "worstBackground": [
+        19,
+        53,
+        88
+      ],
+      "text": "2026.10.10.3 · resmî belgeler + kaynaklı özetler",
+      "foreground": [
+        168,
+        201,
+        231,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        "button:nth-child(1) > strong"
+      ],
+      "sampleId": 26,
+      "status": "sample-sufficient",
+      "ratio": 10.477915845897003,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 1512,
+      "worstBackground": [
+        29,
+        65,
+        103
+      ],
+      "text": "24",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 29,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        ".ki-overview-links > button:nth-child(1) > span"
+      ],
+      "sampleId": 27,
+      "status": "sample-sufficient",
+      "ratio": 7.6522103637282575,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1110,
+      "worstBackground": [
+        29,
+        66,
+        104
+      ],
+      "text": "kaynak kaydı",
+      "foreground": [
+        206,
+        224,
+        240,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        "button:nth-child(2) > strong"
+      ],
+      "sampleId": 28,
+      "status": "sample-sufficient",
+      "ratio": 9.73833905233658,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 1512,
+      "worstBackground": [
+        30,
+        70,
+        110
+      ],
+      "text": "76",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 29,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        "button:nth-child(2) > span"
+      ],
+      "sampleId": 29,
+      "status": "sample-sufficient",
+      "ratio": 7.101049140405453,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1230,
+      "worstBackground": [
+        31,
+        71,
+        111
+      ],
+      "text": "Gazi çıktı özeti",
+      "foreground": [
+        206,
+        224,
+        240,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        "button:nth-child(3) > strong"
+      ],
+      "sampleId": 30,
+      "status": "sample-sufficient",
+      "ratio": 10.218981472365384,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 1512,
+      "worstBackground": [
+        29,
+        67,
+        104
+      ],
+      "text": "46",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 29,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        ".ki-overview-links > button:nth-child(3) > span"
+      ],
+      "sampleId": 31,
+      "status": "sample-sufficient",
+      "ratio": 7.447673863862293,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1305,
+      "worstBackground": [
+        29,
+        68,
+        106
+      ],
+      "text": "kalite alt ölçütü",
+      "foreground": [
+        206,
+        224,
+        240,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        "button:nth-child(4) > strong"
+      ],
+      "sampleId": 32,
+      "status": "sample-sufficient",
+      "ratio": 9.593000966422478,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 792,
+      "worstBackground": [
+        31,
+        71,
+        111
+      ],
+      "text": "0",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 29,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Öğrenci / knowledge",
+      "frame": "portal",
+      "target": [
+        "button:nth-child(4) > span"
+      ],
+      "sampleId": 33,
+      "status": "sample-sufficient",
+      "ratio": 6.9906783004426245,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1095,
+      "worstBackground": [
+        31,
+        72,
+        113
+      ],
+      "text": "kayıtlı matris",
+      "foreground": [
+        206,
+        224,
+        240,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".hero-eyebrow"
+      ],
+      "sampleId": 34,
+      "status": "sample-sufficient",
+      "ratio": 7.60188716360052,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2156,
+      "worstBackground": [
+        20,
+        51,
+        85
+      ],
+      "text": "GAZİ ÜNİVERSİTESİ · YÖNETİŞİM ALANI",
+      "foreground": [
+        175,
+        202,
+        231,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 500,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".welcome-copy > h2"
+      ],
+      "sampleId": 35,
+      "status": "sample-sufficient",
+      "ratio": 11.583228301410417,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 21697,
+      "worstBackground": [
+        24,
+        58,
+        96
+      ],
+      "text": "Her öğrenme deneyimini dönüştürün.",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 29,
+      "fontWeight": 650,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        "em"
+      ],
+      "sampleId": 36,
+      "status": "review",
+      "reason": "text-obscured"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".welcome-copy > p"
+      ],
+      "sampleId": 37,
+      "status": "sample-sufficient",
+      "ratio": 7.687702628277623,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 7893,
+      "worstBackground": [
+        21,
+        55,
+        91
+      ],
+      "text": "İlk başvurudan dijital rozete, kurumunuzun mikro yeterlilik yaşam döngüsünü birlikte yönetin.",
+      "foreground": [
+        189,
+        208,
+        227,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".hero-text-link"
+      ],
+      "sampleId": 38,
+      "status": "sample-sufficient",
+      "ratio": 8.087241531190408,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1652,
+      "worstBackground": [
+        21,
+        54,
+        90
+      ],
+      "text": "Öğrenme çıktısı matrisi",
+      "foreground": [
+        190,
+        212,
+        235,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".orbit-center > span"
+      ],
+      "sampleId": 39,
+      "status": "sample-sufficient",
+      "ratio": 6.015527893212622,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 456,
+      "worstBackground": [
+        45,
+        88,
+        128
+      ],
+      "text": "MYYS",
+      "foreground": [
+        214,
+        233,
+        255,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 600,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".node-a > span"
+      ],
+      "sampleId": 40,
+      "status": "sample-sufficient",
+      "ratio": 8.249884141822331,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 611,
+      "worstBackground": [
+        26,
+        59,
+        89
+      ],
+      "text": "Öğrenme",
+      "foreground": [
+        200,
+        220,
+        241,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".node-b > span"
+      ],
+      "sampleId": 41,
+      "status": "sample-sufficient",
+      "ratio": 8.234523881831766,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 429,
+      "worstBackground": [
+        26,
+        59,
+        90
+      ],
+      "text": "Güven",
+      "foreground": [
+        200,
+        220,
+        241,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".node-c > span"
+      ],
+      "sampleId": 42,
+      "status": "sample-sufficient",
+      "ratio": 8.371217490782005,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 546,
+      "worstBackground": [
+        25,
+        58,
+        88
+      ],
+      "text": "Yetkinlik",
+      "foreground": [
+        200,
+        220,
+        241,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / dashboard",
+      "frame": "portal",
+      "target": [
+        ".orbit-note"
+      ],
+      "sampleId": 43,
+      "status": "sample-sufficient",
+      "ratio": 5.419234721345886,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1298,
+      "worstBackground": [
+        26,
+        69,
+        111
+      ],
+      "text": "İnsan denetiminde yönetişim",
+      "foreground": [
+        161,
+        197,
+        218,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / curriculum",
+      "frame": "portal",
+      "target": [
+        ".course-intro > div:nth-child(1) > h2"
+      ],
+      "sampleId": 44,
+      "status": "sample-sufficient",
+      "ratio": 8.259248395461322,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 3915,
+      "worstBackground": [
+        246,
+        249,
+        254
+      ],
+      "text": "Veri Yapıları",
+      "foreground": [
+        39,
+        77,
+        118,
+        1
+      ],
+      "fontSize": 22,
+      "fontWeight": 600,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / curriculum",
+      "frame": "portal",
+      "target": [
+        ".course-intro > div:nth-child(1) > p"
+      ],
+      "sampleId": 45,
+      "status": "sample-sufficient",
+      "ratio": 5.351359516132972,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2436,
+      "worstBackground": [
+        245,
+        249,
+        254
+      ],
+      "text": "Mühendislik FakültesiBilgisayar Mühendisliği",
+      "foreground": [
+        93,
+        104,
+        119,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / badges",
+      "frame": "portal",
+      "target": [
+        ".badge-hero > div:nth-child(1) > .eyebrow"
+      ],
+      "sampleId": 46,
+      "status": "sample-sufficient",
+      "ratio": 8.02077354320763,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1512,
+      "worstBackground": [
+        14,
+        33,
+        60
+      ],
+      "text": "BİLGİDEN BELGEYE",
+      "foreground": [
+        157,
+        185,
+        223,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / badges",
+      "frame": "portal",
+      "target": [
+        ".badge-hero > div:nth-child(1) > h2"
+      ],
+      "sampleId": 47,
+      "status": "sample-sufficient",
+      "ratio": 14.599143239898321,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 25757,
+      "worstBackground": [
+        19,
+        41,
+        72
+      ],
+      "text": "Her Öğrenme Çıktısı,güvenilir bir kayda dönüşsün.",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 29,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / badges",
+      "frame": "portal",
+      "target": [
+        ".badge-hero > div:nth-child(1) > p"
+      ],
+      "sampleId": 48,
+      "status": "sample-sufficient",
+      "ratio": 8.344977224803573,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 12419,
+      "worstBackground": [
+        20,
+        44,
+        75
+      ],
+      "text": "Üniversiteden kurumsal akademiye; tek bir belgelendirme alanı, izlenebilir kanıtlar ve taşınabilir dijital rozetler.",
+      "foreground": [
+        184,
+        201,
+        222,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / badges",
+      "frame": "portal",
+      "target": [
+        ".badge-hero-tags > span:nth-child(1)"
+      ],
+      "sampleId": 49,
+      "status": "sample-sufficient",
+      "ratio": 11.751357182873242,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2340,
+      "worstBackground": [
+        16,
+        36,
+        64
+      ],
+      "text": "Open Badges 3.0 veri yapısı",
+      "foreground": [
+        213,
+        225,
+        239,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / badges",
+      "frame": "portal",
+      "target": [
+        ".badge-hero-tags > span:nth-child(2)"
+      ],
+      "sampleId": 50,
+      "status": "sample-sufficient",
+      "ratio": 11.464712615362515,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1545,
+      "worstBackground": [
+        17,
+        38,
+        67
+      ],
+      "text": "YÖK EK-1 · 11 alan",
+      "foreground": [
+        213,
+        225,
+        239,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Kalite Komisyonu / badges",
+      "frame": "portal",
+      "target": [
+        ".badge-hero-art > span"
+      ],
+      "sampleId": 51,
+      "status": "sample-sufficient",
+      "ratio": 7.128395791831784,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1944,
+      "worstBackground": [
+        23,
+        48,
+        82
+      ],
+      "text": "DOĞRULANABİLİR ÖĞRENME",
+      "foreground": [
+        168,
+        192,
+        223,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Sistem Yöneticisi / references",
+      "frame": "legacy",
+      "target": [
+        ".ref-hero > div:nth-child(1) > h2"
+      ],
+      "sampleId": 52,
+      "status": "sample-sufficient",
+      "ratio": 11.719590834215747,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 31462,
+      "worstBackground": [
+        16,
+        59,
+        89
+      ],
+      "text": "Her çıktının bir dayanağı.Her kararın bir kanıtı.",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 31,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Sistem Yöneticisi / references",
+      "frame": "legacy",
+      "target": [
+        ".ref-hero > div:nth-child(1) > p"
+      ],
+      "sampleId": 53,
+      "status": "sample-sufficient",
+      "ratio": 7.84739813681117,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 5886,
+      "worstBackground": [
+        15,
+        56,
+        87
+      ],
+      "text": "TYÇ · AYÇ · TYYÇ · Gazi program çıktıları · AKTS",
+      "foreground": [
+        186,
+        211,
+        228,
+        1
+      ],
+      "fontSize": 14,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Sistem Yöneticisi / references",
+      "frame": "legacy",
+      "target": [
+        ".ref-hero-side > strong"
+      ],
+      "sampleId": 54,
+      "status": "sample-sufficient",
+      "ratio": 9.175448206189902,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 4401,
+      "worstBackground": [
+        22,
+        76,
+        109
+      ],
+      "text": "2026.10.10.1",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 22,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "Sistem Yöneticisi / references",
+      "frame": "legacy",
+      "target": [
+        ".ref-hero-side > span"
+      ],
+      "sampleId": 55,
+      "status": "sample-sufficient",
+      "ratio": 5.892661110696961,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2144,
+      "worstBackground": [
+        23,
+        76,
+        110
+      ],
+      "text": "Etkin referans sürümü",
+      "foreground": [
+        186,
+        211,
+        228,
+        1
+      ],
+      "fontSize": 12,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide-label > span:nth-child(1)"
+      ],
+      "sampleId": 56,
+      "status": "sample-sufficient",
+      "ratio": 5.234848419890193,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1507,
+      "worstBackground": [
+        243,
+        247,
+        253
+      ],
+      "text": "UNIGO · ÇALIŞMA SUNUMU",
+      "foreground": [
+        90,
+        105,
+        121,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide-label > span:nth-child(2)"
+      ],
+      "sampleId": 57,
+      "status": "sample-sufficient",
+      "ratio": 5.57005053971177,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 451,
+      "worstBackground": [
+        253,
+        254,
+        254
+      ],
+      "text": "01 / 06",
+      "foreground": [
+        90,
+        105,
+        121,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide-category"
+      ],
+      "sampleId": 58,
+      "status": "sample-sufficient",
+      "ratio": 5.264289228721072,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 455,
+      "worstBackground": [
+        243,
+        248,
+        253
+      ],
+      "text": "Hedef",
+      "foreground": [
+        46,
+        107,
+        161,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > h3"
+      ],
+      "sampleId": 59,
+      "status": "sample-sufficient",
+      "ratio": 10.094060852656364,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 6552,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Veri, bilgi ve karar",
+      "foreground": [
+        29,
+        64,
+        95,
+        1
+      ],
+      "fontSize": 23,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > p"
+      ],
+      "sampleId": 60,
+      "status": "sample-sufficient",
+      "ratio": 5.557389333671874,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 4199,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Veri ile yorum arasındaki farkı açıklar.",
+      "foreground": [
+        72,
+        103,
+        131,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        "li:nth-child(1)"
+      ],
+      "sampleId": 61,
+      "status": "sample-sufficient",
+      "ratio": 5.363092403130016,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 6384,
+      "worstBackground": [
+        246,
+        249,
+        253
+      ],
+      "text": "Bu dersin sonunda üreteceğiniz kanıt: gerekçeli bir çalışma yanıtı.",
+      "foreground": [
+        85,
+        105,
+        126,
+        1
+      ],
+      "fontSize": 12,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        "li:nth-child(2)"
+      ],
+      "sampleId": 62,
+      "status": "sample-sufficient",
+      "ratio": 5.396524110395137,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 6064,
+      "worstBackground": [
+        246,
+        250,
+        253
+      ],
+      "text": "Önce kavramı inceleyin, sonra modül vakası üzerinde deneyin.",
+      "foreground": [
+        85,
+        105,
+        126,
+        1
+      ],
+      "fontSize": 12,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > small"
+      ],
+      "sampleId": 63,
+      "status": "sample-sufficient",
+      "ratio": 5.431388261687189,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1991,
+      "worstBackground": [
+        248,
+        250,
+        253
+      ],
+      "text": "Özgün Türkçe rehber · Vaka verileri kurgudur",
+      "foreground": [
+        93,
+        104,
+        116,
+        1
+      ],
+      "fontSize": 8,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M02 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > h3"
+      ],
+      "sampleId": 64,
+      "status": "sample-sufficient",
+      "ratio": 10.094060852656364,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 10640,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Kaynak seçimi ve veri sözlüğü",
+      "foreground": [
+        29,
+        64,
+        95,
+        1
+      ],
+      "fontSize": 23,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M02 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > p"
+      ],
+      "sampleId": 65,
+      "status": "sample-sufficient",
+      "ratio": 5.557389333671874,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 4386,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Verinin kaynağını ve alanlarını belgeler.",
+      "foreground": [
+        72,
+        103,
+        131,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P01-L07 / guide",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > strong"
+      ],
+      "sampleId": 66,
+      "status": "sample-sufficient",
+      "ratio": 11.117411066708286,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 8008,
+      "worstBackground": [
+        29,
+        62,
+        90
+      ],
+      "text": "İstatistik ve olasılığa giriş",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 21,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M03 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > h3"
+      ],
+      "sampleId": 67,
+      "status": "sample-sufficient",
+      "ratio": 10.094060852656364,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 10304,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Özet istatistikleri yorumlama",
+      "foreground": [
+        29,
+        64,
+        95,
+        1
+      ],
+      "fontSize": 23,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M03 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > p"
+      ],
+      "sampleId": 68,
+      "status": "sample-sufficient",
+      "ratio": 5.557389333671874,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 3859,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Ortalama ve ortancayı karşılaştırır.",
+      "foreground": [
+        72,
+        103,
+        131,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M04 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > h3"
+      ],
+      "sampleId": 69,
+      "status": "sample-sufficient",
+      "ratio": 10.094060852656364,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 9100,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Yapay zekâya temel bakış",
+      "foreground": [
+        29,
+        64,
+        95,
+        1
+      ],
+      "fontSize": 23,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M04 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > p"
+      ],
+      "sampleId": 70,
+      "status": "sample-sufficient",
+      "ratio": 5.557389333671874,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 4624,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Model girdisi ile model çıktısını ayırt eder.",
+      "foreground": [
+        72,
+        103,
+        131,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M05 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > h3"
+      ],
+      "sampleId": 71,
+      "status": "sample-sufficient",
+      "ratio": 10.094060852656364,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 6440,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Mini analiz projesi",
+      "foreground": [
+        29,
+        64,
+        95,
+        1
+      ],
+      "fontSize": 23,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P01-M05 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > p"
+      ],
+      "sampleId": 72,
+      "status": "sample-sufficient",
+      "ratio": 5.557389333671874,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 5542,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Bir analiz sorusuna uygun çalışma planı oluşturur.",
+      "foreground": [
+        72,
+        103,
+        131,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P06-L01 / guide",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > strong"
+      ],
+      "sampleId": 73,
+      "status": "sample-sufficient",
+      "ratio": 10.970003942515703,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 9672,
+      "worstBackground": [
+        29,
+        63,
+        91
+      ],
+      "text": "Herkes için erişilebilir öğrenme",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 21,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P06-L01 / guide",
+      "frame": "portal",
+      "target": [
+        "span:nth-child(4)"
+      ],
+      "sampleId": 74,
+      "status": "sample-sufficient",
+      "ratio": 7.596768797964783,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2655,
+      "worstBackground": [
+        22,
+        54,
+        82
+      ],
+      "text": "W3C Web Accessibility Initiative",
+      "foreground": [
+        183,
+        205,
+        221,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P06-L01 / guide",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > small"
+      ],
+      "sampleId": 75,
+      "status": "sample-sufficient",
+      "ratio": 7.4805597838692375,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2561,
+      "worstBackground": [
+        19,
+        49,
+        77
+      ],
+      "text": "İngilizce · Türkçe altyazı · Oynatıcıyı aç",
+      "foreground": [
+        173,
+        197,
+        218,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P06-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > h3"
+      ],
+      "sampleId": 76,
+      "status": "sample-sufficient",
+      "ratio": 10.094060852656364,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 9688,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Farklı erişim gereksinimleri",
+      "foreground": [
+        29,
+        64,
+        95,
+        1
+      ],
+      "fontSize": 23,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P06-M01 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > p"
+      ],
+      "sampleId": 77,
+      "status": "sample-sufficient",
+      "ratio": 5.557389333671874,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 4692,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Dijital erişim engellerini örneklerle açıklar.",
+      "foreground": [
+        72,
+        103,
+        131,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P06-L04 / guide",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > .lc-kicker"
+      ],
+      "sampleId": 78,
+      "status": "sample-sufficient",
+      "ratio": 5.426606154815,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2256,
+      "worstBackground": [
+        36,
+        73,
+        101
+      ],
+      "text": "MODÜLÜ DESTEKLEYEN VİDEO",
+      "foreground": [
+        169,
+        200,
+        224,
+        1
+      ],
+      "fontSize": 9,
+      "fontWeight": 750,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P06-L04 / guide",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > strong"
+      ],
+      "sampleId": 79,
+      "status": "sample-sufficient",
+      "ratio": 10.663225950875882,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 13440,
+      "worstBackground": [
+        30,
+        65,
+        93
+      ],
+      "text": "Fare olmadan öğrenme ortamını kullanmak",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 21,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P06-L04 / guide",
+      "frame": "portal",
+      "target": [
+        "span:nth-child(4)"
+      ],
+      "sampleId": 80,
+      "status": "sample-sufficient",
+      "ratio": 7.803966601359426,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 2655,
+      "worstBackground": [
+        21,
+        52,
+        80
+      ],
+      "text": "W3C Web Accessibility Initiative",
+      "foreground": [
+        183,
+        205,
+        221,
+        1
+      ],
+      "fontSize": 11,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P06-L04 / guide",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > small"
+      ],
+      "sampleId": 81,
+      "status": "sample-sufficient",
+      "ratio": 7.780393464956333,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 1547,
+      "worstBackground": [
+        17,
+        46,
+        74
+      ],
+      "text": "İngilizce · Oynatıcıyı aç",
+      "foreground": [
+        173,
+        197,
+        218,
+        1
+      ],
+      "fontSize": 10,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P06-M02 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > h3"
+      ],
+      "sampleId": 82,
+      "status": "sample-sufficient",
+      "ratio": 10.094060852656364,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 6664,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Klavye ile gezinme",
+      "foreground": [
+        29,
+        64,
+        95,
+        1
+      ],
+      "fontSize": 23,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P06-M02 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > p"
+      ],
+      "sampleId": 83,
+      "status": "sample-sufficient",
+      "ratio": 5.557389333671874,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 4301,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Temel görevleri klavye ile kontrol eder.",
+      "foreground": [
+        72,
+        103,
+        131,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "lesson P06-L05 / guide",
+      "frame": "portal",
+      "target": [
+        ".lc-video-cover > strong"
+      ],
+      "sampleId": 84,
+      "status": "sample-sufficient",
+      "ratio": 10.663225950875882,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 10132,
+      "worstBackground": [
+        30,
+        65,
+        93
+      ],
+      "text": "Bilgiyi renkten bağımsız okumak",
+      "foreground": [
+        255,
+        255,
+        255,
+        1
+      ],
+      "fontSize": 21,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P06-M03 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > h3"
+      ],
+      "sampleId": 85,
+      "status": "sample-sufficient",
+      "ratio": 10.094060852656364,
+      "threshold": 3,
+      "guard": 3.15,
+      "pixels": 9464,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Erişilebilirlik kontrol listesi",
+      "foreground": [
+        29,
+        64,
+        95,
+        1
+      ],
+      "fontSize": 23,
+      "fontWeight": 700,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "module P06-M03 / Sunum",
+      "frame": "portal",
+      "target": [
+        ".lc-slide > p"
+      ],
+      "sampleId": 86,
+      "status": "sample-sufficient",
+      "ratio": 5.557389333671874,
+      "threshold": 4.5,
+      "guard": 4.65,
+      "pixels": 4760,
+      "worstBackground": [
+        244,
+        248,
+        253
+      ],
+      "text": "Tekrarlanabilir bir inceleme planı oluşturur.",
+      "foreground": [
+        72,
+        103,
+        131,
+        1
+      ],
+      "fontSize": 13,
+      "fontWeight": 400,
+      "method": "rendered-background-under-direct-text-rectangles",
+      "scope": "this-render-only"
+    },
+    {
+      "label": "mobile drawer",
+      "frame": "portal",
+      "target": [
+        ".pilot-tile > strong"
+      ],
+      "sampleId": 87,
+      "status": "review",
+      "reason": "compositing-effect"
+    },
+    {
+      "label": "mobile drawer",
+      "frame": "portal",
+      "target": [
+        ".pilot-tile > button"
+      ],
+      "sampleId": 88,
+      "status": "review",
+      "reason": "compositing-effect"
+    }
+  ],
+  "measurement_profile": {
+    "assertions": 16,
+    "results": {
+      "good": {
+        "status": "sample-sufficient",
+        "ratio": 14.435747253809861,
+        "threshold": 4.5,
+        "guard": 4.65,
+        "pixels": 2688,
+        "worstBackground": [
+          26,
+          43,
+          60
+        ],
+        "text": "Öğrenme çıktısı",
+        "foreground": [
+          255,
+          255,
+          255,
+          1
+        ],
+        "fontSize": 16,
+        "fontWeight": 400,
+        "backgrounds": [
+          {
+            "tag": "P",
+            "className": "dark",
+            "background": "rgba(0, 0, 0, 0) linear-gradient(90deg, rgb(17, 34, 51), rgb(34, 51, 68)) repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 28,
+              "y": 28,
+              "width": 278,
+              "height": 37
+            }
+          },
+          {
+            "tag": "BODY",
+            "className": "",
+            "background": "rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 1586
+            }
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 1586
+            }
+          }
+        ],
+        "method": "rendered-background-under-direct-text-rectangles",
+        "scope": "this-render-only"
+      },
+      "low": {
+        "status": "sample-below-target",
+        "ratio": 2.729567623320369,
+        "threshold": 4.5,
+        "guard": 4.65,
+        "pixels": 2688,
+        "worstBackground": [
+          250,
+          250,
+          250
+        ],
+        "text": "Öğrenme çıktısı",
+        "foreground": [
+          153,
+          153,
+          153,
+          1
+        ],
+        "fontSize": 16,
+        "fontWeight": 400,
+        "backgrounds": [
+          {
+            "tag": "P",
+            "className": "light",
+            "background": "rgba(0, 0, 0, 0) linear-gradient(90deg, rgb(250, 250, 250), rgb(255, 255, 255)) repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 28,
+              "y": 73,
+              "width": 276,
+              "height": 35
+            }
+          },
+          {
+            "tag": "BODY",
+            "className": "",
+            "background": "rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 1586
+            }
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 1586
+            }
+          }
+        ],
+        "method": "rendered-background-under-direct-text-rectangles",
+        "scope": "this-render-only"
+      },
+      "alpha": {
+        "status": "sample-below-target",
+        "ratio": 2.6354118216127658,
+        "threshold": 4.5,
+        "guard": 4.65,
+        "pixels": 2688,
+        "worstBackground": [
+          26,
+          43,
+          60
+        ],
+        "text": "Öğrenme çıktısı",
+        "foreground": [
+          255,
+          255,
+          255,
+          0.3
+        ],
+        "fontSize": 16,
+        "fontWeight": 400,
+        "backgrounds": [
+          {
+            "tag": "P",
+            "className": "dark",
+            "background": "rgba(0, 0, 0, 0) linear-gradient(90deg, rgb(17, 34, 51), rgb(34, 51, 68)) repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 28,
+              "y": 116,
+              "width": 276,
+              "height": 35
+            }
+          },
+          {
+            "tag": "BODY",
+            "className": "",
+            "background": "rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 1586
+            }
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 1440,
+              "height": 1586
+            }
+          }
+        ],
+        "method": "rendered-background-under-direct-text-rectangles",
+        "scope": "this-render-only"
+      },
+      "opacity": {
+        "status": "review",
+        "reason": "compositing-effect"
+      },
+      "shadow": {
+        "status": "review",
+        "reason": "text-effects"
+      },
+      "pseudo": {
+        "status": "review",
+        "reason": "pseudo-overlap-unreviewed"
+      },
+      "covered": {
+        "status": "review",
+        "reason": "text-obscured"
+      },
+      "scroll": {
+        "status": "sample-sufficient",
+        "ratio": 13.484245661400706,
+        "threshold": 4.5,
+        "guard": 4.65,
+        "pixels": 4368,
+        "worstBackground": [
+          31,
+          48,
+          65
+        ],
+        "text": "Aşağıdaki öğrenme çıktısı",
+        "foreground": [
+          255,
+          255,
+          255,
+          1
+        ],
+        "fontSize": 16,
+        "fontWeight": 400,
+        "backgrounds": [
+          {
+            "tag": "P",
+            "className": "dark",
+            "background": "rgba(0, 0, 0, 0) linear-gradient(90deg, rgb(17, 34, 51), rgb(34, 51, 68)) repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 28,
+              "y": 937,
+              "width": 276,
+              "height": 35
+            }
+          },
+          {
+            "tag": "BODY",
+            "className": "",
+            "background": "rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 0,
+              "y": -586,
+              "width": 1440,
+              "height": 1586
+            }
+          },
+          {
+            "tag": "HTML",
+            "className": "",
+            "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+            "rect": {
+              "x": 0,
+              "y": -586,
+              "width": 1440,
+              "height": 1586
+            }
+          }
+        ],
+        "method": "rendered-background-under-direct-text-rectangles",
+        "scope": "this-render-only"
+      }
+    }
+  },
+  "static_files": 115,
+  "only_foreground_and_two_scoped_color_overrides_verified": true,
+  "runtime_js_changed": false,
+  "last_full_suite": {
+    "software_package": 59,
+    "server": 784,
+    "portal": 48,
+    "legacy": 46,
+    "total": 878
+  },
+  "open": [
+    "Axe8106 yinelenen incomplete açık:3903gradient,4173kısmen örtülme,20pseudo,6nonBmp,4kısmen örtme. Gradient ek ölçümü85 render imzasını destekler;3inceleme ve3815ayrı ölçülmeyen tekrar tam kabul değildir.",
+    "Örtüşen/kırpılmış metin, kontrol/odak/ikon karşıtlığı ve bütün sayfalarda semantik/ARIA sınaması; gerçek ekran okuyucu ve200% metin büyütme kabulü açık.",
+    "Video Türkçe altyazı/döküm doğruluğu, belge çıktısı okuma sırası, gerçek canlı rol/akış kabulü ve farklı cihaz/renk profilleri açık."
+  ],
+  "source_parent_remote": "555ce3a3a52f520a4c2eeb24387d44064a82715d",
+  "source_parent_tree": "d583a36b046cd2e7b40e3697d9ffea2a267d4b49",
+  "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+  "contract": "CONTRAST-ACCEPTANCE.md"
+}
