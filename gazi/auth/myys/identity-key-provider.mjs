@@ -39,7 +39,8 @@ export class IdentityKeyProvider {
   const after=this.#metadata(await this.#call('describe',{...ref,version:before.version}),purpose,before.version,this.#now(),mode,created);
   // Rotation/revocation while the provider is working cannot silently produce a usable result.
   if(Object.keys(before).some(k=>before[k]!==after[k])||Object.keys(after).some(k=>before[k]!==after[k])||expires<=this.#now())throw fail();
-  return {mac:reply.mac,binding:Object.freeze({format:'myys-identity-key-binding/1',tenant:this.#tenant,contractDigest:this.#contract,purpose,version:before.version,context,created,expires})};
+  // Public metadata is evidence for the SQL commit barrier, never key material.
+  return {mac:reply.mac,metadata:after,binding:Object.freeze({format:'myys-identity-key-binding/1',tenant:this.#tenant,contractDigest:this.#contract,purpose,version:before.version,context,created,expires})};
  }
  async start({purpose,context,lifetimeSeconds=300}){
   if(!Number.isSafeInteger(lifetimeSeconds)||lifetimeSeconds<1||lifetimeSeconds>900)throw fail();

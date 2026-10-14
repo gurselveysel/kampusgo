@@ -1,3 +1,19 @@
+# Güncel devam — Paket53 yerel kabul; kaynak eşitlemesi sırada
+
+Paket53:16 yeni SQL testi;694 sunucu+48 portal+46 regresyon=788. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite0.5.9/PostgreSQL18.6 tek bağlantı SQL kabulü; gerçek çok bağlantı/KMS/HTTP repository kabulü değil. 136komut18HTTP8924örnek71392denetim;115statik;aktifSQLite16tablo148tür. Yeni2PGadaytablo yalnıztest;16envantere ekleme. IDENTITY-KEY-BRIDGE-CONTRACT.md ve B07-key-bridge JSON ayrıntıdır.
+
+Önce diff/commit ve expected-head15f9d143d114bb81f2528d1c9c4113243192255b/base3763f7b104243200a9ac9d537bd5a69aea13f0fc ile SHA/tam ağaç eşitle. Son canlı16READY yeniden okundu;17–53 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör.
+
+Sırada B07 kalıcı challenge/oturum repository: opak imza kanıtı, provider öncesi claim commit, tek kullanım/replay ve belirsiz commit mutabakatı; anahtar köprüsüyle aynı SQL işi. B28 güvenilir checkpoint ve diğer bütün bağımsızlar sürer. PGlite tek bağlantılı; nativePG hazırlığı UID/grup kısıtında kaldı, sandbox aşılmadı. npm ignore-scripts ile yalnız sabit devDependency0.5.9 eklendi; üretim migration yok.
+
+# Güncel devam — Paket52 kaynakta; B07 kalıcı kimlik sınırı inceleniyor
+
+Paket52 kaynak doğrulaması: yerel `38e64ce406e8447d272f35d2ef9adcaa9671bdf1`, uzak `15f9d143d114bb81f2528d1c9c4113243192255b`, ortak tam ağaç `3763f7b104243200a9ac9d537bd5a69aea13f0fc`.24blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+772otomatik68tarayıcı;136komut18HTTP8924örnek71392denetim;115statik16tablo148tür. B21 yeni kararlar her satırda açık teknik rapor kimliği/null taşır; eski kayıtlar korunur. B07 repository/provider metadata→commit bağı hâlâ eksik. Yerelde postgres/psql yok; Ubuntu24.04,apt-cache listesi boş. Kalıcı servis/hesap kurmadan yalnız geçici yerel test ikili dosyalarını edinme olanağı değerlendirilebilir; üretim migration/credential yok.
+
+Son canlı16;17–52 dağıtılmadı;configuredCore kapalı;browserAuth iptalini yeniden isteme;tek editör/alt ajan yok. B28checkpoint ve tüm diğer bağımsızlar sürer.
+
 # Güncel devam — Paket52 yerel kabul; kaynak eşitlemesi sırada
 
 14.10.2026 Paket52:678+48+46=772 otomatik;6 yeni sunucu;10 sürüm+12 kimlik+12 bağlı inceleme+12 tanıma+11 teklif+11 OBS=68 tarayıcı;136komut/18HTTP8924örnek71392kapsam denetimi.115statik16tablo148tür. RECOGNITION-VERSION-CONTRACT.md ve B21-version JSON ayrıntıdır. Son tasarım: TÜM yeni kararlar (arşivsiz dahil) açık expectedTechnicalId veya null taşır; eski API sessiz bypass yok; eski kayıtlar değişmez.

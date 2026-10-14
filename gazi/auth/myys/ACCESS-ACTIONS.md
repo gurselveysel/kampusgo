@@ -60,3 +60,7 @@ Bu pakette yeni abonelik, kalıcı erişim, üretim migration'ı, gerçek veri a
 ## Paket46 kaynak okuma ve tanıma sınırı
 
 YÖK mikro yeterlilik5sayfa ve Gazi kredi transferi4sayfa okuma engeli kaldırıldı; bağlantı ve SHA’lar RECOGNITION-SOURCE-REVIEW-20261014.md içinde. Bu okuma Senato politikası, Genel Kurul yürürlük kararının tarihi/sayısı, YÖK10/3 ölçü birimi yorumu, özel RPL istisnası, gerçek müfredat/önceki kredi, şahsen başvuru veya yetkili kurul kabulü sağlamaz. Yeni erişim istenmedi/oluşturulmadı. B20/B21 yerel çok dersli kabul üretime etkinleştirilmedi.
+
+## Paket53 SQL adayının özel yetki sınırı
+
+`identity-key-schema.sql` yalnız PGlite testine kuruldu. Mevcut üretim veya Supabase projesine DDL, credential ya da servis kurulmadı. Gerçek kabul için önce mevcut ayrı test deposunun sürüm/rol/RLS/bağlantı ve anahtar kontrol düzlemi sözleşmesi gerekir; bu başlık yeni bir erişim isteğinin gönderildiği anlamına gelmez. Tek bağlantılı WASM sonucu çok bağlantılı PostgreSQL veya KMS kabulü sayılmaz. Bağımsız repository geliştirmesi sürer.

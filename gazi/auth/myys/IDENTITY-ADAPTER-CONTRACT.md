@@ -54,3 +54,7 @@ Kalıcı CSRF/rate dönüşümünün **yerel HTTP** dilimi `HTTP-KEY-ROTATION-CO
 ## Paket45 izleme
 
 Yerel statik PKCE/nonce anahtarı artık aynı oturum transaction’ında monoton revizyon ve küresel yerel engel siciliyle denetlenir. Ayrıntı `DERIVATION-EPOCH-CONTRACT.md`. İki yeni teknik tabloyla envanter16 tablo/133tür; otomatik temizleme yok. Yukarıdaki tarihsel paket sınırları korunur; gerçek KMS metadata/üretim SQL/geri yükleme checkpoint köprüsü hâlâ açık.
+
+## Paket53 izleme
+
+Tarihsel Paket29 sınırının SQL metadata köprüsü `IDENTITY-KEY-BRIDGE-CONTRACT.md` ile eklendi.16 yeni gerçek PostgreSQL WASM SQL senaryosu geçti. PGlite0.5.9 yalnız devDependency; iki aday tablo test-only. Genel metadata sağlayıcı sonucuna eklendi; gerçek session repository, kontrol düzlemi, çok bağlantı ve KMS kabulü açık.

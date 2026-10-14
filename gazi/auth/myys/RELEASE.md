@@ -725,3 +725,13 @@ Paket52: her yeni tek ders ve teklif satırı kararı expectedTechnicalId ile in
 Paket52 dağıtılmadı; son doğrulanan canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Yeni authenticated smoke yok;configuredCore kapalı. 17–52 dağıtılmadı; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı;browserAuth iptali tekrar denenmedi. Kaynak kimliği ve tam ağaç eşitlemesi ayrıca kaydedilir.
 
 Paket52 kaynak eşitlemesi öncesi canlı alias yeniden okundu: `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY/production ve `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`. Bu salt okunur kontrol yeni authenticated smoke değildir.
+
+Paket52 kaynak doğrulaması: yerel `38e64ce406e8447d272f35d2ef9adcaa9671bdf1`, uzak `15f9d143d114bb81f2528d1c9c4113243192255b`, ortak tam ağaç `3763f7b104243200a9ac9d537bd5a69aea13f0fc`.24blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16; yeni yayın yok.
+
+## Paket53 — B07 SQL anahtar metadata/commit (14.10.2026)
+
+Paket53 IdentityKeyProvider genel metadata revizyonunu aynı SQL transaction öncesi/sonrası yeniden denetleyen PostgresIdentityKeyBridge ekledi. SQL değişiklik/denetim atomik; strict+1 ve terminal iptal, amaç/bağlam/scope, emekli devam, süre ve belirsiz COMMIT kapalı. İki aday tablo sadece PGlite testinde; LocalAcceptanceStore16tablo148tür değişmedi. Gerçek oturum repository ve HTTP bağlantısı hâlâ açık.
+
+Paket53:16 yeni SQL testi;694 sunucu+48 portal+46 regresyon=788. Mevcut yerel HTTPS girişinin15 tarayıcı kontrolü geçti. PGlite0.5.9/PostgreSQL18.6 tek bağlantı SQL kabulü; gerçek çok bağlantı/KMS/HTTP repository kabulü değil. 136komut/18HTTP8924örnek71392kapsam denetimi;115statik.36 özgün iş/bağımlılık/kabul aynı.
+
+Paket53 dağıtılmadı. Canlı alias yeniden okundu: dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production, kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu authenticated smoke değildir.17–53 canlı değil;configuredCore kapalı;browserAuth iptali yeniden denenmedi. Geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. Kaynak commit/tam ağaç ayrıca kaydedilir.
