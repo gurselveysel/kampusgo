@@ -1,3 +1,4 @@
+import {activateLocalDerivationKey,blockLocalDerivationKey} from '../../myys/identity-derivation-epoch.mjs';
 // Disposable synthetic HTTPS provider and app. Never included in deployment files.
 import https from 'node:https';
 import {checkServerIdentity} from 'node:tls';
@@ -71,9 +72,12 @@ export async function identityHttpFixture({tenant='test-gazi',sessionLifetimeSec
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));origin='https://127.0.0.1:'+server.address().port;
  const config={version:'local-http-2026.10.13.1',tenant,issuer:'https://test-idp.invalid',audience:'myys-http-test',algorithms:['ES256'],jwks:{keys:[jwk]},mfaProfiles:[{acr:'urn:test:strong',amr:['pwd','otp']}],maxTokenAgeSeconds:300,maxAuthAgeSeconds:900,clockToleranceSeconds:0};
  const derivationKey=randomBytes(32),initialCsrfKey=randomBytes(32);
- const makeIdentity=(csrfKey,csrfKeyRevision)=>new LocalIdentityHttp({store:f.s,identityConfig:config,origin,authorizationEndpoint:providerOrigin+'/__idp/authorize',derivationKey,csrfKey,csrfKeyRevision,clock,sessionLifetimeSeconds,exchangeTimeoutMs,exchangeCode:async({code,codeVerifier,redirectUri,signal})=>{const r=await httpsRequest(providerOrigin,cert,'/__idp/token',{method:'POST',form:{grant_type:'authorization_code',code,code_verifier:codeVerifier,redirect_uri:redirectUri,client_id:config.audience},signal});requireThat(r.status===200,'test_provider','Sentetik sağlayıcı hatası.',403);return r.json().id_token;}});
+ let activeDerivationKey=derivationKey,activeDerivationRevision=1,activeCsrfKey=initialCsrfKey,activeCsrfRevision=1;
+ const makeIdentity=(csrfKey,csrfKeyRevision)=>new LocalIdentityHttp({store:f.s,identityConfig:config,origin,authorizationEndpoint:providerOrigin+'/__idp/authorize',derivationKey:activeDerivationKey,derivationRevision:activeDerivationRevision,csrfKey,csrfKeyRevision,clock,sessionLifetimeSeconds,exchangeTimeoutMs,exchangeCode:async({code,codeVerifier,redirectUri,signal})=>{const r=await httpsRequest(providerOrigin,cert,'/__idp/token',{method:'POST',form:{grant_type:'authorization_code',code,code_verifier:codeVerifier,redirect_uri:redirectUri,client_id:config.audience},signal});requireThat(r.status===200,'test_provider','Sentetik sağlayıcı hatası.',403);return r.json().id_token;}});
  identity=makeIdentity(initialCsrfKey,1);
- h.rotateCsrf=(csrfKey,revision)=>{identity=makeIdentity(csrfKey,revision);h.identity=identity;return identity;};
+ h.rotateCsrf=(csrfKey,revision)=>{activeCsrfKey=csrfKey;activeCsrfRevision=revision;identity=makeIdentity(csrfKey,revision);h.identity=identity;return identity;};
+ h.rotateDerivation=(key,revision)=>{activateLocalDerivationKey({store:f.s,identityConfig:config,derivationKey:key,revision,expectedRevision:revision-1,now:clock()});activeDerivationKey=key;activeDerivationRevision=revision;identity=makeIdentity(activeCsrfKey,activeCsrfRevision);h.identity=identity;return identity;};
+ h.blockDerivation=()=>blockLocalDerivationKey({store:f.s,derivationKey:activeDerivationKey,now:clock()});
  h.selectIdentity=value=>{identity=value;h.identity=value;};
  h.origin=origin;h.providerOrigin=providerOrigin;h.identity=identity;h.request=(path,options)=>{const target=new URL(path,origin);return httpsRequest(target.origin===providerOrigin?providerOrigin:origin,cert,target.href,options);};
  h.close=async()=>{server.closeAllConnections();providerServer.closeAllConnections();await Promise.all([new Promise(resolve=>server.close(resolve)),new Promise(resolve=>providerServer.close(resolve))]);f.close();};return h;

@@ -14,7 +14,7 @@ const reason='Sentetik kişisel veri kapsamı; gerçek kurum saklama kabulü de�
 const out=(f,who='student')=>subjectExport(f.core,f.context(who)).payload;
 const overview=(f,who='student')=>f.core.view(f.context(who)).privacy.inventory;
 
-test('B28 veri envanteri oluşturulan 14 teknik tabloyu ve kaynakta anılan bütün kayıt türlerini kapsar',async()=>{
+test('B28 veri envanteri oluşturulan 16 teknik tabloyu ve kaynakta anılan bütün kayıt türlerini kapsar',async()=>{
  const inventory=JSON.parse(readFileSync(new URL('../myys/data-inventory.json',import.meta.url))),h=await identityHttpFixture();try{
   const actual=h.f.s.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map(r=>r.name);assert.deepEqual(inventory.tables.map(t=>t.table),actual);
   for(const table of inventory.tables){assert.deepEqual(table.columns,h.f.s.db.prepare('PRAGMA table_info('+table.table+')').all().map(c=>c.name));assert.equal(table.approvedRetentionDays,null);assert.equal(table.productionAccepted,false);}

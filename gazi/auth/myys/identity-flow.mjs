@@ -1,3 +1,4 @@
+import {LocalDerivationEpoch} from './identity-derivation-epoch.mjs';
 // Isolated synthetic acceptance adapter. HTTP/cookie boundary is in identity-http.mjs.
 import {randomBytes, randomUUID, createHmac, createHash} from 'node:crypto';
 import {LocalAcceptanceStore, CoreError, hash, requireThat} from './store.mjs';
@@ -12,8 +13,8 @@ const sessionHashValid = value => typeof value === 'string' && /^[a-f0-9]{64}$/.
 const responseValue = value => typeof value === 'string' && /^[A-Za-z0-9_-]{43}$/.test(value);
 
 export class LocalIdentityFlow {
- #store; #config; #contract; #key; #clock; #exchange; #redirect; #digest; #requestMs; #sessionMs; #timeout; #revocation;
- constructor({store, identityConfig, derivationKey, redirectUri, exchangeCode, clock = () => new Date(), requestLifetimeSeconds = 300, sessionLifetimeSeconds = 300, exchangeTimeoutMs = 5000}) {
+ #store; #config; #contract; #key; #clock; #exchange; #redirect; #digest; #requestMs; #sessionMs; #timeout; #revocation; #epoch;
+ constructor({store, identityConfig, derivationKey, derivationRevision=1, redirectUri, exchangeCode, clock = () => new Date(), requestLifetimeSeconds = 300, sessionLifetimeSeconds = 300, exchangeTimeoutMs = 5000}) {
   requireThat(store instanceof LocalAcceptanceStore && !process.env.VERCEL && !process.env.VERCEL_ENV, 'local_only', 'Kimlik akışı yalnız izole yerel kabulde çalışır.', 503);
   requireThat(Buffer.isBuffer(derivationKey) && derivationKey.length === 32 && typeof exchangeCode === 'function' && typeof clock === 'function', 'identity_config', 'Yerel kimlik akışı yapılandırması eksik.', 500);
   let uri;
@@ -22,7 +23,8 @@ export class LocalIdentityFlow {
   requireThat([requestLifetimeSeconds,sessionLifetimeSeconds].every(n => Number.isInteger(n) && n >= 1 && n <= 900) && Number.isInteger(exchangeTimeoutMs) && exchangeTimeoutMs >= 10 && exchangeTimeoutMs <= 10000, 'identity_config', 'Kimlik akışı zaman sınırları geçersiz.', 500);
   this.#store=store; this.#config=structuredClone(identityConfig); this.#contract=createIdentityContract(this.#config);
   this.#key=Buffer.from(derivationKey); this.#exchange=exchangeCode; this.#clock=clock; this.#redirect=redirectUri;
-  this.#digest=hash(JSON.stringify({identityConfig:this.#config,redirectUri}));
+  this.#epoch=new LocalDerivationEpoch({store,identityConfig:this.#config,derivationKey,derivationRevision});
+  this.#digest=hash(JSON.stringify({identityConfig:this.#config,redirectUri,derivation:this.#epoch.binding()}));
   this.#requestMs=requestLifetimeSeconds*1000; this.#sessionMs=sessionLifetimeSeconds*1000; this.#timeout=exchangeTimeoutMs;
   store.db.exec(`CREATE TABLE IF NOT EXISTS identity_challenges(
    id TEXT PRIMARY KEY,state_hash TEXT NOT NULL UNIQUE,browser_hash TEXT NOT NULL,tenant TEXT NOT NULL,
@@ -51,6 +53,7 @@ export class LocalIdentityFlow {
   const id=randomUUID(),state=randomBytes(32).toString('base64url');
   this.#store.transaction(()=>{
    this.#browserScope(browserSessionHash);
+   this.#epoch.assertCurrent(now,{initialize:true});
    const old=this.#store.db.prepare("SELECT id FROM identity_challenges WHERE tenant=? AND browser_hash=? AND status IN ('pending','claimed')").all(this.#config.tenant,browserSessionHash);
    for(const row of old) {this.#store.db.prepare("UPDATE identity_challenges SET status='cancelled',finished=? WHERE id=?").run(now.getTime(),row.id);this.#audit('identity.cancel',row.id,now);}
    this.#store.db.prepare("INSERT INTO identity_challenges VALUES(?,?,?,?,?,?,?,'pending',NULL)").run(id,hash(state),browserSessionHash,this.#config.tenant,this.#digest,now.getTime(),now.getTime()+this.#requestMs);
@@ -66,6 +69,7 @@ export class LocalIdentityFlow {
   const request=this.#store.transaction(()=>{
    const row=this.#store.db.prepare('SELECT * FROM identity_challenges WHERE state_hash=? AND browser_hash=? AND tenant=? AND contract_digest=?').get(hash(state),browserSessionHash,this.#config.tenant,this.#digest);
    requireThat(row && row.status==='pending' && row.created<=started.getTime() && row.expires>started.getTime(), 'identity_challenge', 'Kimlik isteği yok, kullanılmış veya süresi dolmuş.', 403);
+   this.#epoch.assertCurrent(started);
    this.#store.db.prepare("UPDATE identity_challenges SET status='claimed' WHERE id=? AND status='pending'").run(row.id);
    this.#audit('identity.claim',row.id,started);
    return row;
@@ -79,6 +83,7 @@ export class LocalIdentityFlow {
    const now=this.#now(),sessionToken=randomBytes(32).toString('base64url'),sessionHash=hash(sessionToken);
    return this.#contract.commitLocalMember(proof,{store:this.#store,now},(actor,grant)=>{
     this.#browserScope(browserSessionHash);
+    this.#epoch.assertCurrent(now);
     const changed=this.#store.db.prepare("UPDATE identity_challenges SET status='used',finished=? WHERE id=? AND status='claimed' AND created<=? AND expires>?").run(now.getTime(),request.id,now.getTime(),now.getTime());
     requireThat(changed.changes===1, 'identity_challenge', 'Kimlik isteği artık kullanılamıyor.', 403);
     const expires=new Date(Math.min(now.getTime()+this.#sessionMs,Date.parse(grant.expiresAt))).toISOString();

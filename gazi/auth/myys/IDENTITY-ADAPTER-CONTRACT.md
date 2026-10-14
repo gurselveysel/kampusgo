@@ -50,3 +50,7 @@ Sonraki bağımsız B07: kişi/üyelik/challenge/iptal/rate/audit SQL repository
 ## 14.10.2026 Paket39 izleme
 
 Kalıcı CSRF/rate dönüşümünün **yerel HTTP** dilimi `HTTP-KEY-ROTATION-CONTRACT.md` ile bağlandı ve sınandı. Yukarıdaki Paket29 kaydı tarihsel kanıttır. PKCE/nonce anahtar revizyonunun atomik session-commit bariyeri ve PostgreSQL repository hâlâ açık; CSRF dönüşümü bunların yerine geçmez.
+
+## Paket45 izleme
+
+Yerel statik PKCE/nonce anahtarı artık aynı oturum transaction’ında monoton revizyon ve küresel yerel engel siciliyle denetlenir. Ayrıntı `DERIVATION-EPOCH-CONTRACT.md`. İki yeni teknik tabloyla envanter16 tablo/133tür; otomatik temizleme yok. Yukarıdaki tarihsel paket sınırları korunur; gerçek KMS metadata/üretim SQL/geri yükleme checkpoint köprüsü hâlâ açık.

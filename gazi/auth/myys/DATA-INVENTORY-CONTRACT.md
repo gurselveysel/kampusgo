@@ -40,3 +40,7 @@ B28'in yerel envanter/özne özeti dilimi geçti; tam gereksiz hesap verisi temi
 ## Paket41 izleme — 14.10.2026
 
 Yukarıdaki 120/58 sayıları Paket40 tarihsel kanıtıdır. İki yeni veri hakkı türüyle güncel katalog 122 tür/60 izinli alan özeti; teknik tablo sayısı14. `identity_challenges` için ayrı ve sınırlı used/expired sahipli temizlik sözleşmesi eklendi; ham güvenlik exportu/kurum süresi veya diğer bariyerlerin silinmesi açılmadı.
+
+## Paket45 izleme
+
+Yerel statik PKCE/nonce anahtarı artık aynı oturum transaction’ında monoton revizyon ve küresel yerel engel siciliyle denetlenir. Ayrıntı `DERIVATION-EPOCH-CONTRACT.md`. İki yeni teknik tabloyla envanter16 tablo/133tür; otomatik temizleme yok. Yukarıdaki tarihsel paket sınırları korunur; gerçek KMS metadata/üretim SQL/geri yükleme checkpoint köprüsü hâlâ açık.

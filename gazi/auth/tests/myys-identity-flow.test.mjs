@@ -5,6 +5,7 @@ import {generateKeyPair, exportJWK, SignJWT} from 'jose';
 import {LocalIdentityFlow, pkceS256} from '../myys/identity-flow.mjs';
 import {LocalAcceptanceStore, hash} from '../myys/store.mjs';
 import {use} from './helpers/myys-fixture.mjs';
+import {LocalDerivationEpoch,activateLocalDerivationKey,blockLocalDerivationKey,derivationKeyDigest} from '../myys/identity-derivation-epoch.mjs';
 
 const pair=await generateKeyPair('ES256'), jwk={...await exportJWK(pair.publicKey),alg:'ES256',kid:'flow-test'};
 const base=Date.parse('2026-10-10T20:30:00Z'), redirectUri='http://127.0.0.1:43117/oidc/callback';
@@ -12,7 +13,7 @@ const config=()=>({version:'local-2026.10.10.2',tenant:'test-gazi',issuer:'https
 const match=code=>e=>e.code===code;
 function harness(f,options={}) {
  const key=randomBytes(32),codes=new Map();let current=base,sequence=0;
- const h={calls:0,patch:{},hook:async()=>{},lastToken:null,lastVerifier:null,advance(ms){current+=ms;},now:()=>new Date(current)};
+ const h={key,calls:0,patch:{},hook:async()=>{},lastToken:null,lastVerifier:null,advance(ms){current+=ms;},now:()=>new Date(current)};
  const exchangeCode=async({code,codeVerifier,redirectUri:uri,signal})=>{
   h.calls++;const item=codes.get(code);
   assert.ok(item&&!item.used,'synthetic code is single-use');item.used=true;
@@ -86,10 +87,10 @@ test('B07 yeniden açılan depoda bekleyen istek ve türetilen PKCE korunur',()=
  const h=harness(f),a=h.request(),second=new LocalAcceptanceStore(f.path);
  try {const result=await h.make(second).complete(a.input);assert.equal(result.personId,'student');assert.equal(sessions(f),1);}finally{second.close();}
 }));
-test('B07 yanlış türetme anahtarı kimlik açmaz ve aynı isteği tekrar denetmez',()=>use(async f=>{
+test('B07 yanlış türetme anahtarı provider çağırmaz; doğru işçinin isteğini tüketmez',()=>use(async f=>{
  const h=harness(f),a=h.request(),wrong=h.make(f.s,{derivationKey:randomBytes(32)});
- await assert.rejects(()=>wrong.complete(a.input),match('identity_callback'));assert.equal(sessions(f),0);
- await assert.rejects(()=>h.flow.complete(a.input),match('identity_challenge'));assert.equal(h.calls,1);
+ await assert.rejects(()=>wrong.complete(a.input),match('identity_challenge'));assert.equal(sessions(f),0);assert.equal(h.calls,0);
+ await h.flow.complete(a.input);assert.equal(h.calls,1);assert.equal(sessions(f),1);
 }));
 for(const [name,patch] of [['yanlış nonce',{nonce:'a'.repeat(43)}],['MFA yok',{amr:['pwd']}],['başka kişi',{sub:'not-provisioned'}]])
  test(`B07 ${name} oturum yaratmaz; tüketilen istek tekrar kullanılamaz`,()=>use(async f=>{
@@ -163,4 +164,45 @@ test('B07 yerel akış Vercel ortamında ve dış dönüş adresiyle açılamaz'
  const previous=process.env.VERCEL;
  try{process.env.VERCEL='1';assert.throws(()=>h.make(),match('local_only'));assert.throws(()=>h.request(),match('local_only'));}
  finally{if(previous===undefined)delete process.env.VERCEL;else process.env.VERCEL=previous;}
+}));
+
+test('B07 türetme anahtar revizyonu challenge kapsamına bağlı; eski işçi ve eski istek yeni sürümü kullanamaz',()=>use(async f=>{
+ const h=harness(f),a=h.request(),key=randomBytes(32),second=new LocalAcceptanceStore(f.path);
+ try{const next=h.make(second,{derivationKey:key,derivationRevision:2});assert.throws(()=>h.request(next),match('identity_key'));const result=activateLocalDerivationKey({store:second,identityConfig:config(),derivationKey:key,revision:2,expectedRevision:1,now:h.now()});assert.equal(result.duplicate,false);
+ assert.throws(()=>h.request(),match('identity_key'));await assert.rejects(()=>h.flow.complete(a.input),match('identity_key'));await assert.rejects(()=>next.complete(a.input),match('identity_challenge'));assert.equal(h.calls,0);assert.equal(sessions(f),0);await next.complete(h.request(next).input);assert.equal(sessions(f),1);
+ }finally{second.close();}
+}));
+test('B07 sağlayıcı beklerken dönüşüm eski anahtarla oturum commit edilmesini engeller',()=>use(async f=>{
+ const h=harness(f),a=h.request(),key=randomBytes(32);h.hook=async()=>activateLocalDerivationKey({store:f.s,identityConfig:config(),derivationKey:key,revision:2,expectedRevision:1,now:h.now()});await assert.rejects(()=>h.flow.complete(a.input),match('identity_callback'));assert.equal(sessions(f),0);assert.equal(f.s.db.prepare('SELECT status FROM identity_challenges').get().status,'failed');assert.equal(h.calls,1);h.hook=async()=>{};const next=h.make(f.s,{derivationKey:key,derivationRevision:2});await next.complete(h.request(next).input);assert.equal(sessions(f),1);
+}));
+test('B07 imza doğrulamasından sonraki commit girişinde ikinci bağlantının iptali de görülür',()=>use(async f=>{
+ const h=harness(f),a=h.request(),second=new LocalAcceptanceStore(f.path),transaction=f.s.transaction;let intercept=false;
+ h.hook=async()=>{intercept=true;};f.s.transaction=function(fn){if(intercept){intercept=false;blockLocalDerivationKey({store:second,derivationKey:h.key,now:h.now()});}return transaction.call(this,fn);};
+ try{await assert.rejects(()=>h.flow.complete(a.input),match('identity_callback'));assert.equal(sessions(f),0);assert.equal(h.calls,1);assert.equal(f.s.db.prepare("SELECT count(*) n FROM audit WHERE action='identity.accept'").get().n,0);assert.equal(f.s.db.prepare('SELECT status FROM identity_challenges').get().status,'failed');}finally{f.s.transaction=transaction;second.close();}
+}));
+test('B07 aynı anahtar iptali tüm tenant ve audience kapsamlarını kapatır; başka anahtar korunur',()=>use(f=>{
+ const h=harness(f);h.request();const other=h.make(f.s,{identityConfig:{...config(),tenant:'other-tenant',audience:'other-client'}}),unrelated=h.make(f.s,{identityConfig:{...config(),audience:'unrelated-client'},derivationKey:randomBytes(32)});h.request(other);h.request(unrelated);
+ assert.equal(blockLocalDerivationKey({store:f.s,derivationKey:h.key,now:h.now()}).duplicate,false);assert.throws(()=>h.request(),match('identity_key'));assert.throws(()=>h.request(other),match('identity_key'));h.request(unrelated);assert.equal(blockLocalDerivationKey({store:f.s,derivationKey:h.key,now:h.now()}).duplicate,true);assert.equal(f.s.db.prepare("SELECT count(*) n FROM audit WHERE action='identity.key.block'").get().n,2);
+ const later=h.make(f.s,{identityConfig:{...config(),audience:'new-namespace'}});assert.throws(()=>h.request(later),match('identity_key'));
+}));
+test('B07 sürüm atlama, eski anahtarı yeniden kullanma, eski zamanı ve eski metadata benzeri ayarı geri oynatma reddedilir',()=>use(f=>{
+ const h=harness(f);h.request();const key=randomBytes(32),call=(revision,expectedRevision,derivationKey=key,now=h.now())=>activateLocalDerivationKey({store:f.s,identityConfig:config(),derivationKey,revision,expectedRevision,now});
+ assert.throws(()=>call(3,1),match('identity_key'));assert.throws(()=>call(2,1,h.key),match('identity_key'));h.advance(1000);call(2,1);assert.equal(call(2,1).duplicate,true);assert.throws(()=>call(2,1,randomBytes(32)),match('identity_key'));assert.throws(()=>call(3,2,h.key),match('identity_key'));assert.throws(()=>call(3,2,randomBytes(32),new Date(base)),match('identity_key'));assert.throws(()=>h.request(),match('identity_key'));
+ for(const table of ['identity_derivation_epochs','identity_derivation_blocks']){if(table.endsWith('blocks'))blockLocalDerivationKey({store:f.s,derivationKey:key,now:h.now()});assert.throws(()=>f.s.db.exec('DELETE FROM '+table),/immutable/);}
+}));
+test('B07 anahtar etkinleşme ve durdurma denetim hatalarında bütün namespace kayıtları atomik geri alınır',()=>use(f=>{
+ const h=harness(f);h.request();const key=randomBytes(32);f.s.db.exec("CREATE TRIGGER reject_key_audit BEFORE INSERT ON audit WHEN NEW.action IN ('identity.key.activate','identity.key.block') BEGIN SELECT RAISE(ABORT,'synthetic'); END");
+ assert.throws(()=>activateLocalDerivationKey({store:f.s,identityConfig:config(),derivationKey:key,revision:2,expectedRevision:1,now:h.now()}));assert.equal(f.s.db.prepare('SELECT count(*) n FROM identity_derivation_epochs').get().n,1);assert.throws(()=>blockLocalDerivationKey({store:f.s,derivationKey:h.key,now:h.now()}));assert.equal(f.s.db.prepare('SELECT count(*) n FROM identity_derivation_blocks').get().n,0);h.request();
+}));
+test('B07 anahtar durdurma önceden kurulmuş oturumu veya akademik kayıtları kendiliğinden silmez',()=>use(async f=>{
+ const h=harness(f),result=await h.flow.complete(h.request().input);blockLocalDerivationKey({store:f.s,derivationKey:h.key,now:h.now()});assert.equal(f.s.principal(hash(result.sessionToken),'test-gazi',h.now().toISOString()).id,'student');assert.equal(h.flow.logout({sessionHash:hash(result.sessionToken)}).revoked,true);assert.equal(sessions(f),0);
+}));
+test('B07 anahtar geçmişi sır içermez ve yerel operatör girişleri Vercel ortamında kapalıdır',()=>use(f=>{
+ const h=harness(f);h.request();const rows=JSON.stringify(['identity_derivation_epochs','identity_derivation_blocks','identity_challenges','audit'].map(t=>f.s.db.prepare('SELECT * FROM '+t).all()));assert.equal(rows.includes(h.key.toString('hex')),false);assert.equal(rows.includes(h.key.toString('base64')),false);assert.equal(rows.includes(derivationKeyDigest(h.key)),true);
+ process.env.VERCEL='1';try{assert.throws(()=>blockLocalDerivationKey({store:f.s,derivationKey:h.key}),match('local_only'));assert.throws(()=>activateLocalDerivationKey({store:f.s,identityConfig:config(),derivationKey:randomBytes(32),revision:2,expectedRevision:1}),match('local_only'));}finally{delete process.env.VERCEL;}
+}));
+
+test('B07 ilk anahtar kurulumu da aynı işlemde; işlem dışı denetim ve audit hatası iz bırakmaz',()=>use(f=>{
+ const h=harness(f),epoch=new LocalDerivationEpoch({store:f.s,identityConfig:config(),derivationKey:h.key});assert.throws(()=>epoch.assertCurrent(h.now(),{initialize:true}),match('identity_transaction'));assert.equal(f.s.db.prepare('SELECT count(*) n FROM identity_derivation_epochs').get().n,0);
+ f.s.db.exec("CREATE TRIGGER reject_initial_key BEFORE INSERT ON audit WHEN NEW.action='identity.key.activate' BEGIN SELECT RAISE(ABORT,'synthetic'); END");assert.throws(()=>h.request());assert.equal(f.s.db.prepare('SELECT count(*) n FROM identity_derivation_epochs').get().n,0);assert.equal(f.s.db.prepare('SELECT count(*) n FROM identity_challenges').get().n,0);f.s.db.exec('DROP TRIGGER reject_initial_key');h.request();assert.equal(f.s.db.prepare('SELECT count(*) n FROM identity_derivation_epochs').get().n,1);
 }));

@@ -279,3 +279,11 @@ Ders ve materyal ekranı 66 dersin envanterini, program/görev/rubrik eşlemesin
 591+48+46=685 otomatik;14 materyal+19 gezinme+13 itiraz=46 tarayıcı;123 komut/17 HTTP,7028 pozitif örnek/56224 türetilmiş olumsuz denetim;98 menü/288 rol paneli,390 px/klavye. 6 koleksiyon22 modül66 ders ve88 özgün dosya baytları aynı,115 korumalı statik dosya. Kaynak altında yeni133 kayıt türü,14 tablo. İlk tarayıcı koşusundaki aynı adlı summary/button seçici belirsizliği testte giderildi; son tam akış geçti.
 
 B05/B25 bağımsız yerel alt koşulları kapandı; gerçek yazılı sağlayıcı/hak sahibi kararı, seçili Gazi programının akademik/dil/erişilebilirlik incelemesi ve üretim dağıtım adaptörü açık. Bütün iş paketleri tamamlanmadı. Ayrıntı MATERIAL-RIGHTS-CONTRACT.md, MATERIAL-SOURCE-REVIEW.md ve B05-B25 kabul JSON’unda. Yeni canlı yayın ve canlı smoke yok; son canlı16 READY,17–44 dağıtılmadı;configuredCore kapalı.
+
+## Paket45 — B07 yerel türetme anahtarı commit bariyeri (14.10.2026)
+
+Yeni panel/menü yok. Mevcut HTTPS girişinde anahtar sürümü/durdurma, tek kullanımlık challenge ve oturumun aynı commit işlemine bağlıdır. Güvenilen yerel operatör dönüşümü ve paylaşılan anahtarı tenant/issuer/audience kapsamlarında durdurma, audit ile atomiktir. Eski işçi/istek yeni revizyonu kullanamaz; doğru anahtarlı isteği yanlış işçi tüketmez. Provider beklerken ve imza doğrulamasından sonra ikinci bağlantıda iptal yeni çerezi engeller. Önceki akademik oturumun normal süre/üyelik/çıkış denetimleri korunur.
+
+11 yeni test;602+48+46=696 otomatik;15 kimlik+9 temizlik=24 tarayıcı;123komut/17HTTP7056örnek56448denetim;115statik;16teknik tablo/133kayıt türü. B07 yerel alt koşul geçti; IdentityKeyProvider metadata/üretim repository köprüsü, gerçek PG/KMS/IdP/RLS, tüm session yazarları/karma dağıtım ve geri yükleme checkpoint’i açık. `DERIVATION-EPOCH-CONTRACT.md` ayrıntıdır.36 özgün kabul ölçütü değişmedi.
+
+Canlı alias yeniden kontrol edildi: Paket16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY.17–45 dağıtılmadı; yeni canlı smoke yok;configuredCore kapalı. Gerçek credential/migration/kurum kararı yok.

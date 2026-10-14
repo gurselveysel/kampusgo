@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.44",
+  "version": "2026.10.14.45",
   "scope": "local-acceptance-source-inventory",
   "generatedFrom": "schema declarations and reviewed explicit recordGroups/subjectFields",
   "institutionApproved": false,
@@ -73,6 +73,37 @@
       "purpose": "Giriş state/PKCE/nonce tek kullanımını denetlemek",
       "scope": "tenant/browser_hash/contract_digest",
       "lifecycle": "Ayrı gerekçeli yanıt, MFA, kişi teyidi ve değişmez aday özetiyle yalnız tek kişiye kabul izi bağlı used/süresi bitmiş kayıtlar ençok100 satır temizlenebilir. Pending/claimed/belirsiz/diğer kişi/tenant ve güvenlik bariyerleri korunur; fiziksel imha değildir.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_derivation_blocks",
+      "source": "identity-derivation-epoch.mjs",
+      "columns": [
+        "key_digest",
+        "blocked"
+      ],
+      "purpose": "Paylaşılan türetme anahtarının yeni oturum açmasını tüm yerel kapsamlarında durdurmak",
+      "scope": "trusted local operator; global key fingerprint",
+      "lifecycle": "Değişmez engel listesi; tenant kullanıcısı işletemez. Geri yükleme ve saklama dış checkpoint kabulüne bağlı.",
+      "approvedRetentionDays": null,
+      "productionAccepted": false,
+      "rawSubjectExport": false
+    },
+    {
+      "table": "identity_derivation_epochs",
+      "source": "identity-derivation-epoch.mjs",
+      "columns": [
+        "tenant",
+        "namespace",
+        "revision",
+        "key_digest",
+        "activated"
+      ],
+      "purpose": "PKCE/nonce anahtar sürümünü aynı oturum commit işleminde yeniden denetlemek",
+      "scope": "tenant/issuer-audience namespace/revision",
+      "lifecycle": "Monoton ve değişmez yerel geçmiş; key checkpoint/geri yükleme/gerçek KMS kabulü açık. Otomatik silinmez.",
       "approvedRetentionDays": null,
       "productionAccepted": false,
       "rawSubjectExport": false

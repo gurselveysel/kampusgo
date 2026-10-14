@@ -26,3 +26,7 @@ Denetim HTTP isteğinin başlangıcındadır; daha sonra bekleyen sağlayıcı �
 ## Teknik kaynak
 
 [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html), sürümsüz güncel belge; 14.10.2026 tarihinde token iletimi ve HMAC/session bağı bölümleri okundu. Oturuma bağlı sunucu doğrulaması, tokenı URL/loglara taşımama ve Origin denetimi korunur. Buradaki ardışık epoch ve bütün kovaların bitmesini bekleme tasarımı proje kararıdır; OWASP tarafından tarif edilmiş rotasyon protokolü veya kurum politikası olarak sunulmaz.
+
+## Paket45 izleme
+
+Yerel statik PKCE/nonce anahtarı artık aynı oturum transaction’ında monoton revizyon ve küresel yerel engel siciliyle denetlenir. Ayrıntı `DERIVATION-EPOCH-CONTRACT.md`. İki yeni teknik tabloyla envanter16 tablo/133tür; otomatik temizleme yok. Yukarıdaki tarihsel paket sınırları korunur; gerçek KMS metadata/üretim SQL/geri yükleme checkpoint köprüsü hâlâ açık.

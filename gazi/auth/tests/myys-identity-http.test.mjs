@@ -120,3 +120,16 @@ test('B07 HTTPS CSRF anahtarı dönerken canlı bütçe korunur; yeni form gerek
   h.rotateCsrf(nextKey,2);assert.equal((await h.request(P.session,{headers:{Cookie:b.c}})).status,200);assert.equal(h.f.s.db.prepare("SELECT count(*) n FROM audit WHERE action='identity.http-key-epoch'").get().n,2);
  }finally{await h.close();}
 });
+
+test('B07 HTTPS callback sırasında türetme anahtarı dönerse eski yanıt çerez vermez; yeni sürümle tekrar giriş yapılır',()=>use(async h=>{
+ const b=await begin(h),cb=await response(h,b),oldWorker=h.identity;h.beforeToken=async()=>h.rotateDerivation(randomBytes(32),2);
+ const r=await h.request(cb,{headers:{Cookie:b.c}});assert.equal(r.headers.location,P.login+'?result=failed');assert.equal(r.headers['set-cookie'],undefined);assert.equal(grants(h),0);assert.equal(h.f.s.db.prepare('SELECT status FROM identity_challenges').get().status,'failed');
+ h.beforeToken=async()=>{};const next=h.identity;h.selectIdentity(oldWorker);await closedDerivationStart(h);h.selectIdentity(next);const fresh=await login(h);assert.equal(fresh.session.personId,'student');assert.equal(grants(h),1);assert.equal(h.tokenCalls,2);
+}));
+test('B07 HTTPS anahtar durdurma callback ve sonraki girişte geçerli; eski akademik oturum korunur',()=>use(async h=>{
+ const first=await login(h),b=await begin(h),cb=await response(h,b);h.beforeToken=async()=>h.blockDerivation();
+ const r=await h.request(cb,{headers:{Cookie:b.c}});assert.equal(r.headers.location,P.login+'?result=failed');assert.equal(r.headers['set-cookie'],undefined);assert.equal(grants(h),1);assert.equal((await h.request(P.session,{headers:{Cookie:first.c}})).status,200);
+ h.beforeToken=async()=>{};await closedDerivationStart(h);h.rotateDerivation(randomBytes(32),2);const fresh=await login(h);assert.equal(fresh.session.personId,'student');assert.equal(grants(h),2);
+}));
+
+async function closedDerivationStart(h){const page=await h.request(P.login);assert.equal(page.status,200);const r=await h.request(P.start,{method:'POST',headers:headers(h,setCookie(page)),form:{csrf:csrf(page)}});assert.equal(r.status,503);assert.equal(r.json().code,'identity_key');assert.equal(r.headers['set-cookie'],undefined);assert.equal(r.headers.location,undefined);}

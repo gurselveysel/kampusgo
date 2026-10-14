@@ -489,7 +489,7 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "Paket39: 7 oran/anahtar +1 gerçek HTTPS yeni test; 540 sunucu +48 portal +46 regresyon =634. Mevcut HTTPS kimlik15 ve itiraz13 tarayıcı kontrolü geçti. Üretim PostgreSQL/KMS kabulü yok.",
+      "test_status": "Paket45: 9 yeni akış +2 gerçek HTTPS test;602 sunucu+48 portal+46 regresyon=696. Mevcut kimlik15 ve giriş temizliği9=24 tarayıcı kontrolü. İki SQLite bağlantısında doğrulama sonrası commit yarışı geçti; gerçek PG/KMS kabulü değil.",
       "implementation_evidence": [
         "gazi/auth/myys/IMPLEMENTATION.md",
         "gazi/auth/tests/myys.test.mjs",
@@ -520,20 +520,23 @@
         "gazi/auth/myys/acceptance/B07-adapters-20261014.json",
         "gazi/auth/myys/HTTP-KEY-ROTATION-CONTRACT.md",
         "gazi/auth/tests/myys-http-key-rotation.test.mjs",
-        "gazi/auth/myys/acceptance/B07-http-key-rotation-20261014.json"
+        "gazi/auth/myys/acceptance/B07-http-key-rotation-20261014.json",
+        "gazi/auth/myys/identity-derivation-epoch.mjs",
+        "gazi/auth/myys/DERIVATION-EPOCH-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B07-derivation-epoch-20261014.json"
       ],
-      "production_status": "Paket39 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–39 dağıtımı yok; kurumsal SSO kapalı.",
-      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı. Paket39 yerel HTTP CSRF/oran anahtarının ardışık kalıcı revizyonunu ve bütçe sıfırlamasını engelleyen geçişi bağladı. Eski işçiler boşaltılmalı; yeni etkin sürüm eskilerini reddeder. Bu, PKCE/nonce anahtar revizyonunun session commit bariyeri değildir.",
+      "production_status": "Son canlı Paket16. Paket45 kimlik bariyeri yalnız kaynak/yerel kabul;17–45 dağıtımı yok;configuredCore kapalı.",
+      "implementation_note": "Kurum/issuer/audience/sub/sid kapsamlı imzalı sağlayıcı çıkışı, tek makbuz/atomik iptal, gecikmiş giriş bariyeri, iki depo bağlantısı ve kalıcı oran sınırı gerçek yerel HTTPS ile bağlı. Kapalı oturum ve Türkçe bekleme ekranı çalışıyor; gerçek IdP/üretim hizmeti değil. Paket29 tek-client serializable işlem sınırı, belirsiz COMMIT reddi, opt-in sınırlı tam SQL tekrar ve PKCE/nonce sürümlü MAC sağlayıcı sınırı ekledi; gerçek SQL repository/HTTP/anahtar-epoch köprüsü henüz bağlanmadı. Paket39 yerel HTTP CSRF/oran anahtarının ardışık kalıcı revizyonunu ve bütçe sıfırlamasını engelleyen geçişi bağladı. Eski işçiler boşaltılmalı; yeni etkin sürüm eskilerini reddeder. Bu, PKCE/nonce anahtar revizyonunun session commit bariyeri değildir. Paket45 mevcut yerel HTTP/PKCE akışında anahtar revizyonunu challenge sözleşmesine ve aynı session-commit transaction’ına bağladı; paylaşılan anahtarı bütün namespace’lerde durduran güvenilen yerel operatör sınırı var. Gerçek KMS metadata köprüsü ve SQL repository ayrı açık.",
       "independent_remaining_work": [
         "Kişi/üyelik/challenge/session/iptal/rate/audit SQL repository ve HTTP bağlamasını bu işlem sınırıyla tamamla; PostgreSQL şema/driver gerçek kabulünü bağımsız fault-driver kabulüyle karıştırma.",
-        "Monoton PKCE/nonce anahtar revizyonu/iptal bariyerini session commit içinde atomik denetle; yerel CSRF/rate dönüşümü Paket39 ile geçti, üretim kontrol düzlemi/drain ve gerçek KMS driver kabulü ayrı açık.",
+        "Yerel PKCE/nonce atomik commit bariyeri Paket45 ile geçti. IdentityKeyProvider metadata revizyonunu üretim repository/challenge ile bağla; KMS iptalinden önce DB bariyerini kapatan kontrol düzlemi ve tüm session yazarları protokolü açık. Gerçek KMS driver kabulü ayrı dış koşuldur.",
         "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo/IdP erişimi, migration ve yeni credential özel yetki sınırında kapalı."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Kurumun kimlik sağlayıcısı sözleşmesi ve yetkili test erişimi.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi; yerel HTTP anahtar dönüşümü bağlı, SQL repository/PKCE atomik bariyer açık",
+          "status": "kısmi; yerel HTTP PKCE/nonce commit bariyeri bağlı; üretim SQL repository ve gerçek KMS metadata köprüsü açık",
           "evidence": [
             "gazi/auth/myys/IMPLEMENTATION.md",
             "gazi/auth/tests/myys.test.mjs",
@@ -564,22 +567,25 @@
             "gazi/auth/myys/acceptance/B07-adapters-20261014.json",
             "gazi/auth/myys/HTTP-KEY-ROTATION-CONTRACT.md",
             "gazi/auth/tests/myys-http-key-rotation.test.mjs",
-            "gazi/auth/myys/acceptance/B07-http-key-rotation-20261014.json"
+            "gazi/auth/myys/acceptance/B07-http-key-rotation-20261014.json",
+            "gazi/auth/myys/identity-derivation-epoch.mjs",
+            "gazi/auth/myys/DERIVATION-EPOCH-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B07-derivation-epoch-20261014.json"
           ],
           "remaining": [
             "Kişi/üyelik/challenge/session/iptal/rate/audit SQL repository ve HTTP bağlamasını bu işlem sınırıyla tamamla; PostgreSQL şema/driver gerçek kabulünü bağımsız fault-driver kabulüyle karıştırma.",
-            "Monoton PKCE/nonce anahtar revizyonu/iptal bariyerini session commit içinde atomik denetle; yerel CSRF/rate dönüşümü Paket39 ile geçti, üretim kontrol düzlemi/drain ve gerçek KMS driver kabulü ayrı açık.",
+            "Yerel PKCE/nonce atomik commit bariyeri Paket45 ile geçti. IdentityKeyProvider metadata revizyonunu üretim repository/challenge ile bağla; KMS iptalinden önce DB bariyerini kapatan kontrol düzlemi ve tüm session yazarları protokolü açık. Gerçek KMS driver kabulü ayrı dış koşuldur.",
             "Dağıtık worker/region hata, iptal checkpoint geri yükleme ve kapasite kabulü; gerçek depo/IdP erişimi, migration ve yeni credential özel yetki sınırında kapalı."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi; yerel HTTP anahtar dönüşümü geçti",
-          "evidence": "Paket39: 7 oran/anahtar +1 gerçek HTTPS yeni test; 540 sunucu +48 portal +46 regresyon =634. Mevcut HTTPS kimlik15 ve itiraz13 tarayıcı kontrolü geçti. Üretim PostgreSQL/KMS kabulü yok.",
-          "limits": "Gerçek PostgreSQL/KMS yok. PKCE/nonce adaptörleri HTTP akışına bağlı değil; CSRF/rate denetimi yerel ve istek başında."
+          "status": "yerel alt dilim geçti",
+          "evidence": "Paket45: 9 yeni akış +2 gerçek HTTPS test;602 sunucu+48 portal+46 regresyon=696. Mevcut kimlik15 ve giriş temizliği9=24 tarayıcı kontrolü. İki SQLite bağlantısında doğrulama sonrası commit yarışı geçti; gerçek PG/KMS kabulü değil.",
+          "limits": "SQLite yerel protokol; gerçek KMS/PG/IdP/RLS/geri yükleme kontrol düzlemi kabulü değildir."
         },
         "live": {
-          "status": "Paket39 canlı yayımlanmadı",
-          "evidence": "Paket39 yalnız yerel kabul; son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877. Paket17–39 dağıtımı yok; kurumsal SSO kapalı."
+          "status": "yeni dilim yayımlanmadı",
+          "evidence": "Son canlı Paket16. Paket45 kimlik bariyeri yalnız kaynak/yerel kabul;17–45 dağıtımı yok;configuredCore kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2750,16 +2756,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 44,
-    "server_security_tests": "591/591",
+    "software_package": 45,
+    "server_security_tests": "602/602",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 685,
+    "local_total": 696,
     "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
-    "browser_visual_acceptance": "14 materyal+19 gezinme+13 itiraz=46 kontrol;98 menü/288 rol paneli;390 px/klavye/iki ayrı Chromium eski ekran yarışı. Gerçek yardımcı teknoloji veya kurum kabulü değildir.",
+    "browser_visual_acceptance": "15 HTTPS kimlik+9 giriş temizliği=24 kontrol. Yeni anahtar dönüşüm/iptal uçları gerçek HTTPS yanıt testleriyle; ayrı görsel ekran değişmedi.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–44 dağıtılmadı;configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B05-B25-material-20261014.json"
+    "deployment": "Son canlı16 READY;17–45 dağıtılmadı;configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B07-derivation-epoch-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2781,12 +2787,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 44,
-    "source_parent_remote": "7e0261866225a14fcd6446ce6e42e94207addebb",
-    "source_parent_tree": "e2f38573cc81eba3e1aa7e9de8ad73406fad4f04",
+    "software_package": 45,
+    "source_parent_remote": "3255b07d886693b6b766c63a142829bcc82f0459",
+    "source_parent_tree": "3c9b094248793950b670824b9877ca6edd7db47f",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 685,
-    "note": "B05/B25 özgün materyal-sicil/inceleme/teslim/kanıt bağı yerel kabul; kaynak eşitlemesi sırada. B07 atomik kimlik anahtarı bariyeri ve B28 güvenlik checkpoint/saklama bağımsızları sürer; tüm36 tamamlanmadı."
+    "local_tests": 696,
+    "note": "B07 yerel PKCE/nonce commit bariyeri kabul; kaynak eşitlemesi sırada. B20/B21 çoklu tanıma/istisna dilimini backlog üzerinden incele; B07 üretim repository/KMS metadata köprüsü,B28 checkpoint/saklama ve tüm diğer bağımsızlar açık."
   },
   "verification_history": [
     {
@@ -2905,6 +2911,19 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16 READY;17–43 dağıtılmadı;configuredCore kapalı.",
       "evidence": "gazi/auth/myys/acceptance/B03-program-package-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 44,
+      "server_security_tests": "591/591",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46 model/kaynak/demo",
+      "local_total": 685,
+      "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
+      "browser_visual_acceptance": "14 materyal+19 gezinme+13 itiraz=46 kontrol;98 menü/288 rol paneli;390 px/klavye/iki ayrı Chromium eski ekran yarışı. Gerçek yardımcı teknoloji veya kurum kabulü değildir.",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16 READY;17–44 dağıtılmadı;configuredCore kapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B05-B25-material-20261014.json"
     }
   ]
 }

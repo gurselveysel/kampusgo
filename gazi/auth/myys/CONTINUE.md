@@ -1,3 +1,17 @@
+# Güncel devam — Paket45 yerel kabul; kaynak eşitlemesi sırada
+
+B07 mevcut yerel HTTPS/PKCE akışında key revision/digest challenge’a ve session commit’ine bağlı. Global key block shared tenant/issuer/audience kapsamını kapatır; mevcut kurulu oturumları otomatik silmez. 11 yeni test;602+48+46=696 otomatik;15 kimlik+9 temizlik=24tarayıcı;123komut/17HTTP7056örnek56448denetim;16tablo133tür;115statik. IdentityKeyProvider gerçek metadata köprüsü/SQL repository/PG/RLS/KMS ve güvenilir restore checkpoint açık.
+
+Önce diff/uzak baş/commit ve expected-head `3255b07d886693b6b766c63a142829bcc82f0459`, base-tree `3c9b094248793950b670824b9877ca6edd7db47f` ile tam kaynak eşitlemesi. Son canlı16 READY;17–45 dağıtımı yok. BrowserAuth iptalini yeniden isteme;configuredCore kapalı;tek editör/alt ajan yok.
+
+Sıradaki bağımsız ekran dilimi: B20/B21 çoklu ders/istisna tanıma zincirini özgün backlog ve mevcut recognition kodu üzerinden incele; uygun ilk eksik dilimi tamamla. B07 üretim repository/metadata köprüsü,B28 güvenlik checkpoint/idempotency saklama ve tüm diğer bağımsızlar açık. Devam komutu bekleme.
+
+# Güncel devam — Paket44 kaynakta; B07 atomik anahtar bariyeri sırada
+
+Paket44 kaynak doğrulaması: yerel `c447ef917fd296a5f6329333ec9e98bcc86e3186`, uzak `3255b07d886693b6b766c63a142829bcc82f0459`, ortak tam ağaç `3c9b094248793950b670824b9877ca6edd7db47f`.32 blob SHA ve tam ağaç eşleşti; beklenen uzak baş ve force=false ile ilerletildi. Yeni canlı yayın yok.
+
+685 otomatik/46 tarayıcı;son canlı16;17–44 dağıtımı yok. BrowserAuth iptalini yeniden isteme;configuredCore kapalı;tek editör/alt ajan yok. B07 kimlik PKCE/nonce sürümü ve oturum commit atomik bariyerini incele; ardından B28 ve bütün diğer bağımsızları sürdür.
+
 # Güncel devam — Paket44 yerel kabul; kaynak eşitlemesi sırada
 
 B05/B25 Ders ve materyal + Öğrenme kanıtları: tek66ders kaynağı, sürümlü program/görev/rubrik/hak sicili bağı, ayrı yönetici ve kalite incelemesi, gerçek özgün HTML/CSV indirmesi, kendi tesliminden çalışma ve karar zinciri. Üçüncü taraf dosyalar kopyalanmaz; mevcut özgün pilot erişimi kurumsal teslim sayılmaz.685 otomatik/46 tarayıcı;123komut/17HTTP7028örnek56224denetim;98menü288panel;115statik/88özgünbayt aynı;133tür14tablo.

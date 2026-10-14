@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-14",
+  "package": 45,
+  "work_ids": [
+    "B07"
+  ],
+  "ui": "Yeni panel/menü yok; mevcut yerel girişte başarısız callback dönüşü",
+  "production_enabled": false,
+  "new_tests": 11,
+  "automated": {
+    "server": 602,
+    "portal": 48,
+    "regression": 46,
+    "total": 696
+  },
+  "browser": {
+    "identity": 15,
+    "login_cleanup": 9,
+    "total": 24
+  },
+  "scope": {
+    "commands": 123,
+    "http_routes": 17,
+    "positive_samples": 7056,
+    "derived_negative_checks": 56448
+  },
+  "security_tables": 16,
+  "record_kinds": 133,
+  "protected_static_files": 115,
+  "completed_slice": [
+    "Local key revision/digest pins challenge contract",
+    "Current key is checked within begin, claim and session commit transactions",
+    "Global local key block covers shared tenant/issuer/audience namespaces",
+    "Two-store proof-verification/commit race rejects new session; HTTPS callback yields no cookie"
+  ],
+  "limits": [
+    "No actual KMS driver, PG repository, IdP or migration",
+    "IdentityKeyProvider metadata to production challenge/commit bridge still open",
+    "All session writers must adopt protocol; old deployment workers and restored old backups need controlled rollout/checkpoint",
+    "Already committed sessions are not automatically revoked by derivation-key block",
+    "No production deployment or authenticated smoke"
+  ],
+  "live": {
+    "package": 16,
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "new_deployment": null
+  }
+}
