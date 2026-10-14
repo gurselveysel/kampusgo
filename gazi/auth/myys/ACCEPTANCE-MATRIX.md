@@ -219,3 +219,17 @@ Birim kapasitesi sekmesi: iki birimde ayrı görev/MFA, ilk grubun sabit program
 | Dış erişim | Üretim depo/RLS/işçi/dağıtık yük ve gerçek rapor kabulü açık |
 
 `CAPACITY-CONTRACT.md` ve `acceptance/B32-capacity-20261014.json` ayrıntılı kanıttır. Özgün36işin kimlik, bağımlılık ve kabul ölçütleri değişmedi.
+
+## Paket35 — B33 yerel beceri eşlemesi (14.10.2026)
+
+Beceri ilişkileri: program/kaynak/lisans/görevlendirme sicili, atanmış ayrı satır incelemesi, çoktan çoğa ilişki, hedef-gelişen-yerel kanıtlı durum, öğrenen bildirimi/düzeltme sürümü/kalite durdurma.11yeni sunucu/14eşleme tarayıcı;500+48+46=594otomatik;19gezinme/13itiraz;94komut/16HTTP4386örnek35088türetilmiş denetim.
+
+| B33 ekseni | Durum |
+|---|---|
+| Kod | Tanımlı bağımsız eşleme/inceleme/düzeltme dilimi hazır; üretim bağlama kısmi |
+| Yerel işlev/güvenlik | Rol/kurum/birim/kişi ayrımı, inceleme yarışı, hata/düzeltme, karar arşivi SHA korunması geçti |
+| Canlı | Paket35 yayımlanmadı; son canlı16 |
+| Kurum kararı | Gerçek uzman ataması, taksonomi/çeviri hakkı ve temsilî akademik örneklem açık |
+| Dış erişim | Seçili gerçek taksonomi paketi, B29 gerçek kaynak, üretim depo/kimlik kabulü açık |
+
+SKILL-MAP-CONTRACT.md ve B33-skill-map-20261014.json sınırları esastır. Gerçek kurumsal taksonomi onayı false kalır; özgün36işin kriterleri değiştirilmedi.

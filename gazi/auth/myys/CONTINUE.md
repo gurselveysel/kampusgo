@@ -1,3 +1,25 @@
+# Güncel devam — Paket35 yerel kabul; kaynak eşitlemesi sırada
+
+B33 Beceri ilişkileri hazır yerel dilim:594otomatik(500+48+46),14eşleme+19gezinme+13itiraz=46tarayıcı.94komut/16HTTP4386örnek35088denetim;98menü/252panel/66ders,115statik dosya. SKILL-MAP-CONTRACT/B33kanıtı/backlog/beşeksen güncel;36özgünkriter korundu.
+
+Önce diff/commit ve expected-headb1e4ae3aab4e1dc43ee41f5aab3fd67187a505a4 ile eşitle. Taban yerel4f389bb75119a24f2e3f1889788ad7452adbf937 / ortak2ad80cbb9df7e7042855e00181d6e2fd1b79811f. Soncanlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–35yayını yok. browserAuthiptaliniyenidenisteme;configuredCorekapalı,tekeditör/altajanyok.
+
+Sıradaki B34 amaçla sınırlı portfolyo/öğrenen izni/alıcıya ayrı dar yetki/nottan ayrı geri bildirim. B18cüzdan paylaşımı ve B33eşleme kaynaklarını yeniden kullan; yeni gerçekişveren/credential/kurumkararı uydurma. B35modelkıyası/B36alternatif/B07SQLrepoHTTPkeybarrier/B28yenikayıtsaklama ve bütünB01–B36kalanbağımsız işler sürer. Devam komutu bekleme.
+
+# Güncel ara nokta — Paket35 B33 yerel kabul; dokümantasyon/eşitleme sürüyor
+
+Beceri ilişkileri skill-map.mjs/SkillMapWorkspace bağlı.11yeni sunucu geçti;500sunucu+48portal+46regresyon=594otomatik.94komut/16HTTP4386örnek35088denetim.14yeni eşleme tarayıcı geçti;19gezinme/13itiraz regresyonu PTY55008 sürüyor, loglar/tmp/gazi-package35-*.log.115dosya paketlendi. SKILL-MAP-CONTRACT.md yazıldı; kaynak/sürüm/telif kapsamını oku. B33backlog/kabulmatrisi/kanıt/RELEASE35 henüz yazılmadı; commit yok.
+
+B34kaynak tabanıyerel4f389bb75119a24f2e3f1889788ad7452adbf937/uzakb1e4ae3aab4e1dc43ee41f5aab3fd67187a505a4/ortak2ad80cbb9df7e7042855e00181d6e2fd1b79811f.22blobtam ağaceşitlendi. Son canlı16;17–35yayını yok. browserAuthiptaliniyenidenisteme,configuredCorekapalı.
+
+Sıradaki:35regresyonkanıtını doğrula,beşeksen/36özgünkriter/docs/commitexpectedhead eşitle; ardından B34 amaçla sınırlı portfolyo/izin/nottan ayrı geri bildirim. B35modelkıyası/B36alternatif/B07SQLrepoHTTPkeybarrier/B28yenikayıtsaklama ve tümB01–B36kalan bağımsız işler sürer. Tekeditör/altajanyok;gerçekkurumkararı/credential/migration/ücretliservis yok. Devam komutu bekleme.
+
+# Güncel devam — Paket34 kaynakta; B33 uzman eşleme dilimi
+
+Yerel4f389bb75119a24f2e3f1889788ad7452adbf937 / uzakb1e4ae3aab4e1dc43ee41f5aab3fd67187a505a4 / ortak2ad80cbb9df7e7042855e00181d6e2fd1b79811f.22blob/tam ağaç eşleşti;583otomatik/73tarayıcı. Son canlı16;17–34yayını yok. Kullanıcının güvenli giriş iptalini yeniden isteme; configuredCore kapalı.
+
+B33 mevcut projections.mjs/registry/core okundu. Hedef: lisans/kurumsal görevlendirme sicili ve kaynak sürümüne bağlı çoktan çoğa Öğrenme Çıktısı-beceri eşlemesi; açık yerel uzman ataması, ayrı inceleme, öğrenen hata bildirimi/düzeltme sürümü. Eski değerlendirme ve karar değişmeyecek; gerçek uzman/kurum onayı uydurulmayacak. ESCO resmî teknik sayfaları yalnız kaynak modeli örneği; gerçek veri seti alınmadı/kuruma lisans veya Türkçe çeviri hakkı varsayılmadı. B34–36/B07/B28 ve tümbağımsızB01–B36işleri sürer. Tekeditör/altajanyok,credential/migration/gerçekkişi yok.
+
 # Güncel devam — Paket34 yerel kabul; kaynak eşitlemesi sırada
 
 B32 Birim kapasitesi hazır yerel dilim:583otomatik(489+48+46),14kapasite+19gezinme+12grup+15ders kaydı+13itiraz=73tarayıcı.90komut/16HTTP4194örnek33552denetim;98menü/252panel/66ders,115statik dosya. CAPACITY-CONTRACT/B32kanıtı/backlog güncel;36özgünkriter korundu.

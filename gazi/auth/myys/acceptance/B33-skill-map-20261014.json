@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-14",
+  "software_package": 35,
+  "work_packages": [
+    "B33"
+  ],
+  "production": false,
+  "source_parent": {
+    "local": "4f389bb75119a24f2e3f1889788ad7452adbf937",
+    "remote": "b1e4ae3aab4e1dc43ee41f5aab3fd67187a505a4",
+    "tree": "2ad80cbb9df7e7042855e00181d6e2fd1b79811f"
+  },
+  "last_verified_live": {
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false
+  },
+  "automated": {
+    "server": 500,
+    "portal": 48,
+    "regression": 46,
+    "total": 594,
+    "new_skill_map_tests": 11
+  },
+  "scope": {
+    "commands": 94,
+    "http_routes": 16,
+    "positive_samples": 4386,
+    "derived_negative_checks": 35088,
+    "not_test_count_or_product_percentage": true
+  },
+  "skill_map_browser": {
+    "at": "2026-10-14T04:37:18.890Z",
+    "scope": "isolated-local-acceptance",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Öğrenen insan değerlendirmesini gördü; uzman incelemesi olmayan dış beceri onaylı gösterilmedi",
+      "Koordinatör kaynak/lisans/görev siciline bağlı iki ilişki hazırladı; satır ekleme/kaldırma odağı ve görev ayrımı çalıştı",
+      "Atanmamış komisyon görevlisine inceleme verilmedi; taslak öğrenene açılmadı",
+      "Atanmış ayrı incelemeci her ilişkiyi gerekçelendirdi; öğrenen iki yerel kanıt ilişkisini aynı programdan gördü",
+      "Öğrenen hatalı ilişkiyi bildirdi; yalnız ilgili ilişki incelemeye alındı, karar arşivi değişmedi",
+      "Başka öğrenene kişi becerisi, hata bildirimi veya program eşlemesi sızmadı",
+      "Hata bildirimi gerekçeli ikinci sürüme bağlandı; inceleme beklerken eski kabul ve açık hata korundu",
+      "Düzeltme ayrı incelemeyle etkin oldu; eski bildirim çözüm sürümünde izleniyor ve akademik arşiv aynı kaldı",
+      "Kalite görevlisi eşlemeyi durdurdu; eski eşlemeye dönülmedi ve başarı kararı iptal edilmedi",
+      "Teknik ve mali rollere uzman veya kişi eşleme yetkisi açılmadı",
+      "Beceri/eşleme araması, boş sonuç ve doğrudan sekme yenilemesi çalıştı",
+      "390 px beceri/kaynak/geçmiş ekranı taşmadı; kaynak ayrıntısı klavyeyle açıldı",
+      "Mobil iki ilişkili sürüm formunda yatay taşma yok",
+      "İstemci istisnası yok"
+    ],
+    "errors": [],
+    "production": false,
+    "expertAuthorityVerified": false,
+    "externalTaxonomyVerified": false,
+    "manualScreenReader": false
+  },
+  "regression_browser": {
+    "navigation": 19,
+    "appeals": 13,
+    "menu_targets": 98,
+    "role_panels": 252,
+    "lessons": 66,
+    "browser": "138.0.7204.0"
+  },
+  "protected_static_files": 115,
+  "sources": [
+    {
+      "url": "https://esco.ec.europa.eu/en/use-esco",
+      "read_at": "2026-10-14",
+      "displayed_version": "ESCO v1.2.1, 10/12/2025; portal Release v6.0.0",
+      "scope": "Kavram adresi/kapsam/sürüm/dil; Türkçe resmî paket varsayılmaz."
+    },
+    {
+      "url": "https://esco.ec.europa.eu/en/about-esco/faq",
+      "read_at": "2026-10-14",
+      "scope": "Kavram/bağlantı modülleri; akademik ilişki onayı değildir."
+    },
+    {
+      "url": "https://commission.europa.eu/legal-notice_en",
+      "read_at": "2026-10-14",
+      "scope": "Genel CC BY 4.0/atıf-değişiklik/istisnalar; seçili paketin hakları yerine geçmez."
+    }
+  ],
+  "limits": [
+    "Gerçek lisanslı taksonomi/uzman görevlendirmesi/temsilî akademik örneklem onayı yok.",
+    "Tam veri seti indirilmedi; sentetik kavramlar taxonomy.invalid; ESCO eşlemesi gibi sunulmadı.",
+    "Yerel örneklem hazırlanan satırların tamamıdır; bütün taksonomi veya 66 dersin örneklem kabulü değil.",
+    "Dış eşleme meslek/kredi/işveren onayı ve otomatik akademik karar üretmez.",
+    "B09/B29 gerçek kurum, üretim kimlik/depo ve canlı kabulü açık.",
+    "Yeni credential/servis/migration/gerçek öğrenci işlemi yok; Paket17–35 canlı değil; bütünB01–B36tamamlanmadı."
+  ]
+}

@@ -2388,37 +2388,45 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "İtirazda değerlendirme göstergesi düşer; başka öğrenen ilişkisi görünmez.",
+      "test_status": "11 eşleme sunucu ve 14 tarayıcı senaryosu; çoktan çoğa ilişki, atanmış ayrı inceleme, hata/düzeltme ve karar arşivi SHA korunması geçti.",
       "implementation_evidence": [
+        "gazi/auth/myys/skill-map.mjs",
         "gazi/auth/myys/projections.mjs",
-        "gazi/auth/tests/myys.test.mjs"
+        "gazi/auth/myys/SKILL-MAP-CONTRACT.md",
+        "gazi/auth/tests/myys-skill-map.test.mjs",
+        "gazi/portal/src/skill-map-workspace.jsx",
+        "scripts/myys-skill-map-browser.cjs",
+        "gazi/auth/myys/acceptance/B33-skill-map-20261014.json"
       ],
-      "production_status": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi.",
-      "implementation_note": "Program çıktısı–görev–değerlendirme ilişkisi hedef/gelişen/değerlendirilen olarak yansıtılır; uzman taksonomi onayı yok.",
-      "independent_remaining_work": [
-        "Uzman eşleme incelemesi, kaynak lisansı ve hata düzeltme sicili."
-      ],
+      "production_status": "Paket35 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı.",
+      "implementation_note": "Program/kaynak/lisans/görevlendirme siciline bağlı yerel eşleme ve bağımsız satır incelemesi, aynı kişi/kanıttan hedef-gelişen-yerel kanıtlı görünüm, hata/düzeltme/durdurma bağlı. Gerçek taksonomi/uzman kabulü yok.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Lisanslı taksonomi ve akademik uzman kabulü.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; tanımlı bağımsız eşleme dilimi hazır",
           "evidence": [
+            "gazi/auth/myys/skill-map.mjs",
             "gazi/auth/myys/projections.mjs",
-            "gazi/auth/tests/myys.test.mjs"
+            "gazi/auth/myys/SKILL-MAP-CONTRACT.md",
+            "gazi/auth/tests/myys-skill-map.test.mjs",
+            "gazi/portal/src/skill-map-workspace.jsx",
+            "scripts/myys-skill-map-browser.cjs",
+            "gazi/auth/myys/acceptance/B33-skill-map-20261014.json"
           ],
           "remaining": [
-            "Uzman eşleme incelemesi, kaynak lisansı ve hata düzeltme sicili."
+            "Seçili gerçek taksonomi paketi ve kurumca uzman atamasıyla üretim/depo bağlama kabulü."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "İtirazda değerlendirme göstergesi düşer; başka öğrenen ilişkisi görünmez.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "tanımlı yerel dilim geçti; genel paket kısmi",
+          "evidence": "11 eşleme sunucu ve 14 tarayıcı senaryosu; çoktan çoğa ilişki, atanmış ayrı inceleme, hata/düzeltme ve karar arşivi SHA korunması geçti.",
+          "limits": "Sentetik taxonomy.invalid kavramları; gerçek lisans/akademik uzman/temsilî örneklem veya ekran okuyucu kabulü değil."
         },
         "live": {
-          "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "İlk paketin korumalı arayüzü yayımlandı; kurumsal akademik hizmet etkinleştirilmedi."
+          "status": "Paket35 yayımlanmadı",
+          "evidence": "Paket35 kaynak adayı; canlı değil. Son doğrulanmış canlı Paket16; kurumsal çekirdek kapalı."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2426,7 +2434,7 @@
         },
         "external_access": {
           "status": "teyit/erişim bekleniyor",
-          "target": "Lisansı teyit edilecek beceri taksonomisi",
+          "target": "Lisansı/sürümü/atıf-çeviri şartları okunmuş seçili taksonomi; gerçek B29 kaynağı ve üretim depo kabulü.",
           "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
         }
       }
@@ -2595,16 +2603,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 34,
-    "server_security_tests": "489/489",
+    "software_package": 35,
+    "server_security_tests": "500/500",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 583,
+    "local_total": 594,
     "portal_build": "Başarılı;115statik dosyalı mevcut korumalı paket",
-    "browser_visual_acceptance": "14kapasite+19gezinme+12grup+15ders kaydı+13itiraz;98menü/252rol-panel/66ders. Gerçek ekran okuyucu veya dağıtık yük kabulü değil.",
+    "browser_visual_acceptance": "14beceri eşleme+19gezinme+13itiraz;98menü/252rol-panel/66ders. Gerçek uzman/taksonomi/ekran okuyucu kabulü değildir.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–34dağıtılmadı.configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B32-capacity-20261014.json"
+    "deployment": "Son canlı16 READY;17–35dağıtılmadı.configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B33-skill-map-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {

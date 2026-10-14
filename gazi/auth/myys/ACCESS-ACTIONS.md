@@ -30,6 +30,8 @@ Kaynaklar: [Gazi BIDB](https://bidb.gazi.edu.tr/) GUZEM ve OBS bağlantıların�
 
 9. **İkinci birim katılımı ve kapasitesi (B32):** gerçek ilk kohortun B30 kabul sahibi ile ikinci birimin katılım/issuer/rol/veri/rapor sorumluları; program ve korunacak ilk kohort sürümü; gerçek kayıt/kuyruk/toplu satır kapasitesi, izleme ve durdurma yetkisi. Hedef, yerel kapasite planını onaylı birim kararına ve üretim depo/RLS/işçi yük kabulüne bağlamaktır. İlk adım yazılı karar ve kapsam incelemesidir; yeni gerçek üyelik, kurum veya ücretli kaynak açma yetkisi varsayılmaz.
 
+10. **Taksonomi ve uzman kabulü (B33):** seçili veri paketi/kavram sürümü, gerçek lisans ve varsa üçüncü taraf/çeviri/atıf şartları; program-beceri eşlemesi kapsamı ve kurumca görevlendirilmiş akademik uzman; gerçek ders/kanıt örneklemi, hata düzeltme ve dönemsel gözden geçirme sorumlusu. Hedef, sentetik ilişkileri gerçek hak ve uzman kararıyla karşılaştırmaktır. Kamuya açık ESCO açıklamaları tüm veri paketinin/markanın/çevirinin kullanım hakkı veya Gazi uzman görevlendirmesi yerine geçmez. Gerçek kişiye meslek yeterliliği atama izni varsayılmaz.
+
 Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir. Şu aşamada bilinmeyen issuer, API yolu veya test veritabanı adı uydurulmadı. Bilgi eksikliği bağımsız yerel kod/test işlerini durdurmaz.
 
 ## Ayrı özel yetki gerektiren sonraki işlemler

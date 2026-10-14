@@ -233,3 +233,7 @@ B26: `support-service.mjs` sürümlü yerel takvim/ayrı inceleme/hold; `support
 ## Paket34 — İkinci birim kapasitesi
 
 `capacity.mjs` iki birimde yönetici hazırlığı/ayrı kalite incelemesi, ilk kohort revizyon özeti, sürüm/son gün/durdurma ve kayıt-kuyruk-satır kotasını bağlar. Core enrollment, LMS intake ve batch-create aynı işlemde kapasiteyi doğrular ve kabul sürümünü sabitler. Eski iş bitirilebilir; kaynak iptali güvenlik muafiyetiyle gelir. CapacityWorkspace mevcut akademik kişi/rol/kurum verisini kullanır.11yeni sunucu ve14tarayıcı;583otomatik;90komut/16HTTPkapsam matrisi. B32 genel kabul kısmi; gerçek kurum ve dağıtık depo/yük açık. CAPACITY-CONTRACT.md esas ayrıntıdır.
+
+## Paket35 — Uzman eşleme ve düzeltme
+
+`skill-map.mjs` program/kaynak/sicil sürümlerini, tam kaynak adresi ve görev dayanağını sabitler. Atanmış bağımsız komisyon görevlisi her ilişkiyi inceler. Kendi programındaki öğrenen hata bildirir; düzeltme yeni sürüm ve aynı bildirim referanslarıyla ayrı kabul edilir. Eski akademik kayıt/SHA değişmez. `projections.mjs` aynı kişinin güncel karar/kanıtından ayrı taksonomi durumunu çıkarır; kurumsal expertTaxonomyApproved=false. `SkillMapWorkspace` mevcut Beceri ilişkileri sekmesini kullanır; yeni rol veya kopya öğrenci deposu yok.11yeni sunucu/14tarayıcı;594otomatik,94komut/16HTTP. SKILL-MAP-CONTRACT.md kaynak ve gerçeklik sınırını kaydeder.

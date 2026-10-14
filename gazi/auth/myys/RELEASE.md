@@ -503,3 +503,17 @@ Yerel `990b620fba9c7877e96768aa82bb1d6c8f6afc8d`; uzak `432a4ad9927121958d4eb567
 - 14.10uzakdal/alias saltokunur yeniden doğrulandı. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READYproduction.17–34dağıtımı/yeni oturumlu smoke yok; browserAuth kullanıcı iptali yeniden istenmedi; configuredCorekapalı.
 - Canlı geri dönüş hedefi15 dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1; uygulanmadı.
 - Gerçek ikinci birim/kurum/issuer/kota kararı, ilk gerçek kohort, üretim RLS/dağıtık yük ve rapor kabulü açık. Yeni servis/credential/migration/gerçek öğrenci yok. B32 ve tümB01–B36tamamlanmadı.
+
+### Paket34 kaynak kimlikleri
+
+Yerel `4f389bb75119a24f2e3f1889788ad7452adbf937`; uzak `b1e4ae3aab4e1dc43ee41f5aab3fd67187a505a4`; ortak tam ağaç `2ad80cbb9df7e7042855e00181d6e2fd1b79811f`.22blob SHA ve tam ağaç eşleşti; expected-head432a4ad9927121958d4eb5676af78b907b1b4f25,force=false; uzak yeni baş doğrulandı. Yeni canlı yayın yok.
+
+## Paket35 — beceri eşlemesi, inceleme ve düzeltme; kaynak adayı
+
+14.10.2026. Mevcut Beceri ilişkileri ekranında kaynak/lisans/görev siciline bağlı çoktan çoğa eşleme, atanmış uzman incelemesi, hata bildirimi/düzeltme/durdurma ve kişi bazlı güncel kanıt ilişkisi. Arama/indirme/mobil/klavye; akademik karar arşivi aynı SHA ile korundu.
+
+- 500sunucu+48portal+46regresyon=594otomatik;14eşleme+19gezinme+13itiraz=46tarayıcı.94komut/16HTTP4386örnek35088denetim;115korumalı statik dosya.
+- Taban yerel4f389bb75119a24f2e3f1889788ad7452adbf937 / uzakb1e4ae3aab4e1dc43ee41f5aab3fd67187a505a4 / ortak2ad80cbb9df7e7042855e00181d6e2fd1b79811f.
+- Son doğrulanmış canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READYproduction;14.10saltokunur alias kontrolü.17–35dağıtımı/yeni oturumlu smoke yok; kullanıcı browserAuth iptali yeniden istenmedi;configuredCorekapalı.
+- Canlı geri dönüş hedefi15 dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1;uygulanmadı.
+- Gerçek taksonomi/atıf-çeviri hakkı, kurum uzman görevi/örneklem, B29/üretim kimlik/depo ve canlı kabul açık. ESCO resmî sayfaları teknik model/sınır için okundu; veri seti alınmadı, kurum eşlemesi onaylanmadı. B33/tümB01–B36tamamlanmadı.

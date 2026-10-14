@@ -1,3 +1,4 @@
+import {localSkillMapSetup} from '../gazi/auth/tests/helpers/local-skill-map.mjs';
 import {localCapacitySetup,capacityActors} from '../gazi/auth/tests/helpers/local-capacity.mjs';
 import {localPaymentSetup} from '../gazi/auth/tests/helpers/local-payment.mjs';
 import {LocalRecoveryService} from '../gazi/auth/myys/recovery.mjs';
@@ -26,7 +27,7 @@ let supportClock=process.argv.includes('--support')?Date.parse('2026-10-14T06:00
 if(supportClock!==null)f.core.clock=()=>new Date(supportClock).toISOString();
 const recoveryService=process.argv.includes('--recovery')?new LocalRecoveryService(f.core,{rehearse:runSyntheticRecoveryDrill}):null;
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
-const initial=process.argv.includes('--sem')?semSetup(f):process.argv.includes('--keys')?f.passed():process.argv.includes('--profiles')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--replacement')||process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')||process.argv.includes('--capacity')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
+const initial=process.argv.includes('--sem')?semSetup(f):process.argv.includes('--keys')?f.passed():process.argv.includes('--profiles')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--replacement')||process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')||process.argv.includes('--capacity')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')||process.argv.includes('--skill-maps')?f.passed():f.setup();
 const sourceFixture=process.argv.includes('--source-packets')||process.argv.includes('--source-trust')?await sourcePacketFixture(f,{initial,registered:!process.argv.includes('--source-trust')}):null;
 if(process.argv.includes('--appeal-policies'))f.assess(initial);
 if(process.argv.includes('--profiles')){const reason='Sentetik düzenleme yetki kaydı, gerçek kurum kararı değildir.';const authority=f.run('admin','registry-draft',{unit:initial.p.unit,type:'institution-authority',title:'Sentetik düzenleme yetkisi',fields:{...initial.p.responsibilities,pathway:initial.p.pathway,authorityReference:reason}});f.run('authority','registry-review',{recordId:authority.id,outcome:'accepted',reason});}
@@ -52,6 +53,7 @@ for(const [person,role] of [['independent','instructor'],['finance','finance']])
  f.s.db.prepare('INSERT INTO bindings VALUES(?,?,?,1)').run(hash(person),person,'2099-01-01T00:00:00.000Z');
  f.s.db.prepare('INSERT INTO identity_scopes VALUES(?,?,?,?)').run(hash(person),'gazi','synthetic-fixture','2026-01-01T00:00:00.000Z');
 }
+if(process.argv.includes('--skill-maps'))localSkillMapSetup(f,{initial,prepared:false});
 if(process.argv.includes('--capacity'))await localCapacitySetup(f,{initial,prepared:false});
 if(process.argv.includes('--payments'))localPaymentSetup(f,{initial,seedOnly:true});
 let localSigner=process.argv.includes('--replacement')?{base:initial.base,material:initial.material,keyring:[{state:'active',material:initial.material}]}:null;

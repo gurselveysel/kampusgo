@@ -23,6 +23,7 @@ export function skillsProjection(view){
    return {id:enrollment.id+':'+outcome.id,owner:enrollment.owner,programId:program.id,programVersion:program.version,outcomeId:outcome.id,label:outcome.text,
     state:assessed?'assessed':related.length?'developing':'target',
     pilot:true,expertTaxonomyApproved:false,
+    taxonomyLinks:(view.skillMaps?.plans||[]).filter(m=>m.programId===program.id&&m.current).flatMap(m=>m.links.filter(l=>l.outcomeId===outcome.id).map(l=>({mapId:m.id,mapVersion:m.version,linkId:l.id,conceptId:l.conceptId,label:l.label,usable:l.usable,sourceVersion:m.source.version,state:l.usable?(assessed?'evidenced':related.length?'developing':'target'):'review-required',official:false}))),
     source:'Kurum programındaki öğrenme çıktısı; meslek veya dış taksonomi eşdeğerliği değildir.'};
   });
  });

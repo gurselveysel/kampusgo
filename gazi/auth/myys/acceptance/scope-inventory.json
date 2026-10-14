@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.34",
+  "version": "2026.10.14.35",
   "commands": [
     "alternative-evidence",
     "appeal",
@@ -79,6 +79,10 @@
     "sem-review",
     "sem-withdraw",
     "share",
+    "skill-map",
+    "skill-map-hold",
+    "skill-map-issue",
+    "skill-map-review",
     "source-contract",
     "source-contract-review",
     "source-trust-state",
