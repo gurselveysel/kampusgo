@@ -215,3 +215,9 @@ Ekran değişikliği yok. PostgresIdentityTransactions yalnız enjekte edilen te
 ## Paket30 · B15 kaynak ders kaydı ve ilerleme
 
 Aktarım ve mutabakat ekranına kişi/program/ders kayıt ve ilerleme kartı, arama/filtre/kayıt geçmişi eklendi. Yeni imzalı myys-source-registration/1 bildirimi mevcut kaynak güveni, kuyruğu ve yerel program kaydına bağlanır; kendi başına enrollment/karar üretmez. İptal kabul anında uygunluğu kapatır; yeni etkin kayıt ve yeni görev bildirimi gerekir, eski insan kararı ve arşiv aynı kalır. Worker geç sonucu karantinaya alır. Güncel kaynak güveni/registrationFalse veya lisans iptali completion göstergesine de yansır.11sunucu,15yeni+28regresyon tarayıcı;449+46+46=541. Sağlayıcı bağımsız B15 dilimi geçti, gerçek vendor/kurum/üretim kabulü açık. LMS-REGISTRATION-CONTRACT.md ayrıntıları.
+
+## 14.10.2026 — 31. yazılım dilimi / B01–B24
+
+PILOT-INVENTORY.md: özgün ZIP’te27 Gazi satırı ve13 kaynak kaydı; gazi-baseline-27.json değişmemiş alanlar, pilot-inventory.json güncel davranış/rota/regresyon/açık koşullar. NAVIGATION-ACCESSIBILITY.md: mobil odak/inert, Radix geri dönüş, rota odağı, kaynak/matris/rozet sekmeleri, filtre semantiği ve kararlı alan adları. Öğrenci katalog öneri düğmesi sunum rolüne göre kısıtlandı.
+
+544otomatik (452+46+46),18yeni gezinme+13itiraz+8cüzdan;98menü/11profil,234panel/9rol,66ders ve iki tür gerçek dosya indirmesi. Yerel test sunucusunda eski modüller ve yalnız kamu reference.json sunulur; üretim koruması değişmedi. Başarılı tarama gerçek iframe başlığını/içeriğini bekler. Tam ekran okuyucu, altyazı, belge ve her modal/form kabulü açık. configuredCore Vercel’de kapalı;17–31 yayını yok.

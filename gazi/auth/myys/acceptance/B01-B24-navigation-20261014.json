@@ -1,0 +1,1632 @@
+{
+  "date": "2026-10-14",
+  "software_package": 31,
+  "work_packages": [
+    "B01",
+    "B24"
+  ],
+  "production": false,
+  "last_verified_live": {
+    "source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "status": "READY",
+    "alias_read_only_rechecked": "2026-10-14",
+    "new_authenticated_smoke": false
+  },
+  "source_parent": {
+    "local": "c7fac3714f2f5f73a4a790d4e2818b3015fc8c30",
+    "remote": "71b95557b0aa555e05f5e38e02098db19faa5344",
+    "tree": "2ba271a78b0347ace49deb699234332cf140a73d"
+  },
+  "automated": {
+    "server": 452,
+    "portal": 46,
+    "regression": 46,
+    "total": 544,
+    "new_inventory_tests": 3
+  },
+  "scope": {
+    "commands": 77,
+    "http_routes": 16,
+    "positive_samples": 3441,
+    "derived_negative_checks": 27528,
+    "not_test_count_or_product_percentage": true
+  },
+  "navigation": {
+    "at": "2026-10-14T03:03:17.901Z",
+    "browser": "138.0.7204.0",
+    "checks": [
+      "Mobil kapalı menü odak/erişilebilirlik ağacından çıkar; içeriğe geç bağlantısı çalışır",
+      "Mobil menü adlandırılmış modal; ileri/geri odak döngüsü, Escape ve tetikleyiciye dönüş çalışır",
+      "Menü araması boş sonucu açıklar; seçilen sayfaya başlık ve ana içerik odağı taşınır",
+      "Menüden pilot penceresi tek modal olarak açılır; kapanınca mobil menü düğmesine dönülür",
+      "Masaüstüne geçince menü kilidi kalkar; pencere odağı özgün düğmeye döner",
+      "Çalışma alanı seçme penceresi hedef sayfayı açtı ve odağı yeni ana içeriğe taşıdı",
+      "Aynı sayfa seçimi ve dar ekrana dönüşte odak gizli menüde kalmaz; 390 px taşma yok",
+      "11 sunum profilinin tüm menü hedefleri içerikle açıldı; sunum yetkisi uyarısına veya boş sayfaya düşmedi",
+      "Öğrenen katalogdan dört örnek programı planına ekledi; yetkisiz program öneri düğmesi gösterilmedi",
+      "Altı programın 66 dersi doğru başlıkla açıldı; dört materyal sekmesi ve 66 sunum dosyası korundu",
+      "Sunum HTML ve vaka CSV dosyaları gerçek tarayıcı indirmesiyle alındı",
+      "Ders notu ve kişisel tamamlama yenilemede korundu; materyal sekmeleri klavyeyle kullanılabildi",
+      "Rehber ve destek özeti kullanıcı işlemiyle indirildi; dış sisteme gönderildiği iddia edilmedi",
+      "Kaynak, matris ve rozet sekmeleri adlandırılmış panele bağlı; ok/Home/End ve tek Tab durağı çalışır",
+      "Kalite ve paydaş kategori filtreleri doğru seçili düğme anlamıyla ve klavyeyle çalışır",
+      "Dokuz çekirdek rolün tüm akademik alt sayfaları boş olmayan adlandırılmış panellerle açıldı",
+      "Akademik sekmelerde End, sağ okla başa dönüş ve Tab ile panel odağı çalışır",
+      "Sunum ve çekirdek gezinmesinde istemci istisnası yok"
+    ],
+    "routes": [
+      {
+        "profile": "Öğrenci",
+        "code": "learner",
+        "route": "learning",
+        "legacy": false
+      },
+      {
+        "profile": "Öğrenci",
+        "code": "learner",
+        "route": "catalog",
+        "legacy": true
+      },
+      {
+        "profile": "Öğrenci",
+        "code": "learner",
+        "route": "applications",
+        "legacy": true
+      },
+      {
+        "profile": "Öğrenci",
+        "code": "learner",
+        "route": "wallet",
+        "legacy": true
+      },
+      {
+        "profile": "Öğrenci",
+        "code": "learner",
+        "route": "pathways",
+        "legacy": true
+      },
+      {
+        "profile": "Öğrenci",
+        "code": "learner",
+        "route": "appeals",
+        "legacy": true
+      },
+      {
+        "profile": "Öğrenci",
+        "code": "learner",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "dashboard",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "quality",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "assessment",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "academic",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "curriculum",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "requests",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "commission",
+        "legacy": true
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "appeals",
+        "legacy": true
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "audit",
+        "legacy": true
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "proctoring",
+        "legacy": false
+      },
+      {
+        "profile": "Kalite Komisyonu",
+        "code": "quality",
+        "route": "badges",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "dashboard",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "catalog",
+        "legacy": true
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "curriculum",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "assessment",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "academic",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "requests",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "applications",
+        "legacy": true
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "matching",
+        "legacy": true
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "commission",
+        "legacy": true
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "recognition",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "quality",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "stakeholders",
+        "legacy": false
+      },
+      {
+        "profile": "Koordinatörlük",
+        "code": "coordinator",
+        "route": "notifications",
+        "legacy": true
+      },
+      {
+        "profile": "Bilgi İşlem",
+        "code": "it",
+        "route": "connections",
+        "legacy": false
+      },
+      {
+        "profile": "Bilgi İşlem",
+        "code": "it",
+        "route": "integrations",
+        "legacy": true
+      },
+      {
+        "profile": "Bilgi İşlem",
+        "code": "it",
+        "route": "delivery",
+        "legacy": true
+      },
+      {
+        "profile": "Bilgi İşlem",
+        "code": "it",
+        "route": "audit",
+        "legacy": true
+      },
+      {
+        "profile": "Bilgi İşlem",
+        "code": "it",
+        "route": "proctoring",
+        "legacy": false
+      },
+      {
+        "profile": "Bilgi İşlem",
+        "code": "it",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Öğrenci İşleri",
+        "code": "studentAffairs",
+        "route": "obs",
+        "legacy": true
+      },
+      {
+        "profile": "Öğrenci İşleri",
+        "code": "studentAffairs",
+        "route": "recognition",
+        "legacy": false
+      },
+      {
+        "profile": "Öğrenci İşleri",
+        "code": "studentAffairs",
+        "route": "credentials",
+        "legacy": true
+      },
+      {
+        "profile": "Öğrenci İşleri",
+        "code": "studentAffairs",
+        "route": "badges",
+        "legacy": false
+      },
+      {
+        "profile": "Öğrenci İşleri",
+        "code": "studentAffairs",
+        "route": "commission",
+        "legacy": true
+      },
+      {
+        "profile": "Öğrenci İşleri",
+        "code": "studentAffairs",
+        "route": "connections",
+        "legacy": false
+      },
+      {
+        "profile": "Öğrenci İşleri",
+        "code": "studentAffairs",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Saha Ekibi",
+        "code": "sales",
+        "route": "sales",
+        "legacy": true
+      },
+      {
+        "profile": "Saha Ekibi",
+        "code": "sales",
+        "route": "executive",
+        "legacy": true
+      },
+      {
+        "profile": "Saha Ekibi",
+        "code": "sales",
+        "route": "business",
+        "legacy": true
+      },
+      {
+        "profile": "Saha Ekibi",
+        "code": "sales",
+        "route": "demo",
+        "legacy": true
+      },
+      {
+        "profile": "Saha Ekibi",
+        "code": "sales",
+        "route": "dashboard",
+        "legacy": false
+      },
+      {
+        "profile": "Saha Ekibi",
+        "code": "sales",
+        "route": "learning",
+        "legacy": false
+      },
+      {
+        "profile": "Saha Ekibi",
+        "code": "sales",
+        "route": "quality",
+        "legacy": false
+      },
+      {
+        "profile": "Saha Ekibi",
+        "code": "sales",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Rektörlük",
+        "code": "rector",
+        "route": "executive",
+        "legacy": true
+      },
+      {
+        "profile": "Rektörlük",
+        "code": "rector",
+        "route": "dashboard",
+        "legacy": false
+      },
+      {
+        "profile": "Rektörlük",
+        "code": "rector",
+        "route": "quality",
+        "legacy": false
+      },
+      {
+        "profile": "Rektörlük",
+        "code": "rector",
+        "route": "business",
+        "legacy": true
+      },
+      {
+        "profile": "Rektörlük",
+        "code": "rector",
+        "route": "commission",
+        "legacy": true
+      },
+      {
+        "profile": "Rektörlük",
+        "code": "rector",
+        "route": "audit",
+        "legacy": true
+      },
+      {
+        "profile": "Rektörlük",
+        "code": "rector",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Eğitici",
+        "code": "instructor",
+        "route": "curriculum",
+        "legacy": false
+      },
+      {
+        "profile": "Eğitici",
+        "code": "instructor",
+        "route": "catalog",
+        "legacy": true
+      },
+      {
+        "profile": "Eğitici",
+        "code": "instructor",
+        "route": "assessment",
+        "legacy": false
+      },
+      {
+        "profile": "Eğitici",
+        "code": "instructor",
+        "route": "academic",
+        "legacy": false
+      },
+      {
+        "profile": "Eğitici",
+        "code": "instructor",
+        "route": "learning",
+        "legacy": false
+      },
+      {
+        "profile": "Eğitici",
+        "code": "instructor",
+        "route": "outcomes",
+        "legacy": true
+      },
+      {
+        "profile": "Eğitici",
+        "code": "instructor",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "commission",
+        "legacy": true
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "requests",
+        "legacy": false
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "matching",
+        "legacy": true
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "assessment",
+        "legacy": false
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "academic",
+        "legacy": false
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "recognition",
+        "legacy": false
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "evidence",
+        "legacy": true
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "appeals",
+        "legacy": true
+      },
+      {
+        "profile": "Komisyon Üyesi",
+        "code": "commission",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Mali İşler",
+        "code": "finance",
+        "route": "finance",
+        "legacy": true
+      },
+      {
+        "profile": "Mali İşler",
+        "code": "finance",
+        "route": "business",
+        "legacy": true
+      },
+      {
+        "profile": "Mali İşler",
+        "code": "finance",
+        "route": "audit",
+        "legacy": true
+      },
+      {
+        "profile": "Mali İşler",
+        "code": "finance",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "dashboard",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "stakeholders",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "knowledge",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "assessment",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "academic",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "quality",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "settings",
+        "legacy": true
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "recognition",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "connections",
+        "legacy": false
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "integrations",
+        "legacy": true
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "delivery",
+        "legacy": true
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "audit",
+        "legacy": true
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "references",
+        "legacy": true
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "executive",
+        "legacy": true
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "sales",
+        "legacy": true
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "business",
+        "legacy": true
+      },
+      {
+        "profile": "Sistem Yöneticisi",
+        "code": "admin",
+        "route": "demo",
+        "legacy": true
+      }
+    ],
+    "panels": [
+      {
+        "actor": "student",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "student",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "student",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Belge profilleri (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Kişi ve üyelik (1)"
+      },
+      {
+        "actor": "student",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "student",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "student",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Program sürümleri (1)"
+      },
+      {
+        "actor": "student",
+        "label": "Öğrenen kayıtları (1)"
+      },
+      {
+        "actor": "student",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Beceri ilişkileri (1)"
+      },
+      {
+        "actor": "student",
+        "label": "Politika ve hak sicili (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "student",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "student",
+        "label": "LMS kaynak olayları (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Belge profilleri (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Kişi ve üyelik (1)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Program sürümleri (1)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Öğrenen kayıtları (1)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Beceri ilişkileri (1)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Politika ve hak sicili (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "teacher",
+        "label": "LMS kaynak olayları (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "author",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "author",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Belge profilleri (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Kişi ve üyelik (1)"
+      },
+      {
+        "actor": "author",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "author",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "author",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Program sürümleri (1)"
+      },
+      {
+        "actor": "author",
+        "label": "Öğrenen kayıtları (1)"
+      },
+      {
+        "actor": "author",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Beceri ilişkileri (1)"
+      },
+      {
+        "actor": "author",
+        "label": "Politika ve hak sicili (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "author",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "author",
+        "label": "LMS kaynak olayları (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Belge profilleri (1)"
+      },
+      {
+        "actor": "judge",
+        "label": "Kişi ve üyelik (1)"
+      },
+      {
+        "actor": "judge",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "judge",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Program sürümleri (1)"
+      },
+      {
+        "actor": "judge",
+        "label": "Öğrenen kayıtları (1)"
+      },
+      {
+        "actor": "judge",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Beceri ilişkileri (1)"
+      },
+      {
+        "actor": "judge",
+        "label": "Politika ve hak sicili (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "judge",
+        "label": "LMS kaynak olayları (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Belge profilleri (1)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Kişi ve üyelik (1)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Program sürümleri (1)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Öğrenen kayıtları (1)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Beceri ilişkileri (1)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Politika ve hak sicili (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "issuer",
+        "label": "LMS kaynak olayları (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Belge profilleri (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Kişi ve üyelik (1)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Program sürümleri (1)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Öğrenen kayıtları (1)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Beceri ilişkileri (1)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Politika ve hak sicili (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "reviewer",
+        "label": "LMS kaynak olayları (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "it",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "it",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Belge profilleri (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Kişi ve üyelik (1)"
+      },
+      {
+        "actor": "it",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "it",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "it",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Program sürümleri (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Öğrenen kayıtları (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Beceri ilişkileri (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Politika ve hak sicili (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "it",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "it",
+        "label": "LMS kaynak olayları (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Belge profilleri (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Kişi ve üyelik (1)"
+      },
+      {
+        "actor": "finance",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "finance",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Program sürümleri (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Öğrenen kayıtları (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Beceri ilişkileri (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Politika ve hak sicili (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "finance",
+        "label": "LMS kaynak olayları (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Kaynak güven sicili (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Kurtarma tatbikatları (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "SEM dosyaları (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "İtiraz politikaları (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Anahtar ve belge durumu (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Belge profilleri (1)"
+      },
+      {
+        "actor": "admin",
+        "label": "Kişi ve üyelik (13)"
+      },
+      {
+        "actor": "admin",
+        "label": "Akış ve saklama (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Kontrollü grup kabulü (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Başvurular (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Kaynaklı göstergeler (6)"
+      },
+      {
+        "actor": "admin",
+        "label": "Veri talepleri (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "İtiraz incelemeleri (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Destek kayıtları (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Program sürümleri (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Öğrenen kayıtları (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Öğrenme kanıtları (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Değerlendirmeler (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Akademik kararlar (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Belge hazırlığı (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Beceri ilişkileri (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Politika ve hak sicili (1)"
+      },
+      {
+        "actor": "admin",
+        "label": "Tanıma ve kredi (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Kişisel cüzdanım (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "Aktarım ve mutabakat (0)"
+      },
+      {
+        "actor": "admin",
+        "label": "LMS kaynak olayları (0)"
+      }
+    ],
+    "errors": [],
+    "production": false,
+    "manualScreenReader": false,
+    "subtitleAudit": false
+  },
+  "repeated_browsers": {
+    "appeals": {
+      "at": "2026-10-14T03:02:54.661Z",
+      "checks": [
+        "12 sentetik kişi / 9 çekirdek rol için kayıt kapsamı",
+        "Öğrenen itirazı yeniden yüklemede korunur; sonuç formu yok",
+        "Açık itiraz belge hazırlığını kapatır",
+        "Bağımsız olmayan veya kapsam dışı roller inceleme yapamaz",
+        "Bağımsız inceleme, ilişkili etiketler ve klavye sırası",
+        "İlk değerlendiricinin yeniden değerlendirme isteği sunucuda reddedilir",
+        "Bağımsız yeniden değerlendirme aynı itiraz kaydına bağlanır",
+        "Yalnız karar bekleyen değerlendirme için karar formu",
+        "Yalnız yeni karar belge hazırlığına uygun; belge oluşturulmadı",
+        "Öğrenen eski karar, itiraz, inceleme, yeni puan ve yeni kararı birlikte görür",
+        "390 px mobil: taşma ve bozuk resim yok",
+        "Akademik sekmeler Home/End tuşları ve seçili durum",
+        "Yakalanmış istemci istisnası yok"
+      ]
+    },
+    "wallet": {
+      "at": "2026-10-14T03:02:45.489Z",
+      "checks": [
+        "Kişisel imzalı belge indirildi",
+        "Süreli paylaşım bağlantısı yalnız ilk yanıtta gösterilir",
+        "Oturumsuz özet kimlik ve özel kanıt göstermeden açıldı",
+        "İptal sonrası yeni anonim erişim reddedildi",
+        "Cüzdan ve paylaşım iptali kalıcı; gizli bağlantı tekrar gösterilmiyor",
+        "390 px cüzdan görünümünde yatay taşma yok",
+        "Beş başka rolde kişisel belge gizli",
+        "İstemci istisnası yok"
+      ]
+    }
+  },
+  "protected_static_files": 115,
+  "limits": [
+    "27 satır eşlemesi özelliklerin özgün kabulünü tamamlamaz.",
+    "98 menü ve 234 panel açılışı tüm düğme/form işlemlerinin uçtan uca kabulü değildir.",
+    "66 ders ve indirme yerel; not ve kişisel tamamlama tarayıcıda.",
+    "Gerçek ekran okuyucu, tüm altyazı/döküm ve belge çıktısı kabulü açık.",
+    "Canlı 17–31 dağıtımı yok; configuredCore Vercel kapalı; browserAuth iptali yeniden denenmedi."
+  ]
+}

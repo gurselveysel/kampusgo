@@ -1,3 +1,11 @@
+# Güncel devam — Paket31 yerel kabul; kaynak eşitlemesi sırada
+
+B01 özgün27 Gazi satırı/13kaynak; B24 mobil menü/pencere/sekme/filtre/alan odağı hazır.544otomatik(452+46+46);18gezinme+13itiraz+8cüzdan.98menü/11profil,234panel/9çekirdek rol,66ders; gerçek ekran okuyucu/altyazı/belge ve bütün modal/form kabulü değil. PILOT-INVENTORY.md/NAVIGATION-ACCESSIBILITY.md/B01-B24-navigation20261014 kanıtı.
+
+Önce diff/özgün36kriter ve commit; expected-head uzak71b95557b0aa555e05f5e38e02098db19faa5344 ile eşitle. Temel yerelc7fac3714f2f5f73a4a790d4e2818b3015fc8c30 / ortak ağaç2ba271a78b0347ace49deb699234332cf140a73d. Son canlı16 dpl_Coaq5KN2VcNpPjwyXke4neroq877;17–31dağıtımı yok;14.10salt okunur aliasaynıREADY. Kullanıcının browserAuth iptalini yeniden isteme; configuredCore kapalı.
+
+Sıradaki bağımsız B26: destek takvimi/yanıt-çözüm hedefi/eskalasyon sözleşmesi ve rol arayüzü. support.mjs mevcut category→it/quality/admin, revision/resolve/reopen/escalate ve sunucu yetkisi korunacak; kurum SLA’sı uydurulmayacak. B07 SQL repository/HTTP/atomik key revision ile diğer tüm B01–B36 bağımsız işler devam. Tek editör, alt ajan yok, credential/migration/gerçek öğrenci/kurumsal belge yok.
+
 # Güncel devam — Paket30 yerel kabul; kaynak eşitlemesi sırada
 
 B15 Aktarım ve mutabakat / Kaynak ders kaydı ve ilerleme hazır.11yeni sunucu;449+46+46=541otomatik;15kayıt/ilerleme+14kaynak+14güven tarayıcı.77komut/16HTTP3441örnek27528kontrol. Mobil390px ve klavye incelendi;115dosya korumalı paket. LMS-REGISTRATION-CONTRACT.md ve B15-registration20261014 kanıtı. Gerçek LMS/depo/kurum kabulü açık; B15 geneli kısmi.

@@ -451,3 +451,13 @@ Yerel9d737a8c230f5ef3c8f612d321898e5414c4829f; uzak6ac2a5a69e29763a31a48b61b40f4
 Aktarım ve mutabakat ekranında aynı program/öğrenen için kaynak ders kaydı, tamamlama ve görev notu; iptal/yeniden kayıt ve lisans kapanışı mevcut kanıt/karar zincirine bağlı.11yeni sunucu,15yeni kayıt/ilerleme+14kaynak+14güven tarayıcı;449+46+46=541.77komut/16HTTP3441örnek27528kontrol;115korumalı statik dosya. Mobil390px ve gerçek klavye akışı incelendi; manuel ekran okuyucu değil.
 
 Yalnız yerel kabul; gerçek LMS/vendor/kurum kararı/üretim depo yok. Paket17–30 dağıtılmadı. Son doğrulanan canlı kaynak16bd55eefed251ce5d23e1791f87ed3871c6a8c6, deploymentdpl_Coaq5KN2VcNpPjwyXke4neroq877 READY/production. Geri dönüşdpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı. İptal edilmiş browserAuth yeniden istenmedi; yeni canlısmoke iddiası yok. configuredCore kapalı.
+
+## 14.10.2026 — Paket30 kaynak eşitlemesi
+
+Yerel `c7fac3714f2f5f73a4a790d4e2818b3015fc8c30`; uzak `71b95557b0aa555e05f5e38e02098db19faa5344`; ortak kaynak ağacı `2ba271a78b0347ace49deb699234332cf140a73d`.23blob SHA ve tam ağaç eşleşti; beklenen uzak baş6ac2a5a69e29763a31a48b61b40f4ef1ab759f8c, force=false. Bu kaynak eşitlemesidir; dağıtım yok.
+
+## 14.10.2026 — Paket31 yerel kabul / yeni yayın yok
+
+Ekranlar: mobil ana menü, ortak pencereler, Kaynak Merkezi, Matris, rozet sekmeleri, kalite/paydaş filtreleri, alan etiketleri ve öğrenci katalog düğmesi. Kullanıcı klavyeyle menü/sekme değiştirip mantıklı odağa dönebilir. Özgün27 Gazi satırı güncel davranış ve teste bağlandı.544otomatik+18gezinme+13itiraz+8cüzdan geçti; korumalı paket115statik dosya.
+
+Yeni commit/uzak kaynak kimliği eşitlemeden sonra devam kaydına yazılacak. Canlı alias14.10.2026salt okunur `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY; source16bd55eefed251ce5d23e1791f87ed3871c6a8c6. Bu girişli canlı smoke değildir. Paketi17–31 dağıtılmadı. Geri dönüş hedefi `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1`; uygulanmadı. Gerçek ekran okuyucu/altyazı/belge ve bütün modal/form kabulü, kurum kararı ve dış bağlantı açık; üniversite yetkisi/üretim migration’ı yok.

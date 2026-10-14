@@ -1,0 +1,832 @@
+{
+  "format": "myys-gazi-baseline/1",
+  "extractedAt": "2026-10-14",
+  "source": {
+    "libraryId": "libfile_dcd1d1343b048191a8d94c43c1ac1be5",
+    "fileId": "file_00000000c8f48230ba91c592455ce2cd",
+    "filename": "Gazi_UniGO_Uygulama_Ekleri.zip",
+    "zipSha256": "3a3daf5b6bca1f81d0699c8be68737b9031544bf3263b1c94533bcc30ac6e703",
+    "member": "Gazi_UniGO_Hizmet_Modeli_Ek_Veriler.json",
+    "memberSha256": "eb1f8001e49246614903e0c133e833a4df2195bbe305238d5fedea089480e2a6",
+    "method": "Only capability_crosswalk rows with origin exactly Gazi; values preserved without edits. Related source_register entries preserved."
+  },
+  "originalMetadata": {
+    "title": "Gazi ve UniGO mikro yeterlilik hizmet modeli ek veri paketi",
+    "as_of": "2026-10-10",
+    "counts": {
+      "pok_records": 80,
+      "coursera_records": 93,
+      "gazi_baseline_records": 27,
+      "requirements": 32,
+      "total_crosswalk_rows": 232,
+      "service_families": 16,
+      "backlog_items": 36
+    },
+    "meaning": "232 inceleme/gereklilik eşleştirmesi; 232 çalışan özellik veya ayrı hizmet değildir. 173 satır sağlayıcı envanteridir; bilinmeyenler ve lisans kayıtları içerir.",
+    "scope": "Kamuya açık keşfedilen hizmet aileleri ve mevcut pilotun kaynaklı tabanı; gizli satıcı özellikleri için garanti yok.",
+    "current_state": "Gazi pilotunu koru; gerçek kişi/sunucu akademik karar bağı ve canlı LMS/OBS/YÖKSİS/UzemGO bağlantıları tamamlanmış varsayılmaz.",
+    "estimates": "Tahminler planlama içindir; teslim veya bütçe taahhüdü değildir."
+  },
+  "rows": [
+    {
+      "inventory_id": "GAZI-001",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Kurumsal yönetişim",
+      "service_id": "H11",
+      "service_name": "Kurum ve program operasyonu",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Resmî görevlendirme, nisap, vekâlet, çıkar çatışması, karar imzası ve kurum politikası kabulü kanıtlanmadı",
+      "evidence_class": "S, S03–S04",
+      "current_gazi_status": "17 ekranlık temel panel; sonradan beş yönetişim/gözetim/entegrasyon ekranı; başvuru, komisyon oylaması, itiraz, kalite, bildirim ve işlem geçmişi raporlanmış; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Resmî görevlendirme, nisap, vekâlet, çıkar çatışması, karar imzası ve kurum politikası kabulü kanıtlanmadı",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi hizmet ve birim sahipleri",
+      "unigo_owner_role": "UniGO kurum yönetimi",
+      "dependencies": "Tenant; üyelik; görevler ayrılığı",
+      "acceptance_criteria": "Yetki sunucuda uygulanır; başka tenant erişimi, süresi dolmuş rol ve yetkisiz yayın reddedilir.",
+      "source_ids": [
+        "GAZ-03",
+        "GAZ-04"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=91d716b1-21a9-56ee-b2cc-bbbc182e5335",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f404da6c-9fe5-5beb-b1e1-a49ad75321e6",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=277d3464-54ed-553d-ba41-9e39b1765077"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-002",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Yeterlilik kataloğu",
+      "service_id": "H01",
+      "service_name": "Akademik program tasarımı",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Ulusal yeterlilik sicilinin tamamı ve tüm Gazi programları aktarılmamış",
+      "evidence_class": "S, S05",
+      "current_gazi_status": "TYÇ/AYÇ 8’er seviye, TYYÇ düzeyleri ve yeterlilik türleri dahil 52 kaynaklı kayıt; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Ulusal yeterlilik sicilinin tamamı ve tüm Gazi programları aktarılmamış",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi akademik birim ve yetkili kurul",
+      "unigo_owner_role": "UniGO ürün ve iş akışı",
+      "dependencies": "Program sürümü; öğrenme çıktısı; rubrik; iş yükü; yetki",
+      "acceptance_criteria": "Eksik çıktı, rubrik, içerik hakkı veya yetki ile yayın engellenir; geçmiş sürüm yeniden üretilebilir.",
+      "source_ids": [
+        "GAZ-05"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-003",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Gazi program çıktıları",
+      "service_id": "H01",
+      "service_name": "Akademik program tasarımı",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Resmî kaynak Teknoloji Fakültesi Bilgisayar Mühendisliği bölümüdür; tüm Gazi çıktıları değildir",
+      "evidence_class": "S + kaynak D, S05/S12",
+      "current_gazi_status": "13 çıktı sisteme alınmış olduğu raporlanmış; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Resmî kaynak Teknoloji Fakültesi Bilgisayar Mühendisliği bölümüdür; tüm Gazi çıktıları değildir",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi akademik birim ve yetkili kurul",
+      "unigo_owner_role": "UniGO ürün ve iş akışı",
+      "dependencies": "Program sürümü; öğrenme çıktısı; rubrik; iş yükü; yetki",
+      "acceptance_criteria": "Eksik çıktı, rubrik, içerik hakkı veya yetki ile yayın engellenir; geçmiş sürüm yeniden üretilebilir.",
+      "source_ids": [
+        "GAZ-05",
+        "GAZ-12"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da",
+        "https://tf-bm.gazi.edu.tr/view/page/297685/egitim-amaclari-ve-program-ciktilari"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-004",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Öğrenme çıktısı–çerçeve eşleme",
+      "service_id": "H01",
+      "service_name": "Akademik program tasarımı",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Gazi’de açıklanabilir semantik model, doğruluk ölçümü ve kapsamlı insan onay testi kanıtlanmadı",
+      "evidence_class": "S, S05",
+      "current_gazi_status": "Matris ve kaynak/sürüm ilişkisi mevcut raporu; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Gazi’de açıklanabilir semantik model, doğruluk ölçümü ve kapsamlı insan onay testi kanıtlanmadı",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi akademik birim ve yetkili kurul",
+      "unigo_owner_role": "UniGO ürün ve iş akışı",
+      "dependencies": "Program sürümü; öğrenme çıktısı; rubrik; iş yükü; yetki",
+      "acceptance_criteria": "Eksik çıktı, rubrik, içerik hakkı veya yetki ile yayın engellenir; geçmiş sürüm yeniden üretilebilir.",
+      "source_ids": [
+        "GAZ-05"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-005",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Rubrik ve değerlendirme",
+      "service_id": "H05",
+      "service_name": "Ölçme değerlendirme ve itiraz",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Değerlendirici kalibrasyonu, ikinci okuyucu, körleme, gerçek teslim dosyası ve sunucuda kalıcı kanıt kapsamı ayrıca doğrulanmalı",
+      "evidence_class": "S, S05",
+      "current_gazi_status": "Matris → rubrik → kanıt → AKTS → komisyon zinciri, eksik kanıt engeli ve gerekçeli değerlendirme raporlanmış; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Değerlendirici kalibrasyonu, ikinci okuyucu, körleme, gerçek teslim dosyası ve sunucuda kalıcı kanıt kapsamı ayrıca doğrulanmalı",
+      "priority": "P0",
+      "gazi_owner_role": "Gazi ölçme sahibi ve yetkili kurul",
+      "unigo_owner_role": "UniGO kanıt ve değerlendirme altyapısı",
+      "dependencies": "Rubrik sürümü; değerlendirici; kişi; görev",
+      "acceptance_criteria": "Eksik not/kanıtla başarı ve belge oluşmaz; alternatif kanıt insan kararıyla kayıtlıdır; itiraz izi korunur.",
+      "source_ids": [
+        "GAZ-05"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-006",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "AKTS iş yükü",
+      "service_id": "H01",
+      "service_name": "Akademik program tasarımı",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: İş yükü hesabı kredi tanıma kararı değildir; tarihli kurum kuralı ve yetkili karar gerekir",
+      "evidence_class": "S + dayanak D, S05/S13",
+      "current_gazi_status": "25 saat/AKTS kurumsal kaynak dayanağıyla pilot hesap; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "İş yükü hesabı kredi tanıma kararı değildir; tarihli kurum kuralı ve yetkili karar gerekir",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi akademik birim ve yetkili kurul",
+      "unigo_owner_role": "UniGO ürün ve iş akışı",
+      "dependencies": "Program sürümü; öğrenme çıktısı; rubrik; iş yükü; yetki",
+      "acceptance_criteria": "Eksik çıktı, rubrik, içerik hakkı veya yetki ile yayın engellenir; geçmiş sürüm yeniden üretilebilir.",
+      "source_ids": [
+        "GAZ-05",
+        "GAZ-13"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da",
+        "https://webupload.gazi.edu.tr/upload/450/2026/4/21/ff91bf7e-4eb3-473e-be2a-dbaf9c410112-gukk-kIdr_2025.pdf"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-007",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Başvuru/tanıma",
+      "service_id": "H08",
+      "service_name": "Önceki öğrenme ve tanıma",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Dış sertifika doğruluğu, mükerrer tanıma, kısmi tanıma, kurumlar arası tanıma anlaşması ve canlı kayıt henüz doğrulanmadı",
+      "evidence_class": "S, S03/S05",
+      "current_gazi_status": "Akademik inceleme ve komisyona aktarım, OBS/transkript provası; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Dış sertifika doğruluğu, mükerrer tanıma, kısmi tanıma, kurumlar arası tanıma anlaşması ve canlı kayıt henüz doğrulanmadı Son kaynak incelemesi yerel örnek durumları işaretliyor; sunucu kalıcılığı ve gerçek kişi yetkisi ayrıca tamamlanmalı.",
+      "priority": "P0",
+      "gazi_owner_role": "Gazi yetkili kurul ve öğrenci işleri",
+      "unigo_owner_role": "UniGO tanıma iş akışı",
+      "dependencies": "Yerel politika; dış kanıt; hedef ders; geçmiş kredi",
+      "acceptance_criteria": "Tam/kısmi/red kararları gerekçeli; çift sayım engelli; yüzde 10 ve uzaktan sınır kurum yorumuyla uygulanır.",
+      "source_ids": [
+        "GAZ-03",
+        "GAZ-05"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=91d716b1-21a9-56ee-b2cc-bbbc182e5335",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f404da6c-9fe5-5beb-b1e1-a49ad75321e6",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-008",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Kurumsal roller",
+      "service_id": "H11",
+      "service_name": "Kurum ve program operasyonu",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Arayüz rol değiştiricisi kişi bazlı sunucu yetkilendirmesi değildir; gerçek kurum üyeliği ve tenant izolasyonu kanıtlanmalı",
+      "evidence_class": "S, S04",
+      "current_gazi_status": "Dokuz rol; role göre başlangıç, menü, gösterge, görev ve bildirim değişiyor; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Arayüz rol değiştiricisi kişi bazlı sunucu yetkilendirmesi değildir; gerçek kurum üyeliği ve tenant izolasyonu kanıtlanmalı Son kaynak incelemesi yerel örnek durumları işaretliyor; sunucu kalıcılığı ve gerçek kişi yetkisi ayrıca tamamlanmalı.",
+      "priority": "P0",
+      "gazi_owner_role": "Gazi hizmet ve birim sahipleri",
+      "unigo_owner_role": "UniGO kurum yönetimi",
+      "dependencies": "Tenant; üyelik; görevler ayrılığı",
+      "acceptance_criteria": "Yetki sunucuda uygulanır; başka tenant erişimi, süresi dolmuş rol ve yetkisiz yayın reddedilir.",
+      "source_ids": [
+        "GAZ-04"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=277d3464-54ed-553d-ba41-9e39b1765077"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-009",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Kimlik/giriş",
+      "service_id": "H15",
+      "service_name": "Mahremiyet güvenlik ve süreklilik",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Üretim SSO, kullanıcı bazlı MFA/RBAC, yaşam döngüsü ve kurumsal kimlik bağlama yokluğu/açığı raporda açık",
+      "evidence_class": "D giriş / S davranış, S07/S11",
+      "current_gazi_status": "Authenticator kapısı, 60 dakikalık oturum; kod tekrarını ve deneme sınırını engelleme sahibince sınanmış; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Üretim SSO, kullanıcı bazlı MFA/RBAC, yaşam döngüsü ve kurumsal kimlik bağlama yokluğu/açığı raporda açık",
+      "priority": "P0",
+      "gazi_owner_role": "Gazi hukuk/KVKK ve BT",
+      "unigo_owner_role": "UniGO güvenlik ve işletim",
+      "dependencies": "Veri envanteri; aktarım dayanağı; anahtar planı",
+      "acceptance_criteria": "Tenant negatif testleri, anahtar rotasyonu, geri yükleme ve saklama/silme politikası provasından geçer.",
+      "source_ids": [
+        "GAZ-07",
+        "GAZ-11"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac9620b-55cc-83ed-8927-f1ee546356db?messageId=ff132928-3453-5ef1-ba8a-765a9d442b39",
+        "https://gazi.unigoturkiye.com",
+        "https://gazi.unigoturkiye.com/giris?next=%2F"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-010",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Program kataloğu",
+      "service_id": "H02",
+      "service_name": "Katalog başvuru ve kabul",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Akademik kurulca onaylı katalog veya satışa/kayıta açılmış gerçek program sayısı değildir",
+      "evidence_class": "S, S06",
+      "current_gazi_status": "6 örnek program, 22 modül, 66 ders; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Akademik kurulca onaylı katalog veya satışa/kayıta açılmış gerçek program sayısı değildir",
+      "priority": "P1",
+      "gazi_owner_role": "Program sahibi ve ilgili idarî birim",
+      "unigo_owner_role": "UniGO kayıt ve katalog",
+      "dependencies": "Program onayı; uygunluk; kontenjan; kimlik",
+      "acceptance_criteria": "Yanlış kişi ve yetkisiz kabul reddedilir; eksik bilgi, ret ve mükerrer başvuru izlenebilir.",
+      "source_ids": [
+        "GAZ-06"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=9366e2d5-76e8-5f9a-b0db-5761053caec3"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-011",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Ders deneyimi",
+      "service_id": "H03",
+      "service_name": "Öğrenme sunumu ve kohort",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: İlerleme bu tarayıcıda saklanır; cihazlar arası, gerçek kullanıcıya bağlı sunucu kaydı kanıtlanmadı",
+      "evidence_class": "S, S06",
+      "current_gazi_status": "Özet, öğrenme çıktısı, uygulama görevi, not, işaretleme, tamamlama, ilerleme ve devam etme; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "İlerleme bu tarayıcıda saklanır; cihazlar arası, gerçek kullanıcıya bağlı sunucu kaydı kanıtlanmadı Son kaynak incelemesi yerel örnek durumları işaretliyor; sunucu kalıcılığı ve gerçek kişi yetkisi ayrıca tamamlanmalı.",
+      "priority": "P0",
+      "gazi_owner_role": "GUZEM veya seçili LMS sahibi",
+      "unigo_owner_role": "UniGO LMS adaptörü ve öğrenen deneyimi",
+      "dependencies": "Kişi kimliği; lisans; program sürümü",
+      "acceptance_criteria": "Kayıt, ilerleme ve tamamlama kaynak sürümüyle eşleşir; cihazlar arasında kalıcıdır; yeniden olay tek kayda gider.",
+      "source_ids": [
+        "GAZ-06"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=9366e2d5-76e8-5f9a-b0db-5761053caec3"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-012",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Zengin öğrenme içeriği",
+      "service_id": "H04",
+      "service_name": "İçerik üretimi ve hak yönetimi",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Üretici/lisans/atıf, erişilebilirlik, içerik sürümü ve akademik inceleme sicili tamamlanmış sayılmaz",
+      "evidence_class": "S, S02",
+      "current_gazi_status": "66 derste Türkçe sunum; 22 modülde vaka, veri ve açıklamalı soru; yayıncı video ve açık eğitim bağlantıları; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Üretici/lisans/atıf, erişilebilirlik, içerik sürümü ve akademik inceleme sicili tamamlanmış sayılmaz",
+      "priority": "P1",
+      "gazi_owner_role": "Akademik içerik sahibi ve hukuk",
+      "unigo_owner_role": "UniGO içerik iş akışı",
+      "dependencies": "Eser sahibi; lisans; akademik inceleme",
+      "acceptance_criteria": "İzinsiz yeniden dağıtım engellenir; Türkçe/erişilebilirlik incelemesi ve yayın sürümü kaydedilir.",
+      "source_ids": [
+        "GAZ-02"
+      ],
+      "source_urls": [],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-013",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Materyal indirme",
+      "service_id": "H04",
+      "service_name": "İçerik üretimi ve hak yönetimi",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Son tarayıcı indirme testi tamamlanamamış; kapatılacak somut QA maddesi",
+      "evidence_class": "S, S02",
+      "current_gazi_status": "Sunucu kontrolleri geçmiş; indirmeler doğrudan sunucu dosyasına taşınmış; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Son tarayıcı indirme testi tamamlanamamış; kapatılacak somut QA maddesi",
+      "priority": "P0",
+      "gazi_owner_role": "Akademik içerik sahibi ve hukuk",
+      "unigo_owner_role": "UniGO içerik iş akışı",
+      "dependencies": "Eser sahibi; lisans; akademik inceleme",
+      "acceptance_criteria": "İzinsiz yeniden dağıtım engellenir; Türkçe/erişilebilirlik incelemesi ve yayın sürümü kaydedilir.",
+      "source_ids": [
+        "GAZ-02"
+      ],
+      "source_urls": [],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-014",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "UzemGO öğrenme yolculuğu",
+      "service_id": "H16",
+      "service_name": "Entegrasyon ve taşınabilirlik",
+      "decision": "Entegre et",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Açıkça entegrasyon senaryosu; canlı Gazi/UzemGO veri senkronizasyonu kurulmamış",
+      "evidence_class": "S, S02",
+      "current_gazi_status": "Plan → canlı ders → kayıt tekrarı → çalışma → değerlendirme → MYYS akademik inceleme paketi; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Açıkça entegrasyon senaryosu; canlı Gazi/UzemGO veri senkronizasyonu kurulmamış",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi sistem sahipleri ve BT",
+      "unigo_owner_role": "UniGO entegrasyon mimarisi",
+      "dependencies": "Yazılı bağlantı yetkisi; sürümlü şema",
+      "acceptance_criteria": "Yanlış sıra, tekrar, kesinti ve çıkış testleri geçer; kabul yanıtı terminal başarı sayılmaz.",
+      "source_ids": [
+        "GAZ-02"
+      ],
+      "source_urls": [],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-015",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Öğrenme kanıtı aktarımı",
+      "service_id": "H05",
+      "service_name": "Ölçme değerlendirme ve itiraz",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Öğrenci/kurum/program kimliği, teslim hash’i, zaman, değerlendirici ve kaynak sistemi içeren imzalı aktarım sözleşmesi kanıtlanmadı",
+      "evidence_class": "S, S02/S05",
+      "current_gazi_status": "Öğrenci çalışmasından inceleme paketine demo geçiş; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Öğrenci/kurum/program kimliği, teslim hash’i, zaman, değerlendirici ve kaynak sistemi içeren imzalı aktarım sözleşmesi kanıtlanmadı",
+      "priority": "P0",
+      "gazi_owner_role": "Gazi ölçme sahibi ve yetkili kurul",
+      "unigo_owner_role": "UniGO kanıt ve değerlendirme altyapısı",
+      "dependencies": "Rubrik sürümü; değerlendirici; kişi; görev",
+      "acceptance_criteria": "Eksik not/kanıtla başarı ve belge oluşmaz; alternatif kanıt insan kararıyla kayıtlıdır; itiraz izi korunur.",
+      "source_ids": [
+        "GAZ-02",
+        "GAZ-05"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-016",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Rozet zorunlu verisi",
+      "service_id": "H06",
+      "service_name": "Belge yaşam döngüsü",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Bu denetim imzalı örnek dosya veya şemayı açıp yeniden doğrulamadı; şema geçişi sertifikasyon değildir",
+      "evidence_class": "S, S01/S08",
+      "current_gazi_status": "11 asgari bilginin imzalı içerikte bulunması; beş eğitim şablonunun Open Badges JSON şemasıyla sınanması raporlanmış; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Bu denetim imzalı örnek dosya veya şemayı açıp yeniden doğrulamadı; şema geçişi sertifikasyon değildir",
+      "priority": "P0",
+      "gazi_owner_role": "Programa göre hukuki belge düzenleyicisi",
+      "unigo_owner_role": "UniGO belge iş akışı ve teknik işletim",
+      "dependencies": "Issuer yetkisi; akademik karar; anahtar/durum",
+      "acceptance_criteria": "Tek karar tek ihraç; yanlış issuer, bozuk imza, iptal ve süre durumları ayrılır; SEM yolu yerel rozetle ikame edilmez.",
+      "source_ids": [
+        "GAZ-01",
+        "GAZ-08"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac9620b-55cc-83ed-8927-f1ee546356db?messageId=c7c3125f-b508-5b1d-a857-9a3c44edf200"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-017",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Rozet üretim ve doğrulama",
+      "service_id": "H06",
+      "service_name": "Belge yaşam döngüsü",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Algoritma, anahtar yönetimi, rotasyon, trust list, yedekleme, herkese açık doğrulayıcı ve bağımsız interoperabilite henüz incelenmedi",
+      "evidence_class": "S, S01/S08",
+      "current_gazi_status": "Sunucuda imzalama, indirme, dosyadan doğrulama, sicil ve iptal; değiştirilmiş/yanlış üreticili/süresi dolmuş/iptal edilmiş örneklerin reddi; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Algoritma, anahtar yönetimi, rotasyon, trust list, yedekleme, herkese açık doğrulayıcı ve bağımsız interoperabilite henüz incelenmedi Mevcut rozet servisi zorunlu akademik başarı/karar zincirine henüz bağlanmış değil; 15 test yalnız rozet kapsamı.",
+      "priority": "P0",
+      "gazi_owner_role": "Programa göre hukuki belge düzenleyicisi",
+      "unigo_owner_role": "UniGO belge iş akışı ve teknik işletim",
+      "dependencies": "Issuer yetkisi; akademik karar; anahtar/durum",
+      "acceptance_criteria": "Tek karar tek ihraç; yanlış issuer, bozuk imza, iptal ve süre durumları ayrılır; SEM yolu yerel rozetle ikame edilmez.",
+      "source_ids": [
+        "GAZ-01",
+        "GAZ-08"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac9620b-55cc-83ed-8927-f1ee546356db?messageId=c7c3125f-b508-5b1d-a857-9a3c44edf200"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-018",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Cüzdan",
+      "service_id": "H07",
+      "service_name": "Cüzdan paylaşım ve doğrulama",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Harici cüzdan aktarımı, OpenID4VCI/VP, holder binding, çoklu issuer, learner-controlled sharing kanıtlanmadı",
+      "evidence_class": "S, S01",
+      "current_gazi_status": "Pilot rozet listesi, ayrıntısı, indirme ve doğrulama ekranları; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Harici cüzdan aktarımı, OpenID4VCI/VP, holder binding, çoklu issuer, learner-controlled sharing kanıtlanmadı",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi veri/erişim sahibi ve öğrenen",
+      "unigo_owner_role": "UniGO cüzdan ve doğrulama",
+      "dependencies": "Geçerli belge; paylaşım kapsamı; durum",
+      "acceptance_criteria": "Varsayılan özel görünürlük; paylaşım iptali; bağımsız doğrulama; açık veride özel kanıt yok.",
+      "source_ids": [
+        "GAZ-01"
+      ],
+      "source_urls": [],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-019",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Kurumsal eğitim rozeti",
+      "service_id": "H06",
+      "service_name": "Belge yaşam döngüsü",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Gazi/MEB veya başka kurum adına resmî verme yetkisi çıkarılamaz",
+      "evidence_class": "S, S08",
+      "current_gazi_status": "Kurumsal akademi, eğitici eğitimi, hizmet içi eğitim, öğretmen gelişimi şablonları; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Gazi/MEB veya başka kurum adına resmî verme yetkisi çıkarılamaz",
+      "priority": "P1",
+      "gazi_owner_role": "Programa göre hukuki belge düzenleyicisi",
+      "unigo_owner_role": "UniGO belge iş akışı ve teknik işletim",
+      "dependencies": "Issuer yetkisi; akademik karar; anahtar/durum",
+      "acceptance_criteria": "Tek karar tek ihraç; yanlış issuer, bozuk imza, iptal ve süre durumları ayrılır; SEM yolu yerel rozetle ikame edilmez.",
+      "source_ids": [
+        "GAZ-08"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac9620b-55cc-83ed-8927-f1ee546356db?messageId=c7c3125f-b508-5b1d-a857-9a3c44edf200"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-020",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Yığılabilir öğrenme yolları",
+      "service_id": "H08",
+      "service_name": "Önceki öğrenme ve tanıma",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Prerequisite, eşdeğerlik, çift sayım önleme, birikimli yeterlilik kuralı ve gerçekten tanınan kredi kanıtlanmadı",
+      "evidence_class": "S, S03",
+      "current_gazi_status": "Öğrenme yolları ekranı raporlanmış; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Prerequisite, eşdeğerlik, çift sayım önleme, birikimli yeterlilik kuralı ve gerçekten tanınan kredi kanıtlanmadı",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi yetkili kurul ve öğrenci işleri",
+      "unigo_owner_role": "UniGO tanıma iş akışı",
+      "dependencies": "Yerel politika; dış kanıt; hedef ders; geçmiş kredi",
+      "acceptance_criteria": "Tam/kısmi/red kararları gerekçeli; çift sayım engelli; yüzde 10 ve uzaktan sınır kurum yorumuyla uygulanır.",
+      "source_ids": [
+        "GAZ-03"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=91d716b1-21a9-56ee-b2cc-bbbc182e5335",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f404da6c-9fe5-5beb-b1e1-a49ad75321e6"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-021",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Sınav gözetimi",
+      "service_id": "H05",
+      "service_name": "Ölçme değerlendirme ve itiraz",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Gerçek biyometrik gözetim, cihaz üzerinde AI veya KVKK uygunluğu doğrulanmış değil",
+      "evidence_class": "S, S03",
+      "current_gazi_status": "Etkileşimli gözetim simülasyonu; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Gerçek biyometrik gözetim, cihaz üzerinde AI veya KVKK uygunluğu doğrulanmış değil",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi ölçme sahibi ve yetkili kurul",
+      "unigo_owner_role": "UniGO kanıt ve değerlendirme altyapısı",
+      "dependencies": "Rubrik sürümü; değerlendirici; kişi; görev",
+      "acceptance_criteria": "Eksik not/kanıtla başarı ve belge oluşmaz; alternatif kanıt insan kararıyla kayıtlıdır; itiraz izi korunur.",
+      "source_ids": [
+        "GAZ-03"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=91d716b1-21a9-56ee-b2cc-bbbc182e5335",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f404da6c-9fe5-5beb-b1e1-a49ad75321e6"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-022",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "OBS/YÖKSİS/API",
+      "service_id": "H16",
+      "service_name": "Entegrasyon ve taşınabilirlik",
+      "decision": "Entegre et",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Gerçek OBS, YÖKSİS, e-Devlet, kurumsal SSO ve blokzincir bağlantısı kurulmuş sayılmaz",
+      "evidence_class": "S, S03/S05",
+      "current_gazi_status": "Kuyruk, hata/yeniden deneme ve aktarım provası görünür; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Gerçek OBS, YÖKSİS, e-Devlet, kurumsal SSO ve blokzincir bağlantısı kurulmuş sayılmaz",
+      "priority": "P0",
+      "gazi_owner_role": "Gazi sistem sahipleri ve BT",
+      "unigo_owner_role": "UniGO entegrasyon mimarisi",
+      "dependencies": "Yazılı bağlantı yetkisi; sürümlü şema",
+      "acceptance_criteria": "Yanlış sıra, tekrar, kesinti ve çıkış testleri geçer; kabul yanıtı terminal başarı sayılmaz.",
+      "source_ids": [
+        "GAZ-03",
+        "GAZ-05"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=91d716b1-21a9-56ee-b2cc-bbbc182e5335",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f404da6c-9fe5-5beb-b1e1-a49ad75321e6",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-023",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Raporlama/kalite",
+      "service_id": "H14",
+      "service_name": "Kalite ve erişilebilirlik",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Gerçek kohort verisi, öğrenme analitiği, istihdam sonucu, kalite güvence ölçümü, dış denetim ve denetlenebilir server audit kapsamı kanıtlanmadı",
+      "evidence_class": "S, S03",
+      "current_gazi_status": "Pilot KPI, kalite takibi, bildirim ve işlem geçmişi; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Gerçek kohort verisi, öğrenme analitiği, istihdam sonucu, kalite güvence ölçümü, dış denetim ve denetlenebilir server audit kapsamı kanıtlanmadı Son kaynak incelemesi yerel örnek durumları işaretliyor; sunucu kalıcılığı ve gerçek kişi yetkisi ayrıca tamamlanmalı.",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi kalite ve erişilebilirlik sahipleri",
+      "unigo_owner_role": "UniGO QA ve raporlama",
+      "dependencies": "Ölçüm sözlüğü; temsilî kullanıcı testleri",
+      "acceptance_criteria": "Klavye/ekran okuyucu/mobil kritik akışları geçer; KPI paydaları ayrıdır; düzeltme izlenir.",
+      "source_ids": [
+        "GAZ-03"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=91d716b1-21a9-56ee-b2cc-bbbc182e5335",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f404da6c-9fe5-5beb-b1e1-a49ad75321e6"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-024",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Ekip eğitimi/ürün kılavuzu",
+      "service_id": "H13",
+      "service_name": "Destek ve eğitim",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Gazi öğrenci LMS’siyle aynı sistem değildir; son sürüm kılavuz uyumu yeniden kontrol edilmeli",
+      "evidence_class": "S, S09",
+      "current_gazi_status": "lms.uzemgo.com’da 22 ekran rehberi, 12 uygulamalı ders, 24 soru, kişisel ilerleme, taslak ve yönetici raporu; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Gazi öğrenci LMS’siyle aynı sistem değildir; son sürüm kılavuz uyumu yeniden kontrol edilmeli",
+      "priority": "P1",
+      "gazi_owner_role": "Gazi akademik destek ve hizmet sahibi",
+      "unigo_owner_role": "UniGO teknik destek",
+      "dependencies": "Sürüm kılavuzu; SLA; yönlendirme",
+      "acceptance_criteria": "Talep sahibine tek izlenebilir kayıt; akademik karar teknik destekçe değiştirilmez; kapanış doğrulanır.",
+      "source_ids": [
+        "GAZ-09"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac7d930-1be4-83ed-b237-af48fc63cacb?messageId=b74d74b0-3b4d-563b-88d7-35ec4bea3a72"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-025",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Kurumsal tanıtım ve talep yönetimi",
+      "service_id": "H02",
+      "service_name": "Katalog başvuru ve kabul",
+      "decision": "Benimse",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Talep durumunu değiştirmek randevu/takvim daveti oluşturmaz; halka açık siteye ürünün özel iç mimarisi taşınmamalı",
+      "evidence_class": "S, S10",
+      "current_gazi_status": "TR/EN site, gerçek talep kaydı, yöneticiye özel talep listesi, arama, filtre, not, durum; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Talep durumunu değiştirmek randevu/takvim daveti oluşturmaz; halka açık siteye ürünün özel iç mimarisi taşınmamalı",
+      "priority": "P1",
+      "gazi_owner_role": "Program sahibi ve ilgili idarî birim",
+      "unigo_owner_role": "UniGO kayıt ve katalog",
+      "dependencies": "Program onayı; uygunluk; kontenjan; kimlik",
+      "acceptance_criteria": "Yanlış kişi ve yetkisiz kabul reddedilir; eksik bilgi, ret ve mükerrer başvuru izlenebilir.",
+      "source_ids": [
+        "GAZ-10"
+      ],
+      "source_urls": [
+        "https://chatgpt.com/c/6ac69ec4-adc4-83eb-886a-feb44a3d5ca0?messageId=25a06d09-3680-595c-8185-b544d86c20d3",
+        "https://chatgpt.com/c/6ac69ec4-adc4-83eb-886a-feb44a3d5ca0?messageId=bbb21ce9-aba0-48b7-8803-5a0cc051d8f3"
+      ],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-026",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Ücret, ödeme, lisans ve ticari katalog",
+      "service_id": "H12",
+      "service_name": "Ücret tahsilat ve iade",
+      "decision": "Ertele",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Dumlupınar/KampüsGO ödeme pilotu Gazi’de uygulanmış sayılamaz; ödeme/iadeler/vergi ve fiyat planları ayrıca ele alınmalı",
+      "evidence_class": "B",
+      "current_gazi_status": "Gazi’de üretim satış/ödeme hizmeti için yeterli kanıt yok; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Dumlupınar/KampüsGO ödeme pilotu Gazi’de uygulanmış sayılamaz; ödeme/iadeler/vergi ve fiyat planları ayrıca ele alınmalı",
+      "priority": "P1",
+      "gazi_owner_role": "Yetkili mali birim ve tahsilat sahibi",
+      "unigo_owner_role": "UniGO yetkili ödeme adaptörü",
+      "dependencies": "Mali yetki; sözleşme; fiyat/iade politikası",
+      "acceptance_criteria": "Çift ödeme/kayıt engellenir; iade ve ters ibraz mutabıktır; kart bilgisi uygulamada tutulmaz.",
+      "source_ids": [],
+      "source_urls": [],
+      "research_date": "2026-10-10"
+    },
+    {
+      "inventory_id": "GAZI-027",
+      "origin": "Gazi",
+      "record_type": "Mevcut taban veya açık fark",
+      "capability_or_requirement": "Çok kurumlu hizmet",
+      "service_id": "H11",
+      "service_name": "Kurum ve program operasyonu",
+      "decision": "Uyarla",
+      "rationale": "Mevcut yatırımı koruyarak şu farkı kapat: Gerçek multi-tenant veri izolasyonu, kota, white-label self-service, kurum onboarding ve toplu işleme kanıtlanmadı",
+      "evidence_class": "S/D alan adı",
+      "current_gazi_status": "Gazi alt alanı ve özelleştirilmiş kurumsal arayüz var; teslim/kaynak raporu, bağımsız uçtan uca yeniden test değil.",
+      "limits_and_open_questions": "Gerçek multi-tenant veri izolasyonu, kota, white-label self-service, kurum onboarding ve toplu işleme kanıtlanmadı",
+      "priority": "P0",
+      "gazi_owner_role": "Gazi hizmet ve birim sahipleri",
+      "unigo_owner_role": "UniGO kurum yönetimi",
+      "dependencies": "Tenant; üyelik; görevler ayrılığı",
+      "acceptance_criteria": "Yetki sunucuda uygulanır; başka tenant erişimi, süresi dolmuş rol ve yetkisiz yayın reddedilir.",
+      "source_ids": [],
+      "source_urls": [],
+      "research_date": "2026-10-10"
+    }
+  ],
+  "sources": [
+    {
+      "id": "GAZ-03",
+      "title": "Gazi pilot ve yönetişim teslimi",
+      "urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=91d716b1-21a9-56ee-b2cc-bbbc182e5335",
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f404da6c-9fe5-5beb-b1e1-a49ad75321e6"
+      ],
+      "source_type": "saved_delivery",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-04",
+      "title": "Dokuz rol teslimi",
+      "urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=277d3464-54ed-553d-ba41-9e39b1765077"
+      ],
+      "source_type": "saved_delivery",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-05",
+      "title": "Yeterlilik ve Kanıt Merkezi teslimi",
+      "urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=f0f51df0-5ba8-5479-b7e4-1e3f471bb8da"
+      ],
+      "source_type": "saved_delivery",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-06",
+      "title": "Öğrenci modülleri teslimi",
+      "urls": [
+        "https://chatgpt.com/c/6ac96336-be68-83eb-b1e1-8090c1c0b802?messageId=9366e2d5-76e8-5f9a-b0db-5761053caec3"
+      ],
+      "source_type": "saved_delivery",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-07",
+      "title": "Giriş koruması teslimi",
+      "urls": [
+        "https://chatgpt.com/c/6ac9620b-55cc-83ed-8927-f1ee546356db?messageId=ff132928-3453-5ef1-ba8a-765a9d442b39"
+      ],
+      "source_type": "saved_delivery",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-08",
+      "title": "İmzalı pilot rozet teslimi",
+      "urls": [
+        "https://chatgpt.com/c/6ac9620b-55cc-83ed-8927-f1ee546356db?messageId=c7c3125f-b508-5b1d-a857-9a3c44edf200"
+      ],
+      "source_type": "saved_delivery",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-09",
+      "title": "Ürün kılavuzu teslimi",
+      "urls": [
+        "https://chatgpt.com/c/6ac7d930-1be4-83ed-b237-af48fc63cacb?messageId=b74d74b0-3b4d-563b-88d7-35ec4bea3a72"
+      ],
+      "source_type": "saved_delivery",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-10",
+      "title": "ÜniGO kurumsal site kapsamı",
+      "urls": [
+        "https://chatgpt.com/c/6ac69ec4-adc4-83eb-886a-feb44a3d5ca0?messageId=25a06d09-3680-595c-8185-b544d86c20d3",
+        "https://chatgpt.com/c/6ac69ec4-adc4-83eb-886a-feb44a3d5ca0?messageId=bbb21ce9-aba0-48b7-8803-5a0cc051d8f3"
+      ],
+      "source_type": "saved_delivery_and_user_scope",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-11",
+      "title": "Gazi pilot giriş sayfası",
+      "urls": [
+        "https://gazi.unigoturkiye.com",
+        "https://gazi.unigoturkiye.com/giris?next=%2F"
+      ],
+      "source_type": "direct_http_observation",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-12",
+      "title": "TF Bilgisayar Mühendisliği program çıktıları",
+      "urls": [
+        "https://tf-bm.gazi.edu.tr/view/page/297685/egitim-amaclari-ve-program-ciktilari"
+      ],
+      "source_type": "official_primary_source",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-13",
+      "title": "Gazi 2025 Kurum İç Değerlendirme Raporu",
+      "urls": [
+        "https://webupload.gazi.edu.tr/upload/450/2026/4/21/ff91bf7e-4eb3-473e-be2a-dbaf9c410112-gukk-kIdr_2025.pdf"
+      ],
+      "source_type": "official_primary_source",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-01",
+      "title": "Güncel pilot rozet kaynak ve sürüm incelemesi",
+      "urls": [],
+      "source_type": "Kaynak ve teslim raporu; bağımsız uçtan uca tekrar test değil",
+      "access_date": "2026-10-10"
+    },
+    {
+      "id": "GAZ-02",
+      "title": "Güncel öğrenci içerik teslimi özeti",
+      "urls": [],
+      "source_type": "Kaynak ve teslim raporu; bağımsız uçtan uca tekrar test değil",
+      "access_date": "2026-10-10"
+    }
+  ]
+}

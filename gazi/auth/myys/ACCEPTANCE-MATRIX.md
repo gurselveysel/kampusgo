@@ -186,3 +186,14 @@ Görünür ekran değişikliği yok; yeni SQL/KMS/HTTP bağlantısı yok. 20 hat
 ## Paket30 — B15 kaynak ders kaydı/ilerleme yerel dilimi
 
 Aktarım ve mutabakat içinde aynı kişi/program/kaynak kaydı, tamamlama ve görev notu gösterilir; kayıt iptali eski kanıtı kapatır, yeniden kayıt eski notu canlandırmaz.11yeni sunucu +15yeni kayıt/ilerleme tarayıcı;14kaynak/14güven regresyonu.541otomatik;77komut/16HTTP3441örnek27528türetilmiş kontrol. B15 sağlayıcı bağımsız senaryolar kapandı; gerçek vendor şeması, kohort/worker/depo/dış kabul açık. B16/B29 aynı kayıt/güven uygunluğunu kullanır. B24 manuel ekran okuyucu kabulü açık. Kanıt LMS-REGISTRATION-CONTRACT.md ve acceptance/B15-registration-20261014.json.
+
+## 14.10.2026 — B01/B24 gezinme ve özgün envanter (31. yazılım dilimi)
+
+Özgün 27 Gazi satırı/13 kaynak kaydı aynen korundu ve güncel rota/davranış/test/açık koşula bağlandı. Menü/modal odağı, sekmeler, filtre ve alan adları düzeltildi; öğrenci katalog öneri düğmesi yetkiye göre gösterilir. 544 otomatik;18 gezinme+13 itiraz+8 cüzdan tarayıcı geçti. 98 hedef/11 sunum profili,234 panel/9 çekirdek rol,66 ders ve gerçek yerel indirme ayrı kabul kapsamıdır.
+
+| Paket | Kod | Yerel kabul | Canlı | Kurum | Dış erişim |
+|---|---|---|---|---|---|
+| B01 | 27 satır envanteri/regresyon listesi hazır | Eşleme, korunacak sayılar ve gezinme geçti; bütün özellik kriterleri değil | Paketi31 yok; son canlı16 | Gerçek operasyonel kabul açık | Ayrı site/LMS/OBS/IdP kabulü açık |
+| B24 | Menü/pencere/sekme/alan düzeltmeleri hazır | Sınırlı tarama geçti; ekran okuyucu/altyazı/belge ve bütün form/modal koşulları açık | Yeni dilim yok | Erişilebilirlik açılış kabulü açık | Gerçek sağlayıcı medya ve canlı oturum kabulü açık |
+
+PILOT-INVENTORY.md, NAVIGATION-ACCESSIBILITY.md ve acceptance/B01-B24-navigation-20261014.json esas kanıttır. Backlog üst metadata alanlarındaki eski5–7 paket özeti tarihçe korunarak güncellendi; en son canlı16 bilgisi yeni girişli smoke diye sunulmadı.

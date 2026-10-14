@@ -32,7 +32,7 @@
 .support-brief-body{padding:0 25px 25px}.support-brief-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:22px 0}.support-brief-next{border:1px solid #dce4ed;background:#f6f9fc;padding:18px 22px;border-radius:12px}.support-brief-next h3{font-size:16px;margin:0 0 12px}.support-brief-next ol{margin:0;padding-left:22px;font-size:14px;line-height:1.85}.support-brief-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.support-brief [role=status]{font-size:13px;color:#155e48;line-height:1.7}@media(max-width:760px){.support-brief-fields{grid-template-columns:1fr}.support-brief-body{padding:0 18px 20px}}
 
 /* Academic record identifiers and learner text must wrap on narrow screens. */
-.academic-record{min-width:0;overflow-wrap:anywhere}.appeal-followup{border-left:3px solid #315576;background:#f4f7fb;padding:16px;margin:16px 0}.appeal-followup h4{font-weight:650}.tab-strip>[aria-selected="true"]{border-color:#236dd0;color:#2864b1;font-weight:650}
+.academic-record{min-width:0;overflow-wrap:anywhere}.appeal-followup{border-left:3px solid #315576;background:#f4f7fb;padding:16px;margin:16px 0}.appeal-followup h4{font-weight:650}.tab-strip>:is([aria-selected="true"],[aria-pressed="true"]){border-color:#236dd0;color:#2864b1;font-weight:650}
 
 .operations-workspace{display:grid;gap:20px;min-width:0}.operations-workspace .academic-record{overflow-wrap:anywhere}.batch-rows{padding-left:22px}.batch-choice{display:flex;gap:10px;align-items:flex-start;margin:12px 0}.batch-choice input{width:auto;flex-shrink:0}
 
@@ -42,3 +42,5 @@
 
 /* SEM field groups retain full-width labelled controls on narrow screens. */
 .academic-body.sem-form fieldset{min-width:0}.academic-body.sem-form fieldset .field{display:flex}.academic-body.sem-form fieldset input,.academic-body.sem-form fieldset select,.academic-body.sem-form fieldset textarea{width:100%;min-width:0}
+
+.nav-empty{padding:12px;color:#425a73;font-size:12px;line-height:1.6}.sidebar:focus-visible{outline:3px solid #157cd8;outline-offset:-3px}

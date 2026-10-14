@@ -79,7 +79,7 @@ const server=createServer(async(req,res)=>{
   if(!['GET','HEAD'].includes(req.method))return json(res,405,{error:'Yöntem desteklenmiyor.'});
   const path=resolve(root,'.'+decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname));
   // Only static presentation files, never source auth code, SQLite or package files.
-  const ext=extname(path),types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.csv':'text/csv','.vtt':'text/vtt'};
+  const ext=extname(path),types={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.csv':'text/csv','.vtt':'text/vtt',...(url.pathname==='/data/reference.json'?{'.json':'application/json'}:{})};
   if(!path.startsWith(root)||!types[ext]||path.includes('/auth/')||path.includes('/portal/'))return json(res,404,{error:'Dosya yok.'});
   const content=await readFile(path);res.setHeader('Content-Type',types[ext]+'; charset=utf-8');res.end(req.method==='HEAD'?undefined:content);
  }catch(e){json(res,e.code==='ENOENT'?404:500,{error:'Yerel kabul isteği tamamlanamadı.'});}

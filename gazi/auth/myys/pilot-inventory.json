@@ -1,0 +1,656 @@
+{
+  "format": "myys-pilot-inventory/1",
+  "reviewedAt": "2026-10-14",
+  "baseline": "gazi-baseline-27.json",
+  "separation": "27 original Gazi capability rows are not the 33 page guides or 36 work packages. Mapping completion does not close each capability criterion.",
+  "rows": [
+    {
+      "inventory_id": "GAZI-001",
+      "routes": [
+        "academic",
+        "stakeholders",
+        "commission",
+        "audit"
+      ],
+      "packages": [
+        "B06",
+        "B07",
+        "B08",
+        "B11"
+      ],
+      "current_behavior": "Sunucu çekirdeği insan değerlendirmesi, bağımsız karar ve denetim izini yerel kabulde uygular; eski panel tarayıcı örneğidir.",
+      "remaining": "Resmî görev, kurul usulü, üretim kişi/depo ve canlı yetki kabulü açık.",
+      "tests": [
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/tests/myys-membership.test.mjs",
+        "gazi/auth/tests/myys-appeals.test.mjs",
+        "gazi/auth/tests/myys-scope-http.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-03",
+        "GAZ-04"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-002",
+      "routes": [
+        "knowledge",
+        "catalog",
+        "academic"
+      ],
+      "packages": [
+        "B03",
+        "B09",
+        "B12"
+      ],
+      "current_behavior": "Kaynak sürümü 2026.10.10.3: 24 kaynak, 20 seviye özeti; program sürüm/sicil ve rubrik yayın denetimi yerelde.",
+      "remaining": "Ulusal sicilin bütünü değil; gerçek program açma/yayın yetkisi ve içerik hakkı kabulü açık.",
+      "tests": [
+        "gazi/auth/tests/myys-programs.test.mjs",
+        "gazi/auth/tests/myys-profile.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-05"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-003",
+      "routes": [
+        "knowledge",
+        "curriculum",
+        "academic"
+      ],
+      "packages": [
+        "B03",
+        "B09"
+      ],
+      "current_behavior": "Altı Gazi programından 76 çıktı özeti korunur; kaynak özeti ile kurumun onaylı program sürümü ayrı.",
+      "remaining": "Özgün 13 çıktı iddiası tarihsel kapsamdır; özet genişlemesi resmî onay veya tüm Gazi verisi değildir.",
+      "tests": [
+        "gazi/auth/tests/myys-programs.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-05",
+        "GAZ-12"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-004",
+      "routes": [
+        "assessment",
+        "academic"
+      ],
+      "packages": [
+        "B09",
+        "B33"
+      ],
+      "current_behavior": "Çoktan çoğa çıktı-görev-rubrik bağları ve değişmez karar dayanak arşivi yerel çekirdekte; stüdyo taslakları tarayıcıda.",
+      "remaining": "Kapsamlı uzman kalibrasyonu ve gerçek kurumsal eşleme kabulü açık.",
+      "tests": [
+        "gazi/auth/tests/myys-programs.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-05"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-005",
+      "routes": [
+        "academic",
+        "assessment"
+      ],
+      "packages": [
+        "B10",
+        "B11"
+      ],
+      "current_behavior": "Eksik ölçüt/kanıt başarıya gidemez; alternatif kanıt ve bağımsız inceleme, gerekçeli insan değerlendirmesi ve itiraz zinciri yerelde.",
+      "remaining": "Gerçek teslim dosyası saklama, değerlendirici ataması/kalibrasyonu ve kurum yöntemi açık.",
+      "tests": [
+        "gazi/auth/tests/myys.test.mjs",
+        "gazi/auth/tests/myys-alternative-evidence.test.mjs",
+        "gazi/auth/tests/myys-appeals.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-05"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-006",
+      "routes": [
+        "matching",
+        "recognition",
+        "academic"
+      ],
+      "packages": [
+        "B03",
+        "B20"
+      ],
+      "current_behavior": "Tarayıcı iş yükü hesapları örnek olarak kalır; yerel tanıma politikası ve tekil kredi defteri ayrı karar ister.",
+      "remaining": "25 saat varsayımı bütün üniversitelere genellenmez; gerçek kurum politikası/kararı açık.",
+      "tests": [
+        "gazi/auth/tests/myys-recognition.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-05",
+        "GAZ-13"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-007",
+      "routes": [
+        "applications",
+        "recognition",
+        "academic",
+        "obs"
+      ],
+      "packages": [
+        "B20",
+        "B21",
+        "B22"
+      ],
+      "current_behavior": "Gerekçeli tam/kısmi/red, tekrar kredi kazanımı engeli ve yerel OBS mutabakatı var.",
+      "remaining": "Dış doğrulama, çok dersli istisnalar, gerçek tanıma/OBS aktarımı açık.",
+      "tests": [
+        "gazi/auth/tests/myys-recognition.test.mjs",
+        "gazi/auth/tests/myys-obs.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-03",
+        "GAZ-05"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-008",
+      "routes": [
+        "stakeholders",
+        "academic"
+      ],
+      "packages": [
+        "B06",
+        "B08"
+      ],
+      "current_behavior": "Dokuz çekirdek rol sunucuda; 11 sunum profili menü seçimi olarak ayrı tutulur. Süre/birim/kurum kontrolleri yerel.",
+      "remaining": "Kurumun gerçek kişi üyeliği, rol ataması ve üretim izolasyonu açık.",
+      "tests": [
+        "gazi/auth/tests/myys-membership.test.mjs",
+        "gazi/auth/tests/myys-scope-http.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-04"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-009",
+      "routes": [
+        "academic"
+      ],
+      "packages": [
+        "B06",
+        "B07"
+      ],
+      "current_behavior": "Eski korumalı giriş korunur; ayrı yerel HTTPS OIDC/PKCE, kalıcı tek kullanım, kurum kapsamlı çıkış ve oran denetimi.",
+      "remaining": "Gerçek IdP, üretim SQL deposu/anahtar sürüm bariyeri ve canlı SSO kabulü açık.",
+      "tests": [
+        "gazi/auth/tests/gateway.test.mjs",
+        "gazi/auth/tests/myys-identity.test.mjs",
+        "gazi/auth/tests/myys-identity-flow.test.mjs",
+        "gazi/auth/tests/myys-identity-http.test.mjs",
+        "gazi/auth/tests/myys-backchannel.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-07",
+        "GAZ-11"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-010",
+      "routes": [
+        "learning",
+        "catalog",
+        "academic"
+      ],
+      "packages": [
+        "B15",
+        "B29"
+      ],
+      "current_behavior": "6 program/22 modül/66 ders korunur; yerel sunucu başvurusu bağımsız inceleme ile öğrenen kaydına bağlanır.",
+      "remaining": "Örnek ders kataloğu gerçek kurul onayı veya ücretli kayıt ilanı değildir.",
+      "tests": [
+        "gazi/auth/tests/myys-quality.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-06"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-011",
+      "routes": [
+        "learning",
+        "academic"
+      ],
+      "packages": [
+        "B15"
+      ],
+      "current_behavior": "Ders notu/tamamlama tarayıcıya bağlıdır. Ayrı yerel kaynak kayıt/ilerleme zinciri imzalı sürüm ve tek olayla işler.",
+      "remaining": "Örnek ders notları otomatik LMS kanıtı değildir; gerçek cihazlar arası LMS senkronizasyonu açık.",
+      "tests": [
+        "gazi/auth/tests/myys-lms-registration.test.mjs",
+        "gazi/auth/tests/myys-lms.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-06"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-012",
+      "routes": [
+        "learning"
+      ],
+      "packages": [
+        "B05",
+        "B25"
+      ],
+      "current_behavior": "66 Türkçe sunum, 22 açıklamalı vaka ve kaynak/lisans etiketleri korunur.",
+      "remaining": "Tüm üçüncü taraf lisans/yayın hakkı ve altyazı/akademik inceleme kabulü açık.",
+      "tests": [
+        "gazi/auth/tests/gateway.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-02"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-013",
+      "routes": [
+        "learning"
+      ],
+      "packages": [
+        "B05",
+        "B24",
+        "B25"
+      ],
+      "current_behavior": "66 HTML sunum ve 22 CSV vaka dosyası korumalı sunucu paketindedir; indirme bağlantıları korunur.",
+      "remaining": "Yerel tarayıcı indirmesi canlı oturum indirme kabulünün yerine geçmez; üçüncü taraf yeniden dağıtım yetkisi çıkarılmaz.",
+      "tests": [
+        "gazi/auth/tests/gateway.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-02"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-014",
+      "routes": [
+        "learning",
+        "connections",
+        "academic"
+      ],
+      "packages": [
+        "B14",
+        "B15",
+        "B16"
+      ],
+      "current_behavior": "UzemGO yolculuğu canlı/kayıtlı ders, çalışma, değerlendirme ve kanıt taslağını senaryo olarak açıklar. İmzalı kuyruk yerelde ayrı.",
+      "remaining": "Gerçek UzemGO canlı sınıf/kayıt/ilerleme bağlantısı kurulmadı.",
+      "tests": [
+        "gazi/auth/tests/myys-lms.test.mjs",
+        "gazi/auth/tests/myys-source-http.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-02"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-015",
+      "routes": [
+        "learning",
+        "academic"
+      ],
+      "packages": [
+        "B09",
+        "B10"
+      ],
+      "current_behavior": "Tarayıcı kanıt taslağı sunucuya gönderilmez. İmzalı kaynak ürünü aynı kişi/program/sürümle çekirdeğe, insan değerlendirmesine ve arşive bağlanır.",
+      "remaining": "Gerçek dış sağlayıcı ve üretim kanıt saklama/aktarım kabulü açık.",
+      "tests": [
+        "gazi/auth/tests/myys-source-packet.test.mjs",
+        "gazi/auth/tests/myys-source-http.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-02",
+        "GAZ-05"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-016",
+      "routes": [
+        "badges",
+        "credentials",
+        "academic"
+      ],
+      "packages": [
+        "B12",
+        "B13",
+        "B23"
+      ],
+      "current_behavior": "Eski rozet alan/şema testleri korunur; çekirdekte profil, yetki ve tek karar/ihraç denetlenir; SEM dosyası ayrı ve resmî düzenleme kapalıdır.",
+      "remaining": "EK-1/kurum düzenleme yetkisi, gerçek sağlayıcı ve bağımsız standart sertifikasyonu açık.",
+      "tests": [
+        "gazi/auth/tests/badges.test.mjs",
+        "gazi/auth/tests/myys-profile.test.mjs",
+        "gazi/auth/tests/myys-sem.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-01",
+        "GAZ-08"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-017",
+      "routes": [
+        "badges",
+        "academic"
+      ],
+      "packages": [
+        "B12",
+        "B13"
+      ],
+      "current_behavior": "Eski sabit sentetik rozet laboratuvarı korunur; çekirdekte anahtar yaşam döngüsü, imza ve süre/iptal/askı ayrımı yereldedir.",
+      "remaining": "Gerçek anahtar hizmeti, halka açık üretim doğrulayıcı ve bağımsız birlikte çalışabilirlik açık.",
+      "tests": [
+        "gazi/auth/tests/badges.test.mjs",
+        "gazi/auth/tests/myys-keys.test.mjs",
+        "gazi/auth/tests/myys-status.test.mjs",
+        "gazi/auth/tests/myys-credential-lifecycle.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-01",
+        "GAZ-08"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-018",
+      "routes": [
+        "wallet",
+        "academic",
+        "shared"
+      ],
+      "packages": [
+        "B18",
+        "B19"
+      ],
+      "current_behavior": "Kişisel çekirdek cüzdanı özel; tek kullanımlı paylaşım, iptal ve sınırlı kamu özeti yerelde. Eski cüzdan örnek sicildir.",
+      "remaining": "Üretim cüzdanı/harici holder binding ve dış cüzdan kabulü açık.",
+      "tests": [
+        "gazi/auth/tests/myys-wallet.test.mjs",
+        "gazi/auth/tests/myys-status.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-01"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-019",
+      "routes": [
+        "badges",
+        "academic"
+      ],
+      "packages": [
+        "B12"
+      ],
+      "current_behavior": "Eski beş eğitim şablonu/sabit sentetik laboratuvar korunur; çekirdekte bağımsız yetki ve profil gereklidir.",
+      "remaining": "Gazi/MEB adına gerçek belge veya rozet verme yetkisi yok; kurum onayı beklenir.",
+      "tests": [
+        "gazi/auth/tests/badges.test.mjs",
+        "gazi/auth/tests/myys-profile.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-08"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-020",
+      "routes": [
+        "pathways",
+        "recognition",
+        "academic"
+      ],
+      "packages": [
+        "B20",
+        "B21"
+      ],
+      "current_behavior": "Öğrenme yolu örnekleri ile yerel politika/tekil kredi defteri ayrı tutulur; gerekçesiz veya mükerrer kazanım yok.",
+      "remaining": "Gerçek yığılabilir yeterlilik, önkoşul/eşdeğerlik ve çok dersli tanıma anlaşmaları açık.",
+      "tests": [
+        "gazi/auth/tests/myys-recognition.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-03"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-021",
+      "routes": [
+        "proctoring",
+        "academic"
+      ],
+      "packages": [
+        "B10",
+        "B35"
+      ],
+      "current_behavior": "Gözetim kamera/mikrofon açmayan sentetik simülasyondur; işaretler otomatik başarı/başarısızlık kararı vermez.",
+      "remaining": "Gerçek gözetim, biyometrik/AI hizmeti veya buna ilişkin kurum kararı yok.",
+      "tests": [
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-03"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-022",
+      "routes": [
+        "connections",
+        "integrations",
+        "obs",
+        "academic"
+      ],
+      "packages": [
+        "B16",
+        "B17",
+        "B22",
+        "B23"
+      ],
+      "current_behavior": "Kuyruk/karantina/tekrar koruma, satır mutabakatı, yerel OBS zarfı ve SEM hazırlık dosyası var; kabul yanıtı teslim değildir.",
+      "remaining": "OBS/YÖKSİS/e-Devlet gerçek şema/erişim/karşı kabulü açık; dışa iletilen kayıt sıfır.",
+      "tests": [
+        "gazi/auth/tests/myys-lms.test.mjs",
+        "gazi/auth/tests/myys-operations.test.mjs",
+        "gazi/auth/tests/myys-obs.test.mjs",
+        "gazi/auth/tests/myys-sem.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-03",
+        "GAZ-05"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-023",
+      "routes": [
+        "quality",
+        "audit",
+        "notifications",
+        "academic"
+      ],
+      "packages": [
+        "B24",
+        "B26",
+        "B29"
+      ],
+      "current_behavior": "Kaynak paydaları ayrılmış yerel göstergeler, görev/denetim, hata ve düzeltme izi var; 11 profil/9 çekirdek rol gezinmesi sınanır.",
+      "remaining": "Gerçek kohort analitiği/istihdam/dış denetim ve tam ekran okuyucu kabulü açık.",
+      "tests": [
+        "gazi/auth/tests/myys-quality.test.mjs",
+        "gazi/auth/tests/myys-support.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-03"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-024",
+      "routes": [
+        "guide",
+        "academic"
+      ],
+      "packages": [
+        "B26"
+      ],
+      "current_behavior": "Yerel MYYS rehberi ve kişisel verisiz destek özeti; çekirdekte sahipli destek kaydı ve öğrenci kapanış teyidi ayrı.",
+      "remaining": "lms.uzemgo.com ayrı hizmettir; bu taramada açılmadı. Kurum SLA/eskalasyon politikası açık.",
+      "tests": [
+        "gazi/auth/tests/myys-support.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-09"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-025",
+      "routes": [
+        "sales",
+        "executive",
+        "demo",
+        "applications"
+      ],
+      "packages": [
+        "B15",
+        "B26"
+      ],
+      "current_behavior": "Gazi sunum/saha/demoları korunur; yerel MYYS başvurusu gerçek kurum kaydı sayılmaz.",
+      "remaining": "ÜniGO TR/EN kurumsal site ve gerçek talep listesi ayrı hedef; bu depoda güncel dış kabulü yeniden kanıtlanmadı.",
+      "tests": [
+        "gazi/auth/tests/myys-quality.test.mjs"
+      ],
+      "baseline_source_ids": [
+        "GAZ-10"
+      ],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-026",
+      "routes": [
+        "finance",
+        "business"
+      ],
+      "packages": [
+        "B31"
+      ],
+      "current_behavior": "Finans ve yatırım ekranı örnek hesap/mutabakat sunar; gerçek ödeme, fiyat veya lisans satışı etkin değildir.",
+      "remaining": "Koşullu PSP/ödeme-iade/ters ibraz sözleşmesi ve bağımsız durum makinesi halen geliştirme kapsamındadır.",
+      "tests": [
+        "gazi/auth/tests/myys.test.mjs"
+      ],
+      "baseline_source_ids": [],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    },
+    {
+      "inventory_id": "GAZI-027",
+      "routes": [
+        "stakeholders",
+        "academic",
+        "settings"
+      ],
+      "packages": [
+        "B08",
+        "B32"
+      ],
+      "current_behavior": "Gazi görsel kimliği ve alt alanı korunur; yerel çekirdek kurum/birim negatif testleri uygular.",
+      "remaining": "Üretim multi-tenant onboarding/kota/ikinci kurum kabulü ve ölçekleme açık.",
+      "tests": [
+        "gazi/auth/tests/myys-scope-http.test.mjs",
+        "gazi/auth/tests/myys-membership.test.mjs"
+      ],
+      "baseline_source_ids": [],
+      "code_scope": "source-package-31",
+      "live_scope": "last-verified-package-16; packages-17-31-not-deployed",
+      "row_acceptance": "partial; original criterion not declared complete"
+    }
+  ]
+}
