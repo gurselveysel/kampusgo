@@ -1,3 +1,11 @@
+# Güncel devam — Paket27 yerel kabul; kaynak eşitlemesi sırada
+
+B27 Kurtarma tatbikatları ekranı/prova/ayrı inceleme hazır. 403+46+46=495 otomatik; 13 tatbikat +14 kaynak +13 itiraz tarayıcı; 74 komut/16 HTTP, 3128 örnek/25024 kontrol. RECOVERY-CONTRACT ve B27-recovery-20261014.json güncel. 390 px form incelendi; 115 dosyalı paket. Önce özgün36 kriter/diff kontrolü, commit ve expected-head kaynak eşitleme. Temel yerel aea164d471e2c208cdd34d6e20da4c50dd9b0021 / uzak 0a33084efd394fdd9c847b4ef7184e4e9be53ed3 / ağaç fe01101aba1f7dcd4ab9947ad093ee5f9377c1b9.
+
+Son canlı Paket16 dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; Paket17–27 dağıtımı yok. Kullanıcı browserAuth iptalini yeniden isteme; configuredCore kapalı. Tek kod sahibi; alt ajan yok. Gerçek üretim backup/credential/migration/kurum kararı yok.
+
+Sonraki bağımsız B09 kaynak güven sicilinin sürümlü ayrı incelemesi ve key/contract iptalinin güncel akademik uygunluğa yayılması; statik adapter sözleşmesini eski imzalı arşivi bozmadan bağla. Henüz bu yeni kod yazılmadı. B07 üretim transaction/anahtar adaptörü ve tüm B01–B36 bağımsız kalanlar da açık. B27 gerçek sözleşmeli RPO/RTO ve üretim yedek/dağıtık kabulü ACCESS-ACTIONS tek listesine eklendi. Genel tamamlanma iddiası yok; bağımsız geliştirmeyi sürdür.
+
 # Güncel devam — Paket26 yerel kabulü geçti; eşitleme sonra B27
 
 B09 kaynak paketi/HTTP/UI/bağımsız arşiv doğrulayıcı tamamlandı (yerel dilim). 391+46+46=483 otomatik; 14 kaynak/13 itiraz tarayıcı; 72 komut/15 HTTP, 3086 örnek/24688 kontrol. SOURCE-PACKET-CONTRACT.md ve B09-source-20261014.json sınırlar. Kaynak key/contract onay-iptal yaşam döngüsü bağımsız açık; bunu atlama.

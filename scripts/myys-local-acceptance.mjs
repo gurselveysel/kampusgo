@@ -1,3 +1,5 @@
+import {LocalRecoveryService} from '../gazi/auth/myys/recovery.mjs';
+import {runSyntheticRecoveryDrill} from '../gazi/auth/scripts/lib/integrated-recovery.mjs';
 import {sourcePacketFixture} from '../gazi/auth/tests/helpers/local-source-packet.mjs';
 import {semSetup} from '../gazi/auth/tests/helpers/local-sem.mjs';
 import {generateKeyPairSync} from 'node:crypto';
@@ -18,6 +20,7 @@ import {myysRoute} from '../gazi/auth/myys/http.mjs';
 
 if(process.env.VERCEL||process.env.VERCEL_ENV)throw Error('Local acceptance only');
 const f=fixture('gazi');
+const recoveryService=process.argv.includes('--recovery')?new LocalRecoveryService(f.core,{rehearse:runSyntheticRecoveryDrill}):null;
 // The appeal scenario starts from an existing synthetic decision, never a real learner.
 const initial=process.argv.includes('--sem')?semSetup(f):process.argv.includes('--keys')?f.passed():process.argv.includes('--profiles')?f.passed({withProfile:false}):process.argv.includes('--obs')?localRecognitionCase(f):process.argv.includes('--replacement')||process.argv.includes('--wallet')||process.argv.includes('--privacy')||process.argv.includes('--quality')||process.argv.includes('--cohort')?await signedFixture(f):process.argv.includes('--appeals')||process.argv.includes('--operations')?f.passed():f.setup();
 const sourceFixture=process.argv.includes('--source-packets')?await sourcePacketFixture(f,{initial}):null;
@@ -71,7 +74,7 @@ const server=createServer(async(req,res)=>{
    const actor=(req.headers.cookie||'').match(/(?:^|; )myys_acceptance_actor=([a-z]+)(?:;|$)/)?.[1];
    if(url.pathname==='/api/myys/paylasim')return await myysRoute({req,path:url.pathname,b,sessionHash:null,json,res,core:f.core});
    if(!actor||!Object.hasOwn(roles,actor))return json(res,401,{error:'Yerel test senaryosunu seçin.'});
-   return await myysRoute({req,path:url.pathname,b,sessionHash:hash(actor),json,res,core:f.core,signer:localSigner,sourceAdapter:sourceFixture?.adapter});
+   return await myysRoute({req,path:url.pathname,b,sessionHash:hash(actor),json,res,core:f.core,signer:localSigner,sourceAdapter:sourceFixture?.adapter,recoveryService});
   }
   if(!['GET','HEAD'].includes(req.method))return json(res,405,{error:'Yöntem desteklenmiyor.'});
   const path=resolve(root,'.'+decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname));

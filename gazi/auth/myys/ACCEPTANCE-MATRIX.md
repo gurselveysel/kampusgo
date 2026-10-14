@@ -164,3 +164,9 @@ Akademik panelin kapalı oturum/yeniden giriş davranışı sağlayıcı çıkı
 ## Paket26 kaynak adayı — B09/B15/B16/B08 (14.10.2026)
 
 Aktarım ve mutabakat ekranında Türkçe imzalı dosya seçimi, 202 kabulü, ayrı kuyruk işleme ve açık güven kaydı indirme eklendi. İşlenmiş kanıt eğiticiye açılır; insan rubriği/ayrı karar/öğrenci arşivi aynı zincirdedir. Kaynak düzeltmesi eski karar arşivini değiştirmez. Bağımsız Python/OpenSSL kaynak imzasını ve rubrik hesabını doğrular; karar zarfı imzasızdır, güncel uygunluk iddiası yoktur. 391+46+46=483 otomatik, 14 kaynak +13 itiraz tarayıcı; 72 komut/15 HTTP, 3086 örnek/24688 kontrol. `acceptance/B09-source-20261014.json`. Kaynak güven sicili/iptal yaşam döngüsü hâlâ bağımsız açık; gerçek sağlayıcı ve kurum kabulü ayrıca açık. Son canlı Paket16; Paket17–26 dağıtımı yok.
+
+## Paket27 kaynak adayı — B27/B07/B13/B16/B08 (14.10.2026)
+
+Kurtarma tatbikatları ekranı: plan → sunucu sentetik provası → ölçüm/indirme → ayrı yönetici incelemesi. Eski/bozuk yedek, oturum/iptal, kesilen kuyruk/tek makbuz, riskli anahtar/yanlış ihraç ve tarihsel arşiv birlikte doğrulandı. 403+46+46=495 otomatik; 13 tatbikat +14 kaynak +13 itiraz tarayıcı; 74 komut/16 HTTP, 3128 örnek/25024 kontrol. 390 px form incelendi. Gerçek RPO/RTO, üretim adaptörleri ve dağıtık geri dönüş açık; kaynak yayını canlı yayın değildir. Son canlı Paket16; 17–27 dağıtımı yok.
+
+`RECOVERY-CONTRACT.md` ve `acceptance/B27-recovery-20261014.json` sınırlar/kanıtlar. configuredCore kapalı. Korunan 115 dosyalı paket üretildi; başarısız veya doğrulanmamış dağıtım yapılmış sayılmadı. Canlı alias 14.10.2026 yeniden dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1, uygulanmadı.

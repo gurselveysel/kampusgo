@@ -5,12 +5,15 @@ import {join} from 'node:path';
 import {LocalAcceptanceStore, hash, requireThat} from '../../myys/store.mjs';
 
 const localOnly=()=>requireThat(!process.env.VERCEL && !process.env.VERCEL_ENV,'local_only','Geri yükleme provası yalnız yerel kabul ortamında çalışır.',503);
+const has=(db,table)=>!!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?").get(table);
 const inventory=db=>Object.fromEntries(['persons','memberships','records','commands','audit','bindings'].map(table=>[table,db.prepare(`SELECT count(*) AS total FROM ${table}`).get().total]));
 function inspect(db){
  requireThat(db.prepare('PRAGMA integrity_check').get().integrity_check==='ok','snapshot_integrity','Yedek bütünlük denetimi başarısız.');
  requireThat(db.prepare('PRAGMA foreign_key_check').all().length===0,'snapshot_relations','Yedek ilişkileri geçersiz.');
  const counts=inventory(db);
  requireThat(counts.bindings===0,'snapshot_sessions','Yedek eski oturumları geri açamaz.');
+ for(const table of ['identity_scopes','identity_provider_sessions','identity_session_links'])if(has(db,table))requireThat(db.prepare(`SELECT count(*) n FROM ${table}`).get().n===0,'snapshot_sessions','Yedek oturum bağlarını geri açamaz.');
+ if(has(db,'identity_challenges'))requireThat(db.prepare("SELECT count(*) n FROM identity_challenges WHERE status IN ('pending','claimed')").get().n===0,'snapshot_challenges','Bekleyen girişler yedekte kapatılmalı.');
  return counts;
 }
 
@@ -26,7 +29,10 @@ export async function snapshotLocalStore(store,directory){
  try{
   await backup(store.db,path);chmodSync(path,0o600);
   db=new DatabaseSync(path);
-  db.exec('DELETE FROM bindings');
+  db.exec('PRAGMA foreign_keys=ON; BEGIN IMMEDIATE; DELETE FROM bindings');
+  if(has(db,'identity_session_links'))db.exec('DELETE FROM identity_session_links');
+  if(has(db,'identity_challenges'))db.prepare("UPDATE identity_challenges SET status='cancelled',finished=? WHERE status IN ('pending','claimed')").run(Date.now());
+  db.exec('COMMIT');
   const counts=inspect(db);db.close();db=null;
   const digest=hash(readFileSync(path));
   const receipt={version:1,scope:'local-acceptance-only',createdAt:new Date().toISOString(),digest,counts,elapsedMs:performance.now()-started};

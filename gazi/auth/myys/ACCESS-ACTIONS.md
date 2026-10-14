@@ -22,6 +22,8 @@ Kaynaklar: [Gazi BIDB](https://bidb.gazi.edu.tr/) GUZEM ve OBS bağlantıların�
 
 5. **GAZİSEM / merkezi SEM belge paketi (14.10.2026 ek inceleme):** güncel YÖK SEM başvuru yazısı ve ekleri, Gazi/GAZİSEM güncel eğitim-sertifika usulü, program açma/görev kararı ve merkezî düzenleyici teyidi; yetkili YÖKSİS başvuru sahibince sağlanacak teknik alan/şema ve maskelenmiş örnek kabul yanıtı. İlk adım belge incelemesidir; kurum hesabı, parola, kod veya resmî belge üretme yetkisi istenmiyor. Hedef, yerel hazırlık dosyasını gerçek usulle karşılaştırmaktır; otomatik gönderim kapalı kalır.
 
+6. **Geri dönüş işletim kararı (B27):** yetkili olay ve geri dönüş sorumlusu; sözleşmedeki RPO/RTO ve ölçüm başlangıç/bitiş tanımları; yedek kapsamı/bölgesi/saklama sahibi; son güvenlik/iptal noktasının ayrı güvenilir saklama yöntemi; onaylı ayrı geri dönüş hedefi ve sentetik prova yetkisi. İlk adım doküman ve topoloji incelemesidir; gerçek yedeği kopyalama, üretimi geri yükleme veya yeni credential oluşturma yetkisi varsayılmaz.
+
 Bu bilgiler geldiğinde mevcut adaptör sözleşmesi kesin uçlarla eşlenebilir. Şu aşamada bilinmeyen issuer, API yolu veya test veritabanı adı uydurulmadı. Bilgi eksikliği bağımsız yerel kod/test işlerini durdurmaz.
 
 ## Ayrı özel yetki gerektiren sonraki işlemler

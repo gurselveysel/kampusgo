@@ -59,7 +59,7 @@ export function probeCommandScopes(core,args,result,actor){
    let error;try{probe.run(other);}catch(e){error=e;}
    assert.ok(error&&[400,403,404,409,422].includes(error.status),`${args.action}: valid tenant-B reference not rejected correctly: ${error?.code||error?.name||'SUCCESS'}`);
    assert.equal(before(),tenantBaseline,`${args.action}: foreign reference modified persisted state`);checks.push({name:'valid-other-tenant-reference',status:error.status,code:error.code});
-  }else if(['program','registry-draft','support','privacy-request','privacy-withdraw-shares','recognition-policy','key-register'].includes(args.action)){
+  }else if(['program','registry-draft','support','privacy-request','privacy-withdraw-shares','recognition-policy','key-register','recovery-plan'].includes(args.action)){
    const sourceDigest=sourceBefore();
    const own=probe.run(other);assert.notEqual(own.id,result.id,`${args.action}: tenant record identity collided`);
    assert.ok(s.db.prepare('SELECT id FROM records WHERE tenant=? AND id=?').get(otherTenant,own.id));

@@ -193,3 +193,9 @@ Akademik panelin yeniden giriş akışı ve yerel giriş bekleme ekranı tamamla
 ## Paket26 — B09 imzalı kaynak dosyası ve arşiv
 
 `source-packet.mjs` mevcut LMS olay/worker/kanıt/değerlendirme/karar zincirine bağlıdır; ikinci veri deposu oluşturulmadı. Üç yeni özel HTTP yolu ve Aktarım ve mutabakat dosya akışı; yalnız işlenmiş güncel kanıta eğitici işlemi. `verify-source-archive.py` ayrı güven dosyasıyla özgün kaynak imzası ve tarihsel rubrik hesabını denetler. Karar dış zarfı imzasız; gerçek sağlayıcı ve kaynak güven sicili yaşam döngüsü açık. 391 sunucu +46 portal +46 regresyon, 14 kaynak/13 itiraz tarayıcı. Sözleşme ve sınırlar SOURCE-PACKET-CONTRACT.md içinde.
+
+## Paket27 kaynak adayı — B27/B07/B13/B16/B08 (14.10.2026)
+
+Kurtarma tatbikatları ekranı: plan → sunucu sentetik provası → ölçüm/indirme → ayrı yönetici incelemesi. Eski/bozuk yedek, oturum/iptal, kesilen kuyruk/tek makbuz, riskli anahtar/yanlış ihraç ve tarihsel arşiv birlikte doğrulandı. 403+46+46=495 otomatik; 13 tatbikat +14 kaynak +13 itiraz tarayıcı; 74 komut/16 HTTP, 3128 örnek/25024 kontrol. 390 px form incelendi. Gerçek RPO/RTO, üretim adaptörleri ve dağıtık geri dönüş açık; kaynak yayını canlı yayın değildir. Son canlı Paket16; 17–27 dağıtımı yok.
+
+`RECOVERY-CONTRACT.md` ve `acceptance/B27-recovery-20261014.json` sınırlar/kanıtlar. configuredCore kapalı. Korunan 115 dosyalı paket üretildi; başarısız veya doğrulanmamış dağıtım yapılmış sayılmadı. Canlı alias 14.10.2026 yeniden dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1, uygulanmadı.

@@ -1882,50 +1882,62 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "4 yedek/geri dönüş negatif ve pozitif testi geçti; sentetik snapshot ve yeni dizine geri dönüş ölçüldü.",
+      "test_status": "12 yeni +4 mevcut geri dönüş testi; toplam 403 sunucu +46 portal +46 regresyon =495. 13 tatbikat +14 kaynak +13 itiraz tarayıcı; 74 komut/16 HTTP kapsam matrisi geçti.",
       "implementation_evidence": [
+        "gazi/auth/myys/recovery.mjs",
+        "gazi/auth/myys/recovery-model.mjs",
         "gazi/auth/scripts/lib/local-recovery.mjs",
+        "gazi/auth/scripts/lib/integrated-recovery.mjs",
         "gazi/auth/scripts/myys-recovery-drill.mjs",
         "gazi/auth/tests/myys-recovery.test.mjs",
-        "gazi/auth/myys/RELEASE.md"
+        "gazi/auth/tests/myys-integrated-recovery.test.mjs",
+        "gazi/portal/src/recovery-workspace.jsx",
+        "scripts/myys-recovery-browser.cjs",
+        "gazi/auth/myys/RECOVERY-CONTRACT.md",
+        "gazi/auth/myys/acceptance/B27-recovery-20261014.json"
       ],
-      "production_status": "Yerel işletim aracı; canlı dağıtıma alınmadı, üretim verisine dokunmadı.",
-      "implementation_note": "Yalnız yerel sentetik depo: kanıt/karar/denetim/idempotency korunur, eski oturumlar taşınmaz, bozuk yedek ve mevcut hedef reddedilir. Üretim SLA/RPO/RTO kabulü değildir.",
-      "independent_remaining_work": [
-        "Kesinti ve kuyruk tekrar oynatma senaryolarını anahtar riski/yanlış ihraç olay kılavuzuyla birleştir."
-      ],
+      "production_status": "Yalnız izole yerel kabul ve kaynak adayı; Paket27 canlı dağıtımı yok. Son canlı Paket16. Üretim tatbikatı/kimlik/depo kapalı.",
+      "implementation_note": "Kurtarma tatbikatları: değişmez yerel hedefli plan, ayrı sentetik depo provası, ölçülen sonuç/indirme ve ayrı yönetici incelemesi. Kesilen kuyruk/tek makbuz, imzalı çıkış ve kapalı bekleyen giriş, yeni doğrulama, yanlış ihraç/anahtar iptali, eski/bozuk yedek reddi ve değişmeyen kaynak/karar arşivi birlikte doğrulandı. Gerçek kurum deposu, üretim güvenlik kuyruğu ve RPO/RTO kabulü değildir.",
+      "independent_remaining_work": [],
       "development_blocker": null,
       "production_activation_blocker": "Üretim RPO/RTO hedefi, yedekleme ve ayrı geri yükleme yetkisi.",
       "acceptance_axes": {
         "code_completeness": {
           "status": "kısmi",
           "evidence": [
+            "gazi/auth/myys/recovery.mjs",
+            "gazi/auth/myys/recovery-model.mjs",
             "gazi/auth/scripts/lib/local-recovery.mjs",
+            "gazi/auth/scripts/lib/integrated-recovery.mjs",
             "gazi/auth/scripts/myys-recovery-drill.mjs",
             "gazi/auth/tests/myys-recovery.test.mjs",
-            "gazi/auth/myys/RELEASE.md"
+            "gazi/auth/tests/myys-integrated-recovery.test.mjs",
+            "gazi/portal/src/recovery-workspace.jsx",
+            "scripts/myys-recovery-browser.cjs",
+            "gazi/auth/myys/RECOVERY-CONTRACT.md",
+            "gazi/auth/myys/acceptance/B27-recovery-20261014.json"
           ],
           "remaining": [
-            "Kesinti ve kuyruk tekrar oynatma senaryolarını anahtar riski/yanlış ihraç olay kılavuzuyla birleştir."
+            "Üretim deposu/işçi/kimlik/anahtar adaptörü ve güvenilir dış checkpoint ile gerçek geri dönüş; gerçek sistem sözleşmesi/yetkisine bağlı."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi",
-          "evidence": "4 yedek/geri dönüş negatif ve pozitif testi geçti; sentetik snapshot ve yeni dizine geri dönüş ölçüldü.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "yerel dilim doğrulandı",
+          "evidence": "12 yeni +4 mevcut geri dönüş testi; toplam 403 sunucu +46 portal +46 regresyon =495. 13 tatbikat +14 kaynak +13 itiraz tarayıcı; 74 komut/16 HTTP kapsam matrisi geçti.",
+          "limits": "Tek makine, küçük sentetik depo. 31 saniyelik kuyruk süresi sanal ilerletilir ve RTO kıyasına eklenir; kurumsal RPO/RTO kabulü değildir."
         },
         "live": {
           "status": "kurumsal etkinleştirme kapalı",
-          "evidence": "Yerel işletim aracı; canlı dağıtıma alınmadı, üretim verisine dokunmadı."
+          "evidence": "Yalnız izole yerel kabul ve kaynak adayı; Paket27 canlı dağıtımı yok. Son canlı Paket16. Üretim tatbikatı/kimlik/depo kapalı."
         },
         "institution_decision": {
           "status": "operasyonel kabul açık",
-          "required": "Üretim RPO/RTO hedefi, yedekleme ve ayrı geri yükleme yetkisi."
+          "required": "Yetkili olay/geri dönüş sorumlusu, sözleşmeli RPO/RTO, yedek kapsamı ve güvenilir son güvenlik noktası saklama kararı."
         },
         "external_access": {
           "status": "teyit/erişim bekleniyor",
           "target": "Onaylı üretim yedek hedefi ve geri dönüş ortamı",
-          "next_action": "ACCESS-ACTIONS.md kapsamındaki aşamalı en az yetki incelemesi; yeni erişim oluşturulmadı."
+          "next_action": "ACCESS-ACTIONS.md tek liste: onaylı ayrı geri dönüş hedefi ve yalnız sentetik prova yetkisi; gerçek yedek kopyalama/migration henüz yapılmaz."
         }
       }
     },

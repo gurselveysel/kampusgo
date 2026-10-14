@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.24",
+  "version": "2026.10.14.27",
   "commands": [
     "alternative-evidence",
     "appeal",
@@ -55,6 +55,8 @@
     "recognition-request",
     "recognition-resolve",
     "recognition-technical",
+    "recovery-plan",
+    "recovery-review",
     "registry-draft",
     "registry-review",
     "replacement-prepare",
@@ -87,6 +89,7 @@
     "kaynak-al",
     "kaynak-guveni",
     "kaynak-isle",
+    "kurtarma-dene",
     "paylasim",
     "toplu-hazirlik",
     "veri-ozetim"

@@ -1,0 +1,105 @@
+{
+  "work_ids": [
+    "B27",
+    "B07",
+    "B13",
+    "B16",
+    "B08"
+  ],
+  "at": "2026-10-14T01:17:47.248495+00:00",
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "production": false,
+  "automated": {
+    "server": 403,
+    "portal": 46,
+    "regression": 46
+  },
+  "new_tests": 12,
+  "existing_recovery_tests": 4,
+  "browser": {
+    "recovery": {
+      "at": "2026-10-14T01:14:42.164Z",
+      "scope": "local-synthetic-only",
+      "checks": [
+        "Türkçe yerel kapsam ve plan formu",
+        "Hedef ve gerekçe kalıcı plana kaydedildi",
+        "Yenileme sonrasında plan korunuyor",
+        "Gerçek sunucu tatbikatı 11 denetimi tamamladı",
+        "Hazırlayan kendi incelemesini yapamıyor ve başarı yeniden işletilmiyor",
+        "Sonuç dosyası ölçümleri içeriyor, ham depo ve oturum içermiyor",
+        "Arama ve boş sonuç açıklaması",
+        "Ayrı yönetici tam sonuç özetini inceliyor",
+        "Öğrenen tatbikat kayıtlarını göremiyor",
+        "Hedef aşımı geçer sonuç gibi sunulmuyor",
+        "Başarısız sonuç yalnız düzeltme incelemesine açılıyor",
+        "390 px genişlik ve klavye sırası",
+        "Tarayıcı çalışma hatası yok"
+      ],
+      "productionVerified": false
+    },
+    "source_checks": 14,
+    "appeal_checks": 13
+  },
+  "scope_matrix": {
+    "commandCount": 74,
+    "positiveSamples": 3128,
+    "totalChecks": 25024,
+    "httpRoutes": [
+      "calisma",
+      "cuzdan-indir",
+      "dogrula",
+      "dogrulama-paketi",
+      "durum-yayinla",
+      "guven-sicili",
+      "imzala",
+      "islem",
+      "karar-arsivi",
+      "kaynak-al",
+      "kaynak-guveni",
+      "kaynak-isle",
+      "kurtarma-dene",
+      "paylasim",
+      "toplu-hazirlik",
+      "veri-ozetim"
+    ]
+  },
+  "measured_synthetic_drill": {
+    "format": "myys-recovery-report/1",
+    "scenarioVersion": "2026.10.14.1",
+    "checks": {
+      "staleBackup": true,
+      "damagedBackup": true,
+      "records": true,
+      "sessions": true,
+      "logout": true,
+      "freshIdentity": true,
+      "queue": true,
+      "duplicate": true,
+      "archive": true,
+      "keyRisk": true,
+      "wrongIssuance": true
+    },
+    "backupMs": 1.559502000000009,
+    "restoreMs": 0.6392600000000073,
+    "recoveryMs": 15.14504500000001,
+    "recoveryPointGapMs": 0,
+    "lostRecords": 0,
+    "restoredRecords": 36,
+    "restoredSessions": 0,
+    "checkpointDigest": "a302d33443ed44499d8f4ffdb563076633888c5713d804d1e908f64b87d4de1f",
+    "archiveDigest": "25411fd7453ea7c72df2824b90a5bb56836d6e2ccb663bfe7c1a7f9c360e9488",
+    "sourceSignatureCount": 1,
+    "syntheticLeaseAdvanceMs": 31000,
+    "productionRpoRtoVerified": false,
+    "official": false
+  },
+  "limits": [
+    "Gerçek kurum deposu yedeklenmedi/geri yüklenmedi.",
+    "31 saniye kuyruk süresi sanaldır; ölçülen süreye eklenerek yerel hedefle karşılaştırılır.",
+    "RPO boşluğu 0: son güvenlik checkpointinden sonra kaynak yazısı yok. Gerçek üretim sıfır kayıp garantisi değildir.",
+    "Özet imza değildir; en son güvenilir özet ayrı saklanmalıdır. Üretim güvenlik kuyruğu yeniden oynatma ve dış checkpoint adaptörü yoktur.",
+    "Üretim RPO/RTO, rol/erişim ve dağıtık geri yükleme kabulü açık.",
+    "Kaynak adayı; Paket27 canlı dağıtımı yok."
+  ]
+}

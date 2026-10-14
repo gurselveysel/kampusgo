@@ -409,3 +409,13 @@ Yerel c09c116eeb12ac783151b4af4e665cdf5345abd6 / uzak 000fe90fca77b13b8974848076
 - Asimetrik kaynak imzası doğrulanır; dış karar zarfı imzasızdır. Kaynak güven sicili/iptal yaşam döngüsü, gerçek sağlayıcı sözleşmesi ve üretim depo/worker/geri yükleme kabulü açık. B09/B15/B16 tamamlandı sayılmaz.
 - 14.10.2026 alias yine dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY / Paket16. Paket17–26 dağıtımı veya yeni korumalı canlı smoke yok; iptal edilmiş browserAuth yeniden istenmedi. Rollback dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1 uygulanmadı.
 - Eşitleme tabanı uzak 000fe90fca77b13b897484807689f9d0b13909f6, yerel c09c116eeb12ac783151b4af4e665cdf5345abd6, ortak ağaç 9cae8895ea9726f98f504fa9a56a76416b476c51. Yeni kimlikler kaynak eşitlemesi sonrası eklenir.
+
+## Paket26 kaynak eşitlemesi — 14 Ekim 2026
+
+Yerel `aea164d471e2c208cdd34d6e20da4c50dd9b0021`; uzak `0a33084efd394fdd9c847b4ef7184e4e9be53ed3`; ortak ağaç `fe01101aba1f7dcd4ab9947ad093ee5f9377c1b9`. 25 dosyanın blob özeti ve bütün ağaç eşleştirildi; expected-head `000fe90fca77b13b897484807689f9d0b13909f6`, force=false. Canlı dağıtım yok; son canlı Paket16 ve geri dönüş hedefi değişmedi.
+
+## Paket27 kaynak adayı — B27/B07/B13/B16/B08 (14.10.2026)
+
+Kurtarma tatbikatları ekranı: plan → sunucu sentetik provası → ölçüm/indirme → ayrı yönetici incelemesi. Eski/bozuk yedek, oturum/iptal, kesilen kuyruk/tek makbuz, riskli anahtar/yanlış ihraç ve tarihsel arşiv birlikte doğrulandı. 403+46+46=495 otomatik; 13 tatbikat +14 kaynak +13 itiraz tarayıcı; 74 komut/16 HTTP, 3128 örnek/25024 kontrol. 390 px form incelendi. Gerçek RPO/RTO, üretim adaptörleri ve dağıtık geri dönüş açık; kaynak yayını canlı yayın değildir. Son canlı Paket16; 17–27 dağıtımı yok.
+
+`RECOVERY-CONTRACT.md` ve `acceptance/B27-recovery-20261014.json` sınırlar/kanıtlar. configuredCore kapalı. Korunan 115 dosyalı paket üretildi; başarısız veya doğrulanmamış dağıtım yapılmış sayılmadı. Canlı alias 14.10.2026 yeniden dpl_Coaq5KN2VcNpPjwyXke4neroq877 READY; geri dönüş dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1, uygulanmadı.
