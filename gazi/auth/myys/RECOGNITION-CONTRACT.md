@@ -1,6 +1,8 @@
 # Tanıma ve kredi sözleşmesi — yerel kabul
 
-İnceleme tarihi: 10.10.2026. Üretim veya kurum onayı değildir.
+İlk inceleme: 10.10.2026; ek tam kaynak incelemesi: 14.10.2026. Üretim veya kurum onayı değildir.
+
+Paket46: çok dersli teklif sözleşmesi `RECOGNITION-OFFER-CONTRACT.md`; yeni kaynak okuma kaydı `RECOGNITION-SOURCE-REVIEW-20261014.md`. Aşağıdaki erişim sınırları 10.10.2026 tarihli ilk incelemenin tarihsel kaydıdır; YÖK beş sayfa ve Gazi kredi transferi dört sayfa 14.10.2026’da okunmuştur. YÖK uzaktan hükmünün ölçü birimi kurum politikası olmadan otomatik yorumlanmaz.
 
 ## Kaynak ve kapsam sınırı
 

@@ -1,3 +1,17 @@
+# Güncel devam — Paket46 yerel kabul; kaynak eşitlemesi sırada
+
+Tanıma ve kredi → Çok dersli teklifler:615+48+46=709 otomatik;34tarayıcı;128komut/17HTTP7321örnek58568denetim;115statik;16tablo138tür. Kaynaklar YÖK5sayfa/Gazi kredi transferi4sayfa/RPL5sayfa okundu; YÖK10/3 birimi kurumsal onay olmadan varsayılmaz. Sözleşme/kaynak/kanıt dosyaları RECOGNITION-OFFER-CONTRACT.md, RECOGNITION-SOURCE-REVIEW-20261014.md, B20-B21-offers JSON.
+
+Önce diff/uzak baş ve tam ağaç: expected-head `ee90a2a6b3da9327f38ea49855b49ab53bb200bf`,base-tree `57157441c49320f160d25ac0dd42baa246b3d40c`. Yerel45 `b18823117f0908b50dde0b2ffa5ae180b1445658`;46commit/eşitleme henüz yapılmadı. Son canlı16;17–46 dağıtılmadı. BrowserAuth iptalini yeniden isteme;configuredCore kapalı;tek editör/alt ajan yok.
+
+Sırada B20 özel istisna/ölçü birimi kapalı sözleşmesi ve yetkili kaynak inceleme bağı; ardından B21 kriptografik dış belge doğrulama/teslim-arşiv. B07 üretim SQL repository/KMS köprüsü,B28 güvenilir checkpoint ve bütün diğer bağımsızlar açık. Gerçek kurum kararı/credential/migration yok;devam komutu bekleme.
+
+# Güncel devam — Paket45 kaynakta; B20/B21 çok dersli tanıma inceleniyor
+
+Paket45 kaynak doğrulaması: yerel `b18823117f0908b50dde0b2ffa5ae180b1445658`, uzak `ee90a2a6b3da9327f38ea49855b49ab53bb200bf`, ortak tam ağaç `57157441c49320f160d25ac0dd42baa246b3d40c`.18 blob SHA ve tam ağaç eşleşti; expected-head/force=false ile eşitlendi. Son canlı16, yeni yayın yok.
+
+696 otomatik/24 tarayıcı;16teknik tablo133tür;son canlı16;17–45 dağıtımı yok. BrowserAuth iptalini yeniden isteme;configuredCore kapalı;tek editör/alt ajan yok. B20/B21 özgün kabul/çok dersli teklif ve istisna kayıtlarını recognition/OBS/itiraz koduyla birlikte incele; önce bağımsız yerel dilim. B07 gerçek repository/KMS metadata köprüsü ve B28 checkpoint/saklama açık.
+
 # Güncel devam — Paket45 yerel kabul; kaynak eşitlemesi sırada
 
 B07 mevcut yerel HTTPS/PKCE akışında key revision/digest challenge’a ve session commit’ine bağlı. Global key block shared tenant/issuer/audience kapsamını kapatır; mevcut kurulu oturumları otomatik silmez. 11 yeni test;602+48+46=696 otomatik;15 kimlik+9 temizlik=24tarayıcı;123komut/17HTTP7056örnek56448denetim;16tablo133tür;115statik. IdentityKeyProvider gerçek metadata köprüsü/SQL repository/PG/RLS/KMS ve güvenilir restore checkpoint açık.

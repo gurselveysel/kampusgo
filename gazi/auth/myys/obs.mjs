@@ -1,14 +1,11 @@
 import {hash,requireThat,LocalAcceptanceStore} from './store.mjs';
 import {stableStringify} from './program-model.mjs';
-import {recognitionLedger,recognitionView} from './recognition.mjs';
+import {recognitionLedger,recognitionView,recognitionRequestUsable} from './recognition.mjs';
 const allowed=(a,unit,roles)=>a.mfa&&a.memberships.some(m=>m.unit===unit&&m.roles.some(r=>roles.includes(r)));
 const demand=(a,unit,roles)=>requireThat(allowed(a,unit,roles),'forbidden','Bu aktarım işleminde birim yetkisi ve çok faktörlü doğrulama gerekli.',403);
 const read=(s,a,eventId,roles)=>{const e=s.get(a.tenant,'obs-event',eventId);requireThat(e&&allowed(a,e.unit,roles),'not_found','Aktarım kaydı bulunamadı veya erişilemiyor.',404);return e;};
 const reason=p=>requireThat(typeof p.reason==='string'&&p.reason.trim().length>=20&&p.reason.length<=2000,'reason','Mutabakat gerekçesi 20–2000 karakter olmalı.');
-function requestUsable(s,tenant,requestId){
- const appeals=s.list(tenant,'recognition-appeal').filter(x=>s.get(tenant,'recognition-decision',x.decisionId)?.requestId===requestId);
- return appeals.every(x=>{const res=s.list(tenant,'recognition-resolution').find(r=>r.appealId===x.id);return res&&(res.outcome==='upheld'||s.list(tenant,'recognition-decision').some(d=>d.resolutionId===res.id));});
-}
+const requestUsable=recognitionRequestUsable;
 const latestDecision=(s,t,requestId)=>s.list(t,'recognition-decision').filter(d=>d.requestId===requestId).at(-1);
 const lastMatched=(s,t,requestId)=>s.list(t,'obs-event').filter(e=>e.requestId===requestId&&s.list(t,'obs-reconciliation').some(r=>r.eventId===e.id&&r.outcome==='matched')).at(-1);
 export function activeRecognitionCredit(s,tenant,creditId){const c=recognitionLedger(s,tenant).find(x=>x.id===creditId);return !!c&&requestUsable(s,tenant,c.requestId);}

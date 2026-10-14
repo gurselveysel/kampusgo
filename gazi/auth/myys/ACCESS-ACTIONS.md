@@ -56,3 +56,7 @@ Bu pakette yeni abonelik, kalıcı erişim, üretim migration'ı, gerçek veri a
 ## Kimlik sözleşmesinin güncel hazırlığı
 
 `IDENTITY-CONTRACT.md` ve 29 sentetik test mevcut. Kurumdan hâlâ gereken somut belge: IdP protokolü/issuer/client audience/açık anahtar kaynağı ile MFA (acr/amr), kişi anahtarı, ayrılma ve rol/birim yaşam döngüsü tanımı. Bu aşamada parola, tek kullanımlık kod, yönetici hesabı veya yeni kalıcı credential istenmiyor. Belgeler gelmeden gerçek bağlantı açılmaz; bağımsız callback/depo testleri geliştirilebilir.
+
+## Paket46 kaynak okuma ve tanıma sınırı
+
+YÖK mikro yeterlilik5sayfa ve Gazi kredi transferi4sayfa okuma engeli kaldırıldı; bağlantı ve SHA’lar RECOGNITION-SOURCE-REVIEW-20261014.md içinde. Bu okuma Senato politikası, Genel Kurul yürürlük kararının tarihi/sayısı, YÖK10/3 ölçü birimi yorumu, özel RPL istisnası, gerçek müfredat/önceki kredi, şahsen başvuru veya yetkili kurul kabulü sağlamaz. Yeni erişim istenmedi/oluşturulmadı. B20/B21 yerel çok dersli kabul üretime etkinleştirilmedi.

@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-14",
+  "software_package": 46,
+  "work_ids": [
+    "B20",
+    "B21"
+  ],
+  "scope": "isolated-local-acceptance",
+  "official": false,
+  "production": false,
+  "screen": "Tanıma ve kredi → Çok dersli teklifler",
+  "closed_local_subcriteria": [
+    "Aynı kişi/kayıt/politikaya bağlı 2–10 talep, açık çok dersli politika ve değişmez kaynak bağları",
+    "Toplam teklif paydası, ders payları, kanonik çifte sayım ve atomik defter yazımı",
+    "Teklifin tamamı için itiraz/bağımsız inceleme/yeni karar; eski satırların atomik terslenmesi",
+    "OBS bütün teklif bekletmesi ve önceki mutabık satırdan replace/cancel zinciri",
+    "Karar öncesi geri çekme, geçmişin korunması, MFA/rol/tenant/birim ve kişi özeti sınırları"
+  ],
+  "automated": {
+    "server": 615,
+    "portal": 48,
+    "regression": 46,
+    "total": 709,
+    "new_server_tests": 13,
+    "scope_commands": 128,
+    "http_routes": 17,
+    "positive_samples": 7321,
+    "derived_negative_checks": 58568
+  },
+  "browser": {
+    "offers": [
+      "Öğrenen aynı kayıt ve çok dersli politika üzerinden iki ayrı ders talebi hazırladı",
+      "İki teknik rapor ayrı satırlarda kaydedildi; akademik kredi üretilmedi",
+      "Karar öncesi geri çekme geçmişi korudu; aynı dersler yeni teklife alınabildi",
+      "Komisyon iki satırı tek işlemle karara bağladı; uzaktan payda 8 ve mezuniyet paydası 240 ayrı",
+      "Teklif itirazı iki kredi satırını birlikte bekletti",
+      "Bağımsız inceleme yeni karar istedi; önceki karar sahibi yeniden karar veremedi",
+      "Bağımsız yeni karar iki eski kredi satırını tersledi; toplam 4 kredi ve ilk karar geçmişi korundu",
+      "Yeniden yüklemede aynı kişinin teklif, itiraz ve etkin kredi bağlantıları korundu",
+      "390 px görünümde taşma yok; görünüm seçimi klavyeyle çalışıyor",
+      "Başka öğrenen ve yalnız teknik rol teklifin akademik kararlarını göremedi",
+      "İstemci istisnası yok"
+    ],
+    "single_course_regression": 12,
+    "obs_regression": 11,
+    "total": 34,
+    "mobile_width": 390,
+    "real_assistive_technology": false
+  },
+  "packaging": {
+    "protected_files": 115,
+    "technical_tables": 16,
+    "record_kinds": 138
+  },
+  "sources": "gazi/auth/myys/RECOGNITION-SOURCE-REVIEW-20261014.md",
+  "axes": {
+    "code_completeness": "kısmi; çok dersli bağımsız dilim geçti; istisna/kriptografik dış belge/gerçek müfredat kaynakları açık",
+    "local_functional_security": "belirtilen dilim geçti",
+    "live": "dağıtılmadı; son doğrulanmış canlı Paket16",
+    "institution": "Senato/kurul, politika, ölçü birimi, yürürlük, gerçek diploma ve önceki ders kayıtları bekleniyor",
+    "external": "IdP/üretim depo, dış belge kriptografik teslim/arşiv ve OBS gerçek kabulü yok"
+  },
+  "deployment": {
+    "last_live": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
+    "last_live_source": "16bd55eefed251ce5d23e1791f87ed3871c6a8c6",
+    "rollback": "dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1",
+    "new_deployment": null,
+    "authenticated_smoke": false,
+    "configuredCore": "closed"
+  },
+  "limits": [
+    "Yerel kredi oranı YÖK 10/3 ölçü biriminin kurumsal kabulü değildir.",
+    "Teknik rapor insan girdisidir; kriptografik doğrulama ve dosya yükleme yok.",
+    "Yerel işlem resmî başvuru/kurul üye sayısı/imza/tebligat değildir.",
+    "İki SQLite bağlantısı üretim RLS/dağıtık izolasyon kabulü değildir.",
+    "B01–B36 bütünü tamamlanmadı."
+  ]
+}

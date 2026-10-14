@@ -1549,43 +1549,55 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "162 sunucu + 46 portal + 46 regresyon = 254 otomatik test; 14 yeni tanıma senaryosu ve 12 yerel tanıma tarayıcı kontrolü.",
+      "test_status": "14.10.2026 Paket46:615+48+46=709 otomatik;13 yeni sunucu;11 teklif+12 tek ders+11 OBS=34 tarayıcı;128komut/17HTTP7321örnek58568kapsam denetimi.",
       "implementation_evidence": [
         "gazi/auth/myys/recognition.mjs",
         "gazi/auth/myys/RECOGNITION-CONTRACT.md",
         "gazi/auth/tests/myys-recognition.test.mjs",
         "gazi/portal/src/recognition-workspace.jsx",
-        "gazi/auth/myys/acceptance/B20-B21-20261010.json"
+        "gazi/auth/myys/acceptance/B20-B21-20261010.json",
+        "gazi/auth/myys/RECOGNITION-OFFER-CONTRACT.md",
+        "gazi/auth/myys/RECOGNITION-SOURCE-REVIEW-20261014.md",
+        "gazi/auth/tests/myys-recognition-offer.test.mjs",
+        "gazi/portal/src/recognition-offers.jsx",
+        "scripts/myys-recognition-offers-browser.cjs",
+        "gazi/auth/myys/acceptance/B20-B21-offers-20261014.json"
       ],
-      "production_status": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı.",
-      "implementation_note": "Kaynak/madde/sürüm/tarih/kapsam ve iki ayrı payda içeren değişmez politika; bağımsız yerel inceleme; sınır hesabı ve eski başvurunun politika sürümü korunur. Gazi RPL kaynağı okundu, kurum politikası otomatik atanmadı.",
+      "production_status": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı. Paket46 çok dersli teklif dağıtılmadı; son canlı16, yeni smoke yok.",
+      "implementation_note": "Kaynak/madde/sürüm/tarih/kapsam ve iki ayrı payda içeren değişmez politika; bağımsız yerel inceleme; sınır hesabı ve eski başvurunun politika sürümü korunur. Gazi RPL kaynağı okundu, kurum politikası otomatik atanmadı. Paket46: açık çok dersli politika, aynı kişiye ait 2–10 talep; tek karar/toplam payda/tekil defter, toplu itiraz ve bağımsız yeni karar, tüm satırlarda OBS bekletme/düzeltme, karar öncesi geri çekme. Üç birincil kaynak tam okundu; YÖK 10/3 ölçü birimi otomatik seçilmedi.",
       "independent_remaining_work": [
-        "Çok dersli teklif ve özel istisna yollarını yetkili kaynak kararına bağla; gerçek diploma müfredatı/önceki kredi kaynağı olmadan otomatik politika açılmaz."
+        "Özel istisna ve ölçü birimi yollarını yetkili sürümlü kaynak kararına bağlayan kapalı sözleşme/inceleme akışı; gerçek müfredat/önceki ders olmadan otomatik politika yok."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Senato tarafından doğrulanmış politika ve paydalar.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; çok dersli dilim yerelde geçti",
           "evidence": [
             "gazi/auth/myys/recognition.mjs",
             "gazi/auth/myys/RECOGNITION-CONTRACT.md",
             "gazi/auth/tests/myys-recognition.test.mjs",
             "gazi/portal/src/recognition-workspace.jsx",
-            "gazi/auth/myys/acceptance/B20-B21-20261010.json"
+            "gazi/auth/myys/acceptance/B20-B21-20261010.json",
+            "gazi/auth/myys/RECOGNITION-OFFER-CONTRACT.md",
+            "gazi/auth/myys/RECOGNITION-SOURCE-REVIEW-20261014.md",
+            "gazi/auth/tests/myys-recognition-offer.test.mjs",
+            "gazi/portal/src/recognition-offers.jsx",
+            "scripts/myys-recognition-offers-browser.cjs",
+            "gazi/auth/myys/acceptance/B20-B21-offers-20261014.json"
           ],
           "remaining": [
-            "Çok dersli teklif ve özel istisna yollarını yetkili kaynak kararına bağla; gerçek diploma müfredatı/önceki kredi kaynağı olmadan otomatik politika açılmaz."
+            "Özel istisna ve ölçü birimi yollarını yetkili sürümlü kaynak kararına bağlayan kapalı sözleşme/inceleme akışı; gerçek müfredat/önceki ders olmadan otomatik politika yok."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi · tanıma dilimi geçti",
-          "evidence": "162 sunucu + 46 portal + 46 regresyon = 254 otomatik test; 14 yeni tanıma senaryosu ve 12 yerel tanıma tarayıcı kontrolü.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "kısmi · çok dersli teklif ve mevcut tek ders/OBS regresyonu geçti",
+          "evidence": "14.10.2026 Paket46:615+48+46=709 otomatik;13 yeni sunucu;11 teklif+12 tek ders+11 OBS=34 tarayıcı;128komut/17HTTP7321örnek58568kapsam denetimi.",
+          "limits": "Yerel politika kurumsal tanıma/ölçü birimi/tebligat kabulü değildir."
         },
         "live": {
-          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı."
+          "status": "Paket46 dağıtılmadı; mevcut canlı16 kurumsal çekirdeği kapalı",
+          "evidence": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı. Paket46 çok dersli teklif dağıtılmadı; son canlı16, yeni smoke yok."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -1614,43 +1626,55 @@
       "estimate_note": "Kaynak ve kurum beklemelerine bağlı planlama tahmini; taahhüt değildir.",
       "conditional_dependencies": "",
       "implementation_status": "kısmi",
-      "test_status": "162 sunucu + 46 portal + 46 regresyon = 254 otomatik test; 14 yeni tanıma senaryosu ve 12 yerel tanıma tarayıcı kontrolü.",
+      "test_status": "14.10.2026 Paket46:615+48+46=709 otomatik;13 yeni sunucu;11 teklif+12 tek ders+11 OBS=34 tarayıcı;128komut/17HTTP7321örnek58568kapsam denetimi.",
       "implementation_evidence": [
         "gazi/auth/myys/recognition.mjs",
         "gazi/auth/myys/RECOGNITION-CONTRACT.md",
         "gazi/auth/tests/myys-recognition.test.mjs",
         "gazi/portal/src/recognition-workspace.jsx",
-        "gazi/auth/myys/acceptance/B20-B21-20261010.json"
+        "gazi/auth/myys/acceptance/B20-B21-20261010.json",
+        "gazi/auth/myys/RECOGNITION-OFFER-CONTRACT.md",
+        "gazi/auth/myys/RECOGNITION-SOURCE-REVIEW-20261014.md",
+        "gazi/auth/tests/myys-recognition-offer.test.mjs",
+        "gazi/portal/src/recognition-offers.jsx",
+        "scripts/myys-recognition-offers-browser.cjs",
+        "gazi/auth/myys/acceptance/B20-B21-offers-20261014.json"
       ],
-      "production_status": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı.",
-      "implementation_note": "Aynı öğrenci/program kaydına bağlı yerel tek ders talebi; dosya özeti, insan teknik inceleme raporu, ayrı tam/kısmi/red, bağımsız itiraz/yeni karar ve atomik ters kayıtlı tekil kredi defteri. Teknik kontrol krediyi üretmez; IT akademik kararları göremez.",
+      "production_status": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı. Paket46 çok dersli teklif dağıtılmadı; son canlı16, yeni smoke yok.",
+      "implementation_note": "Aynı öğrenci/program kaydına bağlı yerel tek ders talebi; dosya özeti, insan teknik inceleme raporu, ayrı tam/kısmi/red, bağımsız itiraz/yeni karar ve atomik ters kayıtlı tekil kredi defteri. Teknik kontrol krediyi üretmez; IT akademik kararları göremez. Paket46: açık çok dersli politika, aynı kişiye ait 2–10 talep; tek karar/toplam payda/tekil defter, toplu itiraz ve bağımsız yeni karar, tüm satırlarda OBS bekletme/düzeltme, karar öncesi geri çekme. Üç birincil kaynak tam okundu; YÖK 10/3 ölçü birimi otomatik seçilmedi.",
       "independent_remaining_work": [
-        "Dış belge kriptografik doğrulama adaptörü, yetkili gerçek belge teslimi/arşivi ve çok dersli teklif; gerçek önceki ders/kazanım eşlemesi ve kurum kurul kabulü açık."
+        "Dış belge kriptografik doğrulama adaptörü ve yetkili belge teslim/arşiv akışı; gerçek önceki ders/kazanım eşlemesi ve kurum kurul kabulü açık."
       ],
       "development_blocker": null,
       "production_activation_blocker": "Geçerli tanıma politikası ve yetkili kurul.",
       "acceptance_axes": {
         "code_completeness": {
-          "status": "kısmi",
+          "status": "kısmi; çok dersli dilim yerelde geçti",
           "evidence": [
             "gazi/auth/myys/recognition.mjs",
             "gazi/auth/myys/RECOGNITION-CONTRACT.md",
             "gazi/auth/tests/myys-recognition.test.mjs",
             "gazi/portal/src/recognition-workspace.jsx",
-            "gazi/auth/myys/acceptance/B20-B21-20261010.json"
+            "gazi/auth/myys/acceptance/B20-B21-20261010.json",
+            "gazi/auth/myys/RECOGNITION-OFFER-CONTRACT.md",
+            "gazi/auth/myys/RECOGNITION-SOURCE-REVIEW-20261014.md",
+            "gazi/auth/tests/myys-recognition-offer.test.mjs",
+            "gazi/portal/src/recognition-offers.jsx",
+            "scripts/myys-recognition-offers-browser.cjs",
+            "gazi/auth/myys/acceptance/B20-B21-offers-20261014.json"
           ],
           "remaining": [
-            "Dış belge kriptografik doğrulama adaptörü, yetkili gerçek belge teslimi/arşivi ve çok dersli teklif; gerçek önceki ders/kazanım eşlemesi ve kurum kurul kabulü açık."
+            "Dış belge kriptografik doğrulama adaptörü ve yetkili belge teslim/arşiv akışı; gerçek önceki ders/kazanım eşlemesi ve kurum kurul kabulü açık."
           ]
         },
         "local_acceptance": {
-          "status": "kısmi · tanıma dilimi geçti",
-          "evidence": "162 sunucu + 46 portal + 46 regresyon = 254 otomatik test; 14 yeni tanıma senaryosu ve 12 yerel tanıma tarayıcı kontrolü.",
-          "limits": "Bütün paket kabul ölçütlerinin kapandığı anlamına gelmez; gerçek dış sistem kabulü yok."
+          "status": "kısmi · çok dersli teklif ve mevcut tek ders/OBS regresyonu geçti",
+          "evidence": "14.10.2026 Paket46:615+48+46=709 otomatik;13 yeni sunucu;11 teklif+12 tek ders+11 OBS=34 tarayıcı;128komut/17HTTP7321örnek58568kapsam denetimi.",
+          "limits": "Yerel politika kurumsal tanıma/ölçü birimi/tebligat kabulü değildir."
         },
         "live": {
-          "status": "kod yayımlandı; kurumsal etkinleştirme kapalı",
-          "evidence": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı."
+          "status": "Paket46 dağıtılmadı; mevcut canlı16 kurumsal çekirdeği kapalı",
+          "evidence": "Paket 9: b4e3b2dca07ff3a34bf4b5924f948bfacbc848eb / dpl_HSfAwnVABknt9kGv61x6zn6aSzxB READY; 142 dosya hash eşleşmesi ve canlı smoke. Kurumsal tanıma/kredi hizmeti kapalı. Paket46 çok dersli teklif dağıtılmadı; son canlı16, yeni smoke yok."
         },
         "institution_decision": {
           "status": "bekleniyor",
@@ -2756,16 +2780,16 @@
   "scope_note": "İlk ve ikinci yerel kabul dilimleri; üretimde akademik etkinleştirme ayrı. 36 paketin kalan bağımsız kod işi ile dış etkinleştirme engeli ayrı kayıtlı.",
   "verification": {
     "as_of": "2026-10-14",
-    "software_package": 45,
-    "server_security_tests": "602/602",
+    "software_package": 46,
+    "server_security_tests": "615/615",
     "portal_tests": "48/48",
     "legacy_tests": "46/46 model/kaynak/demo",
-    "local_total": 696,
+    "local_total": 709,
     "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
-    "browser_visual_acceptance": "15 HTTPS kimlik+9 giriş temizliği=24 kontrol. Yeni anahtar dönüşüm/iptal uçları gerçek HTTPS yanıt testleriyle; ayrı görsel ekran değişmedi.",
+    "browser_visual_acceptance": "11 çok dersli teklif +12 mevcut tanıma +11 OBS =34;390 px ve klavye; gerçek yardımcı teknoloji kabulü değil.",
     "production_migration": "uygulanmadı",
-    "deployment": "Son canlı16 READY;17–45 dağıtılmadı;configuredCore kapalı.",
-    "evidence": "gazi/auth/myys/acceptance/B07-derivation-epoch-20261014.json"
+    "deployment": "Son canlı16 READY;17–46 dağıtılmadı;configuredCore kapalı.",
+    "evidence": "gazi/auth/myys/acceptance/B20-B21-offers-20261014.json"
   },
   "preserved_live_baseline": "d0b6c1216c2eea786a2667e94f129851e914f0e5",
   "latest_verified_deployment": {
@@ -2787,12 +2811,12 @@
   },
   "last_checkpoint": {
     "date": "2026-10-14",
-    "software_package": 45,
-    "source_parent_remote": "3255b07d886693b6b766c63a142829bcc82f0459",
-    "source_parent_tree": "3c9b094248793950b670824b9877ca6edd7db47f",
+    "software_package": 46,
+    "source_parent_remote": "ee90a2a6b3da9327f38ea49855b49ab53bb200bf",
+    "source_parent_tree": "57157441c49320f160d25ac0dd42baa246b3d40c",
     "live_deployment": "dpl_Coaq5KN2VcNpPjwyXke4neroq877",
-    "local_tests": 696,
-    "note": "B07 yerel PKCE/nonce commit bariyeri kabul; kaynak eşitlemesi sırada. B20/B21 çoklu tanıma/istisna dilimini backlog üzerinden incele; B07 üretim repository/KMS metadata köprüsü,B28 checkpoint/saklama ve tüm diğer bağımsızlar açık."
+    "local_tests": 709,
+    "note": "Çok dersli teklif kabul; kaynak eşitlemesi sırada. B20 özel istisna/ölçü birimi sözleşmesi ardından B21 kriptografik belge/teslim-arşiv; B07/B28 ve bütün diğer bağımsız işler açık."
   },
   "verification_history": [
     {
@@ -2924,6 +2948,19 @@
       "production_migration": "uygulanmadı",
       "deployment": "Son canlı16 READY;17–44 dağıtılmadı;configuredCore kapalı.",
       "evidence": "gazi/auth/myys/acceptance/B05-B25-material-20261014.json"
+    },
+    {
+      "as_of": "2026-10-14",
+      "software_package": 45,
+      "server_security_tests": "602/602",
+      "portal_tests": "48/48",
+      "legacy_tests": "46/46 model/kaynak/demo",
+      "local_total": 696,
+      "portal_build": "Başarılı;115 statik dosyalı korumalı paket",
+      "browser_visual_acceptance": "15 HTTPS kimlik+9 giriş temizliği=24 kontrol. Yeni anahtar dönüşüm/iptal uçları gerçek HTTPS yanıt testleriyle; ayrı görsel ekran değişmedi.",
+      "production_migration": "uygulanmadı",
+      "deployment": "Son canlı16 READY;17–45 dağıtılmadı;configuredCore kapalı.",
+      "evidence": "gazi/auth/myys/acceptance/B07-derivation-epoch-20261014.json"
     }
   ]
 }

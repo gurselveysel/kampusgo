@@ -287,3 +287,13 @@ Yeni panel/menü yok. Mevcut HTTPS girişinde anahtar sürümü/durdurma, tek ku
 11 yeni test;602+48+46=696 otomatik;15 kimlik+9 temizlik=24 tarayıcı;123komut/17HTTP7056örnek56448denetim;115statik;16teknik tablo/133kayıt türü. B07 yerel alt koşul geçti; IdentityKeyProvider metadata/üretim repository köprüsü, gerçek PG/KMS/IdP/RLS, tüm session yazarları/karma dağıtım ve geri yükleme checkpoint’i açık. `DERIVATION-EPOCH-CONTRACT.md` ayrıntıdır.36 özgün kabul ölçütü değişmedi.
 
 Canlı alias yeniden kontrol edildi: Paket16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READY.17–45 dağıtılmadı; yeni canlı smoke yok;configuredCore kapalı. Gerçek credential/migration/kurum kararı yok.
+
+## Paket46 — B20/B21 çok dersli teklif (14.10.2026)
+
+Tanıma ve kredi → Çok dersli teklifler güncellendi. Öğrenen aynı kayıt/politikaya bağlı2–10 dersi birleştirir ve karar öncesi geri çeker. Komisyon tek teklif altında her satırı karara bağlar; toplam uzaktan payda ve ders başına pay/çifte sayım kontrolü yapılır. İtiraz bütün satırları bekletir; bağımsız yeniden karar eski kredileri atomik tersler. OBS eski mutabık satırlardan ayrı replace/cancel zincirini korur. Gerçek belge/kurul/transkript işlemi değildir.
+
+615+48+46=709 otomatik;13 yeni sunucu;11 teklif+12 tek ders+11 OBS=34 tarayıcı;128komut/17HTTP7321pozitif58568türetilmiş denetim;115statik;16teknik tablo138kayıt türü.390px ekran görüntüsü incelendi. İlk hedef testlerinde politika okuma kapsamı ve test fixture referansları düzeltildi; son tam koşular geçti. B20/B21 yalnız belirtilen yerel alt koşullarda kabul; özel istisna/ölçü birimi sözleşmesi, kriptografik dış belge/teslim arşivi, gerçek müfredat/önceki ders, kurum ve dış sistem kabulü açık.
+
+YÖK5sayfa ve Gazi kredi transferi4sayfa önceki erişim/okuma engeli giderildi; Gazi RPL5sayfa yeniden okundu. Kaynak SHA/kapsam/tarih ve yorum sınırları RECOGNITION-SOURCE-REVIEW-20261014.md içinde. YÖK10/3 ölçü birimi otomatik AKTS oranı olarak atanmadı. Ayrıntı RECOGNITION-OFFER-CONTRACT.md ve B20-B21-offers kabul JSON’unda.36 özgün kimlik/başlık/bağımlılık/kabul değişmedi.
+
+Yeni canlı yayın yok:17–46 dağıtılmadı; alias16 READY. Son canlı kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`, deploy `dpl_Coaq5KN2VcNpPjwyXke4neroq877`; geri dönüş `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. Authenticated canlı smoke yenilenmedi; browserAuth13Ekim iptali yeniden denenmedi;configuredCore kapalı.

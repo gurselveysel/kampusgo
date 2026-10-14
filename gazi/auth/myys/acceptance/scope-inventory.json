@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.14.45",
+  "version": "2026.10.14.46",
   "commands": [
     "advice-compare",
     "advice-contest",
@@ -83,6 +83,11 @@
     "publish",
     "recognition-appeal",
     "recognition-decide",
+    "recognition-offer",
+    "recognition-offer-appeal",
+    "recognition-offer-decide",
+    "recognition-offer-resolve",
+    "recognition-offer-withdraw",
     "recognition-policy",
     "recognition-policy-review",
     "recognition-request",

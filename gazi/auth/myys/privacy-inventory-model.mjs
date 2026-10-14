@@ -1,5 +1,5 @@
 // Local data inventory and positive export schema. This is not a legal retention policy.
-export const inventoryVersion='2026.10.14.41';
+export const inventoryVersion='2026.10.14.46';
 export const privacyCategories={
   "learning": {
     "label": "Öğrenme ve değerlendirme",
@@ -74,6 +74,11 @@ export const recordGroups={
     "replacement-review",
     "replacement-withdraw",
     "replacement-completion",
+    "recognition-offer",
+    "recognition-offer-decision",
+    "recognition-offer-appeal",
+    "recognition-offer-resolution",
+    "recognition-offer-withdrawal",
     "recognition-request",
     "recognition-technical",
     "recognition-decision",
@@ -194,6 +199,11 @@ export const recordGroups={
   ]
 };
 export const subjectFields={
+ "recognition-offer":['id','unit','enrollmentId','policyId','targetProgramCode','title','reason','rows','createdAt','official'],
+ "recognition-offer-decision":['id','unit','offerId','rowDecisionIds','credits','remoteCredits','reason','authorityReference','resolutionId','supersedesDecisionId','createdAt','official'],
+ "recognition-offer-appeal":['id','unit','offerId','decisionId','rowAppealIds','reason','createdAt','official'],
+ "recognition-offer-resolution":['id','unit','offerId','appealId','decisionId','rowResolutionIds','outcome','reason','createdAt','official'],
+ "recognition-offer-withdrawal":['id','unit','offerId','reason','createdAt','official'],
   "material-delivery": ["programId","enrollmentId","planId","catalogId","lessonId","lessonDigest","taskIds","format","name","sha256","bytes","operation","official","published","externalMaterialsIncluded"],
   "advice-sample": [
     "id",
@@ -850,6 +860,10 @@ const alternative=fields('method methodReference sourceReference observedAt reas
 const member={...fields('unit expires active personActive'),roles:[scalar]};
 const totals=fields('captured refunded refundHeld disputeHeld chargedBack available');
 const nested={
+ 'recognition-offer':{rows:[fields('requestId')]},
+ 'recognition-offer-decision':{rowDecisionIds:[scalar]},
+ 'recognition-offer-appeal':{rowAppealIds:[scalar]},
+ 'recognition-offer-resolution':{rowResolutionIds:[scalar]},
  'material-delivery':{taskIds:[scalar]},
  evidence:{alternative},
  assessment:{scores:[score],evidenceIds:[scalar],evidenceDigests:[{...fields('id sha256'),alternative:{method:alternative,moderation:fields('id outcome reason verificationReference version createdAt')}}]},
