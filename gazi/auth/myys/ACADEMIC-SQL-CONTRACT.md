@@ -38,3 +38,7 @@ Kalan 128 mevcut komut, belge/iptal/yenileme, LMS/OBS, cüzdan/tanıma, kurum po
 |---|---|---|
 | [PostgreSQL transaction isolation](https://www.postgresql.org/docs/18/transaction-iso.html) | PostgreSQL 18, §13.2.3 | Serialization hatasında bütün transaction tekrar edilir; doğrulanmış commit öncesi sonuç kabul edilmez. Native SSI testinin yerine geçmez. |
 | [PostgreSQL constraints](https://www.postgresql.org/docs/18/ddl-constraints.html) | PostgreSQL 18, §5.5.1–2 | CHECK null sonucunu kabul edebildiği için zorunlu JSON anahtarları ve NOT NULL ayrıca tanımlanır; tablo arası bağ foreign key ile kurulur. |
+
+## Paket67 devamı
+
+Paket66 sırasında açık olan akademik checkpoint yerel alt dilimi [ayrı birleşik profil](ACADEMIC-CHECKPOINT-CONTRACT.md) ile kabul edildi. HTTP fixture artık `academic:true,checkpoint:true` seçimini doğru15tablo profiliyle kullanır. Varsayılan kapalı kalır; gerçek hizmet ve bütün üretim yazıcıları kabulü açık. Önceki22test/936sayısı Paket66 tarihsel kaydıdır.

@@ -23,7 +23,7 @@ import {PrivacyWorkspace} from './privacy-workspace.jsx';
 import {RecognitionWorkspace} from './recognition-workspace.jsx';
 import {ProgramWorkspace} from './program-workspace.jsx';
 import {outcomeIds} from '../../auth/myys/program-model.mjs';
-import React,{useEffect,useState} from 'react';
+import React,{useEffect,useState,useRef} from 'react';
 import {ShieldCheck,RefreshCw,FileCheck2,BookOpen,Award,LockKeyhole} from 'lucide-react';
 import {WalletWorkspace} from './wallet-workspace.jsx';
 import {OperationsWorkspace} from './operations-workspace.jsx';
@@ -38,14 +38,16 @@ const roleNames={learner:'Öğrenen',instructor:'Eğitici',coordinator:'Koordina
 let identityCsrf=null; // Per-page memory only; never an identity or session token.
 async function request(path,body,signal){
  const r=await fetch('/api/myys/'+path,{credentials:'same-origin',cache:'no-store',signal,...(body?{method:'POST',headers:{'Content-Type':'application/json',...(identityCsrf?{'X-MYYS-CSRF':identityCsrf}:{})},body:JSON.stringify(body)}:{})});
- const data=await r.json();if(['local-acceptance','isolated-sql-acceptance'].includes(data.identitySession?.scope))identityCsrf=data.identitySession.csrf;if(!r.ok){if(r.status===401)identityCsrf=null;const e=new Error(data.error||'İşlem tamamlanamadı.');e.code=data.code;if(['local-acceptance','isolated-sql-acceptance'].includes(data.scope)&&data.loginPath==='/__identity/login')e.loginPath=data.loginPath;throw e;}return data;
+ const data=await r.json();if(['local-acceptance','isolated-sql-acceptance'].includes(data.identitySession?.scope))identityCsrf=data.identitySession.csrf;if(!r.ok){if(r.status===401||data.code==='identity_checkpoint')identityCsrf=null;const e=new Error(data.error||'İşlem tamamlanamadı.');e.code=data.code;if(data.code!=='identity_checkpoint'&&['local-acceptance','isolated-sql-acceptance'].includes(data.scope)&&data.loginPath==='/__identity/login')e.loginPath=data.loginPath;throw e;}return data;
 }
 export function AcademicWorkspace(){
+ const checkpointAlert=useRef(null);
  const [tenant,setTenant]=useState('gazi'),[data,setData]=useState(null),[error,setError]=useState(null),[busy,setBusy]=useState(false),[tab,setTab]=useState(()=>requestedTab()||'evidence'),[message,setMessage]=useState('');
  async function refresh(signal){setBusy(true);setError(null);try{const next=await request('calisma?kurum='+encodeURIComponent(tenant),null,signal);setData(next);}catch(e){if(e.name!=='AbortError'){setData(null);setError(e);}}finally{if(!signal?.aborted)setBusy(false);}}
+ useEffect(()=>{if(error?.code==='identity_checkpoint'&&!busy)checkpointAlert.current?.focus();},[error,busy]);
  useEffect(()=>{const c=new AbortController();refresh(c.signal);return()=>c.abort();},[tenant]);
  useEffect(()=>{const align=()=>{const el=document.getElementById('academic-tab-'+tab),strip=el?.parentElement;if(el&&strip){const a=el.getBoundingClientRect(),b=strip.getBoundingClientRect();strip.scrollLeft+=a.left-b.left-(strip.clientWidth-a.width)/2;}};align();window.addEventListener('resize',align);return()=>window.removeEventListener('resize',align);},[tab,data]);
- async function command(action,input){setBusy(true);setMessage('');setError(null);try{const result=await request('islem',{tenant,commandId:crypto.randomUUID(),action,input});setMessage('Sunucu kaydı oluşturuldu.');await refresh();return result;}catch(e){if(action.startsWith('portfolio-')||(action.startsWith('material-')||action.startsWith('recognition-')))await refresh();setError(e);}finally{setBusy(false);}}
+ async function command(action,input){setBusy(true);setMessage('');setError(null);try{const result=await request('islem',{tenant,commandId:crypto.randomUUID(),action,input});setMessage('Sunucu kaydı oluşturuldu.');await refresh();return result;}catch(e){if(e.code==='identity_checkpoint'){setData(null);setMessage('');}if(action.startsWith('portfolio-')||(action.startsWith('material-')||action.startsWith('recognition-')))await refresh();setError(e);}finally{setBusy(false);}}
  function jsonDownload(name,value){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  async function verifyExternal(input){setBusy(true);setError(null);setMessage('');try{const result=await request('dis-belge-dogrula',{tenant,...input});await refresh();setMessage('İmza ve kişi eşlemesi denetlendi. Belge durumu ve akademik inceleme ayrıdır.');return result;}catch(e){await refresh();setError(e);}finally{setBusy(false);}}
  async function recoveryRun(planId){setBusy(true);setError(null);setMessage('');try{const result=await request('kurtarma-dene',{tenant,planId});await refresh();setMessage(result.state==='passed'?'İzole tatbikat bitti; ayrı yönetici incelemesi bekleniyor.':'Tatbikat hedefleri karşılanmadı; sonuçları inceleyin.');return result;}catch(e){setError(e);}finally{setBusy(false);}}
@@ -67,9 +69,10 @@ export function AcademicWorkspace(){
  <Notice><ShieldCheck size={18}/> Bu çalışma alanı kişiye bağlı kurum yetkisi gerektirir. Üst menüdeki sunum profili erişim yetkisi vermez.</Notice>
  <div className="academic-status"><span><LockKeyhole size={16}/>Varsayılan özel kayıtlar</span><span><FileCheck2 size={16}/>Kanıtsız başarı kararı yok</span><span><Award size={16}/>Resmî belge düzenleme kapalı</span></div>
  {busy&&<p role="status">Kurum kaydı kontrol ediliyor…</p>}
- {error&&<div role="alert"><Notice tone="amber">{error.message}</Notice></div>}
+ {error&&<div role="alert" ref={checkpointAlert} tabIndex={error.code==='identity_checkpoint'?-1:undefined}><Notice tone="amber">{error.message}</Notice></div>}
  {message&&<p role="status">{message}</p>}
- {!data&&!busy&&<Card><CardHead title={error?.loginPath?'Yerel oturumunuz kapalı':'Kurum bağlantısı bekleniyor'} sub="Mevcut pilot ve ders kayıtlarınız korunuyor."/><div className="academic-body">{error?.loginPath?<><p>Kayıtları görmek için yeniden yerel kurum girişini tamamlayın.</p><Button onClick={()=>window.location.assign(error.loginPath)}>Yerel giriş ekranını aç</Button></>:<><p>Kişisel kurumsal kimlik, görev yetkileri ve kalıcı kurum deposu bu ortama bağlanınca kayıtlar burada görünür.</p><p>Gazi, GUZEM, UzemGO, OBS veya YÖKSİS bağlantısı kurulmuş olarak gösterilmez. Bu alanda örnek başarı veya kurul kararı üretilmez.</p></>}</div></Card>}
+ {!data&&!busy&&error?.code==='identity_checkpoint'&&<Card><CardHead title="Kayıt güvenliği kontrol edilmeli" sub="Kayıtlar ve işlem formları geçici olarak kapalıdır."/><div className="academic-body"><p>Kayıtların güncelliği doğrulanamadı. Güvenlik kontrolü tamamlanana kadar yeni işlem yapılamaz. Sorumlu birime başvurun.</p></div></Card>}
+ {!data&&!busy&&error?.code!=='identity_checkpoint'&&<Card><CardHead title={error?.loginPath?'Yerel oturumunuz kapalı':'Kurum bağlantısı bekleniyor'} sub="Mevcut pilot ve ders kayıtlarınız korunuyor."/><div className="academic-body">{error?.loginPath?<><p>Kayıtları görmek için yeniden yerel kurum girişini tamamlayın.</p><Button onClick={()=>window.location.assign(error.loginPath)}>Yerel giriş ekranını aç</Button></>:<><p>Kişisel kurumsal kimlik, görev yetkileri ve kalıcı kurum deposu bu ortama bağlanınca kayıtlar burada görünür.</p><p>Gazi, GUZEM, UzemGO, OBS veya YÖKSİS bağlantısı kurulmuş olarak gösterilmez. Bu alanda örnek başarı veya kurul kararı üretilmez.</p></>}</div></Card>}
  {data&&<>
  {data.supportedTabs&&<Notice>Bu yerel denemede program, kayıt, kanıt, değerlendirme, karar ve itiraz işlemleri açıktır. Belge düzenleme ve dış aktarım henüz açık değildir.</Notice>}
  <Card><div className="academic-body"><Pill tone="amber">İzole yerel kabul · Resmî hizmet değil</Pill><p>Kişi kaydı: {data.personId}</p><p>{data.memberships.map(m=>m.unit+' · '+m.roles.map(r=>roleNames[r]||r).join(', ')).join(' / ')}</p></div></Card>

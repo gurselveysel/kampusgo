@@ -1,12 +1,11 @@
-import {readFile} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 import {sqlIdentityFlow} from './sql-identity-flow.mjs';
 import {LocalPostgresAcademicCore} from '../../myys/academic-sql.mjs';
 import {hash} from '../../myys/store.mjs';
 export const sqlAcademicReason='Sentetik akademik SQL kabul gerekçesi; gerçek kurum kararı değildir.';
 export const sqlProgram=()=>({code:'SQL01',title:'Yerel SQL Veri Okuryazarlığı',unit:'engineering',mode:'pilot',pathway:'micro',responsibilities:{programOwner:'Sentetik birim',decisionAuthority:'Sentetik komisyon',legalIssuer:'Sentetik düzenleyici',technicalSigner:'Yerel kabul'},outcomes:[{id:'O1',text:'Veri kalitesini gerekçeleriyle analiz eder.'}],tasks:[{id:'T1',title:'Veri analizi görevi',outcomeIds:['O1']}],rubric:[{id:'R1',outcomeIds:['O1'],taskIds:['T1'],weight:100}],threshold:70,hours:25,ects:1,level:'6',participation:'Karma',quality:'Sentetik akran incelemesi.',instructor:'Sentetik eğitici',license:'Sentetik test içeriği.',assessmentMethod:'Rubrik ile insan değerlendirmesi.'});
-export async function sqlAcademic(t){
- const f=await sqlIdentityFlow(t);await f.sql.db.exec(await readFile(new URL('../../myys/academic-sql-schema.sql',import.meta.url),'utf8'));
+export async function sqlAcademic(t,{checkpointDirectory=null}={}){
+ const f=await sqlIdentityFlow(t,{academic:true,checkpointDirectory});
  for(const [person,roles]of Object.entries({author:['coordinator'],publisher:['commission'],teacher:['instructor'],judge:['commission'],reviewer:['quality'],independent:['instructor'],it:['it']})){await f.putPerson(f.person(person),0);await f.putMembership(f.membership(person,{roles}),0);}
  f.academic=new LocalPostgresAcademicCore({identity:f.flow,clock:f.clock});f.sessions={};
  f.actor=async who=>f.sessions[who]||=(await f.login({sub:who,sid:'sid-'+who},f.flow,hash('sql-academic-browser-'+who)));

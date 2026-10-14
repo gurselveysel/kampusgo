@@ -8,18 +8,19 @@ import {PostgresIdentityFlow} from '../../myys/identity-sql-flow.mjs';
 import {logoutEvent} from '../../myys/identity-contract.mjs';
 import {hash} from '../../myys/store.mjs';
 import {pkceS256} from '../../myys/identity-flow.mjs';
-import {PostgresIdentityCheckpoint} from '../../myys/identity-checkpoint.mjs';
+import {PostgresIdentityCheckpoint,identityCheckpointProfile,academicCheckpointProfile} from '../../myys/identity-checkpoint.mjs';
 import {LocalIdentityCheckpointJournal} from '../../scripts/lib/local-identity-checkpoint.mjs';
-export async function sqlIdentityFlow(t,{configPatch={},redirectUri='https://portal.invalid/callback',clock=null,checkpointDirectory=null}={}){
+export async function sqlIdentityFlow(t,{configPatch={},redirectUri='https://portal.invalid/callback',clock=null,checkpointDirectory=null,academic=false}={}){
  const sql=await pgliteIdentity();t.after(()=>sql.close());await sql.install();
  for(const name of ['identity-challenge-schema.sql','identity-session-schema.sql'])await sql.db.exec(await readFile(new URL('../../myys/'+name,import.meta.url),'utf8'));
+ if(academic)await sql.db.exec(await readFile(new URL('../../myys/academic-sql-schema.sql',import.meta.url),'utf8'));
  let time=clock?0:Date.parse('2026-10-14T10:00:00Z');const now=()=>clock?clock().getTime()+time:time;const signing=await generateKeyPair('ES256'),publicKey={...await exportJWK(signing.publicKey),kid:'test-key',alg:'ES256',use:'sig'};
  const config={version:'test-sql-v1',issuer:'https://idp.invalid',tenant:'test-gazi',audience:'test-myys',algorithms:['ES256'],jwks:{keys:[publicKey]},maxTokenAgeSeconds:300,maxAuthAgeSeconds:900,clockToleranceSeconds:0,mfaProfiles:[{acr:'urn:test:strong',amr:['pwd','otp']}],...configPatch};
  const h={sql,config,clock:()=>new Date(now()),advance:n=>{time+=n;},redirectUri,browser:hash('synthetic-browser'),exchanges:0,exchangeHook:async()=>{},keyRows:new Map(),control:{operatorRef:'test-operator',authorityDigest:hash('test-control')}};
  if(checkpointDirectory){
   for(const name of ['identity-http-schema.sql','identity-checkpoint-schema.sql'])await sql.db.exec(await readFile(new URL('../../myys/'+name,import.meta.url),'utf8'));
-  h.journalId=randomUUID();h.journal=LocalIdentityCheckpointJournal.create({directory:checkpointDirectory,journalId:h.journalId});t.after(()=>h.journal.close());
-  h.checkpoint=new PostgresIdentityCheckpoint({journalDriver:h.journal,journalId:h.journalId});
+  h.checkpointProfile=academic?academicCheckpointProfile:identityCheckpointProfile;h.journalId=randomUUID();h.journal=LocalIdentityCheckpointJournal.create({directory:checkpointDirectory,journalId:h.journalId,profile:h.checkpointProfile});t.after(()=>h.journal.close());
+  h.checkpoint=new PostgresIdentityCheckpoint({journalDriver:h.journal,journalId:h.journalId,profile:h.checkpointProfile});
  }
  h.newTransactions=(cfg=config)=>new PostgresIdentityTransactions({pool:sql.pool,tenant:cfg.tenant,issuer:cfg.issuer,audience:cfg.audience,checkpoint:h.checkpoint||null});
  if(h.checkpoint)await h.newTransactions().initializeCheckpoint(h.control);

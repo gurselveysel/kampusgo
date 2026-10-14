@@ -87,3 +87,7 @@ SQL kimlik deposundan ayrı, geri yüklemede birlikte geri alınmayacak kontrol 
 ### Paket66 kapsam notu
 
 İlk8akademik komut aynı SQL kimliğine bağlandı; yeni erişim veya migration uygulanmadı. Mevcut tek eylem listesindeki kurum deposu/IdP/MFA/KMS/control-plane ve native RLS/SSI kabulü değişmez.16PGadayı yalnız testte; birleşik akademik checkpoint bağımsız kod olarak sıradadır.
+
+### Paket67 kapsam notu
+
+Birleşik15veri tablosu profili yerel kabulde. Mevcut tek eylem listesindeki SQLden bağımsız güvenilir kontrol hizmeti, bütün okuyucu/yazıcılar, belirsiz işlem kurtarma yetkisi ve RPO/RTO işletimi gereksinimleri değişmez. Yeni hizmet/credential/migration yok; kurum kararı beklerken bağımsız geliştirme sürer.

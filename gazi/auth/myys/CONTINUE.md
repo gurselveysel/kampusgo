@@ -1,3 +1,15 @@
+# Güncel devam — Paket67 yerel kabul; kaynak eşitlemesi sırada
+
+AkademikUIgüvenlikuyuşmazlığında kayıt/formlar kapanır, Türkçeuyarı odağa gelir.15tablo birleşikcheckpoint;13yeni/855sunucu+48portal+46regresyon=949;16birleşik13mevcut=29tarayıcı;115statik. Eskiidentity-onlydosya migration olmadan okunur/akademik yenidenetiketleme reddedilir.36özgünölçüt korunur;16PGadayı/16SQLite149tür.
+
+Önce67commit/tam ağaç eşitle: beklenen uzak44484f981a009922a9153cbdf26e431d94064241, taband70ba2dcbde9550e9d2c2beba4708f9a9db88cf1. Soncanlı16;17–67dağıtılmadı;configuredCorekapalı;browserAuthiptaliniyenileme. Sıradaki68: itirazpolitikası/bağımsızinceleme/sürüm/teslimteyidi aynıSQLbağı; akademikaktifbelge kapalı. Sonra kalanbağımsızlar;tekeditör;raporladurma. Üretim yetkisi/IdP/MFA/KMS/nativeSSI/RLS/gerçekcheckpoint/RPO-RTO açık.
+
+# Güncel devam — Paket66 kaynakta;67 birleşik checkpoint
+
+66yerel30ae36b3f55a1e75cea2fe353948e804c3e4ce34,uzak44484f981a009922a9153cbdf26e431d94064241,ortak tam ağaçd70ba2dcbde9550e9d2c2beba4708f9a9db88cf1.26blobSHA/tam ağaç/expected-headforce=false/uzakrefcommit doğrulandı.936otomatik49tarayıcı. Soncanlı16;17–66dağıtılmadı.
+
+67başladı: kimlik12+akademik3tablo açık ayrı checkpoint profili. Eski identity-only profil akademik tabloyu sessizce dışarıda bırakmamalı. YeniDDL/credential/gerçekdepo yok. Şema adayı, profil pinli yerel journal, aynıHTTP/React kabul ve eskiyedeği/komut/kanıt/karar değişimini reddetme testleri sırada. Henüz67kabul/commit yok. Tekeditör;configuredCorekapalı;browserAuthiptaliniyenileme. B01–B36bağımsızlarısürer.
+
 # Güncel devam — Paket66 yerel kabul; kaynak eşitlemesi sırada
 
 Akademik Kayıt ve Karar: aynı SQL kişi/üyelik/oturumunda program→kanıt→insan değerlendirmesi→karar→itiraz.8komut/6sekme; belge ve desteklenmeyen işlemler kapalı.22yeni/842sunucu+48portal+46regresyon=936;49tarayıcı. Son NULL şema kontrolü20SQL/TLS ile tekrar geçti.115statik;16PGadayı,16SQLite149tür.136/18kapsam9035pozitif72280negatif SQLite örneği.36özgünölçüt korundu.

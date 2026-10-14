@@ -857,3 +857,15 @@ Panelin altı mevcut akademik sekmesi aynı SQL kişi/üyelik/oturumuyla program
 Başlangıç yerel `25e1d7b2357788faf1c28945abb9da3d7e2a24de`, uzak `a73fd4db8cbdc668bccc87db0c271f9aef13885c`, ortak tam ağaç `a558ced0dc81703d0e13b52e13a22ebeed6db103`; uzak ref/commit tekrar doğrulandı. Yeni kaynak eşitleme sonucu sonraki devam kaydına yazılır.
 
 14.10alias hâlâ `dpl_Coaq5KN2VcNpPjwyXke4neroq877` READYproduction, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`.17–66dağıtılmadı; yeni kimlikli canlısmoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. BrowserAuthiptali yenilenmedi;configuredCorekapalı. Kalan128komut, akademikcheckpoint/restore, native SSI/RLS ve gerçekkurum açık.
+
+### Paket66 kaynak eşitleme sonucu
+
+Yerel `30ae36b3f55a1e75cea2fe353948e804c3e4ce34`, uzak `44484f981a009922a9153cbdf26e431d94064241`, ortak tam ağaç `d70ba2dcbde9550e9d2c2beba4708f9a9db88cf1`.26blobSHA/tam ağaç eşitliği,expected-headforce=false,uzakref/commit teyidi geçti. Yeni canlı dağıtım yapılmadı.
+
+## Paket67 — kimlik ve akademik birleşik güncellik; yayın değil
+
+Akademik ekranda güvenlik uyuşmazlığı kayıt/formları kapatır ve Türkçe uyarıyı odağa alır.15tablo ayrı profil pinli kontrol; eski dosya uyumluluğu, eski SQL/yeniheadkopyası,record/command/audit değişimi, rollback/belirsizCOMMIT/seal kaybı kabulü.13yeni/855sunucu+48portal+46regresyon=949;16birleşik13mevcut=29tarayıcı;115statik. [Kanıt](acceptance/B07-B28-academic-checkpoint-20261014.json).
+
+Başlangıç yerel `30ae36b3f55a1e75cea2fe353948e804c3e4ce34`, uzak `44484f981a009922a9153cbdf26e431d94064241`, ortak tam ağaç `d70ba2dcbde9550e9d2c2beba4708f9a9db88cf1`. Yeni kaynak eşitleme sonucu sonraki devam kaydına yazılır. Son canlı16 `dpl_Coaq5KN2VcNpPjwyXke4neroq877`, kaynak `16bd55eefed251ce5d23e1791f87ed3871c6a8c6`;17–67dağıtılmadı, yeni kimlikli smoke yok. Geri dönüş15 `dpl_FCDsn7bJN1Cns4LZ8BiNMovTZpM1` uygulanmadı. configuredCorekapalı; browserAuthiptali yenilenmedi; üretim/hukukiimha/RPO-RTO kabulü açık.
+
+14.10.2026 Paket67 eşitlemesi öncesi uzak dal ve canlıalias tekrar okundu: beklenen66kaynağı ve canlı16READY değişmedi; kimlikli canlısmoke yapılmadı.

@@ -61,3 +61,7 @@ Mevcut gerçek TLS SQL giriş ekranının 13 Chromium kontrolü yeni sınır ba�
 | [PGlite API](https://pglite.dev/docs/api), `loadDataDir` / `dumpDataDir` | Tam datadir tar kopyası PGlite'a yeniden yüklenebilir; farklı PostgreSQL sürümleriyle uyumluluk garantisi yok. Kullanılan paket0.5.9 sabit devDependency. |
 
 B07/B27/B28 tamamlanmadı. Async akademik repository ile aynı kimlik/komut transaction bağı, bütün üretim yazarları, harici monoton kontrol hizmeti, gerçek kontrol düzlemi yetkisi, güvenli belirsiz işlem uzlaştırma ve restore kuyruğu, native çok bağlantı/RLS, RPO/RTO ve hukuki saklama kabulü açıktır. Yeni credential, ücretli servis, üretim migration veya gerçek kişi işlemi yapılmadı; `configuredCore()` Vercel'de kapalıdır.
+
+## Paket67 ek profili
+
+`myys-sql-identity-academic-checkpoint/1` kimlik12+akademik3tabloyu kapsar. Eski profil akademik tabloları sessizce atlamaz; eski journal migration olmadan yalnız eski profile açılır. [Birleşik sözleşme](ACADEMIC-CHECKPOINT-CONTRACT.md). Önceki belirsiz işlem/ayrı güvenilir hizmet sınırları korunur.

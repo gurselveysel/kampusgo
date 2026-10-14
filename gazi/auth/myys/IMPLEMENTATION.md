@@ -372,3 +372,7 @@ Akış ve saklama aynı dört komutla yeni dar hedefe bağlandı. Açık kontrol
 ## Paket66 — aynı SQL kimlik ve akademik akış
 
 Mevcut altı akademik sekme ilk8komutla PostgresIdentityFlow özel ön/son guardına bağlandı. SQLrecords/commands/audit atomik; ortak MyysCore kuralları; hiçbir ikinci kalıcı örnek depo yok. 22yeni/936otomatik,49tarayıcı;115statik.16PGadayı;16SQLite149tür korunur. [Sözleşme](ACADEMIC-SQL-CONTRACT.md) ve [kanıt](acceptance/B06-B11-academic-sql-20261014.json). Kalan128komut, birleşikcheckpoint/native SSI/RLS ve gerçekkurum/IdP/KMS açık. Son canlı16;66yerel.
+
+## Paket67 — birleşik akademik checkpoint
+
+15kimlik+akademik tablo ayrı profil pinine bağlandı. Eski SQL/yeni başlık kopyalama ve akademikrecord/command/audit değişimi kapanır; belirsizCOMMIT/ayrıseal sonuç vermez. Eskiidentity-only dosya migration olmadan okunur. AkademikUIuyarı odağı/formları kapatma;13yeni/949otomatik29tarayıcı. [Sözleşme](ACADEMIC-CHECKPOINT-CONTRACT.md).16PGadayı/16SQLite149tür/115statik korundu. Gerçekhizmet/nativeSSI/RLS/RPO/RTO/kurum açık;soncanlı16.
