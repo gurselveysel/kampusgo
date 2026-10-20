@@ -1,7 +1,7 @@
 {
   "engine": "arXivisual + TEYS clinical safety runtime",
   "engine_mode": "arxivisual-template",
-  "generated_at": "2026-08-26T19:54:11.487877+00:00",
+  "generated_at": "2026-10-20T01:39:56.012911+00:00",
   "scene_count": 8,
   "expert_approval": "DOĞRULANMADI",
   "production_allowed": false,
@@ -10,8 +10,8 @@
       "module_id": 1,
       "scenario_id": "scn_module_01_assessment",
       "video": "/medical-simulation/manim/module-01-virtual-patient.mp4",
-      "bytes": 338177,
-      "sha256": "f3a5a4302a6dad3eed1ba79f0ca847f5a5ef04883b6351ae45e80f8714961093",
+      "bytes": 345176,
+      "sha256": "e5ab8ea90cb6f75382b319cf4dde54e96ed4aa595cde54a9bdf504a12ed463b8",
       "scene_class_name": "TEYSMedicalScene1",
       "engine_mode": "arxivisual-template",
       "storyboard": [
@@ -52,8 +52,8 @@
           "issues_found": [],
           "issues_fixed": [],
           "needs_regeneration": false,
-          "code_length": 7102,
-          "code_sha256": "211f1f4c0975a1265571a991f46e1dfd7283dae98e682e736bf2dd3ceca752e1",
+          "code_length": 7539,
+          "code_sha256": "208c4bd7b76c2d34440f9bcfa222362ac8125b978d240500233c5e36ae4b9f8e",
           "result_type": "ValidatorOutput"
         },
         "spatial_validator": {
@@ -81,8 +81,8 @@
       "module_id": 2,
       "scenario_id": "scn_module_02_case_reveal",
       "video": "/medical-simulation/manim/module-02-case-learning.mp4",
-      "bytes": 350592,
-      "sha256": "8bd172f15a06aebf8b01dbbbd0569d7f7476a4199999e29354ad13d970e752b2",
+      "bytes": 359230,
+      "sha256": "cd653374fb659366bfe4150c815e1327622a59a60fcdfad933b16ba06fa7668d",
       "scene_class_name": "TEYSMedicalScene2",
       "engine_mode": "arxivisual-template",
       "storyboard": [
@@ -123,8 +123,8 @@
           "issues_found": [],
           "issues_fixed": [],
           "needs_regeneration": false,
-          "code_length": 7077,
-          "code_sha256": "3ee916ff8b82bf062a247eca8672a6df761051c18b4156f923de2ab48855f6b1",
+          "code_length": 7514,
+          "code_sha256": "1b46f0672689c59247b41c2edbc6c2aa109bfa33f7799c34b34e114653991c88",
           "result_type": "ValidatorOutput"
         },
         "spatial_validator": {
@@ -152,8 +152,8 @@
       "module_id": 3,
       "scenario_id": "scn_module_03_reasoning",
       "video": "/medical-simulation/manim/module-03-clinical-reasoning.mp4",
-      "bytes": 355098,
-      "sha256": "e16d29e60a2291d33cc2ffb98f46f54b73706e98e2d332b18adbb1d0c848ff98",
+      "bytes": 364577,
+      "sha256": "46f31f12a4f96625b8073add991983a8862dae487c23fc9f9506cac7f3d5d9ab",
       "scene_class_name": "TEYSMedicalScene3",
       "engine_mode": "arxivisual-template",
       "storyboard": [
@@ -194,8 +194,8 @@
           "issues_found": [],
           "issues_fixed": [],
           "needs_regeneration": false,
-          "code_length": 7138,
-          "code_sha256": "e1467acd483983be91a6c4f078d5f95d05aad441efeed4a4b072b5fb2e660142",
+          "code_length": 7575,
+          "code_sha256": "b0e5382fbd9e0c3aa6a460d0fd0106b724d83042441950f4da4b8277ad8e312f",
           "result_type": "ValidatorOutput"
         },
         "spatial_validator": {
@@ -223,8 +223,8 @@
       "module_id": 4,
       "scenario_id": "scn_module_04_diagnostics",
       "video": "/medical-simulation/manim/module-04-diagnostics.mp4",
-      "bytes": 345772,
-      "sha256": "144859950cda7b567db8f692d18621fe087748ede2238bf8a3333aeecb2eb494",
+      "bytes": 355371,
+      "sha256": "fcffe1e274aaf28a1fbaf20e28840bfb0331a481f8dae486da7a5ca112328f7d",
       "scene_class_name": "TEYSMedicalScene4",
       "engine_mode": "arxivisual-template",
       "storyboard": [
@@ -265,8 +265,8 @@
           "issues_found": [],
           "issues_fixed": [],
           "needs_regeneration": false,
-          "code_length": 7133,
-          "code_sha256": "9b3d776f3852acefb0c5f95ff93fd15fddb6cd51cf42619565127e9d25fa5f92",
+          "code_length": 7570,
+          "code_sha256": "36d987321d9e671895777df3a166b894be4f90459079c382950172be1eda60d2",
           "result_type": "ValidatorOutput"
         },
         "spatial_validator": {
@@ -294,8 +294,8 @@
       "module_id": 5,
       "scenario_id": "scn_module_05_treatment",
       "video": "/medical-simulation/manim/module-05-treatment.mp4",
-      "bytes": 361025,
-      "sha256": "42c7fc5af54af284ae745e9cfc6f3f20ed6ec4f32e1bc745de4d5debd1aefe80",
+      "bytes": 366363,
+      "sha256": "596748ac6db4a123cb1354554609cdf2a10fccb8be78afcf5cceff8da2d8a889",
       "scene_class_name": "TEYSMedicalScene5",
       "engine_mode": "arxivisual-template",
       "storyboard": [
@@ -336,8 +336,8 @@
           "issues_found": [],
           "issues_fixed": [],
           "needs_regeneration": false,
-          "code_length": 7137,
-          "code_sha256": "174c5ecf1e924100d370f42b1da14594645009354e4926664609fd023a1fefe9",
+          "code_length": 7574,
+          "code_sha256": "fd40fbb93aa70c3e04a9e7173d260dcee479c351fb5102fe915eb86f8ad8840a",
           "result_type": "ValidatorOutput"
         },
         "spatial_validator": {
@@ -365,8 +365,8 @@
       "module_id": 6,
       "scenario_id": "scn_module_06_vf_rosc",
       "video": "/medical-simulation/manim/module-06-emergency.mp4",
-      "bytes": 368690,
-      "sha256": "efc24effc327a281bae1507f53856a527112a335842dac969c4cbaefdc519ea9",
+      "bytes": 363876,
+      "sha256": "289d469430301cb4fd1c4fcfa843b28ea9be98b8f0089e28877ab958e8bb80fc",
       "scene_class_name": "TEYSMedicalScene6",
       "engine_mode": "arxivisual-template",
       "storyboard": [
@@ -407,8 +407,8 @@
           "issues_found": [],
           "issues_fixed": [],
           "needs_regeneration": false,
-          "code_length": 7127,
-          "code_sha256": "ac41a7aca9f48b4d9a003ac2d4a7c18fd0d361f8a792e0faa863382d19b7314e",
+          "code_length": 7564,
+          "code_sha256": "5c158ba28659c171c89a73b96a8446081b7c575d23efd7b8a07fa99334794fdc",
           "result_type": "ValidatorOutput"
         },
         "spatial_validator": {
@@ -436,8 +436,8 @@
       "module_id": 7,
       "scenario_id": "scn_module_07_team",
       "video": "/medical-simulation/manim/module-07-team-leadership.mp4",
-      "bytes": 362309,
-      "sha256": "bf73eaa2a67cf729c90f3402d1e5828979c4bb4a954de67e23ba1eebd7f32181",
+      "bytes": 369650,
+      "sha256": "f0cafc1038170bdedc31bff19ff8cb7d1e0c20275418ff439993cd9b6f36cb4d",
       "scene_class_name": "TEYSMedicalScene7",
       "engine_mode": "arxivisual-template",
       "storyboard": [
@@ -478,8 +478,8 @@
           "issues_found": [],
           "issues_fixed": [],
           "needs_regeneration": false,
-          "code_length": 7146,
-          "code_sha256": "af50d8edeb88162e074ab259a258feda9fb8b7f8ccc5feba3a4c7cb2a6e51447",
+          "code_length": 7583,
+          "code_sha256": "99aeafe305a16de28b8a1b84d1003fcc28209b18eefe73ac22dae968b53626cd",
           "result_type": "ValidatorOutput"
         },
         "spatial_validator": {
@@ -507,8 +507,8 @@
       "module_id": 8,
       "scenario_id": "scn_module_08_integrated",
       "video": "/medical-simulation/manim/module-08-integrated.mp4",
-      "bytes": 379749,
-      "sha256": "f5f5121f867a4a21327bcdde376a88f1add9b3aa24145690be6960c15cc6599c",
+      "bytes": 374798,
+      "sha256": "de05ddb3d4c20e1dd4b139c379741a8b72fc146ea594944c74e8d56934d30a0c",
       "scene_class_name": "TEYSMedicalScene8",
       "engine_mode": "arxivisual-template",
       "storyboard": [
@@ -549,8 +549,8 @@
           "issues_found": [],
           "issues_fixed": [],
           "needs_regeneration": false,
-          "code_length": 7160,
-          "code_sha256": "f8cf395940908c9b96e27957cbafa3d91b54dae04ff6538da81984b4ebf1ec47",
+          "code_length": 7597,
+          "code_sha256": "c35678a2e59f942885c4d86b7d75a66ad0ec83824e49a6322568117a8191273d",
           "result_type": "ValidatorOutput"
         },
         "spatial_validator": {
