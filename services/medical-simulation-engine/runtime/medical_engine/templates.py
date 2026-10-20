@@ -193,14 +193,26 @@ class {class_name}(Scene):
             Text({_py(str(after.diastolic_bp))}, font_size=32, color=WHITE, weight=BOLD),
         ).arrange(RIGHT, buff=0.08).move_to(bp_value.get_center())
         rr_after = Text({_py(str(after.respiratory_rate))}, font_size=38, color=AMBER, weight=BOLD).move_to(rr.get_center())
+        # Keep clinical state changes legible. Morphing two complete text
+        # objects produces transient double glyphs (especially 0→92 and
+        # 72→96) that read like overlapping vital values in the exported
+        # video. Close the old state first, then reveal the new state.
         self.play(
-            Transform(before_label, consequence),
-            Transform(hr, hr_after),
-            Transform(spo2, spo2_after),
-            Transform(bp_value, bp_after),
-            Transform(rr, rr_after),
+            FadeOut(before_label),
+            FadeOut(hr),
+            FadeOut(spo2),
+            FadeOut(bp_value),
+            FadeOut(rr),
+            run_time=0.35,
+        )
+        self.play(
+            FadeIn(consequence),
+            FadeIn(hr_after),
+            FadeIn(spo2_after),
+            FadeIn(bp_after),
+            FadeIn(rr_after),
             torso.animate.scale(0.96),
-            run_time=2.0,
+            run_time=0.75,
         )
 
         signal_box = RoundedRectangle(width=11.9, height=0.9, corner_radius=0.15, color=RED, fill_color="#3A1820", fill_opacity=0.95)
