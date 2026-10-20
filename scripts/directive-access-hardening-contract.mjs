@@ -8,12 +8,13 @@ import {
 } from "../src/supabase.js";
 import { directiveRoleScopeRows, organizationScopes } from "../src/directive-pilot.js";
 
-const migration = readFileSync(new URL("../supabase/migrations/20260820033000_directive_reference_access_hardening.sql", import.meta.url), "utf8");
-const rollback = readFileSync(new URL("../supabase/rollback/20260820033000_directive_reference_access_hardening.rollback.sql", import.meta.url), "utf8");
-const sqlAcceptance = readFileSync(new URL("../supabase/tests/20260820033000_directive_access_hardening.sql", import.meta.url), "utf8");
-const spineIntegrity = readFileSync(new URL("../supabase/migrations/20260820034000_tyyc_spine_integrity_performance.sql", import.meta.url), "utf8");
-const spineIntegrityRollback = readFileSync(new URL("../supabase/rollback/20260820034000_tyyc_spine_integrity_performance.rollback.sql", import.meta.url), "utf8");
-const spineIntegrityAcceptance = readFileSync(new URL("../supabase/tests/20260820034000_tyyc_spine_integrity.sql", import.meta.url), "utf8");
+const readUtf8 = (url) => readFileSync(url, "utf8").replaceAll("\r\n", "\n");
+const migration = readUtf8(new URL("../supabase/migrations/20260820033000_directive_reference_access_hardening.sql", import.meta.url));
+const rollback = readUtf8(new URL("../supabase/rollback/20260820033000_directive_reference_access_hardening.rollback.sql", import.meta.url));
+const sqlAcceptance = readUtf8(new URL("../supabase/tests/20260820033000_directive_access_hardening.sql", import.meta.url));
+const spineIntegrity = readUtf8(new URL("../supabase/migrations/20260820034000_tyyc_spine_integrity_performance.sql", import.meta.url));
+const spineIntegrityRollback = readUtf8(new URL("../supabase/rollback/20260820034000_tyyc_spine_integrity_performance.rollback.sql", import.meta.url));
+const spineIntegrityAcceptance = readUtf8(new URL("../supabase/tests/20260820034000_tyyc_spine_integrity.sql", import.meta.url));
 const migrationSqlBody = migration.replace(/^--.*$/gm, "");
 const sources = JSON.parse(readFileSync(new URL("../supabase/reference/directive_official_sources.json", import.meta.url), "utf8")).sources;
 const adapter = readFileSync(new URL("../src/supabase.js", import.meta.url), "utf8");
