@@ -83,6 +83,10 @@ jobs:
               'cat > /tmp/module-scene.mp4 && ffprobe -v error -show_entries format=duration,size -of json /tmp/module-scene.mp4' \
               < "$video"
           done
+          {
+            printf 'commit=%s\n' "$GITHUB_SHA"
+            sha256sum module-library-output/*.mp4
+          } > module-library-output/proof.txt
       - name: Upload rendered module library
         uses: actions/upload-artifact@v4
         with:
